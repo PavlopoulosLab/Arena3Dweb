@@ -1,0 +1,407 @@
+SCENE_PAN	 	 	 	 	 	 	 	 
+-44	154	0.525773128978409	#000000	 	 	 	 	 
+SCENE_SPHERE	 	 	 	 	 	 	 	 
+0.471238898038469	0.663225115757845	-1.60570291183478	 	 	 	 	 	 
+LAYERS	 	 	 	 	 	 	 	 
+-518	-300	0	0.4	0	0	0	#777777	1001.90476190476
+-206	150	0	0.3	0	0	0	#f7f43e	1001.90476190476
+256	0	0	1	0	0	0	#777777	1001.90476190476
+768	0	0	1.4	0	0	0	#777777	1001.90476190476
+NODES	 	 	 	 	 	 	 	 
+EDNRB	GPCRs	0	-168.952380952381	0	1.04054054054054	#0000ff	 	 
+EDNRA	GPCRs	0	168.952380952381	0	0.824324324324324	#ff0000	 	 
+GRK2	GRKs	0	-126.714285714286	0	0.824324324324324	#0000ff	 	 
+GRK6	GRKs	0	126.714285714286	0	0.662162162162162	#ce7d78	 	 
+GNA14	G-proteins	0	-386.047107014849	-218.266666666667	0.608108108108108	#0000ff	 	 
+GNAI2	G-proteins	0	278.882690597461	354.8	2.5	#2c9c4d	 	 
+GNAI3	G-proteins	0	-258.878648233487	118.266666666667	2.39189189189189	#2c9c4d	 	 
+GNA11	G-proteins	0	-367.880184331797	-118.266666666667	0.662162162162162	#2c9c4d	 	 
+GNAQ	G-proteins	0	-249.713261648745	-168.266666666667	2.17567567567568	#0000ff	 	 
+GNAI1	G-proteins	0	54.7055811571941	118.266666666667	2.44594594594595	#2c9c4d	 	 
+GNA13	G-proteins	0	-281.546338965694	-318.266666666667	0.878378378378378	#0000ff	 	 
+EDN1	Effectors	0	-588.731182795699	-565.573333333333	0.554054054054054	#a48a9e	 	 
+ADCY6	Effectors	0	102.692226967742	297.329921729032	0.608108108108108	#a48a9e	 	 
+GPRIN2	Effectors	0	201.813275225806	297.329921729032	0.608108108108108	#a48a9e	 	 
+TUBB4A	Effectors	0	300.934323483871	297.329921729032	0.986486486486487	#a48a9e	 	 
+NPM1	Effectors	0	400.055371741935	297.329921729032	0.878378378378378	#a48a9e	 	 
+TUBB	Effectors	0	499.17642	297.329921729032	1.63513513513514	#a48a9e	 	 
+HSP90AB1	Effectors	0	3.57117870967747	396.450969987097	1.31081081081081	#a48a9e	 	 
+RAC2	Effectors	0	102.692226967742	396.450969987097	0.716216216216216	#a48a9e	 	 
+TUBG1	Effectors	0	201.813275225806	396.450969987097	1.52702702702703	#a48a9e	 	 
+MYH9	Effectors	0	300.934323483871	396.450969987097	0.932432432432432	#a48a9e	 	 
+CAPZA2	Effectors	0	400.055371741935	396.450969987097	0.608108108108108	#a48a9e	 	 
+PTEN	Effectors	0	499.17642	396.450969987097	0.986486486486487	#a48a9e	 	 
+RAC3	Effectors	0	3.57117870967747	495.572018245161	0.716216216216216	#a48a9e	 	 
+RAC1	Effectors	0	102.692226967742	495.572018245161	1.14864864864865	#a48a9e	 	 
+TUBA1B	Effectors	0	201.813275225806	495.572018245161	1.47297297297297	#a48a9e	 	 
+TUBA4A	Effectors	0	300.934323483871	495.572018245161	1.47297297297297	#a48a9e	 	 
+TUBB4B	Effectors	0	22.0215053763442	10.9174193548388	1.41891891891892	#a48a9e	 	 
+TUBB3	Effectors	0	102.692226967742	-0.0332230451612645	1.52702702702703	#a48a9e	 	 
+TUBB2A	Effectors	0	201.813275225806	-0.0332230451612645	1.36486486486486	#a48a9e	 	 
+RAP1GAP2	Effectors	0	300.934323483871	-0.0332230451612645	0.608108108108108	#a48a9e	 	 
+TUBA1A	Effectors	0	400.055371741935	-0.0332230451612645	1.68918918918919	#a48a9e	 	 
+TUBGCP3	Effectors	0	499.17642	-0.0332230451612645	1.2027027027027	#a48a9e	 	 
+ITCH	Effectors	0	3.57117870967747	99.0878252129032	0.608108108108108	#a48a9e	 	 
+TUBGCP6	Effectors	0	102.692226967742	99.0878252129032	0.932432432432432	#a48a9e	 	 
+TUBGCP5	Effectors	0	201.813275225806	99.0878252129032	0.932432432432432	#a48a9e	 	 
+TTC1	Effectors	0	300.934323483871	99.0878252129032	0.608108108108108	#a48a9e	 	 
+TUBA1C	Effectors	0	400.055371741935	99.0878252129032	1.47297297297297	#a48a9e	 	 
+TUBGCP2	Effectors	0	499.17642	99.0878252129032	1.41891891891892	#a48a9e	 	 
+TUBB6	Effectors	0	3.57117870967747	198.208873470968	1.09459459459459	#a48a9e	 	 
+TUBB2B	Effectors	0	102.692226967742	198.208873470968	1.09459459459459	#a48a9e	 	 
+TUBB1	Effectors	0	201.813275225806	198.208873470968	0.932432432432432	#a48a9e	 	 
+RIC8A	Effectors	0	300.934323483871	198.208873470968	0.77027027027027	#a48a9e	 	 
+TUBG2	Effectors	0	400.055371741935	198.208873470968	0.932432432432432	#a48a9e	 	 
+TUBA8	Effectors	0	499.17642	198.208873470968	0.662162162162162	#a48a9e	 	 
+TUBE1	Effectors	0	3.57117870967747	297.329921729032	0.662162162162162	#a48a9e	 	 
+YWHAQ	Effectors	0	-360.695340501792	184.426666666667	1.2027027027027	#a48a9e	 	 
+RANGAP1	Effectors	0	-390.920067958327	245.615378207216	0.716216216216216	#a48a9e	 	 
+YWHAH	Effectors	0	-458.83441408108	260.727741935484	0.878378378378378	#a48a9e	 	 
+USP33	Effectors	0	-513.297491039427	218.383839728043	0.554054054054054	#a48a9e	 	 
+TRAF6	Effectors	0	-513.297491039427	150.46949360529	1.04054054054054	#a48a9e	 	 
+PDE6D	Effectors	0	-458.83441408108	108.125591397849	0.5	#a48a9e	 	 
+JUN	Effectors	0	-390.920067958327	123.237955126117	1.58108108108108	#a48a9e	 	 
+PLCB2	Effectors	0	69.0752688172043	-115.573333333333	0.662162162162162	#a48a9e	 	 
+ARHGEF11	Effectors	0	-154.623655913978	-415.573333333333	0.554054054054054	#a48a9e	 	 
+PIK3CA	Effectors	0	-195.828078334433	-350.302968866719	0.662162162162162	#a48a9e	 	 
+PIK3CB	Effectors	0	-300.161338409122	-315.573333333333	0.554054054054054	#a48a9e	 	 
+ARF6	Effectors	0	-418.804744214072	-327.634809176151	0.608108108108108	#a48a9e	 	 
+AKAP13	Effectors	0	-496.243727598566	-380.843697799947	0.554054054054054	#a48a9e	 	 
+ARHGEF1	Effectors	0	-496.243727598566	-450.302968866719	0.608108108108108	#a48a9e	 	 
+ARHGEF12	Effectors	0	-418.804744214072	-503.511857490515	0.608108108108108	#a48a9e	 	 
+CDH1	Effectors	0	-300.161338409122	-515.573333333333	0.878378378378378	#a48a9e	 	 
+MAP3K5	Effectors	0	-195.828078334433	-480.843697799947	0.716216216216216	#a48a9e	 	 
+EDGES	 	 	 	 	 	 	 	 
+EDNRB_GPCRs---EDNRA_GPCRs	0.3	#cfcfcf	 	 	 	 	 	 
+EDNRB_GPCRs---GRK2_GRKs	0.3	#00a2ff	 	 	 	 	 	 
+EDNRB_GPCRs---GRK6_GRKs	0.3	#00a2ff	 	 	 	 	 	 
+EDNRA_GPCRs---GRK6_GRKs	0.3	#ff0000	 	 	 	 	 	 
+EDNRB_GPCRs---GNA14_G-proteins	0.3	#00a2ff	 	 	 	 	 	 
+EDNRB_GPCRs---GNAI2_G-proteins	0.3	#00a2ff	 	 	 	 	 	 
+EDNRB_GPCRs---GNAI3_G-proteins	0.3	#00a2ff	 	 	 	 	 	 
+EDNRB_GPCRs---GNA11_G-proteins	0.3	#00a2ff	 	 	 	 	 	 
+EDNRB_GPCRs---GNAQ_G-proteins	0.3	#00a2ff	 	 	 	 	 	 
+EDNRB_GPCRs---GNAI1_G-proteins	0.3	#00a2ff	 	 	 	 	 	 
+EDNRB_GPCRs---GNA13_G-proteins	0.3	#00a2ff	 	 	 	 	 	 
+EDNRA_GPCRs---GNAI2_G-proteins	0.3	#ff0000	 	 	 	 	 	 
+EDNRA_GPCRs---GNAI3_G-proteins	0.3	#ff0000	 	 	 	 	 	 
+EDNRA_GPCRs---GNA11_G-proteins	0.3	#ff0000	 	 	 	 	 	 
+EDNRA_GPCRs---GNAI1_G-proteins	0.3	#ff0000	 	 	 	 	 	 
+EDNRB_GPCRs---EDN1_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+EDNRA_GPCRs---EDN1_Effectors	0.3	#ff0000	 	 	 	 	 	 
+GRK2_GRKs---GRK6_GRKs	0.3	#cfcfcf	 	 	 	 	 	 
+GNAI2_G-proteins---ADCY6_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---GPRIN2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBB4A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---NPM1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBB_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---HSP90AB1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---RAC2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBG1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---MYH9_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---CAPZA2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---PTEN_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---RAC3_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---RAC1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBA1B_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBA4A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBB4B_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBB3_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBB2A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---RAP1GAP2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBA1A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBGCP3_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---ITCH_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBGCP6_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBGCP5_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TTC1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBA1C_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBGCP2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBB6_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBB2B_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBB1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---RIC8A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBG2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBA8_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---TUBE1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI2_G-proteins---GNAI3_G-proteins	0.3	#cfcfcf	 	 	 	 	 	 
+GNAI2_G-proteins---GNAI1_G-proteins	0.3	#cfcfcf	 	 	 	 	 	 
+GNAI3_G-proteins---ADCY6_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---GPRIN2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBB4A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBB_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---RAC2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBG1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---YWHAQ_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---RANGAP1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---RAC3_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---RAC1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBA1B_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBA4A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBB4B_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---YWHAH_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBB3_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBB2A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---RAP1GAP2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBA1A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---USP33_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBGCP3_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBGCP6_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBGCP5_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBA1C_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBGCP2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBB6_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBB2B_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBB1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---RIC8A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBG2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBA8_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TUBE1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---TRAF6_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI3_G-proteins---GNAI1_G-proteins	0.3	#cfcfcf	 	 	 	 	 	 
+GNAI1_G-proteins---ADCY6_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---PDE6D_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---GPRIN2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBB4A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---JUN_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBB_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---RAC2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBG1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---MYH9_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---RANGAP1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---PTEN_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---RAC3_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---RAC1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBA1B_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBA4A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBB4B_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBB3_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBB2A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---RAP1GAP2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBA1A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBGCP3_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBGCP6_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBGCP5_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBA1C_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBGCP2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBB6_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBB2B_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBB1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---RIC8A_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBG2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBA8_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---TUBE1_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAI1_G-proteins---GNA13_G-proteins	0.3	#cfcfcf	 	 	 	 	 	 
+GNA14_G-proteins---GRK2_GRKs	0.3	#00a2ff	 	 	 	 	 	 
+GNA14_G-proteins---PLCB2_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNA11_G-proteins---GRK2_GRKs	0.3	#00a2ff	 	 	 	 	 	 
+GNA11_G-proteins---PLCB2_Effectors	0.3	#62e84a	 	 	 	 	 	 
+GNAQ_G-proteins---ARHGEF11_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBB4A_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBB_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBG1_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---GRK2_GRKs	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---PIK3CA_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---PIK3CB_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---ARF6_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBA1B_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBA4A_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBB4B_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---PLCB2_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---AKAP13_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBB3_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBB2A_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBA1A_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---ARHGEF1_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBGCP3_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBGCP6_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBGCP5_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TTC1_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBA1C_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBGCP2_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBB6_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBB2B_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBB1_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---RIC8A_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBG2_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBA8_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---ARHGEF12_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNAQ_G-proteins---TUBE1_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNA13_G-proteins---ARHGEF11_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNA13_G-proteins---CDH1_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNA13_G-proteins---ARHGEF1_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNA13_G-proteins---MAP3K5_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNA13_G-proteins---RIC8A_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+GNA13_G-proteins---ARHGEF12_Effectors	0.3	#00a2ff	 	 	 	 	 	 
+JUN_Effectors---NPM1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBB_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---HSP90AB1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---YWHAQ_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---MYH9_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---RANGAP1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---RAC1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBA1B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBA4A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBB4B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---YWHAH_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBB2A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---ITCH_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBB6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBB2B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+JUN_Effectors---TUBB1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+MYH9_Effectors---CAPZA2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+MYH9_Effectors---RAC1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+MYH9_Effectors---TUBA4A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+CAPZA2_Effectors---TUBB6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+PTEN_Effectors---TUBA1B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+PTEN_Effectors---TUBB4B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+PTEN_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+PTEN_Effectors---TUBB2A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+PTEN_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB3_Effectors---TUBB2A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB3_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB3_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB3_Effectors---TUBB2B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB3_Effectors---TUBB1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1A_Effectors---TUBGCP3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1A_Effectors---TTC1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1A_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1A_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1A_Effectors---TUBB6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1A_Effectors---TUBB2B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+ARF6_Effectors---RAC1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+ARF6_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+CDH1_Effectors---MYH9_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+CDH1_Effectors---RANGAP1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+CDH1_Effectors---PTEN_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+CDH1_Effectors---TUBB4B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+CDH1_Effectors---ARHGEF12_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---HSP90AB1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---CDH1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TUBG1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---GRK2_GRKs	0.3	#00a2ff	 	 	 	 	 	 
+TUBB_Effectors---YWHAQ_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---PTEN_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TUBA1B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TUBA4A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TUBB4B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TUBB2A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TUBGCP3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB_Effectors---TRAF6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAQ_Effectors---MYH9_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAQ_Effectors---PIK3CB_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAQ_Effectors---TUBA1B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAQ_Effectors---YWHAH_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAQ_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAQ_Effectors---TUBB2A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAQ_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAQ_Effectors---TUBGCP3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAQ_Effectors---MAP3K5_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAQ_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+PIK3CA_Effectors---RAC1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+PIK3CA_Effectors---YWHAH_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+PIK3CA_Effectors---ARHGEF1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1C_Effectors---TUBB6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1C_Effectors---TUBB2B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB6_Effectors---TRAF6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+NPM1_Effectors---HSP90AB1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+NPM1_Effectors---YWHAQ_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+NPM1_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+NPM1_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+NPM1_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+NPM1_Effectors---TRAF6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+RAC1_Effectors---TUBA4A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+RAC1_Effectors---PLCB2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+RAC1_Effectors---AKAP13_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+RAC1_Effectors---TRAF6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+ITCH_Effectors---TRAF6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---CDH1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---TUBG1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---GRK2_GRKs	0.3	#00a2ff	 	 	 	 	 	 
+HSP90AB1_Effectors---MYH9_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---GRK6_GRKs	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---PTEN_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---TUBGCP3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---MAP3K5_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+HSP90AB1_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+MAP3K5_Effectors---TRAF6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4A_Effectors---JUN_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4A_Effectors---TUBB_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4A_Effectors---TUBA4A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4A_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4A_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4A_Effectors---TRAF6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB2B_Effectors---TUBB1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB2B_Effectors---TRAF6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBA1B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBA4A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBB4B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---YWHAH_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBB2A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBGCP3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBGCP6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBGCP5_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBB1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBG1_Effectors---TUBG2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB2A_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB2A_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB2A_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB2A_Effectors---RIC8A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1B_Effectors---TUBA4A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1B_Effectors---TUBB4B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1B_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1B_Effectors---TUBB2A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1B_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1B_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1B_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1B_Effectors---TUBB6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1B_Effectors---TUBB2B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA1B_Effectors---TUBB1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAH_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAH_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+YWHAH_Effectors---MAP3K5_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA4A_Effectors---TUBB4B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA4A_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA4A_Effectors---TUBB2A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA4A_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA4A_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA4A_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA4A_Effectors---TUBB6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBA4A_Effectors---TUBB2B_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBGCP2_Effectors---TUBG2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4B_Effectors---TUBB3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4B_Effectors---TUBB2A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4B_Effectors---TUBA1A_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4B_Effectors---TUBGCP3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4B_Effectors---TUBA1C_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4B_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBB4B_Effectors---TUBB6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+RAC2_Effectors---RAC3_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+RAC2_Effectors---RAC1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+RAC3_Effectors---RAC1_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBGCP3_Effectors---TUBGCP6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBGCP3_Effectors---TUBGCP5_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBGCP3_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBGCP3_Effectors---TUBG2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBGCP6_Effectors---TUBGCP5_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBGCP6_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBGCP6_Effectors---TUBG2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBGCP5_Effectors---TUBGCP2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+TUBGCP5_Effectors---TUBG2_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+RANGAP1_Effectors---TRAF6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+USP33_Effectors---TRAF6_Effectors	0.3	#cfcfcf	 	 	 	 	 	 
+END	 	 	 	 	 	 	 	 

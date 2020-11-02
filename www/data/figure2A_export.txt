@@ -1,0 +1,705 @@
+SCENE_PAN	 	 	 	 	 	 	 	 
+77	-3	0.336569927599661	#000000	 	 	 	 	 
+SCENE_SPHERE	 	 	 	 	 	 	 	 
+-0.386047223242714	0.378081984494371	-0.0257832291643735	 	 	 	 	 	 
+LAYERS	 	 	 	 	 	 	 	 
+50.1173847578199	630.022083042486	-1.65784570724029	1	-3.12413936106985	0.0174532925199435	-1.5707963267949	#777777	1001.90476190476
+-591.625000000001	1.80411241501588e-14	0	1	3.14159265358979	-0.0174532925199439	4.52048256372085e-17	#777777	1001.90476190476
+642.282444822297	56.9228078471692	28.3284060378471	1	1.49043922337151	-0.041857074115393	-0.038443484978509	#777777	1001.90476190476
+-0.124999999999728	-564.999999999999	-2.35922392732846e-14	1	2.2265013138185e-14	1.55334303427555	-1.57079632679552	#777777	1001.90476190476
+NODES	 	 	 	 	 	 	 	 
+2	Layer1	0	41.7524551417391	-39.9241383794944	1.61111111111111	#63b598	 	 
+1	Layer1	0	70.6769753756748	-98.4455397576818	0.5	#63b598	 	 
+3	Layer1	0	145.593594857344	72.8990504306445	1.38888888888889	#63b598	 	 
+4	Layer1	0	144.345951862423	-153.32252978775	1.61111111111111	#63b598	 	 
+5	Layer1	0	131.599758412135	-279.328539483389	0.722222222222222	#63b598	 	 
+6	Layer1	0	-127.829615991429	-44.4517550265818	2.5	#63b598	 	 
+7	Layer1	0	287.901475331169	126.163079965761	1.38888888888889	#63b598	 	 
+8	Layer1	0	113.605213383804	198.458301074125	0.722222222222222	#63b598	 	 
+9	Layer1	0	-228.480267522075	68.525302850131	1.38888888888889	#63b598	 	 
+10	Layer1	0	287.827411817085	-209.489401614095	0.944444444444444	#63b598	 	 
+11	Layer1	0	55.172098112531	29.9781505292976	0.5	#63b598	 	 
+12	Layer1	0	132.30908464406	312.863376966234	0.722222222222222	#63b598	 	 
+13	Layer1	0	-189.287084798078	-172.97104764613	0.944444444444444	#63b598	 	 
+14	Layer1	0	363.048396749579	-308.28202537503	0.944444444444444	#63b598	 	 
+15	Layer1	0	-81.4693471795337	-100.848649341016	0.5	#63b598	 	 
+16	Layer1	0	253.432515654422	47.8501442511298	0.5	#63b598	 	 
+17	Layer1	0	129.906033937037	-390.463420776753	0.5	#63b598	 	 
+18	Layer1	0	166.465589108253	416.4	0.5	#63b598	 	 
+19	Layer1	0	-274.453325985932	-82.0315365130386	1.16666666666667	#63b598	 	 
+20	Layer1	0	151.378320394626	150.229373644894	0.5	#63b598	 	 
+21	Layer1	0	-406.268118322012	-48.7082204120994	0.5	#63b598	 	 
+22	Layer1	0	90.6227269193406	-239.090666483634	0.5	#63b598	 	 
+23	Layer1	0	-288.707298807614	-265.72593836669	0.944444444444444	#63b598	 	 
+24	Layer1	0	-180.050175568495	175.077535559981	0.5	#63b598	 	 
+25	Layer1	0	-137.150619665244	37.4367754189239	0.5	#63b598	 	 
+26	Layer1	0	-87.3114885072626	25.2532731482216	0.5	#63b598	 	 
+27	Layer1	0	374.162182324698	207.151956727168	0.5	#63b598	 	 
+28	Layer1	0	-244.949590135269	162.380191282989	0.5	#63b598	 	 
+29	Layer1	0	-206.544558093586	-14.0811247015201	0.5	#63b598	 	 
+30	Layer1	0	129.915956114889	-33.7472492824427	0.5	#63b598	 	 
+31	Layer1	0	-353.995934254831	55.4819157731293	0.5	#63b598	 	 
+32	Layer1	0	-351.446105518715	143.272550349209	1.16666666666667	#63b598	 	 
+33	Layer1	0	300.494120645829	240.815641422306	0.5	#63b598	 	 
+34	Layer1	0	421.085816859887	79.736891601417	0.5	#63b598	 	 
+35	Layer1	0	198.894572080162	-218.47759778666	0.5	#63b598	 	 
+36	Layer1	0	419.115231401356	-186.628293025628	0.5	#63b598	 	 
+37	Layer1	0	-404.242836255627	-116.733138030863	0.5	#63b598	 	 
+38	Layer1	0	-169.611499695777	-276.320911465504	0.5	#63b598	 	 
+39	Layer1	0	-191.923420356446	-89.6810498483435	0.5	#63b598	 	 
+40	Layer1	0	383.874259447594	-416.4	0.5	#63b598	 	 
+41	Layer1	0	-353.288589107185	-174.312693837813	0.5	#63b598	 	 
+42	Layer1	0	-357.404467856019	260.845717665662	0.5	#63b598	 	 
+43	Layer1	0	-495.714285714286	128.519378927633	0.5	#63b598	 	 
+44	Layer1	0	419.830318513274	144.947736190515	0.5	#63b598	 	 
+45	Layer1	0	-449.6836482039	210.216919153633	0.5	#63b598	 	 
+46	Layer1	0	495.714285714286	-329.354695019619	0.5	#63b598	 	 
+47	Layer1	0	-305.645072581866	-376.710173577022	0.5	#63b598	 	 
+48	Layer1	0	-416.969399747699	-310.722395216098	0.5	#63b598	 	 
+49	Layer1	0	260.741542604991	-124.266809233952	0.5	#63b598	 	 
+50	Layer1	0	-122.331225010061	-132.658073037214	0.5	#63b598	 	 
+2	Layer2	0	-55.3728877676794	-54.8128560864891	1.07142857142857	#ce7d78	 	 
+1	Layer2	0	15.2301485484022	-150.567382227738	2.5	#ce7d78	 	 
+3	Layer2	0	-43.7489206353208	49.9362243760867	0.928571428571429	#ce7d78	 	 
+4	Layer2	0	-179.217915660206	-72.8541773654696	1.07142857142857	#ce7d78	 	 
+5	Layer2	0	1.78394734046651	146.068308368255	1.64285714285714	#ce7d78	 	 
+6	Layer2	0	-36.3784992372453	-245.994605486691	0.928571428571429	#ce7d78	 	 
+7	Layer2	0	-111.055145887603	-327.422657383036	1.07142857142857	#ce7d78	 	 
+8	Layer2	0	124.645310164285	182.558038238782	1.35714285714286	#ce7d78	 	 
+9	Layer2	0	-19.0940972355623	-116.241273408473	0.5	#ce7d78	 	 
+10	Layer2	0	234.763438039925	221.636271829811	0.642857142857143	#ce7d78	 	 
+11	Layer2	0	-15.5447109581738	248.493690147146	0.928571428571429	#ce7d78	 	 
+12	Layer2	0	-3.69435458210813	-198.002835698219	0.5	#ce7d78	 	 
+13	Layer2	0	-122.741854389329	-411.142685973383	0.5	#ce7d78	 	 
+14	Layer2	0	147.897224761277	-164.397673000819	0.928571428571429	#ce7d78	 	 
+15	Layer2	0	126.25405514896	266.273615186933	0.5	#ce7d78	 	 
+16	Layer2	0	-102.832909624616	317.411971278558	0.785714285714286	#ce7d78	 	 
+17	Layer2	0	186.381602704466	-229.329249815046	0.5	#ce7d78	 	 
+18	Layer2	0	-124.368232036687	401.681801071899	0.5	#ce7d78	 	 
+19	Layer2	0	208.795115628517	142.155015492542	0.5	#ce7d78	 	 
+20	Layer2	0	-199.31718266914	363.638462358568	0.5	#ce7d78	 	 
+21	Layer2	0	-306.080064303358	-94.5908880527679	0.785714285714286	#ce7d78	 	 
+22	Layer2	0	219.257547740666	-114.571758438693	0.5	#ce7d78	 	 
+23	Layer2	0	170.067885614017	262.37485133392	0.5	#ce7d78	 	 
+24	Layer2	0	67.3502685630176	147.423625636266	0.5	#ce7d78	 	 
+25	Layer2	0	227.284833892949	170.629785756798	0.5	#ce7d78	 	 
+26	Layer2	0	64.6882369108397	117.173639079363	0.5	#ce7d78	 	 
+27	Layer2	0	46.4875367851031	-194.369755886792	0.5	#ce7d78	 	 
+28	Layer2	0	-59.3893952582048	-196.342510534501	0.642857142857143	#ce7d78	 	 
+29	Layer2	0	257.88067172938	-191.847682774756	1.21428571428571	#ce7d78	 	 
+30	Layer2	0	188.889545120308	220.609243609144	0.5	#ce7d78	 	 
+31	Layer2	0	-49.7359480418513	-144.254185433731	0.5	#ce7d78	 	 
+32	Layer2	0	332.989925836509	-260.041081770909	0.642857142857143	#ce7d78	 	 
+33	Layer2	0	342.744402257328	-204.856749548138	0.5	#ce7d78	 	 
+34	Layer2	0	-15.1014608991305	327.586555639627	0.642857142857143	#ce7d78	 	 
+35	Layer2	0	-6.49289196269638	416.4	0.5	#ce7d78	 	 
+36	Layer2	0	-181.381328376753	-385.207091782423	0.5	#ce7d78	 	 
+37	Layer2	0	-255.422911351718	-28.571122327789	0.5	#ce7d78	 	 
+38	Layer2	0	-101.859911846271	184.783263126631	0.785714285714286	#ce7d78	 	 
+39	Layer2	0	-82.159886075355	-170.342014519625	0.642857142857143	#ce7d78	 	 
+40	Layer2	0	53.2509189125478	317.055949078747	0.642857142857143	#ce7d78	 	 
+41	Layer2	0	-218.097234936619	-346.751388157231	0.5	#ce7d78	 	 
+42	Layer2	0	34.9084608595468	187.732619449358	0.5	#ce7d78	 	 
+43	Layer2	0	70.4056912009714	-92.2347251127061	0.5	#ce7d78	 	 
+44	Layer2	0	-245.991882050481	-131.082247010427	0.5	#ce7d78	 	 
+45	Layer2	0	-257.48579475185	-73.1724756710992	0.5	#ce7d78	 	 
+46	Layer2	0	-397.912508031981	-137.36643588132	0.642857142857143	#ce7d78	 	 
+47	Layer2	0	-48.05316545107	198.84979153805	0.642857142857143	#ce7d78	 	 
+48	Layer2	0	-166.095049228333	73.2874283524517	0.928571428571429	#ce7d78	 	 
+49	Layer2	0	-241.786392486286	130.003934610417	0.5	#ce7d78	 	 
+50	Layer2	0	9.17023047104556	-322.211970303501	0.5	#ce7d78	 	 
+51	Layer2	0	-110.936477474752	-40.991506869841	0.5	#ce7d78	 	 
+52	Layer2	0	-209.02446695829	217.175869182963	0.5	#ce7d78	 	 
+53	Layer2	0	-97.3912048530299	63.4242650450457	0.5	#ce7d78	 	 
+54	Layer2	0	63.4687964959783	-231.314675635626	0.785714285714286	#ce7d78	 	 
+55	Layer2	0	-49.138801762918	150.811337671628	0.5	#ce7d78	 	 
+56	Layer2	0	127.144409219592	-305.596426839522	0.642857142857143	#ce7d78	 	 
+57	Layer2	0	33.9163721693404	-99.7965935397397	0.5	#ce7d78	 	 
+58	Layer2	0	-177.427004135964	252.753952993619	0.5	#ce7d78	 	 
+59	Layer2	0	352.986195595482	-161.629236230347	0.5	#ce7d78	 	 
+60	Layer2	0	-126.574798524756	267.144496142839	0.5	#ce7d78	 	 
+61	Layer2	0	82.5786041732026	-171.425945764089	0.5	#ce7d78	 	 
+62	Layer2	0	-61.38726647537	-416.4	0.5	#ce7d78	 	 
+63	Layer2	0	100.123104083537	-107.766281143456	0.5	#ce7d78	 	 
+64	Layer2	0	-51.569895565878	-311.072613537314	0.5	#ce7d78	 	 
+65	Layer2	0	-272.180638370177	65.3105224271599	0.5	#ce7d78	 	 
+66	Layer2	0	-276.808998582793	103.5548918754	0.5	#ce7d78	 	 
+67	Layer2	0	67.9702737428064	-312.750067550862	0.5	#ce7d78	 	 
+68	Layer2	0	106.161853755047	395.866755409436	0.5	#ce7d78	 	 
+69	Layer2	0	415.300158867983	-306.502054377875	0.642857142857143	#ce7d78	 	 
+70	Layer2	0	317.59989331105	269.591444920595	0.5	#ce7d78	 	 
+71	Layer2	0	-399.564545433198	-58.6085853333781	0.5	#ce7d78	 	 
+72	Layer2	0	337.534983916413	-126.612970369584	0.5	#ce7d78	 	 
+73	Layer2	0	149.24304754422	-394.885707208515	0.5	#ce7d78	 	 
+74	Layer2	0	85.4269844010357	-135.965132119659	0.5	#ce7d78	 	 
+75	Layer2	0	495.714285714286	-344.154390604537	0.5	#ce7d78	 	 
+76	Layer2	0	-495.714285714286	-149.464188384451	0.5	#ce7d78	 	 
+77	Layer2	0	277.389012257932	-282.1373859469	0.5	#ce7d78	 	 
+78	Layer2	0	-147.547521957296	-253.523825268903	0.5	#ce7d78	 	 
+79	Layer2	0	-9.70400941722539	-19.2286385935482	0.5	#ce7d78	 	 
+80	Layer2	0	-176.570084508169	-220.153153038926	0.5	#ce7d78	 	 
+2	Layer3	0	-139.247106745159	13.2130899585309	0.55473331471656	#ea9e70	 	 
+1	Layer3	0	-50.6791817985778	40.9084957367342	1.93367774364703	#ea9e70	 	 
+3	Layer3	0	13.191357340336	-33.3228941091783	2.5	#ea9e70	 	 
+4	Layer3	0	-103.253633957272	114.51333939535	1.88620497067858	#ea9e70	 	 
+5	Layer3	0	-165.752614844674	90.9849106681488	0.5	#ea9e70	 	 
+6	Layer3	0	-54.9352440381343	-68.3842844817235	0.660848924881318	#ea9e70	 	 
+7	Layer3	0	121.388312696966	2.16826612071344	1.2774364702597	#ea9e70	 	 
+8	Layer3	0	-170.041794886414	181.180007591081	1.63487852555152	#ea9e70	 	 
+9	Layer3	0	-240.507410030241	-18.4998612714026	0.5	#ea9e70	 	 
+10	Layer3	0	-200.507557254515	261.914780558964	1.42711533091315	#ea9e70	 	 
+11	Layer3	0	39.5293316042325	-118.05549084146	1.54328399888299	#ea9e70	 	 
+12	Layer3	0	-19.3305087766261	77.7163261605747	0.5	#ea9e70	 	 
+13	Layer3	0	-5.52247219223221	-64.4312600005604	0.55473331471656	#ea9e70	 	 
+14	Layer3	0	-99.3914405187964	33.8916811696058	0.5	#ea9e70	 	 
+15	Layer3	0	-279.401401912472	238.900255232409	0.5	#ea9e70	 	 
+16	Layer3	0	-203.549841171925	78.1343417951112	0.55473331471656	#ea9e70	 	 
+17	Layer3	0	100.523448607155	-183.426821532607	0.715582239597878	#ea9e70	 	 
+18	Layer3	0	224.721298775527	42.1041192192571	1.01605696732756	#ea9e70	 	 
+19	Layer3	0	-228.36636108469	179.296497229818	0.5	#ea9e70	 	 
+20	Layer3	0	-312.436587719982	285.264769528147	0.819463836917062	#ea9e70	 	 
+21	Layer3	0	-19.3326212476563	-202.598656150715	0.967467187936331	#ea9e70	 	 
+22	Layer3	0	-144.805479658767	347.476652810098	0.715582239597878	#ea9e70	 	 
+23	Layer3	0	-382.194169190814	317.37766960052	0.5	#ea9e70	 	 
+24	Layer3	0	160.174185350865	41.663197517948	0.5	#ea9e70	 	 
+25	Layer3	0	69.0392083370729	-8.62525964950584	0.608908126221726	#ea9e70	 	 
+26	Layer3	0	59.3684379227074	-154.237592830039	0.5	#ea9e70	 	 
+27	Layer3	0	-66.9911479642452	-52.5840379602217	0.715582239597878	#ea9e70	 	 
+28	Layer3	0	-146.578428220856	-50.6346347573121	0.5	#ea9e70	 	 
+29	Layer3	0	-352.896601678592	347.038323194005	0.5	#ea9e70	 	 
+30	Layer3	0	197.065326200654	-41.5436745275754	0.55473331471656	#ea9e70	 	 
+31	Layer3	0	-164.353847816445	-78.4551134526391	0.5	#ea9e70	 	 
+32	Layer3	0	326.909044991893	32.8092404779481	0.715023736386484	#ea9e70	 	 
+33	Layer3	0	11.9142162041099	-281.400165640445	0.661965931304105	#ea9e70	 	 
+34	Layer3	0	123.670583930443	-121.016227908773	0.55473331471656	#ea9e70	 	 
+35	Layer3	0	34.2554007139631	4.01245032480296	0.5	#ea9e70	 	 
+36	Layer3	0	384.929533429305	92.5207617625528	0.5	#ea9e70	 	 
+37	Layer3	0	412.6841593058	36.7863607657638	0.55473331471656	#ea9e70	 	 
+38	Layer3	0	-221.533829641609	320.669641296391	0.5	#ea9e70	 	 
+39	Layer3	0	-301.824165845197	49.7659008512393	0.5	#ea9e70	 	 
+40	Layer3	0	-100.629602395886	-256.674352835254	0.608908126221726	#ea9e70	 	 
+41	Layer3	0	-22.531677928672	175.3638092743	0.55473331471656	#ea9e70	 	 
+42	Layer3	0	88.6529863754772	-253.958737766937	0.5	#ea9e70	 	 
+43	Layer3	0	105.935087723396	62.1868036597079	0.5	#ea9e70	 	 
+44	Layer3	0	-152.572188283727	296.352462168985	0.5	#ea9e70	 	 
+45	Layer3	0	220.819232893022	-152.693305384082	0.5	#ea9e70	 	 
+46	Layer3	0	-167.103997212563	-120.502539351474	0.608908126221726	#ea9e70	 	 
+47	Layer3	0	-98.8577737925497	227.530035133704	0.5	#ea9e70	 	 
+48	Layer3	0	-182.164174570891	-292.648222797972	0.5	#ea9e70	 	 
+49	Layer3	0	270.35574659396	113.215130537463	0.55473331471656	#ea9e70	 	 
+50	Layer3	0	-246.505727069072	297.404823828572	0.5	#ea9e70	 	 
+51	Layer3	0	-240.255344134581	154.404510213824	0.5	#ea9e70	 	 
+52	Layer3	0	-408.902240716182	251.752137351203	0.55473331471656	#ea9e70	 	 
+53	Layer3	0	-70.4156629995567	-123.250461807188	0.5	#ea9e70	 	 
+54	Layer3	0	-133.782450612483	216.376896273146	0.5	#ea9e70	 	 
+55	Layer3	0	-390.053429552259	278.072671364324	0.5	#ea9e70	 	 
+56	Layer3	0	-231.66923665955	-179.688432116888	0.5	#ea9e70	 	 
+57	Layer3	0	-128.752213269762	-325.299690892356	0.5	#ea9e70	 	 
+58	Layer3	0	-260.326788269331	262.312471301619	0.5	#ea9e70	 	 
+59	Layer3	0	9.02955363125812	88.1557999747868	0.5	#ea9e70	 	 
+60	Layer3	0	-92.4440022977221	-225.849003562484	0.5	#ea9e70	 	 
+61	Layer3	0	233.058705787927	114.503896216719	0.5	#ea9e70	 	 
+62	Layer3	0	-132.804665914474	-101.607663103803	0.5	#ea9e70	 	 
+63	Layer3	0	148.395624155771	-42.9620085037492	0.5	#ea9e70	 	 
+64	Layer3	0	-29.3104583373436	-256.606328321127	0.5	#ea9e70	 	 
+65	Layer3	0	51.8357119028176	-348.4408217217	0.55473331471656	#ea9e70	 	 
+66	Layer3	0	-275.736305080071	147.527123543545	0.55473331471656	#ea9e70	 	 
+67	Layer3	0	111.419496581573	-142.432238766776	0.55473331471656	#ea9e70	 	 
+68	Layer3	0	-495.714285714286	269.706308570402	0.5	#ea9e70	 	 
+69	Layer3	0	284.36518853746	-74.4324767264559	0.5	#ea9e70	 	 
+70	Layer3	0	54.3770899663192	-45.5827460950486	0.5	#ea9e70	 	 
+71	Layer3	0	-143.614147310359	416.4	0.5	#ea9e70	 	 
+72	Layer3	0	42.936903127911	234.52616683624	0.5	#ea9e70	 	 
+73	Layer3	0	395.727873183175	-19.0445598065759	0.5	#ea9e70	 	 
+74	Layer3	0	-148.91698074056	116.020021846252	0.5	#ea9e70	 	 
+75	Layer3	0	-369.630184446268	126.590474472074	0.5	#ea9e70	 	 
+76	Layer3	0	-107.412895715828	-126.888313332805	0.5	#ea9e70	 	 
+77	Layer3	0	-184.999217212508	316.147362187992	0.5	#ea9e70	 	 
+78	Layer3	0	170.38962104657	-230.590201745706	0.5	#ea9e70	 	 
+79	Layer3	0	20.3336542659233	-163.106481674596	0.5	#ea9e70	 	 
+80	Layer3	0	-45.6802968317507	152.581769924533	0.5	#ea9e70	 	 
+81	Layer3	0	-193.771151349373	411.479704609657	0.5	#ea9e70	 	 
+82	Layer3	0	289.113176938727	0.00603460702376424	0.5	#ea9e70	 	 
+83	Layer3	0	495.714285714286	44.5696449818165	0.5	#ea9e70	 	 
+84	Layer3	0	141.593338188601	68.8209143598	0.5	#ea9e70	 	 
+85	Layer3	0	-76.5345008585779	153.940154407137	0.5	#ea9e70	 	 
+86	Layer3	0	-263.494610822934	-139.15749372721	0.5	#ea9e70	 	 
+87	Layer3	0	180.579539556852	-6.58750081966235	0.5	#ea9e70	 	 
+88	Layer3	0	280.779120356735	70.2206031515547	0.5	#ea9e70	 	 
+89	Layer3	0	-12.7415079517358	-148.807169365067	0.5	#ea9e70	 	 
+90	Layer3	0	-33.8324637601328	-345.922800784572	0.5	#ea9e70	 	 
+91	Layer3	0	-122.031625192837	301.405486291363	0.5	#ea9e70	 	 
+92	Layer3	0	133.610581520467	-248.934597592877	0.5	#ea9e70	 	 
+93	Layer3	0	194.433921144486	-204.756980460203	0.5	#ea9e70	 	 
+94	Layer3	0	63.9246515346737	-416.4	0.5	#ea9e70	 	 
+95	Layer3	0	-1.64458381843184	-4.8147513790766	0.5	#ea9e70	 	 
+96	Layer3	0	-96.0877767471812	406.290626786366	0.5	#ea9e70	 	 
+97	Layer3	0	205.477381352135	-179.310085452746	0.5	#ea9e70	 	 
+98	Layer3	0	-316.74945073303	365.410918029719	0.5	#ea9e70	 	 
+99	Layer3	0	-62.4232225305481	385.16274662371	0.5	#ea9e70	 	 
+100	Layer3	0	330.095676863506	168.507107102442	0.5	#ea9e70	 	 
+1	Layer4	0	280.948973818745	336.10052625075	1.90181268882175	#a48a9e	 	 
+2	Layer4	0	149.907300288634	388.875931179518	1.90181268882175	#a48a9e	 	 
+3	Layer4	0	66.4629136403952	183.197075375904	0.5	#a48a9e	 	 
+4	Layer4	0	-23.4355736985897	416.4	1.90181268882175	#a48a9e	 	 
+5	Layer4	0	-112.021553716398	206.301153468492	1.10422960725076	#a48a9e	 	 
+6	Layer4	0	-211.432347271211	374.76196265903	2.16767371601209	#a48a9e	 	 
+7	Layer4	0	-351.328611413032	305.05767416209	2.16767371601209	#a48a9e	 	 
+8	Layer4	0	-291.39316901495	147.742648829065	2.16767371601209	#a48a9e	 	 
+9	Layer4	0	-434.544713954173	128.242692602301	2.16767371601209	#a48a9e	 	 
+10	Layer4	0	-495.714285714286	-20.6799986355562	2.16767371601209	#a48a9e	 	 
+11	Layer4	0	-377.112950843119	-73.7180471347488	2.16767371601209	#a48a9e	 	 
+12	Layer4	0	-409.686184546663	-211.725328511203	2.16767371601209	#a48a9e	 	 
+13	Layer4	0	-187.942621581579	-165.761340281888	1.58761329305136	#a48a9e	 	 
+14	Layer4	0	-254.304126699379	-343.382851956553	2.16767371601209	#a48a9e	 	 
+15	Layer4	0	-120.304654489851	-416.4	2.43353474320242	#a48a9e	 	 
+16	Layer4	0	-39.6234799960647	-279.257628396007	1.37009063444109	#a48a9e	 	 
+17	Layer4	0	47.2111328628067	-162.661654484823	0.71752265861027	#a48a9e	 	 
+18	Layer4	0	178.517791162169	-384.271582323265	1.90181268882175	#a48a9e	 	 
+19	Layer4	0	291.34504454756	-314.781991016614	1.63595166163142	#a48a9e	 	 
+20	Layer4	0	231.76507303494	-174.719655402533	1.37009063444109	#a48a9e	 	 
+21	Layer4	0	495.714285714286	-133.640145905819	2.5	#a48a9e	 	 
+22	Layer4	0	363.84084842055	-27.0005580686564	1.90181268882175	#a48a9e	 	 
+23	Layer4	0	485.035403945861	62.3690938045929	2.16767371601209	#a48a9e	 	 
+24	Layer4	0	305.772990195616	131.297996590453	1.90181268882175	#a48a9e	 	 
+25	Layer4	0	433.381289361279	257.64625745347	2.5	#a48a9e	 	 
+EDGES	 	 	 	 	 	 	 	 
+2_Layer1---1_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---2_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+4_Layer1---2_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+5_Layer1---4_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---2_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+7_Layer1---3_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+8_Layer1---3_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+9_Layer1---6_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+10_Layer1---4_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+11_Layer1---2_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+12_Layer1---8_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer1---6_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer1---10_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer1---6_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+16_Layer1---3_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer1---5_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer1---12_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+19_Layer1---6_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+20_Layer1---3_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+21_Layer1---19_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+22_Layer1---4_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+23_Layer1---13_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+24_Layer1---9_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+25_Layer1---6_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+26_Layer1---6_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+27_Layer1---7_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+28_Layer1---9_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+29_Layer1---6_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+30_Layer1---2_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+31_Layer1---9_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+32_Layer1---9_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+33_Layer1---7_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+34_Layer1---7_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+35_Layer1---4_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+36_Layer1---10_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+37_Layer1---19_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+38_Layer1---13_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+39_Layer1---6_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+40_Layer1---14_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+41_Layer1---19_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+42_Layer1---32_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+43_Layer1---32_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+44_Layer1---7_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+45_Layer1---32_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+46_Layer1---14_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+47_Layer1---23_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+48_Layer1---23_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+49_Layer1---4_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+50_Layer1---6_Layer1	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer2---2_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+4_Layer2---2_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+5_Layer2---3_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+7_Layer2---6_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+8_Layer2---5_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+9_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+10_Layer2---8_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+11_Layer2---5_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+12_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer2---7_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer2---8_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+16_Layer2---11_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer2---14_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer2---16_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+19_Layer2---8_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+20_Layer2---16_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+21_Layer2---4_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+22_Layer2---14_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+23_Layer2---8_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+24_Layer2---5_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+25_Layer2---8_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+26_Layer2---5_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+27_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+28_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+29_Layer2---14_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+30_Layer2---8_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+31_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+32_Layer2---29_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+33_Layer2---29_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+34_Layer2---11_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+35_Layer2---34_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+36_Layer2---7_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+37_Layer2---4_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+38_Layer2---5_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+39_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+40_Layer2---11_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+41_Layer2---7_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+42_Layer2---5_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+43_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+44_Layer2---4_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+45_Layer2---4_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+46_Layer2---21_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+47_Layer2---5_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+48_Layer2---3_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+49_Layer2---48_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+50_Layer2---6_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+51_Layer2---2_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+52_Layer2---38_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+53_Layer2---3_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+54_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+55_Layer2---5_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+56_Layer2---54_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+57_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+58_Layer2---38_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+59_Layer2---29_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+60_Layer2---47_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+61_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+62_Layer2---7_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+63_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+64_Layer2---6_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+65_Layer2---48_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+66_Layer2---48_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+67_Layer2---54_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+68_Layer2---40_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+69_Layer2---32_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+70_Layer2---10_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+71_Layer2---21_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+72_Layer2---29_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+73_Layer2---56_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+74_Layer2---1_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+75_Layer2---69_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+76_Layer2---46_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+77_Layer2---29_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+78_Layer2---28_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+79_Layer2---2_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+80_Layer2---39_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer3---1_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer3---1_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+4_Layer3---1_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+5_Layer3---4_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer3---3_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+7_Layer3---3_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+8_Layer3---4_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+9_Layer3---2_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+10_Layer3---8_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+11_Layer3---3_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+12_Layer3---1_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer3---3_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer3---1_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer3---10_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+16_Layer3---4_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer3---11_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer3---7_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+19_Layer3---8_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+20_Layer3---10_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+21_Layer3---11_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+22_Layer3---10_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+23_Layer3---20_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+24_Layer3---7_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+25_Layer3---3_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+26_Layer3---11_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+27_Layer3---3_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+28_Layer3---27_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+29_Layer3---20_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+30_Layer3---7_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+31_Layer3---27_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+32_Layer3---18_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+33_Layer3---21_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+34_Layer3---11_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+35_Layer3---3_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+36_Layer3---32_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+37_Layer3---32_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+38_Layer3---10_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+39_Layer3---16_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+40_Layer3---21_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+41_Layer3---4_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+42_Layer3---17_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+43_Layer3---25_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+44_Layer3---10_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+45_Layer3---34_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+46_Layer3---6_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+47_Layer3---8_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+48_Layer3---40_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+49_Layer3---18_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+50_Layer3---10_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+51_Layer3---8_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+52_Layer3---20_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+53_Layer3---13_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+54_Layer3---8_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+55_Layer3---20_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+56_Layer3---46_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+57_Layer3---40_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+58_Layer3---10_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+59_Layer3---1_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+60_Layer3---21_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+61_Layer3---18_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+62_Layer3---27_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+63_Layer3---25_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+64_Layer3---21_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+65_Layer3---33_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+66_Layer3---8_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+67_Layer3---11_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+68_Layer3---52_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+69_Layer3---30_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+70_Layer3---3_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+71_Layer3---22_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+72_Layer3---41_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+73_Layer3---32_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+74_Layer3---4_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+75_Layer3---66_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+76_Layer3---27_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+77_Layer3---10_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+78_Layer3---17_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+79_Layer3---11_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+80_Layer3---4_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+81_Layer3---22_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+82_Layer3---18_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+83_Layer3---37_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+84_Layer3---7_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+85_Layer3---4_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+86_Layer3---46_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+87_Layer3---7_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+88_Layer3---18_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+89_Layer3---11_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+90_Layer3---33_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+91_Layer3---10_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+92_Layer3---17_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+93_Layer3---17_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+94_Layer3---65_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+95_Layer3---3_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+96_Layer3---22_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+97_Layer3---67_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+98_Layer3---20_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+99_Layer3---22_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+100_Layer3---49_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+1_Layer4---2_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer4---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer4---4_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+4_Layer4---5_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+5_Layer4---6_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer4---7_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+7_Layer4---8_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+8_Layer4---9_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+9_Layer4---10_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+10_Layer4---11_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+11_Layer4---12_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+12_Layer4---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer4---14_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer4---15_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer4---16_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+16_Layer4---17_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer4---18_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer4---19_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+19_Layer4---20_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+20_Layer4---21_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+21_Layer4---22_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+22_Layer4---23_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+23_Layer4---24_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+24_Layer4---25_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+1_Layer4---25_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+1_Layer4---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+1_Layer4---24_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+1_Layer4---4_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+1_Layer4---23_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+1_Layer4---5_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+1_Layer4---22_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+1_Layer4---6_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+1_Layer4---21_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer4---25_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer4---4_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer4---24_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer4---5_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer4---23_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer4---6_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer4---22_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+2_Layer4---7_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer4---5_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer4---25_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer4---6_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer4---24_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer4---7_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer4---23_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer4---8_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+4_Layer4---6_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+4_Layer4---7_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+4_Layer4---25_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+4_Layer4---8_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+4_Layer4---24_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+4_Layer4---9_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+5_Layer4---7_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+5_Layer4---8_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+5_Layer4---9_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+5_Layer4---17_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+5_Layer4---10_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer4---8_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer4---9_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer4---10_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer4---11_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+7_Layer4---9_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+7_Layer4---10_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+7_Layer4---11_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+7_Layer4---12_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+8_Layer4---10_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+8_Layer4---11_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+8_Layer4---12_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+8_Layer4---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+9_Layer4---11_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+9_Layer4---12_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+9_Layer4---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+9_Layer4---14_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+10_Layer4---12_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+10_Layer4---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+10_Layer4---14_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+10_Layer4---15_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+11_Layer4---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+11_Layer4---14_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+11_Layer4---15_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+11_Layer4---16_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+12_Layer4---14_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+12_Layer4---15_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+12_Layer4---16_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+12_Layer4---17_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer4---15_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer4---16_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer4---17_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer4---18_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer4---16_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer4---17_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer4---18_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer4---19_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer4---17_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer4---18_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer4---19_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer4---20_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+16_Layer4---18_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+16_Layer4---19_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+16_Layer4---20_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer4---16_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer4---19_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer4---20_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer4---21_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer4---22_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer4---20_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer4---21_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer4---22_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer4---23_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+19_Layer4---21_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+19_Layer4---22_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+19_Layer4---23_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+19_Layer4---24_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+20_Layer4---22_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer4---20_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+20_Layer4---24_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+20_Layer4---25_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+21_Layer4---23_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+21_Layer4---24_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+21_Layer4---25_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+22_Layer4---24_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+22_Layer4---25_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+23_Layer4---25_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---51_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---52_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---53_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---54_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---55_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---56_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---57_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---58_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---59_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---60_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---61_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---62_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---63_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---64_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---65_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---66_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---67_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---68_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---69_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---70_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---71_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---72_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+6_Layer1---73_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---57_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---58_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---59_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---60_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---61_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---62_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---63_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---64_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---65_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---66_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---67_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---68_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---69_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---70_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---71_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---72_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---73_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---74_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---75_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---76_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---77_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---78_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---79_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---80_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---81_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+3_Layer1---82_Layer3	0.3	#CFCFCF	 	 	 	 	 	 
+47_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+48_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+49_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+50_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+51_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+52_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+53_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+54_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+55_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+56_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+57_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+58_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+59_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+60_Layer2---13_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+8_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+9_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+10_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+11_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+12_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+16_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer3---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer1---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer1---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer1---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+16_Layer1---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer1---3_Layer4	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer3---3_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+13_Layer3---3_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+14_Layer3---3_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+15_Layer3---3_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+16_Layer3---3_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+17_Layer3---3_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+18_Layer3---3_Layer2	0.3	#CFCFCF	 	 	 	 	 	 
+END	 	 	 	 	 	 	 	 
