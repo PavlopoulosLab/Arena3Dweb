@@ -43,7 +43,9 @@ var animationRunning = false, //flag to ensure animation function only executes 
     floorDefaultColor = "#777777",
     floorCurrentColor = floorDefaultColor,
     selectedDefaultColor = "#A3FF00",
-    edgeDefaultColor = "#CFCFCF";
+    edgeDefaultColor = "#CFCFCF",
+    draw_inter_edges_flag = true,
+    dragging = false;
     
 //Variables that are being refreshed on new network upload/import (nodes, edges, coords)
 var nodes = [], //canvas objects
@@ -502,35 +504,48 @@ function drawEdges() {
   return true;
 }
 
-function drawLayerEdges() { //runs constantly on animate
-  let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1;
-  var c = document.getElementById("checkboxdiv").children;
-  for (let i = 0; i < layer_edges_pairs.length; i++){
-    scene.remove(layerEdges[i]);
-    color= edgeDefaultColor;
-    let points = [];
-    let edge_split = edge_pairs[layer_edges_pairs[i]].split("---");
-    var node_layer1 = layer_groups[node_groups[edge_split[0]]];
-    var node_layer2 = layer_groups[node_groups[edge_split[1]]];
-    if (!c[node_layer1*7+2].checked && !c[node_layer2*7+2].checked){
-      index1 = node_whole_names.indexOf(edge_split[0]);
-      index2 = node_whole_names.indexOf(edge_split[1]);
-      points.push( nodes[index1].getWorldPosition(new THREE.Vector3()), nodes[index2].getWorldPosition(new THREE.Vector3()) );
-  		let geometry = new THREE.BufferGeometry().setFromPoints( points );
-  		let material = "";
-  		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag) color = selectedDefaultColor;
-  		else if (edge_attributes !== "" && edgeAttributesPriority){
-  		  pos = edges.indexOf(layer_edges_pairs[i]);
-  		  pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[pos]);
-  		  pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[pos]);
-  		  if ( pos1 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos1] !== "" && edge_attributes.Color[pos1] != " ") color = edge_attributes.Color[pos1];
-  		  else if ( pos2 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos2] !== "" && edge_attributes.Color[pos2] != " ") color = edge_attributes.Color[pos2];
-  		}
-  		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edge_values[layer_edges_pairs[i]] } );
-  		else material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: interLayerEdgeOpacity } );
-  		let line = new THREE.Line( geometry, material );
-  		scene.add(line);
-      layerEdges[i] = line;
+function drawLayerEdges(flag) { //runs constantly on animate
+  let i;
+  if (!flag && dragging){
+    for (let i = 0; i < layer_edges_pairs.length; i++){
+      scene.remove(layerEdges[i]);
+    }
+  }
+  else if (!flag && !(edgeWidthByWeight && interLayerEdgeOpacity > 0)){ //this optimizes execution for many connections by making them disappear
+    for (let i = 0; i < layer_edges_pairs.length; i++){
+      scene.remove(layerEdges[i]);
+    }
+    draw_inter_edges_flag = false;
+  } else {
+    let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1;
+    var c = document.getElementById("checkboxdiv").children;
+    for (i = 0; i < layer_edges_pairs.length; i++){
+      scene.remove(layerEdges[i]);
+      color= edgeDefaultColor;
+      let points = [];
+      let edge_split = edge_pairs[layer_edges_pairs[i]].split("---");
+      var node_layer1 = layer_groups[node_groups[edge_split[0]]];
+      var node_layer2 = layer_groups[node_groups[edge_split[1]]];
+      if (!c[node_layer1*7+2].checked && !c[node_layer2*7+2].checked){
+        index1 = node_whole_names.indexOf(edge_split[0]);
+        index2 = node_whole_names.indexOf(edge_split[1]);
+        points.push( nodes[index1].getWorldPosition(new THREE.Vector3()), nodes[index2].getWorldPosition(new THREE.Vector3()) );
+    		let geometry = new THREE.BufferGeometry().setFromPoints( points );
+    		let material = "";
+    		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag) color = selectedDefaultColor;
+    		else if (edge_attributes !== "" && edgeAttributesPriority){
+    		  pos = edges.indexOf(layer_edges_pairs[i]);
+    		  pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[pos]);
+    		  pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[pos]);
+    		  if ( pos1 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos1] !== "" && edge_attributes.Color[pos1] != " ") color = edge_attributes.Color[pos1];
+    		  else if ( pos2 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos2] !== "" && edge_attributes.Color[pos2] != " ") color = edge_attributes.Color[pos2];
+    		}
+    		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edge_values[layer_edges_pairs[i]] } );
+    		else material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: interLayerEdgeOpacity } );
+    		let line = new THREE.Line( geometry, material );
+    		scene.add(line);
+        layerEdges[i] = line;
+      }
     }
   }
   return true;
@@ -673,7 +688,15 @@ function animate() {
   renderNodeLabels();
   if (layerLabelSwitch) redrawLayerLabels();
   else if (selectedLayerLabelSwitch && selected_layers !== []) redrawSelectedLayerLabels();
-  drawLayerEdges();
+  // draw inter-layer edges only when necessary for performance improvement
+  if (dragging){
+    drawLayerEdges(false);
+  } 
+  else if (edgeWidthByWeight || interLayerEdgeOpacity > 0){
+    drawLayerEdges(true);
+    draw_inter_edges_flag = true;
+  }
+  else if (draw_inter_edges_flag) drawLayerEdges(false);
 	renderer.render( scene, camera );
 	return true;
 }
@@ -877,9 +900,11 @@ function clickDrag(event){
     var x = event.screenX,
         y = event.screenY;
     if (leftClickPressed){
+      dragging = true;
       if (event.shiftKey) lassoSelectNodes(event.layerX - xBoundMax, yBoundMax - event.layerY);
       if (!event.shiftKey && !event.ctrlKey) sceneDragPan(x, y);
     } else if (middleClickPressed){
+      dragging = true;
       event.preventDefault();
       sceneOrbit(x, y);
     } else checkHoverOverNode(event, x, y);
@@ -890,7 +915,8 @@ function clickDrag(event){
 }
 
 function clickUp(event){
-  if (scene_pan != "") {;
+  if (scene_pan != "") {
+    dragging = false;
     if (event.button == 0){
       leftClickPressed = false;
       if (optionsList != ""){
@@ -1197,6 +1223,7 @@ function selectSearchedNodes(event){
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  
   var canvas_div = document.getElementById("3d-graph");
   canvas_div.style.position='fixed'; //to scroll down togetehr with the page
   canvas_div.appendChild( renderer.domElement ); //create canvas element once
@@ -1256,6 +1283,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var searchBar = document.getElementById("searchBar");
   searchBar.onkeypress = selectSearchedNodes;
   
+  document.getElementById("homeDiv").innerHTML='<object type="text/html" data="home.html" id="homeObject" ></object>';
   document.getElementById("helpDiv").innerHTML='<object type="text/html" data="help.html" id="helpObject" ></object>';
   
 }, false);

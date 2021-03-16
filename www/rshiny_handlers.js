@@ -362,7 +362,7 @@ function uploadNetwork(message){
   updateLayerNamesRShiny(); //correct order of layer names to avoid bugs with positions
   updateNodeNamesRShiny(); //for Local Layout algorithms
   updateSelectedNodesRShiny();
-  edge_values = mapper(edge_values, 0.1, 1) //min and max opacities
+  //edge_values = mapper(edge_values, 0.1, 1) //min and max opacities //this is done in R now
   if (edge_values.length > max_allowed_edges) alert("Network must contain no more than ".concat(max_allowed_edges).concat(" edges.")); //edge limit
   else {
     attachLayerCheckboxes();

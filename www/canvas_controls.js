@@ -1,6 +1,7 @@
 //drawing and implementation of button controls for node and layer translations and rotations
 
 function mouseUpClear(){
+  dragging = false;
   clearInterval(timeoutF);
   return false;
 }
@@ -19,6 +20,7 @@ function sliderSceneRotate(){
 }
 
 function rotateSceneXMinus(){
+  dragging = true;
   timeoutF = setInterval(function(){
     var value = document.getElementsByClassName("canvasSlider")[0].value;
     scene_sphere.rotateX(-THREE.Math.degToRad(value));
@@ -29,6 +31,7 @@ function rotateSceneXMinus(){
 }
 
 function rotateSceneXPlus(){
+  dragging = true;
   timeoutF = setInterval(function(){
     var value = document.getElementsByClassName("canvasSlider")[0].value;
     scene_sphere.rotateX(THREE.Math.degToRad(value));
@@ -39,6 +42,7 @@ function rotateSceneXPlus(){
 }
 
 function rotateSceneYMinus(){
+  dragging = true;
   timeoutF = setInterval(function(){
     var value = document.getElementsByClassName("canvasSlider")[0].value;
     scene_sphere.rotateY(-THREE.Math.degToRad(value));
@@ -49,7 +53,7 @@ function rotateSceneYMinus(){
 }
 
 function rotateSceneYPlus(){
-  timeoutF = setInterval(function(){
+  dragging = true; timeoutF = setInterval(function(){
     var value = document.getElementsByClassName("canvasSlider")[0].value;
     scene_sphere.rotateY(THREE.Math.degToRad(value));
     return true;
@@ -59,7 +63,7 @@ function rotateSceneYPlus(){
 }
 
 function rotateSceneZMinus(){
-  timeoutF = setInterval(function(){
+  dragging = true; timeoutF = setInterval(function(){
     var value = document.getElementsByClassName("canvasSlider")[0].value;
     scene_sphere.rotateZ(-THREE.Math.degToRad(value));
     return true;
@@ -69,12 +73,22 @@ function rotateSceneZMinus(){
 }
 
 function rotateSceneZPlus(){
-   timeoutF = setInterval(function(){
+   dragging = true; timeoutF = setInterval(function(){
      var value = document.getElementsByClassName("canvasSlider")[0].value;
     scene_sphere.rotateZ(THREE.Math.degToRad(value));
     return true;
   }, 70);
   updateSceneSphereRShiny();
+  return true;
+}
+
+function recenterNetwork(){
+  if (scene_pan !== ""){
+    scene_pan.position.x = 0;
+    scene_pan.position.y = 0;
+    scene_pan.position.z = 0;
+    updateScenePanRShiny();
+  }
   return true;
 }
 
@@ -86,88 +100,96 @@ function sliderLayerRotate(){
 
 function rotateLayersXMinus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[1].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].rotateX(-THREE.Math.degToRad(value));
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[1].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].rotateX(-THREE.Math.degToRad(value));
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
+  }
   return true;
 }
 
 function rotateLayersXPlus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[1].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].rotateX(THREE.Math.degToRad(value));
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[1].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].rotateX(THREE.Math.degToRad(value));
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
+  }
   return true;
 }
 
 function rotateLayersYMinus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[1].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].rotateY(-THREE.Math.degToRad(value));
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[1].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].rotateY(-THREE.Math.degToRad(value));
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
+  }
   return true;
 }
 
 function rotateLayersYPlus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[1].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].rotateY(THREE.Math.degToRad(value));
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[1].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].rotateY(THREE.Math.degToRad(value));
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
+  }
   return true;
 }
 
 function rotateLayersZMinus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[1].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].rotateZ(-THREE.Math.degToRad(value));
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[1].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].rotateZ(-THREE.Math.degToRad(value));
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
+  }
   return true;
 }
 
 function rotateLayersZPlus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[1].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].rotateZ(THREE.Math.degToRad(value));
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
-  return true;
-}
-
-function recenterNetwork(){
-  if (scene_pan !== ""){
-    scene_pan.position.x = 0;
-    scene_pan.position.y = 0;
-    scene_pan.position.z = 0;
-    updateScenePanRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[1].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].rotateZ(THREE.Math.degToRad(value));
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
   }
   return true;
 }
@@ -200,66 +222,59 @@ function congregateLayers() {
   return true;
 }
 
-function spreadNodes() {
-  for (var i=0;i<selected_nodes.length;i++){
-    nodes[selected_nodes[i]].position.y = nodes[selected_nodes[i]].position.y * 1.1;
-    nodes[selected_nodes[i]].position.z = nodes[selected_nodes[i]].position.z * 1.1;
-  }
-  redrawEdges();
-  return true;
-}
-
-function congregateNodes() {
-  for (var i=0;i<selected_nodes.length;i++){
-    nodes[selected_nodes[i]].position.y = nodes[selected_nodes[i]].position.y * 0.9;
-    nodes[selected_nodes[i]].position.z = nodes[selected_nodes[i]].position.z * 0.9;
-  }
-  redrawEdges();
-  return true;
-}
-
 function moveLayersXMinus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[2].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].translateX(-value);
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[2].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].translateX(-value);
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
+  }
   return true;
 }
 
 function moveLayersXPlus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[2].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].translateX(value);
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[2].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].translateX(value);
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
+  }
   return true;
 }
 
 function moveLayersYMinus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[2].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].translateY(-value);
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[2].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].translateY(-value);
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
+  }
   return true;
 }
 
 function moveLayersYPlus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
     var value = document.getElementsByClassName("canvasSlider")[2].value;
     for (var i = 0; i < selected_layers.length; i++){
       layer_planes[selected_layers[i]].translateY(value);
@@ -267,32 +282,39 @@ function moveLayersYPlus(){
     return true;
   }, 70);
   updateLayersRShiny();
+  }
   return true;
 }
 
 function moveLayersZMinus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[2].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].translateZ(-value);
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[2].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].translateZ(-value);
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
+  }
   return true;
 }
 
 function moveLayersZPlus(){
   selectCheckedLayers();
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[2].value;
-    for (var i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].translateZ(value);
-    }
-    return true;
-  }, 70);
-  updateLayersRShiny();
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[2].value;
+      for (var i = 0; i < selected_layers.length; i++){
+        layer_planes[selected_layers[i]].translateZ(value);
+      }
+      return true;
+    }, 70);
+    updateLayersRShiny();
+  }
   return true;
 }
 
@@ -300,17 +322,44 @@ function scaleLayers(){
   td = document.getElementById("sliderValue4");
   td.innerHTML = "x".concat(this.value);
   selectCheckedLayers();
-  for (var i = 0; i < selected_layers.length; i++){
-    layer_planes[selected_layers[i]].geometry.scale(1, parseFloat(this.value)/last_layer_scale[selected_layers[i]], parseFloat(this.value)/last_layer_scale[selected_layers[i]]);
-    for (var j = 0; j < layer_planes[selected_layers[i]].children.length; j++){
-      layer_planes[selected_layers[i]].children[j].position.y = layer_planes[selected_layers[i]].children[j].position.y * parseFloat(this.value)/last_layer_scale[selected_layers[i]];
-      layer_planes[selected_layers[i]].children[j].position.z = layer_planes[selected_layers[i]].children[j].position.z * parseFloat(this.value)/last_layer_scale[selected_layers[i]];
+  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    for (var i = 0; i < selected_layers.length; i++){
+      layer_planes[selected_layers[i]].geometry.scale(1, parseFloat(this.value)/last_layer_scale[selected_layers[i]], parseFloat(this.value)/last_layer_scale[selected_layers[i]]);
+      for (var j = 0; j < layer_planes[selected_layers[i]].children.length; j++){
+        layer_planes[selected_layers[i]].children[j].position.y = layer_planes[selected_layers[i]].children[j].position.y * parseFloat(this.value)/last_layer_scale[selected_layers[i]];
+        layer_planes[selected_layers[i]].children[j].position.z = layer_planes[selected_layers[i]].children[j].position.z * parseFloat(this.value)/last_layer_scale[selected_layers[i]];
+      }
+      last_layer_scale[selected_layers[i]] = parseFloat(this.value);
     }
-    last_layer_scale[selected_layers[i]] = parseFloat(this.value);
+    redrawEdges();
+    updateLayersRShiny();
+    updateNodesRShiny();
   }
-  redrawEdges();
-  updateLayersRShiny();
-  updateNodesRShiny();
+  return true;
+}
+
+function spreadNodes() {
+  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  else{
+    for (var i=0;i<selected_nodes.length;i++){
+      nodes[selected_nodes[i]].position.y = nodes[selected_nodes[i]].position.y * 1.1;
+      nodes[selected_nodes[i]].position.z = nodes[selected_nodes[i]].position.z * 1.1;
+    }
+    redrawEdges();
+  }
+  return true;
+}
+
+function congregateNodes() {
+  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  else{
+    for (var i=0;i<selected_nodes.length;i++){
+      nodes[selected_nodes[i]].position.y = nodes[selected_nodes[i]].position.y * 0.9;
+      nodes[selected_nodes[i]].position.z = nodes[selected_nodes[i]].position.z * 0.9;
+    }
+    redrawEdges();
+  }
   return true;
 }
 
@@ -321,7 +370,9 @@ function sliderNodeTranslate(){
 }
 
 function moveNodesXMinus(){
-  timeoutF = setInterval(function(){
+  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  else{
+    timeoutF = setInterval(function(){
     var value = document.getElementsByClassName("canvasSlider")[4].value;
     for (var i = 0; i < selected_nodes.length; i++){
       nodes[selected_nodes[i]].translateX(-value);
@@ -330,84 +381,102 @@ function moveNodesXMinus(){
     return true;
   }, 70);
   updateNodesRShiny();
+  }
   return true;
 }
 
 function moveNodesXPlus(){
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[4].value;
-    for (var i = 0; i < selected_nodes.length; i++){
-      nodes[selected_nodes[i]].translateX(value);
-    }
-    redrawEdges();
-    return true;
-  }, 70);
-  updateNodesRShiny();
+  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[4].value;
+      for (var i = 0; i < selected_nodes.length; i++){
+        nodes[selected_nodes[i]].translateX(value);
+      }
+      redrawEdges();
+      return true;
+    }, 70);
+    updateNodesRShiny();
+  }
   return true;
 }
 
 function moveNodesYMinus(){
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[4].value;
-    for (var i = 0; i < selected_nodes.length; i++){
-      nodes[selected_nodes[i]].translateY(-value);
-    }
-    redrawEdges();
-    return true;
-  }, 70);
-  updateNodesRShiny();
+  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[4].value;
+      for (var i = 0; i < selected_nodes.length; i++){
+        nodes[selected_nodes[i]].translateY(-value);
+      }
+      redrawEdges();
+      return true;
+    }, 70);
+    updateNodesRShiny();
+  }
   return true;
 }
 
 function moveNodesYPlus(){
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[4].value;
-    for (var i = 0; i < selected_nodes.length; i++){
-      nodes[selected_nodes[i]].translateY(value);
-    }
-    redrawEdges();
-    return true;
-  }, 70);
-  updateNodesRShiny();
+  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[4].value;
+      for (var i = 0; i < selected_nodes.length; i++){
+        nodes[selected_nodes[i]].translateY(value);
+      }
+      redrawEdges();
+      return true;
+    }, 70);
+    updateNodesRShiny();
+  }
   return true;
 }
 
 function moveNodesZMinus(){
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[4].value;
-    for (var i = 0; i < selected_nodes.length; i++){
-      nodes[selected_nodes[i]].translateZ(-value);
-    }
-    redrawEdges();
-    return true;
-  }, 70);
-  updateNodesRShiny();
+  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[4].value;
+      for (var i = 0; i < selected_nodes.length; i++){
+        nodes[selected_nodes[i]].translateZ(-value);
+      }
+      redrawEdges();
+      return true;
+    }, 70);
+    updateNodesRShiny();
+  }
   return true;
 }
 
 function moveNodesZPlus(){
-  timeoutF = setInterval(function(){
-    var value = document.getElementsByClassName("canvasSlider")[4].value;
-    for (var i = 0; i < selected_nodes.length; i++){
-      nodes[selected_nodes[i]].translateZ(value);
-    }
-    redrawEdges();
-    return true;
-  }, 70);
-  updateNodesRShiny();
+  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  else{
+    timeoutF = setInterval(function(){
+      var value = document.getElementsByClassName("canvasSlider")[4].value;
+      for (var i = 0; i < selected_nodes.length; i++){
+        nodes[selected_nodes[i]].translateZ(value);
+      }
+      redrawEdges();
+      return true;
+    }, 70);
+    updateNodesRShiny();
+  }
   return true;
 }
 
 function scaleNodes(){
   td = document.getElementById("sliderValue6");
   td.innerHTML = "x".concat(this.value);
-  console.lo
-  for (var i = 0; i < selected_nodes.length; i++){
-    nodes[selected_nodes[i]].scale.x = parseFloat(this.value);
-    nodes[selected_nodes[i]].scale.y = parseFloat(this.value);
-    nodes[selected_nodes[i]].scale.z = parseFloat(this.value);
+  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  else{
+    for (var i = 0; i < selected_nodes.length; i++){
+      nodes[selected_nodes[i]].scale.x = parseFloat(this.value);
+      nodes[selected_nodes[i]].scale.y = parseFloat(this.value);
+      nodes[selected_nodes[i]].scale.z = parseFloat(this.value);
+    }
+    updateNodesRShiny();
   }
-  updateNodesRShiny();
   return true;
 }
 
@@ -774,7 +843,7 @@ function attachCanvasControls(){ //adding control buttons above the canvas layer
   
   var cavnasButtons = document.getElementsByClassName("canvasControls");
   cavnasButtons[0].onmousedown = rotateSceneXMinus;
-  cavnasButtons[0].onmousemove = cavnasButtons[0].onmouseup = mouseUpClear = mouseUpClear;
+  cavnasButtons[0].onmousemove = cavnasButtons[0].onmouseup = mouseUpClear;
   cavnasButtons[1].onmousedown = rotateSceneXPlus;
   cavnasButtons[1].onmousemove = cavnasButtons[1].onmouseup = mouseUpClear;
   cavnasButtons[2].onmousedown = rotateSceneYMinus;

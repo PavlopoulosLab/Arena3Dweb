@@ -1,13 +1,4 @@
-<!DOCTYPE html>
 <style>
-
-p{
-  display: inline-block;
-  width: 90%;
-  word-break: break-word;
-  font-family: Arial;
-  line-height: 1.6;
-}
 
 h2, h3, a, div{
   font-family: Arial;
@@ -35,6 +26,18 @@ footer{
   font-size: 18px;
   margin-left: -8px;
   color: white;
+}
+
+p{
+  display: inline-block;
+  width: 90%;
+  word-break: break-word;
+  font-family: Arial;
+  line-height: 1.6;
+}
+
+.last_p{
+  margin-bottom: 350px;
 }
 
 /* Style the tab */
@@ -109,9 +112,8 @@ footer{
 </style>
 
 <div class="tab">
-  <button class="tablinks" onclick="openTab(event, 'MainView_tab')" id="defaultOpen">Arena3D<sup>web</sup></button>
+  <button class="tablinks" onclick="openTab(event, 'Examples_tab')" id="defaultOpen">Examples<sup></sup></button>
   <button class="tablinks" onclick="openTab(event, 'File_tab')">Input & Output Files<sup></sup></button>
-  <button class="tablinks" onclick="openTab(event, 'Examples_tab')">Examples<sup></sup></button>
   <button class="tablinks" onclick="openTab(event, 'Navigation_tab')">Navigation Controls<sup></sup></button>
   <button class="tablinks" onclick="openTab(event, 'Layouts_tab')">Layer Selection & Layouts<sup></sup></button>
   <button class="tablinks" onclick="openTab(event, 'Scene_tab')">Scene Actions<sup></sup></button>
@@ -122,17 +124,7 @@ footer{
   <button class="tablinks" onclick="openTab(event, 'About_tab')">About<sup></sup></button>
 </div>
 
-<footer> &#169; 2020 Pavlopoulos Lab | Bioinformatics and Integrative Biology </footer>
-
-<div id="MainView_tab" class="tabcontent">
-  
-  <h2>Arena3D<sup>web</sup></h2>
-  <p>
-    <img src="images/help/mainview2.png" alt="Main View" style="float:left;width:600px;height:522px;margin:5px;margin-right:20px;">
-    Arena3D<sup>web</sup> is the first, fully interactive and dependency-free, web application which allows the visualization of multi-layered graphs in 3D space. With Arena3D<sup>web</sup>, users can integrate multiple networks in a single view along with their intra- and inter-layer connections. For clearer and more informative views, users can choose between a plethora of layout algorithms and apply them on a set of selected layers either individually or in combination. Users can align networks and highlight node topological features, whereas each layer as well as the whole scene can be translated, rotated and scaled in 3D space. User-selected edge colors can be used to highlight important paths, while node positioning, coloring and resizing can be adjusted on-the-fly. In its current version, Arena3D<sup>web</sup> supports weighted and unweighted undirected graphs, is written in R, Shiny and Javascript.
-  </p><br/><br/>
-  
-</div>
+<footer> &#169; 2021 Pavlopoulos Lab | Bioinformatics and Integrative Biology </footer>
 
 <div id="File_tab" class="tabcontent">
   
@@ -209,7 +201,7 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
     <b>Node attributes</b>: Node Name, Node Group, Position X, Position Y, Position Z, Scale, Color, Url, Description<br/>
     <b>Edge attributes</b>: Edge, Weight, Color
   </p>
-  <pre>SCENE_PAN	 	 	 	 	 	 	 	 
+  <pre class="last_p">SCENE_PAN	 	 	 	 	 	 	 	 
 38	16	0.387420489	#1c0d1c	 	 	 	 	 
 SCENE_SPHERE	 	 	 	 	 	 	 	 
 2.68086198337682	1.46785316045254	-2.48877171271573	 	 	 	 	 	 
@@ -357,7 +349,7 @@ END
   Group2	Y  
   Group2	Z  
   </pre>
-  <p>Run as: python filename.txt<br/>
+  <p class="last_p">Run as: python filename.txt<br/>
   The coverted file will be stored in a file named reformatted_filename.txt. </p><br/><br/>
   
 </div>
@@ -366,7 +358,7 @@ END
   
   <h2>Navigation Controls</h2>
   <p> This is the main panel for network transformations in 3D space. The actions are divided into 3 subsections, namely, Scene, Layers and Nodes.</p><br/>
-  <p>
+  <p class="last_p">
     <img src="images/help/navigation_panel.png" alt="Navigation Panel" style="float:left;width:296px;height:1157px;margin:5px;margin-right:20px;">
     <b>General</b> <br/>
     <span class="numbering"> 1.</span> The <i> Navigation Controls </i> button is used to hide/show the navigation panel.<br/>
@@ -418,7 +410,7 @@ END
   </ul>
   
   <p>Below, we briefly desribe the available network metrics for node scaling (<span class="numbering">4</span>).</p><br/>
-  <ul>
+  <ul class="last_p">
     <li> The <i>Degree</i> metric describes the total number of connections adjacent to a node.</li>
     <li>The <i>Clustering Coefficient</i> of a node shows whether this node has the tendency to form clusters and is defined as the number of Edges between a node’s neighbors divided by the number of all possible connections between these neighbors.</li>
     <li>The <i>Betweenness Centrality</i> highlights nodes which can act as mediators in order for two communities to communicate with each other.</li>
@@ -431,7 +423,7 @@ END
   
   <h2>Scene Actions</h2>
   <p> In this tab, the user has 2 scene-related options.</p><br/>
-  <p>
+  <p class="last_p">
     <img src="images/help/scene1_1.PNG" alt="Scene Coords Off" style="float:left;width:335px;height:146px;margin:5px;margin-right:20px;">
     <span class="numbering"> 1. </span> A checkbox that toggles the visibility of the scene coordinates system. <br/>
     <span class="numbering"> 2. </span> A ColorPicker for the background of the network. For bright background colors, be sure to set higher opacity values for layer floors (Layer Actions tab) and edges (Edge Actions tab). <br/>
@@ -442,7 +434,7 @@ END
   
   <h2>Layers</h2>
   <p>This control panel incorporates layer-related actions.</p> <br/>
-  <p>
+  <p class="last_p">
     <img src="images/help/layers.png" alt="Layers" style="float:left;width:317px;height:434px;margin:5px;margin-right:20px;">
     <span class="numbering"> 1. </span> This checkbox allows the user to show or hide all layer labels.<br/>
     <span class="numbering"> 2. </span> This checkbox gives the option of showing the labels of selected layers only. Option (<span class="numbering">1</span>) has priority over this option.<br/>
@@ -471,7 +463,7 @@ END
   </p>
   
   <img src="images/help/mainview.png" alt="Main View" style="float:left;width:726px;height:555px;margin:5px;margin-right:20px;">
-    <ul>
+    <ul class="last_p">
       <li>
         Hovering over nodes shows their corresponding labels, while right-clicking on them opens a menu, allowing the user to either select their direct neighbors (in every layer) or select a multilayer path starting from the current node and expanding on the other layers via their connections, as shown in the image. In case there are accompanying node attributes such as a link or a description, the corresponding options are also shown in the box. <br/><br/>
       </li>
@@ -487,13 +479,16 @@ END
   
   <h2>Edges</h2>
   <p>This control panel incorporates edge-related actions.</p> <br/>
-  <p>
+  <p class="last_p">
     <img src="images/help/edges.png" alt="Edges" style="float:left;width:373px;height:433px;margin:5px;margin-right:20px;">
     <span class="numbering"> 1. </span> This option gives priority on any uploaded/imported values of edge <i>Weights</i>, which are being mapped in the [0-1] range and are assigned on edge opacities. If this option is unchecked, the edge opacity is decided through options (<span class="numbering">4</span>) for intra-layer and (<span class="numbering">5</span>) for inter-layer edges, respectively. <br/>
     <span class="numbering"> 2. </span> This option gives priority on any uploaded edge color attribute over the default white color. <br/>
     <span class="numbering"> 3. </span> When the user right-clicks on a node and <i>Selects Neighbors</i> or <i>Selects MultiLayer Path</i>, edges corresponding to the selection are also highlighted. If this option is unchecked, the selected edges retain either their edge attribute or their default color, based on option (<span class="numbering">2</span>). Double-clicking anywhere on the canvas deselects all currently selected nodes and edges. <br/>
     <span class="numbering"> 4. </span> If option (<span class="numbering">1</span>) is unchecked, the intra-layer edge opacity is decided through this slider.<br/>
-    <span class="numbering"> 5. </span> If option (<span class="numbering">1</span>) is unchecked, the inter-layer edge opacity is decided through this slider.<br/><br/><br/><br/>
+    <span class="numbering"> 5. </span> If option (<span class="numbering">1</span>) is unchecked, the inter-layer edge opacity is decided through this slider.<br/><br/>
+    
+    For a great <b>performance improval</b>, if <span class="numbering">1</span> is NOT selected and <span class="numbering">5</span> set to 0, the inter-layer edges are not drawn on animate and transformations are applied much more smoothly. 
+    <br/><br/>
   </p>
   
 </div>
@@ -501,7 +496,7 @@ END
 <div id="FPS_tab" class="tabcontent">
   
   <h2>FPS</h2>
-  <p> The option for frames per second. The user is allowed to choose between 3 options: <br/><br/>
+  <p class="last_p"> The option for frames per second. The user is allowed to choose between 3 options: <br/><br/>
     <img src="images/help/fps2.PNG" alt="FPS" style="float:left;width:284px;height:158px;margin:5px;margin-right:20px;">
     &bull; 15FPS, for larger, more processing-heavy networks. <br/>
     &bull; 30FPS, the default option. <br/>
@@ -525,14 +520,12 @@ END
   <h2> Related Software </h2>
   &#8226; <a href="http://bib.fleming.gr:3838/NORMA/" target="_blank">NORMA: The NetwORk Makeup Artist</a><br/>
   &#8226; <a href="http://bib.fleming.gr:3838/NAP/" target="_blank">NAP(v2.0): The Network Analysis Profiler</a><br/>
-  &#8226; <a href="https://cytoscape.org/" target="_blank">Cytoscape</a><br/>
   
   <h2> Related Literature </h2>
   &#8226; <a href="https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full" target="_blank">A Guide to Conquer the Biological Network Era Using Graph Theory</a><br/>
   
   <h2> Cite Arena3D<sup>web</sup> </h2>
-  <p> Submitted for publication. <br/><br/><br/><br/></p>
-  
+  <p class="last_p"> Submitted for publication. <br/><br/><br/><br/></p>
   
 </div>
 
