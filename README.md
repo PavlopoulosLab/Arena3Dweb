@@ -6,6 +6,13 @@ For more information please visit our help pages.
 
 The online version supports networks of up to 5000 edges. 
 You can always download the app and run it locally. The edge limit can be bypassed when running the application locally, by adjusting the max_allowed_edges variable value in the global.R file
-Example files can be found in the www folder 
+Example files can be found in the www folder.
 
 
+# Installation
+
+To run Arena3Dweb locally, R (https://www.r-project.org/) and RStudio (https://rstudio.com/) must be installed.
+
+Make sure the following R libraries are also installed: shiny, shinyjs, shinythemes and igraph.
+
+To start the program, double click on the Arena3Dweb.Rproj file. This opens the RStudio process. Then, open the server.R file in RStudio and in the Run App options choose "Run External" and then click Run App.
