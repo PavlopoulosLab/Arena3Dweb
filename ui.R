@@ -10,7 +10,8 @@ ui <- fluidPage(
   # shinythemes::themeSelector(),
   fluidRow( # max columns = 12, per row
     column(12,
-           navbarPage("", id = "navBar", selected = "Main View",
+           navbarPage("", id = "navBar", selected = "Home",
+                      tabPanel("Home", tags$div(id="homeDiv")),
                       tabPanel("Main View", ""),
                       tabPanel("File",
                                fileInput("input_network_file", "Upload Network:", accept = c(".tsv", ".txt")),
@@ -64,7 +65,7 @@ ui <- fluidPage(
                                sliderInput("interLayerEdgeOpacity", "Inter-Layer Edge Opacity:", min = 0, max = 1, value = 0.3, step = 0.1),
                                actionButton("hideButton6", icon("angle-up"), class ="hideButton")
                       ),
-                      tabPanel("FPS", radioButtons("fps", "FPS:", c("15FPS" = "15", "30FPS" = "30", "60FPS" = "60"), selected = "30"),
+                      tabPanel("FPS", radioButtons("fps", "FPS:", c("15FPS" = "15", "30FPS" = "30", "60FPS" = "60"), selected = "15"),
                                actionButton("hideButton7", icon("angle-up"), class ="hideButton")
                       ),
                       tabPanel("Help", tags$div(id="helpDiv"))
@@ -75,7 +76,7 @@ ui <- fluidPage(
            tags$div(id="loader"),
            tags$div(id="labelDiv"),
            tags$div(id="descrDiv"),
-           tags$div(id = "3d-graph") # div of 3D network visualization
+           tags$div(id="3d-graph") # div of 3D network visualization
     )
   )
 )

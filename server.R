@@ -38,6 +38,18 @@ server <- function(input, output, session) {
     reset("fps")
   }
   
+  mapper <- function(inArr, min, max){
+    outArr <- inArr
+    inArr_min <- min(inArr)
+    inArr_max <- max(inArr)
+    if (inArr_max - inArr_min != 0){
+      for (i in 0:length(inArr)){
+        outArr[i] <- (inArr[i] - inArr_min) * (max - min) / (inArr_max - inArr_min) + min;
+      }
+    } else outArr[] <- 0.3;
+    return(outArr);
+  }
+  
   parse_import_data <- function(inFile){
     inData <<-  matrix("", nrow = 0, ncol = 5)
     colnames(inData) <<- c("SourceNode", "TargetNode", "Weight", "SourceLayer", "TargetLayer")
@@ -200,7 +212,7 @@ server <- function(input, output, session) {
     return(TRUE)
   }
   
-  apply_layout_with_fr <- function(sub_graph, sub_nodes){
+  apply_layout_with_fr <- function(sub_graph, sub_nodes){ # this looks bad with weights
     layout <- layout_with_fr(sub_graph, coords = NULL, dim = 2, niter = 500,
                              start.temp = sqrt(vcount(sub_graph)), grid = c("auto", "grid", "nogrid"),
                              weights = NULL, minx = NULL, maxx = NULL, miny = NULL,
@@ -250,7 +262,7 @@ server <- function(input, output, session) {
     return(TRUE)
   }
   
-  apply_layout_with_sugiyama <- function(sub_graph, sub_nodes){
+  apply_layout_with_sugiyama <- function(sub_graph, sub_nodes){ # bad with weights
     layout <- layout_with_sugiyama(sub_graph, layers = NULL, hgap = 1, vgap = 1,
                                    maxiter = 100, weights = NULL, attributes = c("default", "all", "none"))$layout
     nodes_layout <- cbind(as.matrix(sub_nodes),layout)
@@ -342,7 +354,7 @@ server <- function(input, output, session) {
         inData$TargetNode <<- trim(inData$TargetNode)
         inData$TargetLayer <<- trim(inData$TargetLayer)
         if (identical(inData$Weight, NULL)) inData$Weight <<- as.matrix(rep(1,length(inData$SourceNode)))
-        else inData$Weight <<- trim(inData$Weight)
+        else inData$Weight <<- mapper(as.numeric(trim(inData$Weight)), 0.1, 1)
         session$sendCustomMessage("handler_uploadNetwork", inData)
         inData [, "SourceNode"] <<- as.matrix(paste(inData[, "SourceNode"], inData[, "SourceLayer"], sep="_"))
         inData [, "TargetNode"] <<- as.matrix(paste(inData[, "TargetNode"], inData[, "TargetLayer"], sep="_"))
@@ -657,7 +669,7 @@ server <- function(input, output, session) {
               sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
               scaleTopology(sub_graph, sub_nodes, sub_weights)
             } else session$sendCustomMessage("handler_badObject_alert", paste("Subgraph of selected Layerss could not form a graph.", sep=""))
-          } else{
+          } else{ # local
             selected_nodes <- input$js_selected_nodes
             if(length(selected_nodes) > 0){
               whole_node_names <- input$js_node_names
@@ -668,16 +680,18 @@ server <- function(input, output, session) {
                 tempMat <- tempMat[tempMat[, "TargetLayer"] == group_name,, drop = F]
                 inDataEdgelist <- matrix("", nrow = 0, ncol = 3)
                 colnames(inDataEdgelist) <- c("SourceNode", "TargetNode", "Weight")
-                for (j in 1:nrow(tempMat)){
-                  if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selected_nodes+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selected_nodes+1])))){
-                    inDataEdgelist <- rbind(inDataEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"]))
+                if (nrow(tempMat) > 1){
+                  for (j in 1:nrow(tempMat)){
+                    if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selected_nodes+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selected_nodes+1])))){
+                      inDataEdgelist <- rbind(inDataEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"]))
+                    }
                   }
-                }
-                if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
-                  sub_graph <- createGraph(inDataEdgelist) # V(graph)
-                  sub_nodes <- V(sub_graph)$name # unsorted
-                  sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
-                  scaleTopology(sub_graph, sub_nodes, sub_weights)
+                  if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
+                    sub_graph <- createGraph(inDataEdgelist) # V(graph)
+                    sub_nodes <- V(sub_graph)$name # unsorted
+                    sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
+                    scaleTopology(sub_graph, sub_nodes, sub_weights)
+                  } else session$sendCustomMessage("handler_badObject_alert", paste("Layer ", group_name, " could not form a graph.", sep=""))
                 } else session$sendCustomMessage("handler_badObject_alert", paste("Layer ", group_name, " could not form a graph.", sep=""))
               }
             } else session$sendCustomMessage("handler_badObject_alert", "Can't execute Local Layouts without selected Nodes.")
@@ -689,6 +703,10 @@ server <- function(input, output, session) {
   
   observeEvent(list(input$hideButton1, input$hideButton2, input$hideButton3, input$hideButton4, input$hideButton5, input$hideButton6, input$hideButton7),{
     updateSelectInput(session, "navBar", selected = "Main View")
+    if (fresh){ # this function executes on page load, so the first time the page is loaded we need to land on the Home tab instead
+      updateSelectInput(session, "navBar", selected = "Home")
+      fresh <<- F
+    }
     return(TRUE)
   })
   

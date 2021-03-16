@@ -7,3 +7,4 @@ library(igraph)
 # Initializing Script Static Variables
 max_allowed_edges <- 5000
 inData <- ""
+fresh <- T
