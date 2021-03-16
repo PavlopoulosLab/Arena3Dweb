@@ -5,7 +5,7 @@ Efficient integration and visualization of heterogeneous biomedical information 
 For more information please visit our help pages.
 
 The online version supports networks of up to 5000 edges. 
-You can always download the app and run it locally. The edge limit can be bypassed when running the application locally, by adjusting the max_allowed_edges variable value in the global.R file
+Here, you can download the app and run it locally. The edge limit can be bypassed when running the application locally, by adjusting the max_allowed_edges variable value in the global.R file
 Example files can be found in the www folder.
 
 
