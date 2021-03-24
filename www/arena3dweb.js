@@ -17,6 +17,7 @@ renderer.setSize( 2* xBoundMax , 2 * yBoundMax );
 
 //initializing static variables
 var animationRunning = false, //flag to ensure animation function only executes once!
+    animationPause = false, //user button from Shiny to pause rendering at any moment
     leftClickPressed = false, //flag to check if dragging scene
     middleClickPressed = false, //flag to check if rotating scene
     previousX = 0, //variable to calculate drag and orbit controls
@@ -506,7 +507,7 @@ function drawEdges() {
 
 function drawLayerEdges(flag) { //runs constantly on animate
   let i;
-  if (!flag && dragging){
+  if (!flag && (dragging || animationPause)){
     for (let i = 0; i < layer_edges_pairs.length; i++){
       scene.remove(layerEdges[i]);
     }
@@ -689,7 +690,7 @@ function animate() {
   if (layerLabelSwitch) redrawLayerLabels();
   else if (selectedLayerLabelSwitch && selected_layers !== []) redrawSelectedLayerLabels();
   // draw inter-layer edges only when necessary for performance improvement
-  if (dragging){
+  if (dragging || animationPause){
     drawLayerEdges(false);
   } 
   else if (edgeWidthByWeight || interLayerEdgeOpacity > 0){
@@ -748,6 +749,7 @@ function loadGraph(){
   scene_pan.scale.set(0.9, 0.9, 0.9); //starting a little zoomed out
   
   if (!animationRunning) animate(); //ensure animation runs only once
+    
   //communicating variables to rshiny, to optionally export the network on demand
   updateScenePanRShiny();
   updateSceneSphereRShiny();

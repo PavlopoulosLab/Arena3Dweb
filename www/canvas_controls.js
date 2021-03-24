@@ -13,6 +13,19 @@ function displayControlTable(){
   return true;
 }
 
+function pauseAnimate() {
+  var pauseAnimateButton = document.getElementsByClassName("displayCanvasControls")[1];
+  if (animationPause){
+    animationPause = false;
+    pauseAnimateButton.innerText = "Stop:Render Inter-Layer Edges";
+  }
+  else{
+    animationPause = true;
+    pauseAnimateButton.innerText = "Render Inter-Layer Edges";
+  } 
+  return true;
+}
+
 function sliderSceneRotate(){
   td = document.getElementById("sliderValue1");
   td.innerHTML = "Angle: ".concat(this.value).concat("&#730;");
@@ -486,6 +499,7 @@ function attachCanvasControls(){ //adding control buttons above the canvas layer
       navDiv = document.getElementById("navDiv"),
       tbl = document.createElement('table'),
       showBtn = document.createElement("button"),
+      pauseAnimeateButton = document.createElement("button"),
       tbdy ="",
       tr = "",
       td = "",
@@ -823,6 +837,13 @@ function attachCanvasControls(){ //adding control buttons above the canvas layer
   showBtn.style.position = "fixed";
   showBtn.style.zIndex = 1;
   navDiv.appendChild(showBtn);
+  navDiv.appendChild(document.createElement('br'));
+  pauseAnimeateButton.className = "displayCanvasControls";
+  pauseAnimeateButton.innerHTML = "Stop:Render Inter-Layer Edges";
+  pauseAnimeateButton.style.position = "fixed";
+  pauseAnimeateButton.style.zIndex = 1;
+  pauseAnimeateButton.style.marginTop = "25px";
+  navDiv.appendChild(pauseAnimeateButton);
   info.style.display = "inline-block";
   info.appendChild(tbl);
 
@@ -831,6 +852,7 @@ function attachCanvasControls(){ //adding control buttons above the canvas layer
       recenterNetworkButton = document.getElementById("recenterButton");
   
   displayCavnasButton[0].onclick = displayControlTable;
+  displayCavnasButton[1].onclick = pauseAnimate;
   recenterNetworkButton.onclick = recenterNetwork;
   
   var cavnasSliders = document.getElementsByClassName("canvasSlider");

@@ -323,6 +323,7 @@ function badObject_alert(message){
 }
 
 function uploadNetwork(message){
+  if (animationPause) pauseAnimate(); //resume rendering
   clearCanvas();
   if (!attachedCanvasControls) attachCanvasControls();
   var temp_name1 = temp_name2 = temp_layer1 = temp_layer2 = "",
