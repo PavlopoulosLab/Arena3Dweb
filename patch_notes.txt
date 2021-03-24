@@ -1,0 +1,11 @@
+Patch notes
+
+2021/03/24
+Pause/Resume Rendering Inter-Layer Edges button added below Navigation Controls
+
+2021/03/16
+-FPS default value 15
+-Showing weight by uploaded edges and turning inter-layer edge transparency to 0, greatly optimizes performance
+-Dragging and rotating the scene makes the inter-layer edges also disappear, improving performance
+-fixed a bug where site crushed on local node scaling if no nodes where selected on selected layer
+-alerts for non-selected layer and node transformations

@@ -342,7 +342,7 @@ server <- function(input, output, session) {
     reset("topologyScale")
     return(TRUE)
   }
-  
+
   observeEvent(input$input_network_file,{ # creating igraph graph from input file
     inFile <- input$input_network_file
     if (!is.null(inFile)){ #input$input_network_file -> NULL initially
