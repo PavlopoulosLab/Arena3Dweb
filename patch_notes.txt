@@ -1,5 +1,8 @@
 Patch notes
 
+2021/04/15
+Fixed bug where global variables were shown as session variables.
+
 2021/03/24
 Pause/Resume Rendering Inter-Layer Edges button added below Navigation Controls
 
