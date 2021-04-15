@@ -1,6 +1,6 @@
 server <- function(input, output, session) {
   
-  source("global.R")
+  source("global.R", local=TRUE)
   
   session$sendCustomMessage("handler_maxAllowedEdges", max_allowed_edges) #communicate variable to js
   
