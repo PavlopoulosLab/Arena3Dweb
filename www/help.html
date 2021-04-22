@@ -359,9 +359,10 @@ END
   <h2>Navigation Controls</h2>
   <p> This is the main panel for network transformations in 3D space. The actions are divided into 3 subsections, namely, Scene, Layers and Nodes.</p><br/>
   <p class="last_p">
-    <img src="images/help/navigation_panel.png" alt="Navigation Panel" style="float:left;width:296px;height:1157px;margin:5px;margin-right:20px;">
+    <img src="images/help/navigation_panel.png" alt="Navigation Panel" style="float:left;width:280px;height:1152px;margin:5px;margin-right:20px;">
     <b>General</b> <br/>
-    <span class="numbering"> 1.</span> The <i> Navigation Controls </i> button is used to hide/show the navigation panel.<br/>
+    <span class="numbering"> 1.</span> The <i> Navigation Controls </i> button is used to hide/show the navigation panel, while the <i> Stop:Render Inter-Layer Edges </i> button 
+    hides inter-layer edges to greatly improve rendering performance. <br/>
     <span class="numbering"> 2.</span> General instructions on network hotkeys. <br/> <span class="indent">1. The user can zoom-in/out by mouse scrolling.</span> <br/> <span class="indent">2. The network can be translated by dragging with the mouse or by pressing the keyboard's arrow keys. </span><br/> <span class="indent">3. The network view is also orbitable on the X (red) and Y (axis) by dragging while holding the middle-mouse button. </span><br/> <span class="indent">4. The user can select/deselect individual nodes by holding the Ctrl button and clicking on a node. The node flashes when the user hovers over it. </span><br/> <span class="indent">5. For a batch node selection, the user may hold the Shift button and drag the left-mouse button to apply a lasso selection. </span><br/> <span class="indent">6. Finally, by double clicking anywhere on the scene, all selected nodes and edges are instantly deselected. </span><br/>
     <br/><b>Scene</b> <br/>
     <span class="numbering"> 3.</span> Controls to rotate the network as one object in 3D space in X (red), Y (green) and Z (blue) axes. The user can set the angle step (between 1&#176; and 15&#176;) on a slider and then hold the dedicated colored buttons to rotate the network. <br/>
@@ -465,7 +466,7 @@ END
   <img src="images/help/mainview.png" alt="Main View" style="float:left;width:726px;height:555px;margin:5px;margin-right:20px;">
     <ul class="last_p">
       <li>
-        Hovering over nodes shows their corresponding labels, while right-clicking on them opens a menu, allowing the user to either select their direct neighbors (in every layer) or select a multilayer path starting from the current node and expanding on the other layers via their connections, as shown in the image. In case there are accompanying node attributes such as a link or a description, the corresponding options are also shown in the box. <br/><br/>
+        Hovering over nodes shows their corresponding labels, while right-clicking on them opens a menu, allowing the user to (i) select their direct neighbors (in every layer), (ii) select a multilayer path starting from the current node and expanding on the other layers via their connections or (iii) select a downstream path starting from the current node and expanding only on forward layers, as shown in the image. In case there are accompanying node attributes such as a link or a description, the corresponding options are also shown in the box. <br/><br/>
       </li>
       <li>
         Right-click anywhere else on the canvas to save the current view as image.<br/>
@@ -514,6 +515,9 @@ END
     &#8226; Georgios A. Pavlopoulos, email: pavlopoulos@fleming.gr <br/>
   </p>
   
+  <h2> Arena3D<sup>web</sup> Published Article </h2>
+  <p> <a href="https://academic.oup.com/nar/advance-article/doi/10.1093/nar/gkab278/6246395?fbclid=IwAR0BBBUZ1FWFkkGZA-mz8nGeTS6ewcosuW9IGl-s6o3lKItse70fL9ecGqM" target="_blank">Arena3D<sup>web</sup>: interactive 3D visualization of multilayered networks </a></p><br/>
+  
   <h2> Arena3D<sup>web</sup> Source Code </h2>
   <p> <a href="https://github.com/PavlopoulosLab/Arena3Dweb" target="_blank">Github </a></p><br/>
   
@@ -525,7 +529,7 @@ END
   &#8226; <a href="https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full" target="_blank">A Guide to Conquer the Biological Network Era Using Graph Theory</a><br/>
   
   <h2> Cite Arena3D<sup>web</sup> </h2>
-  <p class="last_p"> Submitted for publication. <br/><br/><br/><br/></p>
+  <p class="last_p"> Evangelos Karatzas, Fotis A Baltoumas, Nikolaos A Panayiotou, Reinhard Schneider, Georgios A Pavlopoulos, Arena3Dweb: interactive 3D visualization of multilayered networks, Nucleic Acids Research, 2021;, gkab278, <a href="https://doi.org/10.1093/nar/gkab278" target="_blank">https://doi.org/10.1093/nar/gkab278 </a> <br/><br/><br/><br/></p>
   
 </div>
 
