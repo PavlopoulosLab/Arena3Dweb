@@ -46,7 +46,8 @@ var animationRunning = false, //flag to ensure animation function only executes 
     selectedDefaultColor = "#A3FF00",
     edgeDefaultColor = "#CFCFCF",
     draw_inter_edges_flag = true,
-    dragging = false;
+    dragging = false,
+    downstreamCheckedNodes = []; // for 3rd option of onRightClick on node
     
 //Variables that are being refreshed on new network upload/import (nodes, edges, coords)
 var nodes = [], //canvas objects
@@ -998,6 +999,81 @@ function dblClick(event){
   return true;
 }
 
+//This function returns node IDs of requested node's inter-layer neighbors
+//iterates global variable edge_pairs (String Array, separating node couples by ---)
+//@param node (integer): node whose neighbors are requested
+//@return int array of neighbor IDs
+function interLayerNeighbors(node){
+  var i, edge_split, index1, index2, neighbors = [];
+  //TODO
+  for (i = 0; i < edge_pairs.length; i++){
+    edge_split = edge_pairs[i].split("---");
+    index1 = node_whole_names.indexOf(edge_split[0]);
+    index2 = node_whole_names.indexOf(edge_split[1]);
+    if (node == index1) neighbors.push(index2);
+    else if (node == index2) neighbors.push(index1);
+  }
+  return neighbors;
+}
+
+//This function returns the inter-layer edge connecting two nodes if exists, else null
+//iterates global variable edge_pairs (String Array, separating node couples by ---)
+//@param node1 (integer): first node
+//@param node2 (integer): second node
+//@return: String of inter-layer edge pair (as found in the edge_pairs array) or null if not found
+function getInterLayerEdge(node1, node2){
+  var i, edge_split, index1, index2;
+  //TODO
+  for (i = 0; i < edge_pairs.length; i++){
+    edge_split = edge_pairs[i].split("---");
+    index1 = node_whole_names.indexOf(edge_split[0]);
+    index2 = node_whole_names.indexOf(edge_split[1]);
+    if ((node1 == index1 && node2 == index2) || (node1 == index2 && node2 == index1)) return edge_pairs[i];
+  }
+  return null;
+}
+
+//This function highlights recursively downstream nodes from the clicked node on the starting layer
+//makes use of global variable downstreamCheckedNodes (int array) to keep track of already checked nodes for avoiding re-checks
+//@param layerPath (String Array): current path's already checked Layers
+//@param currentNode (integer): current node, whose Layer must be the last in the layerPath array
+//@param previousNode (integer): previous node, to figure which edge to paint
+//@return void
+function recursiveDownstreamHighlight(layerPath, currentNode, previousNode){
+  var neighbors, i, toCheckLayer, interLayerEdge, pos;
+  if (!exists(downstreamCheckedNodes, currentNode)){
+    downstreamCheckedNodes.push(currentNode);
+    //selecting and painting node
+    if (!exists(selected_nodes, currentNode)){
+      selected_nodes.push(currentNode);
+      if (selectedNodeColorFlag) nodes[currentNode].material.color = new THREE.Color( selectedDefaultColor );
+    }
+    //selecting and painting edge
+    if (currentNode != previousNode){ //skipping first node call check wiuth itself
+      interLayerEdge = getInterLayerEdge(currentNode, previousNode);
+      if (interLayerEdge !== null){
+        pos = edge_pairs.indexOf(interLayerEdge); //integer position of edge name in all-edges array
+        if (!exists(selected_edges, pos)){
+          selected_edges.push(pos);
+          pos = layer_edges_pairs.indexOf(pos); //integer position needed for line object to be painted correctly
+          if (selectedEdgeColorFlag) layerEdges[pos].material.color = new THREE.Color( selectedDefaultColor ); //only inter-layers possible to be painted here
+        }
+      }
+    }
+    //find node inter-layer neighbors and continue recursively
+    neighbors = interLayerNeighbors(currentNode);
+    for (i = 0; i < neighbors.length; i++){
+      toCheckLayer = node_groups[node_whole_names[neighbors[i]]];
+      if (!exists(layerPath, toCheckLayer)){
+        layerPath.push(toCheckLayer);
+        recursiveDownstreamHighlight(layerPath, neighbors[i], currentNode);
+        layerPath.pop();
+      }
+    }
+  }
+  return true;
+}
+
 function executeCommand(item){
   //console.log(item.options[item.selectedIndex].text);
   if (item.options[item.selectedIndex].text == "Select Neighbors"){ //select neighbors
@@ -1094,6 +1170,17 @@ function executeCommand(item){
     decideNodeLabelFlags();
     updateSelectedNodesRShiny();
     finishLoader(true);
+  } else if (item.options[item.selectedIndex].text == "Select Downstream Path"){
+    var currentNode = item.value, //int
+        layerPath = [node_groups[node_whole_names[currentNode]]]; //array of 1 element at start
+    startLoader(true);
+    ///////////////////////////////
+    recursiveDownstreamHighlight(layerPath, currentNode, currentNode);
+    downstreamCheckedNodes = []; //resetting global variable
+    ////////////////////////
+    decideNodeLabelFlags();
+    updateSelectedNodesRShiny();
+    finishLoader(true);
   } else if (item.options[item.selectedIndex].text == "Link") window.open(item.value);
   else if (item.options[item.selectedIndex].text == "Description"){
     var descrDiv = document.getElementById("descrDiv"),
@@ -1123,6 +1210,7 @@ function replaceContextMenuOverNode(evt) { //right mouse click
       optionsList.style.left = nodeX.toString().concat("px");
       optionsList.style.top = nodeY.toString().concat("px");
       optionsList.style.display = "inline-block";
+      //Neighbors
       var option = document.createElement("option");
       option.value = ""; //option 0
       option.text = "-";
@@ -1131,9 +1219,15 @@ function replaceContextMenuOverNode(evt) { //right mouse click
       option.value = i; //option 1
       option.text = "Select Neighbors";
       optionsList.appendChild(option);
+      //MultiLayer Path
       option = document.createElement("option");
       option.value = i; //option 2
       option.text = "Select MultiLayer Path";
+      optionsList.appendChild(option);
+      //Downstream Path
+      option = document.createElement("option");
+      option.value = i; //option 3
+      option.text = "Select Downstream Path";
       optionsList.appendChild(option);
       if (node_attributes !== ""){
         pos = node_attributes.Node.indexOf(node_whole_names[i]);
