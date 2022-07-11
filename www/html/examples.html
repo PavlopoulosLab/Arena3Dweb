@@ -1,0 +1,134 @@
+<style>
+
+  *{
+    color: white;
+    background-color: black;
+  }
+  
+  a{
+    color: lightblue;
+  }
+
+  div{
+    font-family: Arial;
+  }
+  
+  pre{
+    font-family: Courier;
+    border: 1px solid white;
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: scroll;
+  }
+
+  footer{
+    font-family: Arial;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #2b4e99;
+    text-align: center;
+    font-size: 18px;
+    margin-left: -8px;
+    color: white;
+  }
+  
+  p{
+    display: inline-block;
+    width: 90%;
+    word-break: break-word;
+    font-family: Arial;
+    line-height: 1.6;
+  }
+  
+</style>
+
+<div id="Examples_tab">
+  
+  <h2>Example Data</h2>
+  
+  <p>
+    <b>Random networks with different topologies mapped in 6 layers respectively: </b> <br/>
+    The <a href="./data/figure1_data.tsv" download>
+      example network</a> in the Arena3D<sup>web</sup> format. <br/>
+    An <a href="./data/figure1_export.txt" download>
+      exported state file</a> of this example. <br/>
+  </p>
+  
+  <hr>
+  
+  <p>
+    <b>Network example with 4 layers: </b> <br/>
+    The <a href="./data/figure2A_data.tsv" download>
+      network file</a> in Arena3D<sup>web</sup> input format. <br/>
+    An <a href="./data/figure2A_export.txt" download>
+      exported state file</a> of this example forming a cube in 3D space. <br/>
+  </p>
+  
+  <hr>
+  
+  <p>
+    <b>Another network example with 4 layers, accompanied by node and edge attribute files: </b> <br/>
+    The <a href="./data/figure2B_data.tsv" download>
+      network file</a> in Arena3D<sup>web</sup> input format. <br/>
+    <a href="./data/figure2B_data_node_attributes.tsv" download>
+      Node attributes file</a> for this example.<br/>
+    <a href="./data/figure2B_data_edge_attributes.tsv" download>
+      Edge attributes file</a> for this example. <br/>
+    An <a href="./data/figure2B_export.txt" download>
+      exported state file</a> of this example. <br/>
+  </p>
+  
+  <hr>
+  
+  <p>
+    <b>SARS-CoV-2 Example: </b> <br/>
+    A <a href="./data/covid19_data.tsv" download>
+      Covid-19 network</a> based on the work of <a href="https://www.nature.com/articles/s41586-020-2286-9" target="_blank">Gordon et al.</a>, in the Arena3D<sup>web</sup> format. <br/>
+    <a href="./data/covid19_data_node_attributes.tsv" download>
+      Node attributes file</a> for this example.<br/>
+    <a href="./data/covid19_data_edge_attributes.tsv" download>
+      Edge attributes file</a> for this example.<br/>
+    An <a href="./data/covid19_export.txt" download>
+      exported state file</a> of this example. <br/>
+  </p>
+  
+  <hr>
+  
+  <p>
+    <b>GPCR Example: </b> <br/>
+    The <a href="./data/GPCRs_data.tsv" download>
+      network file</a> in the Arena3D<sup>web</sup> format. <br/>
+    <a href="./data/GPCRs_data_node_attributes.tsv" download>
+      Node attributes file</a> for this example.<br/>
+    <a href="./data/GPCRs_data_edge_attributes.tsv" download>
+      Edge attributes file</a> for this example.<br/>
+    An <a href="./data/GPCRs_export.txt" download>
+      exported state file</a> of this example. <br/>
+  </p>
+  
+  <hr>
+  
+  <p>
+    <b>Scripts: </b> <br/>
+    A <a href="./data/transpose.py" download> Python script</a> for parsing edgelist data into Arena3D<sup>web</sup> format.<br/>
+    As an example, this input file:
+  </p>
+  <pre>
+  Group1	A,B,C,D  
+  Group2	X,Y,Z  
+  </pre>
+  <p> will be converted to this output file: </p>
+  <pre>
+  Group1	A  
+  Group1	B  
+  Group1	C  
+  Group1	D  
+  Group2	X  
+  Group2	Y  
+  Group2	Z  
+  </pre>
+  <p>Run as: python filename.txt<br/>
+  The coverted file will be stored in a file named reformatted_filename.txt. </p><br/><br/>
+  
+</div>

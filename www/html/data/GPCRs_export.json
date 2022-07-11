@@ -1,0 +1,3083 @@
+{
+    "scene": {
+        "position_x": "-44",
+        "position_y": "154",
+        "scale": "0.525773128978409",
+        "color": "#000000",
+        "rotation_x": "0.471238898038469",
+        "rotation_y": "0.663225115757845",
+        "rotation_z": "-1.60570291183478"
+    },
+    "layers": [
+        {
+            "name": "GPCRs",
+            "position_x": "-518",
+            "position_y": "-300",
+            "position_z": "0",
+            "last_layer_scale": "0.4",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#777777",
+            "geometry_parameters_width": "1001.90476190476"
+        },
+        {
+            "name": "GRKs",
+            "position_x": "-206",
+            "position_y": "150",
+            "position_z": "0",
+            "last_layer_scale": "0.3",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#f7f43e",
+            "geometry_parameters_width": "1001.90476190476"
+        },
+        {
+            "name": "G-proteins",
+            "position_x": "256",
+            "position_y": "0",
+            "position_z": "0",
+            "last_layer_scale": "1",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#777777",
+            "geometry_parameters_width": "1001.90476190476"
+        },
+        {
+            "name": "Effectors",
+            "position_x": "768",
+            "position_y": "0",
+            "position_z": "0",
+            "last_layer_scale": "1.4",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#777777",
+            "geometry_parameters_width": "1001.90476190476"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "EDNRB",
+            "layer": "GPCRs",
+            "position_x": "0",
+            "position_y": "-168.952380952381",
+            "position_z": "0",
+            "scale": "1.04054054054054",
+            "color": "#0000ff",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "EDNRA",
+            "layer": "GPCRs",
+            "position_x": "0",
+            "position_y": "168.952380952381",
+            "position_z": "0",
+            "scale": "0.824324324324324",
+            "color": "#ff0000",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "GRK2",
+            "layer": "GRKs",
+            "position_x": "0",
+            "position_y": "-126.714285714286",
+            "position_z": "0",
+            "scale": "0.824324324324324",
+            "color": "#0000ff",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "GRK6",
+            "layer": "GRKs",
+            "position_x": "0",
+            "position_y": "126.714285714286",
+            "position_z": "0",
+            "scale": "0.662162162162162",
+            "color": "#ce7d78",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "GNA14",
+            "layer": "G-proteins",
+            "position_x": "0",
+            "position_y": "-386.047107014849",
+            "position_z": "-218.266666666667",
+            "scale": "0.608108108108108",
+            "color": "#0000ff",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "GNAI2",
+            "layer": "G-proteins",
+            "position_x": "0",
+            "position_y": "278.882690597461",
+            "position_z": "354.8",
+            "scale": "2.5",
+            "color": "#2c9c4d",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "GNAI3",
+            "layer": "G-proteins",
+            "position_x": "0",
+            "position_y": "-258.878648233487",
+            "position_z": "118.266666666667",
+            "scale": "2.39189189189189",
+            "color": "#2c9c4d",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "GNA11",
+            "layer": "G-proteins",
+            "position_x": "0",
+            "position_y": "-367.880184331797",
+            "position_z": "-118.266666666667",
+            "scale": "0.662162162162162",
+            "color": "#2c9c4d",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "GNAQ",
+            "layer": "G-proteins",
+            "position_x": "0",
+            "position_y": "-249.713261648745",
+            "position_z": "-168.266666666667",
+            "scale": "2.17567567567568",
+            "color": "#0000ff",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "GNAI1",
+            "layer": "G-proteins",
+            "position_x": "0",
+            "position_y": "54.7055811571941",
+            "position_z": "118.266666666667",
+            "scale": "2.44594594594595",
+            "color": "#2c9c4d",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "GNA13",
+            "layer": "G-proteins",
+            "position_x": "0",
+            "position_y": "-281.546338965694",
+            "position_z": "-318.266666666667",
+            "scale": "0.878378378378378",
+            "color": "#0000ff",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "EDN1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-588.731182795699",
+            "position_z": "-565.573333333333",
+            "scale": "0.554054054054054",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "ADCY6",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "102.692226967742",
+            "position_z": "297.329921729032",
+            "scale": "0.608108108108108",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "GPRIN2",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "201.813275225806",
+            "position_z": "297.329921729032",
+            "scale": "0.608108108108108",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBB4A",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "300.934323483871",
+            "position_z": "297.329921729032",
+            "scale": "0.986486486486487",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "NPM1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "400.055371741935",
+            "position_z": "297.329921729032",
+            "scale": "0.878378378378378",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBB",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "499.17642",
+            "position_z": "297.329921729032",
+            "scale": "1.63513513513514",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "HSP90AB1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "3.57117870967747",
+            "position_z": "396.450969987097",
+            "scale": "1.31081081081081",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "RAC2",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "102.692226967742",
+            "position_z": "396.450969987097",
+            "scale": "0.716216216216216",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBG1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "201.813275225806",
+            "position_z": "396.450969987097",
+            "scale": "1.52702702702703",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "MYH9",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "300.934323483871",
+            "position_z": "396.450969987097",
+            "scale": "0.932432432432432",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "CAPZA2",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "400.055371741935",
+            "position_z": "396.450969987097",
+            "scale": "0.608108108108108",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "PTEN",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "499.17642",
+            "position_z": "396.450969987097",
+            "scale": "0.986486486486487",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "RAC3",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "3.57117870967747",
+            "position_z": "495.572018245161",
+            "scale": "0.716216216216216",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "RAC1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "102.692226967742",
+            "position_z": "495.572018245161",
+            "scale": "1.14864864864865",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBA1B",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "201.813275225806",
+            "position_z": "495.572018245161",
+            "scale": "1.47297297297297",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBA4A",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "300.934323483871",
+            "position_z": "495.572018245161",
+            "scale": "1.47297297297297",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBB4B",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "22.0215053763442",
+            "position_z": "10.9174193548388",
+            "scale": "1.41891891891892",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBB3",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "102.692226967742",
+            "position_z": "-0.0332230451612645",
+            "scale": "1.52702702702703",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBB2A",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "201.813275225806",
+            "position_z": "-0.0332230451612645",
+            "scale": "1.36486486486486",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "RAP1GAP2",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "300.934323483871",
+            "position_z": "-0.0332230451612645",
+            "scale": "0.608108108108108",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBA1A",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "400.055371741935",
+            "position_z": "-0.0332230451612645",
+            "scale": "1.68918918918919",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBGCP3",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "499.17642",
+            "position_z": "-0.0332230451612645",
+            "scale": "1.2027027027027",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "ITCH",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "3.57117870967747",
+            "position_z": "99.0878252129032",
+            "scale": "0.608108108108108",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBGCP6",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "102.692226967742",
+            "position_z": "99.0878252129032",
+            "scale": "0.932432432432432",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBGCP5",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "201.813275225806",
+            "position_z": "99.0878252129032",
+            "scale": "0.932432432432432",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TTC1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "300.934323483871",
+            "position_z": "99.0878252129032",
+            "scale": "0.608108108108108",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBA1C",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "400.055371741935",
+            "position_z": "99.0878252129032",
+            "scale": "1.47297297297297",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBGCP2",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "499.17642",
+            "position_z": "99.0878252129032",
+            "scale": "1.41891891891892",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBB6",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "3.57117870967747",
+            "position_z": "198.208873470968",
+            "scale": "1.09459459459459",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBB2B",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "102.692226967742",
+            "position_z": "198.208873470968",
+            "scale": "1.09459459459459",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBB1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "201.813275225806",
+            "position_z": "198.208873470968",
+            "scale": "0.932432432432432",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "RIC8A",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "300.934323483871",
+            "position_z": "198.208873470968",
+            "scale": "0.77027027027027",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBG2",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "400.055371741935",
+            "position_z": "198.208873470968",
+            "scale": "0.932432432432432",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBA8",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "499.17642",
+            "position_z": "198.208873470968",
+            "scale": "0.662162162162162",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TUBE1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "3.57117870967747",
+            "position_z": "297.329921729032",
+            "scale": "0.662162162162162",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "YWHAQ",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-360.695340501792",
+            "position_z": "184.426666666667",
+            "scale": "1.2027027027027",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "RANGAP1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-390.920067958327",
+            "position_z": "245.615378207216",
+            "scale": "0.716216216216216",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "YWHAH",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-458.83441408108",
+            "position_z": "260.727741935484",
+            "scale": "0.878378378378378",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "USP33",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-513.297491039427",
+            "position_z": "218.383839728043",
+            "scale": "0.554054054054054",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TRAF6",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-513.297491039427",
+            "position_z": "150.46949360529",
+            "scale": "1.04054054054054",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "PDE6D",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-458.83441408108",
+            "position_z": "108.125591397849",
+            "scale": "0.5",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "JUN",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-390.920067958327",
+            "position_z": "123.237955126117",
+            "scale": "1.58108108108108",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "PLCB2",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "69.0752688172043",
+            "position_z": "-115.573333333333",
+            "scale": "0.662162162162162",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "ARHGEF11",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-154.623655913978",
+            "position_z": "-415.573333333333",
+            "scale": "0.554054054054054",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "PIK3CA",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-195.828078334433",
+            "position_z": "-350.302968866719",
+            "scale": "0.662162162162162",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "PIK3CB",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-300.161338409122",
+            "position_z": "-315.573333333333",
+            "scale": "0.554054054054054",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "ARF6",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-418.804744214072",
+            "position_z": "-327.634809176151",
+            "scale": "0.608108108108108",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "AKAP13",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-496.243727598566",
+            "position_z": "-380.843697799947",
+            "scale": "0.554054054054054",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "ARHGEF1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-496.243727598566",
+            "position_z": "-450.302968866719",
+            "scale": "0.608108108108108",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "ARHGEF12",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-418.804744214072",
+            "position_z": "-503.511857490515",
+            "scale": "0.608108108108108",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "CDH1",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-300.161338409122",
+            "position_z": "-515.573333333333",
+            "scale": "0.878378378378378",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "MAP3K5",
+            "layer": "Effectors",
+            "position_x": "0",
+            "position_y": "-195.828078334433",
+            "position_z": "-480.843697799947",
+            "scale": "0.716216216216216",
+            "color": "#a48a9e",
+            "url": "",
+            "descr": ""
+        }
+    ],
+    "edges": [
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "EDNRA_GPCRs",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "GRK2_GRKs",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "GRK6_GRKs",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "EDNRA_GPCRs",
+            "trg": "GRK6_GRKs",
+            "opacity": "0.3",
+            "color": "#ff0000",
+            "channel": ""
+        },
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "GNA14_G-proteins",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "GNAI2_G-proteins",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "GNAI3_G-proteins",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "GNA11_G-proteins",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "GNAQ_G-proteins",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "GNAI1_G-proteins",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "GNA13_G-proteins",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "EDNRA_GPCRs",
+            "trg": "GNAI2_G-proteins",
+            "opacity": "0.3",
+            "color": "#ff0000",
+            "channel": ""
+        },
+        {
+            "src": "EDNRA_GPCRs",
+            "trg": "GNAI3_G-proteins",
+            "opacity": "0.3",
+            "color": "#ff0000",
+            "channel": ""
+        },
+        {
+            "src": "EDNRA_GPCRs",
+            "trg": "GNA11_G-proteins",
+            "opacity": "0.3",
+            "color": "#ff0000",
+            "channel": ""
+        },
+        {
+            "src": "EDNRA_GPCRs",
+            "trg": "GNAI1_G-proteins",
+            "opacity": "0.3",
+            "color": "#ff0000",
+            "channel": ""
+        },
+        {
+            "src": "EDNRB_GPCRs",
+            "trg": "EDN1_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "EDNRA_GPCRs",
+            "trg": "EDN1_Effectors",
+            "opacity": "0.3",
+            "color": "#ff0000",
+            "channel": ""
+        },
+        {
+            "src": "GRK2_GRKs",
+            "trg": "GRK6_GRKs",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "ADCY6_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "GPRIN2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBB4A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "NPM1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBB_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "HSP90AB1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "RAC2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBG1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "MYH9_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "CAPZA2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "PTEN_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "RAC3_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "RAC1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBA1B_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "RAP1GAP2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBGCP3_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "ITCH_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBGCP6_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBGCP5_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TTC1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBB2B_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBB1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "RIC8A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBG2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBA8_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "TUBE1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "GNAI3_G-proteins",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "GNAI2_G-proteins",
+            "trg": "GNAI1_G-proteins",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "ADCY6_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "GPRIN2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBB4A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBB_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "RAC2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBG1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "YWHAQ_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "RANGAP1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "RAC3_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "RAC1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBA1B_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "YWHAH_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "RAP1GAP2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "USP33_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBGCP3_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBGCP6_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBGCP5_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBB2B_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBB1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "RIC8A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBG2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBA8_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TUBE1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI3_G-proteins",
+            "trg": "GNAI1_G-proteins",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "ADCY6_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "PDE6D_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "GPRIN2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBB4A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "JUN_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBB_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "RAC2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBG1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "MYH9_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "RANGAP1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "PTEN_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "RAC3_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "RAC1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBA1B_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "RAP1GAP2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBGCP3_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBGCP6_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBGCP5_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBB2B_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBB1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "RIC8A_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBG2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBA8_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "TUBE1_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAI1_G-proteins",
+            "trg": "GNA13_G-proteins",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "GNA14_G-proteins",
+            "trg": "GRK2_GRKs",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNA14_G-proteins",
+            "trg": "PLCB2_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNA11_G-proteins",
+            "trg": "GRK2_GRKs",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNA11_G-proteins",
+            "trg": "PLCB2_Effectors",
+            "opacity": "0.3",
+            "color": "#62e84a",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "ARHGEF11_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBB4A_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBB_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBG1_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "GRK2_GRKs",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "PIK3CA_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "PIK3CB_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "ARF6_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBA1B_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "PLCB2_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "AKAP13_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "ARHGEF1_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBGCP3_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBGCP6_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBGCP5_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TTC1_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBB2B_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBB1_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "RIC8A_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBG2_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBA8_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "ARHGEF12_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNAQ_G-proteins",
+            "trg": "TUBE1_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNA13_G-proteins",
+            "trg": "ARHGEF11_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNA13_G-proteins",
+            "trg": "CDH1_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNA13_G-proteins",
+            "trg": "ARHGEF1_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNA13_G-proteins",
+            "trg": "MAP3K5_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNA13_G-proteins",
+            "trg": "RIC8A_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "GNA13_G-proteins",
+            "trg": "ARHGEF12_Effectors",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "NPM1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBB_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "HSP90AB1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "YWHAQ_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "MYH9_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "RANGAP1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "RAC1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBA1B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "YWHAH_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "ITCH_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBB2B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "JUN_Effectors",
+            "trg": "TUBB1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "MYH9_Effectors",
+            "trg": "CAPZA2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "MYH9_Effectors",
+            "trg": "RAC1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "MYH9_Effectors",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "CAPZA2_Effectors",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "PTEN_Effectors",
+            "trg": "TUBA1B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "PTEN_Effectors",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "PTEN_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "PTEN_Effectors",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "PTEN_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB3_Effectors",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB3_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB3_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB3_Effectors",
+            "trg": "TUBB2B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB3_Effectors",
+            "trg": "TUBB1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1A_Effectors",
+            "trg": "TUBGCP3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1A_Effectors",
+            "trg": "TTC1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1A_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1A_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1A_Effectors",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1A_Effectors",
+            "trg": "TUBB2B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "ARF6_Effectors",
+            "trg": "RAC1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "ARF6_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "CDH1_Effectors",
+            "trg": "MYH9_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "CDH1_Effectors",
+            "trg": "RANGAP1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "CDH1_Effectors",
+            "trg": "PTEN_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "CDH1_Effectors",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "CDH1_Effectors",
+            "trg": "ARHGEF12_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "HSP90AB1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "CDH1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TUBG1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "GRK2_GRKs",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "YWHAQ_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "PTEN_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TUBA1B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TUBGCP3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB_Effectors",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAQ_Effectors",
+            "trg": "MYH9_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAQ_Effectors",
+            "trg": "PIK3CB_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAQ_Effectors",
+            "trg": "TUBA1B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAQ_Effectors",
+            "trg": "YWHAH_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAQ_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAQ_Effectors",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAQ_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAQ_Effectors",
+            "trg": "TUBGCP3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAQ_Effectors",
+            "trg": "MAP3K5_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAQ_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "PIK3CA_Effectors",
+            "trg": "RAC1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "PIK3CA_Effectors",
+            "trg": "YWHAH_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "PIK3CA_Effectors",
+            "trg": "ARHGEF1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1C_Effectors",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1C_Effectors",
+            "trg": "TUBB2B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB6_Effectors",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "NPM1_Effectors",
+            "trg": "HSP90AB1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "NPM1_Effectors",
+            "trg": "YWHAQ_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "NPM1_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "NPM1_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "NPM1_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "NPM1_Effectors",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "RAC1_Effectors",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "RAC1_Effectors",
+            "trg": "PLCB2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "RAC1_Effectors",
+            "trg": "AKAP13_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "RAC1_Effectors",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "ITCH_Effectors",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "CDH1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "TUBG1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "GRK2_GRKs",
+            "opacity": "0.3",
+            "color": "#00a2ff",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "MYH9_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "GRK6_GRKs",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "PTEN_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "TUBGCP3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "MAP3K5_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "HSP90AB1_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "MAP3K5_Effectors",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4A_Effectors",
+            "trg": "JUN_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4A_Effectors",
+            "trg": "TUBB_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4A_Effectors",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4A_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4A_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4A_Effectors",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB2B_Effectors",
+            "trg": "TUBB1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB2B_Effectors",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBA1B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "YWHAH_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBGCP3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBGCP6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBGCP5_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBB1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBG1_Effectors",
+            "trg": "TUBG2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB2A_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB2A_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB2A_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB2A_Effectors",
+            "trg": "RIC8A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1B_Effectors",
+            "trg": "TUBA4A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1B_Effectors",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1B_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1B_Effectors",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1B_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1B_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1B_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1B_Effectors",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1B_Effectors",
+            "trg": "TUBB2B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA1B_Effectors",
+            "trg": "TUBB1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAH_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAH_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "YWHAH_Effectors",
+            "trg": "MAP3K5_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA4A_Effectors",
+            "trg": "TUBB4B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA4A_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA4A_Effectors",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA4A_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA4A_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA4A_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA4A_Effectors",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBA4A_Effectors",
+            "trg": "TUBB2B_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBGCP2_Effectors",
+            "trg": "TUBG2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4B_Effectors",
+            "trg": "TUBB3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4B_Effectors",
+            "trg": "TUBB2A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4B_Effectors",
+            "trg": "TUBA1A_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4B_Effectors",
+            "trg": "TUBGCP3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4B_Effectors",
+            "trg": "TUBA1C_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4B_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBB4B_Effectors",
+            "trg": "TUBB6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "RAC2_Effectors",
+            "trg": "RAC3_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "RAC2_Effectors",
+            "trg": "RAC1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "RAC3_Effectors",
+            "trg": "RAC1_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBGCP3_Effectors",
+            "trg": "TUBGCP6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBGCP3_Effectors",
+            "trg": "TUBGCP5_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBGCP3_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBGCP3_Effectors",
+            "trg": "TUBG2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBGCP6_Effectors",
+            "trg": "TUBGCP5_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBGCP6_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBGCP6_Effectors",
+            "trg": "TUBG2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBGCP5_Effectors",
+            "trg": "TUBGCP2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "TUBGCP5_Effectors",
+            "trg": "TUBG2_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "RANGAP1_Effectors",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        },
+        {
+            "src": "USP33_Effectors",
+            "trg": "TRAF6_Effectors",
+            "opacity": "0.3",
+            "color": "#cfcfcf",
+            "channel": ""
+        }
+    ],
+    "universal_label_color": "#ffffff"
+}

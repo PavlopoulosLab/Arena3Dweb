@@ -1,0 +1,786 @@
+<style>
+  h2,
+  h3,
+  a,
+  div {
+    font-family: Arial;
+  }
+
+  a {
+    color: lightblue;
+  }
+
+  pre {
+    font-family: Courier;
+    border: 1px solid white;
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: scroll;
+  }
+
+  footer {
+    font-family: Arial;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #2b4e99;
+    text-align: center;
+    font-size: 18px;
+    margin-left: -8px;
+    color: white;
+  }
+
+  p {
+    display: inline-block;
+    width: 90%;
+    word-break: break-word;
+    font-family: Arial;
+    line-height: 1.6;
+  }
+
+  .last_p {
+    margin-bottom: 350px;
+  }
+
+  /* Style the tab */
+  .tab {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    position: relative;
+    width: 100%;
+    display: inline-block;
+  }
+
+  /* Style the buttons inside the tab */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 1%;
+    width: 98%;
+    height: 90%;
+    float: left;
+    word-break: break-word;
+    background-color: black;
+    color: white;
+    margin-top: -4px;
+    text-align: justify;
+  }
+
+  .numbering {
+    color: red;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .indent {
+    margin-left: 20px;
+  }
+
+  @media only screen and (max-width: 1000px) {
+    p {
+      width: 100%;
+    }
+
+    li {
+      width: 100%;
+    }
+
+    .tabcontent {
+      height: 500px;
+    }
+  }
+</style>
+
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'Examples_tab')" id="defaultOpen">Examples</button>
+  <button class="tablinks" onclick="openTab(event, 'API_tab')">API</button>
+  <button class="tablinks" onclick="openTab(event, 'File_tab')">Input & Output Files</button>
+  <button class="tablinks" onclick="openTab(event, 'Navigation_tab')">Navigation Controls</button>
+  <button class="tablinks" onclick="openTab(event, 'Layouts_tab')">Layer Selection & Layouts</button>
+  <button class="tablinks" onclick="openTab(event, 'Scene_tab')">Scene Actions</button>
+  <button class="tablinks" onclick="openTab(event, 'Layer_tab')">Layer Actions</button>
+  <button class="tablinks" onclick="openTab(event, 'Node_tab')">Node Actions</button>
+  <button class="tablinks" onclick="openTab(event, 'Edge_tab')">Edge Actions</button>
+  <button class="tablinks" onclick="openTab(event, 'FPS_tab')">FPS</button>
+  <button class="tablinks" onclick="openTab(event, 'About_tab')">About</button>
+</div>
+
+<footer> &#169; 2022 Pavlopoulos Lab | Bioinformatics and Integrative Biology </footer>
+
+<div id="File_tab" class="tabcontent">
+
+  <h2>Input & Output Files</h2>
+  <p>This is the action panel that allows the user to upload network data as well as export the network in its current
+    state.</p> <br />
+  <p>
+    <img src="../images/help/file.png" alt="File Actions"
+      style="float:left;width:282px;height:425px;margin:5px;margin-right:20px;">
+    <span class="numbering"> 1.</span> The <i> Upload Network </i> option allows the user to upload network data in the
+    Arena3D<sup>web</sup> format. This file consists of 5 columns with headers: <b><i>SourceNode, TargetNode,
+        SourceLayer, TargetLayer</i></b> and <b><i>Weight</i></b>. After the file is uploaded, the weight values are
+    mapped in a [0-1] range and relative opacities are assigned to the respective edges. Edge transparency represents
+    the weight. The heavier the weight, the higher the opacity. In the case of unweighted graphs, one can skip the
+    weight column. The column order in the input file is insignificant.<br />In its online version,
+    Arena3D<sup>web</sup> supports networks of less than 5000 edges. For larger networks, one can download and run
+    Arena3D<sup>web</sup> locally, from <a href="https://github.com/PavlopoulosLab/Arena3Dweb"
+      target="_blank">GitHub</a>, and manually adjust the <b><i>max_allowed_edges</i></b> variable in app.R. <br />
+    <span class="numbering"> 2.</span> The <i> Import Network from a saved object </i> option allows the user to load
+    network data from an exported Arena3D<sup>web</sup> object state (see <span class="numbering">5.</span>). <br />
+    <span class="numbering"> 3.</span> The <i> Upload NODE attributes </i> option allows the user to upload annotation
+    data regarding the nodes of the current network view. Node and Layer name columns are necessary, while Color, Size,
+    Url and Description columns are optional. Color values must be annotated in hex codes. Once the node attributes have
+    been uploaded, links and descriptions can be accessed by right-mouse clicking on the corresponding nodes.<br />
+    <span class="numbering"> 4.</span> The <i> Upload EDGE attributes </i> option allows the user to upload annotation
+    data regarding the edges. Necessary columns: SourceNode, SourceLayer, TargetNode, TargetLayer and Color (in hex
+    code).<br />
+    <span class="numbering"> 5.</span> The <i> Export Current View </i> button allows the user to save the current view
+    in Arena3D<sup>web</sup> export format. The network can be restored by importing the relative saved object (see
+    <span class="numbering">2.</span>).<br />
+  </p>
+
+  <p>Example of the Arena3D<sup>web</sup> <i>Upload Network</i> file format.</p>
+  <pre>SourceNode	SourceLayer	TargetNode	TargetLayer	Weight  Channel
+An	        Group1	        Cn	        Group1          2       1
+An	        Group1	        Bn	        Group1	        10      1
+Bn	        Group1	        Cn	        Group1	        1       1
+Cn	        Group1	        Dn	        Group1	        3       1
+En	        Group2	        Fn	        Group2	        4       1
+En	        Group2	        Hn	        Group2	        5       1
+Fn	        Group2	        Gn	        Group2	        6       1
+Gn	        Group2	        Hn	        Group2	        7       1
+In	        Group3	        Jn	        Group3	        8       1
+Bn	        Group1	        Fn	        Group2	        9       1
+Dn	        Group1	        Hn	        Group2	        11      1
+Dn	        Group1	        In	        Group3	        1       1
+Cn	        Group1	        Jn	        Group3	        1       1
+Hn	        Group2	        In	        Group3	        1       1
+Hn	        Group2	        Kn	        Group4	        1       1
+Kn	        Group4	        Ln	        Group4	        0.1     1
+Kn	        Group4	        Mn	        Group5	        1       1
+An	        Group1	        Nn	        Group5	        1       1
+Kn	        Group4	        On	        Group5	        1       1
+Kn	        Group4	        Pn	        Group5	        12      1
+Kn	        Group4	        Qn	        Group6	        1       1
+Kn	        Group4	        Rn	        Group6	        1       1
+Kn	        Group4	        Sn	        Group7	        1       1
+Kn	        Group4	        Tn	        Group7	        10      1
+  </pre><br />
+
+  <p>Example of the Arena3D<sup>web</sup> <i>Upload NODE attributes</i> file format. All columns are ommitable except
+    from Node and Layer ones. Users do not need to mention every node, just the ones of interest.</p>
+  <pre>Node	Layer	Color	Size	Url	Description
+An	Group1	#6b6a4c	1		This is a node's description.
+Bn	Group1	#ccccff	2		
+Cn	Group1	#254284	3		
+En	Group2		4	https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full	Click the Link of this node to read our review on biological networks.
+Fn	Group2	#7fe5f0	5	http://norma.pavlopouloslab.info/	Click the Link of this node to access our network annotation tool, NORMA.
+Gn	Group2		1		
+In	Group3		2		
+Dn	Group1	#ffb3b3		http://nap.pavlopouloslab.info/	
+Hn	Group2		3		
+Kn	Group4	#e0f2f2			
+Qn	Group6	#ff0067			
+Rn	Group6				
+Sn	Group7	#ffd8e8			
+Tn	Group7		4		
+  </pre><br />
+
+  <p>Example of the Arena3D<sup>web</sup> <i>Upload EDGE attributes</i> file format.</p>
+  <pre>SourceNode	SourceLayer	TargetNode	TargetLayer	Color
+An	        Group1	        Cn	        Group1	        #4EFBE9
+Bn	        Group1	        Fn	        Group2	        #D64EFB
+In	        Group3	        Jn	        Group3	
+Kn	        Group4	        Tn	        Group7	        #4EFB7D
+  </pre><br />
+
+  <p>
+    Example of the Arena3D<sup>web</sup> <i>Import Network</i> file format. Before importing, users can alter the Scene,
+    Layer, Node and/or Edge attributes manually. <br />
+    <b>Scene Pan attributes</b>: Position X, Position Y, Scale, Background Color<br />
+    <b>Scene Sphere attributes</b>: Rotation X, Rotation Y, Rotation Z<br />
+    <b>Layer attributes</b>: Position X, Position Y, Position Z, Scale, Rotation X, Rotation Y, Rotation Z, Background
+    Color, Floor Color, Floor Width<br />
+    <b>Node attributes</b>: Node Name, Node Group, Position X, Position Y, Position Z, Scale, Color, Url,
+    Description<br />
+    <b>Edge attributes</b>: Edge, Weight, Color
+  </p>
+  <pre class="last_p">SCENE_PAN	 	 	 	 	 	 	 	 
+38	16	0.387420489	#1c0d1c	 	 	 	 	 
+SCENE_SPHERE	 	 	 	 	 	 	 	 
+2.68086198337682	1.46785316045254	-2.48877171271573	 	 	 	 	 	 
+LAYERS	 	 	 	 	 	 	 	 
+-1370.14285714286	0	0	1	0	0	0	#e4a801	991.428571428571
+-913.428571428571	0	0	1	0	0	0	#e4a801	991.428571428571
+-456.714285714286	0	0	1	0	0	0	#e4a801	991.428571428571
+0	0	0	1	0	0	0	#e4a801	991.428571428571
+456.714285714286	0	0	1	0	0	0	#e4a801	991.428571428571
+913.428571428571	0	0	1	0	0	0	#e4a801	991.428571428571
+1370.14285714286	0	0	1	0	0	0	#e4a801	991.428571428571
+NODES	 	 	 	 	 	 	 	 
+An	Group1	0	-129.65601687993	-406.46158770244	1	#6b6a4c	 	This is a node.
+Cn	Group1	0	-500.952380952381	1.13686837721616e-13	3	#254284	 	 
+Bn	Group1	0	-354.226825622975	297.550533523299	2	#ccccff	 	 
+Dn	Group1	0	-483.882842502905	108.911054179141	1	#ffb3b3	http://nap.pavlopouloslab.info/	 
+En	Group2	0	129.656016879929	406.46158770244	4	#ce7d78	https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full	Click the Link of this node to read our review on biological networks.
+Fn	Group2	0	-397.432244755419	256.16680932687	5	#7fe5f0	http://norma.pavlopouloslab.info/	Click the Link of this node to access our network annotation tool, NORMA.
+Hn	Group2	0	-433.837487991062	-210.4	3	#ce7d78	 	 
+Gn	Group2	0	-129.65601687993	406.46158770244	1	#ce7d78	 	 
+In	Group3	0	-462.819651524702	-161.033188339229	2	#ea9e70	 	 
+Jn	Group3	0	-496.666663888213	-54.9254216861975	1	#ea9e70	 	 
+Kn	Group4	0	483.882842502904	-108.911054179141	1	#e0f2f2	 	 
+Ln	Group4	0	-304.960487293893	-333.843085594552	1	#a48a9e	 	 
+Mn	Group5	0	-191.706176594321	-388.76850728075	1	#c6e1e8	 	 
+Nn	Group5	0	-65.3874067692832	-417.199997666099	1	#c6e1e8	 	 
+On	Group5	0	65.3874067692827	-417.199997666099	1	#c6e1e8	 	 
+Pn	Group5	0	191.706176594321	-388.76850728075	1	#c6e1e8	 	 
+Qn	Group6	0	304.960487293892	-333.843085594552	1	#ff0067	 	 
+Rn	Group6	0	397.432244755419	-256.16680932687	1	#648177	 	 
+Sn	Group7	0	462.819651524702	-161.03318833923	1	#ffd8e8	 	 
+Tn	Group7	0	496.666663888213	-54.9254216861983	4	#0d5ac1	 	 
+EDGES	 	 	 	 	 	 	 	 
+An_Group1---Cn_Group1	0.243697478991597	#4EFBE9	 	 	 	 	 	 
+An_Group1---Bn_Group1	0.848739495798319	#CFCFCF	 	 	 	 	 	 
+Bn_Group1---Cn_Group1	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+Cn_Group1---Dn_Group1	0.319327731092437	#CFCFCF	 	 	 	 	 	 
+En_Group2---Fn_Group2	0.394957983193277	#CFCFCF	 	 	 	 	 	 
+En_Group2---Hn_Group2	0.470588235294118	#CFCFCF	 	 	 	 	 	 
+Fn_Group2---Gn_Group2	0.546218487394958	#CFCFCF	 	 	 	 	 	 
+Gn_Group2---Hn_Group2	0.621848739495798	#CFCFCF	 	 	 	 	 	 
+In_Group3---Jn_Group3	0.697478991596639	#CFCFCF	 	 	 	 	 	 
+Bn_Group1---Fn_Group2	0.773109243697479	#D64EFB	 	 	 	 	 	 
+Dn_Group1---Hn_Group2	0.92436974789916	#CFCFCF	 	 	 	 	 	 
+Dn_Group1---In_Group3	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+Cn_Group1---Jn_Group3	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+Hn_Group2---In_Group3	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+Hn_Group2---Kn_Group4	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+Kn_Group4---Ln_Group4	0.1	#CFCFCF	 	 	 	 	 	 
+Kn_Group4---Mn_Group5	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+An_Group1---Nn_Group5	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+Kn_Group4---On_Group5	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+Kn_Group4---Pn_Group5	1	#CFCFCF	 	 	 	 	 	 
+Kn_Group4---Qn_Group6	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+Kn_Group4---Rn_Group6	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+Kn_Group4---Sn_Group7	0.168067226890756	#CFCFCF	 	 	 	 	 	 
+Kn_Group4---Tn_Group7	0.848739495798319	#4EFB7D	 	 	 	 	 	 
+END	 	 	 	 	 	 	 	 
+</pre><br />
+
+</div>
+
+<div id="API_tab" class="tabcontent">
+  <p>
+    To open Arena3D<sup>web</sup> from an external application, we offer an API that allows a <b>POST</b> request along
+    with an Arena3D<sup>web</sup> JSON object.
+    The API link is <b><u><i>https://bib.fleming.gr/bib/api/arena3dweb</i></u></b>. Don't forget to set the <b>Header
+      Content-Type</b> to <b>application/json</b>. The JSON object must follow the Arena3D<sup>web</sup> export format
+    as follows:
+  </p>
+  <h3>Simple 3-node, 2-edge, 2-layer network example</h3>
+  <pre>
+{
+    "scene": {
+        "position_x": "0",
+        "position_y": "0",
+        "scale": "0.6561",
+        "color": "#000000",
+        "rotation_x": "0.261799387799149",
+        "rotation_y": "0.261799387799149",
+        "rotation_z": "0.0872664625997165"
+    },
+    "layers": [
+        {
+            "name": "1",
+            "position_x": "-480",
+            "position_y": "0",
+            "position_z": "0",
+            "last_layer_scale": "1",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#777777",
+            "geometry_parameters_width": "947"
+        },
+        {
+            "name": "2",
+            "position_x": "480",
+            "position_y": "0",
+            "position_z": "0",
+            "last_layer_scale": "1",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#777777",
+            "geometry_parameters_width": "947"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "A",
+            "layer": "1",
+            "position_x": "0",
+            "position_y": "-410.179206860405",
+            "position_z": "87.2109740224067",
+            "scale": "1",
+            "color": "#e41a1c",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "B",
+            "layer": "1",
+            "position_x": "0",
+            "position_y": "244.693623604753",
+            "position_z": "-203.550830988035",
+            "scale": "1",
+            "color": "#e41a1c",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "C",
+            "layer": "2",
+            "position_x": "0",
+            "position_y": "-10.2895227857923",
+            "position_z": "361.274295019168",
+            "scale": "1",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        }
+    ],
+    "edges": [
+        {
+            "src": "A_1",
+            "trg": "B_1",
+            "opacity": "1",
+            "color": "#CFCFCF",
+            "channel": ""
+        },
+        {
+            "src": "A_1",
+            "trg": "C_2",
+            "opacity": "1",
+            "color": "#CFCFCF",
+            "channel": ""
+        }
+    ],
+    "universal_label_color": "#FFFFFF",
+    "direction": false
+}
+  </pre>
+  <p>
+    The server then returns a JSON response with the url that links to the Arena3D<sup>web</sup> application, having the
+    requested network loaded:
+  </p>
+  <pre>
+{
+    "url": "https://bib.fleming.gr:8084/app/arena3d?f=081436639JURotmRGQeFJ.json"
+}
+  </pre>
+  <br />
+</div>
+
+<div id="Examples_tab" class="tabcontent">
+
+  <h2>Example Data</h2>
+
+  <p>
+    <b>Random networks with different topologies mapped in 6 layers respectively: </b> <br />
+    The <a href="./data/figure1_data.tsv" download>
+      example network</a> in the Arena3D<sup>web</sup> format. <br />
+    An <a href="./data/figure1_export.json" download>
+      exported state file</a> of this example. <br />
+  </p>
+
+  <hr>
+
+  <p>
+    <b>Network example with 4 layers: </b> <br />
+    The <a href="./data/figure2A_data.tsv" download>
+      network file</a> in Arena3D<sup>web</sup> input format. <br />
+    An <a href="./data/figure2A_export.json" download>
+      exported state file</a> of this example forming a cube in 3D space. <br />
+  </p>
+
+  <hr>
+
+  <p>
+    <b>Another network example with 4 layers, accompanied by node and edge attribute files: </b> <br />
+    The <a href="./data/figure2B_data.tsv" download>
+      network file</a> in Arena3D<sup>web</sup> input format. <br />
+    <a href="./data/figure2B_data_node_attributes.tsv" download>
+      Node attributes file</a> for this example.<br />
+    <a href="./data/figure2B_data_edge_attributes.tsv" download>
+      Edge attributes file</a> for this example. <br />
+    An <a href="./data/figure2B_export.json" download>
+      exported state file</a> of this example. <br />
+  </p>
+
+  <hr>
+
+  <p>
+    <b>SARS-CoV-2 Example: </b> <br />
+    A <a href="./data/covid19_data.tsv" download>
+      Covid-19 network</a> based on the work of <a href="https://www.nature.com/articles/s41586-020-2286-9"
+      target="_blank">Gordon et al.</a>, in the Arena3D<sup>web</sup> format. <br />
+    <a href="./data/covid19_data_node_attributes.tsv" download>
+      Node attributes file</a> for this example.<br />
+    <a href="./data/covid19_data_edge_attributes.tsv" download>
+      Edge attributes file</a> for this example.<br />
+    An <a href="./data/covid19_export.json" download>
+      exported state file</a> of this example. <br />
+  </p>
+
+  <hr>
+
+  <p>
+    <b>GPCR Example: </b> <br />
+    The <a href="./data/GPCRs_data.tsv" download>
+      network file</a> in the Arena3D<sup>web</sup> format. <br />
+    <a href="./data/GPCRs_data_node_attributes.tsv" download>
+      Node attributes file</a> for this example.<br />
+    <a href="./data/GPCRs_data_edge_attributes.tsv" download>
+      Edge attributes file</a> for this example.<br />
+    An <a href="./data/GPCRs_export.json" download>
+      exported state file</a> of this example. <br />
+  </p>
+
+  <hr>
+
+  <p>
+    <b>Scripts: </b> <br />
+    A <a href="./data/transpose.py" download> Python script</a> for parsing edgelist data into Arena3D<sup>web</sup>
+    format.<br />
+    As an example, this input file:
+  </p>
+  <pre>
+  Group1	A,B,C,D  
+  Group2	X,Y,Z  
+  </pre>
+  <p> will be converted to this output file: </p>
+  <pre>
+  Group1	A  
+  Group1	B  
+  Group1	C  
+  Group1	D  
+  Group2	X  
+  Group2	Y  
+  Group2	Z  
+  </pre>
+  <p class="last_p">Run as: python filename.txt<br />
+    The coverted file will be stored in a file named reformatted_filename.txt. </p><br /><br />
+
+</div>
+
+<div id="Navigation_tab" class="tabcontent">
+
+  <h2>Navigation Controls</h2>
+  <p> This is the main panel for network transformations in 3D space. The actions are divided into 3 subsections,
+    namely, Scene, Layers and Nodes.</p><br />
+  <p class="last_p">
+    <img src="../images/help/navigation_panel.png" alt="Navigation Panel"
+      style="float:left;width:280px;height:1152px;margin:5px;margin-right:20px;">
+    <b>General</b> <br />
+    <span class="numbering"> 1.</span> The <i> Navigation Controls </i> button is used to hide/show the navigation
+    panel, while the <i> Stop:Render Inter-Layer Edges </i> button
+    hides inter-layer edges to greatly improve rendering performance. <br />
+    <span class="numbering"> 2.</span> General instructions on network hotkeys. <br /> <span class="indent">1. The user
+      can zoom-in/out by mouse scrolling.</span> <br /> <span class="indent">2. The network can be translated by
+      dragging with the mouse or by pressing the keyboard's arrow keys. </span><br /> <span class="indent">3. The
+      network view is also orbitable on the X (red) and Y (axis) by dragging while holding the middle-mouse button.
+    </span><br /> <span class="indent">4. The user can select/deselect individual nodes by holding the Ctrl button and
+      clicking on a node. The node flashes when the user hovers over it. </span><br /> <span class="indent">5. For a
+      batch node selection, the user may hold the Shift button and drag the left-mouse button to apply a lasso
+      selection. </span><br /> <span class="indent">6. Finally, by double clicking anywhere on the scene, all selected
+      nodes and edges are instantly deselected. </span><br />
+    <br /><b>Scene</b> <br />
+    <span class="numbering"> 3.</span> Controls to rotate the network as one object in 3D space in X (red), Y (green)
+    and Z (blue) axes. The user can set the angle step (between 1&#176; and 15&#176;) on a slider and then hold the
+    dedicated colored buttons to rotate the network. <br />
+    <span class="numbering"> 4.</span> The <i> Recenter Network </i> button readjusts the network at the starting (0, 0,
+    0) coordinates. <br />
+    <br /><b>Layers</b> <br />
+    <span class="numbering"> 5.</span> Dedicated layer rotation controls, with actions similar to the scene rotation
+    controls. These controls are applied to any selected layers. Layers are selected via the <i> Layer Selection &
+      Layouts </i> tab. <br />
+    <span class="numbering"> 6.</span> These 2 buttons can be used to <b> expand </b> or <b> collapse </b> all layers in
+    the X (red) axis, respectively. <br />
+    <span class="numbering"> 7.</span> These controls enable the translation of any selected layers in 3D space. The
+    user can define a step (1-50) through a slider and then translate the selected layers on their respective X (red), Y
+    (green) or Z (blue) axis, by holding the respective buttons. <br />
+    <span class="numbering"> 8.</span> Scaling transformation in a range of 0.2x - 5x for any selected layer. <br />
+    <br /><b>Nodes</b> <br />
+    <span class="numbering"> 9.</span> These 2 buttons allow the user to expand or collapse a group of <b>selected
+      nodes</b> in their corresponding layers, respectively. <br />
+    <span class="numbering"> 10.</span> Node translation controls similar to the layer translation ones. The
+    transformations are applied on selected nodes only. <br />
+    <span class="numbering"> 11.</span> Scaling transformation in a range of 0.2x - 5x for selected nodes. <br />
+  </p><br /><br />
+
+</div>
+
+<div id="Layouts_tab" class="tabcontent">
+
+  <h2>Layer Selection & Layouts</h2>
+  <p>This control panel allows the user to select, deselect and hide layers, show layer-specific node labels, as well as
+    apply layout algorithms and node scaling based on network metrics, on subgraphs of the network.</p> <br />
+  <p>
+    <img src="../images/help/layouts.png" alt="Scene Coords Off"
+      style="float:left;width:360px;height:518px;margin:5px;margin-right:20px;">
+    <span class="numbering"> 1. </span> This consists of a group of 3 exclusive options for subgraph calculations, upon
+    which, layout algorithms (<span class="numbering">3</span>) and node scaling (<span class="numbering">4</span>) is
+    applied. <br /> The <i>Per Layer</i> choice treats each selected layer (<span class="numbering">2</span>) as an
+    individual network. <br /> The <i>All Selected Layers</i> choice treats all selected Layers (<span
+      class="numbering">2</span>) as one, combined network. After the execution of a layout or scaling algorithm, nodes
+    are mapped back to their respective Layer. With this option, the application of force-directed layout algorithms
+    allows network alignment among the different layers. <br /> The <i>Local Layout option for the Selected Nodes Per
+      Layer</i> choice allows layout and scaling algorithms to be applied on a selected sub-group of nodes, per each
+    selected layer respectively.<br />
+    <span class="numbering"> 2. </span> The <i>Select/Deselect All Layers</i> checkbox allows the user to quickly select
+    or deselect all available network layers. After the user uploads or imports a network, a grid of <i>n x 3</i>
+    checkboxes is created, where <i>n</i> is the number of network layers and <i>3</i> are the available actions for
+    each layer; <br /> the 1<sup>st</sup> column allows the individual selection/deselection of layers, <br /> the
+    2<sup>nd</sup> column allows the user to hide individual layers and their inter-layer connections <br /> and the
+    3<sup>rd</sup> column allows the user to show node labels per layer.<br />
+    <span class="numbering"> 3. </span> A list of available layout algorithms of the igraph package, to apply on
+    selected layers (<span class="numbering">2</span>) based on the execution mode of (<span
+      class="numbering">1</span>). <br />
+    <span class="numbering"> 4. </span> A list of available network metrics of the igraph package, used for
+    node-scaling, to apply on selected layers (<span class="numbering">2</span>) based on the execution mode of option
+    (<span class="numbering">1</span>).<br />
+  </p>
+
+  <p>Below, we briefly desribe the available layout algorithms (<span class="numbering">3</span>).</p><br />
+  <ul>
+    <li>Reingold-Tilford: This is a tree-like layout and is suitable for trees, hierarchies and graphs without many
+      cycles.</li>
+    <li>Sugiyama: Like with Reingold-Tilford, this layout algorithm is more suitable for layered directed acyclic
+      graphs.</li>
+    <li>Fruchterman-Reingold: It places nodes on the plane using the force-directed layout algorithm developed by
+      Fruchterman and Reingold.</li>
+    <li>Circle: It places vertices on a circle, ordered by their vertex ids.</li>
+    <li>Grid: This layout places vertices on a rectangular 2D grid.</li>
+    <li>Davidson-Harel: It is a force-directed algorithm which uses simulated annealing and a sophisticated energy
+      function to place nodes on a plane. </li>
+    <li>Distributed Recursive (Graph) Layout: DrL is a force-directed graph layout toolbox focused on real-world
+      large-scale graphs.</li>
+    <li>Multidimensional scaling: It aims to place points from a higher dimensional space in 2D plane, so that the
+      distance between the points are kept as much as possible.</li>
+    <li>Random: This function places the vertices of the graph on a 2D plane uniformly using random coordinates.</li>
+    <li>Kamada-Kawai: This layout places the vertices on a 2D plane by simulating a physical model of springs.</li>
+    <li>Large Graph Layout (LGL): A force directed layout suitable for larger graphs.</li>
+    <li>Graphopt: A force-directed layout algorithm, which scales relatively well to large graphs.</li>
+    <li>Gem: It places vertices on the plane using the GEM force-directed layout algorithm.</li>
+    <li>Star: It places vertices of a graph on the plane, according to the simulated annealing algorithm by Davidson and
+      Harel.</li>
+  </ul>
+
+  <p>Below, we briefly desribe the available network metrics for node scaling (<span class="numbering">4</span>).</p>
+  <br />
+  <ul class="last_p">
+    <li> The <i>Degree</i> metric describes the total number of connections adjacent to a node.</li>
+    <li>The <i>Clustering Coefficient</i> of a node shows whether this node has the tendency to form clusters and is
+      defined as the number of Edges between a node’s neighbors divided by the number of all possible connections
+      between these neighbors.</li>
+    <li>The <i>Betweenness Centrality</i> highlights nodes which can act as mediators in order for two communities to
+      communicate with each other.</li>
+  </ul>
+  <br />
+
+</div>
+
+<div id="Scene_tab" class="tabcontent">
+
+  <h2>Scene Actions</h2>
+  <p> In this tab, the user has 2 scene-related options.</p><br />
+  <p class="last_p">
+    <img src="../images/help/scene1_1.PNG" alt="Scene Coords Off"
+      style="float:left;width:335px;height:146px;margin:5px;margin-right:20px;">
+    <span class="numbering"> 1. </span> A checkbox that toggles the visibility of the scene coordinates system. <br />
+    <span class="numbering"> 2. </span> A ColorPicker for the background of the network. For bright background colors,
+    be sure to set higher opacity values for layer floors (Layer Actions tab) and edges (Edge Actions tab). <br />
+  </p>
+</div>
+
+<div id="Layer_tab" class="tabcontent">
+
+  <h2>Layers</h2>
+  <p>This control panel incorporates layer-related actions.</p> <br />
+  <p class="last_p">
+    <img src="../images/help/layers.png" alt="Layers"
+      style="float:left;width:317px;height:434px;margin:5px;margin-right:20px;">
+    <span class="numbering"> 1. </span> This checkbox allows the user to show or hide all layer labels.<br />
+    <span class="numbering"> 2. </span> This checkbox gives the option of showing the labels of selected layers only.
+    Option (<span class="numbering">1</span>) has priority over this option.<br />
+    <span class="numbering"> 3. </span> This option toggles the coordinate systems -X (red), Y (green), Z (blue)- for
+    all layers. <br />
+    <span class="numbering"> 4. </span> This option allows an alternate visualization for layers floors, in wireframe
+    mode. <br />
+    <span class="numbering"> 5. </span> This slider resizes layer labels. <br />
+    <span class="numbering"> 6. </span> This slider changes layer opacities in [0-1]. <br />
+    <span class="numbering"> 7. </span> This is a ColorPicker button for painting layer floors. <br /><br /><br />
+  </p>
+
+</div>
+
+<div id="Node_tab" class="tabcontent">
+
+  <h2>Nodes</h2>
+  <p>This control panel incorporates node-related actions.</p> <br />
+  <p>
+    <img src="../images/help/nodes.png" alt="Nodes"
+      style="float:left;width:328px;height:485px;margin:5px;margin-right:20px;">
+    <span class="numbering"> 1. </span> This options allows the user to select/deselect all nodes. Selected nodes can
+    then be translated in 3D space via the <i>Navigation Controls</i>, and via the <i>Layer Selection & Layouts</i>
+    action tab can be either rearranged in a local layout or rescaled based on network metrics.<br />
+    <span class="numbering"> 2. </span> This option allows the user to view every node label. This is an option that
+    demands heavy processing power due to the constant redrawing of labels. Ensure that this is enabled only in small
+    networks and in combination with the 15FPS option of the <i>FPS</i> action tab.<br />
+    <span class="numbering"> 3. </span> This option allows viewing only the labels of selected nodes. Priority is given
+    in option (<span class="numbering">2</span>) over this option.<br />
+    <span class="numbering"> 4. </span> This is an option that passes priority on uploaded node colors (via the
+    <i>Upload NODE Attributes</i> action of the <i>File</i> tab) over the default selected node color. Deselecting this,
+    repaints the nodes with their default layer color.<br />
+    <span class="numbering"> 5. </span> Selected nodes are highlighted in a chartreuse color. Deselecting this option
+    allows nodes to retain their original color (either from any uploaded node attributes while option (<span
+      class="numbering">4</span>) is active, or from their default layer color otherwise). Deactivating this option
+    works in combination with activating option (<span class="numbering">3</span>), so as to select certain nodes of a
+    pre-colored path, view their labels without changing their color and extracting the respective image (either with
+    the PrintScreen key, or by snipping or by right-clicking and then selecting the <i>Save as Image</i> option).<br />
+    <span class="numbering"> 6. </span> This option allows resizing of node labels. <br />
+    <span class="numbering"> 7. </span> This is the node search bar. The user can select multiple nodes by entering
+    their names, without the need to specify layers, separated by commas. Any trailing and leading spaces are
+    trimmed.<br />
+  </p>
+
+  <img src="../images/help/mainview.png" alt="Main View"
+    style="float:left;width:726px;height:555px;margin:5px;margin-right:20px;">
+  <ul class="last_p">
+    <li>
+      Hovering over nodes shows their corresponding labels, while right-clicking on them opens a menu, allowing the user
+      to (i) select their direct neighbors (in every layer), (ii) select a multilayer path starting from the current
+      node and expanding on the other layers via their connections or (iii) select a downstream path starting from the
+      current node and expanding only on forward layers, as shown in the image. In case there are accompanying node
+      attributes such as a link or a description, the corresponding options are also shown in the box. <br /><br />
+    </li>
+    <li>
+      Right-click anywhere else on the canvas to save the current view as image.<br />
+    </li>
+  </ul>
+  <br /><br />
+
+</div>
+
+<div id="Edge_tab" class="tabcontent">
+
+  <h2>Edges</h2>
+  <p>This control panel incorporates edge-related actions.</p> <br />
+  <p class="last_p">
+    <img src="../images/help/edges.png" alt="Edges"
+      style="float:left;width:373px;height:433px;margin:5px;margin-right:20px;">
+    <span class="numbering"> 1. </span> This option gives priority on any uploaded/imported values of edge
+    <i>Weights</i>, which are being mapped in the [0-1] range and are assigned on edge opacities. If this option is
+    unchecked, the edge opacity is decided through options (<span class="numbering">4</span>) for intra-layer and (<span
+      class="numbering">5</span>) for inter-layer edges, respectively. <br />
+    <span class="numbering"> 2. </span> This option gives priority on any uploaded edge color attribute over the default
+    white color. <br />
+    <span class="numbering"> 3. </span> When the user right-clicks on a node and <i>Selects Neighbors</i> or <i>Selects
+      MultiLayer Path</i>, edges corresponding to the selection are also highlighted. If this option is unchecked, the
+    selected edges retain either their edge attribute or their default color, based on option (<span
+      class="numbering">2</span>). Double-clicking anywhere on the canvas deselects all currently selected nodes and
+    edges. <br />
+    <span class="numbering"> 4. </span> If option (<span class="numbering">1</span>) is unchecked, the intra-layer edge
+    opacity is decided through this slider.<br />
+    <span class="numbering"> 5. </span> If option (<span class="numbering">1</span>) is unchecked, the inter-layer edge
+    opacity is decided through this slider.<br /><br />
+
+    For a great <b>performance improval</b>, if <span class="numbering">1</span> is NOT selected and <span
+      class="numbering">5</span> set to 0, the inter-layer edges are not drawn on animate and transformations are
+    applied much more smoothly.
+    <br /><br />
+  </p>
+
+</div>
+
+<div id="FPS_tab" class="tabcontent">
+
+  <h2>FPS</h2>
+  <p class="last_p"> The option for frames per second. The user is allowed to choose between 3 options: <br /><br />
+    <img src="../images/help/fps2.PNG" alt="FPS"
+      style="float:left;width:284px;height:158px;margin:5px;margin-right:20px;">
+    &bull; 15FPS, for larger, more processing-heavy networks. <br />
+    &bull; 30FPS, the default option. <br />
+    &bull; 60FPS, for smaller networks that allow smoother rendering. <br />
+  </p>
+
+</div>
+
+<div id="About_tab" class="tabcontent">
+
+  <h2> Developers </h2>
+  <p>
+    &#8226; Evangelos Karatzas, email: karatzas@fleming.gr<br />
+    &#8226; Fotis Baltoumas, email: baltoumas@fleming.gr <br />
+    &#8226; Georgios A. Pavlopoulos, email: pavlopoulos@fleming.gr <br />
+  </p>
+
+  <h2> Arena3D<sup>web</sup> Source Code </h2>
+  <p> <a href="https://github.com/PavlopoulosLab/Arena3Dweb" target="_blank">Github </a></p><br />
+
+  <h2> Related Software </h2>
+  &#8226; <a href="http://norma.pavlopouloslab.info/" target="_blank">NORMA: The NetwORk Makeup Artist</a><br />
+  &#8226; <a href="http://nap.pavlopouloslab.info/" target="_blank">NAP(v2.0): The Network Analysis Profiler</a><br />
+
+  <h2> Related Literature </h2>
+  &#8226; <a href="https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full" target="_blank">A Guide to
+    Conquer the Biological Network Era Using Graph Theory</a><br />
+
+  <h2> Cite Arena3D<sup>web</sup> </h2>
+  <p class="last_p"> Evangelos Karatzas, Fotis A Baltoumas, Nikolaos A Panayiotou, Reinhard Schneider, Georgios A
+    Pavlopoulos, <a
+      href="https://academic.oup.com/nar/advance-article/doi/10.1093/nar/gkab278/6246395?fbclid=IwAR0BBBUZ1FWFkkGZA-mz8nGeTS6ewcosuW9IGl-s6o3lKItse70fL9ecGqM"
+      target="_blank"> Arena3D<sup>web</sup>: interactive 3D visualization of multilayered networks</a>, Nucleic Acids
+    Research, 2021;, gkab278, <a href="https://doi.org/10.1093/nar/gkab278"
+      target="_blank">https://doi.org/10.1093/nar/gkab278 </a> <br /><br /><br /><br /></p>
+
+</div>
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "inline-block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+</script>
