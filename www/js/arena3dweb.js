@@ -50,8 +50,9 @@ const clearCanvas = () => {
   edge_attributes = "",
   last_layer_scale = [];
   channel_values = [];
-  isDirectionEnabled = false,
-  autoRotateFlag = false
+  isDirectionEnabled = false;
+  autoRotateFlag = false;
+  toggleChannelCurvatureRange(false);
   return true;
 }
 
@@ -1164,6 +1165,7 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
 
 const toggleChannelCurvatureRange = (message) => {
   Shiny.setInputValue("channel_curvature_flag", message); //R monitors selected Channels
+  return true;
 }
 
 const assignColor = (checkChannels, i, channels, tag, color, edgeNoChannel) => {

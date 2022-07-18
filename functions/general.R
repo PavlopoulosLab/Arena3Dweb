@@ -51,5 +51,5 @@ reset_UI_values <- function(){
   reset("channelCurvature")
   shinyjs::hide("channelCurvature")
   reset("interChannelCurvature")
-  shinyjs::hide("interChannelCurvature")
+  shinyjs::hide("interChannelCurvature") 
 }
