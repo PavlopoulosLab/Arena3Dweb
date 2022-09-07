@@ -330,7 +330,7 @@ const attachLayerCheckboxes = () => { //insert #groups Checkboxes
     container = document.getElementById('checkboxdiv');
   container.innerHTML = ''; //clear previous checkboxes
   for(let i = 0; i < Object.getOwnPropertyNames(layer_groups).length; i++){
-    checkbox = document.createElement('input'); 
+    checkbox = document.createElement('input');
     checkbox.type = "checkbox";
     checkbox.name = "checkbox".concat(i);
     checkbox.className = "checkbox_check";
@@ -384,12 +384,14 @@ const attachLayerCheckboxes = () => { //insert #groups Checkboxes
   return true;
 }
 
-const moveLayers = () => {
+const moveLayers = (checkMoveFlag) => {
   let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
-      numLayers = layer_planes.length;
+    numLayers = layer_planes.length;
   for (let i = 0; i < numLayers; i++){
-    if (numLayers % 2) layer_planes[i].translateX( (-Math.floor(layer_planes.length/2) + i) * window_width); //odd number of Layers
-    else layer_planes[i].translateX( (-layer_planes.length/2 + i) * window_width + window_width/2); //even number of Layers
+    if(checkMoveFlag && layer_planes[i].move || !checkMoveFlag) {
+      if (numLayers % 2) layer_planes[i].translateX( (-Math.floor(layer_planes.length/2) + i) * window_width); //odd number of Layers
+      else layer_planes[i].translateX( (-layer_planes.length/2 + i) * window_width + window_width/2); //even number of Layers
+    }
   }
   updateLayersRShiny();
   updateNodesRShiny(); // VR node world positions update
@@ -485,6 +487,33 @@ const scrambleNodes = (yMin, yMax, zMin, zMax) => {
   }
   return true;
 }
+
+const adjustLayerSize = () => {
+  let maxY, minY, maxZ, minZ;
+  maxY = minY = maxZ = minZ = nodes[0].position;
+  for (let i = 1; i < nodes.length; i++) {
+    if (nodes[i].position.y > maxY.y) maxY = nodes[i].position;
+    if (nodes[i].position.y < minY.y) minY = nodes[i].position;
+    if (nodes[i].position.z > maxZ.z) maxZ = nodes[i].position;
+    if (nodes[i].position.z < maxZ.z) minZ = nodes[i].position;
+  }
+  y_distance = maxY.manhattanDistanceTo(new THREE.Vector3( )) + new THREE.Vector3( ).manhattanDistanceTo(minY)
+  z_distance = maxZ.manhattanDistanceTo(new THREE.Vector3()) + new THREE.Vector3().manhattanDistanceTo(minZ)
+  if (y_distance < parseFloat(layer_planes[0].geometry.parameters.height)/2) y_distance = parseFloat(layer_planes[0].geometry.parameters.height)/2;
+  if (z_distance < parseFloat(layer_planes[0].geometry.parameters.width)/2) z_distance = parseFloat(layer_planes[0].geometry.parameters.width)/2;
+  scale_y = y_distance / parseFloat(layer_planes[0].geometry.parameters.height);
+  scale_z = z_distance / parseFloat(layer_planes[0].geometry.parameters.width);
+  //TODO update yBoundMax and xBoundMax
+  for (let i = 0; i < layer_planes.length; i++) {
+    layer_planes[i].geometry.scale(1, scale_y, scale_z);
+    layer_planes[i].geometry.parameters.height = y_distance;
+    layer_planes[i].geometry.parameters.width = z_distance;
+  }
+  updateLayersRShiny();
+  redrawLayerLabels();
+}
+
+
 
 // Called from mouse move event
 // @return bool
@@ -662,7 +691,7 @@ const drawEdges = () => {
     } else { //identify between-layer edges
       edges.push(i); //pushing this to keep count of edges for redraw
       layer_edges_pairs.push(i);
-      edge_channels &&  layer_edges_pairs_channels.push(edge_channels[i]);    
+      edge_channels &&  layer_edges_pairs_channels.push(edge_channels[i]); 
     }
   }
   return true;
@@ -877,14 +906,19 @@ const setEdgeColor = () =>{
       if (edges[i].children && edges[i].children.length > 0) {
         edges[i].children.forEach(child => {
           if (child.material && child.material.color) {
-            if (child.userData && child.userData.tag) child.material.color =  new THREE.Color(channel_color[child.userData.tag]);
-            else child.material.color =  new THREE.Color(edgeDefaultColor);
-          } else {
-            if (child.userData && child.userData.tag) child.setColor(channel_color[child.userData.tag])
-            else child.setColor(edgeDefaultColor)
-          }
+              if (exists(selected_edges, i) && selectedEdgeColorFlag) child.material.color = new THREE.Color(selectedDefaultColor);
+              else if (child.userData && child.userData.tag) child.material.color = new THREE.Color(channel_color[child.userData.tag]);
+              else child.material.color = new THREE.Color(edgeDefaultColor);
+            } else {
+              if (child.userData && child.userData.tag) child.setColor(channel_color[child.userData.tag])
+              else child.setColor(edgeDefaultColor)
+            }
         });
-      } else edges[i].material.color = new THREE.Color(edgeDefaultColor);
+      } else {
+        
+        if (exists(selected_edges, i) && selectedEdgeColorFlag) edges[i].material.color = new THREE.Color(selectedDefaultColor);
+        else edges[i].material.color = new THREE.Color(edgeDefaultColor);
+      } 
     } 
   }
 }
@@ -993,7 +1027,9 @@ const attachChannelEditList = () => {
 
       container.appendChild(subcontainer);
       subcontainer = '';
-  });
+    });
+  if (edgeAttributesPriority) document.getElementById('channelColorPicker').style.display = 'none';
+  else document.getElementById('channelColorPicker').style.display = 'block';
 }
 
 const attachChannelLayoutList = () => {
@@ -1116,7 +1152,7 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
     ver_line.material.color =  new THREE.Color(color);
     curve_group.add(ver_line);
     if (isDirectionEnabled) {
-      arrowHelper = createArrow([p1, p2], color,isLayerEdges);
+      arrowHelper = createArrow([p1, p2], color,null, isLayerEdges);
       arrowHelper.userData.tag = temp_channels[0];
       arrowHelper.visible = channelVisibility[ver_line.userData.tag]
       curve_group.add(arrowHelper)
@@ -1153,7 +1189,7 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
       ver_line.material.color = new THREE.Color(color);
       curve_group.add(ver_line);
       if (isDirectionEnabled) {
-        arrowHelper = createArrow([p1, p2], color,isLayerEdges);
+        arrowHelper = createArrow([p1, p2], color,null, isLayerEdges);
         arrowHelper.userData.tag = temp_channels[temp_channels.length - 1];
         arrowHelper.visible = channelVisibility[ver_line.userData.tag]
         curve_group.add(arrowHelper)

@@ -96,7 +96,11 @@ const uploadNetwork = (message) => {
     edge_values.push(Number(String(message.Weight[i])));
   }
   node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; });
-  layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function() { return false; });
+  layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function () { return false; });
+  if (layer_names.length > max_allowed_layers) {
+     alert("Network must contain no more than ".concat(max_allowed_layers).concat(" layers.")); //layer limit
+      return false
+  }
   updateLayerNamesRShiny(); //correct order of layer names to avoid bugs with positions
   updateNodeNamesRShiny(); //for Local Layout algorithms
   updateSelectedNodesRShiny();
@@ -157,6 +161,8 @@ const importNetwork = (message) => {
     "Color": []
     };
   let scrambleNodes_flag = false;
+  let adjustLayerSize_flag = false;
+
   let layerSphereGeometry = new THREE.SphereGeometry( 0 );
   let layerSphereMaterial = new THREE.MeshBasicMaterial( {color:"white", transparent: true, opacity: 0.5});
   for (let i = 0; i < message.length; i++){
@@ -193,9 +199,17 @@ const importNetwork = (message) => {
       layer_planes.push(plane);
       layer_spheres.push(sphere);
       scene_sphere.add(plane);
-      plane.position.x = Number(message[i][1]); //x
-      plane.position.y = Number(message[i][2]); //y
-      plane.position.z = Number(message[i][3]); //z
+      if (message[i][10] != 'TRUE') {
+        plane.position.x = Number(message[i][1]); //x
+        plane.position.y = Number(message[i][2]); //y
+        plane.position.z = Number(message[i][3]); //z
+      } else {
+        // set x,y,z
+        plane.position.x = 0; //x
+        plane.position.y = 0; //y
+        plane.position.z = 0; //z
+        plane.move = true
+      }
       plane.geometry.scale(1, Number(message[i][4]), Number(message[i][4]));
       last_layer_scale.push(Number(message[i][4]));
       plane.rotation.x = Number(message[i][5]);
@@ -253,6 +267,12 @@ const importNetwork = (message) => {
     } else if (message[i][0] == "direction") {
       isDirectionEnabled = (message[i][1] === 'TRUE')
       updateCheckboxInput('directionToggle', message[i][1] === 'TRUE')
+    } else if (message[i][0] == "edgeopacitybyweight") {
+      edgeWidthByWeight = (message[i][1] === 'TRUE')
+      updateCheckboxInput('edgeWidthByWeight', message[i][1] === 'TRUE')
+    } else if (message[i][0] == "adjust_layer_size") {
+      adjustLayerSize_flag = message[i][1]
+      adjustLayerSize_flag = (message[i][1] === 'TRUE');
     }
   }
   floorCurrentColor = floorDefaultColor;
@@ -263,6 +283,7 @@ const importNetwork = (message) => {
       alert("Network must contain no more than ".concat(max_allowed_channels).concat(" channels.")); //channel limit
       return false
     } else {
+        channel_colors = channel_colors_light;
         channels = channel_values;
         channels.forEach(c => {
           channelVisibility[c] = true;
@@ -295,9 +316,9 @@ const importNetwork = (message) => {
   updateNodesRShiny();
   updateEdgesRShiny();
   updateLabelColorRShiny();
-  if (scrambleNodes_flag) {
-    scrambleNodes(import_width/2, -import_width/2, -import_width/2.5, import_width/2.5);
-  }
+  moveLayers(true);
+  if (scrambleNodes_flag) scrambleNodes(import_width / 2, -import_width / 2, -import_width / 2.5, import_width / 2.5);
+  if (adjustLayerSize_flag) adjustLayerSize();
   toggleDirection(isDirectionEnabled)
   return true;
 }
@@ -384,6 +405,11 @@ const autoRotateScene = (message) => {
 }
 
 // Layers ====================
+const maxAllowedLayers = (limit) => {
+  max_allowed_layers = limit;
+  return true;
+}
+
 const showLayerCoords = (message) => {
   let labelCoordsSwitch = message; //message = true or false
   if (labelCoordsSwitch){
@@ -597,6 +623,14 @@ const setInterLayerEdgeOpacity = (message) => {
 
 const redrawEdgeWidthByWeight = (message) => {
   edgeWidthByWeight = message; //message = true or false
+  redrawEdges();
+  return true;
+}
+
+const edgeFileColorPriority = (message) => {
+  edgeAttributesPriority = message; //message = true or false
+  if (edgeAttributesPriority) document.getElementById('channelColorPicker').style.display = 'none';
+  else document.getElementById('channelColorPicker').style.display = 'block';
   redrawEdges();
   return true;
 }
@@ -865,6 +899,7 @@ Shiny.addCustomMessageHandler("handler_edgeAttributes", edgeAttributes);
 // Scene ====================
 Shiny.addCustomMessageHandler("handler_showSceneCoords", showSceneCoords);
 // Layers ====================
+Shiny.addCustomMessageHandler("handler_maxAllowedLayers", maxAllowedLayers);
 Shiny.addCustomMessageHandler("handler_showLayerCoords", showLayerCoords);
 Shiny.addCustomMessageHandler("handler_autoRotateScene", autoRotateScene);
 Shiny.addCustomMessageHandler("handler_floorOpacity", setFloorOpacity);
@@ -883,6 +918,7 @@ Shiny.addCustomMessageHandler("handler_layerEdgeOpacity", setLayerEdgeOpacity);
 Shiny.addCustomMessageHandler("handler_interLayerEdgeOpacity", setInterLayerEdgeOpacity);
 Shiny.addCustomMessageHandler("handler_edgeWidthByWeight", redrawEdgeWidthByWeight);
 Shiny.addCustomMessageHandler("handler_edgeSelectedColorPriority", edgeSelectedColorPriority);
+Shiny.addCustomMessageHandler("handler_edgeFileColorPriority", edgeFileColorPriority);
 Shiny.addCustomMessageHandler("handler_toggleDirection", toggleDirection);
 // Channels ====================
 Shiny.addCustomMessageHandler("handler_maxAllowedChannels", maxAllowedChannels);

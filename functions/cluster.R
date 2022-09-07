@@ -33,6 +33,7 @@ getFormatedClusterString <- function(cluster_name) {
 # @param cluster (character): Cluster needed for stategy3_superNodes functions 
 # @return void
 applyCluster <- function(inDataEdgelist, layout, local_layout, cluster){
+  session$sendCustomMessage("handler_startLoader", T)
   formatted_layout <- getFormatedLayoutString(layout)
   formatted_local_layout <- getFormatedLayoutString(local_layout)
   formatted_cluster <- getFormatedClusterString(cluster)
@@ -44,13 +45,13 @@ applyCluster <- function(inDataEdgelist, layout, local_layout, cluster){
   # } else {
   clustered_graph <- eval(parse(text = paste0(formatted_cluster, "(sub_graph)")))
   # }
-  
   annotations <- parseClusterData(clustered_graph)
   colnames(annotations) <- c('Annotations', 'Nodes')
   layout_coords <- strategy3_superNodes(sub_graph, annotations, formatted_layout, formatted_local_layout,3)
   nodes_layout <- cbind(layout_coords$network_nodes, layout_coords$lay)
   nodes_layout <-  as.matrix(merge(nodes_layout, layout_coords$groups_expanded, by.x = 1, by.y = "Nodes"))
   session$sendCustomMessage("handler_layout", nodes_layout)
+  session$sendCustomMessage("handler_finishLoader", T)
   # reset("selectCluster")
   # reset("selectLayout")
   # reset("selectLocalLayout")
@@ -97,8 +98,13 @@ strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force
     temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "max")
     lay_super <- eval(parse(text = paste0(layout, "(temp_g)")))
     # lay_super <- layout_with_fr(temp_g)
-    lay_super <- cbind(lay_super, names(V(temp_g)))
     # plot(temp_g, layout = lay_super)
+    
+    if (identical(typeof(lay_super), "double")){ # most layout algorithms
+      lay_super <- cbind(lay_super, names(V(temp_g)))
+    } else{ # Sugiyama, list instead of double
+      lay_super <- cbind(lay_super$layout, names(V(temp_g)))
+    }
     
     # 3. push all nodes above away from 0,0 // also check minx maxx for layout as alternative
     # foreach node, calculate a = y/x
@@ -112,13 +118,12 @@ strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force
     lay_super$Y <- lay_super$a * lay_super$X
     lay_super <- lay_super[, c('X', 'Y', 'V3')]
     colnames(lay_super)[3] <- 'Node'
-    
     # 4. foreach group, add low-weight within group edges and
     # apply layout (2nd input choice) with the respective (x,y) coords system
     # extra edges dataframe for all groups
     extra_edges <- merge(groups_expanded, groups_expanded, by.x = "Annotations", by.y = "Annotations")
     lay <- matrix(, nrow = 0, ncol = 3)
-    
+
     for (group in unique(groups_expanded$Annotations)){
       tempFrame <- superFrame
       tempFrame <- tempFrame[(tempFrame$Annotations.x == group & tempFrame$Annotations.y == group), ]
@@ -145,13 +150,18 @@ strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force
         temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "max")
         # temp_lay <- layout_with_fr(temp_g)
         temp_lay <- eval(parse(text = paste0( local_layout, "(temp_g)")))
-        temp_lay <- cbind(temp_lay, names(V(temp_g)))
+        
         # plot(temp_g, layout = temp_lay)
+        if (identical(typeof(temp_lay), "double")){ # most layout algorithms
+          temp_lay <- cbind(temp_lay, names(V(temp_g)))
+        } else{ # Sugiyama, list instead of double
+          temp_lay <- cbind(temp_lay$layout, names(V(temp_g)))
+        }
+        
         groupX <- lay_super[lay_super[,3] == group, 1]
         groupY <- lay_super[lay_super[,3] == group, 2]
         temp_lay[, 1] <- as.numeric(temp_lay[, 1]) + groupX
         temp_lay[, 2] <- as.numeric(temp_lay[, 2]) + groupY
-        
         lay <- rbind(lay, temp_lay)
       } else{
         lay <- rbind(lay, c(lay_super[lay_super[,3] == group, 1],
@@ -159,7 +169,7 @@ strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force
                             groups$Nodes[groups$Annotations == group]))
       }
     } # end for
-    
+
     # 5. calculate coordinates for duplicate nodes
     dflay <- as.data.frame(lay)
     dflay$V1 <- as.numeric(dflay$V1)

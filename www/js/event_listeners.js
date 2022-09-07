@@ -171,10 +171,20 @@ const dblClick = (event) => {
                 } else edges[i].material.color = new THREE.Color( edgeDefaultColor );
               }
             } else{
-              if (typeof(edges[i]) == "number") {
+              if (typeof (edges[i]) == "number") {
                 pos3 = layer_edges_pairs.indexOf(i);
-                layerEdges[pos3].material.color = new THREE.Color( edgeDefaultColor );
-              } else edges[i].material.color = new THREE.Color( edgeDefaultColor );
+                if (layerEdges[pos3].children && layerEdges[pos3].children.length > 0) {
+                  layerEdges[pos3].children.forEach(line => {
+                    line.material.color = new THREE.Color(edgeDefaultColor);
+                  });
+                } else layerEdges[pos3].material.color = new THREE.Color(edgeDefaultColor);
+              } else {
+                if (edges[i].children && edges[i].children.length > 0) {
+                  edges[i].children.forEach(line => {
+                    line.material.color = new THREE.Color(edgeDefaultColor);
+                  });
+                } else edges[i].material.color = new THREE.Color( edgeDefaultColor );
+               } 
             } 
           }
           updateSelectedNodesRShiny();

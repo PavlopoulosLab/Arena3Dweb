@@ -28,6 +28,7 @@ server <- function(input, output, session) {
   # Communicate variables to js ####
   session$sendCustomMessage("handler_maxAllowedEdges", max_allowed_edges) 
   session$sendCustomMessage("handler_maxAllowedChannels", max_allowed_channels)
+  session$sendCustomMessage("handler_maxAllowedLayers", max_allowed_layers)
   session$sendCustomMessage("handler_colorBrewerPallete_dark", channel_colors_dark)
   session$sendCustomMessage("handler_colorBrewerPallete", channel_colors_light)
 
@@ -64,13 +65,17 @@ server <- function(input, output, session) {
         if ("Channel" %in% colnames(inData)) {
           inData$Channel <<- trim(inData$Channel)
         }
-        if (identical(inData$Weight, NULL)) inData$Weight <<- as.matrix(rep(1,length(inData$SourceNode)))
-        else inData$Weight <<- mapper(as.numeric(trim(inData$Weight)), 0.1, 1)
-        session$sendCustomMessage("handler_uploadNetwork", inData)
-        inData [, "SourceNode"] <<- as.matrix(paste(inData[, "SourceNode"], inData[, "SourceLayer"], sep="_"))
-        inData [, "TargetNode"] <<- as.matrix(paste(inData[, "TargetNode"], inData[, "TargetLayer"], sep="_"))
-        inData <<- as.data.frame(inData)
-        
+        if('' %in% inData$Channel){
+          print(paste("A channel name is empty. Channels: ",inData$Channel))
+          session$sendCustomMessage("handler_badObject_alert", "A channel name is empty. Please reupload the file with all the channel names.")
+        } else {
+          if (identical(inData$Weight, NULL)) inData$Weight <<- as.matrix(rep(1,length(inData$SourceNode)))
+          else inData$Weight <<- mapper(as.numeric(trim(inData$Weight)), 0.1, 1)
+          session$sendCustomMessage("handler_uploadNetwork", inData)
+          inData [, "SourceNode"] <<- as.matrix(paste(inData[, "SourceNode"], inData[, "SourceLayer"], sep="_"))
+          inData [, "TargetNode"] <<- as.matrix(paste(inData[, "TargetNode"], inData[, "TargetLayer"], sep="_"))
+          inData <<- as.data.frame(inData)
+        }
         updateSelectInput(session, "navBar", selected = "Main View")
       }
       reset("load_network_file")
@@ -429,7 +434,21 @@ server <- function(input, output, session) {
   observeEvent(input$nodeSelectedColorPriority,{ session$sendCustomMessage("handler_nodeSelectedColorPriority", input$nodeSelectedColorPriority) }, ignoreInit = T)
   # Edges
   observeEvent(input$edgeSelectedColorPriority,{ session$sendCustomMessage("handler_edgeSelectedColorPriority", input$edgeSelectedColorPriority) }, ignoreInit = T)
-  observeEvent(input$edgeWidthByWeight,{ session$sendCustomMessage("handler_edgeWidthByWeight", input$edgeWidthByWeight) }, ignoreInit = T)
+  observeEvent(input$edgeFileColorPriority,{ session$sendCustomMessage("handler_edgeFileColorPriority", input$edgeFileColorPriority) }, ignoreInit = T)
+  observeEvent(input$edgeWidthByWeight,{
+    tryCatch({
+      if (input$edgeWidthByWeight){ # triggers second event when resetting
+        shinyjs::hide("layerEdgeOpacity")
+        shinyjs::hide("interLayerEdgeOpacity")
+      } else {
+        shinyjs::show("layerEdgeOpacity")
+        shinyjs::show("interLayerEdgeOpacity")
+      }}, error = function(e) {
+      print(paste("Error in Edge Opacity:  ", e))
+      session$sendCustomMessage("handler_badObject_alert", "Error on Edge Opacity interface.")
+    })
+     session$sendCustomMessage("handler_edgeWidthByWeight", input$edgeWidthByWeight)
+      }, ignoreInit = T)
   observeEvent(input$directionToggle,{
     tryCatch({
       if (input$directionToggle){ # triggers second event when resetting

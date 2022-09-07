@@ -149,7 +149,8 @@
     Arena3D<sup>web</sup> supports networks of up to 5000 edges and 9 channels. For larger networks, one can
     download and run
     Arena3D<sup>web</sup> locally from <a href="https://github.com/PavlopoulosLab/Arena3Dweb"
-      target="_blank">GitHub</a>, and manually adjust the <b><i>max_allowed_edges</i></b> or
+      target="_blank">GitHub</a>, and manually adjust the <b><i>max_allowed_edges</i></b>, the
+    <b><i>max_allowed_layers</i></b> or
     <b><i>max_allowed_channels</i></b> variable in the global.R file. <br />
     <span class="numbering"> 2.</span> The <i> Load Session </i> option allows the user to load
     network data from an exported JSON object (see <span class="numbering">5.</span>). <br />
@@ -353,7 +354,7 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
     "channel": ""
     }
     ],
-    "universal_label_color": "#ffffff",
+    "universalLabelColor": "#ffffff",
     "direction": true
 </pre><br />
 
@@ -456,8 +457,9 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
             "channel": ""
         }
     ],
-    "universal_label_color": "#FFFFFF",
-    "direction": false
+    "universalLabelColor": "#FFFFFF",
+    "direction": false,
+    "edgeOpacityByWeight": true
 }
   </pre>
   <p>
@@ -686,9 +688,9 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
     <li>Star: It places vertices of a graph on the plane, according to the simulated annealing algorithm by Davidson and
       Harel.</li>
   </ul>
-  
+
   <img src="../images/help/layouts_figure.png" alt="Layouts Figure" style="float:left;height:75%;">
-  
+
   <p>Below, we briefly desribe the available clustering algorithms (<span class="numbering">4</span>).</p><br />
   <ul>
     <li>Louvain: This algorithm is a greedy optimization method that appears to run in time O(nlogn) where n is the
@@ -707,9 +709,9 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
       the algorithm, a subset of the data points have labels (or classifications). These labels are
       propagated to the unlabeled points throughout the course of the algorithm. </li>
   </ul>
-  
+
   <img src="../images/help/clustering.png" alt="Clustering" style="float:left;">
-  
+
   <p>Below, we briefly desribe the available network metrics for node scaling (<span class="numbering">6</span>).</p>
   <br />
   <ul class="last_p">
@@ -742,17 +744,17 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
     <span class="numbering"> 5. </span> A button to see the network in VR. Works only in the online version of the
     tool.<br />
     <div class="scene-actions">
-      <img src="../images/help/predefined_layouts.png" alt="Predefined Layouts"
-        style="float:left;height:35%;">
+      <img src="../images/help/predefined_layouts.png" alt="Predefined Layouts" style="float:left;height:35%;">
     </div>
-    
+
     <img src="../images/help/vr.png" alt="VR" style="height: 50%;">
-    
+
     <p>
-      A dedicated theme bar is also offered on the top-right corner of the UI, allowing the user to choose among a Light, a Dark and a Gray mode.
+      A dedicated theme bar is also offered on the top-right corner of the UI, allowing the user to choose among a
+      Light, a Dark and a Gray mode.
     </p>
     <img src="../images/help/themes.png" alt="Themes" style="margin-bottom:50px;height:45%;">
-        
+
   </div>
 
 </div>
@@ -833,36 +835,40 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
     <img src="../images/help/edges.png" alt="Edges"
       style="float:left;width:320px;height:auto;margin:5px;margin-right:20px;">
     <span class="numbering"> 1. </span> This option highlights the selected edges.<br />
-    <span class="numbering"> 2. </span> This option toggles the graph direction from the source node to target
+    <span class="numbering"> 2. </span> This option toggles gives priority to the edge color that it is set on file. If
+    it is not checked and there network has multiple edges then the channel menu <span class="numbering">11</span> is
+    visible.<br />
+    <span class="numbering"> 3. </span> This option toggles the graph direction from the source node to target
     node (first figure). <br />
-    <span class="numbering"> 3. </span> This slider changes the intra-layer arrow sizes. This is visible only if option
-    (<span class="numbering">2</span>) is enabled.<br />
-    <span class="numbering"> 4. </span> This slider change the inter-layer arrow sizes. This is visible only if option
-    (<span class="numbering">2</span>) is enabled. <br />
-    <span class="numbering"> 5. </span> This option gives priority on any uploaded/imported values of edge
+    <span class="numbering"> 4. </span> This slider changes the intra-layer arrow sizes. This is visible only if option
+    (<span class="numbering">3</span>) is enabled.<br />
+    <span class="numbering"> 5. </span> This slider change the inter-layer arrow sizes. This is visible only if option
+    (<span class="numbering">3</span>) is enabled. <br />
+    <span class="numbering"> 6. </span> This option gives priority on any uploaded/imported values of edge
     <i>Weights</i>, which are being mapped in the [0-1] range and are assigned on edge opacities. If this option is
-    unchecked, the edge opacity is decided through options (<span class="numbering">6</span>) for intra-layer and (<span
-      class="numbering">7</span>) for inter-layer edges, respectively. <br />
-    <span class="numbering"> 6. </span> If option (<span class="numbering">5</span>) is unchecked, the intra-layer edge
+    unchecked, the edge opacity is decided through options (<span class="numbering">7</span>) for intra-layer and (<span
+      class="numbering">8</span>) for inter-layer edges, respectively. <br />
+    <span class="numbering"> 7. </span> If option (<span class="numbering">6</span>) is unchecked, the intra-layer edge
     opacity is decided through this slider.<br />
-    <span class="numbering"> 7. </span> If option (<span class="numbering">5</span>) is unchecked, the inter-layer edge
+    <span class="numbering"> 8. </span> If option (<span class="numbering">6</span>) is unchecked, the inter-layer edge
     opacity is decided through this slider.<br />
-    <span class="numbering"> 8. </span> If the graph is multi-edge then this slider is visible and control the
-    curvature of the intra-layer edges.<br />
     <span class="numbering"> 9. </span> If the graph is multi-edge then this slider is visible and control the
+    curvature of the intra-layer edges.<br />
+    <span class="numbering"> 10. </span> If the graph is multi-edge then this slider is visible and control the
     curvature of the inter-layer edges.<br />
-    <span class="numbering"> 10. </span> If the graph that is uploaded is multi-edge then then the channel menu (a
+    <span class="numbering"> 11. </span> If the graph that is uploaded is multi-edge then then the channel menu (a
     grid
     of <i>n x 3</i>)
     is created, where <i>n</i> is the number of channels and <i>3</i> are the available columns for
     each layer; <br /> the 1<sup>st</sup> column is the name of the channel,<br /> the
     2<sup>nd</sup> column allows the user to change the color of each channel,<br /> the
     3<sup>rd</sup> column allows the user to hide individual channels. (second figure)<br />
+    This is visible only if option
+    (<span class="numbering">2</span>) is not enabled.<br />
     <br />
     <img src="../images/help/directed_graph.png" alt="Directed Graph"
       style="float:left;height:45%;margin:5px;margin-right:20px;">
-    <img src="../images/help/channels.png" alt="Channels"
-      style="float:left;height:50%;margin:5px;margin-right:20px;">
+    <img src="../images/help/channels.png" alt="Channels" style="float:left;height:50%;margin:5px;margin-right:20px;">
     <br />
   </div>
 

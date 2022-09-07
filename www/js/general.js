@@ -86,6 +86,6 @@ const assign2Children = (parent, color, getColorsFromMap) => {
       
     });
   } else {
-    parent.material.color = color;
+    parent.material.color = new THREE.Color(color);
   }
 }

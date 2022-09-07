@@ -8,9 +8,10 @@ library(jsonlite)
 library(tidyr)
 
 # Initializing Script Static Variables
-max_allowed_edges <- 5000
+max_allowed_edges <- 10000
 inData <- ""
 max_allowed_channels <- 9
+max_allowed_layers <- 18
 color_brewer_pallete <- 'Set3'
 color_brewer_pallete_dark <- 'Set1'
 channel_colors_light <- brewer.pal(max_allowed_channels, color_brewer_pallete)
