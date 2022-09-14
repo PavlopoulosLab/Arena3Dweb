@@ -55,15 +55,7 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
         if (!exists(selected_edges, pos)){
           selected_edges.push(pos);
           pos = layer_edges_pairs.indexOf(pos); //integer position needed for line object to be painted correctly
-          if (selectedEdgeColorFlag) {
-            if (layerEdges[pos].children && layerEdges[pos].children.length > 0) {
-              layerEdges[pos].children.forEach(channel => {
-                channel.material.color = new THREE.Color(selectedDefaultColor);
-              });
-            } else {
-              layerEdges[pos].material.color = new THREE.Color(selectedDefaultColor); //only inter-layers possible to be painted here
-            }
-          }
+          if (selectedNodeColorFlag) changeColor(layerEdges[pos], selectedDefaultColor);
         }
       }
     }
