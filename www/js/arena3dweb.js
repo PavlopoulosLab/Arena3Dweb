@@ -928,6 +928,7 @@ const changeChannelColor = (el) => {
   channel_name = el.id.substring(5);
   channel_color[channel_name] = el.value;
   redrawEdges();
+  updateEdgesRShiny();
   return true;
 }
 
