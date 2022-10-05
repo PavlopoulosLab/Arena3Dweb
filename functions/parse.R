@@ -188,7 +188,7 @@ parse_import_data <- function(inFile){
   return(TRUE)
 }
 
-format_export_data <- function(js_scene_pan, js_scene_sphere, js_layers, js_nodes, js_edge_pairs, label_color){
+format_export_data <- function(js_scene_pan, js_scene_sphere, js_layers, js_nodes, js_edge_pairs, label_color, direction){
   scene_df <- list(position_x=unbox(js_scene_pan[1]), position_y=unbox(js_scene_pan[2]), scale=unbox(js_scene_pan[3]), color=unbox(js_scene_pan[4]),
                 rotation_x=unbox(toString(js_scene_sphere[1])), rotation_y=unbox(toString(js_scene_sphere[2])), rotation_z=unbox(toString(js_scene_sphere[3])))
   
@@ -216,7 +216,7 @@ format_export_data <- function(js_scene_pan, js_scene_sphere, js_layers, js_node
   }
   colnames(edges_df) <- c("src", "trg", "opacity", "color", "channel")
   
-  matrix <- list(scene = scene_df, layers = layer_df, nodes = nodes_df, edges = edges_df, universalLabelColor = unbox(label_color))
+  matrix <- list(scene = scene_df, layers = layer_df, nodes = nodes_df, edges = edges_df, universalLabelColor = unbox(label_color), direction = unbox(direction))
 
   return(matrix)
 }

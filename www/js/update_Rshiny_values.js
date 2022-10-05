@@ -17,18 +17,19 @@ const updateLayersRShiny = () => {
     targetQ = new THREE.Quaternion(); // VR
   temp_js_layers = [];
   let temp_size;
-  if (typeof floorCurrentColor === Object) {
+  if (typeof floorCurrentColor === 'object') {
     tempColor = '#' + floorCurrentColor.getHexString();
   } else {
     tempColor = floorCurrentColor;
   }
   for (let i = 0; i < layer_planes.length; i++){
-    if (layerColorFile) layerColor = floorDefaultColors[i]
-    else layerColor = tempColor;
-    if (layer_planes[i].geometry.parameters.width < layer_planes[i].geometry.parameters.height) temp_size = layer_planes[i].geometry.parameters.width;
-    else temp_size = layer_planes[i].geometry.parameters.height;
+    if (layerColorFile) {
+        if (typeof floorDefaultColors[i] === 'object') {
+          layerColor = '#' + floorDefaultColors[i].getHexString();
+        } else layerColor = floorDefaultColors[i]
+    } else layerColor = tempColor;
      temp_js_layers = [layer_names[i], layer_planes[i].position.x, layer_planes[i].position.y, layer_planes[i].position.z, last_layer_scale[i],
-                      layer_planes[i].rotation.x, layer_planes[i].rotation.y, layer_planes[i].rotation.z, layerColor, temp_size];
+                      layer_planes[i].rotation.x, layer_planes[i].rotation.y, layer_planes[i].rotation.z, layerColor,  layer_planes[i].geometry.parameters.width];
     js_layers.push(temp_js_layers);
     
     // VR

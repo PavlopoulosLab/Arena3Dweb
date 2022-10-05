@@ -115,6 +115,7 @@
 <div class="tab">
   <button class="tablinks" onclick="openTab(event, 'Examples_tab')" id="defaultOpen">Examples</button>
   <button class="tablinks" onclick="openTab(event, 'API_tab')">API</button>
+  <button class="tablinks" onclick="openTab(event, 'Cytoscape_tab')">Cytoscape App</button>
   <button class="tablinks" onclick="openTab(event, 'File_tab')">Input & Output Files</button>
   <button class="tablinks" onclick="openTab(event, 'Navigation_tab')">Navigation Controls</button>
   <button class="tablinks" onclick="openTab(event, 'Layouts_tab')">Layer Selection & Layouts</button>
@@ -126,7 +127,7 @@
   <button class="tablinks" onclick="openTab(event, 'About_tab')">About</button>
 </div>
 
-<footer> &#169; 2022 Pavlopoulos Lab | Bioinformatics and Integrative Biology </footer>
+<footer> &#169; 2023 Pavlopoulos Lab | Bioinformatics and Integrative Biology </footer>
 
 <div id="File_tab" class="tabcontent">
 
@@ -474,6 +475,34 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
   <br />
 </div>
 
+<div id="Cytoscape_tab" class="tabcontent">
+  <h3><a href="https://apps.cytoscape.org/apps/arena3DwebApp" target="_blank">
+    Arena3D<sup>web</sup>App</a> is now available in the <a href="https://apps.cytoscape.org/" target="_blank"> Cytoscape App Store</a>.</h3>
+  <p>
+    Users can now load their 2D <a href="https://cytoscape.org/download.html" target="_blank"> Cytoscape </a> instantly in Arena3D<sup>web</sup>.
+    Take this aspirin network example, designed in Cytoscape via the StringApp.
+  </p>
+  <img src="../images/help/cytoscape_aspirin.png" alt="Cytoscape example" style="float:left;width:1200px;">
+  <img src="../images/help/arena3dwebapp.png" alt="ArenaApp prompt window" style="float:left;width:500px;">
+  <p>
+    The Arena3D<sup>web</sup>App prompt window asks for layer and description information in its dedicated panel.
+    The most important setting is choosing which node attribute contains the layer information.
+    It could be any numeric or string value that defines up to 18 different non-overlapping groups, which will be translated into layers.
+    Furthermore, Arena3DwebApp extracts the currently displayed color, size and coordinates of the nodes 
+    as well as the directionality, color, thickness, and transparency of the edges. 
+    The node label font and the network background are also transferred. 
+    The user can choose which column to use for the node description and URL 
+    that can be seen in Arena3D<sup>web</sup> as additional node information (on node right-click). 
+    If there are nodes that do not participate in any named layer, 
+    they are added to a layer named “unassigned” by default, but the user can choose to not import them in Arena3D<sup>web</sup>.
+    The app generates a JSON file that is automatically sent to Arena3D<sup>web</sup> and gets displayed in the user’s default web browser. 
+    If users want to share the layered network or open it later, they can export the JSON file from Cytoscape and import it in Arena3D<sup>web</sup>.
+    The generated Arena3D<sup>web</sup> should look something like this:
+  </p>
+  <img src="../images/help/arena_cytoscape_aspirin.png" alt="Arena Cytoscape Integration" style="float:left;width:1200px;">
+  
+</div>
+    
 <div id="Examples_tab" class="tabcontent">
 
   <h2>Example Data</h2>
@@ -513,7 +542,7 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
   <hr>
 
   <p>
-    <b>SARS-CoV-2 Example: </b> <br />
+    <b>SARS-CoV-2 example: </b> <br />
     A <a href="./data/covid19_data.tsv" download>
       Covid-19 network</a> based on the work of <a href="https://www.nature.com/articles/s41586-020-2286-9"
       target="_blank">Gordon et al.</a>, in the Arena3D<sup>web</sup> format. <br />
@@ -528,7 +557,7 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
   <hr>
 
   <p>
-    <b>GPCR Example: </b> <br />
+    <b>GPCR example: </b> <br />
     The <a href="./data/GPCRs_data.tsv" download>
       network file</a> in the Arena3D<sup>web</sup> format. <br />
     <a href="./data/GPCRs_data_node_attributes.tsv" download>
@@ -540,7 +569,38 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
   </p>
 
   <hr>
+  
+  <p>
+    <b>Aspirin network example with 3 data channels: </b> <br />
+    The <a href="./data/aspirin_3channels.tsv" download>
+      network file</a> in the Arena3D<sup>web</sup> format. <br />
+    An <a href="./data/aspirin_3channels_directed.json" download>
+      exported state file</a> of this example. <br />
+  </p>
 
+  <hr>
+
+  <p>
+    <b><a href="https://imbbc.hcmr.gr/project/prego/" target="_blank"> PREGO </a> 3-channel example
+    for ‘anaerobic ammonium oxidation’ process associations:</b> <br />
+    The <a href="./data/prego.tsv" download>
+      network file</a> in the Arena3D<sup>web</sup> format. <br />
+    An <a href="./data/prego.json" download>
+      exported state file</a> of this example. <br />
+  </p>
+
+  <hr>
+  
+  <p>
+    <b>Cytoscape-Arena3D<sup>web</sup>App aspirin multi-channel interoperability example: </b> <br />
+    The <a href="./data/StringApp_aspirin.cys" download>
+      network file</a> in Cytoscape format. <br />
+    An <a href="./data/Arena3DwebApp_aspirin.json" download>
+      exported state file</a> of this example in the Arena3D<sup>web</sup> exported format. <br />
+  </p>
+
+  <hr>
+  
   <p>
     <b>Scripts: </b> <br />
     A <a href="./data/transpose.py" download> Python script</a> for parsing edgelist data into Arena3D<sup>web</sup>

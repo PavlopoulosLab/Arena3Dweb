@@ -503,11 +503,17 @@ const adjustLayerSize = () => {
   if (z_distance < parseFloat(layer_planes[0].geometry.parameters.width)/2) z_distance = parseFloat(layer_planes[0].geometry.parameters.width)/2;
   scale_y = y_distance / parseFloat(layer_planes[0].geometry.parameters.height);
   scale_z = z_distance / parseFloat(layer_planes[0].geometry.parameters.width);
-  //TODO update yBoundMax and xBoundMax
+  //Keep the largest dimension
+  if (scale_y > scale_z) {
+    scale = scale_y;
+    distance = y_distance
+  } else {
+    scale = scale_z;
+    distance = z_distance
+  }
   for (let i = 0; i < layer_planes.length; i++) {
-    layer_planes[i].geometry.scale(1, scale_y, scale_z);
-    layer_planes[i].geometry.parameters.height = y_distance;
-    layer_planes[i].geometry.parameters.width = z_distance;
+    layer_planes[i].geometry.scale(1, scale, scale);
+    layer_planes[i].geometry.parameters.height =  layer_planes[i].geometry.parameters.width = distance;
   }
   updateLayersRShiny();
   redrawLayerLabels();
@@ -715,7 +721,8 @@ const drawLayerEdges = (flag) => {
     let c = document.getElementById("checkboxdiv").children;
     for (i = 0; i < layer_edges_pairs.length; i++){
       scene.remove(layerEdges[i]);
-      if (layer_edges_pairs_channels && layer_edges_pairs_channels[i] &&  layer_edges_pairs_channels[i].length === 1) {
+      // Keep default color
+      if (layer_edges_pairs_channels && layer_edges_pairs_channels[i] &&  layer_edges_pairs_channels[i].length === 1) {  
         color = channel_color[layer_edges_pairs_channels[i][0]];
       } else {
         color = edgeDefaultColor;
@@ -729,14 +736,15 @@ const drawLayerEdges = (flag) => {
         index2 = node_whole_names.indexOf(edge_split[1]);
         points.push( nodes[index1].getWorldPosition(new THREE.Vector3()), nodes[index2].getWorldPosition(new THREE.Vector3()) );
     		let geometry = new THREE.BufferGeometry().setFromPoints( points );
-    		let material = "";
+        let material = "";
+        // set color to selectedDefault if the edge is selected
     		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag) color = selectedDefaultColor;
         else if (edge_attributes !== "" && edgeAttributesPriority) {
     		  pos = edges.indexOf(layer_edges_pairs[i]);
     		  pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[pos]);
     		  pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[pos]);
           if (checkIfAttributeColorExist(edge_attributes, pos1)) color = edge_attributes.Color[pos1];
-    		  else if ( checkIfAttributeColorExist(edge_attributes, pos2)) color = edge_attributes.Color[pos2];
+          else if (checkIfAttributeColorExist(edge_attributes, pos2)) color = edge_attributes.Color[pos2];
     		}
         if (edgeWidthByWeight) material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: edge_values[layer_edges_pairs[i]] });
         else {
@@ -745,6 +753,8 @@ const drawLayerEdges = (flag) => {
         let arrowHelper = createArrow(points, color,null, true);
         let ver_line = new THREE.Line(geometry, material);
 
+        // if the edge is multi channel create the multiple channels
+        
         if (layer_edges_pairs_channels[i]) {
           let curve_group = new THREE.Group();
           curve_group = createChannels(points[0], points[1], interChannelCurvature, ver_line, i, true);
@@ -819,7 +829,6 @@ const redrawEdges = () => {
           edges[i] = group;
         }
       }
-
     }
   }
   return true;
@@ -899,7 +908,7 @@ const createCurve = (p1, p2, lgth, color, isLayerEdges, group, tag) => {
 
 const setEdgeColor = () =>{
   let i;
-  // inter-layer edges automatically from edgeDefaultColor
+  // inter-layer edges automatically change from edgeDefaultColor
   for (i=0; i<edges.length; i++) {
     // intra-layer edges
     if (typeof (edges[i]) === 'object') {
@@ -915,7 +924,6 @@ const setEdgeColor = () =>{
             }
         });
       } else {
-        
         if (exists(selected_edges, i) && selectedEdgeColorFlag) edges[i].material.color = new THREE.Color(selectedDefaultColor);
         else edges[i].material.color = new THREE.Color(edgeDefaultColor);
       } 
@@ -1104,14 +1112,12 @@ const getChannelColor = (i, c, isLayerEdges) => {
     pos = edges.indexOf(layer_edges_pairs[i]);
     j = pos;
   } else j = i;
-
   if (exists(selected_edges, j) && selectedEdgeColorFlag) {
     return selectedDefaultColor;
   }
   else if (edge_attributes !== "" && edgeAttributesPriority) {
-    pos1arr = findIndices(edge_attributes.SourceNode, edge_pairs[i]);
-    pos2arr = findIndices(edge_attributes.TargetNode, edge_pairs[i]);
-
+    pos1arr = findIndices(edge_attributes.SourceNode, edge_pairs[j]);
+    pos2arr = findIndices(edge_attributes.TargetNode, edge_pairs[j]);
     pos1arr != -1 && pos1arr.forEach(pos1 => {
       if (checkIfAttributeColorExist(edge_attributes, pos1)){//if node not currently selected and exists in node attributes file and color is assigned
         if (edge_attributes.Channel[pos1] === c) {
@@ -1135,7 +1141,7 @@ const getChannelColor = (i, c, isLayerEdges) => {
 }
 
 // t is a random percentage that has been set after tries
-// t is a factor between 0-1 
+// t is a factor between 0-1
 const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
   let arrowHelper;
   temp_channels = [];
@@ -1150,7 +1156,7 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
     ver_line.visible = channelVisibility[ver_line.userData.tag];
     color = getChannelColor(group_pos, ver_line.userData.tag, isLayerEdges);
     !color && (color = channel_color[ver_line.userData.tag]);
-    ver_line.material.color =  new THREE.Color(color);
+    ver_line.material.color = new THREE.Color(color);
     curve_group.add(ver_line);
     if (isDirectionEnabled) {
       arrowHelper = createArrow([p1, p2], color,null, isLayerEdges);
@@ -1171,8 +1177,6 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
       !color && (color = channel_color[temp_channels[i]]);
       curve_group = createCurve(p1, p2, lgth, color, isLayerEdges, curve_group, temp_channels[i]);
     }
-
-
     for (let i = 0; i < loopTotal; i++) {
       lgth = ver_line_const * (loopTotal - i) / loopTotal;
       color = getChannelColor(group_pos, temp_channels[loopTotal + i], isLayerEdges);

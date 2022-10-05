@@ -152,41 +152,32 @@ const dblClick = (event) => {
               pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[i]);
               pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[i]);
               if (pos1 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos1] !== "" && edge_attributes.Color[pos1] != " "){//if node not currently selected and exists in node attributes file and color is assigned
-                if (typeof(edges[i]) == "number"){ //edge is inter-layer
+                if (typeof (edges[i]) == "number") { //edge is inter-layer
                   pos3 = layer_edges_pairs.indexOf(i);
-                  layerEdges[pos3].material.color = new THREE.Color( edge_attributes.Color[pos1] );
+                  changeColor(layerEdges[pos3], edge_attributes.Color[pos3]);
                 }
-                else edges[i].material.color = new THREE.Color( edge_attributes.Color[pos1] ); //edge is intra layer
+                else changeColor(edges[i], edge_attributes.Color[pos3]);
               }
               else if (pos2 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos2] !== "" && edge_attributes.Color[pos2] != " "){ 
                 if (typeof(edges[i]) == "number"){ //edge is inter-layer
                   pos3 = layer_edges_pairs.indexOf(i);
-                  layerEdges[pos3].material.color = new THREE.Color( edge_attributes.Color[pos2] );
-                } else edges[i].material.color = new THREE.Color( edge_attributes.Color[pos2] );
+                  changeColor(layerEdges[pos3], edge_attributes.Color[pos2]);
+                } else changeColor(edges[i], edge_attributes.Color[pos2]);
               }
               else{
                 if (typeof(edges[i]) == "number") {
                   pos3 = layer_edges_pairs.indexOf(i);
-                  layerEdges[pos3].material.color = new THREE.Color( edgeDefaultColor );
-                } else edges[i].material.color = new THREE.Color( edgeDefaultColor );
+                  changeColor(layerEdges[pos3], edgeDefaultColor);
+                } else changeColor(edges[i], edgeDefaultColor);
               }
             } else{
               if (typeof (edges[i]) == "number") {
                 pos3 = layer_edges_pairs.indexOf(i);
-                if (layerEdges[pos3].children && layerEdges[pos3].children.length > 0) {
-                  layerEdges[pos3].children.forEach(line => {
-                    line.material.color = new THREE.Color(edgeDefaultColor);
-                  });
-                } else layerEdges[pos3].material.color = new THREE.Color(edgeDefaultColor);
-              } else {
-                if (edges[i].children && edges[i].children.length > 0) {
-                  edges[i].children.forEach(line => {
-                    line.material.color = new THREE.Color(edgeDefaultColor);
-                  });
-                } else edges[i].material.color = new THREE.Color( edgeDefaultColor );
-               } 
+                changeColor(layerEdges[pos3], edgeDefaultColor);
+              } else changeColor(edges[i], edgeDefaultColor);
             } 
           }
+          redrawEdges();
           updateSelectedNodesRShiny();
         }
       }

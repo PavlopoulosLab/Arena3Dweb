@@ -486,7 +486,8 @@ server <- function(input, output, session) {
         js_nodes <- as.data.frame(fromJSON(input$js_nodes))
         js_edge_pairs <- as.data.frame(fromJSON(input$js_edge_pairs))
         js_label_color <- input$js_label_color
-        exportData <- format_export_data(js_scene_pan, js_scene_sphere, js_layers, js_nodes, js_edge_pairs, js_label_color)
+        js_direction_flag <- input$directionToggle
+        exportData <- format_export_data(js_scene_pan, js_scene_sphere, js_layers, js_nodes, js_edge_pairs, js_label_color, js_direction_flag)
         json_output <- toJSON(exportData)
       }
       write(json_output, con)

@@ -1,0 +1,32 @@
+SourceNode	SourceLayer	TargetNode	TargetLayer	Channel
+Anammox	Process	Nitrospira	Organism	Default
+Anammox	Process	Thauera	Organism	Default
+Anammox	Process	Nitrococcus	Organism	Default
+Anammox	Process	Sulfurimonas	Organism	Default
+Anammox	Process	Thioploca	Organism	Default
+Anammox	Process	Dechloromonas	Organism	Default
+Anammox	Process	Sedimenticola	Organism	Default
+Anammox	Process	Zoogloea	Organism	Default
+Anammox	Process	Sulfuricurvum	Organism	Default
+Anammox	Process	Beggiatoa	Organism	Default
+Anammox	Process	Arcobacter	Organism	Default
+Beggiatoa	Organism	Microbial mat	Environment	Literature
+Beggiatoa	Organism	Sediment	Environment	Literature
+Beggiatoa	Organism	Sea floor	Environment	Literature
+Beggiatoa	Organism	Mud volcano	Environment	Literature
+Beggiatoa	Organism	Sea water	Environment	Literature
+Beggiatoa	Organism	Fresh water	Environment	Literature
+Beggiatoa	Organism	Ocean	Environment	Literature
+Beggiatoa	Organism	Drainage basin	Environment	Literature
+Beggiatoa	Organism	Anoxic water	Environment	Literature
+Beggiatoa	Organism	Chemocline	Environment	Literature
+Beggiatoa	Organism	Coast	Environment	Literature
+Beggiatoa	Organism	Biofilm	Environment	Literature
+Beggiatoa	Organism	Sediment	Environment	Environmental Samples
+Beggiatoa	Organism	Coast	Environment	Environmental Samples
+Beggiatoa	Organism	Marine biome	Environment	Environmental Samples
+Beggiatoa	Organism	Mangrove biome	Environment	Environmental Samples
+Beggiatoa	Organism	Coastal plain	Environment	Environmental Samples
+Beggiatoa	Organism	Oil	Environment	Environmental Samples
+Beggiatoa	Organism	Layer	Environment	Environmental Samples
+Beggiatoa	Organism	Field	Environment	Environmental Samples

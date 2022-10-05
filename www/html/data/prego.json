@@ -1,0 +1,601 @@
+{
+    "scene": {
+        "position_x": "6",
+        "position_y": "25",
+        "scale": "0.668297731460458",
+        "color": "#ffffff",
+        "rotation_x": "0.261799387799151",
+        "rotation_y": "0.0872664625997165",
+        "rotation_z": "-1.5707963267949"
+    },
+    "layers": [
+        {
+            "name": "Process",
+            "position_x": "-504",
+            "position_y": "-25",
+            "position_z": "0",
+            "last_layer_scale": "0.5",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "16758968",
+            "geometry_parameters_width": "865"
+        },
+        {
+            "name": "Organism",
+            "position_x": "0",
+            "position_y": "25",
+            "position_z": "0",
+            "last_layer_scale": "1",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "16758968",
+            "geometry_parameters_width": "865"
+        },
+        {
+            "name": "Environment",
+            "position_x": "548.604161716517",
+            "position_y": "-53.115871548108",
+            "position_z": "-1.77485942830598",
+            "last_layer_scale": "1",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "16758968",
+            "geometry_parameters_width": "865"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Anammox",
+            "layer": "Process",
+            "position_x": "0",
+            "position_y": "-4.95633216213656",
+            "position_z": "93.8200322801044",
+            "scale": "1.5",
+            "color": "#e41a1c",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Nitrospira",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "-362.42284435308",
+            "position_z": "-36.0146790878078",
+            "scale": "0.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Thauera",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "-174.440379188698",
+            "position_z": "317.969137741232",
+            "scale": "0.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Nitrococcus",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "71.7642910240856",
+            "position_z": "346",
+            "scale": "0.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Sulfurimonas",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "298.022923091783",
+            "position_z": "264.178306977945",
+            "scale": "0.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Thioploca",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "432.5",
+            "position_z": "98.4818680851134",
+            "scale": "0.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Dechloromonas",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "432.5",
+            "position_z": "-98.4818680851131",
+            "scale": "0.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Sedimenticola",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "298.022923091783",
+            "position_z": "-264.178306977945",
+            "scale": "0.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Zoogloea",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "71.7642910240856",
+            "position_z": "-346",
+            "scale": "0.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Sulfuricurvum",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "-174.440379188698",
+            "position_z": "-317.969137741232",
+            "scale": "0.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Beggiatoa",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "-361.331943297654",
+            "position_z": "243.080119946268",
+            "scale": "2.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Arcobacter",
+            "layer": "Organism",
+            "position_x": "0",
+            "position_y": "-362.42284435308",
+            "position_z": "-188.985320912192",
+            "scale": "0.5",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Microbial mat",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "399.748235153184",
+            "position_z": "60.6622395370713",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Sediment",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "-430.823682863182",
+            "position_z": "244.658946290545",
+            "scale": "0.6",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Sea floor",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "396.857433852701",
+            "position_z": "139.389563503944",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Mud volcano",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "322.040162297171",
+            "position_z": "193.121518372023",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Sea water",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "224.050375571894",
+            "position_z": "204.798588122547",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Fresh water",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "133.999138599399",
+            "position_z": "170.713385615956",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Ocean",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "80.4770828468161",
+            "position_z": "101.687721813559",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Drainage basin",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "80.4770828468161",
+            "position_z": "19.6367572605837",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Anoxic water",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "133.999138599399",
+            "position_z": "-49.388906541813",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Chemocline",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "224.050375571894",
+            "position_z": "-83.4741090484047",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Coast",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "-344.176317136818",
+            "position_z": "180.341053709455",
+            "scale": "0.6",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Biofilm",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "321.857433852701",
+            "position_z": "-68.0650844298007",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Marine biome",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "-49.7856460489829",
+            "position_z": "-44.5614239992072",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Mangrove biome",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "-95.3117571588562",
+            "position_z": "90.2916980344906",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Coastal plain",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "-186.363979378603",
+            "position_z": "165.291698034491",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Oil",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "-231.890090488476",
+            "position_z": "-44.5614239992072",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Layer",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "-186.363979378603",
+            "position_z": "-179.414546032905",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Field",
+            "layer": "Environment",
+            "position_x": "0",
+            "position_y": "-120.311757158856",
+            "position_z": "-179.414546032905",
+            "scale": "0.5",
+            "color": "#4daf4a",
+            "url": "",
+            "descr": ""
+        }
+    ],
+    "edges": [
+        {
+            "src": "Anammox_Process",
+            "trg": "Nitrospira_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Anammox_Process",
+            "trg": "Thauera_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Anammox_Process",
+            "trg": "Nitrococcus_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Anammox_Process",
+            "trg": "Sulfurimonas_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Anammox_Process",
+            "trg": "Thioploca_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Anammox_Process",
+            "trg": "Dechloromonas_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Anammox_Process",
+            "trg": "Sedimenticola_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Anammox_Process",
+            "trg": "Zoogloea_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Anammox_Process",
+            "trg": "Sulfuricurvum_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Anammox_Process",
+            "trg": "Beggiatoa_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Anammox_Process",
+            "trg": "Arcobacter_Organism",
+            "opacity": "1",
+            "color": "#1a9900",
+            "channel": "Default"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Microbial mat_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Sediment_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Sediment_Environment",
+            "opacity": "1",
+            "color": "#ff0000",
+            "channel": "Environmental Samples"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Sea floor_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Mud volcano_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Sea water_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Fresh water_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Ocean_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Drainage basin_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Anoxic water_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Chemocline_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Coast_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Coast_Environment",
+            "opacity": "1",
+            "color": "#ff0000",
+            "channel": "Environmental Samples"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Biofilm_Environment",
+            "opacity": "1",
+            "color": "#1e8a00",
+            "channel": "Literature"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Marine biome_Environment",
+            "opacity": "1",
+            "color": "#ff0000",
+            "channel": "Environmental Samples"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Mangrove biome_Environment",
+            "opacity": "1",
+            "color": "#ff0000",
+            "channel": "Environmental Samples"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Coastal plain_Environment",
+            "opacity": "1",
+            "color": "#ff0000",
+            "channel": "Environmental Samples"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Oil_Environment",
+            "opacity": "1",
+            "color": "#ff0000",
+            "channel": "Environmental Samples"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Layer_Environment",
+            "opacity": "1",
+            "color": "#ff0000",
+            "channel": "Environmental Samples"
+        },
+        {
+            "src": "Beggiatoa_Organism",
+            "trg": "Field_Environment",
+            "opacity": "1",
+            "color": "#ff0000",
+            "channel": "Environmental Samples"
+        }
+    ],
+    "universalLabelColor": "#000000"
+}

@@ -1,0 +1,751 @@
+{
+    "scene": {
+        "position_x": "85",
+        "position_y": "-19",
+        "scale": "0.809455827869314",
+        "color": "#ffffff",
+        "rotation_x": "-2.78896419700599",
+        "rotation_y": "-0.302066641937101",
+        "rotation_z": "0.0029771022900188"
+    },
+    "layers": [
+        {
+            "name": "enriched_term",
+            "position_x": "442.058002797784",
+            "position_y": "160.901161622552",
+            "position_z": "233.674720828911",
+            "last_layer_scale": "1",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#ddb3ff",
+            "geometry_parameters_width": "603.326074473483"
+        },
+        {
+            "name": "protein",
+            "position_x": "-81.1191257882335",
+            "position_y": "-78.6699211047243",
+            "position_z": "-125.599774259377",
+            "last_layer_scale": "1",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#ddb3ff",
+            "geometry_parameters_width": "603.326074473483"
+        },
+        {
+            "name": "compound",
+            "position_x": "-410.500521507677",
+            "position_y": "120.553179984998",
+            "position_z": "326.354756898516",
+            "last_layer_scale": "1",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#ddb3ff",
+            "geometry_parameters_width": "603.326074473483"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Small cell lung cancer",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "-184.390180387424",
+            "position_z": "-0.235312365146985",
+            "scale": "0.5",
+            "color": "#D9D9D9",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Regulation of lipolysis in adipocytes",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "-208.898649698721",
+            "position_z": "96.0095153453069",
+            "scale": "0.5",
+            "color": "#D9D9D9",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Serotonergic synapse",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "-248.554186056634",
+            "position_z": "59.2472624012911",
+            "scale": "0.5",
+            "color": "#D9D9D9",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Platelet activation",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "-248.554186056634",
+            "position_z": "-59.7178871315854",
+            "scale": "0.5",
+            "color": "#D9D9D9",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Arachidonic acid metabolism",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "-208.898649698721",
+            "position_z": "-96.4801400756012",
+            "scale": "0.5",
+            "color": "#D9D9D9",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Thrombosis",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "255.264259857242",
+            "position_z": "-5.5065133261044",
+            "scale": "0.5",
+            "color": "#3690C0",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Blood platelet",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "60.0846252433915",
+            "position_z": "-1.45083035896154",
+            "scale": "0.653846153846154",
+            "color": "#99D8C9",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Connective tissue",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "25.6560387280491",
+            "position_z": "54.1468041959962",
+            "scale": "0.807692307692308",
+            "color": "#99D8C9",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Peripheral artery disease",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "279.629653012579",
+            "position_z": "-84.5585799875458",
+            "scale": "0.5",
+            "color": "#3690C0",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Blood vessel",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "-23.1214547872933",
+            "position_z": "-1.45083035896154",
+            "scale": "0.807692307692308",
+            "color": "#99D8C9",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "Blood",
+            "layer": "enriched_term",
+            "position_x": "-10",
+            "position_y": "1.74119372804912",
+            "position_z": "-80.9633099139193",
+            "scale": "1.11538461538462",
+            "color": "#99D8C9",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TP53",
+            "layer": "protein",
+            "position_x": "-10",
+            "position_y": "-243.463965867211",
+            "position_z": "37.4827708709913",
+            "scale": "1.42307692307692",
+            "color": "#FF0000",
+            "url": "",
+            "descr": "Cellular tumor antigen p53; Acts as a tumor suppressor in many tumor types; induces growth arrest or apoptosis depending on the physiological circumstances and cell type. Involved in cell cycle regulation as a trans-activator that acts to negatively regulate cell division by controlling a set of genes required for this process. One of the activated genes is an inhibitor of cyclin-dependent kinases. Apoptosis induction seems to be mediated either by stimulation of BAX and FAS antigen expression or by repression of Bcl-2 expression. In cooperation with mitochondrial PPIF is involved in activating oxidative stress-induced necrosis; the function is largely independent of transcription. Induces the transcription of long intergenic non-coding RNA p21 (lincRNA-p21) and lincRNA- Mkln1. LincRNA-p21 participates in TP53-dependent transcriptional repression leading to apoptosis and seem to have to effect on cell-cycle regulation. Implicated in Notch signaling cross-over. Prevents CDK7 kinase activity when associated to CAK complex in response to DNA damage thus stopping cell cycle progression. Isoform 2 enhances the transactivation activity of isoform 1 from some but not all TP53-inducible promoters. Isoform 4 suppresses transactivation activity and impairs growth suppression mediated by isoform 1. Isoform 7 inhibits isoform 1-mediated apoptosis. Regulates the circadian clock by repressing CLOCK-ARNTL/BMAL1- mediated transcriptional activation of PER2."
+        },
+        {
+            "name": "warfarin",
+            "layer": "compound",
+            "position_x": "-10",
+            "position_y": "-183.309324858094",
+            "position_z": "-133.489189479766",
+            "scale": "0.961538461538462",
+            "color": "#FFC580",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "ibuprofen",
+            "layer": "compound",
+            "position_x": "-10",
+            "position_y": "55.5495507646588",
+            "position_z": "254.759524441928",
+            "scale": "1.11538461538462",
+            "color": "#E8FF00",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "clopidogrel",
+            "layer": "compound",
+            "position_x": "-10",
+            "position_y": "219.148397777884",
+            "position_z": "-254.453267529946",
+            "scale": "0.961538461538462",
+            "color": "#AEFF80",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "SELP",
+            "layer": "protein",
+            "position_x": "-10",
+            "position_y": "162.757038084004",
+            "position_z": "-124.383602137524",
+            "scale": "1.88461538461538",
+            "color": "#00FF2E",
+            "url": "",
+            "descr": "Platelet activation dependent granule-external membrane protein; Ca(2+)-dependent receptor for myeloid cells that binds to carbohydrates on neutrophils and monocytes. Mediates the interaction of activated endothelial cells or platelets with leukocytes. The ligand recognized is sialyl-Lewis X. Mediates rapid rolling of leukocyte rolling over vascular surfaces during the initial steps in inflammation through interaction with PSGL1; Belongs to the selectin/LECAM family."
+        },
+        {
+            "name": "TBXA2R",
+            "layer": "protein",
+            "position_x": "-10",
+            "position_y": "269.733593919743",
+            "position_z": "61.7684463326417",
+            "scale": "1.57692307692308",
+            "color": "#80FFDC",
+            "url": "",
+            "descr": "Thromboxane A2 receptor; Receptor for thromboxane A2 (TXA2) a potent stimulator of platelet aggregation. The activity of this receptor is mediated by a G-protein that activates a phosphatidylinositol-calcium second messenger system. In the kidney the binding of TXA2 to glomerular TP receptors causes intense vasoconstriction. Activates phospholipase C. Isoform 1 activates adenylyl cyclase. Isoform 2 inhibits adenylyl cyclase."
+        },
+        {
+            "name": "CRP",
+            "layer": "protein",
+            "position_x": "-10",
+            "position_y": "60.2105170350341",
+            "position_z": "-150.420318051157",
+            "scale": "1.73076923076923",
+            "color": "#00B9FF",
+            "url": "",
+            "descr": "C-reactive protein pentraxin-related; Displays several functions associated with host defense: it promotes agglutination bacterial capsular swelling phagocytosis and complement fixation through its calcium-dependent binding to phosphorylcholine. Can interact with DNA and histones and may scavenge nuclear material released from damaged circulating cells; Short pentraxins"
+        },
+        {
+            "name": "salicylate",
+            "layer": "compound",
+            "position_x": "-10",
+            "position_y": "190.916466660542",
+            "position_z": "121.062673551418",
+            "scale": "1.26923076923077",
+            "color": "#8097FF",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "PTGS1",
+            "layer": "protein",
+            "position_x": "-10",
+            "position_y": "88.2359754509011",
+            "position_z": "144.912065235429",
+            "scale": "2.19230769230769",
+            "color": "#5D00FF",
+            "url": "",
+            "descr": "Prostaglandin-endoperoxide synthase 1 (prostaglandin G/H synthase and cyclooxygenase); Converts arachidonate to prostaglandin H2 (PGH2) a committed step in prostanoid synthesis. Involved in the constitutive production of prostanoids in particular in the stomach and platelets. In gastric epithelial cells it is a key step in the generation of prostaglandins such as prostaglandin E2 (PGE2) which plays an important role in cytoprotection. In platelets it is involved in the generation of thromboxane A2 (TXA2) which promotes platelet activation and aggregation vasoconstriction and proliferation of vascular smooth muscle cells; Belongs to the prostaglandin G/H synthase family."
+        },
+        {
+            "name": "PTGS2",
+            "layer": "protein",
+            "position_x": "-10",
+            "position_y": "-35.1740864612164",
+            "position_z": "122.803637014825",
+            "scale": "2.5",
+            "color": "#F380FF",
+            "url": "",
+            "descr": "Prostaglandin-endoperoxide synthase 2 (prostaglandin G/H synthase and cyclooxygenase); Converts arachidonate to prostaglandin H2 (PGH2) a committed step in prostanoid synthesis. Constitutively expressed in some tissues in physiological conditions such as the endothelium kidney and brain and in pathological conditions such as in cancer. PTGS2 is responsible for production of inflammatory prostaglandins. Up-regulation of PTGS2 is also associated with increased cell adhesion phenotypic changes resistance to apoptosis and tumor angiogenesis. In cancer cells PTGS2 is a key step in the production of prostaglandin E2 (PGE2) which plays important roles in modulating motility proliferation and resistance to apoptosis; Belongs to the prostaglandin G/H synthase family."
+        },
+        {
+            "name": "aspirin",
+            "layer": "compound",
+            "position_x": "-10",
+            "position_y": "247.498437602146",
+            "position_z": "9.03979852559709",
+            "scale": "1.73076923076923",
+            "color": "#FF008B",
+            "url": "",
+            "descr": ""
+        }
+    ],
+    "edges": [
+        {
+            "src": "PTGS2_protein",
+            "trg": "Small cell lung cancer_enriched_term",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Small cell lung cancer_enriched_term",
+            "trg": "TP53_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "PTGS2_protein",
+            "trg": "Regulation of lipolysis in adipocytes_enriched_term",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "PTGS1_protein",
+            "trg": "Regulation of lipolysis in adipocytes_enriched_term",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "PTGS2_protein",
+            "trg": "Serotonergic synapse_enriched_term",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "PTGS1_protein",
+            "trg": "Serotonergic synapse_enriched_term",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Platelet activation_enriched_term",
+            "trg": "TBXA2R_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "PTGS1_protein",
+            "trg": "Platelet activation_enriched_term",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Arachidonic acid metabolism_enriched_term",
+            "trg": "PTGS2_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Arachidonic acid metabolism_enriched_term",
+            "trg": "PTGS1_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "SELP_protein",
+            "trg": "Thrombosis_enriched_term",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "CRP_protein",
+            "trg": "Thrombosis_enriched_term",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood platelet_enriched_term",
+            "trg": "TBXA2R_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood platelet_enriched_term",
+            "trg": "PTGS1_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood platelet_enriched_term",
+            "trg": "SELP_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Connective tissue_enriched_term",
+            "trg": "PTGS2_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Connective tissue_enriched_term",
+            "trg": "PTGS1_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Connective tissue_enriched_term",
+            "trg": "TP53_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "CRP_protein",
+            "trg": "Connective tissue_enriched_term",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Peripheral artery disease_enriched_term",
+            "trg": "SELP_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "CRP_protein",
+            "trg": "Peripheral artery disease_enriched_term",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood vessel_enriched_term",
+            "trg": "TBXA2R_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood vessel_enriched_term",
+            "trg": "PTGS2_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood vessel_enriched_term",
+            "trg": "SELP_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood vessel_enriched_term",
+            "trg": "CRP_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood_enriched_term",
+            "trg": "TBXA2R_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood_enriched_term",
+            "trg": "PTGS2_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood_enriched_term",
+            "trg": "PTGS1_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood_enriched_term",
+            "trg": "TP53_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood_enriched_term",
+            "trg": "SELP_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "Blood_enriched_term",
+            "trg": "CRP_protein",
+            "opacity": "0.500500500500501",
+            "color": "#8DD3C7",
+            "channel": "enrichment"
+        },
+        {
+            "src": "TP53_protein",
+            "trg": "salicylate_compound",
+            "opacity": "0.451745863510569",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "TP53_protein",
+            "trg": "aspirin_compound",
+            "opacity": "0.628275334157687",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "TP53_protein",
+            "trg": "warfarin_compound",
+            "opacity": "0.326993660326994",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "PTGS2_protein",
+            "trg": "TP53_protein",
+            "opacity": "0.659428055506487",
+            "color": "#BEBADA",
+            "channel": "pp"
+        },
+        {
+            "src": "ibuprofen_compound",
+            "trg": "warfarin_compound",
+            "opacity": "0.182719974876838",
+            "color": "#FB8072",
+            "channel": "cc"
+        },
+        {
+            "src": "clopidogrel_compound",
+            "trg": "warfarin_compound",
+            "opacity": "0.560325030913266",
+            "color": "#FB8072",
+            "channel": "cc"
+        },
+        {
+            "src": "SELP_protein",
+            "trg": "salicylate_compound",
+            "opacity": "0.427093760427094",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "SELP_protein",
+            "trg": "aspirin_compound",
+            "opacity": "0.652888182299947",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "SELP_protein",
+            "trg": "clopidogrel_compound",
+            "opacity": "0.599772321340949",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "PTGS2_protein",
+            "trg": "SELP_protein",
+            "opacity": "0.12012012012012",
+            "color": "#BEBADA",
+            "channel": "pp"
+        },
+        {
+            "src": "PTGS1_protein",
+            "trg": "SELP_protein",
+            "opacity": "0.144203026555968",
+            "color": "#BEBADA",
+            "channel": "pp"
+        },
+        {
+            "src": "TBXA2R_protein",
+            "trg": "aspirin_compound",
+            "opacity": "0.652888182299947",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "TBXA2R_protein",
+            "trg": "clopidogrel_compound",
+            "opacity": "0.154829339143065",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "TBXA2R_protein",
+            "trg": "ibuprofen_compound",
+            "opacity": "0.183418712830478",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "CRP_protein",
+            "trg": "aspirin_compound",
+            "opacity": "0.653547665312371",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "CRP_protein",
+            "trg": "clopidogrel_compound",
+            "opacity": "0.65025025025025",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "CRP_protein",
+            "trg": "TP53_protein",
+            "opacity": "0.117058234705294",
+            "color": "#BEBADA",
+            "channel": "pp"
+        },
+        {
+            "src": "CRP_protein",
+            "trg": "SELP_protein",
+            "opacity": "0.45229543268759",
+            "color": "#BEBADA",
+            "channel": "pp"
+        },
+        {
+            "src": "CRP_protein",
+            "trg": "PTGS2_protein",
+            "opacity": "0.269634340222576",
+            "color": "#BEBADA",
+            "channel": "pp"
+        },
+        {
+            "src": "salicylate_compound",
+            "trg": "warfarin_compound",
+            "opacity": "0.187246069599011",
+            "color": "#FB8072",
+            "channel": "cc"
+        },
+        {
+            "src": "ibuprofen_compound",
+            "trg": "salicylate_compound",
+            "opacity": "0.45229543268759",
+            "color": "#FB8072",
+            "channel": "cc"
+        },
+        {
+            "src": "aspirin_compound",
+            "trg": "salicylate_compound",
+            "opacity": "0.660754872519578",
+            "color": "#FB8072",
+            "channel": "cc"
+        },
+        {
+            "src": "PTGS1_protein",
+            "trg": "salicylate_compound",
+            "opacity": "0.65025025025025",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "PTGS1_protein",
+            "trg": "aspirin_compound",
+            "opacity": "0.666666666666667",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "PTGS1_protein",
+            "trg": "ibuprofen_compound",
+            "opacity": "0.665999332665999",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "PTGS1_protein",
+            "trg": "PTGS2_protein",
+            "opacity": "0.504865649963689",
+            "color": "#BEBADA",
+            "channel": "pp"
+        },
+        {
+            "src": "PTGS1_protein",
+            "trg": "TBXA2R_protein",
+            "opacity": "0.167500834167501",
+            "color": "#BEBADA",
+            "channel": "pp"
+        },
+        {
+            "src": "PTGS2_protein",
+            "trg": "salicylate_compound",
+            "opacity": "0.650909733262674",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "PTGS2_protein",
+            "trg": "aspirin_compound",
+            "opacity": "0.666666666666667",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "PTGS2_protein",
+            "trg": "ibuprofen_compound",
+            "opacity": "0.658101238493395",
+            "color": "#FFFFB3",
+            "channel": "pc"
+        },
+        {
+            "src": "PTGS2_protein",
+            "trg": "TBXA2R_protein",
+            "opacity": "0.120402755696873",
+            "color": "#BEBADA",
+            "channel": "pp"
+        },
+        {
+            "src": "aspirin_compound",
+            "trg": "warfarin_compound",
+            "opacity": "0.628923040687747",
+            "color": "#FB8072",
+            "channel": "cc"
+        },
+        {
+            "src": "aspirin_compound",
+            "trg": "ibuprofen_compound",
+            "opacity": "0.635341223576518",
+            "color": "#FB8072",
+            "channel": "cc"
+        },
+        {
+            "src": "aspirin_compound",
+            "trg": "clopidogrel_compound",
+            "opacity": "0.637947751673242",
+            "color": "#FB8072",
+            "channel": "cc"
+        }
+    ],
+    "universalLabelColor": "#000000"
+}

@@ -1,0 +1,40 @@
+SourceNode	SourceLayer	TargetNode	TargetLayer	Channel	Weight
+aspirin	Drug	PTGS1	Protein	Experimental	0.725
+aspirin	Drug	PTGS1	Protein	Database	0.9
+aspirin	Drug	PTGS1	Protein	Text Mining	0.986
+aspirin	Drug	PTGS2	Protein	Experimental	0.643
+aspirin	Drug	PTGS2	Protein	Database	0.9
+aspirin	Drug	PTGS2	Protein	Text Mining	0.98
+ibuprofen	Drug	PTGS1	Protein	Experimental	0.61
+ibuprofen	Drug	PTGS1	Protein	Database	0.9
+ibuprofen	Drug	PTGS1	Protein	Text Mining	0.959
+TP53	Protein	PTGS2	Protein	Experimental	0.961
+TP53	Protein	PTGS2	Protein	Text Mining	0.94
+prostaglandin	Drug	TBXA2R	Protein	Experimental	0.235
+prostaglandin	Drug	TBXA2R	Protein	Database	0.9
+prostaglandin	Drug	TBXA2R	Protein	Text Mining	0.952
+ibuprofen	Drug	PTGS2	Protein	Experimental	0.658
+ibuprofen	Drug	PTGS2	Protein	Database	0.9
+ibuprofen	Drug	PTGS2	Protein	Text Mining	0.799
+aspirin	Drug	CRP	Protein	Database	0.9
+aspirin	Drug	CRP	Protein	Text Mining	0.92
+prostaglandin	Drug	PTGS2	Protein	Text Mining	0.99
+aspirin	Drug	SELP	Protein	Database	0.9
+aspirin	Drug	SELP	Protein	Text Mining	0.911
+aspirin	Drug	TBXA2R	Protein	Database	0.7
+aspirin	Drug	TBXA2R	Protein	Text Mining	0.968
+clopidogrel	Drug	CRP	Protein	Database	0.9
+clopidogrel	Drug	CRP	Protein	Text Mining	0.865
+clopidogrel	Drug	aspirin	Drug	Text Mining	0.979
+ibuprofen	Drug	aspirin	Drug	Experimental	0.246
+ibuprofen	Drug	aspirin	Drug	Text Mining	0.969
+warfarin	Drug	aspirin	Drug	Text Mining	0.971
+aspirin	Drug	TP53	Protein	Database	0.8
+aspirin	Drug	TP53	Protein	Text Mining	0.857
+aspirin	Drug	prostaglandin	Drug	Text Mining	0.969
+clopidogrel	Drug	SELP	Protein	Database	0.9
+clopidogrel	Drug	SELP	Protein	Text Mining	0.507
+prostaglandin	Drug	PTGS1	Protein	Text Mining	0.923
+warfarin	Drug	clopidogrel	Drug	Text Mining	0.915
+ibuprofen	Drug	prostaglandin	Drug	Text Mining	0.804
+warfarin	Drug	TP53	Protein	Database	0.7

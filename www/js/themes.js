@@ -17,6 +17,7 @@ const applyTheme = (bgColor, floorColor, edgeColor, labelColor, theme_colors, ch
     setLabelColor();
     updateLabelColorRShiny();
     updateNodesRShiny();
+    redrawEdges();
   }
 }
 

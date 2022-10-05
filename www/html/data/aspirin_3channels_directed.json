@@ -1,0 +1,437 @@
+{
+    "scene": {
+        "position_x": "39",
+        "position_y": "9",
+        "scale": "0.531441",
+        "color": "#ffffff",
+        "rotation_x": "0.261799387799149",
+        "rotation_y": "0.261799387799149",
+        "rotation_z": "0.0872664625997165"
+    },
+    "layers": [
+        {
+            "name": "Drug",
+            "position_x": "-640",
+            "position_y": "0",
+            "position_z": "0",
+            "last_layer_scale": "1",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#8daa83",
+            "geometry_parameters_width": "1307"
+        },
+        {
+            "name": "Protein",
+            "position_x": "640",
+            "position_y": "0",
+            "position_z": "0",
+            "last_layer_scale": "1",
+            "rotation_x": "0",
+            "rotation_y": "0",
+            "rotation_z": "0",
+            "floor_current_color": "#8daa83",
+            "geometry_parameters_width": "1307"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "aspirin",
+            "layer": "Drug",
+            "position_x": "0",
+            "position_y": "-36.6954927033751",
+            "position_z": "0",
+            "scale": "1",
+            "color": "#e41a1c",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "PTGS1",
+            "layer": "Protein",
+            "position_x": "0",
+            "position_y": "-453.520329528123",
+            "position_z": "186.834809097834",
+            "scale": "1",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "PTGS2",
+            "layer": "Protein",
+            "position_x": "0",
+            "position_y": "-215.37429983652",
+            "position_z": "0",
+            "scale": "1",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "ibuprofen",
+            "layer": "Drug",
+            "position_x": "0",
+            "position_y": "-551.912439922119",
+            "position_z": "0",
+            "scale": "1",
+            "color": "#e41a1c",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TP53",
+            "layer": "Protein",
+            "position_x": "0",
+            "position_y": "187.626257669982",
+            "position_z": "0",
+            "scale": "1",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "prostaglandin",
+            "layer": "Drug",
+            "position_x": "0",
+            "position_y": "-653.5",
+            "position_z": "0.570121186022675",
+            "scale": "1",
+            "color": "#e41a1c",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "TBXA2R",
+            "layer": "Protein",
+            "position_x": "0",
+            "position_y": "-530.532933422337",
+            "position_z": "-356.285267092639",
+            "scale": "1",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "CRP",
+            "layer": "Protein",
+            "position_x": "0",
+            "position_y": "397.33259081432",
+            "position_z": "-165.522660577038",
+            "scale": "1",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "SELP",
+            "layer": "Protein",
+            "position_x": "0",
+            "position_y": "232.898384994476",
+            "position_z": "-522.8",
+            "scale": "1",
+            "color": "#377eb8",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "clopidogrel",
+            "layer": "Drug",
+            "position_x": "0",
+            "position_y": "623.072073304888",
+            "position_z": "-302.903393576351",
+            "scale": "1",
+            "color": "#e41a1c",
+            "url": "",
+            "descr": ""
+        },
+        {
+            "name": "warfarin",
+            "layer": "Drug",
+            "position_x": "0",
+            "position_y": "653.5",
+            "position_z": "234.113323990731",
+            "scale": "1",
+            "color": "#e41a1c",
+            "url": "",
+            "descr": ""
+        }
+    ],
+    "edges": [
+        {
+            "src": "aspirin_Drug",
+            "trg": "PTGS1_Protein",
+            "opacity": "0.684105960264901",
+            "color": "#00bd6b",
+            "channel": "Experimental"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "PTGS1_Protein",
+            "opacity": "0.892715231788079",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "PTGS1_Protein",
+            "opacity": "0.99523178807947",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "PTGS2_Protein",
+            "opacity": "0.58635761589404",
+            "color": "#00bd6b",
+            "channel": "Experimental"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "PTGS2_Protein",
+            "opacity": "0.892715231788079",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "PTGS2_Protein",
+            "opacity": "0.988079470198675",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "ibuprofen_Drug",
+            "trg": "PTGS1_Protein",
+            "opacity": "0.547019867549669",
+            "color": "#00bd6b",
+            "channel": "Experimental"
+        },
+        {
+            "src": "ibuprofen_Drug",
+            "trg": "PTGS1_Protein",
+            "opacity": "0.892715231788079",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "ibuprofen_Drug",
+            "trg": "PTGS1_Protein",
+            "opacity": "0.963046357615894",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "TP53_Protein",
+            "trg": "PTGS2_Protein",
+            "opacity": "0.965430463576159",
+            "color": "#00bd6b",
+            "channel": "Experimental"
+        },
+        {
+            "src": "TP53_Protein",
+            "trg": "PTGS2_Protein",
+            "opacity": "0.940397350993377",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "prostaglandin_Drug",
+            "trg": "TBXA2R_Protein",
+            "opacity": "0.1",
+            "color": "#00bd6b",
+            "channel": "Experimental"
+        },
+        {
+            "src": "prostaglandin_Drug",
+            "trg": "TBXA2R_Protein",
+            "opacity": "0.892715231788079",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "prostaglandin_Drug",
+            "trg": "TBXA2R_Protein",
+            "opacity": "0.954701986754967",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "ibuprofen_Drug",
+            "trg": "PTGS2_Protein",
+            "opacity": "0.604238410596027",
+            "color": "#00bd6b",
+            "channel": "Experimental"
+        },
+        {
+            "src": "ibuprofen_Drug",
+            "trg": "PTGS2_Protein",
+            "opacity": "0.892715231788079",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "ibuprofen_Drug",
+            "trg": "PTGS2_Protein",
+            "opacity": "0.772317880794702",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "CRP_Protein",
+            "opacity": "0.892715231788079",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "CRP_Protein",
+            "opacity": "0.916556291390728",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "prostaglandin_Drug",
+            "trg": "PTGS2_Protein",
+            "opacity": "1",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "SELP_Protein",
+            "opacity": "0.892715231788079",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "SELP_Protein",
+            "opacity": "0.905827814569536",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "TBXA2R_Protein",
+            "opacity": "0.654304635761589",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "TBXA2R_Protein",
+            "opacity": "0.973774834437086",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "clopidogrel_Drug",
+            "trg": "CRP_Protein",
+            "opacity": "0.892715231788079",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "clopidogrel_Drug",
+            "trg": "CRP_Protein",
+            "opacity": "0.850993377483444",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "clopidogrel_Drug",
+            "trg": "aspirin_Drug",
+            "opacity": "0.986887417218543",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "ibuprofen_Drug",
+            "trg": "aspirin_Drug",
+            "opacity": "0.113112582781457",
+            "color": "#00bd6b",
+            "channel": "Experimental"
+        },
+        {
+            "src": "ibuprofen_Drug",
+            "trg": "aspirin_Drug",
+            "opacity": "0.974966887417218",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "warfarin_Drug",
+            "trg": "aspirin_Drug",
+            "opacity": "0.977350993377483",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "TP53_Protein",
+            "opacity": "0.773509933774834",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "TP53_Protein",
+            "opacity": "0.841456953642384",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "aspirin_Drug",
+            "trg": "prostaglandin_Drug",
+            "opacity": "0.974966887417218",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "clopidogrel_Drug",
+            "trg": "SELP_Protein",
+            "opacity": "0.892715231788079",
+            "color": "#0300bd",
+            "channel": "Database"
+        },
+        {
+            "src": "clopidogrel_Drug",
+            "trg": "SELP_Protein",
+            "opacity": "0.424238410596027",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "prostaglandin_Drug",
+            "trg": "PTGS1_Protein",
+            "opacity": "0.920132450331126",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "warfarin_Drug",
+            "trg": "clopidogrel_Drug",
+            "opacity": "0.910596026490066",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "ibuprofen_Drug",
+            "trg": "prostaglandin_Drug",
+            "opacity": "0.778278145695364",
+            "color": "#ff0000",
+            "channel": "Text Mining"
+        },
+        {
+            "src": "warfarin_Drug",
+            "trg": "TP53_Protein",
+            "opacity": "0.654304635761589",
+            "color": "#0300bd",
+            "channel": "Database"
+        }
+    ],
+    "universalLabelColor": "#000000",
+    "direction": true
+}
