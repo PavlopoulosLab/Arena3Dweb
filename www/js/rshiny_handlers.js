@@ -832,9 +832,9 @@ const applyPredefinedLayout = (message) => {
           break;
         case "cube":
           let cube_size = 6;
-          groups = Math.floor(numLayers / cube_size) + 1;
+          let groups = Math.ceil(numLayers / cube_size);
           if (numLayers == 6) groups = 1;
-          width = groups*(layer_size+400);
+          let distance = groups * (Number(layer_size) + 400);
           for (let j = 0; j < groups; j++) {
             if (j * cube_size + cube_size > numLayers) length = numLayers;
             else length = j * cube_size + cube_size;
@@ -845,11 +845,11 @@ const applyPredefinedLayout = (message) => {
                 let x;
                 if ((groups % 2)) {
                   if(j == Math.floor(groups / 2)) x = 0
-                  else if (j < Math.floor(groups / 2))  x = -width/groups
-                  else  x =  width/groups
+                  else if (j < Math.floor(groups / 2))  x = -distance/groups
+                  else  x =  distance/groups
                 } else {
-                  if (j < Math.floor(groups / 2))  x = -width/groups
-                  else x =  width/groups
+                  if (j < Math.floor(groups / 2))  x = -distance/groups
+                  else x = distance/groups
                 }
                 layer_planes[i].position.set(x , 0, 0);
               }
