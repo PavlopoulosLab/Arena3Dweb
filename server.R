@@ -9,8 +9,10 @@ server <- function(input, output, session) {
   source("functions/parse.R", local = T)
   source("functions/vr.R", local = T)
   
+  # session$sendCustomMessage("handler_js_init", T) # TODO
+  
   # GET request ####
-  output$url_checker <- renderText({ # this component needs to be in landing page in order to be observed on page load
+  observeEvent(session$clientData$url_search, {
     tryCatch({
       query <- parseQueryString(session$clientData$url_search)
       if (length(query$f) > 0){ # GET request, f filename
