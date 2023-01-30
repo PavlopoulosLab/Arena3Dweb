@@ -94,7 +94,7 @@ const loadGraph = () => {
   }
   
   drag_controls = new DragControls( layer_planes, camera, renderer.domElement );
-  channel_colors = channel_colors_light;
+  channel_colors = CHANNEL_COLORS_LIGHT;
   createChannelColorMap();
   scrambleNodes();
   moveLayers();

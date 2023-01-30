@@ -1,6 +1,4 @@
 ui <- fluidPage(
-  useShinyjs(),
-  extendShinyjs(text = js.opentab, functions = c("BrowseURL")),
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "arena3dweb.css")),
   tags$head(tags$script(src = "js/three/three.js")), # 3D graphics engine
   tags$head(tags$script(src = "js/three/matrix4.js")), # three.js matrix4 for dragcontrols

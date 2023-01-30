@@ -1,14 +1,13 @@
 server <- function(input, output, session) {
-  
-  # sourcing files ####
-  source("global.R", local=TRUE)
-  source("functions/general.R", local=TRUE)
-  source("functions/graph.R", local=TRUE)
-  source("functions/layout.R", local=TRUE)
-  source("functions/topology.R", local=TRUE)
-  source("functions/cluster.R", local=TRUE)
-  source("functions/parse.R", local=TRUE)
-  source("functions/vr.R", local=TRUE)
+  source("config/global_variables.R", local = T)
+  source("config/static_variables.R", local = T)
+  source("functions/general.R", local = T)
+  source("functions/graph.R", local = T)
+  source("functions/layout.R", local = T)
+  source("functions/topology.R", local = T)
+  source("functions/cluster.R", local = T)
+  source("functions/parse.R", local = T)
+  source("functions/vr.R", local = T)
   
   # GET request ####
   output$url_checker <- renderText({ # this component needs to be in landing page in order to be observed on page load
@@ -26,11 +25,11 @@ server <- function(input, output, session) {
   })
   
   # Communicate variables to js ####
-  session$sendCustomMessage("handler_maxAllowedEdges", max_allowed_edges) 
-  session$sendCustomMessage("handler_maxAllowedChannels", max_allowed_channels)
-  session$sendCustomMessage("handler_maxAllowedLayers", max_allowed_layers)
-  session$sendCustomMessage("handler_colorBrewerPallete_dark", channel_colors_dark)
-  session$sendCustomMessage("handler_colorBrewerPallete", channel_colors_light)
+  session$sendCustomMessage("handler_maxAllowedEdges", MAX_EDGES) 
+  session$sendCustomMessage("handler_maxAllowedChannels", MAX_CHANNELS)
+  session$sendCustomMessage("handler_maxAllowedLayers", MAX_LAYERS)
+  session$sendCustomMessage("handler_colorBrewerPallete_dark", CHANNEL_COLORS_DARK)
+  session$sendCustomMessage("handler_colorBrewerPallete", CHANNEL_COLORS_LIGHT)
 
   observeEvent(input$js_checkbox_flag,{ 
      updateCheckboxInput(session, input$js_checkbox_flag[1],value = (input$js_checkbox_flag[2] == 'TRUE'))
@@ -153,7 +152,7 @@ server <- function(input, output, session) {
     tryCatch({
       producePLY(session$token)
       produceHTML(session$token)
-      js$BrowseURL(paste0(API_URL, session$token))
+      session$sendCustomMessage("handler_browseUrl", paste0(API_URL, session$token))
     }, error = function(e) {
       print(paste("Error in VR parser:  ", e))
       session$sendCustomMessage("handler_badObject_alert", "Error while parsing network for VR mode.")

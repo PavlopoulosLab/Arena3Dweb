@@ -2,8 +2,7 @@
 const badObject_alert = (message) => {
   alert(message);
   return true;
-}
-
+};
 
 const clean_array = (message) => {
   temp = [];
@@ -16,7 +15,7 @@ const clean_array = (message) => {
     message[i] = temp;
   }
   return message;
-}
+};
 
 const startLoader = (m) => {
   let canvas_div = document.getElementById("3d-graph"),
@@ -24,7 +23,7 @@ const startLoader = (m) => {
   canvas_div.style.opacity = 0.5;
   loader.style.display = "inline-block";
   return true;
-}
+};
 
 const finishLoader = (m) => {
   let canvas_div = document.getElementById("3d-graph"),
@@ -32,12 +31,16 @@ const finishLoader = (m) => {
   canvas_div.style.opacity = 1;
   loader.style.display = "none";
   return true;
-}
+};
 
 const changeFPS = (message) => {
   fps = Number(message);
   return true;
-}
+};
+
+const browseUrl = url => {
+  window.open(url, "_blank");
+};
 
 // Files ====================
 const uploadNetwork = (message) => {
@@ -97,8 +100,8 @@ const uploadNetwork = (message) => {
   }
   node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; });
   layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function () { return false; });
-  if (layer_names.length > max_allowed_layers) {
-     alert("Network must contain no more than ".concat(max_allowed_layers).concat(" layers.")); //layer limit
+  if (layer_names.length > MAX_LAYERS) {
+     alert("Network must contain no more than ".concat(MAX_LAYERS).concat(" layers.")); //layer limit
       return false
   }
   updateLayerNamesRShiny(); //correct order of layer names to avoid bugs with positions
@@ -107,8 +110,8 @@ const uploadNetwork = (message) => {
   //edge_values = mapper(edge_values, 0.1, 1) //min and max opacities //this is done in R now
   if (message.Channel) {
     let channel_values = message.Channel.filter((x, i, a) => a.indexOf(x) == i)
-    if (channel_values.length > max_allowed_channels) {
-      alert("Network must contain no more than ".concat(max_allowed_channels).concat(" channels.")); //channel limit
+    if (channel_values.length > MAX_CHANNELS) {
+      alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
       return false
     } else {
       channels = channel_values;
@@ -118,7 +121,7 @@ const uploadNetwork = (message) => {
     }
   }
 
-  if (edge_values.length > max_allowed_edges) alert("Network must contain no more than ".concat(max_allowed_edges).concat(" edges.")); //edge limit
+  if (edge_values.length > MAX_EDGES) alert("Network must contain no more than ".concat(MAX_EDGES).concat(" edges.")); //edge limit
   else {
     attachLayerCheckboxes();
     loadGraph();
@@ -279,11 +282,11 @@ const importNetwork = (message) => {
   drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
   
   if (channel_values.length > 0) {
-    if (channel_values.length > max_allowed_channels) {
-      alert("Network must contain no more than ".concat(max_allowed_channels).concat(" channels.")); //channel limit
+    if (channel_values.length > MAX_CHANNELS) {
+      alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
       return false
     } else {
-        channel_colors = channel_colors_light;
+        channel_colors = CHANNEL_COLORS_LIGHT;
         channels = channel_values;
         channels.forEach(c => {
           channelVisibility[c] = true;
@@ -406,7 +409,7 @@ const autoRotateScene = (message) => {
 
 // Layers ====================
 const maxAllowedLayers = (limit) => {
-  max_allowed_layers = limit;
+  MAX_LAYERS = limit;
   return true;
 }
 
@@ -594,7 +597,7 @@ const nodeSelectedColorPriority = (message) => {
 
 // Edges ====================
 const maxAllowedEdges = (limit) => {
-  max_allowed_edges = limit;
+  MAX_EDGES = limit;
   return true;
 }
 
@@ -696,17 +699,17 @@ const toggleDirection = (message) => {
 
 // Channels ====================
 const maxAllowedChannels = (limit) => {
-  max_allowed_channels = limit;
+  MAX_CHANNELS = limit;
   return true;
 }
 
 const getChannelColors = (brewerColors) => {
-  channel_colors_light = brewerColors;
+  CHANNEL_COLORS_LIGHT = brewerColors;
   return true;
 }
 
 const getDarkChannelColors = (brewerColors) => {
-  channel_colors_dark = brewerColors;
+  CHANNEL_COLORS_DARK = brewerColors;
   return true;
 }
 
@@ -891,6 +894,7 @@ Shiny.addCustomMessageHandler("handler_badObject_alert", badObject_alert);
 Shiny.addCustomMessageHandler("handler_startLoader", startLoader);
 Shiny.addCustomMessageHandler("handler_finishLoader", finishLoader);
 Shiny.addCustomMessageHandler("handler_fps", changeFPS);
+Shiny.addCustomMessageHandler("handler_browseUrl", browseUrl);
 // Files ====================
 Shiny.addCustomMessageHandler("handler_uploadNetwork", uploadNetwork);
 Shiny.addCustomMessageHandler("handler_importNetwork", importNetwork);

@@ -31,8 +31,8 @@ parse_import_data <- function(inFile){
     if (nrow(raw_json$layers) > 0){
       layers <- raw_json$layers
       uniqueLayers <- unique(layers)
-      if (nrow(uniqueLayers) > max_allowed_layers) {
-        session$sendCustomMessage("handler_badObject_alert", paste("Network must contain no more than ", max_allowed_layers, " layers.", sep=""))
+      if (nrow(uniqueLayers) > MAX_LAYERS) {
+        session$sendCustomMessage("handler_badObject_alert", paste("Network must contain no more than ", MAX_LAYERS, " layers.", sep=""))
         return(FALSE)
       }      
       for(i in 1:nrow(layers)) {
@@ -167,7 +167,7 @@ parse_import_data <- function(inFile){
         }
         inData <<- as.data.frame(inData)
       } else  session$sendCustomMessage("handler_badObject_alert", "Edge Problem. Not a valid Arena3D object.")
-      if (nrow(inData) > max_allowed_edges) session$sendCustomMessage("handler_badObject_alert", paste("Network must contain no more than ", max_allowed_edges, " edges.", sep=""))
+      if (nrow(inData) > MAX_EDGES) session$sendCustomMessage("handler_badObject_alert", paste("Network must contain no more than ", MAX_EDGES, " edges.", sep=""))
       else {
         if (length(raw_json$universalLabelColor) == 1){
           session$sendCustomMessage("handler_globalLabelColor", raw_json$universalLabelColor)

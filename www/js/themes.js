@@ -41,9 +41,9 @@ const attachThemeButtons = () =>{
   grayThemeButton.id = "grayThemeButton";
   grayThemeButton.innerHTML = "Gray";
 
-  lightThemeButton.addEventListener("click", () => {applyTheme('#ffffff', '#8aa185', '#5c5c5c', '#000000', lightColors, channel_colors_dark)});
-  darkThemeButton.addEventListener("click", () => {applyTheme('#000000', '#777777', '#ffffff', '#ffffff', darkColors, channel_colors_light)});
-  grayThemeButton.addEventListener("click", () => {applyTheme('#999999', '#1d4991', '#6e2a5a', '#ffffff', grayColors, channel_colors_light)});
+  lightThemeButton.addEventListener("click", () => {applyTheme('#ffffff', '#8aa185', '#5c5c5c', '#000000', lightColors, CHANNEL_COLORS_DARK)});
+  darkThemeButton.addEventListener("click", () => {applyTheme('#000000', '#777777', '#ffffff', '#ffffff', darkColors, CHANNEL_COLORS_LIGHT)});
+  grayThemeButton.addEventListener("click", () => {applyTheme('#999999', '#1d4991', '#6e2a5a', '#ffffff', grayColors, CHANNEL_COLORS_LIGHT)});
 
   themeDiv.appendChild(lightThemeButton);
   themeDiv.appendChild(darkThemeButton);
