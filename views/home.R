@@ -1,6 +1,5 @@
 generateHomeTabPanel <- function() {
-  tabPanel(
-    title = "Home",
+  
     tags$div(
       id = "homeDiv"
     #   ,
@@ -34,6 +33,6 @@ generateHomeTabPanel <- function() {
     #    target=\"_blank\">Biomedical Sciences Research Center \"Alexander Fleming\"</a>
     #   </footer>
     # ')
-    )
+    
   )
 }

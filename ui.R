@@ -1,5 +1,6 @@
 source("config/ui_variables.R", local = T)
 source("views/home.R", local = T)
+source("views/file.R", local = T)
 
 ui <- fluidPage(
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "arena3dweb.css")),
@@ -19,17 +20,9 @@ ui <- fluidPage(
   theme = shinytheme("darkly"),
   navbarPage(
     title = "", id = "navBar", selected = "Home", windowTitle = "Arena3Dweb",
-    generateHomeTabPanel(),
-    tabPanel("Main View"),
-    tabPanel(
-      "File",
-      fileInput("input_network_file", "Upload Network:", accept = c(".tsv", ".txt")),
-      fileInput("load_network_file", "Load Session:", accept = c(".json")),
-      fileInput("node_attributes_file", "Upload NODE attributes:", accept = c(".tsv", ".txt")),
-      fileInput("edge_attributes_file", "Upload EDGE attributes:", accept = c(".tsv", ".txt")),
-      downloadButton("save_network_object", "Save Session"),
-      actionButton("hideButton1", icon("angle-up"), class = "hideButton")
-    ),
+    tabPanel(title = "Home", generateHomeTabPanel()),
+    tabPanel(title = "Main View"),
+    tabPanel(title = "File", generateFileTabPanel()),
     tabPanel(
       "Layer Selection & Layouts",
       radioButtons("sub_graphChoice", "Select Subgraph to Apply Calculations:", c("Per Layer" = "perLayer", "All Selected Layers" = "allLayers", "Local Layout for Selected Nodes Per Layer" = "nodesPerLayers")),
