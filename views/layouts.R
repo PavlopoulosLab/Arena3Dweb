@@ -1,0 +1,27 @@
+generateLayoutsDiv <- function() {
+  tags$div(
+    radioButtons("sub_graphChoice", "Select Subgraph to Apply Calculations:",
+                 c("Per Layer" = "perLayer", "All Selected Layers" = "allLayers",
+                   "Local Layout for Selected Nodes Per Layer" = "nodesPerLayers")),
+    checkboxInput("selectAll", "Select/Deselect All Layers", value = F),
+    tags$div(id = "checkboxdiv", class = "checkboxdiv"),
+    tags$div(id = "channelColorLayoutDiv", class = "channelColorLayoutDiv"),
+    selectInput("selectLayout", "Apply Layout Algorithm on Selected Layers:",
+                c("-", "Fruchterman-Reingold", "Reingold-Tilford", "Circle",
+                  "Grid", "Random", "DrL", "Graphopt", "Kamada-Kawai",
+                  "Large Graph Layout",  "Multidimensional Scaling", "Sugiyama"), # "Davidson-Harel", "GEM" 
+                width = "500px"),
+    selectInput("selectCluster", "Apply Clustering on Selected Layers (Optional):",
+                c("-", "Louvain", "Walktrap", "Fast Greedy", "Label Propagation")), # "Edge Betweenness"
+    selectInput("selectLocalLayout", "Apply Local Layout Algorithm:",
+                c("-", "Fruchterman-Reingold", "Reingold-Tilford", "Circle",
+                  "Grid", "Random", "DrL", "Graphopt", "Kamada-Kawai",
+                  "Large Graph Layout",  "Multidimensional Scaling", "Sugiyama"), # "Davidson-Harel", "GEM"
+                width = "500px"),            
+    actionButton("runClusterLayout", "Run", class = "runButton"),
+    selectInput("topologyScale", "Scale Nodes of Selected Layers by Topology Metric:",
+                c("-", "Degree", "Clustering Coefficient", "Betweenness Centrality"),
+                width = "500px"),
+    actionButton("hideButton2", icon("angle-up"), class = "hideButton")
+  )
+}

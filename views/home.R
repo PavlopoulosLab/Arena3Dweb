@@ -1,4 +1,4 @@
-generateHomeTabPanel <- function() {
+generateHomeDiv <- function() {
   
     tags$div(
       id = "homeDiv"
