@@ -1,4 +1,4 @@
-parse_import_data <- function(inFile){
+parseInputJSONFile <- function(inFile){
   inData <<-  matrix("", nrow = 0, ncol = 6)
   colnames(inData) <<- c("SourceNode", "SourceLayer", "TargetNode", "TargetLayer", "Weight", "Channel")
   uniqueNodes <- matrix("", nrow = 0, ncol = 1)
@@ -32,7 +32,7 @@ parse_import_data <- function(inFile){
       layers <- raw_json$layers
       uniqueLayers <- unique(layers)
       if (nrow(uniqueLayers) > MAX_LAYERS) {
-        session$sendCustomMessage("handler_badObject_alert", paste("Network must contain no more than ", MAX_LAYERS, " layers.", sep=""))
+        renderWarning(paste0("Network must contain no more than ", MAX_LAYERS, " layers."))
         return(FALSE)
       }      
       for(i in 1:nrow(layers)) {
@@ -143,7 +143,8 @@ parse_import_data <- function(inFile){
           
         nodeGroups <- rbind(nodeGroups, as.character(nodes[[2]][i]))
         }
-      }  else  session$sendCustomMessage("handler_badObject_alert", "Node Problem. Not a valid Arena3D object.")
+      } else
+        renderWarning("Node Problem. Not a valid Arena3D object.")
       
       if (nrow(raw_json$edges) > 0){
         edges <- raw_json$edges
@@ -163,11 +164,13 @@ parse_import_data <- function(inFile){
         #Check if there isn't any channel if yes then drop the column
         if (all(is.na(inData[,6]))) inData <<- inData[, colnames(inData) != "Channel", drop=F]
         else if (any(is.na(inData[,6]))) { # Check if not all edges have a channel name
-          session$sendCustomMessage("handler_badObject_alert", "Channel Problem. Not a valid Arena3D object.")
+          renderWarning("Channel Problem. Not a valid Arena3D object.")
         }
         inData <<- as.data.frame(inData)
-      } else  session$sendCustomMessage("handler_badObject_alert", "Edge Problem. Not a valid Arena3D object.")
-      if (nrow(inData) > MAX_EDGES) session$sendCustomMessage("handler_badObject_alert", paste("Network must contain no more than ", MAX_EDGES, " edges.", sep=""))
+      } else
+        renderWarning("Edge Problem. Not a valid Arena3D object.")
+      if (nrow(inData) > MAX_EDGES)
+        renderWarning(paste0("Network must contain no more than ", MAX_EDGES, " edges."))
       else {
         if (length(raw_json$universalLabelColor) == 1){
           session$sendCustomMessage("handler_globalLabelColor", raw_json$universalLabelColor)
@@ -183,8 +186,10 @@ parse_import_data <- function(inFile){
         }
         session$sendCustomMessage("handler_importNetwork", network_matrix)
       }
-    } else session$sendCustomMessage("handler_badObject_alert", "Layer Problem. Not a valid Arena3D object.")
-  } else session$sendCustomMessage("handler_badObject_alert", "Empty File. Not a valid Arena3D object. Please try again.")
+    } else
+      renderWarning("Layer Problem. Not a valid Arena3D object.")
+  } else
+    renderWarning("Empty File. Not a valid Arena3D object. Please try again.")
   return(TRUE)
 }
 

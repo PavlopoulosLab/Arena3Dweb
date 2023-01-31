@@ -1,3 +1,16 @@
+handleClusterAlgorithmSelection <- function() {
+  tryCatch({
+    if (input$selectCluster != "-") { # triggers second event when resetting
+      shinyjs::show("selectLocalLayout")
+    } else {
+      shinyjs::hide("selectLocalLayout")
+    }
+  }, error = function(e) {
+    print(paste0("Error in clustering algorithm selection: ", e))
+    renderError("Unexpected error on cluster interface.")
+  })
+}
+
 # @param clusters (communities list): output from igraph clustering algorithms such as louvain
 # we are using $membership and $names form this clusters object
 # @return annotations (2-col character dataframe): col1 clustering groups, col2 comma separated members per group

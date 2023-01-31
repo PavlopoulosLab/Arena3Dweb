@@ -1205,7 +1205,7 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
 }
 
 const toggleChannelCurvatureRange = (message) => {
-  Shiny.setInputValue("channel_curvature_flag", message); //R monitors selected Channels
+  Shiny.setInputValue("js_channel_curvature_flag", message); //R monitors selected Channels
   return true;
 }
 

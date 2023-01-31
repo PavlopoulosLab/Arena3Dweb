@@ -1,9 +1,4 @@
 // General ====================
-const badObject_alert = (message) => {
-  alert(message);
-  return true;
-};
-
 const clean_array = (message) => {
   temp = [];
   for (i = 0; i < message.length; i++) {
@@ -890,7 +885,6 @@ const applyPredefinedLayout = (message) => {
 //RSHINY HANDLERS----------------------------
 
 // General ====================
-Shiny.addCustomMessageHandler("handler_badObject_alert", badObject_alert);
 Shiny.addCustomMessageHandler("handler_startLoader", startLoader);
 Shiny.addCustomMessageHandler("handler_finishLoader", finishLoader);
 Shiny.addCustomMessageHandler("handler_fps", changeFPS);

@@ -1,3 +1,11 @@
+.modal-dialog {
+  text-align: center;
+}
+
+.modal-body {
+  background-color: seagreen;
+}
+
 body {
   font-family: Arial;
   margin: 0;
