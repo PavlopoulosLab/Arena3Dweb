@@ -1,8 +1,8 @@
 generateHomeDiv <- function() {
   
-    tags$div(
-      id = "homeDiv",
-      HTML('
+  tags$div(
+    id = "homeDiv",
+    HTML('
         <style>
   div {
     font-family: Arial;
@@ -79,12 +79,13 @@ generateHomeDiv <- function() {
     <br /><br />
     &#8594; To start using Arena3D<sup>web</sup> click on the <b>File</b> menu tab and upload a network.
     <br /><br />
-    &#8594; Follow this <a href="examples.html" target="_blank">link</a> or visit the <b>Help</b> page to download some
-    Arena3D<sup>web</sup> example files.
+    &#8594; Visit the'),
+    actionLink("link_to_examples", "Help/Examples page"),
+    HTML(' to download some Arena3D<sup>web</sup> example files.
   </p>
   <br /><br />
 </div>
       '),
-      generateFooter()
+    generateFooter()
   )
 }

@@ -10,8 +10,12 @@ server <- function(input, output, session) {
   source("functions/vr.R", local = T)
   
   # session$sendCustomMessage("handler_js_init", T) # TODO
+  # ~Welcome ####
+  observeEvent(input$link_to_examples, {
+    updateNavbarPage(session, "navBar", selected = "Help")
+  }, ignoreInit = T)
   
-  # GET request ####
+  # GET request #### TODO try
   observeEvent(session$clientData$url_search, {
     tryCatch({
       query <- parseQueryString(session$clientData$url_search)
