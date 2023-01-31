@@ -8,6 +8,7 @@ source("views/node.R", local = T)
 source("views/edge.R", local = T)
 source("views/fps.R", local = T)
 source("views/help.R", local = T)
+source("views/footer.R", local = T)
 
 ui <- fluidPage(
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "arena3dweb.css")),

@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // themeDiv
   attachThemeButtons();
   
-  document.getElementById("homeDiv").innerHTML='<object type="text/html" data="html/home.html" id="homeObject" ></object>'; // ΤΟDO
-  document.getElementById("helpDiv").innerHTML='<object type="text/html" data="html/help.html" id="helpObject" ></object>';
+  //document.getElementById("homeDiv").innerHTML='<object type="text/html" data="html/home.html" id="homeObject" ></object>'; // ΤΟDO
+  //document.getElementById("helpDiv").innerHTML='<object type="text/html" data="html/help.html" id="helpObject" ></object>';
   
 }, false);
