@@ -20,7 +20,7 @@ handleInputNetworkFileUpload <- function() {
       } else {
         if (identical(inData$Weight, NULL)) inData$Weight <<- as.matrix(rep(1,length(inData$SourceNode)))
         else inData$Weight <<- mapper(as.numeric(trim(inData$Weight)), 0.1, 1)
-        session$sendCustomMessage("handler_uploadNetwork", inData)
+        callJSHandler("handler_uploadNetwork", inData)
         inData [, "SourceNode"] <<- as.matrix(paste(inData[, "SourceNode"], inData[, "SourceLayer"], sep="_"))
         inData [, "TargetNode"] <<- as.matrix(paste(inData[, "TargetNode"], inData[, "TargetLayer"], sep="_"))
         inData <<- as.data.frame(inData)
@@ -71,7 +71,7 @@ handleInputNodeAttributeFileUpload <- function() {
     if (!identical(nodeAttributes$Url, NULL)) nodeAttributes$Url <- trim(nodeAttributes$Url)
     if (!identical(nodeAttributes$Description, NULL)) nodeAttributes$Description <- trim(nodeAttributes$Description)
     if (!is.null(nodeFile)){
-      session$sendCustomMessage("handler_nodeAttributes", nodeAttributes)
+      callJSHandler("handler_nodeAttributes", nodeAttributes)
       updateSelectInput(session, "navBar", selected = "Main View")
     }
   }, error = function(e) {
@@ -97,7 +97,7 @@ handleInputEdgeAttributeFileUpload <- function() {
       edgeAttributes$Channel <- trim(edgeAttributes$Channel)
     }
     if (!is.null(edgeFile)){
-      session$sendCustomMessage("handler_edgeAttributes", edgeAttributes)
+      callJSHandler("handler_edgeAttributes", edgeAttributes)
       updateSelectInput(session, "navBar", selected = "Main View")
     }
   }, error = function(e) {

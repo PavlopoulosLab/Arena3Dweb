@@ -264,7 +264,7 @@ const importNetwork = (message) => {
       scrambleNodes_flag = (message[i][1] === 'TRUE');
     } else if (message[i][0] == "direction") {
       isDirectionEnabled = (message[i][1] === 'TRUE')
-      updateCheckboxInput('directionToggle', message[i][1] === 'TRUE')
+      updateCheckboxInput('edgeDirectionToggle', message[i][1] === 'TRUE')
     } else if (message[i][0] == "edgeopacitybyweight") {
       edgeWidthByWeight = (message[i][1] === 'TRUE')
       updateCheckboxInput('edgeWidthByWeight', message[i][1] === 'TRUE')

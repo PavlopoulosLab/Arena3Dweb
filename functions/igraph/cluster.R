@@ -46,7 +46,7 @@ getFormatedClusterString <- function(cluster_name) {
 # @param cluster (character): Cluster needed for stategy3_superNodes functions 
 # @return void
 applyCluster <- function(inDataEdgelist, layout, local_layout, cluster){
-  session$sendCustomMessage("handler_startLoader", T)
+  callJSHandler("handler_startLoader", T)
   formatted_layout <- getFormatedLayoutString(layout)
   formatted_local_layout <- getFormatedLayoutString(local_layout)
   formatted_cluster <- getFormatedClusterString(cluster)
@@ -63,8 +63,8 @@ applyCluster <- function(inDataEdgelist, layout, local_layout, cluster){
   layout_coords <- strategy3_superNodes(sub_graph, annotations, formatted_layout, formatted_local_layout,3)
   nodes_layout <- cbind(layout_coords$network_nodes, layout_coords$lay)
   nodes_layout <-  as.matrix(merge(nodes_layout, layout_coords$groups_expanded, by.x = 1, by.y = "Nodes"))
-  session$sendCustomMessage("handler_layout", nodes_layout)
-  session$sendCustomMessage("handler_finishLoader", T)
+  callJSHandler("handler_layout", nodes_layout)
+  callJSHandler("handler_finishLoader", T)
   # reset("selectCluster")
   # reset("selectLayout")
   # reset("selectLocalLayout")

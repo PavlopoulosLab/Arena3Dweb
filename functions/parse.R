@@ -173,8 +173,8 @@ parseInputJSONFile <- function(inFile){
         renderWarning(paste0("Network must contain no more than ", MAX_EDGES, " edges."))
       else {
         if (length(raw_json$universalLabelColor) == 1){
-          session$sendCustomMessage("handler_globalLabelColor", raw_json$universalLabelColor)
-        } else session$sendCustomMessage("handler_globalLabelColor", "#ffffff","","",
+          callJSHandler("handler_globalLabelColor", raw_json$universalLabelColor)
+        } else callJSHandler("handler_globalLabelColor", "#ffffff","","",
                                                   "", "", "", "", "", "", "")
         if (length(raw_json$direction) == 1){
           network_matrix <- rbind(network_matrix, c("direction", raw_json$direction,"","",
@@ -184,7 +184,7 @@ parseInputJSONFile <- function(inFile){
           network_matrix <- rbind(network_matrix, c("edgeopacitybyweight", raw_json$edgeOpacityByWeight,"","",
                                                   "", "", "", "", "", "", ""))
         }
-        session$sendCustomMessage("handler_importNetwork", network_matrix)
+        callJSHandler("handler_importNetwork", network_matrix)
       }
     } else
       renderWarning("Layer Problem. Not a valid Arena3D object.")

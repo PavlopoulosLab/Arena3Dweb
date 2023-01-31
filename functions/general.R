@@ -1,3 +1,7 @@
+callJSHandler <- function(handlerName, handlerFunctionParameter) {
+  session$sendCustomMessage(handlerName, handlerFunctionParameter)
+}
+
 # used to trim user input data
 trim <- function (x) {
   x <- gsub("^\\s+|\\s+$", "", x)
@@ -27,7 +31,7 @@ reset_UI_values <- function(){
   reset("nodeSelectedColorPriority")
   reset("edgeSelectedColorPriority")
    reset("edgeFileColorPriority")
-  reset("directionToggle")
+  reset("edgeDirectionToggle")
   reset("showWireFrames")
   reset("layerColorFilePriority")
   shinyjs::hide("layerColorFilePriority")

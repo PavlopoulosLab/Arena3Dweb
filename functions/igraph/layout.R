@@ -185,7 +185,7 @@ formatAndApplyLayout <- function(tempMatNodes, localBoundflag) {
   sub_nodes <- V(sub_graph)$name
   sub_weights <- E(sub_graph)$weight
   if (localBoundflag == TRUE) {
-    session$sendCustomMessage("handler_setLocalFlag", T) # this tells js to map coordinates on local bounds in assignXYZ
+    callJSHandler("handler_setLocalFlag", T) # this tells js to map coordinates on local bounds in assignXYZ
   }
   applyLayout(sub_graph, sub_nodes, sub_weights)
 }
@@ -227,28 +227,28 @@ apply_layout_as_tree <- function(sub_graph, sub_nodes){
   layout <- layout_as_tree(sub_graph, root = numeric(), circular = FALSE,
                            rootlevel = numeric(), mode = "all", flip.y = TRUE)
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
 apply_layout_in_circle <- function(sub_graph, sub_nodes){
   layout <- layout_in_circle(sub_graph, order = V(sub_graph))
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
 apply_layout_on_grid <- function(sub_graph, sub_nodes){
   layout <- layout_on_grid(sub_graph, width = 0, height = 0, dim = 2)
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
 apply_layout_randomly <- function(sub_graph, sub_nodes){
   layout <- layout_randomly(sub_graph, dim = 2)
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
@@ -258,7 +258,7 @@ apply_layout_with_dh <- function(sub_graph, sub_nodes){
                            weight.edge.crossings = 1 - sqrt(edge_density(sub_graph)),
                            weight.node.edge.dist = 0.2 * (1 - edge_density(sub_graph)))
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
@@ -268,7 +268,7 @@ apply_layout_with_drl <- function(sub_graph, sub_nodes){
                             options = drl_defaults$default, weights = E(sub_graph)$weight,
                             fixed = NULL, dim = 2)
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
@@ -278,7 +278,7 @@ apply_layout_with_fr <- function(sub_graph, sub_nodes){ # this looks bad with we
                            weights = NULL, minx = NULL, maxx = NULL, miny = NULL,
                            maxy = NULL, minz = NULL, maxz = NULL)
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
@@ -287,7 +287,7 @@ apply_layout_with_gem <- function(sub_graph, sub_nodes){
                             temp.max = vcount(sub_graph), temp.min = 1/10,
                             temp.init = sqrt(vcount(sub_graph)))
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
@@ -296,14 +296,14 @@ apply_layout_with_graphopt <- function(sub_graph, sub_nodes){
                                  charge = 0.001, mass = 30, spring.length = 0,
                                  spring.constant = 1, max.sa.movement = 5)
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
 apply_layout_with_kk <- function(sub_graph, sub_nodes, sub_weights){
   layout <- layout_with_kk(sub_graph, dim = 2, weights = sub_weights)
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
@@ -311,14 +311,14 @@ apply_layout_with_lgl <- function(sub_graph, sub_nodes){
   layout <- layout_with_lgl(sub_graph, maxiter = 150, maxdelta = vcount(sub_graph),
                             coolexp = 1.5, root = NULL)
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
 apply_layout_with_mds <- function(sub_graph, sub_nodes){
   layout <- layout_with_mds(sub_graph, dist = NULL, dim = 2, options = arpack_defaults)
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
@@ -326,12 +326,12 @@ apply_layout_with_sugiyama <- function(sub_graph, sub_nodes){ # bad with weights
   layout <- layout_with_sugiyama(sub_graph, layers = NULL, hgap = 1, vgap = 1,
                                  maxiter = 100, weights = NULL, attributes = c("default", "all", "none"))$layout
   nodes_layout <- cbind(as.matrix(sub_nodes),layout)
-  session$sendCustomMessage("handler_layout", nodes_layout) # send to JS to refresh Layout
+  callJSHandler("handler_layout", nodes_layout) # send to JS to refresh Layout
   return(TRUE)
 }
 
 applyLayout <- function(sub_graph, sub_nodes, sub_weights){
-  session$sendCustomMessage("handler_startLoader", T)
+  callJSHandler("handler_startLoader", T)
   set.seed(123)
   if (input$selectLayout == "Reingold-Tilford"){
     done <- apply_layout_as_tree(sub_graph, sub_nodes)
@@ -362,7 +362,7 @@ applyLayout <- function(sub_graph, sub_nodes, sub_weights){
   } else if (input$selectLayout == "Sugiyama"){
     done <- apply_layout_with_sugiyama(sub_graph, sub_nodes)
   }
-  session$sendCustomMessage("handler_finishLoader", T)
+  callJSHandler("handler_finishLoader", T)
   # reset("selectLayout")
   return(TRUE)
 }

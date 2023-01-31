@@ -2,7 +2,7 @@ generateEdgeDiv <- function() {
   tags$div(
     checkboxInput("edgeSelectedColorPriority", "Highlight Selected Edges in Color", T),
     checkboxInput("edgeFileColorPriority", "Priority on Edge Color From File", T),
-    checkboxInput("directionToggle", "Enable Edge Direction", F),
+    checkboxInput("edgeDirectionToggle", "Enable Edge Direction", F),
     sliderInput("intraDirectionArrowSize", "Intra-Layer Direction Arrow Size:",
                 min = 0.01, max = 0.1, value = 0.05, step = 0.01),
     sliderInput("directionArrowSize", "Inter-Layer Direction Arrow Size:",
