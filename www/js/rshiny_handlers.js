@@ -780,27 +780,15 @@ const setLocalFlag = (message) => { //T
   return true;
 }
 
-const topologyScale = (message) => {
-  let scale_values = []; //column of scale values from topology
-  for(let i=0; i < message.length; i++){
-    scale_values.push(message[i][1]);
-  }
-  let scale_min = Math.min.apply(Math, scale_values),
-      scale_max = Math.max.apply(Math, scale_values),
-      target_scale_min = 0.5,
-      target_scale_max = 2.5;
-  for (i = 0; i < message.length; i++){
-    node_name = message[i][0];
-    if (scale_max - scale_min !== 0){
-      node_scale = (message[i][1] - scale_min) * (target_scale_max - target_scale_min) / (scale_max - scale_min) + target_scale_min; //mapping
-      nodes[node_whole_names.indexOf(node_name)].scale.x = node_scale;
-      nodes[node_whole_names.indexOf(node_name)].scale.y = node_scale;
-      nodes[node_whole_names.indexOf(node_name)].scale.z = node_scale;
-    }
+const topologyScale = (nodeScale) => {
+  for (i = 0; i < nodeScale.nodeName.length; i++) {
+    nodeName = nodeScale.nodeName[i];
+    nodes[node_whole_names.indexOf(nodeName)].scale.x =
+      nodes[node_whole_names.indexOf(nodeName)].scale.y =
+      nodes[node_whole_names.indexOf(nodeName)].scale.z = nodeScale.scale[i];
   }
   updateNodesRShiny();
-  return true;
-}
+};
 
 
 const applyPredefinedLayout = (message) => {

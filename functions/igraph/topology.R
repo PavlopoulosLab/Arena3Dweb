@@ -64,34 +64,34 @@ parseAndScaleEdgelist <- function(filteredNetworkDF, subgraphChoice, layerName) 
 }
 
 scaleTopology <- function(networkGraph) {
-  switch(
+  scale <- switch(
     input$topologyScaleMetricChoice,
-    "Degree" = scaleByDegree(networkGraph),
-    "Clustering Coefficient" = scaleByTransitivity(networkGraph),
-    "Betweenness Centrality" = scaleByBetweenness(networkGraph)
+    "Degree" =
+      degree(networkGraph, v = V(networkGraph), mode = "all", loops = T,
+             normalized = F),
+    "Clustering Coefficient" = {
+      scale <- transitivity(networkGraph, type = "weighted", vids = NULL,
+                            weights = NULL, isolates = "zero") # NULL == E(networkGraph)$weight
+      names(scale) <- V(networkGraph)$name
+      scale
+    },
+    "Betweenness Centrality" = 
+      betweenness(networkGraph, v = V(networkGraph),
+                  directed = input$edgeDirectionToggle, weights = NULL, # NULL == E(networkGraph)$weight
+                  normalized = F) 
   )
+  nodeScale <- calculateNodeScaleDF(scale)
+  nodeScale$scale <- mapper(nodeScale$scale,
+                            TARGET_NODE_SCALE_MIN, TARGET_NODE_SCALE_MAX)
+  callJSHandler("handler_topologyScale", nodeScale)
 }
 
-scaleByDegree <- function(networkGraph) {
-  topology <- degree(networkGraph, v = V(networkGraph), mode = "all",
-                     loops = FALSE, normalized = FALSE)
-  nodes_scale <- cbind(as.matrix(V(networkGraph)$name), topology)
-  callJSHandler("handler_topologyScale", nodes_scale)
-}
-
-scaleByTransitivity <- function(networkGraph){
-  topology <- transitivity(networkGraph, type = "local", vids = NULL,
-                           weights = E(networkGraph)$weight, isolates = "zero")
-  nodes_scale <- cbind(as.matrix(V(networkGraph)$name), topology)
-  callJSHandler("handler_topologyScale", nodes_scale)
-}
-
-scaleByBetweenness <- function(networkGraph){
-  topology <- betweenness(networkGraph, v = V(networkGraph), directed = FALSE,
-                          weights = E(networkGraph)$weight, nobigint = TRUE,
-                          normalized = FALSE)
-  nodes_scale <- cbind(as.matrix(V(networkGraph)$name), topology)
-  callJSHandler("handler_topologyScale", nodes_scale)
+calculateNodeScaleDF <- function(scale) {
+  nodeScale <- as.data.frame(scale)
+  nodeScale$nodeName <- rownames(nodeScale)
+  rownames(nodeScale) <- NULL
+  nodeScale <- nodeScale[, c("nodeName", "scale")]
+  return(nodeScale)
 }
 
 runAllLayersScaling <- function(selectedLayerNames, subgraphChoice) {

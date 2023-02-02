@@ -13,11 +13,11 @@ mapper <- function(inArr, min, max){
   outArr <- inArr
   inArr_min <- min(inArr)
   inArr_max <- max(inArr)
-  if (inArr_max - inArr_min != 0){
+  if (inArr_max - inArr_min != 0) {
     for (i in 0:length(inArr)){
       outArr[i] <- (inArr[i] - inArr_min) * (max - min) / (inArr_max - inArr_min) + min;
     }
-  } else outArr[] <- 0.3;
+  } else outArr[] <- DEFAULT_MAP_VALUE;
   return(outArr);
 }
 
