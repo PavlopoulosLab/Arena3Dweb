@@ -9,7 +9,7 @@ trim <- function (x) {
   return(x)
 }
 
-mapper <- function(inArr, min, max){
+mapper <- function(inArr, min, max, defaultValue = DEFAULT_MAP_VALUE){
   outArr <- inArr
   inArr_min <- min(inArr)
   inArr_max <- max(inArr)
@@ -17,7 +17,7 @@ mapper <- function(inArr, min, max){
     for (i in 0:length(inArr)){
       outArr[i] <- (inArr[i] - inArr_min) * (max - min) / (inArr_max - inArr_min) + min;
     }
-  } else outArr[] <- DEFAULT_MAP_VALUE;
+  } else outArr[] <- defaultValue;
   return(outArr);
 }
 

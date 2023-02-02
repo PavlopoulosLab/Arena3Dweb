@@ -82,7 +82,8 @@ scaleTopology <- function(networkGraph) {
   )
   nodeScale <- calculateNodeScaleDF(scale)
   nodeScale$scale <- mapper(nodeScale$scale,
-                            TARGET_NODE_SCALE_MIN, TARGET_NODE_SCALE_MAX)
+                            TARGET_NODE_SCALE_MIN, TARGET_NODE_SCALE_MAX,
+                            defaultValue = 1)
   callJSHandler("handler_topologyScale", nodeScale)
 }
 
@@ -95,13 +96,10 @@ calculateNodeScaleDF <- function(scale) {
 }
 
 runAllLayersScaling <- function(selectedLayerNames, subgraphChoice) {
-  networkEdgelist <- matrix("", ncol = length(colnames(networkDF)), nrow = 0)
-  for (i in 1:nrow(networkDF)){
-    if ((!is.na(match(networkDF[i, "SourceLayer"], selectedLayerNames))) &&
-        (!is.na(match(networkDF[i, "TargetLayer"], selectedLayerNames))))
-      networkEdgelist <- rbind(networkEdgelist, networkDF[i,])
-  }
-  parseAndScaleEdgelist(networkEdgelist, subgraphChoice, layerName)
+  filteredNetworkDF <-
+    networkDF[(networkDF[, "SourceLayer"] %in% selectedLayerNames) &
+                (networkDF[, "TargetLayer"] %in% selectedLayerNames), , drop = F]
+  parseAndScaleEdgelist(filteredNetworkDF, subgraphChoice, layerName)
 }
 
 runLocalScaling <- function(selectedLayerNames, subgraphChoice) {
