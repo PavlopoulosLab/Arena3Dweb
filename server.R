@@ -64,7 +64,7 @@ server <- function(input, output, session) {
     handleClusterAlgorithmSelection()
   }, ignoreInit = T)
   
-  observeEvent(input$topologyScale,{
+  observeEvent(input$runTopologyScale, {
     handleTopologyScaling()
   }, ignoreInit = T)
   

@@ -104,6 +104,5 @@ scaleTopology <- function(sub_graph, sub_nodes, sub_weights){
     scaleByBetweenness(sub_graph, sub_nodes, sub_weights)
   }
   callJSHandler("handler_finishLoader", T)
-  reset("topologyScale")
   return(TRUE)
 }
