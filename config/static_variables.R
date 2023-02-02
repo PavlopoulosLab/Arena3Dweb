@@ -1,1 +1,1 @@
-inData <- ""
+inData <- data.frame()

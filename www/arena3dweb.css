@@ -12,14 +12,6 @@ body {
   padding: 0;
 }
 
-h2,
-h3,
-a,
-p,
-div {
-  font-family: Arial;
-}
-
 a {
   color: lightblue;
 }
@@ -38,7 +30,7 @@ footer {
 
 p {
   display: inline-block;
-  width: 90%;
+  width: 100%;
   word-break: break-word;
   font-family: Arial;
   line-height: 1.6;

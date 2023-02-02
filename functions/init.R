@@ -16,7 +16,7 @@ attachDownloadHandler <- function() {
     filename = function() {
       paste0("network-", Sys.Date(), ".json")
     }, content = function(con) {
-      if (length(inData) > 1){ # == network loaded
+      if (existsNetwork()) {
         js_scene_pan <- fromJSON(input$js_scene_pan) # from JS
         js_scene_sphere <- fromJSON(input$js_scene_sphere)
         js_layers <- as.data.frame(fromJSON(input$js_layers))

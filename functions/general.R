@@ -2,6 +2,25 @@ callJSHandler <- function(handlerName, handlerFunctionParameter) {
   session$sendCustomMessage(handlerName, handlerFunctionParameter)
 }
 
+existsNetwork <- function() {
+  exist <- T
+  saveRDS(inData, "inData.RDS")
+  if (nrow(inData) == 0) {
+    exist <- F
+    renderWarning("Upload/import a network first through the File tab.")
+  }
+  return(exist)
+}
+
+existsSelectedLayer <- function() {
+  exist <- T
+  if (is.null(input$selected_layers)) {
+    exist <- F
+    renderWarning("Select at least one layer.")
+  }
+  return(exist)
+}
+
 # used to trim user input data
 trim <- function (x) {
   x <- gsub("^\\s+|\\s+$", "", x)

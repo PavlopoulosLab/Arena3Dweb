@@ -1,75 +1,100 @@
 handleTopologyScaling <- function() {
   tryCatch({
-    if (input$topologyScale != "-"){ # triggers second event when resetting
+    if (areValidTopologyScalingInputs()) {
+      renderModal("<h2>Please wait.</h2><br /><p>Rescaling nodes.</p>")
+      
+      
+      # ===================
       selected_layers <- as.numeric(input$selected_layers)
-      if (!identical(selected_layers, numeric(0))){ # at least one selected Layer needed
-        layer_group_names <- as.matrix(input$js_layer_names)
-        if (input$sub_graphChoice == "perLayer"){
-          # make separate sub_graphs for each Layer and then run Layout iteratively
-          for (i in 1:length(selected_layers)){
-            group_name <- layer_group_names[selected_layers[i]+1] # +1, since layers start from 0 in js
-            inDataEdgelist <- inData[inData[, "SourceLayer"] == group_name,,drop=F ]
-            inDataEdgelist <- inDataEdgelist[inDataEdgelist[, "TargetLayer"] == group_name,,drop=F ]
-            if ( nrow(inDataEdgelist) >= 2 ){ # igraph cant create graph with only one row (edge)
-              inDataEdgelist <- as.matrix(inDataEdgelist[, c("SourceNode", "TargetNode", "Weight")])
-              sub_graph <- createGraph(inDataEdgelist) # V(graph)
-              sub_nodes <- V(sub_graph)$name # unsorted
-              sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
-              scaleTopology(sub_graph, sub_nodes, sub_weights)
-            } else
-              renderWarning(paste0("Layer ", group_name, " could not form a graph."))
-          }
-        } else if(input$sub_graphChoice == "allLayers") {
-          # make a combined sub_graph for each Layer and then run Layout iteratively
-          inDataEdgelist <- matrix("", ncol = length(colnames(inData)), nrow = 0)
-          groups <- layer_group_names[selected_layers + 1, ]
-          for (i in 1:nrow(inData)){
-            if ((!is.na(match(inData[i, "SourceLayer"], groups))) && (!is.na(match(inData[i, "TargetLayer"], groups))))
-              inDataEdgelist <- rbind(inDataEdgelist, inData[i,])
-          }
-          if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
+      layer_group_names <- as.matrix(input$js_layer_names)
+      if (input$sub_graphChoice == "perLayer"){
+        # make separate sub_graphs for each Layer and then run Layout iteratively
+        for (i in 1:length(selected_layers)){
+          group_name <- layer_group_names[selected_layers[i]+1] # +1, since layers start from 0 in js
+          inDataEdgelist <- inData[inData[, "SourceLayer"] == group_name,,drop=F ]
+          inDataEdgelist <- inDataEdgelist[inDataEdgelist[, "TargetLayer"] == group_name,,drop=F ]
+          if ( nrow(inDataEdgelist) >= 2 ){ # igraph cant create graph with only one row (edge)
             inDataEdgelist <- as.matrix(inDataEdgelist[, c("SourceNode", "TargetNode", "Weight")])
             sub_graph <- createGraph(inDataEdgelist) # V(graph)
             sub_nodes <- V(sub_graph)$name # unsorted
             sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
             scaleTopology(sub_graph, sub_nodes, sub_weights)
           } else
-            renderWarning(paste0("Subgraph of selected Layerss could not form a graph."))
-        } else{ # local layouts
-          selected_nodes <- input$js_selected_nodes
-          if(length(selected_nodes) > 0){
-            whole_node_names <- input$js_node_names
-            for (i in 1:length(selected_layers)){
-              group_name <- layer_group_names[selected_layers[i]+1]
-              tempMat <- inData[inData[, "SourceLayer"] == group_name,, drop = F]
-              tempMat <- tempMat[tempMat[, "TargetLayer"] == group_name,, drop = F]
-              inDataEdgelist <- matrix("", nrow = 0, ncol = 3)
-              colnames(inDataEdgelist) <- c("SourceNode", "TargetNode", "Weight")
-              if (nrow(tempMat) > 1){
-                for (j in 1:nrow(tempMat)){
-                  if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selected_nodes+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selected_nodes+1])))){
-                    inDataEdgelist <- rbind(inDataEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"]))
-                  }
+            renderWarning(paste0("Layer ", group_name, " could not form a graph."))
+        }
+      } else if(input$sub_graphChoice == "allLayers") {
+        # make a combined sub_graph for each Layer and then run Layout iteratively
+        inDataEdgelist <- matrix("", ncol = length(colnames(inData)), nrow = 0)
+        groups <- layer_group_names[selected_layers + 1, ]
+        for (i in 1:nrow(inData)){
+          if ((!is.na(match(inData[i, "SourceLayer"], groups))) && (!is.na(match(inData[i, "TargetLayer"], groups))))
+            inDataEdgelist <- rbind(inDataEdgelist, inData[i,])
+        }
+        if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
+          inDataEdgelist <- as.matrix(inDataEdgelist[, c("SourceNode", "TargetNode", "Weight")])
+          sub_graph <- createGraph(inDataEdgelist) # V(graph)
+          sub_nodes <- V(sub_graph)$name # unsorted
+          sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
+          scaleTopology(sub_graph, sub_nodes, sub_weights)
+        } else
+          renderWarning(paste0("Subgraph of selected Layerss could not form a graph."))
+      } else{ # local layouts
+        selected_nodes <- input$js_selected_nodes
+        if(length(selected_nodes) > 0){
+          whole_node_names <- input$js_node_names
+          for (i in 1:length(selected_layers)){
+            group_name <- layer_group_names[selected_layers[i]+1]
+            tempMat <- inData[inData[, "SourceLayer"] == group_name,, drop = F]
+            tempMat <- tempMat[tempMat[, "TargetLayer"] == group_name,, drop = F]
+            inDataEdgelist <- matrix("", nrow = 0, ncol = 3)
+            colnames(inDataEdgelist) <- c("SourceNode", "TargetNode", "Weight")
+            if (nrow(tempMat) > 1){
+              for (j in 1:nrow(tempMat)){
+                if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selected_nodes+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selected_nodes+1])))){
+                  inDataEdgelist <- rbind(inDataEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"]))
                 }
-                if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
-                  sub_graph <- createGraph(inDataEdgelist) # V(graph)
-                  sub_nodes <- V(sub_graph)$name # unsorted
-                  sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
-                  scaleTopology(sub_graph, sub_nodes, sub_weights)
-                } else
-                  renderWarning(paste("Layer ", group_name, " could not form a graph."))
+              }
+              if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
+                sub_graph <- createGraph(inDataEdgelist) # V(graph)
+                sub_nodes <- V(sub_graph)$name # unsorted
+                sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
+                scaleTopology(sub_graph, sub_nodes, sub_weights)
               } else
                 renderWarning(paste("Layer ", group_name, " could not form a graph."))
-            }
-          } else
-            renderWarning("Can't execute Local Layouts without selected Nodes.")
-        }
+            } else
+              renderWarning(paste("Layer ", group_name, " could not form a graph."))
+          }
+        } else
+          renderWarning("Can't execute Local Layouts without selected Nodes.")
       }
     }
+
+    # ===================
+    
   }, error = function(e) {
-    print(paste("Error in Clustering:  ", e))
-    renderError("Bad Cluster Edge Attributes File Format.")
+    print(paste0("Error in topological scaling: ", e))
+    renderError("Unexpected topological scaling error.")
+  }, finally = {
+    removeModal()
   })
+}
+
+areValidTopologyScalingInputs <- function() {
+  areValid <- F
+  if (existsNetwork())
+    if (isTopologyMetricSelected())
+      if (existsSelectedLayer())
+        areValid <- T
+  return(areValid)
+}
+
+isTopologyMetricSelected <- function() {
+  isSelected <- T
+  if (input$topologyScale == "-") {
+    isSelected <- F
+    renderWarning("Please, select a topology metric.")
+  }
+  return(isSelected)
 }
 
 scaleByDegree <- function(sub_graph, sub_nodes){
