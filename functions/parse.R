@@ -1,6 +1,6 @@
 parseInputJSONFile <- function(inFile){
-  inData <<-  matrix("", nrow = 0, ncol = 6)
-  colnames(inData) <<- c("SourceNode", "SourceLayer", "TargetNode", "TargetLayer", "Weight", "Channel")
+  networkDF <<-  matrix("", nrow = 0, ncol = 6)
+  colnames(networkDF) <<- c("SourceNode", "SourceLayer", "TargetNode", "TargetLayer", "Weight", "Channel")
   uniqueNodes <- matrix("", nrow = 0, ncol = 1)
   nodeGroups <- matrix("", nrow = 0, ncol = 1) # map node rows from above to groups
   uniqueChannels <- matrix("", nrow = 0, ncol = 5)
@@ -159,17 +159,17 @@ parseInputJSONFile <- function(inFile){
           node2 <- trim(as.character(edges[[2]][i]))
           group1 <- nodeGroups[match(node1, uniqueNodes), 1]
           group2 <- nodeGroups[match(node2, uniqueNodes), 1]
-          inData <<- rbind(inData, c(node1, group1, node2, group2, as.character(edges[[3]][i]),as.character(edges[[5]][i])))
+          networkDF <<- rbind(networkDF, c(node1, group1, node2, group2, as.character(edges[[3]][i]),as.character(edges[[5]][i])))
         }
         #Check if there isn't any channel if yes then drop the column
-        if (all(is.na(inData[,6]))) inData <<- inData[, colnames(inData) != "Channel", drop=F]
-        else if (any(is.na(inData[,6]))) { # Check if not all edges have a channel name
+        if (all(is.na(networkDF[,6]))) networkDF <<- networkDF[, colnames(networkDF) != "Channel", drop=F]
+        else if (any(is.na(networkDF[,6]))) { # Check if not all edges have a channel name
           renderWarning("Channel Problem. Not a valid Arena3D object.")
         }
-        inData <<- as.data.frame(inData)
+        networkDF <<- as.data.frame(networkDF)
       } else
         renderWarning("Edge Problem. Not a valid Arena3D object.")
-      if (nrow(inData) > MAX_EDGES)
+      if (nrow(networkDF) > MAX_EDGES)
         renderWarning(paste0("Network must contain no more than ", MAX_EDGES, " edges."))
       else {
         if (length(raw_json$universalLabelColor) == 1){

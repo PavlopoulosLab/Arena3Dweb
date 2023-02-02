@@ -1,7 +1,6 @@
 existsNetwork <- function() {
   exist <- T
-  saveRDS(inData, "inData.RDS")
-  if (nrow(inData) == 0) {
+  if (nrow(networkDF) == 0) {
     exist <- F
     renderWarning("Upload/import a network first through the File tab.")
   }
@@ -17,9 +16,9 @@ existsSelectedLayer <- function() {
   return(exist)
 }
 
-isIGraphObjectValid <- function(inDataEdgelist, subgraphChoice, layerName) {
+isIGraphObjectValid <- function(filteredNetworkDF, subgraphChoice, layerName) {
   isValid <- T
-  if (nrow(inDataEdgelist) < 2) {
+  if (nrow(filteredNetworkDF) < 2) {
     isValid <- F
     if (subgraphChoice == "allLayers")
       renderWarning(paste0("Subgraph of selected layers cannot form a graph."))

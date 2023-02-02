@@ -20,7 +20,7 @@ generateLayoutsDiv <- function() {
                   "Large Graph Layout",  "Multidimensional Scaling", "Sugiyama"), # "Davidson-Harel", "GEM"
                 width = "500px"),            
     actionButton("runClusterLayout", "Run", class = "runButton"),
-    selectInput("topologyScale", "Scale Nodes of Selected Layers by Topology Metric:",
+    selectInput("topologyScaleMetricChoice", "Scale Nodes of Selected Layers by Topology Metric:",
                 c("-", "Degree", "Clustering Coefficient", "Betweenness Centrality"),
                 width = "500px"),
     actionButton("runTopologyScale", "Run", class = "runButton"),

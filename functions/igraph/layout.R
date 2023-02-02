@@ -11,9 +11,9 @@ handleClusterLayout <- function() {
           for (i in 1:length(js_selected_layers)){
             group_name <- layer_group_names[js_selected_layers[i]+1]
             if (input$selectLayout == "Circle" || input$selectLayout == "Grid" || input$selectLayout == "Random"){
-              tempMat <- inData[inData[, "SourceLayer"] == group_name,, drop = F]
+              tempMat <- networkDF[networkDF[, "SourceLayer"] == group_name,, drop = F]
               tempMatNodes <- as.matrix(tempMat[, "SourceNode"])
-              tempMat <- inData[inData[, "TargetLayer"] == group_name,, drop = F]
+              tempMat <- networkDF[networkDF[, "TargetLayer"] == group_name,, drop = F]
               if (nrow(tempMat) >= 2){ # igraph cant create graph with only one row (edge)
                 if (input$selectCluster != "-"){
                   if (input$selectLocalLayout != "-"){
@@ -27,20 +27,20 @@ handleClusterLayout <- function() {
               }  else
                 renderWarning(paste0("Layer ", group_name, " could not form a graph."))
             } else {
-              inDataEdgelist <- inData[inData[, "SourceLayer"] == group_name,, drop=F]
-              inDataEdgelist <- inDataEdgelist[inDataEdgelist[, "TargetLayer"] == group_name,, drop=F]
-              if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
-                inDataEdgelist <- checkAndFilterSelectedChannels(inDataEdgelist, selected_channels)
-                if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
+              networkEdgelist <- networkDF[networkDF[, "SourceLayer"] == group_name,, drop=F]
+              networkEdgelist <- networkEdgelist[networkEdgelist[, "TargetLayer"] == group_name,, drop=F]
+              if (nrow(networkEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
+                networkEdgelist <- checkAndFilterSelectedChannels(networkEdgelist, selected_channels)
+                if (nrow(networkEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
                   if (input$selectCluster != "-"){
                     if (input$selectLocalLayout != "-"){
-                      applyCluster(inDataEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+                      applyCluster(networkEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
                     } else
                       renderWarning("Can't execute Cluster without selected Local Layout.")
                   } else {
-                    sub_graph <- createGraph(inDataEdgelist) # V(graph)
+                    sub_graph <- createGraph(networkEdgelist) # V(graph)
                     sub_nodes <- V(sub_graph)$name # unsorted
-                    sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
+                    sub_weights <- E(sub_graph)$weight # != networkEdgelist[, 3]
                     applyLayout(sub_graph, sub_nodes, sub_weights)
                   }
                 } else
@@ -51,35 +51,35 @@ handleClusterLayout <- function() {
           }
         } else if (input$subgraphChoice == "allLayers"){ # ALL LAYERS
           # make a combined sub_graph for each Layer and then run Layout iteratively
-          inDataEdgelist <- matrix("", ncol = ncol(inData), nrow = 0)
+          networkEdgelist <- matrix("", ncol = ncol(networkDF), nrow = 0)
           groups <- layer_group_names[js_selected_layers + 1, ]
-          for (i in 1:nrow(inData)){
-            if ((!is.na(match(inData[i, "SourceLayer"], groups))) && (!is.na(match(inData[i, "TargetLayer"], groups))))
-              inDataEdgelist <- rbind(inDataEdgelist, inData[i,])
+          for (i in 1:nrow(networkDF)){
+            if ((!is.na(match(networkDF[i, "SourceLayer"], groups))) && (!is.na(match(networkDF[i, "TargetLayer"], groups))))
+              networkEdgelist <- rbind(networkEdgelist, networkDF[i,])
           }
-          if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
+          if (nrow(networkEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
             if (input$selectLayout == "Circle" || input$selectLayout == "Grid" || input$selectLayout == "Random"){
               if (input$selectCluster != "-"){
                 if (input$selectLocalLayout != "-"){
-                  applyCluster(inDataEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+                  applyCluster(networkEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
                 } else
                   renderWarning("Can't execute Cluster without selected Local Layout.")
               } else {
-                tempMatNodes <- rbind(inDataEdgelist[,"SourceNode"], inDataEdgelist[,"TargetNode"])
+                tempMatNodes <- rbind(networkEdgelist[,"SourceNode"], networkEdgelist[,"TargetNode"])
                 formatAndApplyLayout(tempMatNodes, FALSE)
               }
             } else {
-              inDataEdgelist <- checkAndFilterSelectedChannels(inDataEdgelist, selected_channels)
-              if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
+              networkEdgelist <- checkAndFilterSelectedChannels(networkEdgelist, selected_channels)
+              if (nrow(networkEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
                 if (input$selectCluster != "-"){
                   if (input$selectLocalLayout != "-"){
-                    applyCluster(inDataEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+                    applyCluster(networkEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
                   } else
                     renderWarning("Can't execute Cluster without selected Local Layout.")
                 } else {
-                  sub_graph <- createGraph(inDataEdgelist) # V(graph)
+                  sub_graph <- createGraph(networkEdgelist) # V(graph)
                   sub_nodes <- V(sub_graph)$name # unsorted
-                  sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
+                  sub_weights <- E(sub_graph)$weight # != networkEdgelist[, 3]
                   applyLayout(sub_graph, sub_nodes, sub_weights) # execute once, for combined subgraph
                 }
               } else
@@ -95,27 +95,27 @@ handleClusterLayout <- function() {
             for (i in 1:length(js_selected_layers)){
               group_name <- layer_group_names[js_selected_layers[i]+1]
               #Find  edges and nodes in case we need clustering 
-              tempMat <- inData[inData[, "SourceLayer"] == group_name,, drop = F]
+              tempMat <- networkDF[networkDF[, "SourceLayer"] == group_name,, drop = F]
               tempMat <- tempMat[tempMat[, "TargetLayer"] == group_name,, drop = F] 
               #First filter selected Channels if exist  
-              if("Channel" %in% colnames(inData)) {
-                inDataEdgelist <- matrix("", nrow = 0, ncol = 4)
-                colnames(inDataEdgelist) <- c("SourceNode", "TargetNode", "Weight", "Channel")
-                inDataEdgelist <- inDataEdgelist[inDataEdgelist[, "Channel"] == selected_channels,, drop = F]
+              if("Channel" %in% colnames(networkDF)) {
+                networkEdgelist <- matrix("", nrow = 0, ncol = 4)
+                colnames(networkEdgelist) <- c("SourceNode", "TargetNode", "Weight", "Channel")
+                networkEdgelist <- networkEdgelist[networkEdgelist[, "Channel"] == selected_channels,, drop = F]
               } else {
-                inDataEdgelist <- matrix("", nrow = 0, ncol = 3)
-                colnames(inDataEdgelist) <- c("SourceNode", "TargetNode", "Weight")
+                networkEdgelist <- matrix("", nrow = 0, ncol = 3)
+                colnames(networkEdgelist) <- c("SourceNode", "TargetNode", "Weight")
               }  
               #If we have more than one selected node filter the nodes that we want 
               if (nrow(tempMat) > 1){
                 for (j in 1:nrow(tempMat)){
-                  if("Channel" %in% colnames(inData)) {
+                  if("Channel" %in% colnames(networkDF)) {
                     if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selected_nodes+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selected_nodes+1])))){
-                      inDataEdgelist <- rbind(inDataEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"],  tempMat[j, "Channel"]))
+                      networkEdgelist <- rbind(networkEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"],  tempMat[j, "Channel"]))
                     }
                   } else {
                     if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selected_nodes+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selected_nodes+1])))){
-                      inDataEdgelist <- rbind(inDataEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"]))
+                      networkEdgelist <- rbind(networkEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"]))
                     }
                   }
                 }
@@ -125,8 +125,8 @@ handleClusterLayout <- function() {
               if (input$selectLayout == "Circle" || input$selectLayout == "Grid" || input$selectLayout == "Random"){
                 tempMatNodes <- matrix("", nrow = 0, ncol = 1)
                 # for these 3 simple layouts, just find selected node names in selected layers
-                tempMat1 <- inData[inData[, "SourceLayer"] == group_name,, drop = F]
-                tempMat2 <- inData[inData[, "TargetLayer"] == group_name,, drop = F]
+                tempMat1 <- networkDF[networkDF[, "SourceLayer"] == group_name,, drop = F]
+                tempMat2 <- networkDF[networkDF[, "TargetLayer"] == group_name,, drop = F]
                 
                 
                 for (j in 1:length(selected_nodes)){
@@ -139,7 +139,7 @@ handleClusterLayout <- function() {
                 if ((nrow(tempMatNodes) >= 2 )){
                   if (input$selectCluster != "-"){
                     if (input$selectLocalLayout != "-"){
-                      applyCluster(inDataEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+                      applyCluster(networkEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
                     } else
                       renderWarning("Can't execute Cluster without selected Local Layout.")
                   } else {
@@ -149,14 +149,14 @@ handleClusterLayout <- function() {
                   renderWarning(paste0("Layer ", group_name, " could not form a graph."))
               } else {
                 # for the rest of the layouts, use selected edges and nodes
-                if (nrow(inDataEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
+                if (nrow(networkEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
                   if (input$selectCluster != "-"){
                     if (input$selectLocalLayout != "-"){
-                      applyCluster(inDataEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+                      applyCluster(networkEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
                     } else
                       renderWarning("Can't execute Cluster without selected Local Layout.")
                   } else {
-                    formatAndApplyLayout(inDataEdgelist, TRUE)
+                    formatAndApplyLayout(networkEdgelist, TRUE)
                   }
                 } else
                   renderWarning(paste0("Layer ", group_name, " could not form a graph."))
@@ -190,13 +190,13 @@ formatAndApplyLayout <- function(tempMatNodes, localBoundflag) {
   applyLayout(sub_graph, sub_nodes, sub_weights)
 }
 
-checkAndFilterSelectedChannels <- function(inDataEdgelist, selected_channels) {
-  if("Channel" %in% colnames(inDataEdgelist) && !is.null(selected_channels) ) {
-    inDataEdgelist <- as.data.frame(inDataEdgelist)
-    inDataEdgelist <- inDataEdgelist[inDataEdgelist$Channel %in% selected_channels,]
+checkAndFilterSelectedChannels <- function(networkEdgelist, selected_channels) {
+  if("Channel" %in% colnames(networkEdgelist) && !is.null(selected_channels) ) {
+    networkEdgelist <- as.data.frame(networkEdgelist)
+    networkEdgelist <- networkEdgelist[networkEdgelist$Channel %in% selected_channels,]
   } 
-  inDataEdgelist <- as.matrix(inDataEdgelist[, c("SourceNode", "TargetNode", "Weight")])
-  return(inDataEdgelist)
+  networkEdgelist <- as.matrix(networkEdgelist[, c("SourceNode", "TargetNode", "Weight")])
+  return(networkEdgelist)
 }
 
 # @param layout_name (string): string name from UI

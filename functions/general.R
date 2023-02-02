@@ -43,7 +43,7 @@ reset_UI_values <- function(){
    shinyjs::hide("interLayerEdgeOpacity")
   reset("floorOpacity")
   reset("selectAll")
-  reset("topologyScale")
+  reset("topologyScaleMetricChoice")
   reset("selectLayout")
   reset("selectCluster")
   reset("selectLocalLayout")

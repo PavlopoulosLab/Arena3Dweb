@@ -4,26 +4,26 @@ handleInputNetworkFileUpload <- function() {
     inFile <- input$input_network_file
     if (!is.null(inFile)){ #input$input_network_file -> NULL initially
       reset_UI_values()
-      inData <<- read.delim(inFile$datapath, header = TRUE) # datapath -> temporary location of uploaded file
+      networkDF <<- read.delim(inFile$datapath, header = TRUE) # datapath -> temporary location of uploaded file
       
-      inData$SourceNode <<- trim(inData$SourceNode)
-      inData$SourceLayer <<- trim(inData$SourceLayer)
-      inData$TargetNode <<- trim(inData$TargetNode)
-      inData$TargetLayer <<- trim(inData$TargetLayer)
-      if ("Channel" %in% colnames(inData)) {
-        inData$Channel <<- trim(inData$Channel)
+      networkDF$SourceNode <<- trim(networkDF$SourceNode)
+      networkDF$SourceLayer <<- trim(networkDF$SourceLayer)
+      networkDF$TargetNode <<- trim(networkDF$TargetNode)
+      networkDF$TargetLayer <<- trim(networkDF$TargetLayer)
+      if ("Channel" %in% colnames(networkDF)) {
+        networkDF$Channel <<- trim(networkDF$Channel)
       }
-      if('' %in% inData$Channel){
-        print(paste("A channel name is empty. Channels: ",inData$Channel))
+      if('' %in% networkDF$Channel){
+        print(paste("A channel name is empty. Channels: ",networkDF$Channel))
         renderWarning("A channel name is empty.
                       Please reupload the file with all the channel names.")
       } else {
-        if (identical(inData$Weight, NULL)) inData$Weight <<- as.matrix(rep(1,length(inData$SourceNode)))
-        else inData$Weight <<- mapper(as.numeric(trim(inData$Weight)), 0.1, 1)
-        callJSHandler("handler_uploadNetwork", inData)
-        inData [, "SourceNode"] <<- as.matrix(paste(inData[, "SourceNode"], inData[, "SourceLayer"], sep="_"))
-        inData [, "TargetNode"] <<- as.matrix(paste(inData[, "TargetNode"], inData[, "TargetLayer"], sep="_"))
-        inData <<- as.data.frame(inData)
+        if (identical(networkDF$Weight, NULL)) networkDF$Weight <<- as.matrix(rep(1,length(networkDF$SourceNode)))
+        else networkDF$Weight <<- mapper(as.numeric(trim(networkDF$Weight)), 0.1, 1)
+        callJSHandler("handler_uploadNetwork", networkDF)
+        networkDF [, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
+        networkDF [, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
+        networkDF <<- as.data.frame(networkDF)
       }
       updateSelectInput(session, "navBar", selected = "Main View")
     }
