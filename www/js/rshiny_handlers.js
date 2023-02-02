@@ -451,13 +451,13 @@ const layerColorFilePriority = (message) => {
 }
 
 const selectAllLayers = (message) => {
-  selected_layers = [];
+  js_selected_layers = [];
   let c = document.getElementById("checkboxdiv").children;
   for (let i = 0; i < c.length; i++){
     if (i%7 === 0){ //(c[i].type == "checkbox"){
       if (message){
         c[i].checked = true;
-        selected_layers.push(i/7);
+        js_selected_layers.push(i/7);
         layer_planes[i/7].material.color = new THREE.Color( "#f7f43e" );
       } else {
         c[i].checked = false;
@@ -468,7 +468,7 @@ const selectAllLayers = (message) => {
       }
     }
   }
-  Shiny.setInputValue("selected_layers", selected_layers);
+  Shiny.setInputValue("js_selected_layers", js_selected_layers);
   return true;
 }
 
@@ -739,8 +739,8 @@ const showLayerLabels = (message) => {
 const showSelectedLayerLabels = (message) => {
   selectedLayerLabelSwitch = message; //message = true or false
   if (!selectedLayerLabelSwitch){
-    for (let i = 0; i < selected_layers.length; i++){
-      layer_labels[selected_layers[i]].style.display = "none";
+    for (let i = 0; i < js_selected_layers.length; i++){
+      layer_labels[js_selected_layers[i]].style.display = "none";
     }
   }
   return true;

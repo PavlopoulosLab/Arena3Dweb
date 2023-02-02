@@ -143,12 +143,12 @@ function sliderLayerRotate(){
 
 function rotateLayersXMinus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].rotateX(-THREE.Math.degToRad(value));
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].rotateX(-THREE.Math.degToRad(value));
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -160,12 +160,12 @@ function rotateLayersXMinus(){
 
 function rotateLayersXPlus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].rotateX(THREE.Math.degToRad(value));
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].rotateX(THREE.Math.degToRad(value));
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -177,12 +177,12 @@ function rotateLayersXPlus(){
 
 function rotateLayersYMinus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].rotateY(-THREE.Math.degToRad(value));
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].rotateY(-THREE.Math.degToRad(value));
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -194,12 +194,12 @@ function rotateLayersYMinus(){
 
 function rotateLayersYPlus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].rotateY(THREE.Math.degToRad(value));
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].rotateY(THREE.Math.degToRad(value));
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -211,12 +211,12 @@ function rotateLayersYPlus(){
 
 function rotateLayersZMinus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].rotateZ(-THREE.Math.degToRad(value));
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].rotateZ(-THREE.Math.degToRad(value));
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -228,12 +228,12 @@ function rotateLayersZMinus(){
 
 function rotateLayersZPlus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].rotateZ(THREE.Math.degToRad(value));
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].rotateZ(THREE.Math.degToRad(value));
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -277,12 +277,12 @@ function congregateLayers() {
 
 function moveLayersXMinus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].translateX(-value);
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].translateX(-value);
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -294,12 +294,12 @@ function moveLayersXMinus(){
 
 function moveLayersXPlus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].translateX(value);
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].translateX(value);
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -311,12 +311,12 @@ function moveLayersXPlus(){
 
 function moveLayersYMinus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].translateY(-value);
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].translateY(-value);
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -328,12 +328,12 @@ function moveLayersYMinus(){
 
 function moveLayersYPlus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].translateY(value);
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].translateY(value);
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -345,12 +345,12 @@ function moveLayersYPlus(){
 
 function moveLayersZMinus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].translateZ(-value);
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].translateZ(-value);
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -362,12 +362,12 @@ function moveLayersZMinus(){
 
 function moveLayersZPlus(){
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < selected_layers.length; i++){
-        layer_planes[selected_layers[i]].translateZ(value);
+      for (let i = 0; i < js_selected_layers.length; i++){
+        layer_planes[js_selected_layers[i]].translateZ(value);
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -381,15 +381,15 @@ function scaleLayers(){
   td = document.getElementById("sliderValue4");
   td.innerHTML = "x".concat(this.value);
   selectCheckedLayers();
-  if (selected_layers.length == 0) alert("Please select at least one layer.");
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    for (let i = 0; i < selected_layers.length; i++){
-      layer_planes[selected_layers[i]].geometry.scale(1, parseFloat(this.value)/last_layer_scale[selected_layers[i]], parseFloat(this.value)/last_layer_scale[selected_layers[i]]);
-      for (let j = 0; j < layer_planes[selected_layers[i]].children.length; j++){
-        layer_planes[selected_layers[i]].children[j].position.y = layer_planes[selected_layers[i]].children[j].position.y * parseFloat(this.value)/last_layer_scale[selected_layers[i]];
-        layer_planes[selected_layers[i]].children[j].position.z = layer_planes[selected_layers[i]].children[j].position.z * parseFloat(this.value)/last_layer_scale[selected_layers[i]];
+    for (let i = 0; i < js_selected_layers.length; i++){
+      layer_planes[js_selected_layers[i]].geometry.scale(1, parseFloat(this.value)/last_layer_scale[js_selected_layers[i]], parseFloat(this.value)/last_layer_scale[js_selected_layers[i]]);
+      for (let j = 0; j < layer_planes[js_selected_layers[i]].children.length; j++){
+        layer_planes[js_selected_layers[i]].children[j].position.y = layer_planes[js_selected_layers[i]].children[j].position.y * parseFloat(this.value)/last_layer_scale[js_selected_layers[i]];
+        layer_planes[js_selected_layers[i]].children[j].position.z = layer_planes[js_selected_layers[i]].children[j].position.z * parseFloat(this.value)/last_layer_scale[js_selected_layers[i]];
       }
-      last_layer_scale[selected_layers[i]] = parseFloat(this.value);
+      last_layer_scale[js_selected_layers[i]] = parseFloat(this.value);
     }
     redrawEdges();
     updateLayersRShiny();

@@ -9,6 +9,7 @@ server <- function(input, output, session) {
   source("functions/render.R", local = T)
   source("functions/general.R", local = T)
   source("functions/parse.R", local = T)
+  source("functions/igraph/general.R", local = T)
   source("functions/igraph/graph.R", local = T)
   source("functions/igraph/layout.R", local = T)
   source("functions/igraph/cluster.R", local = T)

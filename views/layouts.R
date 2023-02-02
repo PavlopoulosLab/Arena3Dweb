@@ -1,6 +1,6 @@
 generateLayoutsDiv <- function() {
   tags$div(
-    radioButtons("sub_graphChoice", "Select Subgraph to Apply Calculations:",
+    radioButtons("subgraphChoice", "Select Subgraph to Apply Calculations:",
                  c("Per Layer" = "perLayer", "All Selected Layers" = "allLayers",
                    "Local Layout for Selected Nodes Per Layer" = "nodesPerLayers")),
     checkboxInput("selectAll", "Select/Deselect All Layers", value = F),

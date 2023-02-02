@@ -3,13 +3,13 @@ handleClusterLayout <- function() {
     renderModal("<h2>Please wait.</h2><br /><p>Generating layout.</p>")
     selected_channels <- input$channels_layout;
     if (input$selectLayout != "-"){ # triggers second event when resetting
-      selected_layers <- as.numeric(input$selected_layers) # from JS
-      if (!identical(selected_layers, numeric(0))){ # at least one selected Layer needed
+      js_selected_layers <- as.numeric(input$js_selected_layers) # from JS
+      if (!identical(js_selected_layers, numeric(0))){ # at least one selected Layer needed
         layer_group_names <- as.matrix(input$js_layer_names)
-        if (input$sub_graphChoice == "perLayer"){ # PER LAYER
+        if (input$subgraphChoice == "perLayer"){ # PER LAYER
           # make separate sub_graphs for each Layer and then run Layout iteratively
-          for (i in 1:length(selected_layers)){
-            group_name <- layer_group_names[selected_layers[i]+1]
+          for (i in 1:length(js_selected_layers)){
+            group_name <- layer_group_names[js_selected_layers[i]+1]
             if (input$selectLayout == "Circle" || input$selectLayout == "Grid" || input$selectLayout == "Random"){
               tempMat <- inData[inData[, "SourceLayer"] == group_name,, drop = F]
               tempMatNodes <- as.matrix(tempMat[, "SourceNode"])
@@ -49,10 +49,10 @@ handleClusterLayout <- function() {
                 renderWarning(paste0("Layer ", group_name, " could not form a graph."))
             }
           }
-        } else if (input$sub_graphChoice == "allLayers"){ # ALL LAYERS
+        } else if (input$subgraphChoice == "allLayers"){ # ALL LAYERS
           # make a combined sub_graph for each Layer and then run Layout iteratively
           inDataEdgelist <- matrix("", ncol = ncol(inData), nrow = 0)
-          groups <- layer_group_names[selected_layers + 1, ]
+          groups <- layer_group_names[js_selected_layers + 1, ]
           for (i in 1:nrow(inData)){
             if ((!is.na(match(inData[i, "SourceLayer"], groups))) && (!is.na(match(inData[i, "TargetLayer"], groups))))
               inDataEdgelist <- rbind(inDataEdgelist, inData[i,])
@@ -92,8 +92,8 @@ handleClusterLayout <- function() {
           selected_nodes <- input$js_selected_nodes
           if (length(selected_nodes) > 0){ # can't run local layouts without selected nodes
             whole_node_names <- input$js_node_names
-            for (i in 1:length(selected_layers)){
-              group_name <- layer_group_names[selected_layers[i]+1]
+            for (i in 1:length(js_selected_layers)){
+              group_name <- layer_group_names[js_selected_layers[i]+1]
               #Find  edges and nodes in case we need clustering 
               tempMat <- inData[inData[, "SourceLayer"] == group_name,, drop = F]
               tempMat <- tempMat[tempMat[, "TargetLayer"] == group_name,, drop = F] 
