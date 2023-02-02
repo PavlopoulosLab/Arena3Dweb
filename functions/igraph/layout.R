@@ -190,6 +190,15 @@ formatAndApplyLayout <- function(tempMatNodes, localBoundflag) {
   applyLayout(sub_graph, sub_nodes, sub_weights)
 }
 
+checkAndFilterSelectedChannels <- function(inDataEdgelist, selected_channels) {
+  if("Channel" %in% colnames(inDataEdgelist) && !is.null(selected_channels) ) {
+    inDataEdgelist <- as.data.frame(inDataEdgelist)
+    inDataEdgelist <- inDataEdgelist[inDataEdgelist$Channel %in% selected_channels,]
+  } 
+  inDataEdgelist <- as.matrix(inDataEdgelist[, c("SourceNode", "TargetNode", "Weight")])
+  return(inDataEdgelist)
+}
+
 # @param layout_name (string): string name from UI
 # @return layout_function_name (string): layout name needed for stategy3_superNodes 
 getFormatedLayoutString <- function(layout_name) {
