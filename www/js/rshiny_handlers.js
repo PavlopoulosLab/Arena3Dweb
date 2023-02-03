@@ -328,7 +328,7 @@ const nodeAttributes = (message) => {
     pos = node_attributes.Node.indexOf(node_whole_names[i]);
     if (pos > -1){ //if node exists in attributes file
       if (nodeAttributesPriority){
-        if (!exists(selected_nodes, i) && checkIfAttributeColorExist(node_attributes, pos)) //if node not currently selected and color is assigned
+        if (!exists(selectedNodePositions, i) && checkIfAttributeColorExist(node_attributes, pos)) //if node not currently selected and color is assigned
           nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
       }
       if (node_attributes.Size !== undefined && node_attributes.Size[pos] !== "" && node_attributes.Size[pos] != " " && node_attributes.Size[pos] !== null)
@@ -552,15 +552,15 @@ const assignXYZ = (message) => {
 const nodeSelector = (message) => {
   //message -> T | F
   if (message){
-    selected_nodes = []; //reseting, else multiple entries -> double transformations
+    selectedNodePositions = []; //reseting, else multiple entries -> double transformations
     for (let i=0; i < nodes.length; i++){
-      selected_nodes.push(i);
+      selectedNodePositions.push(i);
       if (selectedNodeColorFlag) nodes[i].material.color = new THREE.Color( selectedDefaultColor );
     }
     updateSelectedNodesRShiny();
   }
   else{
-    selected_nodes = [];
+    selectedNodePositions = [];
     updateSelectedNodesRShiny();
     for (i=0; i < nodes.length; i++){
       if (node_attributes !== ""){
@@ -578,14 +578,14 @@ const nodeSelector = (message) => {
 
 const nodeSelectedColorPriority = (message) => {
   selectedNodeColorFlag = message;
-  for (let i=0; i<selected_nodes.length; i++){
-    if (selectedNodeColorFlag) nodes[selected_nodes[i]].material.color = new THREE.Color( selectedDefaultColor );
+  for (let i=0; i<selectedNodePositions.length; i++){
+    if (selectedNodeColorFlag) nodes[selectedNodePositions[i]].material.color = new THREE.Color( selectedDefaultColor );
     else if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
-      pos = node_attributes.Node.indexOf(node_whole_names[selected_nodes[i]]);
+      pos = node_attributes.Node.indexOf(node_whole_names[selectedNodePositions[i]]);
       if(checkIfAttributeColorExist(node_attributes, pos))//if node exists in node attributes file
-        nodes[selected_nodes[i]].material.color = new THREE.Color( node_attributes.Color[pos] );
-      else nodes[selected_nodes[i]].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[selected_nodes[i]]]])%colors.length]);
-    } else nodes[selected_nodes[i]].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[selected_nodes[i]]]])%colors.length]);
+        nodes[selectedNodePositions[i]].material.color = new THREE.Color( node_attributes.Color[pos] );
+      else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colors.length]);
+    } else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colors.length]);
   }
   return true;
 }

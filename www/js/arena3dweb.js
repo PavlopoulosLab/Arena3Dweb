@@ -37,7 +37,7 @@ const clearCanvas = () => {
   layer_planes = [],
   layer_spheres = [],
   js_selected_layers = [],
-  selected_nodes = [],
+  selectedNodePositions = [],
   selected_edges = [],
   shiftX = "",
   shiftY = "",
@@ -574,16 +574,16 @@ const checkNodeInteraction = (e) => {
   if (intersects.length > 0){
     node_selection = true;
     let ind = findIndexByUuid(nodes, intersects[0].object.uuid);
-    if (exists(selected_nodes, ind)){
+    if (exists(selectedNodePositions, ind)){
       if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
         pos = node_attributes.Node.indexOf(node_whole_names[ind]);
         if (pos > -1 && node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
           nodes[ind].material.color = new THREE.Color( node_attributes.Color[pos] );
         else nodes[ind].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[ind]]])%colors.length]);
       } else nodes[ind].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[ind]]])%colors.length]);
-      selected_nodes = selected_nodes.filter(function(value, index, arr){ return value != ind;}); //array remove/filter
+      selectedNodePositions = selectedNodePositions.filter(function(value, index, arr){ return value != ind;}); //array remove/filter
     } else {
-      selected_nodes.push(ind);
+      selectedNodePositions.push(ind);
       if (selectedNodeColorFlag) nodes[ind].material.color = new THREE.Color( selectedDefaultColor );
     }
   }
@@ -628,16 +628,16 @@ const translateNodes = (e) => {
   else step =-20;
   
   if (axisPressed=="z"){
-    for (i = 0; i < selected_nodes.length; i++){
-      nodes[selected_nodes[i]].translateZ(step);
+    for (i = 0; i < selectedNodePositions.length; i++){
+      nodes[selectedNodePositions[i]].translateZ(step);
     }
   /*} else if (axisPressed=="x"){
-    for (i = 0; i < selected_nodes.length; i++){
-      nodes[selected_nodes[i]].translateX(step);
+    for (i = 0; i < selectedNodePositions.length; i++){
+      nodes[selectedNodePositions[i]].translateX(step);
     }*/
   } else if (axisPressed=="c"){
-    for (i = 0; i < selected_nodes.length; i++){
-      nodes[selected_nodes[i]].translateY(step);
+    for (i = 0; i < selectedNodePositions.length; i++){
+      nodes[selectedNodePositions[i]].translateY(step);
     }
   }
   redrawEdges();
@@ -790,7 +790,7 @@ const redrawEdges = () => {
     let edge_split = edge_pairs[i].split("---");
     index1 = node_whole_names.indexOf(edge_split[0]);
     index2 = node_whole_names.indexOf(edge_split[1]);
-    if (node_groups[node_whole_names[index1]] == node_groups[node_whole_names[index2]]){ //(exists(selected_nodes, index1) || exists(selected_nodes, index2)) &&
+    if (node_groups[node_whole_names[index1]] == node_groups[node_whole_names[index2]]){ //(exists(selectedNodePositions, index1) || exists(selectedNodePositions, index2)) &&
       let points = [];
       layer_planes[layer_groups[node_groups[node_whole_names[index1]]]].remove(edges[i]);
   		points.push( nodes[index1].position, nodes[index2].position );
@@ -1316,7 +1316,7 @@ const decideNodeLabelFlags = () => {
       node_label_flags[i] = true;
     } else if (layer_node_labels_flags[node_layer]){ //3. if showing layer node labels
       node_label_flags[i] = true;
-    } else if (selectedLabelSwitch && exists(selected_nodes, i)){ //4. if showing selected node labels, and node is selected
+    } else if (selectedLabelSwitch && exists(selectedNodePositions, i)){ //4. if showing selected node labels, and node is selected
       node_label_flags[i] = true;
     } else if (exists(hovered_nodes, i)){ //5. if hovering over node(s)
       node_label_flags[i] = true;

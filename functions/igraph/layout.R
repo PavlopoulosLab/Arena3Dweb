@@ -89,8 +89,8 @@ handleClusterLayout <- function() {
             renderWarning("Subgraph of selected Layers could not form a graph.")
         } 
         else { # LOCAL LAYOUTS
-          selected_nodes <- input$js_selected_nodes
-          if (length(selected_nodes) > 0){ # can't run local layouts without selected nodes
+          selectedNodePositions <- input$js_selectedNodePositions
+          if (length(selectedNodePositions) > 0){ # can't run local layouts without selected nodes
             whole_node_names <- input$js_node_names
             for (i in 1:length(js_selected_layers)){
               group_name <- layer_group_names[js_selected_layers[i]+1]
@@ -110,11 +110,11 @@ handleClusterLayout <- function() {
               if (nrow(tempMat) > 1){
                 for (j in 1:nrow(tempMat)){
                   if("Channel" %in% colnames(networkDF)) {
-                    if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selected_nodes+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selected_nodes+1])))){
+                    if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selectedNodePositions+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selectedNodePositions+1])))){
                       networkEdgelist <- rbind(networkEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"],  tempMat[j, "Channel"]))
                     }
                   } else {
-                    if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selected_nodes+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selected_nodes+1])))){
+                    if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selectedNodePositions+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selectedNodePositions+1])))){
                       networkEdgelist <- rbind(networkEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"]))
                     }
                   }
@@ -129,10 +129,10 @@ handleClusterLayout <- function() {
                 tempMat2 <- networkDF[networkDF[, "TargetLayer"] == group_name,, drop = F]
                 
                 
-                for (j in 1:length(selected_nodes)){
-                  tempMat <- tempMat1[tempMat1[, "SourceNode"] == whole_node_names[selected_nodes[j]+1],, drop = F]
+                for (j in 1:length(selectedNodePositions)){
+                  tempMat <- tempMat1[tempMat1[, "SourceNode"] == whole_node_names[selectedNodePositions[j]+1],, drop = F]
                   tempMatNodes <- rbind(tempMatNodes, as.matrix(tempMat[, "SourceNode"]))
-                  tempMat <- tempMat2[tempMat2[, "TargetNode"] == whole_node_names[selected_nodes[j]+1],, drop = F]
+                  tempMat <- tempMat2[tempMat2[, "TargetNode"] == whole_node_names[selectedNodePositions[j]+1],, drop = F]
                   tempMatNodes <- rbind(tempMatNodes, as.matrix(tempMat[, "TargetNode"]))
                 }
                 tempMatNodes <- unique(tempMatNodes)

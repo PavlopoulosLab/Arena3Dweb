@@ -399,11 +399,11 @@ function scaleLayers(){
 }
 
 function spreadNodes() {
-  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    for (let i=0;i<selected_nodes.length;i++){
-      nodes[selected_nodes[i]].position.y = nodes[selected_nodes[i]].position.y * 1.1;
-      nodes[selected_nodes[i]].position.z = nodes[selected_nodes[i]].position.z * 1.1;
+    for (let i=0;i<selectedNodePositions.length;i++){
+      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 1.1;
+      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 1.1;
     }
     updateNodesRShiny();
     redrawEdges();
@@ -412,11 +412,11 @@ function spreadNodes() {
 }
 
 function congregateNodes() {
-  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    for (let i=0;i<selected_nodes.length;i++){
-      nodes[selected_nodes[i]].position.y = nodes[selected_nodes[i]].position.y * 0.9;
-      nodes[selected_nodes[i]].position.z = nodes[selected_nodes[i]].position.z * 0.9;
+    for (let i=0;i<selectedNodePositions.length;i++){
+      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 0.9;
+      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 0.9;
     }
     updateNodesRShiny();
     redrawEdges();
@@ -431,12 +431,12 @@ function sliderNodeTranslate(){
 }
 
 function moveNodesXMinus(){
-  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selected_nodes.length; i++){
-        nodes[selected_nodes[i]].translateX(-value);
+      for (let i = 0; i < selectedNodePositions.length; i++){
+        nodes[selectedNodePositions[i]].translateX(-value);
       }
       redrawEdges();
       updateNodesRShiny();
@@ -447,12 +447,12 @@ function moveNodesXMinus(){
 }
 
 function moveNodesXPlus(){
-  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selected_nodes.length; i++){
-        nodes[selected_nodes[i]].translateX(value);
+      for (let i = 0; i < selectedNodePositions.length; i++){
+        nodes[selectedNodePositions[i]].translateX(value);
       }
       redrawEdges();
       updateNodesRShiny();
@@ -463,12 +463,12 @@ function moveNodesXPlus(){
 }
 
 function moveNodesYMinus(){
-  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selected_nodes.length; i++){
-        nodes[selected_nodes[i]].translateY(-value);
+      for (let i = 0; i < selectedNodePositions.length; i++){
+        nodes[selectedNodePositions[i]].translateY(-value);
       }
       redrawEdges();
       updateNodesRShiny();
@@ -479,12 +479,12 @@ function moveNodesYMinus(){
 }
 
 function moveNodesYPlus(){
-  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selected_nodes.length; i++){
-        nodes[selected_nodes[i]].translateY(value);
+      for (let i = 0; i < selectedNodePositions.length; i++){
+        nodes[selectedNodePositions[i]].translateY(value);
       }
       redrawEdges();
       updateNodesRShiny();
@@ -495,12 +495,12 @@ function moveNodesYPlus(){
 }
 
 function moveNodesZMinus(){
-  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selected_nodes.length; i++){
-        nodes[selected_nodes[i]].translateZ(-value);
+      for (let i = 0; i < selectedNodePositions.length; i++){
+        nodes[selectedNodePositions[i]].translateZ(-value);
       }
       redrawEdges();
       updateNodesRShiny();
@@ -511,12 +511,12 @@ function moveNodesZMinus(){
 }
 
 function moveNodesZPlus(){
-  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
     timeoutF = setInterval(function(){
       let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selected_nodes.length; i++){
-        nodes[selected_nodes[i]].translateZ(value);
+      for (let i = 0; i < selectedNodePositions.length; i++){
+        nodes[selectedNodePositions[i]].translateZ(value);
       }
       redrawEdges();
       updateNodesRShiny();
@@ -529,12 +529,12 @@ function moveNodesZPlus(){
 function scaleNodes(){
   td = document.getElementById("sliderValue6");
   td.innerHTML = "x".concat(this.value);
-  if (selected_nodes.length == 0) alert("Please select at least one node.");
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    for (let i = 0; i < selected_nodes.length; i++){
-      nodes[selected_nodes[i]].scale.x = parseFloat(this.value);
-      nodes[selected_nodes[i]].scale.y = parseFloat(this.value);
-      nodes[selected_nodes[i]].scale.z = parseFloat(this.value);
+    for (let i = 0; i < selectedNodePositions.length; i++){
+      nodes[selectedNodePositions[i]].scale.x = parseFloat(this.value);
+      nodes[selectedNodePositions[i]].scale.y = parseFloat(this.value);
+      nodes[selectedNodePositions[i]].scale.z = parseFloat(this.value);
     }
     updateNodesRShiny();
   }

@@ -49,8 +49,8 @@ runTopologyScaling <- function(selectedLayerNames, subgraphChoice) {
 runPerLayerScaling <- function(selectedLayerNames, subgraphChoice) {
   for (layerName in selectedLayerNames) {
     filteredNetworkDF <-
-      networkDF[(networkDF[, "SourceLayer"] == layerName) &
-                  (networkDF[, "TargetLayer"] == layerName), , drop = F]
+      networkDF[(networkDF$SourceLayer == layerName) &
+                  (networkDF$TargetLayer == layerName), , drop = F]
     parseAndScaleEdgelist(filteredNetworkDF, subgraphChoice, layerName)
   }
 }
@@ -97,30 +97,32 @@ calculateNodeScaleDF <- function(scale) {
 
 runAllLayersScaling <- function(selectedLayerNames, subgraphChoice) {
   filteredNetworkDF <-
-    networkDF[(networkDF[, "SourceLayer"] %in% selectedLayerNames) &
-                (networkDF[, "TargetLayer"] %in% selectedLayerNames), , drop = F]
+    networkDF[(networkDF$SourceLayer %in% selectedLayerNames) &
+                (networkDF$TargetLayer %in% selectedLayerNames), , drop = F]
   parseAndScaleEdgelist(filteredNetworkDF, subgraphChoice, layerName)
 }
 
 runLocalScaling <- function(selectedLayerNames, subgraphChoice) {
-  selected_nodes <- input$js_selected_nodes # TODO per layer check
-  if(length(selected_nodes) > 0){
-    whole_node_names <- input$js_node_names
-    for (layerName in selectedLayerNames){
-      tempMat <- networkDF[networkDF[, "SourceLayer"] == layerName, , drop = F]
-      tempMat <- tempMat[tempMat[, "TargetLayer"] == layerName, , drop = F]
-      networkEdgelist <- matrix("", nrow = 0, ncol = 3)
-      colnames(networkEdgelist) <- c("SourceNode", "TargetNode", "Weight")
-      if (nrow(tempMat) > 1){
-        for (j in 1:nrow(tempMat)){
-          if ((!is.na(match(tempMat[j, "SourceNode"], whole_node_names[selected_nodes+1]))) && (!is.na(match(tempMat[j, "TargetNode"], whole_node_names[selected_nodes+1])))){
-            networkEdgelist <- rbind(networkEdgelist, c(tempMat[j, "SourceNode"], tempMat[j, "TargetNode"], tempMat[j, "Weight"]))
-          }
-        }
-        parseAndScaleEdgelist(networkEdgelist, subgraphChoice, layerName)
-      } else
-        renderWarning(paste("Layer ", layerName, " could not form a graph."))
+  selectedNodePositions <- input$js_selectedNodePositions + 1 # JS to R iterator
+  if (existSelectedNodes(selectedNodePositions)) {
+    nodeNamesWithLayer <- input$js_node_names
+    selectedNodeNamesWithLayer <- nodeNamesWithLayer[selectedNodePositions]
+    for (layerName in selectedLayerNames) {
+      filteredNetworkDF <-
+        networkDF[(networkDF$SourceLayer == layerName) &
+                    (networkDF$TargetLayer == layerName) &
+                    (networkDF$SourceNode %in% selectedNodeNamesWithLayer) &
+                    (networkDF$TargetNode %in% selectedNodeNamesWithLayer), , drop = F]
+      parseAndScaleEdgelist(filteredNetworkDF, subgraphChoice, layerName)
     }
-  } else
-    renderWarning("Can't execute Local Layouts without selected Nodes.")
+  }
+}
+
+existSelectedNodes <- function(selectedNodePositions) {
+  exist <- T
+  if (length(selectedNodePositions) == 0) {
+    exist <- F
+    renderWarning("Cannot execute local layouts without selected nodes.")
+  }
+  return(exist)
 }
