@@ -92,7 +92,7 @@ const updateNodeNamesRShiny = () => {
 }
 
 const updateSelectedNodesRShiny = () => {
-  Shiny.setInputValue("js_selected_nodes", selected_nodes);
+  Shiny.setInputValue("js_selectedNodePositions", selectedNodePositions);
   return true;
 }
 

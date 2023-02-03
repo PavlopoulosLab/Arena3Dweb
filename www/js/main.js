@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
   canvas.addEventListener('dblclick', dblClick);
   canvas.addEventListener('contextmenu', replaceContextMenuOverNode); //implementing right click toolbox over nodes
 
-  document.getElementsByClassName("row")[0].children[0].addEventListener("mouseleave", clickUp); //release mouse buttons on network div exit
+  document.getElementsByClassName("container-fluid")[0].children[0].addEventListener("mouseleave", clickUp); //release mouse buttons on network div exit
 
   window.onresize = canvasRescale;
   
@@ -64,8 +64,5 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // themeDiv
   attachThemeButtons();
-  
-  document.getElementById("homeDiv").innerHTML='<object type="text/html" data="html/home.html" id="homeObject" ></object>';
-  document.getElementById("helpDiv").innerHTML='<object type="text/html" data="html/help.html" id="helpObject" ></object>';
-  
+
 }, false);

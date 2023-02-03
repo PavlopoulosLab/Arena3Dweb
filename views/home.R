@@ -1,4 +1,9 @@
-<style>
+generateHomeDiv <- function() {
+  
+  tags$div(
+    id = "homeDiv",
+    HTML('
+        <style>
   div {
     font-family: Arial;
   }
@@ -51,7 +56,7 @@
     height: 48px;
     position: relative;
     z-index: 1;
-    float: left;
+    float: right;
     margin-top: 25px;
     margin-right: 10px;
   }
@@ -74,10 +79,13 @@
     <br /><br />
     &#8594; To start using Arena3D<sup>web</sup> click on the <b>File</b> menu tab and upload a network.
     <br /><br />
-    &#8594; Follow this <a href="examples.html" target="_blank">link</a> or visit the <b>Help</b> page to download some
-    Arena3D<sup>web</sup> example files.
+    &#8594; Visit the'),
+    actionLink("link_to_examples", "Help/Examples page"),
+    HTML(' to download some Arena3D<sup>web</sup> example files.
   </p>
   <br /><br />
 </div>
-
-<footer> &#169; 2023 Pavlopoulos Lab | Bioinformatics and Integrative Biology </footer>
+      '),
+    generateFooter()
+  )
+}

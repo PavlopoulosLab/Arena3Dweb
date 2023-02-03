@@ -1,3 +1,16 @@
+handleClusterAlgorithmSelection <- function() {
+  tryCatch({
+    if (input$selectCluster != "-") { # triggers second event when resetting
+      shinyjs::show("selectLocalLayout")
+    } else {
+      shinyjs::hide("selectLocalLayout")
+    }
+  }, error = function(e) {
+    print(paste0("Error in clustering algorithm selection: ", e))
+    renderError("Unexpected error on cluster interface.")
+  })
+}
+
 # @param clusters (communities list): output from igraph clustering algorithms such as louvain
 # we are using $membership and $names form this clusters object
 # @return annotations (2-col character dataframe): col1 clustering groups, col2 comma separated members per group
@@ -27,19 +40,19 @@ getFormatedClusterString <- function(cluster_name) {
   } 
 }
 
-# @param inDataEdgelist (dataframe): Dataframe with edges 
+# @param networkEdgelist (dataframe): Dataframe with edges 
 # @param layout (character): Layout needed for stategy3_superNodes functions 
 # @param local_layout (character): Local Layout needed for stategy3_superNodes functions 
 # @param cluster (character): Cluster needed for stategy3_superNodes functions 
 # @return void
-applyCluster <- function(inDataEdgelist, layout, local_layout, cluster){
-  session$sendCustomMessage("handler_startLoader", T)
+applyCluster <- function(networkEdgelist, layout, local_layout, cluster){
+  callJSHandler("handler_startLoader", T)
   formatted_layout <- getFormatedLayoutString(layout)
   formatted_local_layout <- getFormatedLayoutString(local_layout)
   formatted_cluster <- getFormatedClusterString(cluster)
-  sub_graph <- createGraph(inDataEdgelist) # V(graph)
+  sub_graph <- createGraph(networkEdgelist) # V(graph)
   sub_nodes <- V(sub_graph)$name # unsorted
-  sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
+  sub_weights <- E(sub_graph)$weight # != networkEdgelist[, 3]
   # if(cluster == 'Leiden') {
   #   clustered_graph <- cluster_leiden(sub_graph,resolution_parameter=0.06)
   # } else {
@@ -50,8 +63,8 @@ applyCluster <- function(inDataEdgelist, layout, local_layout, cluster){
   layout_coords <- strategy3_superNodes(sub_graph, annotations, formatted_layout, formatted_local_layout,3)
   nodes_layout <- cbind(layout_coords$network_nodes, layout_coords$lay)
   nodes_layout <-  as.matrix(merge(nodes_layout, layout_coords$groups_expanded, by.x = 1, by.y = "Nodes"))
-  session$sendCustomMessage("handler_layout", nodes_layout)
-  session$sendCustomMessage("handler_finishLoader", T)
+  callJSHandler("handler_layout", nodes_layout)
+  callJSHandler("handler_finishLoader", T)
   # reset("selectCluster")
   # reset("selectLayout")
   # reset("selectLocalLayout")

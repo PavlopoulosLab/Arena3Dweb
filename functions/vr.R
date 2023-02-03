@@ -1,3 +1,14 @@
+handleVRCall <- function() {
+  tryCatch({
+    producePLY(session$token)
+    produceHTML(session$token)
+    callJSHandler("handler_browseUrl", paste0(API_URL, session$token))
+  }, error = function(e) {
+    print(paste0("Error in VR parser: ", e))
+    renderError("Error while parsing network for VR mode.")
+  })
+}
+
 # void function that creates the user-specific VR ply file
 # and moves it to the api folder
 producePLY <- function(id){

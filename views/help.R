@@ -1,4 +1,8 @@
-<style>
+generateHelpDiv <- function() {
+  tags$div(
+    id = "helpDiv",
+    HTML('
+      <style>
   h2,
   h3,
   a,
@@ -36,6 +40,7 @@
     word-break: break-word;
     font-family: Arial;
     line-height: 1.6;
+    font-size: medium;
   }
 
   .last_p {
@@ -77,14 +82,15 @@
   .tabcontent {
     display: none;
     padding: 1%;
-    width: 98%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     float: left;
     word-break: break-word;
     background-color: black;
     color: white;
     margin-top: -4px;
     text-align: justify;
+    overflow:scroll;
   }
 
   .numbering {
@@ -113,21 +119,19 @@
 </style>
 
 <div class="tab">
-  <button class="tablinks" onclick="openTab(event, 'Examples_tab')" id="defaultOpen">Examples</button>
-  <button class="tablinks" onclick="openTab(event, 'API_tab')">API</button>
-  <button class="tablinks" onclick="openTab(event, 'Cytoscape_tab')">Cytoscape App</button>
-  <button class="tablinks" onclick="openTab(event, 'File_tab')">Input & Output Files</button>
-  <button class="tablinks" onclick="openTab(event, 'Navigation_tab')">Navigation Controls</button>
-  <button class="tablinks" onclick="openTab(event, 'Layouts_tab')">Layer Selection & Layouts</button>
-  <button class="tablinks" onclick="openTab(event, 'Scene_tab')">Scene Actions</button>
-  <button class="tablinks" onclick="openTab(event, 'Layer_tab')">Layer Actions</button>
-  <button class="tablinks" onclick="openTab(event, 'Node_tab')">Node Actions</button>
-  <button class="tablinks" onclick="openTab(event, 'Edge_tab')">Edge Actions</button>
-  <button class="tablinks" onclick="openTab(event, 'FPS_tab')">FPS</button>
-  <button class="tablinks" onclick="openTab(event, 'About_tab')">About</button>
+  <button class="tablinks" onclick="openTab(event, \'Examples_tab\')" id="defaultOpen">Examples</button>
+  <button class="tablinks" onclick="openTab(event, \'API_tab\')">API</button>
+  <button class="tablinks" onclick="openTab(event, \'Cytoscape_tab\')">Cytoscape App</button>
+  <button class="tablinks" onclick="openTab(event, \'File_tab\')">Input & Output Files</button>
+  <button class="tablinks" onclick="openTab(event, \'Navigation_tab\')">Navigation Controls</button>
+  <button class="tablinks" onclick="openTab(event, \'Layouts_tab\')">Layer Selection & Layouts</button>
+  <button class="tablinks" onclick="openTab(event, \'Scene_tab\')">Scene Actions</button>
+  <button class="tablinks" onclick="openTab(event, \'Layer_tab\')">Layer Actions</button>
+  <button class="tablinks" onclick="openTab(event, \'Node_tab\')">Node Actions</button>
+  <button class="tablinks" onclick="openTab(event, \'Edge_tab\')">Edge Actions</button>
+  <button class="tablinks" onclick="openTab(event, \'FPS_tab\')">FPS</button>
+  <button class="tablinks" onclick="openTab(event, \'About_tab\')">About</button>
 </div>
-
-<footer> &#169; 2023 Pavlopoulos Lab | Bioinformatics and Integrative Biology </footer>
 
 <div id="File_tab" class="tabcontent">
 
@@ -150,9 +154,9 @@
     Arena3D<sup>web</sup> supports networks of up to 5000 edges and 9 channels. For larger networks, one can
     download and run
     Arena3D<sup>web</sup> locally from <a href="https://github.com/PavlopoulosLab/Arena3Dweb"
-      target="_blank">GitHub</a>, and manually adjust the <b><i>max_allowed_edges</i></b>, the
-    <b><i>max_allowed_layers</i></b> or
-    <b><i>max_allowed_channels</i></b> variable in the global.R file. <br />
+      target="_blank">GitHub</a>, and manually adjust the <b><i>MAX_EDGES</i></b>, the
+    <b><i>MAX_LAYERS</i></b> or
+    <b><i>MAX_CHANNELS</i></b> variable in the global.R file. <br />
     <span class="numbering"> 2.</span> The <i> Load Session </i> option allows the user to load
     network data from an exported JSON object (see <span class="numbering">5.</span>). <br />
     <span class="numbering"> 3.</span> The <i> Upload NODE attributes </i> option allows the user to upload annotation
@@ -199,173 +203,173 @@ Kn	        Group4	        Tn	        Group7	        10      1
   <p>Example of the Arena3D<sup>web</sup> <i>Upload NODE attributes</i> file format. All columns are ommitable except
     from Node and Layer ones. Users do not need to mention every node, just the ones of interest.</p>
   <pre>Node	Layer	Color	Size	Url	Description
-An	Group1	#6b6a4c	1		This is a node's description.
-Bn	Group1	#ccccff	2		
-Cn	Group1	#254284	3		
-En	Group2		4	https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full	Click the Link of this node to read our review on biological networks.
-Fn	Group2	#7fe5f0	5	http://norma.pavlopouloslab.info/	Click the Link of this node to access our network annotation tool, NORMA.
-Gn	Group2		1		
-In	Group3		2		
-Dn	Group1	#ffb3b3		http://nap.pavlopouloslab.info/	
-Hn	Group2		3		
-Kn	Group4	#e0f2f2			
-Qn	Group6	#ff0067			
-Rn	Group6				
-Sn	Group7	#ffd8e8			
-Tn	Group7		4		
-  </pre><br />
-
-  <p>Example of the Arena3D<sup>web</sup> <i>Upload EDGE attributes</i> file format.</p>
-  <pre>SourceNode	SourceLayer	TargetNode	TargetLayer	Color
-An	        Group1	        Cn	        Group1	        #4EFBE9
-Bn	        Group1	        Fn	        Group2	        #D64EFB
-In	        Group3	        Jn	        Group3	
-Kn	        Group4	        Tn	        Group7	        #4EFB7D
-  </pre><br />
-
-  <p>
-    Example of the JSON file format. Before importing, users can alter the Scene,
-    Layer, Node and/or Edge attributes manually. <br />
-    <b>Scene object</b>: Position x, Position Y, Scale, Background Color, Rotation X, Rotation Y, Rotation Z<br />
-    <b>Layer object</b>: Layer name, Position X, Position Y, Position Z, Scale, Rotation X, Rotation Y, Rotation Z,
-    , Floor Color, Floor Width<br />
-    <b>Node</b>: Node Name, Node Layer, Position X, Position Y, Position Z, Scale, Color, Url,
-    Description<br />
-    <b>Edge attributes</b>: Edge, Weight, Opacity, Color, Channel<br />
-    <b>Univers Label Color</b>: hex code for the labels<br />
-    <b>Enable Direction</b>: boolean
-  </p>
-  <pre class="last_p">
-    {
-      "scene_pan": {
-      "position_x": "-320",
-      "position_y": "10",
-      "scale": "0.456302989349695",
-      "color": "#000000",
-      "rotation_x": "0.279252680319093",
-      "rotation_y": "0.279252680319093",
-      "rotation_z": "-1.58824961931484"
-    },
-    "layers": [
-      {
-      "name": "Complex",
-      "position_x": "-819.2",
-      "position_y": "300",
-      "position_z": "0",
-      "last_layer_scale": "0.6",
-      "rotation_x": "0",
-      "rotation_y": "0",
-      "rotation_z": "0",
-      "floor_current_color": "#5e5a5a",
-      "geometry_parameters_width": "1244.7619047619"
-      },
-      {
-      "name": "Proteins",
-      "position_x": "-159.6",
-      "position_y": "850",
-      "position_z": "0",
-      "last_layer_scale": "1",
-      "rotation_x": "0",
-      "rotation_y": "0",
-      "rotation_z": "0",
-      "floor_current_color": "#5e5a5a",
-      "geometry_parameters_width": "1244.7619047619"
-      },
-    ],
-    "nodes": [
-      {
-      "name": "Pericentrin-GCP Complex",
-      "layer": "Complex",
-      "position_x": "0",
-      "position_y": "-187.632917471854",
-      "position_z": "212.593778709733",
-      "scale": "0.53921568627451",
-      "color": "#63b598",
-      "url": "",
-      "descr": ""
-      },
-      {
-      "name": "TUBGCP2",
-      "layer": "Proteins",
-      "position_x": "0",
-      "position_y": "-354.817961725556",
-      "position_z": "347.86115539628",
-      "scale": "0.57843137254902",
-      "color": "#ce7d78",
-      "url": "",
-      "descr": ""
-      },
-      {
-      "name": "TUBGCP3",
-      "layer": "Proteins",
-      "position_x": "0",
-      "position_y": "-346.070269403277",
-      "position_z": "332.464903691254",
-      "scale": "0.57843137254902",
-      "color": "#ce7d78",
-      "url": "",
-      "descr": ""
-      },
-      {
-      "name": "DNA Polymerase Alpha",
-      "layer": "Complex",
-      "position_x": "0",
-      "position_y": "40.5705071933332",
-      "position_z": "-308.931155161144",
-      "scale": "0.617647058823529",
-      "color": "#63b598",
-      "url": "",
-      "descr": ""
-      }
-    ],
-    "edges": [
-    {
-    "src": "Pericentrin-GCP Complex_Complex",
-    "trg": "TUBGCP2_Proteins",
-    "opacity": "0.1",
-    "color": "#CFCFCF",
-    "channel": ""
-    },
-    {
-    "src": "Pericentrin-GCP Complex_Complex",
-    "trg": "TUBGCP3_Proteins",
-    "opacity": "0.1",
-    "color": "#CFCFCF",
-    "channel": ""
-    },
-    {
-    "src": "DNA Polymerase Alpha_Complex",
-    "trg": "TUBGCP2_Proteins",
-    "opacity": "0.1",
-    "color": "#CFCFCF",
-    "channel": ""
-    },
-    {
-    "src": "DNA Polymerase Alpha_Complex",
-    "trg": "TUBGCP3_Proteins",
-    "opacity": "0.1",
-    "color": "#CFCFCF",
-    "channel": ""
-    },
-    {
-    "src": "TUBGCP2_Proteins",
-    "trg": "TUBGCP3_Proteins",
-    "opacity": "0.1",
-    "color": "#CFCFCF",
-    "channel": ""
-    }
-    ],
-    "universalLabelColor": "#ffffff",
-    "direction": true
-</pre><br />
-
-</div>
-
-<div id="API_tab" class="tabcontent">
-  <p>
-    To open Arena3D<sup>web</sup> from an external application, we offer an API that allows a <b>POST</b> request along
-    with an Arena3D<sup>web</sup> JSON object.
-    The API link is <b><u><i>https://bib.fleming.gr/bib/api/arena3dweb</i></u></b>. Don't forget to set the <b>Header
+An	Group1	#6b6a4c	1		This is a node\'s description.
+         Bn	Group1	#ccccff	2		
+         Cn	Group1	#254284	3		
+         En	Group2		4	https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full	Click the Link of this node to read our review on biological networks.
+         Fn	Group2	#7fe5f0	5	http://norma.pavlopouloslab.info/	Click the Link of this node to access our network annotation tool, NORMA.
+         Gn	Group2		1		
+         In	Group3		2		
+         Dn	Group1	#ffb3b3		http://nap.pavlopouloslab.info/	
+         Hn	Group2		3		
+         Kn	Group4	#e0f2f2			
+         Qn	Group6	#ff0067			
+         Rn	Group6				
+         Sn	Group7	#ffd8e8			
+         Tn	Group7		4		
+         </pre><br />
+           
+           <p>Example of the Arena3D<sup>web</sup> <i>Upload EDGE attributes</i> file format.</p>
+           <pre>SourceNode	SourceLayer	TargetNode	TargetLayer	Color
+         An	        Group1	        Cn	        Group1	        #4EFBE9
+         Bn	        Group1	        Fn	        Group2	        #D64EFB
+         In	        Group3	        Jn	        Group3	
+         Kn	        Group4	        Tn	        Group7	        #4EFB7D
+         </pre><br />
+           
+           <p>
+           Example of the JSON file format. Before importing, users can alter the Scene,
+         Layer, Node and/or Edge attributes manually. <br />
+           <b>Scene object</b>: Position x, Position Y, Scale, Background Color, Rotation X, Rotation Y, Rotation Z<br />
+           <b>Layer object</b>: Layer name, Position X, Position Y, Position Z, Scale, Rotation X, Rotation Y, Rotation Z,
+         , Floor Color, Floor Width<br />
+           <b>Node</b>: Node Name, Node Layer, Position X, Position Y, Position Z, Scale, Color, Url,
+         Description<br />
+           <b>Edge attributes</b>: Edge, Weight, Opacity, Color, Channel<br />
+           <b>Univers Label Color</b>: hex code for the labels<br />
+           <b>Enable Direction</b>: boolean
+         </p>
+           <pre class="last_p">
+           {
+             "scene_pan": {
+               "position_x": "-320",
+               "position_y": "10",
+               "scale": "0.456302989349695",
+               "color": "#000000",
+               "rotation_x": "0.279252680319093",
+               "rotation_y": "0.279252680319093",
+               "rotation_z": "-1.58824961931484"
+             },
+             "layers": [
+               {
+                 "name": "Complex",
+                 "position_x": "-819.2",
+                 "position_y": "300",
+                 "position_z": "0",
+                 "last_layer_scale": "0.6",
+                 "rotation_x": "0",
+                 "rotation_y": "0",
+                 "rotation_z": "0",
+                 "floor_current_color": "#5e5a5a",
+                 "geometry_parameters_width": "1244.7619047619"
+               },
+               {
+                 "name": "Proteins",
+                 "position_x": "-159.6",
+                 "position_y": "850",
+                 "position_z": "0",
+                 "last_layer_scale": "1",
+                 "rotation_x": "0",
+                 "rotation_y": "0",
+                 "rotation_z": "0",
+                 "floor_current_color": "#5e5a5a",
+                 "geometry_parameters_width": "1244.7619047619"
+               },
+             ],
+             "nodes": [
+               {
+                 "name": "Pericentrin-GCP Complex",
+                 "layer": "Complex",
+                 "position_x": "0",
+                 "position_y": "-187.632917471854",
+                 "position_z": "212.593778709733",
+                 "scale": "0.53921568627451",
+                 "color": "#63b598",
+                 "url": "",
+                 "descr": ""
+               },
+               {
+                 "name": "TUBGCP2",
+                 "layer": "Proteins",
+                 "position_x": "0",
+                 "position_y": "-354.817961725556",
+                 "position_z": "347.86115539628",
+                 "scale": "0.57843137254902",
+                 "color": "#ce7d78",
+                 "url": "",
+                 "descr": ""
+               },
+               {
+                 "name": "TUBGCP3",
+                 "layer": "Proteins",
+                 "position_x": "0",
+                 "position_y": "-346.070269403277",
+                 "position_z": "332.464903691254",
+                 "scale": "0.57843137254902",
+                 "color": "#ce7d78",
+                 "url": "",
+                 "descr": ""
+               },
+               {
+                 "name": "DNA Polymerase Alpha",
+                 "layer": "Complex",
+                 "position_x": "0",
+                 "position_y": "40.5705071933332",
+                 "position_z": "-308.931155161144",
+                 "scale": "0.617647058823529",
+                 "color": "#63b598",
+                 "url": "",
+                 "descr": ""
+               }
+             ],
+             "edges": [
+               {
+                 "src": "Pericentrin-GCP Complex_Complex",
+                 "trg": "TUBGCP2_Proteins",
+                 "opacity": "0.1",
+                 "color": "#CFCFCF",
+                 "channel": ""
+               },
+               {
+                 "src": "Pericentrin-GCP Complex_Complex",
+                 "trg": "TUBGCP3_Proteins",
+                 "opacity": "0.1",
+                 "color": "#CFCFCF",
+                 "channel": ""
+               },
+               {
+                 "src": "DNA Polymerase Alpha_Complex",
+                 "trg": "TUBGCP2_Proteins",
+                 "opacity": "0.1",
+                 "color": "#CFCFCF",
+                 "channel": ""
+               },
+               {
+                 "src": "DNA Polymerase Alpha_Complex",
+                 "trg": "TUBGCP3_Proteins",
+                 "opacity": "0.1",
+                 "color": "#CFCFCF",
+                 "channel": ""
+               },
+               {
+                 "src": "TUBGCP2_Proteins",
+                 "trg": "TUBGCP3_Proteins",
+                 "opacity": "0.1",
+                 "color": "#CFCFCF",
+                 "channel": ""
+               }
+             ],
+             "universalLabelColor": "#ffffff",
+             "direction": true
+             </pre><br />
+               
+               </div>
+               
+               <div id="API_tab" class="tabcontent">
+                 <p>
+                 To open Arena3D<sup>web</sup> from an external application, we offer an API that allows a <b>POST</b> request along
+               with an Arena3D<sup>web</sup> JSON object.
+               The API link is <b><u><i>https://bib.fleming.gr/bib/api/arena3dweb</i></u></b>. Don\'t forget to set the <b>Header
       Content-Type</b> to <b>application/json</b>. The JSON object must follow the Arena3D<sup>web</sup> export format
     as follows:
   </p>
@@ -590,7 +594,7 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
 
   <p>
     <b><a href="https://imbbc.hcmr.gr/project/prego/" target="_blank"> PREGO </a> 3-channel example
-      for ‘anaerobic ammonium oxidation’ process associations:</b> <br />
+      for \'anaerobic ammonium oxidation\' process associations:</b> <br />
     The <a href="./data/prego.tsv" download>
       network file</a> in the Arena3D<sup>web</sup> format. <br />
     An <a href="./data/prego.json" download>
@@ -648,144 +652,144 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
     hides inter-layer edges to greatly improve rendering performance. <br />
     <span class="numbering"> 2.</span> General instructions on network hotkeys. <br /> <span class="indent">1. The user
       can zoom-in/out by mouse scrolling.</span> <br /> <span class="indent">2. The network can be translated by
-      dragging with the mouse or by pressing the keyboard's arrow keys. </span><br /> <span class="indent">3. The
-      network view is also orbitable by dragging while holding the middle-mouse button.
-    </span><br /> <span class="indent">4. The user can move a layer by click and dragging it.</span><br /> <span
-      class="indent">
-      5. The user can rotate selected layers at X(red), Y(green) and Z(blue) axis by holding the respective hotkeys and
-      click-dragging.</span><br /> <span class="indent">6. The user can move selected nodes on a layer by holding the
-      hotkeys (Y, Z) and click-dragging. Priority is given on selected nodes over layers. </span><br /> <span
-      class="indent">7. The user can select/deselect individual nodes or layers by double clicking on objects. The node
-      or layer
-      flashes when the user hovers over it and changes color when selected. </span><br /><span class="indent">8.
-      For a batch node selecion, the user may hold the Shift button and click-drag to apply a lasso
-      selection. </span><br /> <span class="indent">9. Finally, by double clicking anywhere on the scene, all selected
-      nodes and edges are deselected. </span><br />
-    <br /><b>Scene</b> <br />
-    <span class="numbering"> 3.</span> Controls to rotate the network as one object in 3D space in X (red), Y (green)
-    and Z (blue) axes. The user can set the angle step (between 1&#176; and 15&#176;) on a slider and then hold the
-    dedicated colored buttons to rotate the network. In case the auto-rotate checkbox (<b>Scene Actions</b> tab) is
-    enabled, then the
-    scene starts to automatically rotate, relative to the designated angles.<br />
-    <span class="numbering"> 4.</span> The <i> Recenter Network </i> button readjusts the network at the starting (0, 0,
-    0) coordinates. <br />
-    <br /><b>Layers</b> <br />
-    <span class="numbering"> 5.</span> Dedicated layer rotation controls, with actions similar to the scene rotation
-    controls. These controls are applied to any selected layers. Layers can be selected via the <i> Layer Selection &
-      Layouts </i> tab or by double-clicking. <br />
-    <span class="numbering"> 6.</span> These 2 buttons can be used to <b> expand </b> or <b> collapse </b> all layers in
-    the X (red) axis, respectively. <br />
-    <span class="numbering"> 7.</span> These controls enable the translation (moving) of any selected layers in 3D
-    space. The
-    user can define a step (1-50) through a slider and then translate the selected layers on their respective X (red), Y
-    (green) or Z (blue) axis, by holding the respective buttons. <br />
-    <span class="numbering"> 8.</span> Scaling transformation in a range of 0.2x - 5x for any selected layer. <br />
-    <br /><b>Nodes</b> <br />
-    <span class="numbering"> 9.</span> These 2 buttons allow the user to <b> expand </b> or <b> collapse </b> a group of
-    <b>selected
-      nodes</b> in their corresponding layers, respectively. <br />
-    <span class="numbering"> 10.</span> Node translation controls similar to the layer translation ones. The
-    transformations are applied on selected nodes only. <br />
-    <span class="numbering"> 11.</span> Scaling transformation in a range of 0.2x - 5x for selected nodes. <br />
-  </p><br /><br />
-
-</div>
-
-<div id="Layouts_tab" class="tabcontent">
-
-  <h2>Layer Selection & Layouts</h2>
-  <p>This control panel allows the user to select, deselect and hide layers, show layer-specific node labels, as well as
-    apply layout and clustering algorithms and node scaling based on network metrics, on subgraphs of the network.</p>
-  <br />
-  <p>
-    <img src="../images/help/layouts.png" alt="Layouts"
-      style="float:left;width:360px;height:518px;margin:5px;margin-right:20px;">
-    <span class="numbering"> 1. </span> This consists of a group of 3 exclusive options for subgraph calculations, upon
-    which, layout algorithms (<span class="numbering">3, 5</span>), clustering algorithms (<span
-      class="numbering">4</span>) and node scaling (<span class="numbering">6</span>) is
-    applied. <br /> The <i>Per Layer</i> choice treats each selected layer (<span class="numbering">2</span>) as an
-    individual network. <br /> The <i>All Selected Layers</i> choice treats all selected Layers (<span
-      class="numbering">2</span>) as one, combined network. After the execution of a layout or scaling algorithm, nodes
-    are mapped back to their respective Layer. With this option, the application of force-directed layout algorithms
-    allows network alignment among the different layers. <br /> The <i>Local Layout option for the Selected Nodes Per
-      Layer</i> choice allows layout and scaling algorithms to be applied on a selected sub-group of nodes, per each
-    selected layer respectively.<br />
-    <span class="numbering"> 2. </span> The <i>Select/Deselect All Layers</i> checkbox allows the user to quickly select
-    or deselect all available network layers. After the user uploads or imports a network, a grid of <i>n x 3</i>
-    checkboxes is created, where <i>n</i> is the number of network layers and <i>3</i> are the available actions for
-    each layer; <br /> the 1<sup>st</sup> column allows the individual selection/deselection of layers, <br /> the
-    2<sup>nd</sup> column allows the user to hide individual layers and their inter-layer connections <br /> and the
-    3<sup>rd</sup> column allows the user to show node labels per layer.<br />
-    <span class="numbering"> 3. </span> A list of available layout algorithms of the igraph package, to apply on
-    selected layers (<span class="numbering">2</span>) based on the execution mode of (<span
-      class="numbering">1</span>). <br />
-    <span class="numbering"> 4. </span> A list of available clustering algorithms of the igraph package, to apply on
-    selected layers (<span class="numbering">2</span>) based on the execution mode of (<span
-      class="numbering">1</span>).
-    <br />
-    <span class="numbering"> 5. </span> A list of available layout algorithms of the igraph package, to apply as
-    local layouts on clusters (<span class="numbering">4</span>) based on the execution mode of (<span
-      class="numbering">1</span>). Visible when a clustering algorithm has been selected.
-    <br />
-    <span class="numbering"> 6. </span> A list of available network metrics of the igraph package, used for
-    node-scaling, to apply on selected layers (<span class="numbering">2</span>) based on the execution mode of option
-    (<span class="numbering">1</span>).<br />
-  </p>
-
-  <p>Below, we briefly describe the available layout algorithms (<span class="numbering">3, 5</span>).</p><br />
-  <ul>
-    <li>Reingold-Tilford: This is a tree-like layout and is suitable for trees, hierarchies and graphs without many
-      cycles.</li>
-    <li>Sugiyama: Like with Reingold-Tilford, this layout algorithm is more suitable for layered directed acyclic
-      graphs.</li>
-    <li>Fruchterman-Reingold: It places nodes on the plane using the force-directed layout algorithm developed by
-      Fruchterman and Reingold.</li>
-    <li>Circle: It places vertices on a circle, ordered by their vertex ids.</li>
-    <li>Grid: This layout places vertices on a rectangular 2D grid.</li>
-    <li>Davidson-Harel: It is a force-directed algorithm which uses simulated annealing and a sophisticated energy
-      function to place nodes on a plane. </li>
-    <li>Distributed Recursive (Graph) Layout: DrL is a force-directed graph layout toolbox focused on real-world
-      large-scale graphs.</li>
-    <li>Multidimensional scaling: It aims to place points from a higher dimensional space in 2D plane, so that the
-      distance between the points are kept as much as possible.</li>
-    <li>Random: This function places the vertices of the graph on a 2D plane uniformly using random coordinates.</li>
-    <li>Kamada-Kawai: This layout places the vertices on a 2D plane by simulating a physical model of springs.</li>
-    <li>Large Graph Layout (LGL): A force directed layout suitable for larger graphs.</li>
-    <li>Graphopt: A force-directed layout algorithm, which scales relatively well to large graphs.</li>
-    <li>Gem: It places vertices on the plane using the GEM force-directed layout algorithm.</li>
-    <li>Star: It places vertices of a graph on the plane, according to the simulated annealing algorithm by Davidson and
-      Harel.</li>
-  </ul>
-
-  <img src="../images/help/layouts_figure.png" alt="Layouts Figure" style="float:left;height:75%;">
-
-  <p>Below, we briefly desribe the available clustering algorithms (<span class="numbering">4</span>).</p><br />
-  <ul>
-    <li>Louvain: This algorithm is a greedy optimization method that appears to run in time O(nlogn) where n is the
-      number of nodes in the network.</li>
-    <li>Walktrap: This algorithm in graph theory, used to identify communities in large networks via random walks.</li>
-    <li>Edge Betweenness: performs this algorithm by calculating the edge betweenness of the graph, removing the edge
-      with the highest edge
-      betweenness score, then recalculating edge betweenness of the edges and again removing the one with the highest
-      score,
-      etc.</li>
-    <li>Fast Greedy: This algorithm hierarchical approach, but it is bottom-up instead of top-down. It tries to optimize
-      a quality function
-      called modularity in a greedy manner.</li>
-    <li>Label Propagation: This algoritm a semi-supervised machine learning algorithm that assigns labels to previously
-      unlabeled data points. At the start of
-      the algorithm, a subset of the data points have labels (or classifications). These labels are
-      propagated to the unlabeled points throughout the course of the algorithm. </li>
-  </ul>
-
-  <img src="../images/help/clustering.png" alt="Clustering" style="float:left;">
-
-  <p>Below, we briefly desribe the available network metrics for node scaling (<span class="numbering">6</span>).</p>
-  <br />
-  <ul class="last_p">
-    <li> The <i>Degree</i> metric describes the total number of connections adjacent to a node.</li>
-    <li>The <i>Clustering Coefficient</i> of a node shows whether this node has the tendency to form clusters and is
-      defined as the number of Edges between a node's neighbors divided by the number of all possible connections
+      dragging with the mouse or by pressing the keyboard\'s arrow keys. </span><br /> <span class="indent">3. The
+               network view is also orbitable by dragging while holding the middle-mouse button.
+               </span><br /> <span class="indent">4. The user can move a layer by click and dragging it.</span><br /> <span
+               class="indent">
+                 5. The user can rotate selected layers at X(red), Y(green) and Z(blue) axis by holding the respective hotkeys and
+               click-dragging.</span><br /> <span class="indent">6. The user can move selected nodes on a layer by holding the
+               hotkeys (Y, Z) and click-dragging. Priority is given on selected nodes over layers. </span><br /> <span
+               class="indent">7. The user can select/deselect individual nodes or layers by double clicking on objects. The node
+               or layer
+               flashes when the user hovers over it and changes color when selected. </span><br /><span class="indent">8.
+               For a batch node selecion, the user may hold the Shift button and click-drag to apply a lasso
+               selection. </span><br /> <span class="indent">9. Finally, by double clicking anywhere on the scene, all selected
+               nodes and edges are deselected. </span><br />
+                 <br /><b>Scene</b> <br />
+                 <span class="numbering"> 3.</span> Controls to rotate the network as one object in 3D space in X (red), Y (green)
+               and Z (blue) axes. The user can set the angle step (between 1&#176; and 15&#176;) on a slider and then hold the
+                                                                     dedicated colored buttons to rotate the network. In case the auto-rotate checkbox (<b>Scene Actions</b> tab) is
+                                                                   enabled, then the
+                                                                   scene starts to automatically rotate, relative to the designated angles.<br />
+                                                                     <span class="numbering"> 4.</span> The <i> Recenter Network </i> button readjusts the network at the starting (0, 0,
+                                                                                                                                                                                    0) coordinates. <br />
+                                                                     <br /><b>Layers</b> <br />
+                                                                     <span class="numbering"> 5.</span> Dedicated layer rotation controls, with actions similar to the scene rotation
+                                                                   controls. These controls are applied to any selected layers. Layers can be selected via the <i> Layer Selection &
+                                                                     Layouts </i> tab or by double-clicking. <br />
+                                                                     <span class="numbering"> 6.</span> These 2 buttons can be used to <b> expand </b> or <b> collapse </b> all layers in
+                                                                   the X (red) axis, respectively. <br />
+                                                                     <span class="numbering"> 7.</span> These controls enable the translation (moving) of any selected layers in 3D
+                                                                   space. The
+                                                                   user can define a step (1-50) through a slider and then translate the selected layers on their respective X (red), Y
+                                                                   (green) or Z (blue) axis, by holding the respective buttons. <br />
+                                                                     <span class="numbering"> 8.</span> Scaling transformation in a range of 0.2x - 5x for any selected layer. <br />
+                                                                     <br /><b>Nodes</b> <br />
+                                                                     <span class="numbering"> 9.</span> These 2 buttons allow the user to <b> expand </b> or <b> collapse </b> a group of
+                                                                   <b>selected
+                                                                   nodes</b> in their corresponding layers, respectively. <br />
+                                                                     <span class="numbering"> 10.</span> Node translation controls similar to the layer translation ones. The
+                                                                   transformations are applied on selected nodes only. <br />
+                                                                     <span class="numbering"> 11.</span> Scaling transformation in a range of 0.2x - 5x for selected nodes. <br />
+                                                                     </p><br /><br />
+                                                                     
+                                                                     </div>
+                                                                     
+                                                                     <div id="Layouts_tab" class="tabcontent">
+                                                                     
+                                                                     <h2>Layer Selection & Layouts</h2>
+                                                                     <p>This control panel allows the user to select, deselect and hide layers, show layer-specific node labels, as well as
+                                                                   apply layout and clustering algorithms and node scaling based on network metrics, on subgraphs of the network.</p>
+                                                                     <br />
+                                                                     <p>
+                                                                     <img src="../images/help/layouts.png" alt="Layouts"
+                                                                   style="float:left;width:360px;height:518px;margin:5px;margin-right:20px;">
+                                                                     <span class="numbering"> 1. </span> This consists of a group of 3 exclusive options for subgraph calculations, upon
+                                                                   which, layout algorithms (<span class="numbering">3, 5</span>), clustering algorithms (<span
+                                                                                                                                                          class="numbering">4</span>) and node scaling (<span class="numbering">6</span>) is
+                                                                   applied. <br /> The <i>Per Layer</i> choice treats each selected layer (<span class="numbering">2</span>) as an
+                                                                   individual network. <br /> The <i>All Selected Layers</i> choice treats all selected Layers (<span
+                                                                                                                                                                class="numbering">2</span>) as one, combined network. After the execution of a layout or scaling algorithm, nodes
+                                                                   are mapped back to their respective Layer. With this option, the application of force-directed layout algorithms
+                                                                   allows network alignment among the different layers. <br /> The <i>Local Layout option for the Selected Nodes Per
+                                                                   Layer</i> choice allows layout and scaling algorithms to be applied on a selected sub-group of nodes, per each
+                                                                   selected layer respectively.<br />
+                                                                     <span class="numbering"> 2. </span> The <i>Select/Deselect All Layers</i> checkbox allows the user to quickly select
+                                                                   or deselect all available network layers. After the user uploads or imports a network, a grid of <i>n x 3</i>
+                                                                     checkboxes is created, where <i>n</i> is the number of network layers and <i>3</i> are the available actions for
+                                                                   each layer; <br /> the 1<sup>st</sup> column allows the individual selection/deselection of layers, <br /> the
+                                                                   2<sup>nd</sup> column allows the user to hide individual layers and their inter-layer connections <br /> and the
+                                                                   3<sup>rd</sup> column allows the user to show node labels per layer.<br />
+                                                                     <span class="numbering"> 3. </span> A list of available layout algorithms of the igraph package, to apply on
+                                                                   selected layers (<span class="numbering">2</span>) based on the execution mode of (<span
+                                                                                                                                                      class="numbering">1</span>). <br />
+                                                                     <span class="numbering"> 4. </span> A list of available clustering algorithms of the igraph package, to apply on
+                                                                   selected layers (<span class="numbering">2</span>) based on the execution mode of (<span
+                                                                                                                                                      class="numbering">1</span>).
+                                                                   <br />
+                                                                     <span class="numbering"> 5. </span> A list of available layout algorithms of the igraph package, to apply as
+                                                                   local layouts on clusters (<span class="numbering">4</span>) based on the execution mode of (<span
+                                                                                                                                                                class="numbering">1</span>). Visible when a clustering algorithm has been selected.
+                                                                   <br />
+                                                                     <span class="numbering"> 6. </span> A list of available network metrics of the igraph package, used for
+                                                                   node-scaling, to apply on selected layers (<span class="numbering">2</span>) based on the execution mode of option
+                                                                   (<span class="numbering">1</span>).<br />
+                                                                     </p>
+                                                                     
+                                                                     <p>Below, we briefly describe the available layout algorithms (<span class="numbering">3, 5</span>).</p><br />
+                                                                     <ul>
+                                                                     <li>Reingold-Tilford: This is a tree-like layout and is suitable for trees, hierarchies and graphs without many
+                                                                   cycles.</li>
+                                                                     <li>Sugiyama: Like with Reingold-Tilford, this layout algorithm is more suitable for layered directed acyclic
+                                                                   graphs.</li>
+                                                                     <li>Fruchterman-Reingold: It places nodes on the plane using the force-directed layout algorithm developed by
+                                                                   Fruchterman and Reingold.</li>
+                                                                     <li>Circle: It places vertices on a circle, ordered by their vertex ids.</li>
+                                                                     <li>Grid: This layout places vertices on a rectangular 2D grid.</li>
+                                                                     <li>Davidson-Harel: It is a force-directed algorithm which uses simulated annealing and a sophisticated energy
+                                                                   function to place nodes on a plane. </li>
+                                                                     <li>Distributed Recursive (Graph) Layout: DrL is a force-directed graph layout toolbox focused on real-world
+                                                                   large-scale graphs.</li>
+                                                                     <li>Multidimensional scaling: It aims to place points from a higher dimensional space in 2D plane, so that the
+                                                                   distance between the points are kept as much as possible.</li>
+                                                                     <li>Random: This function places the vertices of the graph on a 2D plane uniformly using random coordinates.</li>
+                                                                     <li>Kamada-Kawai: This layout places the vertices on a 2D plane by simulating a physical model of springs.</li>
+                                                                     <li>Large Graph Layout (LGL): A force directed layout suitable for larger graphs.</li>
+                                                                     <li>Graphopt: A force-directed layout algorithm, which scales relatively well to large graphs.</li>
+                                                                     <li>Gem: It places vertices on the plane using the GEM force-directed layout algorithm.</li>
+                                                                     <li>Star: It places vertices of a graph on the plane, according to the simulated annealing algorithm by Davidson and
+                                                                   Harel.</li>
+                                                                     </ul>
+                                                                     
+                                                                     <img src="../images/help/layouts_figure.png" alt="Layouts Figure" style="float:left;height:75%;">
+                                                                     
+                                                                     <p>Below, we briefly desribe the available clustering algorithms (<span class="numbering">4</span>).</p><br />
+                                                                     <ul>
+                                                                     <li>Louvain: This algorithm is a greedy optimization method that appears to run in time O(nlogn) where n is the
+                                                                   number of nodes in the network.</li>
+                                                                     <li>Walktrap: This algorithm in graph theory, used to identify communities in large networks via random walks.</li>
+                                                                     <li>Edge Betweenness: performs this algorithm by calculating the edge betweenness of the graph, removing the edge
+                                                                   with the highest edge
+                                                                   betweenness score, then recalculating edge betweenness of the edges and again removing the one with the highest
+                                                                   score,
+                                                                   etc.</li>
+                                                                     <li>Fast Greedy: This algorithm hierarchical approach, but it is bottom-up instead of top-down. It tries to optimize
+                                                                   a quality function
+                                                                   called modularity in a greedy manner.</li>
+                                                                     <li>Label Propagation: This algoritm a semi-supervised machine learning algorithm that assigns labels to previously
+                                                                   unlabeled data points. At the start of
+                                                                   the algorithm, a subset of the data points have labels (or classifications). These labels are
+                                                                   propagated to the unlabeled points throughout the course of the algorithm. </li>
+                                                                     </ul>
+                                                                     
+                                                                     <img src="../images/help/clustering.png" alt="Clustering" style="float:left;">
+                                                                     
+                                                                     <p>Below, we briefly desribe the available network metrics for node scaling (<span class="numbering">6</span>).</p>
+                                                                     <br />
+                                                                     <ul class="last_p">
+                                                                     <li> The <i>Degree</i> metric describes the total number of connections adjacent to a node.</li>
+                                                                     <li>The <i>Clustering Coefficient</i> of a node shows whether this node has the tendency to form clusters and is
+                                                                   defined as the number of Edges between a node\'s neighbors divided by the number of all possible connections
       between these neighbors.</li>
     <li>The <i>Betweenness Centrality</i> highlights nodes which can act as mediators in order for two communities to
       communicate with each other.</li>
@@ -1022,3 +1026,8 @@ Kn	        Group4	        Tn	        Group7	        #4EFB7D
   // Get the element with id="defaultOpen" and click on it
   document.getElementById("defaultOpen").click();
 </script>
+
+    '),
+    generateFooter()
+  )
+}

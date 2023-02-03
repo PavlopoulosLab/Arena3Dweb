@@ -1,10 +1,4 @@
 // General ====================
-const badObject_alert = (message) => {
-  alert(message);
-  return true;
-}
-
-
 const clean_array = (message) => {
   temp = [];
   for (i = 0; i < message.length; i++) {
@@ -16,7 +10,7 @@ const clean_array = (message) => {
     message[i] = temp;
   }
   return message;
-}
+};
 
 const startLoader = (m) => {
   let canvas_div = document.getElementById("3d-graph"),
@@ -24,7 +18,7 @@ const startLoader = (m) => {
   canvas_div.style.opacity = 0.5;
   loader.style.display = "inline-block";
   return true;
-}
+};
 
 const finishLoader = (m) => {
   let canvas_div = document.getElementById("3d-graph"),
@@ -32,12 +26,16 @@ const finishLoader = (m) => {
   canvas_div.style.opacity = 1;
   loader.style.display = "none";
   return true;
-}
+};
 
 const changeFPS = (message) => {
   fps = Number(message);
   return true;
-}
+};
+
+const browseUrl = url => {
+  window.open(url, "_blank");
+};
 
 // Files ====================
 const uploadNetwork = (message) => {
@@ -97,8 +95,8 @@ const uploadNetwork = (message) => {
   }
   node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; });
   layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function () { return false; });
-  if (layer_names.length > max_allowed_layers) {
-     alert("Network must contain no more than ".concat(max_allowed_layers).concat(" layers.")); //layer limit
+  if (layer_names.length > MAX_LAYERS) {
+     alert("Network must contain no more than ".concat(MAX_LAYERS).concat(" layers.")); //layer limit
       return false
   }
   updateLayerNamesRShiny(); //correct order of layer names to avoid bugs with positions
@@ -107,8 +105,8 @@ const uploadNetwork = (message) => {
   //edge_values = mapper(edge_values, 0.1, 1) //min and max opacities //this is done in R now
   if (message.Channel) {
     let channel_values = message.Channel.filter((x, i, a) => a.indexOf(x) == i)
-    if (channel_values.length > max_allowed_channels) {
-      alert("Network must contain no more than ".concat(max_allowed_channels).concat(" channels.")); //channel limit
+    if (channel_values.length > MAX_CHANNELS) {
+      alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
       return false
     } else {
       channels = channel_values;
@@ -118,7 +116,7 @@ const uploadNetwork = (message) => {
     }
   }
 
-  if (edge_values.length > max_allowed_edges) alert("Network must contain no more than ".concat(max_allowed_edges).concat(" edges.")); //edge limit
+  if (edge_values.length > MAX_EDGES) alert("Network must contain no more than ".concat(MAX_EDGES).concat(" edges.")); //edge limit
   else {
     attachLayerCheckboxes();
     loadGraph();
@@ -266,7 +264,7 @@ const importNetwork = (message) => {
       scrambleNodes_flag = (message[i][1] === 'TRUE');
     } else if (message[i][0] == "direction") {
       isDirectionEnabled = (message[i][1] === 'TRUE')
-      updateCheckboxInput('directionToggle', message[i][1] === 'TRUE')
+      updateCheckboxInput('edgeDirectionToggle', message[i][1] === 'TRUE')
     } else if (message[i][0] == "edgeopacitybyweight") {
       edgeWidthByWeight = (message[i][1] === 'TRUE')
       updateCheckboxInput('edgeWidthByWeight', message[i][1] === 'TRUE')
@@ -279,11 +277,11 @@ const importNetwork = (message) => {
   drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
   
   if (channel_values.length > 0) {
-    if (channel_values.length > max_allowed_channels) {
-      alert("Network must contain no more than ".concat(max_allowed_channels).concat(" channels.")); //channel limit
+    if (channel_values.length > MAX_CHANNELS) {
+      alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
       return false
     } else {
-        channel_colors = channel_colors_light;
+        channel_colors = CHANNEL_COLORS_LIGHT;
         channels = channel_values;
         channels.forEach(c => {
           channelVisibility[c] = true;
@@ -330,7 +328,7 @@ const nodeAttributes = (message) => {
     pos = node_attributes.Node.indexOf(node_whole_names[i]);
     if (pos > -1){ //if node exists in attributes file
       if (nodeAttributesPriority){
-        if (!exists(selected_nodes, i) && checkIfAttributeColorExist(node_attributes, pos)) //if node not currently selected and color is assigned
+        if (!exists(selectedNodePositions, i) && checkIfAttributeColorExist(node_attributes, pos)) //if node not currently selected and color is assigned
           nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
       }
       if (node_attributes.Size !== undefined && node_attributes.Size[pos] !== "" && node_attributes.Size[pos] != " " && node_attributes.Size[pos] !== null)
@@ -406,7 +404,7 @@ const autoRotateScene = (message) => {
 
 // Layers ====================
 const maxAllowedLayers = (limit) => {
-  max_allowed_layers = limit;
+  MAX_LAYERS = limit;
   return true;
 }
 
@@ -453,13 +451,13 @@ const layerColorFilePriority = (message) => {
 }
 
 const selectAllLayers = (message) => {
-  selected_layers = [];
+  js_selected_layers = [];
   let c = document.getElementById("checkboxdiv").children;
   for (let i = 0; i < c.length; i++){
     if (i%7 === 0){ //(c[i].type == "checkbox"){
       if (message){
         c[i].checked = true;
-        selected_layers.push(i/7);
+        js_selected_layers.push(i/7);
         layer_planes[i/7].material.color = new THREE.Color( "#f7f43e" );
       } else {
         c[i].checked = false;
@@ -470,7 +468,7 @@ const selectAllLayers = (message) => {
       }
     }
   }
-  Shiny.setInputValue("selected_layers", selected_layers);
+  Shiny.setInputValue("js_selected_layers", js_selected_layers);
   return true;
 }
 
@@ -554,15 +552,15 @@ const assignXYZ = (message) => {
 const nodeSelector = (message) => {
   //message -> T | F
   if (message){
-    selected_nodes = []; //reseting, else multiple entries -> double transformations
+    selectedNodePositions = []; //reseting, else multiple entries -> double transformations
     for (let i=0; i < nodes.length; i++){
-      selected_nodes.push(i);
+      selectedNodePositions.push(i);
       if (selectedNodeColorFlag) nodes[i].material.color = new THREE.Color( selectedDefaultColor );
     }
     updateSelectedNodesRShiny();
   }
   else{
-    selected_nodes = [];
+    selectedNodePositions = [];
     updateSelectedNodesRShiny();
     for (i=0; i < nodes.length; i++){
       if (node_attributes !== ""){
@@ -580,21 +578,21 @@ const nodeSelector = (message) => {
 
 const nodeSelectedColorPriority = (message) => {
   selectedNodeColorFlag = message;
-  for (let i=0; i<selected_nodes.length; i++){
-    if (selectedNodeColorFlag) nodes[selected_nodes[i]].material.color = new THREE.Color( selectedDefaultColor );
+  for (let i=0; i<selectedNodePositions.length; i++){
+    if (selectedNodeColorFlag) nodes[selectedNodePositions[i]].material.color = new THREE.Color( selectedDefaultColor );
     else if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
-      pos = node_attributes.Node.indexOf(node_whole_names[selected_nodes[i]]);
+      pos = node_attributes.Node.indexOf(node_whole_names[selectedNodePositions[i]]);
       if(checkIfAttributeColorExist(node_attributes, pos))//if node exists in node attributes file
-        nodes[selected_nodes[i]].material.color = new THREE.Color( node_attributes.Color[pos] );
-      else nodes[selected_nodes[i]].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[selected_nodes[i]]]])%colors.length]);
-    } else nodes[selected_nodes[i]].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[selected_nodes[i]]]])%colors.length]);
+        nodes[selectedNodePositions[i]].material.color = new THREE.Color( node_attributes.Color[pos] );
+      else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colors.length]);
+    } else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colors.length]);
   }
   return true;
 }
 
 // Edges ====================
 const maxAllowedEdges = (limit) => {
-  max_allowed_edges = limit;
+  MAX_EDGES = limit;
   return true;
 }
 
@@ -696,17 +694,17 @@ const toggleDirection = (message) => {
 
 // Channels ====================
 const maxAllowedChannels = (limit) => {
-  max_allowed_channels = limit;
+  MAX_CHANNELS = limit;
   return true;
 }
 
 const getChannelColors = (brewerColors) => {
-  channel_colors_light = brewerColors;
+  CHANNEL_COLORS_LIGHT = brewerColors;
   return true;
 }
 
 const getDarkChannelColors = (brewerColors) => {
-  channel_colors_dark = brewerColors;
+  CHANNEL_COLORS_DARK = brewerColors;
   return true;
 }
 
@@ -741,8 +739,8 @@ const showLayerLabels = (message) => {
 const showSelectedLayerLabels = (message) => {
   selectedLayerLabelSwitch = message; //message = true or false
   if (!selectedLayerLabelSwitch){
-    for (let i = 0; i < selected_layers.length; i++){
-      layer_labels[selected_layers[i]].style.display = "none";
+    for (let i = 0; i < js_selected_layers.length; i++){
+      layer_labels[js_selected_layers[i]].style.display = "none";
     }
   }
   return true;
@@ -782,27 +780,15 @@ const setLocalFlag = (message) => { //T
   return true;
 }
 
-const topologyScale = (message) => {
-  let scale_values = []; //column of scale values from topology
-  for(let i=0; i < message.length; i++){
-    scale_values.push(message[i][1]);
-  }
-  let scale_min = Math.min.apply(Math, scale_values),
-      scale_max = Math.max.apply(Math, scale_values),
-      target_scale_min = 0.5,
-      target_scale_max = 2.5;
-  for (i = 0; i < message.length; i++){
-    node_name = message[i][0];
-    if (scale_max - scale_min !== 0){
-      node_scale = (message[i][1] - scale_min) * (target_scale_max - target_scale_min) / (scale_max - scale_min) + target_scale_min; //mapping
-      nodes[node_whole_names.indexOf(node_name)].scale.x = node_scale;
-      nodes[node_whole_names.indexOf(node_name)].scale.y = node_scale;
-      nodes[node_whole_names.indexOf(node_name)].scale.z = node_scale;
-    }
+const topologyScale = (nodeScale) => {
+  for (i = 0; i < nodeScale.nodeName.length; i++) {
+    nodeName = nodeScale.nodeName[i];
+    nodes[node_whole_names.indexOf(nodeName)].scale.x =
+      nodes[node_whole_names.indexOf(nodeName)].scale.y =
+      nodes[node_whole_names.indexOf(nodeName)].scale.z = nodeScale.scale[i];
   }
   updateNodesRShiny();
-  return true;
-}
+};
 
 
 const applyPredefinedLayout = (message) => {
@@ -887,10 +873,10 @@ const applyPredefinedLayout = (message) => {
 //RSHINY HANDLERS----------------------------
 
 // General ====================
-Shiny.addCustomMessageHandler("handler_badObject_alert", badObject_alert);
 Shiny.addCustomMessageHandler("handler_startLoader", startLoader);
 Shiny.addCustomMessageHandler("handler_finishLoader", finishLoader);
 Shiny.addCustomMessageHandler("handler_fps", changeFPS);
+Shiny.addCustomMessageHandler("handler_browseUrl", browseUrl);
 // Files ====================
 Shiny.addCustomMessageHandler("handler_uploadNetwork", uploadNetwork);
 Shiny.addCustomMessageHandler("handler_importNetwork", importNetwork);

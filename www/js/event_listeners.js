@@ -74,7 +74,7 @@ const clickDrag = (event) => {
           last_hovered_layer_index = ""; // to be able to lasso inside layer
           lassoSelectNodes(event.layerX - xBoundMax, yBoundMax - event.layerY);
         } 
-        else if (axisPressed !== "" && selected_nodes.length > 0) translateNodes(event);
+        else if (axisPressed !== "" && selectedNodePositions.length > 0) translateNodes(event);
         else if (axisPressed !== "") rotateLayers(event);
         else if (last_hovered_layer_index === "" && last_hovered_node_index === "") sceneDragPan(x, y); // && !event.ctrlKey
       } else if (middleClickPressed){
@@ -107,8 +107,8 @@ const clickUp = (event) => {
         for (let i = 0; i < nodes.length; i++){
           if (nodes[i].material.opacity == 0.5){
             nodes[i].material.opacity = 1;
-            if (!exists(selected_nodes, i)){
-              selected_nodes.push(i);
+            if (!exists(selectedNodePositions, i)){
+              selectedNodePositions.push(i);
               if (selectedNodeColorFlag) nodes[i].material.color = new THREE.Color( selectedDefaultColor );
             }
           }
@@ -134,7 +134,7 @@ const dblClick = (event) => {
       if (!node_selection) {
         let layer_selection = checkLayerInteraction(event); //priority 2
         if (!layer_selection) { //priority 3
-          selected_nodes = [],
+          selectedNodePositions = [],
           selected_edges = [];
           let pos1 = pos2 = pos3 = -1;
           for (let i = 0; i < nodes.length; i++){
@@ -288,8 +288,8 @@ const selectSearchedNodes = (event) => {
         tempIndexes = getAllIndexes(node_names, searchString[i].trim()) //case insensitive function
         if (tempIndexes.length > 0){
           for (j=0; j < tempIndexes.length; j++){
-            if (!exists(selected_nodes, tempIndexes[j])){
-              selected_nodes.push(tempIndexes[j]);
+            if (!exists(selectedNodePositions, tempIndexes[j])){
+              selectedNodePositions.push(tempIndexes[j]);
               if (selectedNodeColorFlag) nodes[tempIndexes[j]].material.color = new THREE.Color( selectedDefaultColor );
             }
           }
