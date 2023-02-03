@@ -1,1 +1,1 @@
-inData <- ""
+networkDF <- data.frame()

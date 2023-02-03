@@ -40,19 +40,19 @@ getFormatedClusterString <- function(cluster_name) {
   } 
 }
 
-# @param inDataEdgelist (dataframe): Dataframe with edges 
+# @param networkEdgelist (dataframe): Dataframe with edges 
 # @param layout (character): Layout needed for stategy3_superNodes functions 
 # @param local_layout (character): Local Layout needed for stategy3_superNodes functions 
 # @param cluster (character): Cluster needed for stategy3_superNodes functions 
 # @return void
-applyCluster <- function(inDataEdgelist, layout, local_layout, cluster){
+applyCluster <- function(networkEdgelist, layout, local_layout, cluster){
   callJSHandler("handler_startLoader", T)
   formatted_layout <- getFormatedLayoutString(layout)
   formatted_local_layout <- getFormatedLayoutString(local_layout)
   formatted_cluster <- getFormatedClusterString(cluster)
-  sub_graph <- createGraph(inDataEdgelist) # V(graph)
+  sub_graph <- createGraph(networkEdgelist) # V(graph)
   sub_nodes <- V(sub_graph)$name # unsorted
-  sub_weights <- E(sub_graph)$weight # != inDataEdgelist[, 3]
+  sub_weights <- E(sub_graph)$weight # != networkEdgelist[, 3]
   # if(cluster == 'Leiden') {
   #   clustered_graph <- cluster_leiden(sub_graph,resolution_parameter=0.06)
   # } else {
