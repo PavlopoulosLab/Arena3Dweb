@@ -26,8 +26,8 @@ attachDownloadHandler <- function() {
         js_direction_flag <- input$edgeDirectionToggle
         exportData <- format_export_data(js_scene_pan, js_scene_sphere, js_layers, js_nodes, js_edge_pairs, js_label_color, js_direction_flag)
         json_output <- toJSON(exportData)
+        write(json_output, con)
       }
-      write(json_output, con)
     }
   )
 }

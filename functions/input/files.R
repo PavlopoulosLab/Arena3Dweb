@@ -107,3 +107,56 @@ handleInputEdgeAttributeFileUpload <- function() {
     removeModal()
   })
 }
+
+handleLoadExample <- function() {
+  tryCatch({
+    if (existsNetwork(silent = T)) {
+      showModal(modalDialog(
+        title = "Load Example Network",
+        paste0("The current network will be discarded. Are you sure?"),
+        footer = tagList(
+          actionButton("loadExample_ok", "Yes"),
+          modalButton("Cancel")
+        )
+      ))
+    } else
+      loadExampleNetwork()
+  }, error = function(e) {
+    print(paste0("Example network upload error: ", e))
+    renderError("Unexpected error.")
+  })
+}
+
+loadExampleNetwork <- function() {
+  inFileUrl <- "./www/data/figure2A_data.tsv"
+  
+  reset_UI_values()
+  networkDF <<- read.delim(inFileUrl, header = T)
+  networkDF$SourceNode <<- trim(networkDF$SourceNode)
+  networkDF$SourceLayer <<- trim(networkDF$SourceLayer)
+  networkDF$TargetNode <<- trim(networkDF$TargetNode)
+  networkDF$TargetLayer <<- trim(networkDF$TargetLayer)
+  networkDF$Weight <<- mapper(as.numeric(trim(networkDF$Weight)), 0.1, 1)
+  
+  callJSHandler("handler_uploadNetwork", networkDF)
+  networkDF [, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
+  networkDF [, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
+  networkDF <<- as.data.frame(networkDF)
+  
+  updateSelectInput(session, "navBar", selected = "Main View")
+  
+  reset("load_network_file")
+  reset("node_attributes_file")
+  reset("edge_attributes_file")
+}
+
+handleLoadExampleAccept <- function() {
+  tryCatch({
+    loadExampleNetwork()
+  }, error = function(e) {
+    print(paste0("Example network upload error: ", e))
+    renderError("Unexpected error.")
+  }, finally = {
+    removeModal()
+  })
+}

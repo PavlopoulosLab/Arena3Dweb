@@ -1,8 +1,9 @@
-existsNetwork <- function() {
+existsNetwork <- function(silent = F) {
   exist <- T
   if (nrow(networkDF) == 0) {
     exist <- F
-    renderWarning("Upload/import a network first through the File tab.")
+    if (!silent)
+      renderWarning("Upload/import a network first through the File tab.")
   }
   return(exist)
 }

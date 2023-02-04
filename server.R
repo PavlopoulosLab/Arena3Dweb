@@ -29,6 +29,10 @@ server <- function(input, output, session) {
     updateNavbarPage(session, "navBar", selected = "Help")
   }, ignoreInit = T)
   
+  observeEvent(input$link_to_fileInput, {
+    updateNavbarPage(session, "navBar", selected = "File")
+  }, ignoreInit = T)
+  
   # JS variables ####
   observeEvent(input$js_checkbox_flag, {
     updateCheckboxInputFromJS()
@@ -53,6 +57,14 @@ server <- function(input, output, session) {
   
   observeEvent(input$edge_attributes_file, {
     handleInputEdgeAttributeFileUpload()
+  }, ignoreInit = T)
+  
+  observeEvent(input$exampleButton, {
+    handleLoadExample()
+  }, ignoreInit = T)
+  
+  observeEvent(input$loadExample_ok, {
+    handleLoadExampleAccept()
   }, ignoreInit = T)
   
   # LAYOUT ####

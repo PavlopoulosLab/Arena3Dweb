@@ -7,6 +7,7 @@ generateFileDiv <- function() {
     fileInput("edge_attributes_file", "Upload EDGE attributes:",
               accept = c(".tsv", ".txt")),
     downloadButton("save_network_object", "Save Session"),
+    actionButton("exampleButton", "Load Example", icon("message")),
     actionButton("hideButton1", icon("angle-up"), class = "hideButton")
   )
 }
