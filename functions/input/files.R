@@ -24,6 +24,7 @@ handleInputNetworkFileUpload <- function() {
         networkDF [, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
         networkDF [, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
         networkDF <<- as.data.frame(networkDF)
+        renderNetworkDF()
       }
       updateSelectInput(session, "navBar", selected = "Main View")
     }
@@ -142,6 +143,7 @@ loadExampleNetwork <- function() {
   networkDF [, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
   networkDF [, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
   networkDF <<- as.data.frame(networkDF)
+  renderNetworkDF()
   
   updateSelectInput(session, "navBar", selected = "Main View")
   

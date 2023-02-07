@@ -167,6 +167,7 @@ parseInputJSONFile <- function(inFile){
           renderWarning("Channel Problem. Not a valid Arena3D object.")
         }
         networkDF <<- as.data.frame(networkDF)
+        renderNetworkDF()
       } else
         renderWarning("Edge Problem. Not a valid Arena3D object.")
       if (nrow(networkDF) > MAX_EDGES)

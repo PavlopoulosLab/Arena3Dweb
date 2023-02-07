@@ -175,7 +175,7 @@ input[type="checkbox"] {
 
 .tab-pane:nth-child(1),
 .tab-pane:nth-child(2),
-.tab-pane:nth-child(10) {
+.tab-pane:nth-child(11) {
   /*Main View and Help border remove*/
   border: 0;
   padding: 0;

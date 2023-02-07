@@ -7,6 +7,7 @@ source("views/layer.R", local = T)
 source("views/node.R", local = T)
 source("views/edge.R", local = T)
 source("views/fps.R", local = T)
+source("views/data.R", local = T)
 source("views/help.R", local = T)
 source("views/footer.R", local = T)
 
@@ -36,6 +37,7 @@ ui <- fluidPage(
     tabPanel(title = "Layer Actions", generateLayerDiv()),
     tabPanel(title = "Node Actions", generateNodeDiv()),
     tabPanel(title = "Edge Actions", generateEdgeDiv()),
+    tabPanel(title = "View Data", generateDataDiv()),
     tabPanel(title = "FPS", generateFPSDiv()),
     tabPanel(title = "Help", generateHelpDiv()),
   ),

@@ -9,4 +9,4 @@ CHANNEL_COLORS_DARK <- brewer.pal(MAX_CHANNELS, 'Set1')
 VR_DOWNSCALE_FACTOR <- 300
 POST_REQUEST_PATH <- 'tmp/'
 API_URL <- "https://bib.fleming.gr/bib/api/arena3dweb/vr/" # "http://localhost:8080/api/arena3dweb/vr/"
-HIDE_BUTTONS <- paste0("hideButton", c(1:7))
+HIDE_BUTTONS <- paste0("hideButton", c(1:8))
