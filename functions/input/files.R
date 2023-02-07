@@ -21,8 +21,10 @@ handleInputNetworkFileUpload <- function() {
         if (identical(networkDF$Weight, NULL)) networkDF$Weight <<- as.matrix(rep(1,length(networkDF$SourceNode)))
         else networkDF$Weight <<- mapper(as.numeric(trim(networkDF$Weight)), 0.1, 1)
         callJSHandler("handler_uploadNetwork", networkDF)
-        networkDF [, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
-        networkDF [, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
+        create_nodeLayer_to_node_table()
+        
+        networkDF[, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
+        networkDF[, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
         networkDF <<- as.data.frame(networkDF)
         renderNetworkDF()
       }
@@ -37,6 +39,17 @@ handleInputNetworkFileUpload <- function() {
   }, finally = {
     removeModal()
   })
+}
+
+create_nodeLayer_to_node_table <- function() {
+  nodeLayer_to_node <<-
+    as.data.frame(
+      c(paste(networkDF$SourceNode, networkDF$SourceLayer, sep = "_"),
+        paste(networkDF$TargetNode, networkDF$TargetLayer, sep = "_"))
+    )
+  colnames(nodeLayer_to_node)[1] <<- "NodeLayer"
+  nodeLayer_to_node$Node <<- c(networkDF$SourceNode, networkDF$TargetNode)
+  nodeLayer_to_node <<- unique(nodeLayer_to_node)
 }
 
 handleImportNetworkFileUpload <- function() {
@@ -140,8 +153,10 @@ loadExampleNetwork <- function() {
   networkDF$Weight <<- mapper(as.numeric(trim(networkDF$Weight)), 0.1, 1)
   
   callJSHandler("handler_uploadNetwork", networkDF)
-  networkDF [, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
-  networkDF [, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
+  create_nodeLayer_to_node_table()
+  
+  networkDF[, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
+  networkDF[, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
   networkDF <<- as.data.frame(networkDF)
   renderNetworkDF()
   
