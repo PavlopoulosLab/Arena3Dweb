@@ -96,6 +96,10 @@ prepareMetricTable <- function(topologyMetricChoice, nodeScale) {
     nodeScale[order(-nodeScale[[topologyMetricChoice]]), ]
   nodeScale[[topologyMetricChoice]] <-
     format(round(nodeScale[[topologyMetricChoice]], 2))
+  nodeScale$Layer <- extractColumnFrom_node_layerDF(nodeScale$Node, "Layer")
+  nodeScale$Node <- extractColumnFrom_node_layerDF(nodeScale$Node, "Node")
+  nodeScale <- nodeScale[, c("Node", "Layer", topologyMetricChoice)]
+  
   metric <- switch(
     topologyMetricChoice,
     "Degree" = "degree",

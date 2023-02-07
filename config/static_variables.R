@@ -1,2 +1,2 @@
 networkDF <- data.frame()
-nodeLayer_to_node <- data.frame()
+node_layerDF <- data.frame()

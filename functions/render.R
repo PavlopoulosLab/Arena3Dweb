@@ -12,10 +12,10 @@ renderModal <- function(prompt) {
   showModal(modalDialog(HTML(prompt), footer = NULL))
 }
 
-renderNetworkDF <- function() {
+renderNetworkDF <- function(formattedNetwork) {
   showTab(inputId = "dataViewPanel", target = "Network Data")
   updateTabsetPanel(session, "dataViewPanel", selected = "Network Data")
-  renderShinyDataTable("network_dataView", networkDF, fileName = "networkData",
+  renderShinyDataTable("network_dataView", formattedNetwork, fileName = "networkData",
                        filter = "top")
 }
 

@@ -5,7 +5,7 @@ parseInputJSONFile <- function(inFile){
   nodeGroups <- matrix("", nrow = 0, ncol = 1) # map node rows from above to groups
   uniqueChannels <- matrix("", nrow = 0, ncol = 5)
   raw_json <- fromJSON(inFile)
-  nodeLayer_to_node_table_fromJSON(raw_json$nodes)
+  node_layerDF_table_fromJSON(raw_json$nodes)
 
   max_cols <- 11 # layers with generate coordinates boolean 
   if(length(raw_json) > 2){
@@ -168,7 +168,7 @@ parseInputJSONFile <- function(inFile){
           renderWarning("Channel Problem. Not a valid Arena3D object.")
         }
         networkDF <<- as.data.frame(networkDF)
-        renderNetworkDF()
+        printNetworkDF()
       } else
         renderWarning("Edge Problem. Not a valid Arena3D object.")
       if (nrow(networkDF) > MAX_EDGES)
@@ -195,13 +195,14 @@ parseInputJSONFile <- function(inFile){
   return(TRUE)
 }
 
-nodeLayer_to_node_table_fromJSON <- function(jsonNodes) {
-  nodeLayer_to_node <<- jsonNodes[, c("name", "layer")]
-  nodeLayer_to_node$NodeLayer <<- paste(nodeLayer_to_node$name,
-                                        nodeLayer_to_node$layer, sep = "_")
-  nodeLayer_to_node <<- nodeLayer_to_node[, c("NodeLayer", "name")]
-  colnames(nodeLayer_to_node)[2] <<- "Node"
-  nodeLayer_to_node <<- unique(nodeLayer_to_node)
+node_layerDF_table_fromJSON <- function(jsonNodes) {
+  node_layerDF <<- jsonNodes[, c("name", "layer")]
+  node_layerDF$NodeLayer <<- paste(node_layerDF$name,
+                                        node_layerDF$layer, sep = "_")
+  node_layerDF <<- node_layerDF[, c("NodeLayer", "name", "layer")]
+  colnames(node_layerDF)[2] <<- "Node"
+  colnames(node_layerDF)[3] <<- "Layer"
+  node_layerDF <<- unique(node_layerDF)
 }
 
 format_export_data <- function(js_scene_pan, js_scene_sphere, js_layers, js_nodes, js_edge_pairs, label_color, direction){
