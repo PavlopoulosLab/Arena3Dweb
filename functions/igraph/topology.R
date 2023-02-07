@@ -64,8 +64,10 @@ parseAndScaleEdgelist <- function(filteredNetworkDF, subgraphChoice, layerName) 
 }
 
 scaleTopology <- function(networkGraph) {
+  topologyMetricChoice <- input$topologyScaleMetricChoice
+  
   scale <- switch(
-    input$topologyScaleMetricChoice,
+    topologyMetricChoice,
     "Degree" =
       degree(networkGraph, v = V(networkGraph), mode = "all", loops = T,
              normalized = F),
@@ -81,10 +83,30 @@ scaleTopology <- function(networkGraph) {
                   normalized = F) 
   )
   nodeScale <- calculateNodeScaleDF(scale)
+  prepareMetricTable(topologyMetricChoice, nodeScale)
   nodeScale$scale <- mapper(nodeScale$scale,
                             TARGET_NODE_SCALE_MIN, TARGET_NODE_SCALE_MAX,
                             defaultValue = 1)
   callJSHandler("handler_topologyScale", nodeScale)
+}
+
+prepareMetricTable <- function(topologyMetricChoice, nodeScale) {
+  colnames(nodeScale) <- c("Node", topologyMetricChoice)
+  nodeScale <-
+    nodeScale[order(-nodeScale[[topologyMetricChoice]]), ]
+  nodeScale[[topologyMetricChoice]] <-
+    format(round(nodeScale[[topologyMetricChoice]], 2))
+  nodeScale$Layer <- extractColumnFrom_node_layerDF(nodeScale$Node, "Layer")
+  nodeScale$Node <- extractColumnFrom_node_layerDF(nodeScale$Node, "Node")
+  nodeScale <- nodeScale[, c("Node", "Layer", topologyMetricChoice)]
+  
+  metric <- switch(
+    topologyMetricChoice,
+    "Degree" = "degree",
+    "Clustering Coefficient" = "transitivity",
+    "Betweenness Centrality" = "betweenness"
+  )
+  renderMetricTable(topologyMetricChoice, nodeScale, metric)
 }
 
 calculateNodeScaleDF <- function(scale) {

@@ -1,6 +1,7 @@
 initializeServerApp <- function() {
   initializeJSVariables()
   attachDownloadHandler()
+  hideDataMetricTabs()
 }
 
 initializeJSVariables <- function() { # TODO one call with one JSON object
@@ -30,4 +31,10 @@ attachDownloadHandler <- function() {
       }
     }
   )
+}
+
+hideDataMetricTabs <- function() {
+  lapply(c("Network Data", TOPOLOGY_METRICS), function(metricName) {
+    hideTab(inputId = "dataViewPanel", target = metricName)
+  })
 }

@@ -21,9 +21,12 @@ handleInputNetworkFileUpload <- function() {
         if (identical(networkDF$Weight, NULL)) networkDF$Weight <<- as.matrix(rep(1,length(networkDF$SourceNode)))
         else networkDF$Weight <<- mapper(as.numeric(trim(networkDF$Weight)), 0.1, 1)
         callJSHandler("handler_uploadNetwork", networkDF)
-        networkDF [, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
-        networkDF [, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
+        create_node_layerDF_table()
+        
+        networkDF[, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
+        networkDF[, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
         networkDF <<- as.data.frame(networkDF)
+        printNetworkDF()
       }
       updateSelectInput(session, "navBar", selected = "Main View")
     }
@@ -36,6 +39,36 @@ handleInputNetworkFileUpload <- function() {
   }, finally = {
     removeModal()
   })
+}
+
+create_node_layerDF_table <- function() {
+  node_layerDF <<-
+    as.data.frame(
+      c(paste(networkDF$SourceNode, networkDF$SourceLayer, sep = "_"),
+        paste(networkDF$TargetNode, networkDF$TargetLayer, sep = "_"))
+    )
+  colnames(node_layerDF)[1] <<- "NodeLayer"
+  node_layerDF$Node <<- c(networkDF$SourceNode, networkDF$TargetNode)
+  node_layerDF$Layer <<- c(networkDF$SourceLayer, networkDF$TargetLayer)
+  node_layerDF <<- unique(node_layerDF)
+}
+
+printNetworkDF <- function() {
+  formattedNetwork <- networkDF
+  formattedNetwork$SourceNode <-
+    extractColumnFrom_node_layerDF(formattedNetwork$SourceNode, "Node")
+  formattedNetwork$TargetNode <- 
+    extractColumnFrom_node_layerDF(formattedNetwork$TargetNode, "Node")
+  channelColumn <- "Channel"
+  if (is.null(formattedNetwork$Channel))
+    channelColumn <- NULL
+  weightColumn <- "Weight"
+  if (is.null(formattedNetwork$Weight))
+    weightColumn <- NULL
+  formattedNetwork <- formattedNetwork[, c("SourceNode", "SourceLayer",
+                                           "TargetNode", "TargetLayer",
+                                           channelColumn, weightColumn)]
+  renderNetworkDF(formattedNetwork)
 }
 
 handleImportNetworkFileUpload <- function() {
@@ -139,9 +172,12 @@ loadExampleNetwork <- function() {
   networkDF$Weight <<- mapper(as.numeric(trim(networkDF$Weight)), 0.1, 1)
   
   callJSHandler("handler_uploadNetwork", networkDF)
-  networkDF [, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
-  networkDF [, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
+  create_node_layerDF_table()
+  
+  networkDF[, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
+  networkDF[, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
   networkDF <<- as.data.frame(networkDF)
+  printNetworkDF()
   
   updateSelectInput(session, "navBar", selected = "Main View")
   
