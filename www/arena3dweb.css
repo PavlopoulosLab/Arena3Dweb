@@ -90,15 +90,15 @@ h5 {
   font-size: 18px;
 }
 
+ul li {
+  word-break: break-word;
+}
+
 input[type="range"] {
   -webkit-appearance: none;
   overflow: hidden;
   width: 100%;
   color: white;
-}
-
-ul li {
-  word-break: break-word;
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
@@ -160,7 +160,8 @@ input[type="checkbox"] {
   z-index: 3;
 }
 
-.tab-pane {
+/* .tab-content:nth-child(1) = navBar */
+.tab-content:nth-child(1) > .tab-pane {
   padding: 10px;
   position: fixed;
   margin-left: 250px;
@@ -173,9 +174,9 @@ input[type="checkbox"] {
   max-height: 70vh;
 }
 
-.tab-pane:nth-child(1),
-.tab-pane:nth-child(2),
-.tab-pane:nth-child(11) {
+.tab-content:nth-child(1) > .tab-pane:nth-child(1),
+.tab-content:nth-child(1) > .tab-pane:nth-child(2),
+.tab-content:nth-child(1) > .tab-pane:nth-child(11) {
   /*Main View and Help border remove*/
   border: 0;
   padding: 0;
@@ -217,7 +218,6 @@ input[type="checkbox"] {
   background-color: aliceblue;
   font-size: 16px;
 }
-
 
 .checkboxdiv {
   width: 100%;
@@ -528,6 +528,17 @@ input[type="checkbox"] {
   display: none;
 }
 
+
+.networkDataTab {
+	width: 70vw;
+}
+
+#networkDataView {
+	background-color: lavender;
+	padding: 5px;
+	margin-bottom: 10px
+}
+
 #navDiv {
   position: fixed;
   z-index: 1;
@@ -785,6 +796,10 @@ input[type="checkbox"] {
 #grayThemeButton {
   color: #6e2a5a;
   background-color: #bababa;
+}
+
+#datatables_buttons_info {
+	color: black
 }
 
 /* Safari */

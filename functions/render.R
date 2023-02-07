@@ -13,9 +13,8 @@ renderModal <- function(prompt) {
 }
 
 renderNetworkDF <- function() {
-  renderShinyDataTable("networkDataView", networkDF,
-                       caption = "Network Data", fileName = "networkData",
-                       scrollY = "200px", filter = "top")
+  renderShinyDataTable("networkDataView", networkDF, fileName = "networkData",
+                       filter = "top")
 }
 
 renderShinyDataTable <- function(shinyOutputId, outputData,

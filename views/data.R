@@ -1,6 +1,21 @@
 generateDataDiv <- function() {
   tags$div(
-    DT::dataTableOutput(outputId = "networkDataView"),
-    actionButton("hideButton7", icon("angle-up"), class = "hideButton")
+    class = "networkDataTab",
+    tabsetPanel(
+      tabPanel(
+        "Network Data",
+        DT::dataTableOutput(outputId = "networkDataView"),
+        actionButton("hideButton7", icon("angle-up"), class = "hideButton")
+      ),
+      tabPanel(
+        "Degree"
+      ),
+      tabPanel(
+        "Clustering Coefficient"
+      ),
+      tabPanel(
+        "Betweenness Centrality"
+      )
+    )
   )
 }
