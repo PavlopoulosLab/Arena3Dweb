@@ -21,7 +21,7 @@ generateLayoutsDiv <- function() {
                 width = "500px"),            
     actionButton("runClusterLayout", "Run", class = "runButton"),
     selectInput("topologyScaleMetricChoice", "Scale Nodes of Selected Layers by Topology Metric:",
-                c("-", "Degree", "Clustering Coefficient", "Betweenness Centrality"),
+                c("-", TOPOLOGY_METRICS),
                 width = "500px"),
     actionButton("runTopologyScale", "Run", class = "runButton"),
     actionButton("hideButton2", icon("angle-up"), class = "hideButton")

@@ -1,5 +1,6 @@
 server <- function(input, output, session) {
   source("config/global_variables.R", local = T)
+  source("config/server_variables.R", local = T)
   source("config/static_variables.R", local = T)
   
   source("functions/input/api.R", local = T)

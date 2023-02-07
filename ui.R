@@ -1,3 +1,4 @@
+source("config/global_variables.R", local = T)
 source("config/ui_variables.R", local = T)
 source("views/home.R", local = T)
 source("views/file.R", local = T)

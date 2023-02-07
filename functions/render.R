@@ -13,7 +13,18 @@ renderModal <- function(prompt) {
 }
 
 renderNetworkDF <- function() {
-  renderShinyDataTable("networkDataView", networkDF, fileName = "networkData",
+  showTab(inputId = "dataViewPanel", target = "Network Data")
+  updateTabsetPanel(session, "dataViewPanel", selected = "Network Data")
+  renderShinyDataTable("network_dataView", networkDF, fileName = "networkData",
+                       filter = "top")
+}
+
+renderMetricTable <- function(topologyMetricChoice, nodeScale, metric) {
+  showTab(inputId = "dataViewPanel", target = topologyMetricChoice)
+  updateTabsetPanel(session, "dataViewPanel", selected = topologyMetricChoice)
+  renderShinyDataTable(paste0(metric, "_dataView"),
+                       nodeScale,
+                       fileName = paste0(metric, "Data"),
                        filter = "top")
 }
 
