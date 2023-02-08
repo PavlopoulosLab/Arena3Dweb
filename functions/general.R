@@ -2,10 +2,18 @@ callJSHandler <- function(handlerName, handlerFunctionParameter) {
   session$sendCustomMessage(handlerName, handlerFunctionParameter)
 }
 
-# used to trim user input data
+readFromTableFileToDataFrame <- function(path) {
+  df <- switch(
+    READ_LIBRARY,
+    "fread" = data.table::fread(path),
+    "base" = read.delim(path, header = T)
+  )
+  return(df)
+}
+
 trim <- function (x) {
   x <- gsub("^\\s+|\\s+$", "", x)
-  x <- gsub(",", "", x)
+  x <- gsub(",", "", x) # TODO test why, else replace with trimws
   return(x)
 }
 

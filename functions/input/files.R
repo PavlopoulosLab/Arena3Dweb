@@ -2,43 +2,114 @@ handleInputNetworkFileUpload <- function() {
   tryCatch({
     renderModal("<h2>Please wait.</h2><br /><p>Uploading network.</p>")
     inFile <- input$input_network_file
-    if (!is.null(inFile)){ #input$input_network_file -> NULL initially
+    tempNetworkDF <- readFromTableFileToDataFrame(inFile$datapath)
+    if (isNetworkFormatValid(tempNetworkDF)) {
       reset_UI_values()
-      networkDF <<- read.delim(inFile$datapath, header = TRUE) # datapath -> temporary location of uploaded file
+
+      networkDF <<- parseUploadedNetwork(tempNetworkDF)
       
-      networkDF$SourceNode <<- trim(networkDF$SourceNode)
-      networkDF$SourceLayer <<- trim(networkDF$SourceLayer)
-      networkDF$TargetNode <<- trim(networkDF$TargetNode)
-      networkDF$TargetLayer <<- trim(networkDF$TargetLayer)
-      if ("Channel" %in% colnames(networkDF)) {
-        networkDF$Channel <<- trim(networkDF$Channel)
-      }
-      if('' %in% networkDF$Channel){
-        print(paste("A channel name is empty. Channels: ",networkDF$Channel))
-        renderWarning("A channel name is empty.
-                      Please reupload the file with all the channel names.")
-      } else {
-        if (identical(networkDF$Weight, NULL)) networkDF$Weight <<- as.matrix(rep(1,length(networkDF$SourceNode)))
-        else networkDF$Weight <<- mapper(as.numeric(trim(networkDF$Weight)), 0.1, 1)
-        callJSHandler("handler_uploadNetwork", networkDF)
-        create_node_layerDF_table()
-        
-        networkDF[, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
-        networkDF[, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
-        networkDF <<- as.data.frame(networkDF)
-        printNetworkDF()
-      }
+      
+      
+      
+      callJSHandler("handler_uploadNetwork", networkDF) # TODO update with new columns in JS, dont calculate Node_Layers again
+      create_node_layerDF_table() # TODO maybe not needed here with new column
+      printNetworkDF() # TODO hidden columns 6,7,8 or 7,8,9 see Channel, and revise with existing network cols
+      
+      
+      
       updateSelectInput(session, "navBar", selected = "Main View")
+      reset("load_network_file")
+      reset("node_attributes_file")
+      reset("edge_attributes_file")
     }
-    reset("load_network_file")
-    reset("node_attributes_file")
-    reset("edge_attributes_file")
   }, error = function(e) {
     print(paste0("Upload network file error: ", e))
     renderError("Bad uploaded network file format.")
   }, finally = {
     removeModal()
   })
+}
+
+isNetworkFormatValid <- function(df) {
+  isValid <- T
+  if (!existMandatoryColumns(df))
+    isValid <- F
+  else if (existEmptyChannelName(df))
+    isValid <- F
+  return(isValid)
+}
+
+existMandatoryColumns <- function(df) {
+  exist <- T
+  if (!all(MANDATORY_NETWORK_COLUMNS %in%
+           colnames(df))) {
+    exist <- F
+    renderWarning("Your network file must contain at least these four columns:\n
+                  SourceNode, SourceLayer, TargetNode, TargetLayer")
+  }
+  return(exist)
+}
+
+existEmptyChannelName <- function(df) {
+  exist <- F
+  if ("Channel" %in% colnames(df)) {
+    if ('' %in% df$Channel) {
+      exist <- T
+      renderWarning("At least one edge has no channel name.\n
+                    Please reupload the network file with all edge channels.")
+    }
+  }
+  return(exist)
+}
+
+parseUploadedNetwork <- function(df) {
+  df <- subsetLegitColumns(df)
+  df <- trimNetworkData(df)
+  df <- appendScaledNetworkWeights(df)
+  df <- appendNodeLayerCombinations(df)
+  df <- reorderNetworkColumns(df)
+  return(df)
+}
+
+subsetLegitColumns <- function(df) {
+  combinedLegitColumns <- c(MANDATORY_NETWORK_COLUMNS, OPTIONAL_NETWORK_COLUMNS)
+  existingLegitColumns <- combinedLegitColumns[which(combinedLegitColumns %in%
+                                                       colnames(df))]
+  return(df[, existingLegitColumns])
+}
+
+trimNetworkData <- function(df) {
+  invisible(lapply(colnames(df), function(colName) {
+    df[[colName]] <<- trim(df[[colName]])
+  }))
+  return(df)
+}
+
+appendScaledNetworkWeights <- function(df) {
+  if ("Weight" %in% colnames(df)){
+    # TODO check if valid numeric weights
+    df$Weight <- as.numeric(df$Weight)
+    df$ScaledWeight <- mapper(df$Weight, 0.1, 1)
+  } else {
+    df$Weight <- rep(1, nrow(df))
+    df$ScaledWeight <- mapper(df$Weight, 0.1, 1)
+  }
+  return(df)
+}
+
+appendNodeLayerCombinations <- function(df) {
+  df$SourceNode_Layer <- paste(df$SourceNode, df$SourceLayer, sep = "_")
+  df$TargetNode_Layer <- paste(df$TargetNode, df$TargetLayer, sep = "_")
+  return(df)
+}
+
+reorderNetworkColumns <- function(df) {
+  channelColumn <- NULL
+  if ("Channel" %in% colnames(df))
+    channelColumn <- "Channel"
+  df <- df[, c(MANDATORY_NETWORK_COLUMNS, channelColumn, "Weight",
+               "SourceNode_Layer", "TargetNode_Layer", "ScaledWeight")]
+  return(df)
 }
 
 create_node_layerDF_table <- function() {
