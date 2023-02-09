@@ -39,7 +39,7 @@ const browseUrl = url => {
 
 // Files ====================
 const uploadNetwork = (message) => {
-  session_flag = false;
+  session_flag = false; // TODO figure what this exactly does..
   if (animationPause) pauseAnimate(); //resume rendering
    //init on with darkColors
   colors = darkColors.concat(default_colors);
@@ -51,8 +51,8 @@ const uploadNetwork = (message) => {
   for (let i=0; i < message.SourceLayer.length; i++){
     temp_layer1 = String(message.SourceLayer[i]);
     temp_layer2 = String(message.TargetLayer[i]);
-    temp_name1 = String(message.SourceNode[i]).concat("_").concat(temp_layer1);
-    temp_name2 = String(message.TargetNode[i]).concat("_").concat(temp_layer2);
+    temp_name1 = message.SourceNode_Layer[i];
+    temp_name2 = message.TargetNode_Layer[i];
     if (message.Channel) {
       temp_channel = String(message.Channel[i]);
     }

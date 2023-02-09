@@ -45,7 +45,7 @@ server <- function(input, output, session) {
 
   # FILE I/O ####
   observeEvent(input$input_network_file, {
-    handleInputNetworkFileUpload()
+    handleNetworkFileUpload()
   }, ignoreInit = T)
   
   observeEvent(input$load_network_file, {

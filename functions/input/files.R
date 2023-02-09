@@ -1,26 +1,12 @@
-handleInputNetworkFileUpload <- function() {
+handleNetworkFileUpload <- function() {
   tryCatch({
     renderModal("<h2>Please wait.</h2><br /><p>Uploading network.</p>")
     inFile <- input$input_network_file
     tempNetworkDF <- readFromTableFileToDataFrame(inFile$datapath)
     if (isNetworkFormatValid(tempNetworkDF)) {
       reset_UI_values()
-
       networkDF <<- parseUploadedNetwork(tempNetworkDF)
-      
-      
-      
-      
-      callJSHandler("handler_uploadNetwork", networkDF) # TODO update with new columns in JS, dont calculate Node_Layers again
-      create_node_layerDF_table() # TODO maybe not needed here with new column
-      printNetworkDF() # TODO hidden columns 6,7,8 or 7,8,9 see Channel, and revise with existing network cols
-      
-      
-      
-      updateSelectInput(session, "navBar", selected = "Main View")
-      reset("load_network_file")
-      reset("node_attributes_file")
-      reset("edge_attributes_file")
+      generateStaticNetwork()
     }
   }, error = function(e) {
     print(paste0("Upload network file error: ", e))
@@ -112,34 +98,24 @@ reorderNetworkColumns <- function(df) {
   return(df)
 }
 
+generateStaticNetwork <- function() {
+  callJSHandler("handler_uploadNetwork", networkDF)
+  create_node_layerDF_table()
+  renderNetworkDF(networkDF)
+  
+  updateSelectInput(session, "navBar", selected = "Main View")
+  reset("load_network_file")
+  reset("node_attributes_file")
+  reset("edge_attributes_file")
+}
+
 create_node_layerDF_table <- function() {
   node_layerDF <<-
-    as.data.frame(
-      c(paste(networkDF$SourceNode, networkDF$SourceLayer, sep = "_"),
-        paste(networkDF$TargetNode, networkDF$TargetLayer, sep = "_"))
-    )
+    as.data.frame(c(networkDF$SourceNode_Layer, networkDF$TargetNode_Layer))
   colnames(node_layerDF)[1] <<- "NodeLayer"
   node_layerDF$Node <<- c(networkDF$SourceNode, networkDF$TargetNode)
   node_layerDF$Layer <<- c(networkDF$SourceLayer, networkDF$TargetLayer)
   node_layerDF <<- unique(node_layerDF)
-}
-
-printNetworkDF <- function() {
-  formattedNetwork <- networkDF
-  formattedNetwork$SourceNode <-
-    extractColumnFrom_node_layerDF(formattedNetwork$SourceNode, "Node")
-  formattedNetwork$TargetNode <- 
-    extractColumnFrom_node_layerDF(formattedNetwork$TargetNode, "Node")
-  channelColumn <- "Channel"
-  if (is.null(formattedNetwork$Channel))
-    channelColumn <- NULL
-  weightColumn <- "Weight"
-  if (is.null(formattedNetwork$Weight))
-    weightColumn <- NULL
-  formattedNetwork <- formattedNetwork[, c("SourceNode", "SourceLayer",
-                                           "TargetNode", "TargetLayer",
-                                           channelColumn, weightColumn)]
-  renderNetworkDF(formattedNetwork)
 }
 
 handleImportNetworkFileUpload <- function() {
@@ -231,30 +207,10 @@ handleLoadExample <- function() {
   })
 }
 
-loadExampleNetwork <- function() {
-  inFileUrl <- "./www/data/figure2A_data.tsv"
-  
+loadExampleNetwork <- function() { # TODO update based on Upload
   reset_UI_values()
-  networkDF <<- read.delim(inFileUrl, header = T)
-  networkDF$SourceNode <<- trim(networkDF$SourceNode)
-  networkDF$SourceLayer <<- trim(networkDF$SourceLayer)
-  networkDF$TargetNode <<- trim(networkDF$TargetNode)
-  networkDF$TargetLayer <<- trim(networkDF$TargetLayer)
-  networkDF$Weight <<- mapper(as.numeric(trim(networkDF$Weight)), 0.1, 1)
-  
-  callJSHandler("handler_uploadNetwork", networkDF)
-  create_node_layerDF_table()
-  
-  networkDF[, "SourceNode"] <<- as.matrix(paste(networkDF[, "SourceNode"], networkDF[, "SourceLayer"], sep="_"))
-  networkDF[, "TargetNode"] <<- as.matrix(paste(networkDF[, "TargetNode"], networkDF[, "TargetLayer"], sep="_"))
-  networkDF <<- as.data.frame(networkDF)
-  printNetworkDF()
-  
-  updateSelectInput(session, "navBar", selected = "Main View")
-  
-  reset("load_network_file")
-  reset("node_attributes_file")
-  reset("edge_attributes_file")
+  networkDF <<- read.fst("./www/data/networkDF.fst")
+  generateStaticNetwork()
 }
 
 handleLoadExampleAccept <- function() {

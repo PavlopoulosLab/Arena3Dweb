@@ -168,7 +168,7 @@ parseInputJSONFile <- function(inFile){
           renderWarning("Channel Problem. Not a valid Arena3D object.")
         }
         networkDF <<- as.data.frame(networkDF)
-        printNetworkDF()
+        printNetworkDF_old()
       } else
         renderWarning("Edge Problem. Not a valid Arena3D object.")
       if (nrow(networkDF) > MAX_EDGES)
@@ -203,6 +203,24 @@ node_layerDF_table_fromJSON <- function(jsonNodes) {
   colnames(node_layerDF)[2] <<- "Node"
   colnames(node_layerDF)[3] <<- "Layer"
   node_layerDF <<- unique(node_layerDF)
+}
+
+printNetworkDF_old <- function() { # TODO remove after import has been updated
+  formattedNetwork <- networkDF
+  formattedNetwork$SourceNode <-
+    extractColumnFrom_node_layerDF(formattedNetwork$SourceNode, "Node")
+  formattedNetwork$TargetNode <- 
+    extractColumnFrom_node_layerDF(formattedNetwork$TargetNode, "Node")
+  channelColumn <- "Channel"
+  if (is.null(formattedNetwork$Channel))
+    channelColumn <- NULL
+  weightColumn <- "Weight"
+  if (is.null(formattedNetwork$Weight))
+    weightColumn <- NULL
+  formattedNetwork <- formattedNetwork[, c("SourceNode", "SourceLayer",
+                                           "TargetNode", "TargetLayer",
+                                           channelColumn, weightColumn)]
+  renderNetworkDF(formattedNetwork)
 }
 
 format_export_data <- function(js_scene_pan, js_scene_sphere, js_layers, js_nodes, js_edge_pairs, label_color, direction){
