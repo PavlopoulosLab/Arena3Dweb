@@ -138,9 +138,9 @@ parseInputJSONFile <- function(inFile){
         } else {
           descr <- nodes$descr[i]
         }
-        network_matrix <- rbind(network_matrix, c("node", trim(as.character(nodes[[1]][i])), as.character(nodes[[2]][i]), as.character(position_x), as.character(position_y),
+        network_matrix <- rbind(network_matrix, c("node", trimws(as.character(nodes[[1]][i])), as.character(nodes[[2]][i]), as.character(position_x), as.character(position_y),
                                                     as.character(position_z), as.character(scale), as.character(color), as.character(url), as.character(descr), ""))
-        uniqueNodes <- rbind(uniqueNodes, paste(trim(as.character(nodes[[1]][i])), as.character(nodes[[2]][i]), sep = "_"))
+        uniqueNodes <- rbind(uniqueNodes, paste(trimws(as.character(nodes[[1]][i])), as.character(nodes[[2]][i]), sep = "_"))
           
         nodeGroups <- rbind(nodeGroups, as.character(nodes[[2]][i]))
         }
@@ -153,11 +153,11 @@ parseInputJSONFile <- function(inFile){
           if (as.character(edges[[5]][i]) == " " | as.character(edges[[5]][i]) == "") {
             edges[[5]][i] = NA
           }
-          nodes_pair <- paste(c(trim(as.character(edges[[1]][i])),trim(as.character(edges[[2]][i]))), collapse="---")
+          nodes_pair <- paste(c(trimws(as.character(edges[[1]][i])),trimws(as.character(edges[[2]][i]))), collapse="---")
           network_matrix <- rbind(network_matrix,c("edge",nodes_pair, as.character(edges[[3]][i]),
                                                     as.character(edges[[4]][i]),as.character(edges[[5]][i]), "", "", "", "", "", ""))
-          node1 <- trim(as.character(edges[[1]][i]))
-          node2 <- trim(as.character(edges[[2]][i]))
+          node1 <- trimws(as.character(edges[[1]][i]))
+          node2 <- trimws(as.character(edges[[2]][i]))
           group1 <- nodeGroups[match(node1, uniqueNodes), 1]
           group2 <- nodeGroups[match(node2, uniqueNodes), 1]
           networkDF <<- rbind(networkDF, c(node1, group1, node2, group2, as.character(edges[[3]][i]),as.character(edges[[5]][i])))
@@ -238,15 +238,15 @@ format_export_data <- function(js_scene_pan, js_scene_sphere, js_layers, js_node
   for (i in 1:nrow(js_nodes)){
     nodes_df <- rbind(nodes_df, c(js_nodes[i, 1], js_nodes[i, 2], js_nodes[i, 3], js_nodes[i, 4],
                                   js_nodes[i, 5], js_nodes[i, 6], js_nodes[i, 7],
-                                  trim(js_nodes[i, 8]), trim(js_nodes[i, 9])))
+                                  trimws(js_nodes[i, 8]), trimws(js_nodes[i, 9])))
   }
   colnames(nodes_df) <- c("name", "layer", "position_x", "position_y", "position_z", "scale", "color", "url", "descr")
   
   edges_df <- data.frame()
   for (i in 1:nrow(js_edge_pairs)){
     line_split <- strsplit(as.character(js_edge_pairs[i, 1]), "---")
-    node1 <- trim(line_split[[1]][1])
-    node2 <- trim(line_split[[1]][2])
+    node1 <- trimws(line_split[[1]][1])
+    node2 <- trimws(line_split[[1]][2])
     edges_df <- rbind(edges_df, c(node1,node2, js_edge_pairs[i, 2], js_edge_pairs[i, 3], js_edge_pairs[i, 4] ))
   }
   colnames(edges_df) <- c("src", "trg", "opacity", "color", "channel")

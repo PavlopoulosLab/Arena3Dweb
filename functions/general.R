@@ -11,12 +11,6 @@ readFromTableFileToDataFrame <- function(path) {
   return(df)
 }
 
-trim <- function (x) {
-  x <- gsub("^\\s+|\\s+$", "", x)
-  x <- gsub(",", "", x) # TODO test why, else replace with trimws
-  return(x)
-}
-
 mapper <- function(inArr, min, max, defaultValue = DEFAULT_MAP_VALUE){
   outArr <- inArr
   inArr_min <- min(inArr)

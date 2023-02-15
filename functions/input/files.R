@@ -20,7 +20,9 @@ isNetworkFormatValid <- function(df) {
   isValid <- T
   if (!existMandatoryColumns(df))
     isValid <- F
-  else if (existEmptyChannelName(df))
+  else if (existsNonNumericWeight(df))
+    isValid <- F
+  else if (existsEmptyChannelName(df))
     isValid <- F
   return(isValid)
 }
@@ -36,7 +38,18 @@ existMandatoryColumns <- function(df) {
   return(exist)
 }
 
-existEmptyChannelName <- function(df) {
+existsNonNumericWeight <- function(df) {
+  exist <- F
+  if ("Weight" %in% colnames(df)) {
+    if (!is.numeric(df$Weight)) {
+      exist <- T
+      renderWarning("Make sure all input weights all numeric values.")
+    }
+  }
+  return(exist)
+}
+
+existsEmptyChannelName <- function(df) {
   exist <- F
   if ("Channel" %in% colnames(df)) {
     if ('' %in% df$Channel) {
@@ -66,20 +79,18 @@ subsetLegitColumns <- function(df) {
 
 trimNetworkData <- function(df) {
   invisible(lapply(colnames(df), function(colName) {
-    df[[colName]] <<- trim(df[[colName]])
+    df[[colName]] <<- trimws(df[[colName]])
   }))
   return(df)
 }
 
 appendScaledNetworkWeights <- function(df) {
-  if ("Weight" %in% colnames(df)){
-    # TODO check if valid numeric weights
+  if ("Weight" %in% colnames(df)) {
     df$Weight <- as.numeric(df$Weight)
-    df$ScaledWeight <- mapper(df$Weight, 0.1, 1)
   } else {
     df$Weight <- rep(1, nrow(df))
-    df$ScaledWeight <- mapper(df$Weight, 0.1, 1)
   }
+  df$ScaledWeight <- mapper(df$Weight, 0.1, 1)
   return(df)
 }
 
@@ -98,12 +109,14 @@ reorderNetworkColumns <- function(df) {
   return(df)
 }
 
-generateStaticNetwork <- function() {
+generateStaticNetwork <- function(fromUpload = T) {
   callJSHandler("handler_uploadNetwork", networkDF)
   create_node_layerDF_table()
   renderNetworkDF(networkDF)
   
   updateSelectInput(session, "navBar", selected = "Main View")
+  if (!fromUpload)
+    reset("input_network_file")
   reset("load_network_file")
   reset("node_attributes_file")
   reset("edge_attributes_file")
@@ -145,11 +158,11 @@ handleInputNodeAttributeFileUpload <- function() {
     renderModal("<h2>Please wait.</h2><br /><p>Uploading node attributes.</p>")
     nodeFile <- input$node_attributes_file$datapath
     nodeAttributes <- read.delim(nodeFile)
-    nodeAttributes$Node <- paste(trim(nodeAttributes$Node), trim(nodeAttributes$Layer), sep="_") #concatenation node & group name
-    if (!identical(nodeAttributes$Color, NULL)) nodeAttributes$Color <- trim(nodeAttributes$Color)
-    if (!identical(nodeAttributes$Size, NULL)) nodeAttributes$Size <- trim(nodeAttributes$Size)
-    if (!identical(nodeAttributes$Url, NULL)) nodeAttributes$Url <- trim(nodeAttributes$Url)
-    if (!identical(nodeAttributes$Description, NULL)) nodeAttributes$Description <- trim(nodeAttributes$Description)
+    nodeAttributes$Node <- paste(trimws(nodeAttributes$Node), trimws(nodeAttributes$Layer), sep="_") #concatenation node & group name
+    if (!identical(nodeAttributes$Color, NULL)) nodeAttributes$Color <- trimws(nodeAttributes$Color)
+    if (!identical(nodeAttributes$Size, NULL)) nodeAttributes$Size <- trimws(nodeAttributes$Size)
+    if (!identical(nodeAttributes$Url, NULL)) nodeAttributes$Url <- trimws(nodeAttributes$Url)
+    if (!identical(nodeAttributes$Description, NULL)) nodeAttributes$Description <- trimws(nodeAttributes$Description)
     if (!is.null(nodeFile)){
       callJSHandler("handler_nodeAttributes", nodeAttributes)
       updateSelectInput(session, "navBar", selected = "Main View")
@@ -167,14 +180,14 @@ handleInputEdgeAttributeFileUpload <- function() {
     renderModal("<h2>Please wait.</h2><br /><p>Uploading edge attributes.</p>")
     edgeFile <- input$edge_attributes_file$datapath
     edgeAttributes <- read.delim(edgeFile)
-    edgeAttributes$SourceNode <- paste(trim(edgeAttributes$SourceNode), trim(edgeAttributes$SourceLayer), sep="_") # concatenation node1_Group1---node2_Group2
-    edgeAttributes$TargetNode <- paste(trim(edgeAttributes$TargetNode), trim(edgeAttributes$TargetLayer), sep="_")
+    edgeAttributes$SourceNode <- paste(trimws(edgeAttributes$SourceNode), trimws(edgeAttributes$SourceLayer), sep="_") # concatenation node1_Group1---node2_Group2
+    edgeAttributes$TargetNode <- paste(trimws(edgeAttributes$TargetNode), trimws(edgeAttributes$TargetLayer), sep="_")
     temp <- edgeAttributes$SourceNode
     edgeAttributes$SourceNode <- paste(edgeAttributes$SourceNode, edgeAttributes$TargetNode, sep="---")
     edgeAttributes$TargetNode <- paste(edgeAttributes$TargetNode, temp, sep="---") # both ways, undirected
-    edgeAttributes$Color <- trim(edgeAttributes$Color)
+    edgeAttributes$Color <- trimws(edgeAttributes$Color)
     if ("Channel" %in% colnames(edgeAttributes)) {
-      edgeAttributes$Channel <- trim(edgeAttributes$Channel)
+      edgeAttributes$Channel <- trimws(edgeAttributes$Channel)
     }
     if (!is.null(edgeFile)){
       callJSHandler("handler_edgeAttributes", edgeAttributes)
@@ -207,10 +220,10 @@ handleLoadExample <- function() {
   })
 }
 
-loadExampleNetwork <- function() { # TODO update based on Upload
+loadExampleNetwork <- function() {
   reset_UI_values()
-  networkDF <<- read.fst("./www/data/networkDF.fst")
-  generateStaticNetwork()
+  networkDF <<- fst::read.fst("./www/data/networkDF.fst")
+  generateStaticNetwork(fromUpload = F)
 }
 
 handleLoadExampleAccept <- function() {
