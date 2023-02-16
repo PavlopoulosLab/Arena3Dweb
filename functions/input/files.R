@@ -113,7 +113,7 @@ reorderNetworkColumns <- function(df) {
 
 generateStaticNetwork <- function(fromUpload = T) {
   callJSHandler("handler_uploadNetwork", networkDF)
-  create_node_layerDF_table()
+  create_node_layerDF()
   renderNetworkDF(networkDF)
   
   updateSelectInput(session, "navBar", selected = "Main View")
@@ -124,7 +124,7 @@ generateStaticNetwork <- function(fromUpload = T) {
   reset("edge_attributes_file")
 }
 
-create_node_layerDF_table <- function() {
+create_node_layerDF <- function() {
   node_layerDF <<-
     as.data.frame(c(networkDF$SourceNode_Layer, networkDF$TargetNode_Layer))
   colnames(node_layerDF)[1] <<- "NodeLayer"
@@ -172,11 +172,10 @@ isJSONFormatValid <- function(jsonNetwork) {
   isValid <- T
   if (!existMandatoryObjects(jsonNetwork))
     isValid <- F
+  if (!existMandatoryNodeColumns(jsonNetwork$nodes))
+    isValid <- F
   if (!existMandatoryEdgeColumns(jsonNetwork$edges))
     isValid <- F
-  
-  # TODO add more checks
-  
   return(isValid)
 }
 
@@ -192,22 +191,54 @@ existMandatoryObjects <- function(jsonNetwork) {
   return(exist)
 }
 
+existMandatoryNodeColumns <- function(nodes) {
+  exist <- T
+  if (!all(MANDATORY_JSON_NODE_COLUMNS  %in%
+           colnames(nodes))) {
+    exist <- F
+    renderWarning("Your JSON nodes must contain at least a name and a layer\n
+                  See our Help page -> API")
+  } else if (containsEmptyValue(nodes$name)) {
+    exist <- F
+    renderWarning("Your JSON nodes contain at least one empty name value.\n
+                  Node names cannot be empty.")
+  } else if (containsEmptyValue(nodes$layer)) {
+    exist <- F
+    renderWarning("Your JSON nodes contain at least one empty layer value.\n
+                  Node layers cannot be empty.")
+  }
+  return(exist)
+}
+
+containsEmptyValue <- function(vec) {
+  containsEmpty <- F
+  if (anyNA(vec) || "" %in% vec)
+    containsEmpty <- T
+  return(containsEmpty)
+}
+
 existMandatoryEdgeColumns <- function(edges) {
-  
-  # TODO continue from here, empty rows in edges src/trg
-  
   exist <- T
   if (!all(MANDATORY_JSON_EDGE_COLUMNS  %in%
            colnames(edges))) {
     exist <- F
     renderWarning("Your JSON edges must contain at least a src and a trg node\n
                   See our Help page -> API")
+  } else if (containsEmptyValue(edges$src)) {
+    exist <- F
+    renderWarning("Your JSON edges contain at least one empty src value.\n
+                  Source Nodes along with their layers cannot be empty.")
+  } else if (containsEmptyValue(edges$trg)) {
+    exist <- F
+    renderWarning("Your JSON edges contain at least one empty trg value.\n
+                  Target Nodes along with their layers cannot be empty.")
   }
   return(exist)
 }
 
 parseUploadedJSON <- function(jsonNetwork) {
   jsonNetwork <- subsetLegitObjects(jsonNetwork)
+  create_node_layerDF_fromJSON(jsonNetwork$nodes)
   df <- parseJSONEdgesIntoNetwork(jsonNetwork$edges)
   
   # old
@@ -227,7 +258,17 @@ subsetLegitObjects <- function(jsonNetwork) {
   combinedLegitObjects <- c(MANDATORY_JSON_OBJECTS, OPTIONAL_JSON_OBJECTS)
   existingLegitObjects <- combinedLegitObjects[which(combinedLegitObjects %in%
                                                        names(jsonNetwork))]
-  return(jsonNetwork[existingLegitColumns])
+  return(jsonNetwork[existingLegitObjects])
+}
+
+create_node_layerDF_fromJSON <- function(jsonNodes) {
+  node_layerDF <<- jsonNodes[, c("name", "layer")]
+  node_layerDF$NodeLayer <<- paste(node_layerDF$name,
+                                   node_layerDF$layer, sep = "_")
+  node_layerDF <<- node_layerDF[, c("NodeLayer", "name", "layer")]
+  colnames(node_layerDF)[2] <<- "Node"
+  colnames(node_layerDF)[3] <<- "Layer"
+  node_layerDF <<- unique(node_layerDF)
 }
 
 # Upload NODE attributes ####

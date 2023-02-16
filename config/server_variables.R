@@ -2,6 +2,7 @@
 READ_LIBRARY <- "base" # options: base, fread; fread faster load but slower operations
 MANDATORY_NETWORK_COLUMNS <- c("SourceNode", "SourceLayer", "TargetNode", "TargetLayer")
 MANDATORY_JSON_OBJECTS <- c("layers", "nodes", "edges")
+MANDATORY_JSON_NODE_COLUMNS <- c("name", "layer")
 MANDATORY_JSON_EDGE_COLUMNS <- c("src", "trg")
 OPTIONAL_NETWORK_COLUMNS <- c("Channel", "Weight")
 OPTIONAL_JSON_OBJECTS <- c("scene", "universalLabelColor", "direction", "edgeOpacityByWeight")
