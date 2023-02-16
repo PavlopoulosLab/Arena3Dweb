@@ -171,7 +171,6 @@ parseInputJSONFile_old <- function(inFile){ # TODO remove
         }
         networkDF <<- as.data.frame(networkDF)
         printNetworkDF_old()
-        saveRDS(networkDF, "networkDF.RDS")
       } else
         renderWarning("Edge Problem. Not a valid Arena3D object.")
       if (nrow(networkDF) > MAX_EDGES)

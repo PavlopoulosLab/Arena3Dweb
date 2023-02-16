@@ -153,7 +153,7 @@ loadNetworkFromJSONFilepath <- function(filePath) {
     reset_UI_values()
     
     # new, from Upload
-    # networkDF <<- parseUploadedJSON(jsonNetwork)
+    networkDF <<- parseUploadedJSON(jsonNetwork)
     # generateStaticNetwork()
     
     # old, from Import
@@ -172,6 +172,10 @@ isJSONFormatValid <- function(jsonNetwork) {
   isValid <- T
   if (!existMandatoryObjects(jsonNetwork))
     isValid <- F
+  if (!existMandatoryEdgeColumns(jsonNetwork$edges))
+    isValid <- F
+  
+  # TODO add more checks
   
   return(isValid)
 }
@@ -188,13 +192,35 @@ existMandatoryObjects <- function(jsonNetwork) {
   return(exist)
 }
 
+existMandatoryEdgeColumns <- function(edges) {
+  
+  # TODO continue from here, empty rows in edges src/trg
+  
+  exist <- T
+  if (!all(MANDATORY_JSON_EDGE_COLUMNS  %in%
+           colnames(edges))) {
+    exist <- F
+    renderWarning("Your JSON edges must contain at least a src and a trg node\n
+                  See our Help page -> API")
+  }
+  return(exist)
+}
+
 parseUploadedJSON <- function(jsonNetwork) {
   jsonNetwork <- subsetLegitObjects(jsonNetwork)
+  df <- parseJSONEdgesIntoNetwork(jsonNetwork$edges)
+  
+  # old
   # df <- trimNetworkData(df)
   # df <- appendScaledNetworkWeights(df)
   # df <- appendNodeLayerCombinations(df)
   # df <- reorderNetworkColumns(df)
   return(df)
+}
+
+parseJSONEdgesIntoNetwork <- function(edges) {
+  
+  return(networkDF)
 }
 
 subsetLegitObjects <- function(jsonNetwork) {
