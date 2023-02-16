@@ -45,11 +45,11 @@ server <- function(input, output, session) {
 
   # FILE I/O ####
   observeEvent(input$input_network_file, {
-    handleNetworkFileUpload()
+    handleUploadNetwork()
   }, ignoreInit = T)
   
   observeEvent(input$load_network_file, {
-    handleImportNetworkFileUpload()
+    handleLoadSession()
   }, ignoreInit = T)
   
   observeEvent(input$node_attributes_file, {

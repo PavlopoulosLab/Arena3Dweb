@@ -1,19 +1,21 @@
-parseInputJSONFile <- function(inFile){
+parseInputJSONFile_old <- function(inFile){ # TODO remove
   networkDF <<-  matrix("", nrow = 0, ncol = 6)
   colnames(networkDF) <<- c("SourceNode", "SourceLayer", "TargetNode", "TargetLayer", "Weight", "Channel")
   uniqueNodes <- matrix("", nrow = 0, ncol = 1)
   nodeGroups <- matrix("", nrow = 0, ncol = 1) # map node rows from above to groups
   uniqueChannels <- matrix("", nrow = 0, ncol = 5)
-  raw_json <- fromJSON(inFile)
-  node_layerDF_table_fromJSON(raw_json$nodes)
+  
+  
+  jsonNetwork <- fromJSON(inFile)
+  node_layerDF_table_fromJSON(jsonNetwork$nodes)
 
   max_cols <- 11 # layers with generate coordinates boolean 
-  if(length(raw_json) > 2){
+  if(length(jsonNetwork) > 2){
     network_matrix = matrix("", nrow = 0, ncol = max_cols)
     
     # scene + defaults
-    scene <- raw_json$scene
-    if (identical(raw_json$scene, NULL)){ # all defaults
+    scene <- jsonNetwork$scene
+    if (identical(jsonNetwork$scene, NULL)){ # all defaults
       network_matrix <- rbind(network_matrix, c("scene", 0, 0, 0.9, "#000000",
                                                 0.261799388, 0.261799388, 0.261799388, "", "",""))
     } else{
@@ -29,8 +31,8 @@ parseInputJSONFile <- function(inFile){
     }
     
     # layers
-    if (nrow(raw_json$layers) > 0){
-      layers <- raw_json$layers
+    if (nrow(jsonNetwork$layers) > 0){
+      layers <- jsonNetwork$layers
       uniqueLayers <- unique(layers)
       if (nrow(uniqueLayers) > MAX_LAYERS) {
         renderWarning(paste0("Network must contain no more than ", MAX_LAYERS, " layers."))
@@ -93,8 +95,8 @@ parseInputJSONFile <- function(inFile){
         network_matrix <- rbind(network_matrix, c("layer", as.character(position_x), as.character(position_y), as.character(position_z), as.character(last_layer_scale),
                                                   as.character(rotation_x), as.character(rotation_y), as.character(rotation_z), as.character(floor_current_color), as.character(geometry_parameters_width), as.character(generate_coordinates)))
       }
-      if (nrow(raw_json$nodes) > 0){
-        nodes <- raw_json$nodes
+      if (nrow(jsonNetwork$nodes) > 0){
+        nodes <- jsonNetwork$nodes
         # if all the positions are missing we need to scramble the nodes manually (JS function)
         if(!"position_x"  %in% colnames(nodes) && !"position_y"  %in% colnames(nodes) && !"position_z"  %in% colnames(nodes)) {
           scramble_nodes <- TRUE
@@ -147,8 +149,8 @@ parseInputJSONFile <- function(inFile){
       } else
         renderWarning("Node Problem. Not a valid Arena3D object.")
       
-      if (nrow(raw_json$edges) > 0){
-        edges <- raw_json$edges
+      if (nrow(jsonNetwork$edges) > 0){
+        edges <- jsonNetwork$edges
         for(i in 1:nrow(edges)) { #channels
           if (as.character(edges[[5]][i]) == " " | as.character(edges[[5]][i]) == "") {
             edges[[5]][i] = NA
@@ -169,21 +171,22 @@ parseInputJSONFile <- function(inFile){
         }
         networkDF <<- as.data.frame(networkDF)
         printNetworkDF_old()
+        saveRDS(networkDF, "networkDF.RDS")
       } else
         renderWarning("Edge Problem. Not a valid Arena3D object.")
       if (nrow(networkDF) > MAX_EDGES)
         renderWarning(paste0("Network must contain no more than ", MAX_EDGES, " edges."))
       else {
-        if (length(raw_json$universalLabelColor) == 1){
-          callJSHandler("handler_globalLabelColor", raw_json$universalLabelColor)
+        if (length(jsonNetwork$universalLabelColor) == 1){
+          callJSHandler("handler_globalLabelColor", jsonNetwork$universalLabelColor)
         } else callJSHandler("handler_globalLabelColor", "#ffffff","","",
                                                   "", "", "", "", "", "", "")
-        if (length(raw_json$direction) == 1){
-          network_matrix <- rbind(network_matrix, c("direction", raw_json$direction,"","",
+        if (length(jsonNetwork$direction) == 1){
+          network_matrix <- rbind(network_matrix, c("direction", jsonNetwork$direction,"","",
                                                   "", "", "", "", "", "", ""))
         }
-        if (length(raw_json$edgeOpacityByWeight) == 1){
-          network_matrix <- rbind(network_matrix, c("edgeopacitybyweight", raw_json$edgeOpacityByWeight,"","",
+        if (length(jsonNetwork$edgeOpacityByWeight) == 1){
+          network_matrix <- rbind(network_matrix, c("edgeopacitybyweight", jsonNetwork$edgeOpacityByWeight,"","",
                                                   "", "", "", "", "", "", ""))
         }
         callJSHandler("handler_importNetwork", network_matrix)
