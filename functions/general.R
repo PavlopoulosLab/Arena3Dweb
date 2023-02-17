@@ -62,3 +62,11 @@ reset_UI_values <- function(){
   reset("interChannelCurvature")
   shinyjs::hide("interChannelCurvature") 
 }
+
+extractColumnFrom_node_layerDF <- function(nodeLayerNames, column) { # column = Node or Layer
+  nodeLayerNames <- as.data.frame(nodeLayerNames)
+  colnames(nodeLayerNames)[1] <- "NodeLayer"
+  nodeLayerNames <- plyr::join(nodeLayerNames, node_layerDF, type = "left",
+                               by = "NodeLayer")
+  return(nodeLayerNames[[column]])
+}
