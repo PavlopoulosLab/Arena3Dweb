@@ -1,5 +1,5 @@
 // General ====================
-const clean_array = (message) => {
+const clean_array = (message) => { // TODO remove
   temp = [];
   for (i = 0; i < message.length; i++) {
     temp = [];
@@ -131,7 +131,209 @@ const uploadNetwork = (message) => {
   return true;
 }
 
-const importNetwork = (message) => {
+const importNetwork = (jsonNetwork) => {
+  // console.log(jsonNetwork) // TODO remove
+  session_flag = true;
+  // clean_array(jsonNetwork) // TODO remove
+  clearCanvas();
+  //init on with darkColors
+  colors = darkColors.concat(default_colors);
+  if (!attachedCanvasControls) attachCanvasControls();
+  setLights();
+  addScenePanAndSphere();
+  
+  let layers_counter = 0,
+      color = "",
+      whole_name = "",
+    import_width = "",
+    channel_values = [];
+  node_attributes = {
+    "Node": [],
+    "Size": [],
+    "Color": [],
+    "Url": [],
+    "Description": [],
+  },
+  edge_attributes = {
+    "SourceNode": [],
+    "TargetNode": [],
+    "Color": []
+    };
+  let scrambleNodes_flag = false;
+  let adjustLayerSize_flag = false;
+  let layerSphereGeometry = new THREE.SphereGeometry( 0 );
+  let layerSphereMaterial = new THREE.MeshBasicMaterial( {
+    color:"white", transparent: true, opacity: 0.5
+    
+  });
+  
+  // TODO updating here next
+  if (jsonNetwork.hasOwnProperty("scene")) {
+    
+  } else {
+    
+  }
+  
+  
+  for (let i = 0; i < message.length; i++){
+    if (message[i][0] == "scene") {
+      scene_pan.position.x = Number(message[i][1]);
+      scene_pan.position.y = Number(message[i][2]);
+      scene_pan.scale.x = scene_pan.scale.y = scene_pan.scale.z = Number(message[i][3]);
+      renderer.setClearColor(message[i][4]);
+      scene_sphere.rotation.x = Number(message[i][5]);
+      scene_sphere.rotation.y = Number(message[i][6]);
+      scene_sphere.rotation.z = Number(message[i][7]);
+    } else if (message[i][0] == "layer") {
+      import_width = message[i][9];
+      //create layer geometries
+      let planeGeom = new THREE.PlaneGeometry(import_width, import_width, 8, 8);
+      planeGeom.rotateY(THREE.Math.degToRad(90));
+      floorCurrentColor = new THREE.Color(message[i][8]);
+      floorDefaultColors.push(floorCurrentColor)
+      let planeMat = new THREE.MeshBasicMaterial({
+        color: floorCurrentColor,
+        alphaTest: 0.05,
+        wireframe: false,
+        transparent: true,
+        opacity: floorOpacity,
+        side: THREE.DoubleSide
+      });
+      let plane = new THREE.Mesh(planeGeom, planeMat);
+      let sphere = new THREE.Mesh(layerSphereGeometry, layerSphereMaterial);
+      plane.add(sphere);
+      sphere.translateY(-import_width / 2);
+      sphere.translateZ(import_width / 2);
+      sphere.position.y = sphere.position.y * Number(message[i][4]); //stretch factor for label
+      sphere.position.z = sphere.position.z * Number(message[i][4]); //stretch factor for label
+      layer_planes.push(plane);
+      layer_spheres.push(sphere);
+      scene_sphere.add(plane);
+      if (message[i][10] != 'TRUE') { // generate_coordinates
+        plane.position.x = Number(message[i][1]); //x
+        plane.position.y = Number(message[i][2]); //y
+        plane.position.z = Number(message[i][3]); //z
+      } else {
+        // set x,y,z
+        plane.position.x = 0; //x
+        plane.position.y = 0; //y
+        plane.position.z = 0; //z
+        plane.move = true
+      }
+      plane.geometry.scale(1, Number(message[i][4]), Number(message[i][4]));
+      last_layer_scale.push(Number(message[i][4]));
+      plane.rotation.x = Number(message[i][5]);
+      plane.rotation.y = Number(message[i][6]);
+      plane.rotation.z = Number(message[i][7]);
+    } else if (message[i][0] == "node") {
+      node_names.push(message[i][1]); //name
+      whole_name = message[i][1].concat("_").concat(message[i][2]);
+      node_whole_names.push(whole_name); //name + group
+      node_attributes.Node.push(whole_name);
+      node_groups[whole_name] = message[i][2]; //layer
+      if (!layer_groups.hasOwnProperty((message[i][2].trim()))) {
+        layer_groups[message[i][2].trim()] = layers_counter;
+        layers_counter++;
+        layer_names.push(message[i][2].trim());
+      }
+      //create node geometries
+      let geometry = new THREE.SphereGeometry(sphereRadius, 4, 3);
+      let material = new THREE.MeshStandardMaterial({ color: message[i][7], transparent: true });
+      node_attributes.Color.push(message[i][7]);
+      node_attributes.Url.push(message[i][8]);
+      node_attributes.Description.push(message[i][9]);
+      let sphere = new THREE.Mesh(geometry, material);
+      nodes.push(sphere);
+      layer_planes[layer_groups[node_groups[whole_name]]].add(sphere);
+      sphere.position.x = Number(message[i][3]); //x
+      sphere.position.y = Number(message[i][4]); //y
+      sphere.position.z = Number(message[i][5]); //z
+      sphere.scale.x = sphere.scale.y = sphere.scale.z = Number(message[i][6]);
+      node_attributes.Size.push(Number(message[i][6]));
+    } else if (message[i][0] == "edge") {
+      if (!edge_pairs.includes(message[i][1])) {
+        edge_pairs.push(message[i][1]);
+        edge_channels.push([])
+      }
+      if (message[i][4]) {
+        //create edge_attributes.Channel
+        if (!edge_attributes.Channel) {
+          edge_attributes.Channel = []
+        }
+        pos = edge_pairs.indexOf(message[i][1]);
+        edge_channels[pos].push(message[i][4]);
+        if (!channel_values.includes(message[i][4])) {
+          channel_values.push(message[i][4])
+        }
+        edge_attributes.Channel.push(message[i][4]);
+      }
+      edge_values.push(Number(message[i][2]));
+      edge_attributes.SourceNode.push(message[i][1]);
+      edge_attributes.TargetNode.push("");
+      edge_attributes.Color.push(message[i][3]);
+    } else if (message[i][0] == "scramble_nodes") {
+      scrambleNodes_flag = message[i][1]
+      scrambleNodes_flag = (message[i][1] === 'TRUE');
+    } else if (message[i][0] == "direction") {
+      isDirectionEnabled = (message[i][1] === 'TRUE')
+      updateCheckboxInput('edgeDirectionToggle', message[i][1] === 'TRUE')
+    } else if (message[i][0] == "edgeopacitybyweight") {
+      edgeWidthByWeight = (message[i][1] === 'TRUE')
+      updateCheckboxInput('edgeWidthByWeight', message[i][1] === 'TRUE')
+    } else if (message[i][0] == "adjust_layer_size") {
+      adjustLayerSize_flag = message[i][1]
+      adjustLayerSize_flag = (message[i][1] === 'TRUE');
+    }
+  }
+  floorCurrentColor = floorDefaultColor;
+  drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
+  
+  if (channel_values.length > 0) {
+    if (channel_values.length > MAX_CHANNELS) {
+      alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
+      return false
+    } else {
+        channel_colors = CHANNEL_COLORS_LIGHT;
+        channels = channel_values;
+        channels.forEach(c => {
+          channelVisibility[c] = true;
+        });
+        createChannelColorMap()
+    }
+    attachChannelEditList();
+    toggleChannelCurvatureRange(true);
+    attachChannelLayoutList();
+    channels_layout = channels;
+    Shiny.setInputValue("channels_layout", channels_layout); //R monitors selected Channels
+    } else {
+    edge_channels = []
+    toggleChannelCurvatureRange(false);
+  }
+  node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; }); //for node label rendering
+  layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function() { return false; }); //for specific-layer node label rendering
+  updateLayerNamesRShiny();
+  updateNodeNamesRShiny();
+  updateSelectedNodesRShiny();
+  attachLayerCheckboxes();
+  drawEdges();
+  drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
+  createLabels();
+  if (!animationRunning) animate();
+  //communicating variables to rshiny, to optionally export the network on demand
+  updateScenePanRShiny();
+  updateSceneSphereRShiny();
+  updateLayersRShiny();
+  updateNodesRShiny();
+  updateEdgesRShiny();
+  updateLabelColorRShiny();
+  moveLayers(true);
+  if (scrambleNodes_flag) scrambleNodes(import_width / 2, -import_width / 2, -import_width / 2.5, import_width / 2.5);
+  if (adjustLayerSize_flag) adjustLayerSize();
+  toggleDirection(isDirectionEnabled)
+  return true;
+}
+
+const importNetwork_old = (message) => { // TODO remove after updated
   session_flag = true;
   clean_array(message)
   clearCanvas();

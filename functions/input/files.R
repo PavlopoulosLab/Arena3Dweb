@@ -149,7 +149,7 @@ handleLoadSession <- function() {
 
 loadNetworkFromJSONFilepath <- function(filePath) {
   jsonNetwork <- fromJSON(filePath)
-  if (isJSONFormatValid(jsonNetwork)) {
+  if (isJSONValid(jsonNetwork)) {
     reset_UI_values()
     jsonNetwork <- parseUploadedJSON(jsonNetwork)
     networkDF <<- extractNetworkDFFromJSONNetwork(jsonNetwork)
@@ -157,9 +157,11 @@ loadNetworkFromJSONFilepath <- function(filePath) {
   }
 }
 
-isJSONFormatValid <- function(jsonNetwork) {
+isJSONValid <- function(jsonNetwork) {
   isValid <- T
   if (!existMandatoryObjects(jsonNetwork))
+    isValid <- F
+  if (!areLayersValid(jsonNetwork$layers))
     isValid <- F
   if (!existMandatoryNodeColumns(jsonNetwork$nodes))
     isValid <- F
@@ -180,12 +182,33 @@ existMandatoryObjects <- function(jsonNetwork) {
   return(exist)
 }
 
+areLayersValid <- function(layers) {
+  areValid <- T
+  if (!("name" %in% colnames(layers))) {
+    areLayersValid <- F
+    renderWarning("Your JSON layers must contain at least a name property.\n
+                  See our Help page -> API")
+  } else if (containsEmptyValue(layers$name)) {
+    areLayersValid <- F
+    renderWarning("Your JSON layers contain at least one empty name value.\n
+                  Layer names cannot be empty.")
+  } else {
+    uniqueLayers <- unique(layers$name)
+    if (length(uniqueLayers) > MAX_LAYERS) {
+      areLayersValid <- F
+      renderWarning(paste0("The network must contain no more than ",
+                           MAX_LAYERS, " layers."))
+    }
+  }
+  return(areValid)
+}
+
 existMandatoryNodeColumns <- function(nodes) {
   exist <- T
   if (!all(MANDATORY_JSON_NODE_COLUMNS  %in%
            colnames(nodes))) {
     exist <- F
-    renderWarning("Your JSON nodes must contain at least a name and a layer\n
+    renderWarning("Your JSON nodes must contain at least a name and a layer.\n
                   See our Help page -> API")
   } else if (containsEmptyValue(nodes$name)) {
     exist <- F
@@ -211,7 +234,7 @@ existMandatoryEdgeColumns <- function(edges) {
   if (!all(MANDATORY_JSON_EDGE_COLUMNS  %in%
            colnames(edges))) {
     exist <- F
-    renderWarning("Your JSON edges must contain at least a src and a trg node\n
+    renderWarning("Your JSON edges must contain at least a src and a trg node.\n
                   See our Help page -> API")
   } else if (containsEmptyValue(edges$src)) {
     exist <- F
@@ -228,6 +251,8 @@ existMandatoryEdgeColumns <- function(edges) {
 parseUploadedJSON <- function(jsonNetwork) {
   jsonNetwork <- subsetLegitObjects(jsonNetwork)
   jsonNetwork <- trimJSONData(jsonNetwork)
+  jsonNetwork <- chooseSceneOrDefaults(jsonNetwork)
+  jsonNetwork <- chooseLayersOrDefaults(jsonNetwork)
   return(jsonNetwork)
 }
 
@@ -248,6 +273,53 @@ trimJSONData <- function(jsonNetwork) {
     } else
       jsonNetwork[[objName]] <<- trimws(jsonNetwork[[objName]])
   }))
+  return(jsonNetwork)
+}
+
+chooseSceneOrDefaults <- function(jsonNetwork) {
+  if (!"scene" %in% names(jsonNetwork))
+    jsonNetwork$scene <- list()
+  if (is.null(jsonNetwork$scene$position_x))
+    jsonNetwork$scene$position_x <- "0"
+  if (is.null(jsonNetwork$scene$position_y)) 
+    jsonNetwork$scene$position_y <- "0"
+  if (is.null(jsonNetwork$scene$scale))
+    jsonNetwork$scene$scale <- "0.9"
+  if (is.null(jsonNetwork$scene$color))
+    jsonNetwork$scene$color <- "#000000"
+  if (is.null(jsonNetwork$scene$rotation_x))
+    jsonNetwork$scene$rotation_x <- "0.261799388"
+  if (is.null(jsonNetwork$scene$rotation_y))
+    jsonNetwork$scene$rotation_y <- "0.261799388"
+  if (is.null(jsonNetwork$scene$rotation_z))
+    jsonNetwork$scene$rotation_z <- "0.261799388"
+  return(jsonNetwork)
+}
+
+chooseLayersOrDefaults <- function(jsonNetwork) {
+  # flag to move layer with JS if a coord was not given
+  jsonNetwork$layers$generate_coordinates <- F
+  
+  
+  for (i in 1:nrow(jsonNetwork$layers)) {
+    # TODO continue here
+  }
+  
+  # if (is.null(jsonNetwork$layers$position_x))
+  #   jsonNetwork$scene$position_x <- "0"
+  # if (is.null(jsonNetwork$scene$position_y)) 
+  #   jsonNetwork$scene$position_y <- "0"
+  # if (is.null(jsonNetwork$scene$scale))
+  #   jsonNetwork$scene$scale <- "0.9"
+  # if (is.null(jsonNetwork$scene$color))
+  #   jsonNetwork$scene$color <- "#000000"
+  # if (is.null(jsonNetwork$scene$rotation_x))
+  #   jsonNetwork$scene$rotation_x <- "0.261799388"
+  # if (is.null(jsonNetwork$scene$rotation_y))
+  #   jsonNetwork$scene$rotation_y <- "0.261799388"
+  # if (is.null(jsonNetwork$scene$rotation_z))
+  #   jsonNetwork$scene$rotation_z <- "0.261799388"
+  
   return(jsonNetwork)
 }
 
@@ -299,7 +371,7 @@ generateNetworkFromDF_JSONVersion <- function(jsonNetwork) {
   shinyjs::show("layerColorFilePriority")
   updateCheckboxInput(session, 'layerColorFilePriority', value = T)
   
-  # callJSHandler("handler_importNetwork", jsonNetwork) # TODO next
+  callJSHandler("handler_importNetwork", jsonNetwork)
   renderNetworkDF(networkDF)
   
   updateSelectInput(session, "navBar", selected = "Main View")
