@@ -253,6 +253,10 @@ parseUploadedJSON <- function(jsonNetwork) {
   jsonNetwork <- trimJSONData(jsonNetwork)
   jsonNetwork <- chooseSceneOrDefaults(jsonNetwork)
   jsonNetwork <- chooseLayersOrDefaults(jsonNetwork)
+  jsonNetwork <- chooseToScrambleNodes(jsonNetwork)
+  jsonNetwork <- chooseNodesOrDefaults(jsonNetwork)
+  jsonNetwork <- chooseEdgesOrDefaults(jsonNetwork)
+  jsonNetwork <- addExtraJSONCommands(jsonNetwork)
   return(jsonNetwork)
 }
 
@@ -310,6 +314,8 @@ chooseLayersOrDefaults <- function(jsonNetwork) {
   # flag to move layer with JS if a coord was not given
   jsonNetwork$layers$generate_coordinates <-
     decideGenerateCoordinatesFlag(jsonNetwork$layers)
+  jsonNetwork$layers$adjust_layer_size <-
+    decideAdjustLayerSize(jsonNetwork$layers)
   jsonNetwork$layers$position_x <-
     keepValuesOrDefault(jsonNetwork$layers$position_x)
   jsonNetwork$layers$position_y <-
@@ -347,6 +353,71 @@ decideGenerateCoordinatesFlag <- function(layers) {
     }))
   }
   return(layers$generate_coordinates)
+}
+
+decideAdjustLayerSize <- function(layers) {
+  layers$adjust_layer_size <- F
+  if (is.null(layers$geometry_parameters_width)) {
+    layers$adjust_layer_size <- T
+  } else {
+    layers$adjust_layer_size[
+      which(is.na(layers$geometry_parameters_width))] <- T
+    layers$adjust_layer_size[
+      which(layers$geometry_parameters_width == "")] <- T
+  }
+  return(layers$adjust_layer_size)
+}
+
+chooseToScrambleNodes <- function(jsonNetwork) {
+  if (is.null(jsonNetwork$nodes$position_x) &&
+     is.null(jsonNetwork$nodes$position_y) &&
+     is.null(jsonNetwork$nodes$position_z))
+    jsonNetwork$scramble_nodes <- T
+  else 
+    jsonNetwork$scramble_nodes <- F
+  return(jsonNetwork)
+}
+
+chooseNodesOrDefaults <- function(jsonNetwork) {
+  jsonNetwork$nodes$position_x <-
+    keepValuesOrDefault(jsonNetwork$nodes$position_x)
+  jsonNetwork$nodes$position_y <-
+    keepValuesOrDefault(jsonNetwork$nodes$position_y)
+  jsonNetwork$nodes$position_z <-
+    keepValuesOrDefault(jsonNetwork$nodes$position_z)
+  jsonNetwork$nodes$scale <-
+    keepValuesOrDefault(jsonNetwork$nodes$scale)
+  jsonNetwork$nodes$scale <-
+    keepValuesOrDefault(jsonNetwork$nodes$scale, 1)
+  jsonNetwork$nodes$color <-
+    keepValuesOrDefault(jsonNetwork$nodes$color,
+                        NODE_COLORS[match(jsonNetwork$nodes$layer,
+                                          jsonNetwork$layer$name)])
+  jsonNetwork$nodes$url <-
+    keepValuesOrDefault(jsonNetwork$nodes$url, "")
+  jsonNetwork$nodes$descr <-
+    keepValuesOrDefault(jsonNetwork$nodes$descr, "")
+  return(jsonNetwork)
+}
+
+chooseEdgesOrDefaults <- function(jsonNetwork) {
+  jsonNetwork$edges$opacity <-
+    keepValuesOrDefault(jsonNetwork$edges$opacity, 1)
+  jsonNetwork$edges$color <-
+    keepValuesOrDefault(jsonNetwork$edges$color, EDGE_DEFAULT_COLOR)
+  jsonNetwork$edges$channel <-
+    keepValuesOrDefault(jsonNetwork$edges$channel, NA)
+  return(jsonNetwork)
+}
+
+addExtraJSONCommands <- function(jsonNetwork) {
+  jsonNetwork$universalLabelColor <-
+    keepValuesOrDefault(jsonNetwork$universalLabelColor, "#FFFFFF")
+  jsonNetwork$direction <-
+    keepValuesOrDefault(jsonNetwork$direction, F)
+  jsonNetwork$edgeOpacityByWeight <-
+    keepValuesOrDefault(jsonNetwork$edgeOpacityByWeight, T)
+  return(jsonNetwork)
 }
 
 extractNetworkDFFromJSONNetwork <- function(jsonNetwork) {
