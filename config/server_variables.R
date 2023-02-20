@@ -17,6 +17,8 @@ POST_REQUEST_PATH <- 'tmp/'
 API_URL <- "https://bib.fleming.gr/bib/api/arena3dweb/vr/" # "http://localhost:8080/api/arena3dweb/vr/"
 # UI ####
 HIDE_BUTTONS <- paste0("hideButton", c(1:8))
+FLOOR_DEFAULT_COLOR <- "#777777"
+FLOOR_DEFAULT_WIDTH <- "1001.90476190476"
 # Themes ####
 CHANNEL_COLORS_LIGHT <- brewer.pal(MAX_CHANNELS, 'Set3')
 CHANNEL_COLORS_DARK <- brewer.pal(MAX_CHANNELS, 'Set1')

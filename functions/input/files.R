@@ -279,48 +279,74 @@ trimJSONData <- function(jsonNetwork) {
 chooseSceneOrDefaults <- function(jsonNetwork) {
   if (!"scene" %in% names(jsonNetwork))
     jsonNetwork$scene <- list()
-  if (is.null(jsonNetwork$scene$position_x))
-    jsonNetwork$scene$position_x <- "0"
-  if (is.null(jsonNetwork$scene$position_y)) 
-    jsonNetwork$scene$position_y <- "0"
-  if (is.null(jsonNetwork$scene$scale))
-    jsonNetwork$scene$scale <- "0.9"
-  if (is.null(jsonNetwork$scene$color))
-    jsonNetwork$scene$color <- "#000000"
-  if (is.null(jsonNetwork$scene$rotation_x))
-    jsonNetwork$scene$rotation_x <- "0.261799388"
-  if (is.null(jsonNetwork$scene$rotation_y))
-    jsonNetwork$scene$rotation_y <- "0.261799388"
-  if (is.null(jsonNetwork$scene$rotation_z))
-    jsonNetwork$scene$rotation_z <- "0.261799388"
+  jsonNetwork$scene$position_x <-
+    keepValuesOrDefault(jsonNetwork$scene$position_x)
+  jsonNetwork$scene$position_y <-
+    keepValuesOrDefault(jsonNetwork$scene$position_y)
+  jsonNetwork$scene$scale <-
+    keepValuesOrDefault(jsonNetwork$scene$scale, "0.9")
+  jsonNetwork$scene$color <-
+    keepValuesOrDefault(jsonNetwork$scene$color, "#000000")
+  jsonNetwork$scene$rotation_x <-
+    keepValuesOrDefault(jsonNetwork$scene$rotation_x, "0.261799388")
+  jsonNetwork$scene$rotation_y <-
+    keepValuesOrDefault(jsonNetwork$scene$rotation_y, "0.261799388")
+  jsonNetwork$scene$rotation_z <-
+    keepValuesOrDefault(jsonNetwork$scene$rotation_z, "0.261799388")
   return(jsonNetwork)
+}
+
+keepValuesOrDefault <- function(jsonNetworkVec, default = "0") {
+  if (is.null(jsonNetworkVec)) {
+    jsonNetworkVec <- default
+  } else {
+    jsonNetworkVec[is.na(jsonNetworkVec)] <- default
+    jsonNetworkVec[jsonNetworkVec == ""] <- default
+  }
+  return(jsonNetworkVec)
 }
 
 chooseLayersOrDefaults <- function(jsonNetwork) {
   # flag to move layer with JS if a coord was not given
-  jsonNetwork$layers$generate_coordinates <- F
-  
-  
-  for (i in 1:nrow(jsonNetwork$layers)) {
-    # TODO continue here
-  }
-  
-  # if (is.null(jsonNetwork$layers$position_x))
-  #   jsonNetwork$scene$position_x <- "0"
-  # if (is.null(jsonNetwork$scene$position_y)) 
-  #   jsonNetwork$scene$position_y <- "0"
-  # if (is.null(jsonNetwork$scene$scale))
-  #   jsonNetwork$scene$scale <- "0.9"
-  # if (is.null(jsonNetwork$scene$color))
-  #   jsonNetwork$scene$color <- "#000000"
-  # if (is.null(jsonNetwork$scene$rotation_x))
-  #   jsonNetwork$scene$rotation_x <- "0.261799388"
-  # if (is.null(jsonNetwork$scene$rotation_y))
-  #   jsonNetwork$scene$rotation_y <- "0.261799388"
-  # if (is.null(jsonNetwork$scene$rotation_z))
-  #   jsonNetwork$scene$rotation_z <- "0.261799388"
-  
+  jsonNetwork$layers$generate_coordinates <-
+    decideGenerateCoordinatesFlag(jsonNetwork$layers)
+  jsonNetwork$layers$position_x <-
+    keepValuesOrDefault(jsonNetwork$layers$position_x)
+  jsonNetwork$layers$position_y <-
+    keepValuesOrDefault(jsonNetwork$layers$position_y)
+  jsonNetwork$layers$position_z <-
+    keepValuesOrDefault(jsonNetwork$layers$position_z)
+  jsonNetwork$layers$last_layer_scale <-
+    keepValuesOrDefault(jsonNetwork$layers$last_layer_scale, "1")
+  jsonNetwork$layers$rotation_x <-
+    keepValuesOrDefault(jsonNetwork$layers$rotation_x)
+  jsonNetwork$layers$rotation_y <-
+    keepValuesOrDefault(jsonNetwork$layers$rotation_y)
+  jsonNetwork$layers$rotation_z <-
+    keepValuesOrDefault(jsonNetwork$layers$rotation_z)
+  jsonNetwork$layers$floor_current_color <-
+    keepValuesOrDefault(jsonNetwork$layers$floor_current_color,
+                        FLOOR_DEFAULT_COLOR)
+  jsonNetwork$layers$geometry_parameters_width <-
+    keepValuesOrDefault(jsonNetwork$layers$geometry_parameters_width,
+                        FLOOR_DEFAULT_WIDTH)
   return(jsonNetwork)
+}
+
+decideGenerateCoordinatesFlag <- function(layers) {
+  layers$generate_coordinates <- F
+  if (is.null(layers$position_x) || is.null(layers$position_y) ||
+      is.null(layers$position_z)) {
+    layers$generate_coordinates <- T
+  } else {
+    invisible(lapply(c("x", "y", "z"), function(dimension) {
+      layers$generate_coordinates[
+        which(is.na(layers[[paste0("position_", dimension)]]))] <<- T
+      layers$generate_coordinates[
+        which(layers[[paste0("position_", dimension)]] == "")] <<- T
+    }))
+  }
+  return(layers$generate_coordinates)
 }
 
 extractNetworkDFFromJSONNetwork <- function(jsonNetwork) {
