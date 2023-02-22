@@ -73,8 +73,8 @@ server <- function(input, output, session) {
   }, ignoreInit = T)
   
   # LAYOUT ####
-  observeEvent(input$runClusterLayout, {
-    handleClusterLayout()
+  observeEvent(input$runLayout, {
+    handleLayout()
   }, ignoreInit = T)
   
   observeEvent(input$selectCluster, {

@@ -1,20 +1,3 @@
-# API ####
-resolveAPI <- function() {
-  tryCatch({
-    query <- parseQueryString(session$clientData$url_search)
-    if (length(query$f) > 0) {
-      renderModal("<h2>Please wait.</h2><br /><p>Importing network from API.</p>")
-      loadNetworkFromJSONFilepath(paste0(POST_REQUEST_PATH, query$f))
-      updateNavbarPage(session, "navBar", selected = "Main View")
-    }
-  }, error = function(e) {
-    print(paste0("API error: ", e))
-    renderError("Error with external API call.")
-  }, finally = {
-    removeModal()
-  })
-}
-
 # Upload Network ####
 handleUploadNetwork <- function() {
   tryCatch({
@@ -496,6 +479,23 @@ generateNetworkFromDF_JSONVersion <- function(jsonNetwork) {
   reset("input_network_file")
   reset("node_attributes_file")
   reset("edge_attributes_file")
+}
+
+# API ####
+resolveAPI <- function() {
+  tryCatch({
+    query <- parseQueryString(session$clientData$url_search)
+    if (length(query$f) > 0) {
+      renderModal("<h2>Please wait.</h2><br /><p>Importing network from API.</p>")
+      loadNetworkFromJSONFilepath(paste0(POST_REQUEST_PATH, query$f))
+      updateNavbarPage(session, "navBar", selected = "Main View")
+    }
+  }, error = function(e) {
+    print(paste0("API error: ", e))
+    renderError("Error with external API call.")
+  }, finally = {
+    removeModal()
+  })
 }
 
 # Upload NODE attributes ####
