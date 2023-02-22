@@ -320,6 +320,10 @@ chooseSceneOrDefaults <- function(jsonNetwork) {
 keepValuesOrDefault <- function(jsonNetworkVec, default = "0") {
   if (is.null(jsonNetworkVec)) {
     jsonNetworkVec <- default
+  } else if (identical(jsonNetworkVec, "TRUE")) {
+    jsonNetworkVec <- T
+  } else if (identical(jsonNetworkVec, "FALSE")) {
+    jsonNetworkVec <- F
   } else {
     jsonNetworkVec[is.na(jsonNetworkVec)] <- default
     jsonNetworkVec[jsonNetworkVec == ""] <- default
@@ -545,10 +549,17 @@ handleInputEdgeAttributeFileUpload <- function() {
 }
 
 # Save Session ####
-# TODO NEXT 
-format_export_data <- function(js_scene_pan, js_scene_sphere, js_layers, js_nodes, js_edge_pairs, label_color, direction){
-  scene_df <- list(position_x=unbox(js_scene_pan[1]), position_y=unbox(js_scene_pan[2]), scale=unbox(js_scene_pan[3]), color=unbox(js_scene_pan[4]),
-                   rotation_x=unbox(toString(js_scene_sphere[1])), rotation_y=unbox(toString(js_scene_sphere[2])), rotation_z=unbox(toString(js_scene_sphere[3])))
+convertSessionToJSON <- function() {
+  js_scene_pan <- fromJSON(input$js_scene_pan)
+  js_scene_sphere <- fromJSON(input$js_scene_sphere)
+  js_layers <- as.data.frame(fromJSON(input$js_layers))
+  js_nodes <- as.data.frame(fromJSON(input$js_nodes))
+  js_edge_pairs <- as.data.frame(fromJSON(input$js_edge_pairs))
+  js_label_color <- input$js_label_color
+  js_direction_flag <- input$edgeDirectionToggle
+  
+  scene <- c(js_scene_pan, js_scene_sphere)
+
   
   layer_df <- data.frame()
   for (i in 1:nrow(js_layers)){
@@ -574,9 +585,11 @@ format_export_data <- function(js_scene_pan, js_scene_sphere, js_layers, js_node
   }
   colnames(edges_df) <- c("src", "trg", "opacity", "color", "channel")
   
-  matrix <- list(scene = scene_df, layers = layer_df, nodes = nodes_df, edges = edges_df, universalLabelColor = unbox(label_color), direction = unbox(direction))
-  
-  return(matrix)
+  exportData <- list(scene = scene, layers = layer_df, nodes = nodes_df,
+                     edges = edges_df, universalLabelColor = js_label_color,
+                     direction = js_direction_flag)
+  exportData <- toJSON(exportData, auto_unbox = T)
+  return(exportData)
 }
 
 # Load Example ####

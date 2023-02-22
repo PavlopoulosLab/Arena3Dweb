@@ -272,14 +272,12 @@ const importNetwork = (jsonNetwork) => {
   // EXTRAS
   if (jsonNetwork.scramble_nodes)
     scrambleNodes_flag = true;
-  if (jsonNetwork.direction) {
-    isDirectionEnabled = true;
-    updateCheckboxInput('edgeDirectionToggle', true);
-  }
-  if (jsonNetwork.edgeOpacityByWeight) {
-    edgeWidthByWeight = true;
-    updateCheckboxInput('edgeWidthByWeight', true);
-  }
+    
+  isDirectionEnabled = jsonNetwork.direction;
+  updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
+  edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
+  updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
+
   if (jsonNetwork.adjust_layer_size)
     adjustLayerSize_flag = true;
   

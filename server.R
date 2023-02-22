@@ -33,8 +33,14 @@ server <- function(input, output, session) {
   }, ignoreInit = T)
   
   # JS variables ####
-  observeEvent(input$js_checkbox_flag, {
-    updateCheckboxInputFromJS()
+  observeEvent(input$js_direction_checkbox_flag, {
+    updateCheckboxInputFromJS(input$js_direction_checkbox_flag[1],
+                              input$js_direction_checkbox_flag[2])
+  }, ignoreInit = T)
+
+  observeEvent(input$js_edgeByWeight_checkbox_flag, {
+    updateCheckboxInputFromJS(input$js_edgeByWeight_checkbox_flag[1],
+                              input$js_edgeByWeight_checkbox_flag[2])
   }, ignoreInit = T)
 
   observeEvent(input$js_channel_curvature_flag, {

@@ -23,7 +23,7 @@ mapper <- function(inArr, min, max, defaultValue = DEFAULT_MAP_VALUE){
   return(outArr);
 }
 
-reset_UI_values <- function(){
+reset_UI_values <- function() {
   reset("showLabels") #shinyjs resetting checkboxes
   reset("showSelectedLabels")
   reset("showSelectedLayerLabels")
@@ -32,7 +32,7 @@ reset_UI_values <- function(){
   reset("showLayerCoords")
   reset("nodeSelectedColorPriority")
   reset("edgeSelectedColorPriority")
-   reset("edgeFileColorPriority")
+  reset("edgeFileColorPriority")
   reset("edgeDirectionToggle")
   reset("showWireFrames")
   reset("layerColorFilePriority")
@@ -40,9 +40,9 @@ reset_UI_values <- function(){
   reset("showSceneCoords")
   reset("autoRotateScene")
   reset("layerEdgeOpacity")
-   shinyjs::hide("layerEdgeOpacity")
+  shinyjs::hide("layerEdgeOpacity")
   reset("interLayerEdgeOpacity")
-   shinyjs::hide("interLayerEdgeOpacity")
+  shinyjs::hide("interLayerEdgeOpacity")
   reset("floorOpacity")
   reset("selectAll")
   reset("topologyScaleMetricChoice")

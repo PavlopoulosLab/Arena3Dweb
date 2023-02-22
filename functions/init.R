@@ -18,16 +18,8 @@ attachDownloadHandler <- function() {
       paste0("network-", Sys.Date(), ".json")
     }, content = function(con) {
       if (existsNetwork()) {
-        js_scene_pan <- fromJSON(input$js_scene_pan) # from JS
-        js_scene_sphere <- fromJSON(input$js_scene_sphere)
-        js_layers <- as.data.frame(fromJSON(input$js_layers))
-        js_nodes <- as.data.frame(fromJSON(input$js_nodes))
-        js_edge_pairs <- as.data.frame(fromJSON(input$js_edge_pairs))
-        js_label_color <- input$js_label_color
-        js_direction_flag <- input$edgeDirectionToggle
-        exportData <- format_export_data(js_scene_pan, js_scene_sphere, js_layers, js_nodes, js_edge_pairs, js_label_color, js_direction_flag)
-        json_output <- toJSON(exportData)
-        write(json_output, con)
+        exportData <- convertSessionToJSON()
+        write(exportData, con)
       }
     }
   )
