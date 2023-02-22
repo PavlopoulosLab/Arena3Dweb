@@ -42,8 +42,10 @@ const updateLayersRShiny = () => {
     js_layers.push(temp_js_layers);
     
     // VR
-    temp_js_layers = [layer_names[i],
-    layer_planes[i].getWorldPosition(target).x, layer_planes[i].getWorldPosition(target).y, layer_planes[i].getWorldPosition(target).z];
+    temp_js_layers = [
+      layer_names[i], layer_planes[i].getWorldPosition(target).x,
+      layer_planes[i].getWorldPosition(target).y,
+      layer_planes[i].getWorldPosition(target).z];
     js_layers_world.push(temp_js_layers);
   }
   Shiny.setInputValue("js_layers", JSON.stringify(js_layers));
