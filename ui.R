@@ -13,6 +13,7 @@ source("views/help.R", local = T)
 source("views/footer.R", local = T)
 
 ui <- fluidPage(
+  useShinyjs(),
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "arena3dweb.css")),
   tags$head(tags$script(src = "js/three/three.js")),
   tags$head(tags$script(src = "js/three/matrix4.js")), # three.js matrix4 for dragcontrols

@@ -2,11 +2,13 @@ callJSHandler <- function(handlerName, handlerFunctionParameter) {
   session$sendCustomMessage(handlerName, handlerFunctionParameter)
 }
 
-# used to trim user input data
-trim <- function (x) {
-  x <- gsub("^\\s+|\\s+$", "", x)
-  x <- gsub(",", "", x)
-  return(x)
+readFromTableFileToDataFrame <- function(path) {
+  df <- switch(
+    READ_LIBRARY,
+    "fread" = data.table::fread(path),
+    "base" = read.delim(path, header = T)
+  )
+  return(df)
 }
 
 mapper <- function(inArr, min, max, defaultValue = DEFAULT_MAP_VALUE){
@@ -21,7 +23,7 @@ mapper <- function(inArr, min, max, defaultValue = DEFAULT_MAP_VALUE){
   return(outArr);
 }
 
-reset_UI_values <- function(){
+reset_UI_values <- function() {
   reset("showLabels") #shinyjs resetting checkboxes
   reset("showSelectedLabels")
   reset("showSelectedLayerLabels")
@@ -30,7 +32,7 @@ reset_UI_values <- function(){
   reset("showLayerCoords")
   reset("nodeSelectedColorPriority")
   reset("edgeSelectedColorPriority")
-   reset("edgeFileColorPriority")
+  reset("edgeFileColorPriority")
   reset("edgeDirectionToggle")
   reset("showWireFrames")
   reset("layerColorFilePriority")
@@ -38,9 +40,9 @@ reset_UI_values <- function(){
   reset("showSceneCoords")
   reset("autoRotateScene")
   reset("layerEdgeOpacity")
-   shinyjs::hide("layerEdgeOpacity")
+  shinyjs::hide("layerEdgeOpacity")
   reset("interLayerEdgeOpacity")
-   shinyjs::hide("interLayerEdgeOpacity")
+  shinyjs::hide("interLayerEdgeOpacity")
   reset("floorOpacity")
   reset("selectAll")
   reset("topologyScaleMetricChoice")
@@ -59,4 +61,12 @@ reset_UI_values <- function(){
   shinyjs::hide("channelCurvature")
   reset("interChannelCurvature")
   shinyjs::hide("interChannelCurvature") 
+}
+
+extractColumnFrom_node_layerDF <- function(nodeLayerNames, column) { # column = Node or Layer
+  nodeLayerNames <- as.data.frame(nodeLayerNames)
+  colnames(nodeLayerNames)[1] <- "NodeLayer"
+  nodeLayerNames <- plyr::join(nodeLayerNames, node_layerDF, type = "left",
+                               by = "NodeLayer")
+  return(nodeLayerNames[[column]])
 }

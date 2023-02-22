@@ -1,11 +1,20 @@
 const updateScenePanRShiny = () => {
-  let js_scene_pan = [scene_pan.position.x, scene_pan.position.y, scene_pan.scale.x, "#".concat(renderer.getClearColor().getHexString())];
-  Shiny.setInputValue("js_scene_pan", JSON.stringify(js_scene_pan)); //R monitors node attributes to can readily export network
+  let js_scene_pan = {
+    "position_x" : String(scene_pan.position.x),
+    "position_y" : String(scene_pan.position.y),
+    "scale" : String(scene_pan.scale.x),
+    "color" : "#".concat(renderer.getClearColor().getHexString()) 
+  }
+  Shiny.setInputValue("js_scene_pan", JSON.stringify(js_scene_pan));
   return true;
 }
 
 const updateSceneSphereRShiny = () => {
-  let js_scene_sphere = [scene_sphere.rotation.x, scene_sphere.rotation.y, scene_sphere.rotation.z];
+  let js_scene_sphere = {
+    "rotation_x" : String(scene_sphere.rotation.x),
+    "rotation_y" : String(scene_sphere.rotation.y),
+    "rotation_z" : String(scene_sphere.rotation.z)
+  }
   Shiny.setInputValue("js_scene_sphere", JSON.stringify(js_scene_sphere));
   return true;
 }
@@ -33,8 +42,10 @@ const updateLayersRShiny = () => {
     js_layers.push(temp_js_layers);
     
     // VR
-    temp_js_layers = [layer_names[i],
-    layer_planes[i].getWorldPosition(target).x, layer_planes[i].getWorldPosition(target).y, layer_planes[i].getWorldPosition(target).z];
+    temp_js_layers = [
+      layer_names[i], layer_planes[i].getWorldPosition(target).x,
+      layer_planes[i].getWorldPosition(target).y,
+      layer_planes[i].getWorldPosition(target).z];
     js_layers_world.push(temp_js_layers);
   }
   Shiny.setInputValue("js_layers", JSON.stringify(js_layers));
@@ -142,7 +153,14 @@ const updateLabelColorRShiny = () => {
   return true;
 }
 
+const updateDirectionCheckboxRShiny = (name, value) => {
+  // to always trigger
+  Shiny.setInputValue('js_direction_checkbox_flag', [name, !value])
+  Shiny.setInputValue('js_direction_checkbox_flag', [name, value])
+}
 
-const updateCheckboxInput = (name, value) => {
-  Shiny.setInputValue('js_checkbox_flag', [name, value])
+const updateEdgeByWeightCheckboxRShiny = (name, value) => {
+  // to always trigger
+  Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, !value])
+  Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, value])
 }

@@ -57,7 +57,8 @@ runPerLayerScaling <- function(selectedLayerNames, subgraphChoice) {
 
 parseAndScaleEdgelist <- function(filteredNetworkDF, subgraphChoice, layerName) {
   if (isIGraphObjectValid(filteredNetworkDF, subgraphChoice, layerName)) {
-    networkEdgelist <- filteredNetworkDF[, c("SourceNode", "TargetNode", "Weight")]
+    networkEdgelist <- filteredNetworkDF[, c("SourceNode_Layer",
+                                             "TargetNode_Layer", "ScaledWeight")]
     networkGraph <- createGraph(networkEdgelist)
     scaleTopology(networkGraph)
   }
@@ -133,8 +134,8 @@ runLocalScaling <- function(selectedLayerNames, subgraphChoice) {
       filteredNetworkDF <-
         networkDF[(networkDF$SourceLayer == layerName) &
                     (networkDF$TargetLayer == layerName) &
-                    (networkDF$SourceNode %in% selectedNodeNamesWithLayer) &
-                    (networkDF$TargetNode %in% selectedNodeNamesWithLayer), , drop = F]
+                    (networkDF$SourceNode_Layer %in% selectedNodeNamesWithLayer) &
+                    (networkDF$TargetNode_Layer %in% selectedNodeNamesWithLayer), , drop = F]
       parseAndScaleEdgelist(filteredNetworkDF, subgraphChoice, layerName)
     }
   }

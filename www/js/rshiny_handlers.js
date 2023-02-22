@@ -1,17 +1,4 @@
 // General ====================
-const clean_array = (message) => {
-  temp = [];
-  for (i = 0; i < message.length; i++) {
-    temp = [];
-    for (j = 0; j < message[i].length; j++) {
-      if( Array.isArray(message[i][j])) temp.push(message[i][j][0]);
-      else temp.push(message[i][j]);
-    }
-    message[i] = temp;
-  }
-  return message;
-};
-
 const startLoader = (m) => {
   let canvas_div = document.getElementById("3d-graph"),
       loader = document.getElementById("loader");
@@ -39,7 +26,7 @@ const browseUrl = url => {
 
 // Files ====================
 const uploadNetwork = (message) => {
-  session_flag = false;
+  session_flag = false; // TODO figure what this exactly does..
   if (animationPause) pauseAnimate(); //resume rendering
    //init on with darkColors
   colors = darkColors.concat(default_colors);
@@ -51,8 +38,8 @@ const uploadNetwork = (message) => {
   for (let i=0; i < message.SourceLayer.length; i++){
     temp_layer1 = String(message.SourceLayer[i]);
     temp_layer2 = String(message.TargetLayer[i]);
-    temp_name1 = String(message.SourceNode[i]).concat("_").concat(temp_layer1);
-    temp_name2 = String(message.TargetNode[i]).concat("_").concat(temp_layer2);
+    temp_name1 = message.SourceNode_Layer[i];
+    temp_name2 = message.TargetNode_Layer[i];
     if (message.Channel) {
       temp_channel = String(message.Channel[i]);
     }
@@ -131,9 +118,9 @@ const uploadNetwork = (message) => {
   return true;
 }
 
-const importNetwork = (message) => {
+const importNetwork = (jsonNetwork) => {
+  setLabelColorVariable(jsonNetwork.universalLabelColor);
   session_flag = true;
-  clean_array(message)
   clearCanvas();
   //init on with darkColors
   colors = darkColors.concat(default_colors);
@@ -160,119 +147,141 @@ const importNetwork = (message) => {
     };
   let scrambleNodes_flag = false;
   let adjustLayerSize_flag = false;
-
   let layerSphereGeometry = new THREE.SphereGeometry( 0 );
-  let layerSphereMaterial = new THREE.MeshBasicMaterial( {color:"white", transparent: true, opacity: 0.5});
-  for (let i = 0; i < message.length; i++){
-    if (message[i][0] == "scene") {
-      scene_pan.position.x = Number(message[i][1]);
-      scene_pan.position.y = Number(message[i][2]);
-      scene_pan.scale.x = scene_pan.scale.y = scene_pan.scale.z = Number(message[i][3]);
-      renderer.setClearColor(message[i][4]);
-      scene_sphere.rotation.x = Number(message[i][5]);
-      scene_sphere.rotation.y = Number(message[i][6]);
-      scene_sphere.rotation.z = Number(message[i][7]);
-    } else if (message[i][0] == "layer") {
-      import_width = message[i][9];
-      //create layer geometries
-      let planeGeom = new THREE.PlaneGeometry(import_width, import_width, 8, 8);
-      planeGeom.rotateY(THREE.Math.degToRad(90));
-      floorCurrentColor = new THREE.Color(message[i][8]);
-      floorDefaultColors.push(floorCurrentColor)
-      let planeMat = new THREE.MeshBasicMaterial({
-        color: floorCurrentColor,
-        alphaTest: 0.05,
-        wireframe: false,
-        transparent: true,
-        opacity: floorOpacity,
-        side: THREE.DoubleSide
-      });
-      let plane = new THREE.Mesh(planeGeom, planeMat);
-      let sphere = new THREE.Mesh(layerSphereGeometry, layerSphereMaterial);
-      plane.add(sphere);
-      sphere.translateY(-import_width / 2);
-      sphere.translateZ(import_width / 2);
-      sphere.position.y = sphere.position.y * Number(message[i][4]); //stretch factor for label
-      sphere.position.z = sphere.position.z * Number(message[i][4]); //stretch factor for label
-      layer_planes.push(plane);
-      layer_spheres.push(sphere);
-      scene_sphere.add(plane);
-      if (message[i][10] != 'TRUE') {
-        plane.position.x = Number(message[i][1]); //x
-        plane.position.y = Number(message[i][2]); //y
-        plane.position.z = Number(message[i][3]); //z
-      } else {
-        // set x,y,z
-        plane.position.x = 0; //x
-        plane.position.y = 0; //y
-        plane.position.z = 0; //z
-        plane.move = true
-      }
-      plane.geometry.scale(1, Number(message[i][4]), Number(message[i][4]));
-      last_layer_scale.push(Number(message[i][4]));
-      plane.rotation.x = Number(message[i][5]);
-      plane.rotation.y = Number(message[i][6]);
-      plane.rotation.z = Number(message[i][7]);
-    } else if (message[i][0] == "node") {
-      node_names.push(message[i][1]); //name
-      whole_name = message[i][1].concat("_").concat(message[i][2]);
-      node_whole_names.push(whole_name); //name + group
-      node_attributes.Node.push(whole_name);
-      node_groups[whole_name] = message[i][2]; //layer
-      if (!layer_groups.hasOwnProperty((message[i][2].trim()))) {
-        layer_groups[message[i][2].trim()] = layers_counter;
-        layers_counter++;
-        layer_names.push(message[i][2].trim());
-      }
-      //create node geometries
-      let geometry = new THREE.SphereGeometry(sphereRadius, 4, 3);
-      let material = new THREE.MeshStandardMaterial({ color: message[i][7], transparent: true });
-      node_attributes.Color.push(message[i][7]);
-      node_attributes.Url.push(message[i][8]);
-      node_attributes.Description.push(message[i][9]);
-      let sphere = new THREE.Mesh(geometry, material);
-      nodes.push(sphere);
-      layer_planes[layer_groups[node_groups[whole_name]]].add(sphere);
-      sphere.position.x = Number(message[i][3]); //x
-      sphere.position.y = Number(message[i][4]); //y
-      sphere.position.z = Number(message[i][5]); //z
-      sphere.scale.x = sphere.scale.y = sphere.scale.z = Number(message[i][6]);
-      node_attributes.Size.push(Number(message[i][6]));
-    } else if (message[i][0] == "edge") {
-      if (!edge_pairs.includes(message[i][1])) {
-        edge_pairs.push(message[i][1]);
-        edge_channels.push([])
-      }
-      if (message[i][4]) {
-        //create edge_attributes.Channel
-        if (!edge_attributes.Channel) {
-          edge_attributes.Channel = []
-        }
-        pos = edge_pairs.indexOf(message[i][1]);
-        edge_channels[pos].push(message[i][4]);
-        if (!channel_values.includes(message[i][4])) {
-          channel_values.push(message[i][4])
-        }
-        edge_attributes.Channel.push(message[i][4]);
-      }
-      edge_values.push(Number(message[i][2]));
-      edge_attributes.SourceNode.push(message[i][1]);
-      edge_attributes.TargetNode.push("");
-      edge_attributes.Color.push(message[i][3]);
-    } else if (message[i][0] == "scramble_nodes") {
-      scrambleNodes_flag = message[i][1]
-      scrambleNodes_flag = (message[i][1] === 'TRUE');
-    } else if (message[i][0] == "direction") {
-      isDirectionEnabled = (message[i][1] === 'TRUE')
-      updateCheckboxInput('edgeDirectionToggle', message[i][1] === 'TRUE')
-    } else if (message[i][0] == "edgeopacitybyweight") {
-      edgeWidthByWeight = (message[i][1] === 'TRUE')
-      updateCheckboxInput('edgeWidthByWeight', message[i][1] === 'TRUE')
-    } else if (message[i][0] == "adjust_layer_size") {
-      adjustLayerSize_flag = message[i][1]
-      adjustLayerSize_flag = (message[i][1] === 'TRUE');
+  let layerSphereMaterial = new THREE.MeshBasicMaterial( {
+    color:"white", transparent: true, opacity: 0.5
+    
+  });
+  
+  // SCENE
+  scene_pan.position.x = Number(jsonNetwork.scene.position_x);
+  scene_pan.position.y = Number(jsonNetwork.scene.position_y);
+  scene_pan.scale.x = scene_pan.scale.y = scene_pan.scale.z = 
+    Number(jsonNetwork.scene.scale);
+  renderer.setClearColor(jsonNetwork.scene.color);
+  scene_sphere.rotation.x = Number(jsonNetwork.scene.rotation_x);
+  scene_sphere.rotation.y = Number(jsonNetwork.scene.rotation_y);
+  scene_sphere.rotation.z = Number(jsonNetwork.scene.rotation_z);
+  
+  // LAYER
+  for (let i = 0; i < jsonNetwork.layers.name.length; i++) {
+    import_width = jsonNetwork.layers.geometry_parameters_width[i];
+    //create layer geometries
+    let planeGeom = new THREE.PlaneGeometry(import_width, import_width, 8, 8);
+    planeGeom.rotateY(THREE.Math.degToRad(90));
+    floorCurrentColor = new THREE.Color(jsonNetwork.layers.floor_current_color[i]);
+    floorDefaultColors.push(floorCurrentColor)
+    let planeMat = new THREE.MeshBasicMaterial({
+      color: floorCurrentColor,
+      alphaTest: 0.05,
+      wireframe: false,
+      transparent: true,
+      opacity: floorOpacity,
+      side: THREE.DoubleSide
+    });
+    let plane = new THREE.Mesh(planeGeom, planeMat);
+    let sphere = new THREE.Mesh(layerSphereGeometry, layerSphereMaterial);
+    plane.add(sphere);
+    sphere.translateY(-import_width / 2);
+    sphere.translateZ(import_width / 2);
+    sphere.position.y = sphere.position.y * Number(jsonNetwork.layers.last_layer_scale[i]); //stretch factor for label
+    sphere.position.z = sphere.position.z * Number(jsonNetwork.layers.last_layer_scale[i]); //stretch factor for label
+    layer_planes.push(plane);
+    layer_spheres.push(sphere);
+    scene_sphere.add(plane);
+    if (jsonNetwork.layers.generate_coordinates) { 
+      plane.position.x = Number(jsonNetwork.layers.position_x[i]);
+      plane.position.y = Number(jsonNetwork.layers.position_y[i]);
+      plane.position.z = Number(jsonNetwork.layers.position_z[i]);
+    } else {
+      plane.position.x = 0;
+      plane.position.y = 0;
+      plane.position.z = 0;
+      plane.move = true
     }
+    plane.geometry.scale(1,
+      Number(jsonNetwork.layers.last_layer_scale[i]),
+      Number(jsonNetwork.layers.last_layer_scale[i])
+    );
+    last_layer_scale.push(Number(jsonNetwork.layers.last_layer_scale[i]));
+    plane.rotation.x = Number(jsonNetwork.layers.rotation_x[i]);
+    plane.rotation.y = Number(jsonNetwork.layers.rotation_y[i]);
+    plane.rotation.z = Number(jsonNetwork.layers.rotation_z[i]);
   }
+  
+  // NODE
+  for (let i = 0; i < jsonNetwork.nodes.name.length; i++) {
+    node_names.push(jsonNetwork.nodes.name[i]);
+    currentLayer = jsonNetwork.nodes.layer[i];
+    whole_name = jsonNetwork.nodes.name[i].concat("_").concat(currentLayer);
+    node_whole_names.push(whole_name); //name + group
+    node_attributes.Node.push(whole_name);
+    node_groups[whole_name] = jsonNetwork.nodes.layer[i];
+    if (!layer_groups.hasOwnProperty(currentLayer)) {
+      layer_groups[currentLayer] = layers_counter;
+      layers_counter++;
+      layer_names.push(currentLayer);
+    }
+    //create node geometries
+    let geometry = new THREE.SphereGeometry(sphereRadius, 4, 3);
+    let material = new THREE.MeshStandardMaterial({
+      color: jsonNetwork.nodes.color[i],
+      transparent: true
+    });
+    node_attributes.Color.push(jsonNetwork.nodes.color[i]);
+    node_attributes.Url.push(jsonNetwork.nodes.url[i]);
+    node_attributes.Description.push(jsonNetwork.nodes.descr[i]);
+    let sphere = new THREE.Mesh(geometry, material);
+    nodes.push(sphere);
+    layer_planes[layer_groups[node_groups[whole_name]]].add(sphere);
+    sphere.position.x = Number(jsonNetwork.nodes.position_x[i]);
+    sphere.position.y = Number(jsonNetwork.nodes.position_y[i]);
+    sphere.position.z = Number(jsonNetwork.nodes.position_z[i]);
+    sphere.scale.x = sphere.scale.y = sphere.scale.z = 
+      Number(jsonNetwork.nodes.scale[i]);
+    node_attributes.Size.push(Number(jsonNetwork.nodes.scale[i]));
+  }
+  
+  // EDGE
+  for (let i = 0; i < jsonNetwork.edges.src.length; i++) {
+    let edge_pair = jsonNetwork.edges.src[i].concat("---").concat(jsonNetwork.edges.trg[i]);
+    if (!edge_pairs.includes(edge_pair)) {
+      edge_pairs.push(edge_pair);
+      edge_channels.push([]);
+    }
+    
+    if (jsonNetwork.edges.channel[i] !== null) {
+      //create edge_attributes.Channel
+      if (!edge_attributes.Channel) {
+        edge_attributes.Channel = []
+      }
+      pos = edge_pairs.indexOf(edge_pair);
+      edge_channels[pos].push(jsonNetwork.edges.channel[i]);
+      if (!channel_values.includes(jsonNetwork.edges.channel[i])) {
+        channel_values.push(jsonNetwork.edges.channel[i])
+      }
+      edge_attributes.Channel.push(jsonNetwork.edges.channel[i]);
+    }
+    
+    edge_values.push(Number(jsonNetwork.edges.opacity[i]));
+    edge_attributes.SourceNode.push(edge_pair);
+    edge_attributes.TargetNode.push("");
+    edge_attributes.Color.push(jsonNetwork.edges.color);
+  }
+  
+  // EXTRAS
+  if (jsonNetwork.scramble_nodes)
+    scrambleNodes_flag = true;
+    
+  isDirectionEnabled = jsonNetwork.direction;
+  updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
+  edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
+  updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
+
+  if (jsonNetwork.adjust_layer_size)
+    adjustLayerSize_flag = true;
+  
+  //========================
   floorCurrentColor = floorDefaultColor;
   drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
   
@@ -318,6 +327,11 @@ const importNetwork = (message) => {
   if (scrambleNodes_flag) scrambleNodes(import_width / 2, -import_width / 2, -import_width / 2.5, import_width / 2.5);
   if (adjustLayerSize_flag) adjustLayerSize();
   toggleDirection(isDirectionEnabled)
+  return true;
+}
+
+const setLabelColorVariable = (label_color) => {
+  globalLabelColor = label_color;
   return true;
 }
 
@@ -708,11 +722,6 @@ const getDarkChannelColors = (brewerColors) => {
   return true;
 }
 
-const getLabelColor = (label_color) => {
-  globalLabelColor = label_color;
-  return true;
-}
-
 const toggleChannelCurvature = (message) => {
   channelCurvature = message;
   redrawEdges();
@@ -919,7 +928,6 @@ Shiny.addCustomMessageHandler("handler_resizeLayerLabels", resizeLayerLabels);
 Shiny.addCustomMessageHandler("handler_showLabels", showLabels);
 Shiny.addCustomMessageHandler("handler_showSelectedLabels", showSelectedLabels);
 Shiny.addCustomMessageHandler("handler_resizeLabels", resizeLabels);
-Shiny.addCustomMessageHandler("handler_globalLabelColor", getLabelColor);
 // Layouts and Topology ====================
 Shiny.addCustomMessageHandler("handler_setLocalFlag", setLocalFlag);
 Shiny.addCustomMessageHandler("handler_topologyScale", topologyScale);

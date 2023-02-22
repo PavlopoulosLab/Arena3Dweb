@@ -31,21 +31,13 @@ isIGraphObjectValid <- function(filteredNetworkDF, subgraphChoice, layerName) {
 
 createGraph <- function(edgelist) {
   graph <- graph_from_edgelist(
-    as.matrix(edgelist[, c('SourceNode', 'TargetNode')]), directed = F
+    as.matrix(edgelist[, c('SourceNode_Layer', 'TargetNode_Layer')]), directed = F
   )
-  E(graph)$weight <- as.double(edgelist[, 'Weight'])
+  E(graph)$weight <- as.double(edgelist[, 'ScaledWeight'])
   # if it does not have channels remove multiple edges else not 
   removeMultiple <- is.na(input$channels_layout) 
   # remove loops and multiple edges, simplify sum aggregates same edges
   graph <- simplify(graph, remove.multiple = removeMultiple,
                     remove.loops = F, edge.attr.comb = list(weight = "sum"))
   return(graph)
-}
-
-extractColumnFrom_node_layerDF <- function(nodeLayerNames, column) {
-  nodeLayerNames <- as.data.frame(nodeLayerNames)
-  colnames(nodeLayerNames)[1] <- "NodeLayer"
-  nodeLayerNames <- plyr::join(nodeLayerNames, node_layerDF, type = "left",
-                               by = "NodeLayer")
-  return(nodeLayerNames[[column]])
 }

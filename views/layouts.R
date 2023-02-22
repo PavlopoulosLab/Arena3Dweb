@@ -19,7 +19,7 @@ generateLayoutsDiv <- function() {
                   "Grid", "Random", "DrL", "Graphopt", "Kamada-Kawai",
                   "Large Graph Layout",  "Multidimensional Scaling", "Sugiyama"), # "Davidson-Harel", "GEM"
                 width = "500px"),            
-    actionButton("runClusterLayout", "Run", class = "runButton"),
+    actionButton("runLayout", "Run", class = "runButton"),
     selectInput("topologyScaleMetricChoice", "Scale Nodes of Selected Layers by Topology Metric:",
                 c("-", TOPOLOGY_METRICS),
                 width = "500px"),

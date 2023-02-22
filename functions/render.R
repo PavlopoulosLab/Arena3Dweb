@@ -15,8 +15,12 @@ renderModal <- function(prompt) {
 renderNetworkDF <- function(formattedNetwork) {
   showTab(inputId = "dataViewPanel", target = "Network Data")
   updateTabsetPanel(session, "dataViewPanel", selected = "Network Data")
+  
+  hiddenColumns <- c(6, 7, 8)
+  if (is.null(formattedNetwork$Channel))
+    hiddenColumns <- hiddenColumns - 1
   renderShinyDataTable("network_dataView", formattedNetwork, fileName = "networkData",
-                       filter = "top")
+                       hiddenColumns = hiddenColumns, filter = "top")
 }
 
 renderMetricTable <- function(topologyMetricChoice, nodeScale, metric) {

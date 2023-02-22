@@ -6,6 +6,10 @@
   background-color: seagreen;
 }
 
+.sweet-alert p {
+	display: inline-block !important;
+}
+
 body {
   font-family: Arial;
   margin: 0;
