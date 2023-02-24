@@ -26,3 +26,5 @@ CHANNEL_COLORS_LIGHT <- brewer.pal(MAX_CHANNELS, 'Set3')
 CHANNEL_COLORS_DARK <- brewer.pal(MAX_CHANNELS, 'Set1')
 # VR ####
 VR_DOWNSCALE_FACTOR <- 300
+# Layouts ####
+NO_EDGE_LAYOUTS <- c("Circle", "Grid", "Random")

@@ -203,6 +203,7 @@ isLayoutAlgorithmSelected <- function() {
 }
 
 runLayoutAlgorithm <- function(selectedLayerNames, subgraphChoice) {
+  set.seed(123)
   switch(
     subgraphChoice,
     "perLayer" = runPerLayerLayout(selectedLayerNames, subgraphChoice),
@@ -213,16 +214,42 @@ runLayoutAlgorithm <- function(selectedLayerNames, subgraphChoice) {
 
 runPerLayerLayout <- function(selectedLayerNames, subgraphChoice) {
   for (layerName in selectedLayerNames) {
-    # TODO create filter function for below, ADD channels if exist, call from topology as well
-    filteredNetworkDF <-
-      networkDF[(networkDF$SourceLayer == layerName) &
-                  (networkDF$TargetLayer == layerName), , drop = F]
+    # TODO add channel condition
+    if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
+      filteredNetworkDF <- filterUserSelectedPseudoNetwork(layerName)
+    } else {
+      # TODO create filter function for below, ADD channels if exist, call from topology as well
+      filteredNetworkDF <-
+        networkDF[(networkDF$SourceLayer == layerName) &
+                    (networkDF$TargetLayer == layerName), , drop = F]
+    }
     networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                            layerName)
     applyLayoutWithOptionalClustering(networkGraph)
-    #if (input$clusteringAlgorithmChoice != "-"){
-      #               if (input$localLayoutAlgorithmChoice != "-"){
   }
+}
+
+filterUserSelectedPseudoNetwork <- function(layerName) {
+  filteredNetworkDF <-
+    networkDF[(networkDF$SourceLayer == layerName), , drop = F]
+  filteredNetworkDF <- filteredNetworkDF[, c("SourceNode_Layer"), drop = F]
+  tempNetworkColumn <-
+    networkDF[(networkDF$TargetLayer == layerName), , drop = F]
+  tempNetworkColumn <- tempNetworkColumn[, c("TargetNode_Layer"), drop = F]
+  colnames(tempNetworkColumn) <- "SourceNode_Layer"
+  filteredNetworkDF <- rbind(filteredNetworkDF,tempNetworkColumn)
+  filteredNetworkDF <- unique(filteredNetworkDF)
+  filteredNetworkDF$TargetNode_Layer <- 
+    shiftValuesByOne(filteredNetworkDF$SourceNode_Layer)
+  filteredNetworkDF$ScaledWeight <- 1
+  return(filteredNetworkDF)
+}
+
+shiftValuesByOne <- function(vec) {
+  vec <- c("", vec)
+  vec[1] <- tail(vec, n = 1)
+  vec <- head(vec, -1)
+  return(vec)
 }
 
 parseEdgelistIntoGraph <- function(filteredNetworkDF, subgraphChoice, layerName) {
@@ -238,6 +265,8 @@ parseEdgelistIntoGraph <- function(filteredNetworkDF, subgraphChoice, layerName)
 applyLayoutWithOptionalClustering <- function(networkGraph) {
   if (class(networkGraph) == "igraph") {
     # if (isClusteringAlgorithmSelected()) # TODO
+    #if (input$clusteringAlgorithmChoice != "-"){
+    #               if (input$localLayoutAlgorithmChoice != "-"){
     #   applyCluster(networkGraph, input$layoutAlgorithmChoice, input$localLayoutAlgorithmChoice, input$clusteringAlgorithmChoice)
     # else
     #   formatAndApplyLayout(networkGraph, TRUE)
@@ -252,12 +281,13 @@ calculateLayout <- function(networkGraph) {
   nodePositions <- data.frame() # TODO probably remove
   nodePositions <- switch(
     layoutAlgorithmChoice,
-    "Fruchterman-Reingold" = layout_with_fr(networkGraph) # TODO check parameters if needed
+    "Circle" = igraph::layout_in_circle(networkGraph),
+    "Fruchterman-Reingold" = igraph::layout_with_fr(networkGraph) # TODO check parameters if needed
   )
   
   nodePositions <- as.data.frame(nodePositions)
   colnames(nodePositions) <- c("y", "z")
-  nodePositions$name <- V(networkGraph)$name
+  nodePositions$name <- igraph::V(networkGraph)$name
   callJSHandler("handler_layout", nodePositions)
 }
 
@@ -281,6 +311,7 @@ formatAndApplyLayout <- function(tempMatNodes, localBoundflag) {
   if (localBoundflag == TRUE) {
     callJSHandler("handler_setLocalFlag", T) # this tells js to map coordinates on local bounds in assignXYZ
   }
+  # TODO check if else F is needed here
   applyLayout(sub_graph, sub_nodes, sub_weights)
 }
 

@@ -71,16 +71,16 @@ scaleTopology <- function(networkGraph) {
   scale <- switch(
     topologyMetricChoice,
     "Degree" =
-      degree(networkGraph, v = V(networkGraph), mode = "all", loops = T,
+      igraph::degree(networkGraph, v = igraph::V(networkGraph), mode = "all", loops = T,
              normalized = F),
     "Clustering Coefficient" = {
-      scale <- transitivity(networkGraph, type = "weighted", vids = NULL,
+      scale <- igraph::transitivity(networkGraph, type = "weighted", vids = NULL,
                             weights = NULL, isolates = "zero") # NULL == E(networkGraph)$weight
-      names(scale) <- V(networkGraph)$name
+      names(scale) <- igraph::V(networkGraph)$name
       scale
     },
     "Betweenness Centrality" = 
-      betweenness(networkGraph, v = V(networkGraph),
+      igraph::betweenness(networkGraph, v = igraph::V(networkGraph),
                   directed = input$edgeDirectionToggle, weights = NULL, # NULL == E(networkGraph)$weight
                   normalized = F) 
   )
