@@ -1,9 +1,9 @@
 handleClusterAlgorithmSelection <- function() {
   tryCatch({
-    if (input$selectCluster != "-") { # triggers second event when resetting
-      shinyjs::show("selectLocalLayout")
+    if (input$clusteringAlgorithmChoice != "-") { # triggers second event when resetting
+      shinyjs::show("localLayoutAlgorithmChoice")
     } else {
-      shinyjs::hide("selectLocalLayout")
+      shinyjs::hide("localLayoutAlgorithmChoice")
     }
   }, error = function(e) {
     print(paste0("Error in clustering algorithm selection: ", e))
@@ -65,9 +65,9 @@ applyCluster <- function(networkEdgelist, layout, local_layout, cluster){
   nodes_layout <-  as.matrix(merge(nodes_layout, layout_coords$groups_expanded, by.x = 1, by.y = "Nodes"))
   callJSHandler("handler_layout", nodes_layout)
   callJSHandler("handler_finishLoader", T)
-  # reset("selectCluster")
-  # reset("selectLayout")
-  # reset("selectLocalLayout")
+  # reset("clusteringAlgorithmChoice")
+  # reset("layoutAlgorithmChoice")
+  # reset("localLayoutAlgorithmChoice")
 }
 
 # Function for Layouts with superNodes per Annotation Group

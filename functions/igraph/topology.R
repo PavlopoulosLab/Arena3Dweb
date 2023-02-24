@@ -51,6 +51,7 @@ runPerLayerScaling <- function(selectedLayerNames, subgraphChoice) {
     filteredNetworkDF <-
       networkDF[(networkDF$SourceLayer == layerName) &
                   (networkDF$TargetLayer == layerName), , drop = F]
+    # TODO probably break into two functions parse() and scale
     parseAndScaleEdgelist(filteredNetworkDF, subgraphChoice, layerName)
   }
 }

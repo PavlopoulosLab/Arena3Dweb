@@ -4,24 +4,28 @@ handleLayout <- function() {
       renderModal("<h2>Please wait.</h2><br /><p>Generating layout.</p>")
       callJSHandler("handler_startLoader", T)
       
-      # TODO continue from here
+      selectedLayerPositions <- input$js_selected_layers + 1 # from JS to R counters
+      selectedLayerNames <- input$js_layer_names[selectedLayerPositions]
+      subgraphChoice <- input$subgraphChoice
       
+      runLayoutAlgorithm(selectedLayerNames, subgraphChoice)
+      
+      # OLD ####
       # selected_channels <- input$channels_layout
       # js_selected_layers <- as.numeric(input$js_selected_layers) # from JS
-      # if (!identical(js_selected_layers, numeric(0))){ # at least one selected Layer needed
       #   layer_group_names <- as.matrix(input$js_layer_names)
       #   if (input$subgraphChoice == "perLayer"){ # PER LAYER
       #     # make separate sub_graphs for each Layer and then run Layout iteratively
       #     for (i in 1:length(js_selected_layers)){
       #       group_name <- layer_group_names[js_selected_layers[i]+1]
-      #       if (input$selectLayout == "Circle" || input$selectLayout == "Grid" || input$selectLayout == "Random"){
+      #       if (input$layoutAlgorithmChoice == "Circle" || input$layoutAlgorithmChoice == "Grid" || input$layoutAlgorithmChoice == "Random"){
       #         tempMat <- networkDF[networkDF[, "SourceLayer"] == group_name,, drop = F]
       #         tempMatNodes <- as.matrix(tempMat[, "SourceNode"])
       #         tempMat <- networkDF[networkDF[, "TargetLayer"] == group_name,, drop = F]
       #         if (nrow(tempMat) >= 2){ # igraph cant create graph with only one row (edge)
-      #           if (input$selectCluster != "-"){
-      #             if (input$selectLocalLayout != "-"){
-      #               applyCluster(tempMat, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+      #           if (input$clusteringAlgorithmChoice != "-"){
+      #             if (input$localLayoutAlgorithmChoice != "-"){
+      #               applyCluster(tempMat, input$layoutAlgorithmChoice, input$localLayoutAlgorithmChoice, input$clusteringAlgorithmChoice)
       #             } else
       #               renderWarning("Can't execute Cluster without selected Local Layout.")
       #           } else {
@@ -36,9 +40,9 @@ handleLayout <- function() {
       #         if (nrow(networkEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
       #           networkEdgelist <- checkAndFilterSelectedChannels(networkEdgelist, selected_channels)
       #           if (nrow(networkEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
-      #             if (input$selectCluster != "-"){
-      #               if (input$selectLocalLayout != "-"){
-      #                 applyCluster(networkEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+      #             if (input$clusteringAlgorithmChoice != "-"){
+      #               if (input$localLayoutAlgorithmChoice != "-"){
+      #                 applyCluster(networkEdgelist, input$layoutAlgorithmChoice, input$localLayoutAlgorithmChoice, input$clusteringAlgorithmChoice)
       #               } else
       #                 renderWarning("Can't execute Cluster without selected Local Layout.")
       #             } else {
@@ -62,10 +66,10 @@ handleLayout <- function() {
       #         networkEdgelist <- rbind(networkEdgelist, networkDF[i,])
       #     }
       #     if (nrow(networkEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
-      #       if (input$selectLayout == "Circle" || input$selectLayout == "Grid" || input$selectLayout == "Random"){
-      #         if (input$selectCluster != "-"){
-      #           if (input$selectLocalLayout != "-"){
-      #             applyCluster(networkEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+      #       if (input$layoutAlgorithmChoice == "Circle" || input$layoutAlgorithmChoice == "Grid" || input$layoutAlgorithmChoice == "Random"){
+      #         if (input$clusteringAlgorithmChoice != "-"){
+      #           if (input$localLayoutAlgorithmChoice != "-"){
+      #             applyCluster(networkEdgelist, input$layoutAlgorithmChoice, input$localLayoutAlgorithmChoice, input$clusteringAlgorithmChoice)
       #           } else
       #             renderWarning("Can't execute Cluster without selected Local Layout.")
       #         } else {
@@ -75,9 +79,9 @@ handleLayout <- function() {
       #       } else {
       #         networkEdgelist <- checkAndFilterSelectedChannels(networkEdgelist, selected_channels)
       #         if (nrow(networkEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
-      #           if (input$selectCluster != "-"){
-      #             if (input$selectLocalLayout != "-"){
-      #               applyCluster(networkEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+      #           if (input$clusteringAlgorithmChoice != "-"){
+      #             if (input$localLayoutAlgorithmChoice != "-"){
+      #               applyCluster(networkEdgelist, input$layoutAlgorithmChoice, input$localLayoutAlgorithmChoice, input$clusteringAlgorithmChoice)
       #             } else
       #               renderWarning("Can't execute Cluster without selected Local Layout.")
       #           } else {
@@ -126,7 +130,7 @@ handleLayout <- function() {
       #         }  else
       #           renderWarning(paste0("Layer ", group_name, " could not form a graph."))
       #         
-      #         if (input$selectLayout == "Circle" || input$selectLayout == "Grid" || input$selectLayout == "Random"){
+      #         if (input$layoutAlgorithmChoice == "Circle" || input$layoutAlgorithmChoice == "Grid" || input$layoutAlgorithmChoice == "Random"){
       #           tempMatNodes <- matrix("", nrow = 0, ncol = 1)
       #           # for these 3 simple layouts, just find selected node names in selected layers
       #           tempMat1 <- networkDF[networkDF[, "SourceLayer"] == group_name,, drop = F]
@@ -141,9 +145,9 @@ handleLayout <- function() {
       #           }
       #           tempMatNodes <- unique(tempMatNodes)
       #           if ((nrow(tempMatNodes) >= 2 )){
-      #             if (input$selectCluster != "-"){
-      #               if (input$selectLocalLayout != "-"){
-      #                 applyCluster(networkEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+      #             if (input$clusteringAlgorithmChoice != "-"){
+      #               if (input$localLayoutAlgorithmChoice != "-"){
+      #                 applyCluster(networkEdgelist, input$layoutAlgorithmChoice, input$localLayoutAlgorithmChoice, input$clusteringAlgorithmChoice)
       #               } else
       #                 renderWarning("Can't execute Cluster without selected Local Layout.")
       #             } else {
@@ -154,9 +158,9 @@ handleLayout <- function() {
       #         } else {
       #           # for the rest of the layouts, use selected edges and nodes
       #           if (nrow(networkEdgelist) >= 2){ # igraph cant create graph with only one row (edge)
-      #             if (input$selectCluster != "-"){
-      #               if (input$selectLocalLayout != "-"){
-      #                 applyCluster(networkEdgelist, input$selectLayout, input$selectLocalLayout, input$selectCluster)
+      #             if (input$clusteringAlgorithmChoice != "-"){
+      #               if (input$localLayoutAlgorithmChoice != "-"){
+      #                 applyCluster(networkEdgelist, input$layoutAlgorithmChoice, input$localLayoutAlgorithmChoice, input$clusteringAlgorithmChoice)
       #               } else
       #                 renderWarning("Can't execute Cluster without selected Local Layout.")
       #             } else {
@@ -169,7 +173,7 @@ handleLayout <- function() {
       #     } else
       #       renderWarning("Can't execute Local Layouts without selected Nodes.")
       #   }
-      # }
+      
     }
   }, error = function(e) {
     print(paste0("Error on layout or clustering: ", e))
@@ -191,13 +195,80 @@ areValidLayoutInputs <- function() {
 
 isLayoutAlgorithmSelected <- function() {
   isSelected <- T
-  if (input$selectLayout == "-") {
+  if (input$layoutAlgorithmChoice == "-") {
     isSelected <- F
     renderWarning("Please, select a layout algorithm.")
   }
   return(isSelected)
 }
 
+runLayoutAlgorithm <- function(selectedLayerNames, subgraphChoice) {
+  switch(
+    subgraphChoice,
+    "perLayer" = runPerLayerLayout(selectedLayerNames, subgraphChoice),
+    "allLayers" = runAllLayersLayout(selectedLayerNames, subgraphChoice),
+    "nodesPerLayers" = runLocalLayout(selectedLayerNames, subgraphChoice)
+  )
+}
+
+runPerLayerLayout <- function(selectedLayerNames, subgraphChoice) {
+  for (layerName in selectedLayerNames) {
+    # TODO create filter function for below, ADD channels if exist, call from topology as well
+    filteredNetworkDF <-
+      networkDF[(networkDF$SourceLayer == layerName) &
+                  (networkDF$TargetLayer == layerName), , drop = F]
+    networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
+                                           layerName)
+    applyLayoutWithOptionalClustering(networkGraph)
+    #if (input$clusteringAlgorithmChoice != "-"){
+      #               if (input$localLayoutAlgorithmChoice != "-"){
+  }
+}
+
+parseEdgelistIntoGraph <- function(filteredNetworkDF, subgraphChoice, layerName) {
+  networkGraph <- ""
+  if (isIGraphObjectValid(filteredNetworkDF, subgraphChoice, layerName)) {
+    networkEdgelist <- filteredNetworkDF[, c("SourceNode_Layer",
+                                             "TargetNode_Layer", "ScaledWeight")]
+    networkGraph <- createGraph(networkEdgelist)
+  }
+  return(networkGraph)
+}
+
+applyLayoutWithOptionalClustering <- function(networkGraph) {
+  if (class(networkGraph) == "igraph") {
+    # if (isClusteringAlgorithmSelected()) # TODO
+    #   applyCluster(networkGraph, input$layoutAlgorithmChoice, input$localLayoutAlgorithmChoice, input$clusteringAlgorithmChoice)
+    # else
+    #   formatAndApplyLayout(networkGraph, TRUE)
+    calculateLayout(networkGraph)
+  }
+  print("TODO. Finished.")
+}
+
+calculateLayout <- function(networkGraph) {
+  layoutAlgorithmChoice <- input$layoutAlgorithmChoice
+  
+  nodePositions <- switch(
+    layoutAlgorithmChoice,
+    "Fruchterman-Reingold" = {
+      layout <- layout_with_fr(networkGraph)
+      # cbind(as.matrix(sub_nodes), layout) # TODO bind node names to coords
+    }
+  )
+  
+  callJSHandler("handler_topologyScale", nodePositions)
+}
+
+runAllLayersLayout <- function(selectedLayerNames, subgraphChoice) {
+  print("TODO. Not yet coded.")
+}
+
+runLocalLayout <- function(selectedLayerNames, subgraphChoice) {
+  print("TODO. Not yet coded.")
+}
+
+# OLD ####
 # @param tempMatNodes():
 # @param localBoundflag(boolean): flag that send the setLocalFlag used only @ local layouts 
 formatAndApplyLayout <- function(tempMatNodes, localBoundflag) {
@@ -364,36 +435,36 @@ apply_layout_with_sugiyama <- function(sub_graph, sub_nodes){ # bad with weights
 applyLayout <- function(sub_graph, sub_nodes, sub_weights){
   callJSHandler("handler_startLoader", T)
   set.seed(123)
-  if (input$selectLayout == "Reingold-Tilford"){
+  if (input$layoutAlgorithmChoice == "Reingold-Tilford"){
     done <- apply_layout_as_tree(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "Circle"){
+  } else if (input$layoutAlgorithmChoice == "Circle"){
     done <- apply_layout_in_circle(sub_graph, sub_nodes)
-    # } else if (input$selectLayout == "Nicely"){
+    # } else if (input$layoutAlgorithmChoice == "Nicely"){
     #   done <- apply_layout_nicely(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "Grid"){
+  } else if (input$layoutAlgorithmChoice == "Grid"){
     done <- apply_layout_on_grid(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "Random"){
+  } else if (input$layoutAlgorithmChoice == "Random"){
     done <- apply_layout_randomly(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "Davidson-Harel"){
+  } else if (input$layoutAlgorithmChoice == "Davidson-Harel"){
     done <- apply_layout_with_dh(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "DrL"){
+  } else if (input$layoutAlgorithmChoice == "DrL"){
     done <- apply_layout_with_drl(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "Fruchterman-Reingold"){
+  } else if (input$layoutAlgorithmChoice == "Fruchterman-Reingold"){
     done <- apply_layout_with_fr(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "GEM"){
+  } else if (input$layoutAlgorithmChoice == "GEM"){
     done <- apply_layout_with_gem(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "Graphopt"){
+  } else if (input$layoutAlgorithmChoice == "Graphopt"){
     done <- apply_layout_with_graphopt(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "Kamada-Kawai"){
+  } else if (input$layoutAlgorithmChoice == "Kamada-Kawai"){
     done <- apply_layout_with_kk(sub_graph, sub_nodes, sub_weights)
-  } else if (input$selectLayout == "Large Graph Layout"){
+  } else if (input$layoutAlgorithmChoice == "Large Graph Layout"){
     done <- apply_layout_with_lgl(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "Multidimensional Scaling"){
+  } else if (input$layoutAlgorithmChoice == "Multidimensional Scaling"){
     done <- apply_layout_with_mds(sub_graph, sub_nodes)
-  } else if (input$selectLayout == "Sugiyama"){
+  } else if (input$layoutAlgorithmChoice == "Sugiyama"){
     done <- apply_layout_with_sugiyama(sub_graph, sub_nodes)
   }
   callJSHandler("handler_finishLoader", T)
-  # reset("selectLayout")
+  # reset("layoutAlgorithmChoice")
   return(TRUE)
 }

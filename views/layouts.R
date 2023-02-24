@@ -6,15 +6,15 @@ generateLayoutsDiv <- function() {
     checkboxInput("selectAll", "Select/Deselect All Layers", value = F),
     tags$div(id = "checkboxdiv", class = "checkboxdiv"),
     tags$div(id = "channelColorLayoutDiv", class = "channelColorLayoutDiv"),
-    selectInput("selectLayout", "Apply Layout Algorithm on Selected Layers:",
+    selectInput("layoutAlgorithmChoice", "Apply Layout Algorithm on Selected Layers:",
                 c("-", "Fruchterman-Reingold", "Reingold-Tilford", "Circle",
                   "Grid", "Random", "DrL", "Graphopt", "Kamada-Kawai",
                   "Large Graph Layout",  "Multidimensional Scaling", "Sugiyama"), # "Davidson-Harel", "GEM" 
                 width = "500px"),
-    selectInput("selectCluster", "Apply Clustering on Selected Layers (Optional):",
+    selectInput("clusteringAlgorithmChoice", "Apply Clustering on Selected Layers (Optional):",
                 c("-", "Louvain", "Walktrap", "Fast Greedy", "Label Propagation"), # "Edge Betweenness"
                 width = "500px"),
-    selectInput("selectLocalLayout", "Apply Local Layout Algorithm:",
+    selectInput("localLayoutAlgorithmChoice", "Apply Local Layout Algorithm:",
                 c("-", "Fruchterman-Reingold", "Reingold-Tilford", "Circle",
                   "Grid", "Random", "DrL", "Graphopt", "Kamada-Kawai",
                   "Large Graph Layout",  "Multidimensional Scaling", "Sugiyama"), # "Davidson-Harel", "GEM"

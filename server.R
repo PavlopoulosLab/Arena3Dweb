@@ -77,7 +77,7 @@ server <- function(input, output, session) {
     handleLayout()
   }, ignoreInit = T)
   
-  observeEvent(input$selectCluster, {
+  observeEvent(input$clusteringAlgorithmChoice, {
     handleClusterAlgorithmSelection()
   }, ignoreInit = T)
   
