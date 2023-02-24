@@ -241,7 +241,7 @@ applyLayoutWithOptionalClustering <- function(networkGraph) {
     #   applyCluster(networkGraph, input$layoutAlgorithmChoice, input$localLayoutAlgorithmChoice, input$clusteringAlgorithmChoice)
     # else
     #   formatAndApplyLayout(networkGraph, TRUE)
-    calculateLayout(networkGraph)
+    calculateLayout(networkGraph) # this is else, TODO remove comment
   }
   print("TODO. Finished.")
 }
@@ -249,15 +249,16 @@ applyLayoutWithOptionalClustering <- function(networkGraph) {
 calculateLayout <- function(networkGraph) {
   layoutAlgorithmChoice <- input$layoutAlgorithmChoice
   
+  nodePositions <- data.frame() # TODO probably remove
   nodePositions <- switch(
     layoutAlgorithmChoice,
-    "Fruchterman-Reingold" = {
-      layout <- layout_with_fr(networkGraph)
-      # cbind(as.matrix(sub_nodes), layout) # TODO bind node names to coords
-    }
+    "Fruchterman-Reingold" = layout_with_fr(networkGraph) # TODO check parameters if needed
   )
   
-  callJSHandler("handler_topologyScale", nodePositions)
+  nodePositions <- as.data.frame(nodePositions)
+  colnames(nodePositions) <- c("y", "z")
+  nodePositions$name <- V(networkGraph)$name
+  callJSHandler("handler_layout", nodePositions)
 }
 
 runAllLayersLayout <- function(selectedLayerNames, subgraphChoice) {

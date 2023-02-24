@@ -25,7 +25,7 @@ const browseUrl = url => {
 };
 
 // Files ====================
-const uploadNetwork = (message) => {
+const uploadNetwork = (network) => {
   session_flag = false; // TODO figure what this exactly does..
   if (animationPause) pauseAnimate(); //resume rendering
    //init on with darkColors
@@ -35,17 +35,17 @@ const uploadNetwork = (message) => {
   let temp_name1 = temp_name2 = temp_layer1 = temp_layer2 = "",
     layers_counter = 0;
   let temp_channel;
-  for (let i=0; i < message.SourceLayer.length; i++){
-    temp_layer1 = String(message.SourceLayer[i]);
-    temp_layer2 = String(message.TargetLayer[i]);
-    temp_name1 = message.SourceNode_Layer[i];
-    temp_name2 = message.TargetNode_Layer[i];
-    if (message.Channel) {
-      temp_channel = String(message.Channel[i]);
+  for (let i=0; i < network.SourceLayer.length; i++){
+    temp_layer1 = String(network.SourceLayer[i]);
+    temp_layer2 = String(network.TargetLayer[i]);
+    temp_name1 = network.SourceNode_Layer[i];
+    temp_name2 = network.TargetNode_Layer[i];
+    if (network.Channel) {
+      temp_channel = String(network.Channel[i]);
     }
     //push new nodes, layers, layer_groups and node-layergroup maps
     if (!node_whole_names.includes(temp_name1)){
-      node_names.push(String(message.SourceNode[i]));
+      node_names.push(String(network.SourceNode[i]));
       node_whole_names.push(temp_name1);
       node_groups[temp_name1] = temp_layer1;
       if (!layer_names.includes(temp_layer1)){
@@ -55,7 +55,7 @@ const uploadNetwork = (message) => {
       }
     }
     if (!node_whole_names.includes(temp_name2)){
-      node_names.push(String(message.TargetNode[i]));
+      node_names.push(String(network.TargetNode[i]));
       node_whole_names.push(temp_name2);
       node_groups[temp_name2] = temp_layer2;
       if (!layer_names.includes(temp_layer2)){
@@ -78,7 +78,7 @@ const uploadNetwork = (message) => {
     } else {
       edge_pairs.push(temp_edge_pair);
     }
-    edge_values.push(Number(String(message.Weight[i])));
+    edge_values.push(Number(String(network.Weight[i])));
   }
   node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; });
   layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function () { return false; });
@@ -90,8 +90,8 @@ const uploadNetwork = (message) => {
   updateNodeNamesRShiny(); //for Local Layout algorithms
   updateSelectedNodesRShiny();
   //edge_values = mapper(edge_values, 0.1, 1) //min and max opacities //this is done in R now
-  if (message.Channel) {
-    let channel_values = message.Channel.filter((x, i, a) => a.indexOf(x) == i)
+  if (network.Channel) {
+    let channel_values = network.Channel.filter((x, i, a) => a.indexOf(x) == i)
     if (channel_values.length > MAX_CHANNELS) {
       alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
       return false
@@ -107,7 +107,7 @@ const uploadNetwork = (message) => {
   else {
     attachLayerCheckboxes();
     loadGraph();
-    if (message.Channel) {
+    if (network.Channel) {
       attachChannelEditList();
       toggleChannelCurvatureRange(true);
       attachChannelLayoutList();
@@ -487,82 +487,6 @@ const selectAllLayers = (message) => {
 }
 
 // Nodes ====================
-const assignXYZ = (message) => {
-  let y_arr = [], //x always 0, assign on floor every time
-      z_arr = [],
-      node_name = "",
-      y = z = 0,
-    layerIndex = "";
-  for (let i = 0; i < message.length; i++){
-    y_arr.push(Number(message[i][1]));
-    z_arr.push(Number(message[i][2]));
-  }
-  let y_min = Math.min.apply(Math, y_arr),
-      y_max = Math.max.apply(Math, y_arr),
-      z_min = Math.min.apply(Math, z_arr),
-      z_max = Math.max.apply(Math, z_arr),
-      target_y_min = yBoundMin,
-      target_y_max = yBoundMax,
-      target_z_min = zBoundMin,
-      target_z_max = zBoundMax;
-  if (localLayoutFlag){ //if local layout, change target mins and maxes and then unset flag
-    layerIndex = layer_groups[node_groups[message[0][0]]];
-    target_y_min = target_y_max = nodes[node_whole_names.indexOf(message[0][0].trim())].position.y/last_layer_scale[layerIndex],
-    target_z_min = target_z_max = nodes[node_whole_names.indexOf(message[0][0].trim())].position.z/last_layer_scale[layerIndex];
-    for (i = 1; i < message.length; i++) {
-      node_name = message[i][0].trim();
-      if (nodes[node_whole_names.indexOf(node_name)]) {
-        y = nodes[node_whole_names.indexOf(node_name)].position.y / last_layer_scale[layerIndex];
-        z = nodes[node_whole_names.indexOf(node_name)].position.z / last_layer_scale[layerIndex];
-        if (y < target_y_min) target_y_min = y;
-        if (y > target_y_max) target_y_max = y;
-        if (z < target_z_min) target_z_min = z;
-        if (z > target_z_max) target_z_max = z;
-      }
-      if (target_y_min == target_y_max) { //form a square
-        target_y_min = target_y_min - Math.abs(target_z_min - target_z_max) / 2;
-        target_y_max = target_y_max + Math.abs(target_z_min - target_z_max) / 2;
-      } else if (target_z_min == target_z_max) {
-        target_z_min = target_z_min - Math.abs(target_y_min - target_y_max) / 2;
-        target_z_max = target_z_max + Math.abs(target_y_min - target_y_max) / 2;
-      }
-    }
-  }
-  for (i = 0; i < message.length; i++){
-    node_name = message[i][0].trim();
-    if (session_flag && !localLayoutFlag) {
-      layerIndex = layer_groups[node_groups[message[0][0]]];
-      target_y_max = -layer_planes[layerIndex].geometry.parameters.width / 2;
-      target_y_min = layer_planes[layerIndex].geometry.parameters.width/2;
-      target_z_max = layer_planes[layerIndex].geometry.parameters.width/2.5;
-      target_z_min = -layer_planes[layerIndex].geometry.parameters.width/2.5;
-    }
-    //nodes[node_whole_names.indexOf(node_name)].position.x = -15; // to float over layer
-    if (nodes[node_whole_names.indexOf(node_name)]) {
-      if (y_max - y_min != 0) nodes[node_whole_names.indexOf(node_name)].position.y = ((y_arr[i] - y_min) * (target_y_max - target_y_min) / (y_max - y_min) + target_y_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping * layer stretch scale
-      else nodes[node_whole_names.indexOf(node_name)].position.y = 0;
-      if (z_max - z_min != 0) nodes[node_whole_names.indexOf(node_name)].position.z = ((z_arr[i] - z_min) * (target_z_max - target_z_min) / (z_max - z_min) + target_z_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping
-      else nodes[node_whole_names.indexOf(node_name)].position.z = 0;
-    }
-  }
-  localLayoutFlag = false;
-
-  if (message && message[0] && message[0].length == 4) {
-    for (i = 0; i < message.length; i++){
-      node_name = message[i][0].trim();
-      if (nodes[node_whole_names.indexOf(node_name)]) {
-        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colors[message[i][3]]);
-        node_cluster_colors[node_whole_names.indexOf(node_name)] = colors[message[i][3]];
-        nodes[node_whole_names.indexOf(node_name)].userData.cluster = message[i][3];
-      }
-    }
-  }
-  updateNodesRShiny();
-  redrawEdges();
-
-  return true;
-}
-
 const nodeSelector = (message) => {
   //message -> T | F
   if (message){
@@ -784,6 +708,82 @@ const resizeLabels = (message) => {
 }
 
 // Layouts and Topology ====================
+const assignXYZ = (nodePositions) => {
+  let y_arr = [], //x always 0, assign on floor every time
+      z_arr = [],
+      node_name = "",
+      y_coord = z_coord = 0,
+    layerIndex = "";
+  for (let i = 0; i < nodePositions.name.length; i++){
+    y_arr.push(Number(nodePositions.y[i]));
+    z_arr.push(Number(nodePositions.z[i]));
+  }
+  let y_min = Math.min.apply(Math, y_arr),
+      y_max = Math.max.apply(Math, y_arr),
+      z_min = Math.min.apply(Math, z_arr),
+      z_max = Math.max.apply(Math, z_arr),
+      target_y_min = yBoundMin,
+      target_y_max = yBoundMax,
+      target_z_min = zBoundMin,
+      target_z_max = zBoundMax;
+  if (localLayoutFlag){ //if local layout, change target mins and maxes and then unset flag
+    layerIndex = layer_groups[node_groups[nodePositions.name[0]]];
+    target_y_min = target_y_max = nodes[node_whole_names.indexOf(nodePositions.name[0].trim())].position.y/last_layer_scale[layerIndex],
+    target_z_min = target_z_max = nodes[node_whole_names.indexOf(nodePositions.name[0].trim())].position.z/last_layer_scale[layerIndex];
+    for (i = 1; i < nodePositions.name.length; i++) {
+      node_name = nodePositions.name[i].trim();
+      if (nodes[node_whole_names.indexOf(node_name)]) {
+        y_coord = nodes[node_whole_names.indexOf(node_name)].position.y / last_layer_scale[layerIndex];
+        z_coord = nodes[node_whole_names.indexOf(node_name)].position.z / last_layer_scale[layerIndex];
+        if (y_coord < target_y_min) target_y_min = y_coord;
+        if (y_coord > target_y_max) target_y_max = y_coord;
+        if (z_coord < target_z_min) target_z_min = z_coord;
+        if (z_coord > target_z_max) target_z_max = z_coord;
+      }
+      if (target_y_min == target_y_max) { //form a square
+        target_y_min = target_y_min - Math.abs(target_z_min - target_z_max) / 2;
+        target_y_max = target_y_max + Math.abs(target_z_min - target_z_max) / 2;
+      } else if (target_z_min == target_z_max) {
+        target_z_min = target_z_min - Math.abs(target_y_min - target_y_max) / 2;
+        target_z_max = target_z_max + Math.abs(target_y_min - target_y_max) / 2;
+      }
+    }
+  }
+  for (i = 0; i < nodePositions.name.length; i++){
+    node_name = nodePositions.name[i].trim();
+    if (session_flag && !localLayoutFlag) {
+      layerIndex = layer_groups[node_groups[nodePositions.name[0]]];
+      target_y_max = -layer_planes[layerIndex].geometry.parameters.width / 2;
+      target_y_min = layer_planes[layerIndex].geometry.parameters.width/2;
+      target_z_max = layer_planes[layerIndex].geometry.parameters.width/2.5;
+      target_z_min = -layer_planes[layerIndex].geometry.parameters.width/2.5;
+    }
+    //nodes[node_whole_names.indexOf(node_name)].position.x = -15; // to float over layer
+    if (nodes[node_whole_names.indexOf(node_name)]) {
+      if (y_max - y_min != 0) nodes[node_whole_names.indexOf(node_name)].position.y = ((y_arr[i] - y_min) * (target_y_max - target_y_min) / (y_max - y_min) + target_y_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping * layer stretch scale
+      else nodes[node_whole_names.indexOf(node_name)].position.y = 0;
+      if (z_max - z_min != 0) nodes[node_whole_names.indexOf(node_name)].position.z = ((z_arr[i] - z_min) * (target_z_max - target_z_min) / (z_max - z_min) + target_z_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping
+      else nodes[node_whole_names.indexOf(node_name)].position.z = 0;
+    }
+  }
+  localLayoutFlag = false;
+
+  if (nodePositions && nodePositions.name && nodePositions.name.length == 4) { // TODO test
+    for (i = 0; i < nodePositions.name.length; i++){
+      node_name = nodePositions.name[i].trim();
+      if (nodes[node_whole_names.indexOf(node_name)]) {
+        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colors[nodePositions[i][3]]); // TODO color from clustering
+        node_cluster_colors[node_whole_names.indexOf(node_name)] = colors[nodePositions[i][3]];
+        nodes[node_whole_names.indexOf(node_name)].userData.cluster = nodePositions[i][3];
+      }
+    }
+  }
+  updateNodesRShiny();
+  redrawEdges();
+
+  return true;
+}
+
 const setLocalFlag = (message) => { //T
   localLayoutFlag = message;
   return true;
@@ -902,7 +902,6 @@ Shiny.addCustomMessageHandler("handler_showWireFrames", showWireFrames);
 Shiny.addCustomMessageHandler("handler_selectAllLayers", selectAllLayers);
 Shiny.addCustomMessageHandler("handler_layerColorFilePriority", layerColorFilePriority);
 // Nodes ====================
-Shiny.addCustomMessageHandler("handler_layout", assignXYZ);
 Shiny.addCustomMessageHandler("handler_nodeSelector", nodeSelector);
 Shiny.addCustomMessageHandler("handler_nodeSelectedColorPriority", nodeSelectedColorPriority);
 // Edges ====================
@@ -929,6 +928,7 @@ Shiny.addCustomMessageHandler("handler_showLabels", showLabels);
 Shiny.addCustomMessageHandler("handler_showSelectedLabels", showSelectedLabels);
 Shiny.addCustomMessageHandler("handler_resizeLabels", resizeLabels);
 // Layouts and Topology ====================
+Shiny.addCustomMessageHandler("handler_layout", assignXYZ);
 Shiny.addCustomMessageHandler("handler_setLocalFlag", setLocalFlag);
 Shiny.addCustomMessageHandler("handler_topologyScale", topologyScale);
 Shiny.addCustomMessageHandler("handler_predefined_layer_layout", applyPredefinedLayout);
