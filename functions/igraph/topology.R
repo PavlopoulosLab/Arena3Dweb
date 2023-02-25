@@ -113,7 +113,8 @@ calculateNodeScaleDF <- function(scale) {
 }
 
 runAllLayersScaling <- function(selectedLayerNames, subgraphChoice) {
-  filteredNetworkDF <- filterAllSelectedLayers(networkDF, selectedLayerNames)
+  filteredNetworkDF <- filterSeletedChannels(networkDF)
+  filteredNetworkDF <- filterAllSelectedLayers(filteredNetworkDF, selectedLayerNames)
   networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                          layerName)
   scaleTopology(networkGraph)
@@ -126,8 +127,10 @@ runLocalScaling <- function(selectedLayerNames, subgraphChoice) {
     nodeNamesWithLayer <- input$js_node_names
     selectedNodeNamesWithLayer <- nodeNamesWithLayer[selectedNodePositions]
     for (layerName in selectedLayerNames) {
-      filteredNetworkDF <- filterPerLayer(networkDF, layerName)
-      filteredNetworkDF <- filterPerSelectedNodes(filteredNetworkDF)
+      filteredNetworkDF <- filterSeletedChannels(networkDF)
+      filteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
+      filteredNetworkDF <- filterPerSelectedNodes(filteredNetworkDF,
+                                                  selectedNodeNamesWithLayer)
       networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                              layerName)
       scaleTopology(networkGraph)

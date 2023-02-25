@@ -18,12 +18,8 @@ existsSelectedLayer <- function() {
 }
 
 filterSeletedChannels <- function(netData) {
-  selected_channels <- input$channels_layout
-  print(selected_channels)
-  if (!is.null(selected_channels)) {
-    saveRDS(netData, "netData.RDS")
-    netData <- netData[(netData$Channel %in% selected_channels), , drop = F]
-  }
+  if ("Channel" %in% colnames(netData))
+    netData <- netData[(netData$Channel %in% input$channels_layout), , drop = F]
   return(netData)
 }
 
