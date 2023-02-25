@@ -17,9 +17,12 @@ existsSelectedLayer <- function() {
   return(exist)
 }
 
-filterSeletedChannels <- function(netData) {
-  if ("Channel" %in% colnames(netData))
+filterSelectedChannels <- function(netData) {
+  if ("Channel" %in% colnames(netData)) {
     netData <- netData[(netData$Channel %in% input$channels_layout), , drop = F]
+    if (is.null(input$channels_layout))
+      renderWarning("Select at least one channel.")
+  }
   return(netData)
 }
 

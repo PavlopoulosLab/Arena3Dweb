@@ -38,17 +38,24 @@ isTopologyMetricSelected <- function() {
 }
 
 runTopologyScaling <- function(selectedLayerNames, subgraphChoice) {
-  switch(
-    subgraphChoice,
-    "perLayer" = runPerLayerScaling(selectedLayerNames, subgraphChoice),
-    "allLayers" = runAllLayersScaling(selectedLayerNames, subgraphChoice),
-    "nodesPerLayers" = runLocalScaling(selectedLayerNames, subgraphChoice)
-  )
+  filteredNetworkDF <- filterSelectedChannels(networkDF)
+  
+  if (nrow(filteredNetworkDF) > 0) {
+    switch(
+      subgraphChoice,
+      "perLayer" = runPerLayerScaling(filteredNetworkDF, selectedLayerNames,
+                                      subgraphChoice),
+      "allLayers" = runAllLayersScaling(filteredNetworkDF, selectedLayerNames,
+                                        subgraphChoice),
+      "nodesPerLayers" = runLocalScaling(filteredNetworkDF, selectedLayerNames,
+                                         subgraphChoice)
+    )
+  }
 }
 
-runPerLayerScaling <- function(selectedLayerNames, subgraphChoice) {
+runPerLayerScaling <- function(filteredNetworkDF, selectedLayerNames,
+                               subgraphChoice) {
   for (layerName in selectedLayerNames) {
-    filteredNetworkDF <- filterSeletedChannels(networkDF)
     filteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
     networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                            layerName)
@@ -112,8 +119,8 @@ calculateNodeScaleDF <- function(scale) {
   return(nodeScale)
 }
 
-runAllLayersScaling <- function(selectedLayerNames, subgraphChoice) {
-  filteredNetworkDF <- filterSeletedChannels(networkDF)
+runAllLayersScaling <- function(filteredNetworkDF, selectedLayerNames,
+                                subgraphChoice) {
   filteredNetworkDF <- filterAllSelectedLayers(filteredNetworkDF, selectedLayerNames)
   networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                          layerName)
@@ -121,13 +128,13 @@ runAllLayersScaling <- function(selectedLayerNames, subgraphChoice) {
 }
 
 # TODO runLocalAlgorithm (..., scaling)
-runLocalScaling <- function(selectedLayerNames, subgraphChoice) {
+runLocalScaling <- function(filteredNetworkDF, selectedLayerNames,
+                            subgraphChoice) {
   selectedNodePositions <- input$js_selectedNodePositions + 1 # JS to R iterator
   if (existSelectedNodes(selectedNodePositions)) {
     nodeNamesWithLayer <- input$js_node_names
     selectedNodeNamesWithLayer <- nodeNamesWithLayer[selectedNodePositions]
     for (layerName in selectedLayerNames) {
-      filteredNetworkDF <- filterSeletedChannels(networkDF)
       filteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
       filteredNetworkDF <- filterPerSelectedNodes(filteredNetworkDF,
                                                   selectedNodeNamesWithLayer)
