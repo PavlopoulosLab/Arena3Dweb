@@ -218,10 +218,7 @@ runPerLayerLayout <- function(selectedLayerNames, subgraphChoice) {
     if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
       filteredNetworkDF <- filterUserSelectedPseudoNetwork(layerName)
     } else {
-      # TODO create filter function for below, ADD channels if exist, call from topology as well
-      filteredNetworkDF <-
-        networkDF[(networkDF$SourceLayer == layerName) &
-                    (networkDF$TargetLayer == layerName), , drop = F]
+      filteredNetworkDF <- filterPerLayer(networkDF, layerName)
     }
     networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                            layerName)
@@ -289,10 +286,23 @@ calculateLayout <- function(networkGraph) {
 }
 
 runAllLayersLayout <- function(selectedLayerNames, subgraphChoice) {
-  print("TODO. Not yet coded.")
+  # if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
+  #   filteredNetworkDF <- filterUserSelectedPseudoNetwork(layerName) # TODO all layers here
+  # } else {
+    filteredNetworkDF <- filterAllSelectedLayers(networkDF, selectedLayerNames)
+  # }
+  
+  networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
+                                         layerName)
+  applyLayoutWithOptionalClustering(networkGraph)
 }
 
 runLocalLayout <- function(selectedLayerNames, subgraphChoice) {
+  # if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
+  #   filteredNetworkDF <- filterUserSelectedPseudoNetwork(layerName) # TODO all layers here
+  # } else {
+  
+  #}
   print("TODO. Not yet coded.")
 }
 

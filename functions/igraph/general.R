@@ -17,11 +17,45 @@ existsSelectedLayer <- function() {
   return(exist)
 }
 
+filterSeletedChannels <- function(netData) {
+  selected_channels <- input$channels_layout
+  print(selected_channels)
+  if (!is.null(selected_channels)) {
+    saveRDS(netData, "netData.RDS")
+    netData <- netData[(netData$Channel %in% selected_channels), , drop = F]
+  }
+  return(netData)
+}
+
+filterPerLayer <- function(netData, layerName) {
+  filteredNetworkDF <- netData[(netData$SourceLayer == layerName) &
+                                 (netData$TargetLayer == layerName), , drop = F]
+  return(filteredNetworkDF)
+}
+
+filterAllSelectedLayers <- function(netData, selectedLayerNames) {
+  filteredNetworkDF <- 
+    netData[(netData$SourceLayer %in% selectedLayerNames) &
+              (netData$TargetLayer %in% selectedLayerNames), , drop = F]
+  return(filteredNetworkDF)
+}
+
+filterPerSelectedNodes <- function(netData, selectedNodeNamesWithLayer) {
+  filteredNetworkDF <- 
+    netData[(netData$SourceNode_Layer %in% selectedNodeNamesWithLayer) &
+              (netData$TargetNode_Layer %in% selectedNodeNamesWithLayer), ,
+            drop = F]
+  return(filteredNetworkDF)
+}
+
 parseEdgelistIntoGraph <- function(filteredNetworkDF, subgraphChoice, layerName) {
   networkGraph <- ""
   if (isIGraphObjectValid(filteredNetworkDF, subgraphChoice, layerName)) {
     networkEdgelist <- filteredNetworkDF[, c("SourceNode_Layer",
                                              "TargetNode_Layer", "ScaledWeight")]
+    # distinct, in case multiple rows remained in multi-channel nets
+    networkEdgelist <- dplyr::distinct(networkEdgelist, SourceNode_Layer,
+                                       TargetNode_Layer, .keep_all = T)
     networkGraph <- createGraph(networkEdgelist)
   }
   return(networkGraph)

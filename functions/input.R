@@ -66,6 +66,7 @@ existsEmptyChannelName <- function(df) {
 parseUploadedNetwork <- function(df) {
   df <- subsetLegitColumns(df)
   df <- trimNetworkData(df)
+  df <- removeDuplicateNetworkRows(df)
   df <- appendScaledNetworkWeights(df)
   df <- appendNodeLayerCombinations(df)
   df <- reorderNetworkColumns(df)
@@ -83,6 +84,17 @@ trimNetworkData <- function(df) {
   invisible(lapply(colnames(df), function(colName) {
     df[[colName]] <<- trimws(df[[colName]])
   }))
+  return(df)
+}
+
+removeDuplicateNetworkRows <- function(df) {
+  if ("Channel" %in% colnames(df)) {
+    df <- dplyr::distinct(df, SourceNode, SourceLayer, TargetNode, TargetLayer,
+                          Channel, .keep_all = T)
+  } else {
+    df <- dplyr::distinct(df, SourceNode, SourceLayer, TargetNode, TargetLayer,
+                          .keep_all = T)
+  }
   return(df)
 }
 
@@ -251,6 +263,7 @@ existMandatoryEdgeColumns <- function(edges) {
 parseUploadedJSON <- function(jsonNetwork) {
   jsonNetwork <- subsetLegitObjects(jsonNetwork)
   jsonNetwork <- trimJSONData(jsonNetwork)
+  jsonNetwork$edges <- removeDuplicateJSONEdges(jsonNetwork$edges)
   jsonNetwork <- chooseSceneOrDefaults(jsonNetwork)
   jsonNetwork <- chooseLayersOrDefaults(jsonNetwork)
   jsonNetwork <- chooseToScrambleNodes(jsonNetwork)
@@ -278,6 +291,11 @@ trimJSONData <- function(jsonNetwork) {
       jsonNetwork[[objName]] <<- trimws(jsonNetwork[[objName]])
   }))
   return(jsonNetwork)
+}
+
+removeDuplicateJSONEdges <- function(edges) {
+  edges <- dplyr::distinct(edges, src, trg, channel, .keep_all = T)
+  return(edges)
 }
 
 chooseSceneOrDefaults <- function(jsonNetwork) {

@@ -48,9 +48,8 @@ runTopologyScaling <- function(selectedLayerNames, subgraphChoice) {
 
 runPerLayerScaling <- function(selectedLayerNames, subgraphChoice) {
   for (layerName in selectedLayerNames) {
-    filteredNetworkDF <-
-      networkDF[(networkDF$SourceLayer == layerName) &
-                  (networkDF$TargetLayer == layerName), , drop = F]
+    filteredNetworkDF <- filterSeletedChannels(networkDF)
+    filteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
     networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                            layerName)
     scaleTopology(networkGraph)
@@ -114,25 +113,21 @@ calculateNodeScaleDF <- function(scale) {
 }
 
 runAllLayersScaling <- function(selectedLayerNames, subgraphChoice) {
-  filteredNetworkDF <-
-    networkDF[(networkDF$SourceLayer %in% selectedLayerNames) &
-                (networkDF$TargetLayer %in% selectedLayerNames), , drop = F]
+  filteredNetworkDF <- filterAllSelectedLayers(networkDF, selectedLayerNames)
   networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                          layerName)
   scaleTopology(networkGraph)
 }
 
+# TODO runLocalAlgorithm (..., scaling)
 runLocalScaling <- function(selectedLayerNames, subgraphChoice) {
   selectedNodePositions <- input$js_selectedNodePositions + 1 # JS to R iterator
   if (existSelectedNodes(selectedNodePositions)) {
     nodeNamesWithLayer <- input$js_node_names
     selectedNodeNamesWithLayer <- nodeNamesWithLayer[selectedNodePositions]
     for (layerName in selectedLayerNames) {
-      filteredNetworkDF <-
-        networkDF[(networkDF$SourceLayer == layerName) &
-                    (networkDF$TargetLayer == layerName) &
-                    (networkDF$SourceNode_Layer %in% selectedNodeNamesWithLayer) &
-                    (networkDF$TargetNode_Layer %in% selectedNodeNamesWithLayer), , drop = F]
+      filteredNetworkDF <- filterPerLayer(networkDF, layerName)
+      filteredNetworkDF <- filterPerSelectedNodes(filteredNetworkDF)
       networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                              layerName)
       scaleTopology(networkGraph)
