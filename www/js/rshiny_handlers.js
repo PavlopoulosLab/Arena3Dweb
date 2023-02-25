@@ -266,7 +266,7 @@ const importNetwork = (jsonNetwork) => {
     edge_values.push(Number(jsonNetwork.edges.opacity[i]));
     edge_attributes.SourceNode.push(edge_pair);
     edge_attributes.TargetNode.push("");
-    edge_attributes.Color.push(jsonNetwork.edges.color);
+    edge_attributes.Color.push(jsonNetwork.edges.color[i]);
   }
   
   // EXTRAS
