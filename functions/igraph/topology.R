@@ -56,8 +56,8 @@ runTopologyScaling <- function(selectedLayerNames, subgraphChoice) {
 runPerLayerScaling <- function(filteredNetworkDF, selectedLayerNames,
                                subgraphChoice) {
   for (layerName in selectedLayerNames) {
-    filteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
-    networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
+    tempFilteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
+    networkGraph <- parseEdgelistIntoGraph(tempFilteredNetworkDF, subgraphChoice,
                                            layerName)
     scaleTopology(networkGraph)
   }
@@ -127,7 +127,6 @@ runAllLayersScaling <- function(filteredNetworkDF, selectedLayerNames,
   scaleTopology(networkGraph)
 }
 
-# TODO runLocalAlgorithm (..., scaling)
 runLocalScaling <- function(filteredNetworkDF, selectedLayerNames,
                             subgraphChoice) {
   selectedNodePositions <- input$js_selectedNodePositions + 1 # JS to R iterator
@@ -135,21 +134,12 @@ runLocalScaling <- function(filteredNetworkDF, selectedLayerNames,
     nodeNamesWithLayer <- input$js_node_names
     selectedNodeNamesWithLayer <- nodeNamesWithLayer[selectedNodePositions]
     for (layerName in selectedLayerNames) {
-      filteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
-      filteredNetworkDF <- filterPerSelectedNodes(filteredNetworkDF,
-                                                  selectedNodeNamesWithLayer)
-      networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
-                                             layerName)
+      tempFilteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
+      tempFilteredNetworkDF <- filterPerSelectedNodes(tempFilteredNetworkDF,
+                                                      selectedNodeNamesWithLayer)
+      networkGraph <- parseEdgelistIntoGraph(tempFilteredNetworkDF,
+                                             subgraphChoice, layerName)
       scaleTopology(networkGraph)
     }
   }
-}
-
-existSelectedNodes <- function(selectedNodePositions) {
-  exist <- T
-  if (length(selectedNodePositions) == 0) {
-    exist <- F
-    renderWarning("Cannot execute local layouts without selected nodes.")
-  }
-  return(exist)
 }

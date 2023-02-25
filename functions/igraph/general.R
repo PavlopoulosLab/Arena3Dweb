@@ -84,3 +84,12 @@ createGraph <- function(edgelist) {
                             remove.loops = F, edge.attr.comb = list(weight = "sum"))
   return(graph)
 }
+
+existSelectedNodes <- function(selectedNodePositions) {
+  exist <- T
+  if (length(selectedNodePositions) == 0) {
+    exist <- F
+    renderWarning("Cannot execute local layouts without selected nodes.")
+  }
+  return(exist)
+}
