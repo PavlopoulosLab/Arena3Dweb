@@ -223,8 +223,8 @@ runPerLayerLayout <- function(filteredNetworkDF, selectedLayerNames,
                               subgraphChoice) {
   for (layerName in selectedLayerNames) {
     if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
-      tempFilteredNetworkDF <- filterUserSelectedPseudoNetwork(filteredNetworkDF,
-                                                           layerName)
+      tempFilteredNetworkDF <- filterPseudoNetworkByLayers(filteredNetworkDF,
+                                                               layerName)
     } else {
       tempFilteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
     }
@@ -234,20 +234,27 @@ runPerLayerLayout <- function(filteredNetworkDF, selectedLayerNames,
   }
 }
 
-filterUserSelectedPseudoNetwork <- function(filteredNetworkDF, layerName) {
+filterPseudoNetworkByLayers <- function(filteredNetworkDF, layerNames) {
   tempNetworkDF1 <-
-    filteredNetworkDF[(filteredNetworkDF$SourceLayer == layerName), , drop = F]
+    filteredNetworkDF[(filteredNetworkDF$SourceLayer %in% layerNames), , drop = F]
   tempNetworkDF1 <- tempNetworkDF1[, c("SourceNode_Layer"), drop = F]
   tempNetworkDF2 <-
-    filteredNetworkDF[(filteredNetworkDF$TargetLayer == layerName), , drop = F]
+    filteredNetworkDF[(filteredNetworkDF$TargetLayer %in% layerNames), , drop = F]
   tempNetworkDF2 <- tempNetworkDF2[, c("TargetNode_Layer"), drop = F]
   colnames(tempNetworkDF2) <- "SourceNode_Layer"
-  filteredNetworkDF <- rbind(tempNetworkDF1, tempNetworkDF2)
-  filteredNetworkDF <- unique(filteredNetworkDF)
-  filteredNetworkDF$TargetNode_Layer <- 
-    shiftValuesByOne(filteredNetworkDF$SourceNode_Layer)
-  filteredNetworkDF$ScaledWeight <- 1
+  filteredNetworkDF <- interlinkNodeColumns(tempNetworkDF1, tempNetworkDF2)
   return(filteredNetworkDF)
+}
+
+interlinkNodeColumns <- function(df1, df2) {
+  df <- rbind(df1, df2)
+  if (nrow(df) > 0) {
+    df <- unique(df)
+    df$TargetNode_Layer <- 
+      shiftValuesByOne(df$SourceNode_Layer)
+    df$ScaledWeight <- 1
+  }
+  return(df)
 }
 
 shiftValuesByOne <- function(vec) {
@@ -260,12 +267,11 @@ shiftValuesByOne <- function(vec) {
 applyLayoutWithOptionalClustering <- function(networkGraph) {
   if (class(networkGraph) == "igraph") {
     # if (isClusteringAlgorithmSelected()) # TODO
-    #if (input$clusteringAlgorithmChoice != "-"){
+    # if (input$clusteringAlgorithmChoice != "-"){
     #               if (input$localLayoutAlgorithmChoice != "-"){
     #   applyCluster(networkGraph, input$layoutAlgorithmChoice, input$localLayoutAlgorithmChoice, input$clusteringAlgorithmChoice)
     # else
-    #   formatAndApplyLayout(networkGraph, TRUE)
-    calculateLayout(networkGraph) # this is else, TODO remove comment
+      calculateLayout(networkGraph)
   }
 }
 
@@ -295,11 +301,12 @@ calculateLayout <- function(networkGraph) {
 
 runAllLayersLayout <- function(filteredNetworkDF, selectedLayerNames,
                                subgraphChoice) {
-  # if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
-  #   filteredNetworkDF <- filterUserSelectedPseudoNetwork(layerName) # TODO all layers here
-  # } else {
+  if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
+    filteredNetworkDF <- filterPseudoNetworkByLayers(filteredNetworkDF,
+                                                         selectedLayerNames)
+  } else {
     filteredNetworkDF <- filterAllSelectedLayers(filteredNetworkDF, selectedLayerNames)
-  # }
+  }
   
   networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                          layerName)
@@ -308,38 +315,44 @@ runAllLayersLayout <- function(filteredNetworkDF, selectedLayerNames,
 
 runLocalLayout <- function(filteredNetworkDF, selectedLayerNames,
                            subgraphChoice) {
-  # if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
-  #   filteredNetworkDF <- filterUserSelectedPseudoNetwork(layerName) # TODO all layers here
-  # } else {
-    selectedNodePositions <- input$js_selectedNodePositions + 1 # JS to R iterator
-    if (existSelectedNodes(selectedNodePositions)) {
-      nodeNamesWithLayer <- input$js_node_names
-      selectedNodeNamesWithLayer <- nodeNamesWithLayer[selectedNodePositions]
-      for (layerName in selectedLayerNames) {
+  selectedNodePositions <- input$js_selectedNodePositions + 1 # JS to R iterator
+  if (existSelectedNodes(selectedNodePositions)) {
+    nodeNamesWithLayer <- input$js_node_names
+    selectedNodeNamesWithLayer <- nodeNamesWithLayer[selectedNodePositions]
+    
+    if (!input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS)
+      filteredNetworkDF <- filterPerSelectedNodes(filteredNetworkDF,
+                                                  selectedNodeNamesWithLayer)
+    for (layerName in selectedLayerNames) {
+      if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
+        tempFilteredNetworkDF <-
+          filterPseudoNetworkByLayersAndNodes(filteredNetworkDF, layerName,
+                                              selectedNodeNamesWithLayer)
+      } else {
         tempFilteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
-        tempFilteredNetworkDF <- filterPerSelectedNodes(tempFilteredNetworkDF,
-                                                    selectedNodeNamesWithLayer)
-        networkGraph <- parseEdgelistIntoGraph(tempFilteredNetworkDF,
-                                               subgraphChoice, layerName)
-        applyLayoutWithOptionalClustering(networkGraph)
       }
+      networkGraph <- parseEdgelistIntoGraph(tempFilteredNetworkDF,
+                                             subgraphChoice, layerName)
+      # map coordinates on local bounds in assignXYZ
+      callJSHandler("handler_setLocalFlag", T)
+      applyLayoutWithOptionalClustering(networkGraph)
     }
-  #}
+  }
 }
 
-# OLD ####
-# @param tempMatNodes():
-# @param localBoundflag(boolean): flag that send the setLocalFlag used only @ local layouts 
-formatAndApplyLayout <- function(tempMatNodes, localBoundflag) {
-  # tempMatNodes <- unique(tempMatNodes)
-  # sub_graph <- make_ring(length(tempMatNodes))
-  # V(sub_graph)$name <- tempMatNodes
-  # sub_nodes <- V(sub_graph)$name
-  # sub_weights <- E(sub_graph)$weight
-  
-  if (localBoundflag == TRUE) {
-    callJSHandler("handler_setLocalFlag", T) # this tells js to map coordinates on local bounds in assignXYZ
-  } # TODO check if else F is needed here
-  
-  # applyLayout(sub_graph, sub_nodes, sub_weights)
+filterPseudoNetworkByLayersAndNodes <- function(filteredNetworkDF, layerName,
+                                                selectedNodeNamesWithLayer) {
+  tempNetworkDF1 <-
+    filteredNetworkDF[(filteredNetworkDF$SourceLayer == layerName) &
+                        (filteredNetworkDF$SourceNode_Layer %in%
+                           selectedNodeNamesWithLayer), , drop = F]
+  tempNetworkDF1 <- tempNetworkDF1[, c("SourceNode_Layer"), drop = F]
+  tempNetworkDF2 <-
+    filteredNetworkDF[(filteredNetworkDF$TargetLayer == layerName) &
+                        (filteredNetworkDF$TargetNode_Layer %in%
+                           selectedNodeNamesWithLayer), , drop = F]
+  tempNetworkDF2 <- tempNetworkDF2[, c("TargetNode_Layer"), drop = F]
+  colnames(tempNetworkDF2) <- "SourceNode_Layer"
+  filteredNetworkDF <- interlinkNodeColumns(tempNetworkDF1, tempNetworkDF2)
+  return(filteredNetworkDF)
 }

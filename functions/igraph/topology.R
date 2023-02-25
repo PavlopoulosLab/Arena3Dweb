@@ -133,10 +133,10 @@ runLocalScaling <- function(filteredNetworkDF, selectedLayerNames,
   if (existSelectedNodes(selectedNodePositions)) {
     nodeNamesWithLayer <- input$js_node_names
     selectedNodeNamesWithLayer <- nodeNamesWithLayer[selectedNodePositions]
+    filterPerSelectedNodes <- filterPerSelectedNodes(filteredNetworkDF,
+                                                    selectedNodeNamesWithLayer)
     for (layerName in selectedLayerNames) {
-      tempFilteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
-      tempFilteredNetworkDF <- filterPerSelectedNodes(tempFilteredNetworkDF,
-                                                      selectedNodeNamesWithLayer)
+      tempFilteredNetworkDF <- filterPerLayer(filterPerSelectedNodes, layerName)
       networkGraph <- parseEdgelistIntoGraph(tempFilteredNetworkDF,
                                              subgraphChoice, layerName)
       scaleTopology(networkGraph)
