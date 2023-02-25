@@ -17,6 +17,16 @@ existsSelectedLayer <- function() {
   return(exist)
 }
 
+parseEdgelistIntoGraph <- function(filteredNetworkDF, subgraphChoice, layerName) {
+  networkGraph <- ""
+  if (isIGraphObjectValid(filteredNetworkDF, subgraphChoice, layerName)) {
+    networkEdgelist <- filteredNetworkDF[, c("SourceNode_Layer",
+                                             "TargetNode_Layer", "ScaledWeight")]
+    networkGraph <- createGraph(networkEdgelist)
+  }
+  return(networkGraph)
+}
+
 isIGraphObjectValid <- function(filteredNetworkDF, subgraphChoice, layerName) {
   isValid <- T
   if (nrow(filteredNetworkDF) < 2) {

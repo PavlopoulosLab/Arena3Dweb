@@ -252,16 +252,6 @@ shiftValuesByOne <- function(vec) {
   return(vec)
 }
 
-parseEdgelistIntoGraph <- function(filteredNetworkDF, subgraphChoice, layerName) {
-  networkGraph <- ""
-  if (isIGraphObjectValid(filteredNetworkDF, subgraphChoice, layerName)) {
-    networkEdgelist <- filteredNetworkDF[, c("SourceNode_Layer",
-                                             "TargetNode_Layer", "ScaledWeight")]
-    networkGraph <- createGraph(networkEdgelist)
-  }
-  return(networkGraph)
-}
-
 applyLayoutWithOptionalClustering <- function(networkGraph) {
   if (class(networkGraph) == "igraph") {
     # if (isClusteringAlgorithmSelected()) # TODO

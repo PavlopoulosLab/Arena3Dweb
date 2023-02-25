@@ -51,45 +51,39 @@ runPerLayerScaling <- function(selectedLayerNames, subgraphChoice) {
     filteredNetworkDF <-
       networkDF[(networkDF$SourceLayer == layerName) &
                   (networkDF$TargetLayer == layerName), , drop = F]
-    # TODO probably break into two functions parse() and scale
-    parseAndScaleEdgelist(filteredNetworkDF, subgraphChoice, layerName)
-  }
-}
-
-parseAndScaleEdgelist <- function(filteredNetworkDF, subgraphChoice, layerName) {
-  if (isIGraphObjectValid(filteredNetworkDF, subgraphChoice, layerName)) {
-    networkEdgelist <- filteredNetworkDF[, c("SourceNode_Layer",
-                                             "TargetNode_Layer", "ScaledWeight")]
-    networkGraph <- createGraph(networkEdgelist)
+    networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
+                                           layerName)
     scaleTopology(networkGraph)
   }
 }
 
 scaleTopology <- function(networkGraph) {
-  topologyMetricChoice <- input$topologyScaleMetricChoice
-  
-  scale <- switch(
-    topologyMetricChoice,
-    "Degree" =
-      igraph::degree(networkGraph, v = igraph::V(networkGraph), mode = "all", loops = T,
-             normalized = F),
-    "Clustering Coefficient" = {
-      scale <- igraph::transitivity(networkGraph, type = "weighted", vids = NULL,
-                            weights = NULL, isolates = "zero") # NULL == E(networkGraph)$weight
-      names(scale) <- igraph::V(networkGraph)$name
-      scale
-    },
-    "Betweenness Centrality" = 
-      igraph::betweenness(networkGraph, v = igraph::V(networkGraph),
-                  directed = input$edgeDirectionToggle, weights = NULL, # NULL == E(networkGraph)$weight
-                  normalized = F) 
-  )
-  nodeScale <- calculateNodeScaleDF(scale)
-  prepareMetricTable(topologyMetricChoice, nodeScale)
-  nodeScale$scale <- mapper(nodeScale$scale,
-                            TARGET_NODE_SCALE_MIN, TARGET_NODE_SCALE_MAX,
-                            defaultValue = 1)
-  callJSHandler("handler_topologyScale", nodeScale)
+  if (class(networkGraph) == "igraph") {
+    topologyMetricChoice <- input$topologyScaleMetricChoice
+    
+    scale <- switch(
+      topologyMetricChoice,
+      "Degree" =
+        igraph::degree(networkGraph, v = igraph::V(networkGraph), mode = "all", loops = T,
+                       normalized = F),
+      "Clustering Coefficient" = {
+        scale <- igraph::transitivity(networkGraph, type = "weighted", vids = NULL,
+                                      weights = NULL, isolates = "zero") # NULL: E(networkGraph)$weight
+        names(scale) <- igraph::V(networkGraph)$name
+        scale
+      },
+      "Betweenness Centrality" = 
+        igraph::betweenness(networkGraph, v = igraph::V(networkGraph),
+                            directed = input$edgeDirectionToggle, weights = NULL, # NULL == E(networkGraph)$weight
+                            normalized = F) 
+    )
+    nodeScale <- calculateNodeScaleDF(scale)
+    prepareMetricTable(topologyMetricChoice, nodeScale)
+    nodeScale$scale <- mapper(nodeScale$scale,
+                              TARGET_NODE_SCALE_MIN, TARGET_NODE_SCALE_MAX,
+                              defaultValue = 1)
+    callJSHandler("handler_topologyScale", nodeScale)
+  }
 }
 
 prepareMetricTable <- function(topologyMetricChoice, nodeScale) {
@@ -123,7 +117,9 @@ runAllLayersScaling <- function(selectedLayerNames, subgraphChoice) {
   filteredNetworkDF <-
     networkDF[(networkDF$SourceLayer %in% selectedLayerNames) &
                 (networkDF$TargetLayer %in% selectedLayerNames), , drop = F]
-  parseAndScaleEdgelist(filteredNetworkDF, subgraphChoice, layerName)
+  networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
+                                         layerName)
+  scaleTopology(networkGraph)
 }
 
 runLocalScaling <- function(selectedLayerNames, subgraphChoice) {
@@ -137,7 +133,9 @@ runLocalScaling <- function(selectedLayerNames, subgraphChoice) {
                     (networkDF$TargetLayer == layerName) &
                     (networkDF$SourceNode_Layer %in% selectedNodeNamesWithLayer) &
                     (networkDF$TargetNode_Layer %in% selectedNodeNamesWithLayer), , drop = F]
-      parseAndScaleEdgelist(filteredNetworkDF, subgraphChoice, layerName)
+      networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
+                                             layerName)
+      scaleTopology(networkGraph)
     }
   }
 }
