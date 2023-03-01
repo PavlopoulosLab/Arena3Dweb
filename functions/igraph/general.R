@@ -73,15 +73,13 @@ isIGraphObjectValid <- function(filteredNetworkDF, subgraphChoice, layerName) {
 }
 
 createGraph <- function(edgelist) {
-  graph <- igraph::graph_from_edgelist(
-    as.matrix(edgelist[, c('SourceNode_Layer', 'TargetNode_Layer')]), directed = F
-  )
+  graph <- igraph::graph_from_data_frame(edgelist, directed = F)
   igraph::E(graph)$weight <- as.double(edgelist[, 'ScaledWeight'])
   # if it does not have channels remove multiple edges else not 
   removeMultiple <- is.na(input$channels_layout) 
   # remove loops and multiple edges, simplify sum aggregates same edges
   graph <- igraph::simplify(graph, remove.multiple = removeMultiple,
-                            remove.loops = F, edge.attr.comb = list(weight = "sum"))
+                            remove.loops = F, edge.attr.comb = "sum")
   return(graph)
 }
 
