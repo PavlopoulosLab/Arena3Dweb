@@ -11,63 +11,65 @@ handleClusterAlgorithmSelection <- function() {
   })
 }
 
-# @param clusters (communities list): output from igraph clustering algorithms such as louvain
-# we are using $membership and $names form this clusters object
-# @return annotations (2-col character dataframe): col1 clustering groups, col2 comma separated members per group
-parseClusterData <- function(clusters){
-  clusters$membership <- as.character(clusters$membership)
-  groups <- unique(clusters$membership)
-  annotations <- matrix(, nrow=0, ncol=2)
-  for (i in 1:length(groups)){
-    annotations <- rbind(annotations, c(groups[i], paste(clusters$names[which(clusters$membership %in% groups[i])], collapse=',')))
+isClusteringEnabled <- function() {
+  isEnabled <- F
+  if (input$clusteringAlgorithmChoice != "-") {
+    isEnabled <- T
+    if (input$localLayoutAlgorithmChoice == "-") {
+      isEnabled <- F
+      renderWarning("You need to select a local layout algorithm for the clusters.")
+    }
   }
-  return(as.data.frame(annotations))
+  return(isEnabled)
 }
 
-# @param cluster_name (string): string name from UI
-# @return cluster_function_name (string): cluster name needed for stategy3_superNodes 
-getFormatedClusterString <- function(cluster_name) {
-  if (cluster_name == "Louvain"){
-    return('cluster_louvain')
-  } else if (cluster_name == "Walktrap"){
-    return('cluster_walktrap')
-  } else if (cluster_name == "Edge Betweenness"){
-    return('cluster_edge_betweenness')
-  } else if (cluster_name == "Fast Greedy"){
-    return('cluster_fast_greedy')
-  } else if (cluster_name == "Label Propagation"){
-    return('cluster_label_prop')
-  } 
+calculateClusteredLayout <- function(networkGraph) {
+  assignedClusters <- applyClustering(networkGraph)
+  globalLayoutFunc <- getLayoutFunction(input$layoutAlgorithmChoice)
+  localLayoutFunc <- getLayoutFunction(input$localLayoutAlgorithmChoice)
+  
+  nodes_layout <- 
+    execute_strategy3_superNodes(networkGraph, assignedClusters,
+                                 globalLayoutFunc, localLayoutFunc)
+  return(nodes_layout)
 }
 
-# @param networkEdgelist (dataframe): Dataframe with edges 
-# @param layout (character): Layout needed for stategy3_superNodes functions 
-# @param local_layout (character): Local Layout needed for stategy3_superNodes functions 
-# @param cluster (character): Cluster needed for stategy3_superNodes functions 
-# @return void
-applyCluster <- function(networkEdgelist, layout, local_layout, cluster){
-  callJSHandler("handler_startLoader", T)
-  formatted_layout <- getFormatedLayoutString(layout)
-  formatted_local_layout <- getFormatedLayoutString(local_layout)
-  formatted_cluster <- getFormatedClusterString(cluster)
-  sub_graph <- createGraph(networkEdgelist) # V(graph)
-  sub_nodes <- V(sub_graph)$name # unsorted
-  sub_weights <- E(sub_graph)$weight # != networkEdgelist[, 3]
-  # if(cluster == 'Leiden') {
-  #   clustered_graph <- cluster_leiden(sub_graph,resolution_parameter=0.06)
-  # } else {
-  clustered_graph <- eval(parse(text = paste0(formatted_cluster, "(sub_graph)")))
-  # }
-  annotations <- parseClusterData(clustered_graph)
-  colnames(annotations) <- c('Annotations', 'Nodes')
-  layout_coords <- strategy3_superNodes(sub_graph, annotations, formatted_layout, formatted_local_layout,3)
-  nodes_layout <- cbind(layout_coords$network_nodes, layout_coords$lay)
-  nodes_layout <-  as.matrix(merge(nodes_layout, layout_coords$groups_expanded, by.x = 1, by.y = "Nodes"))
-  callJSHandler("handler_layout", nodes_layout)
-  callJSHandler("handler_finishLoader", T)
-  # reset("clusteringAlgorithmChoice")
-  # reset("layoutAlgorithmChoice")
-  # reset("localLayoutAlgorithmChoice")
+applyClustering <- function(networkGraph) {
+  clusteringResults <- switch(
+    input$clusteringAlgorithmChoice,
+    "Louvain" = igraph::cluster_louvain(networkGraph),
+    "Walktrap" = igraph::cluster_walktrap(networkGraph),
+    "Fast Greedy" = igraph::cluster_fast_greedy(networkGraph),
+    "Label Propagation" = igraph::cluster_label_prop(networkGraph)
+  )
+  
+  assignedClusters <- data.frame()
+  for (i in 1:length(clusteringResults)) {
+    assignedClusters <- rbind(assignedClusters, cbind(i, paste(clusteringResults[[i]], collapse = ",")))
+  }
+  colnames(assignedClusters) <- c("Annotations", "Nodes")
+  
+  return(assignedClusters)
+}
+
+getLayoutFunction <- function(layout_name) {
+  layoutFunction <- switch(
+    layout_name,
+    "Reingold-Tilford" = "layout_as_tree",
+    "Circle" = "layout_in_circle",
+    "Grid" = "layout_on_grid",
+    "Random" = "layout_randomly",
+    "Davidson-Harel" = "layout_with_dh",
+    "DrL" = "layout_with_drl",
+    "Fruchterman-Reingold" = "layout_with_fr",
+    "GEM" = "layout_with_gem",
+    "Graphopt" = "layout_with_graphopt",
+    "Kamada-Kawai" = "layout_with_kk",
+    "Large Graph Layout" = "layout_with_lgl",
+    "Multidimensional Scaling" = "layout_with_mds",
+    "Sugiyama" = "layout_with_sugiyama",
+  )
+  return(layoutFunction)
 }
 
 # Function for Layouts with superNodes per Annotation Group
@@ -78,15 +80,15 @@ applyCluster <- function(networkEdgelist, layout, local_layout, cluster){
 # @param repeling_force(int): the user-selected repeling force
 # @return lay (2d double matrix): the layout coordinates
 # @return network_nodes (character vector): the proper order of nodes(names) to correctly attach to canvas
-strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force){
+execute_strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force = 3){
   lay <- NULL
   network_nodes <- NULL
   if (!(is.null(g) || is.null(groups))){
     set.seed(123)
     # network
-    E(g)$Weight <- 1
-    my_network <- as.data.frame(get.edgelist(g))
-    my_network <- cbind(my_network, as.double(E(g)$Weight))
+    igraph::E(g)$Weight <- 1
+    my_network <- as.data.frame(igraph::get.edgelist(g))
+    my_network <- cbind(my_network, as.double(igraph::E(g)$Weight))
     colnames(my_network) <- c('Source', 'Target', 'Weight')
     network_nodes <- unique(c(my_network$Source, my_network$Target))
     # annotations
@@ -106,17 +108,17 @@ strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force
     graphFrame$Target[!is.na(graphFrame$Annotations.y)] <- graphFrame$Annotations.y[!is.na(graphFrame$Annotations.y)]
     graphFrame <- graphFrame[, c('Source', 'Target', 'Weight')]
     # 2. create graph and apply layout on this compound supernode network
-    temp_g <- graph_from_data_frame(graphFrame, directed = F)
-    E(temp_g)$weight <- as.numeric(graphFrame$Weight)
+    temp_g <- igraph::graph_from_data_frame(graphFrame, directed = F)
+    igraph::E(temp_g)$weight <- as.numeric(graphFrame$Weight)
     temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "max")
-    lay_super <- eval(parse(text = paste0(layout, "(temp_g)")))
+    lay_super <- eval(parse(text = paste0("igraph::", layout, "(temp_g)")))
     # lay_super <- layout_with_fr(temp_g)
     # plot(temp_g, layout = lay_super)
     
     if (identical(typeof(lay_super), "double")){ # most layout algorithms
-      lay_super <- cbind(lay_super, names(V(temp_g)))
+      lay_super <- cbind(lay_super, names(igraph::V(temp_g)))
     } else{ # Sugiyama, list instead of double
-      lay_super <- cbind(lay_super$layout, names(V(temp_g)))
+      lay_super <- cbind(lay_super$layout, names(igraph::V(temp_g)))
     }
     
     # 3. push all nodes above away from 0,0 // also check minx maxx for layout as alternative
@@ -136,7 +138,7 @@ strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force
     # extra edges dataframe for all groups
     extra_edges <- merge(groups_expanded, groups_expanded, by.x = "Annotations", by.y = "Annotations")
     lay <- matrix(, nrow = 0, ncol = 3)
-
+    
     for (group in unique(groups_expanded$Annotations)){
       tempFrame <- superFrame
       tempFrame <- tempFrame[(tempFrame$Annotations.x == group & tempFrame$Annotations.y == group), ]
@@ -146,50 +148,50 @@ strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force
       # create any missing in-group edges with minimum weight
       # (all against all in same groups that do not already exist in tempFrame)
       temp_extra_edges <- extra_edges[extra_edges$Annotations == group, ]
-      temp_g <- graph_from_data_frame(temp_extra_edges[, c(2,3)], directed = F)
+      temp_g <- igraph::graph_from_data_frame(temp_extra_edges[, c(2,3)], directed = F)
       min_weight <- ifelse(identical(min(tempFrame$Weight), Inf), 1, min(tempFrame$Weight))
       # Kamada kawai 
-      if ('layout_with_kk' == layout) E(temp_g)$weight <- min_weight * repeling_force
-      else  E(temp_g)$weight <- min_weight / repeling_force # * 1.0001 # invisible weight = max network value *2
+      if ('layout_with_kk' == layout) igraph::E(temp_g)$weight <- min_weight * repeling_force
+      else igraph::E(temp_g)$weight <- min_weight / repeling_force # * 1.0001 # invisible weight = max network value *2
       temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "first")
-      temp_extra_edges <- as.data.frame(cbind( get.edgelist(temp_g) , E(temp_g)$weight ))
+      temp_extra_edges <- as.data.frame(cbind(igraph::get.edgelist(temp_g) , igraph::E(temp_g)$weight ))
       colnames(temp_extra_edges) <- c('Source', 'Target', 'Weight')
       
       tempFrame <- rbind(tempFrame, temp_extra_edges)
       
       if (nrow(tempFrame) > 0){
-        temp_g <- graph_from_data_frame(tempFrame, directed = F)
-        E(temp_g)$weight <- as.numeric(tempFrame$Weight)
+        temp_g <- igraph::graph_from_data_frame(tempFrame, directed = F)
+        igraph::E(temp_g)$weight <- as.numeric(tempFrame$Weight)
         temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "max")
         # temp_lay <- layout_with_fr(temp_g)
-        temp_lay <- eval(parse(text = paste0( local_layout, "(temp_g)")))
+        temp_lay <- eval(parse(text = paste0("igraph::", local_layout, "(temp_g)")))
         
         # plot(temp_g, layout = temp_lay)
         if (identical(typeof(temp_lay), "double")){ # most layout algorithms
-          temp_lay <- cbind(temp_lay, names(V(temp_g)))
+          temp_lay <- cbind(temp_lay, names(igraph::V(temp_g)))
         } else{ # Sugiyama, list instead of double
-          temp_lay <- cbind(temp_lay$layout, names(V(temp_g)))
+          temp_lay <- cbind(temp_lay$layout, names(igraph::V(temp_g)))
         }
         
-        groupX <- lay_super[lay_super[,3] == group, 1]
-        groupY <- lay_super[lay_super[,3] == group, 2]
+        groupX <- lay_super[lay_super[, 3] == group, 1]
+        groupY <- lay_super[lay_super[, 3] == group, 2]
         temp_lay[, 1] <- as.numeric(temp_lay[, 1]) + groupX
         temp_lay[, 2] <- as.numeric(temp_lay[, 2]) + groupY
         lay <- rbind(lay, temp_lay)
-      } else{
-        lay <- rbind(lay, c(lay_super[lay_super[,3] == group, 1],
-                            lay_super[lay_super[,3] == group, 2],
+      } else {
+        lay <- rbind(lay, c(lay_super[lay_super[, 3] == group, 1],
+                            lay_super[lay_super[, 3] == group, 2],
                             groups$Nodes[groups$Annotations == group]))
       }
     } # end for
-
+    
     # 5. calculate coordinates for duplicate nodes
     dflay <- as.data.frame(lay)
     dflay$V1 <- as.numeric(dflay$V1)
     dflay$V2 <- as.numeric(dflay$V2)
-    meanX <- aggregate(dflay$V1, by=list(dflay$V3), FUN=mean)
+    meanX <- aggregate(dflay$V1, by = list(dflay$V3), FUN = mean)
     colnames(meanX) <- c("Node", "X")
-    meanY <- aggregate(dflay$V2, by=list(dflay$V3), FUN=mean)
+    meanY <- aggregate(dflay$V2, by = list(dflay$V3), FUN = mean)
     colnames(meanY) <- c("Node", "Y")
     dflay <- merge(meanX, meanY)
     dflay <- as.matrix(dflay[, c("X", "Y", "Node")])
@@ -200,5 +202,12 @@ strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force
     
     lay <- cbind(as.numeric(lay[, 1]), as.numeric(lay[, 2]))
   }
-  return(list(lay = lay, network_nodes = network_nodes, groups_expanded = groups_expanded))
+  
+  # wrap up
+  nodes_layout <- cbind(network_nodes, lay)
+  nodes_layout <- as.matrix(merge(nodes_layout, groups_expanded,
+                                  by.x = 1, by.y = "Nodes"))
+  colnames(nodes_layout) <- c("name", "y", "z", "group")
+  nodes_layout <- as.data.frame(nodes_layout)
+  return(nodes_layout)
 }

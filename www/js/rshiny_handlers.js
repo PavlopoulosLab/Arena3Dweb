@@ -768,16 +768,18 @@ const assignXYZ = (nodePositions) => {
   }
   localLayoutFlag = false;
 
-  if (nodePositions && nodePositions.name && nodePositions.name.length == 4) { // TODO test
+  // Clustering + colors
+  if (nodePositions.group != null) {
     for (i = 0; i < nodePositions.name.length; i++){
       node_name = nodePositions.name[i].trim();
       if (nodes[node_whole_names.indexOf(node_name)]) {
-        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colors[nodePositions[i][3]]); // TODO color from clustering
-        node_cluster_colors[node_whole_names.indexOf(node_name)] = colors[nodePositions[i][3]];
-        nodes[node_whole_names.indexOf(node_name)].userData.cluster = nodePositions[i][3];
+        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colors[nodePositions.group[i]]);
+        node_cluster_colors[node_whole_names.indexOf(node_name)] = colors[nodePositions.group[i]];
+        nodes[node_whole_names.indexOf(node_name)].userData.cluster = nodePositions.group[i];
       }
     }
-  }
+  } // end clustering colors
+  
   updateNodesRShiny();
   redrawEdges();
 
