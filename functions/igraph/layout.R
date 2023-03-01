@@ -102,7 +102,7 @@ shiftValuesByOne <- function(vec) {
 applyLayoutWithOptionalClustering <- function(networkGraph) {
   if (class(networkGraph) == "igraph") {
     if (isClusteringEnabled())
-      nodePositions <- calculateClusteredLayout(networkGraph) # TODO check for Circle layouts etc
+      nodePositions <- calculateClusteredLayout(networkGraph)
     else
       nodePositions <- calculateLayout(networkGraph, input$layoutAlgorithmChoice)
     callJSHandler("handler_layout", nodePositions)

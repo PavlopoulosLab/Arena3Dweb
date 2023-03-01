@@ -72,32 +72,27 @@ getLayoutFunction <- function(layout_name) {
   return(layoutFunction)
 }
 
-# Function for Layouts with superNodes per Annotation Group
-# @param g(igraph obj): the selected network
-# @param groups(dataframe): the selected annotation file -> names and respective nodes
-# @param layout(string): the user-selected layout choice
-# @param local_layout(string): the user-selected layout choice for in-group layouts
-# @param repeling_force(int): the user-selected repeling force
-# @return lay (2d double matrix): the layout coordinates
-# @return network_nodes (character vector): the proper order of nodes(names) to correctly attach to canvas
-execute_strategy3_superNodes <- function(g, groups, layout, local_layout, repeling_force = 3){
+execute_strategy3_superNodes <- function(networkGraph, assignedClusters,
+                                         globalLayoutFunc, localLayoutFunc,
+                                         repeling_force = 3) {
+  # TODO check for Circle layouts etc
+  
   lay <- NULL
   network_nodes <- NULL
-  if (!(is.null(g) || is.null(groups))){
-    set.seed(123)
+  if (!(is.null(networkGraph) || is.null(assignedClusters))){
     # network
-    igraph::E(g)$Weight <- 1
-    my_network <- as.data.frame(igraph::get.edgelist(g))
-    my_network <- cbind(my_network, as.double(igraph::E(g)$Weight))
+    igraph::E(networkGraph)$weight <- 1
+    my_network <- as.data.frame(igraph::get.edgelist(networkGraph))
+    my_network <- cbind(my_network, as.double(igraph::E(networkGraph)$weight))
     colnames(my_network) <- c('Source', 'Target', 'Weight')
     network_nodes <- unique(c(my_network$Source, my_network$Target))
     # annotations
-    groups_expanded <- groups %>% separate_rows(Nodes, sep=",")
+    groups_expanded <- assignedClusters %>% separate_rows(Nodes, sep=",")
     groups_expanded <- groups_expanded[which(groups_expanded$Nodes %in% network_nodes), ] # removing non-existing nodes
     noGroupNodes <- network_nodes[!(network_nodes %in% groups_expanded$Nodes)]
     # 1. create dataframe of one supernode per group plus no-group nodes
     # Source Target -> swap all nodes with their respective Group Name(s)
-    # if multiple groups per node, add the extra edges
+    # if multiple assignedClusters per node, add the extra edges
     # e.g. Group1+2Node - noGroupNode -> Group1 - noGroupNode, Group2 - noGroupNode
     # merge my_network with groups_expanded two times ( Source - Nodes, Target - Nodes)
     # where annotations not NA, swap Source or Target with respective Group Name
@@ -107,15 +102,13 @@ execute_strategy3_superNodes <- function(g, groups, layout, local_layout, repeli
     graphFrame$Source[!is.na(graphFrame$Annotations.x)] <- graphFrame$Annotations.x[!is.na(graphFrame$Annotations.x)]
     graphFrame$Target[!is.na(graphFrame$Annotations.y)] <- graphFrame$Annotations.y[!is.na(graphFrame$Annotations.y)]
     graphFrame <- graphFrame[, c('Source', 'Target', 'Weight')]
-    # 2. create graph and apply layout on this compound supernode network
+    # 2. create graph and apply globalLayoutFunc on this compound supernode network
     temp_g <- igraph::graph_from_data_frame(graphFrame, directed = F)
     igraph::E(temp_g)$weight <- as.numeric(graphFrame$Weight)
     temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "max")
-    lay_super <- eval(parse(text = paste0("igraph::", layout, "(temp_g)")))
-    # lay_super <- layout_with_fr(temp_g)
-    # plot(temp_g, layout = lay_super)
+    lay_super <- eval(parse(text = paste0("igraph::", globalLayoutFunc, "(temp_g)")))
     
-    if (identical(typeof(lay_super), "double")){ # most layout algorithms
+    if (identical(typeof(lay_super), "double")) { # most layout algorithms
       lay_super <- cbind(lay_super, names(igraph::V(temp_g)))
     } else{ # Sugiyama, list instead of double
       lay_super <- cbind(lay_super$layout, names(igraph::V(temp_g)))
@@ -135,7 +128,7 @@ execute_strategy3_superNodes <- function(g, groups, layout, local_layout, repeli
     colnames(lay_super)[3] <- 'Node'
     # 4. foreach group, add low-weight within group edges and
     # apply layout (2nd input choice) with the respective (x,y) coords system
-    # extra edges dataframe for all groups
+    # extra edges dataframe for all assignedClusters
     extra_edges <- merge(groups_expanded, groups_expanded, by.x = "Annotations", by.y = "Annotations")
     lay <- matrix(, nrow = 0, ncol = 3)
     
@@ -146,12 +139,12 @@ execute_strategy3_superNodes <- function(g, groups, layout, local_layout, repeli
       tempFrame <- tempFrame[, c('Source', 'Target', 'Weight')]
       
       # create any missing in-group edges with minimum weight
-      # (all against all in same groups that do not already exist in tempFrame)
+      # (all against all in same assignedClusters that do not already exist in tempFrame)
       temp_extra_edges <- extra_edges[extra_edges$Annotations == group, ]
       temp_g <- igraph::graph_from_data_frame(temp_extra_edges[, c(2,3)], directed = F)
       min_weight <- ifelse(identical(min(tempFrame$Weight), Inf), 1, min(tempFrame$Weight))
       # Kamada kawai 
-      if ('layout_with_kk' == layout) igraph::E(temp_g)$weight <- min_weight * repeling_force
+      if ('layout_with_kk' == globalLayoutFunc) igraph::E(temp_g)$weight <- min_weight * repeling_force
       else igraph::E(temp_g)$weight <- min_weight / repeling_force # * 1.0001 # invisible weight = max network value *2
       temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "first")
       temp_extra_edges <- as.data.frame(cbind(igraph::get.edgelist(temp_g) , igraph::E(temp_g)$weight ))
@@ -163,10 +156,8 @@ execute_strategy3_superNodes <- function(g, groups, layout, local_layout, repeli
         temp_g <- igraph::graph_from_data_frame(tempFrame, directed = F)
         igraph::E(temp_g)$weight <- as.numeric(tempFrame$Weight)
         temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "max")
-        # temp_lay <- layout_with_fr(temp_g)
-        temp_lay <- eval(parse(text = paste0("igraph::", local_layout, "(temp_g)")))
+        temp_lay <- eval(parse(text = paste0("igraph::", localLayoutFunc, "(temp_g)")))
         
-        # plot(temp_g, layout = temp_lay)
         if (identical(typeof(temp_lay), "double")){ # most layout algorithms
           temp_lay <- cbind(temp_lay, names(igraph::V(temp_g)))
         } else{ # Sugiyama, list instead of double
@@ -181,7 +172,7 @@ execute_strategy3_superNodes <- function(g, groups, layout, local_layout, repeli
       } else {
         lay <- rbind(lay, c(lay_super[lay_super[, 3] == group, 1],
                             lay_super[lay_super[, 3] == group, 2],
-                            groups$Nodes[groups$Annotations == group]))
+                            assignedClusters$Nodes[assignedClusters$Annotations == group]))
       }
     } # end for
     
