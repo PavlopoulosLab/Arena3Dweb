@@ -269,6 +269,7 @@ parseUploadedJSON <- function(jsonNetwork) {
   jsonNetwork <- chooseToScrambleNodes(jsonNetwork)
   jsonNetwork <- chooseNodesOrDefaults(jsonNetwork)
   jsonNetwork <- chooseEdgesOrDefaults(jsonNetwork)
+  jsonNetwork <- handleJSONChannels(jsonNetwork)
   jsonNetwork <- addExtraJSONCommands(jsonNetwork)
   return(jsonNetwork)
 }
@@ -428,7 +429,18 @@ chooseEdgesOrDefaults <- function(jsonNetwork) {
   jsonNetwork$edges$color <-
     keepValuesOrDefault(jsonNetwork$edges$color, EDGE_DEFAULT_COLOR)
   jsonNetwork$edges$channel <-
-    keepValuesOrDefault(jsonNetwork$edges$channel, NA)
+    keepValuesOrDefault(jsonNetwork$edges$channel, "")
+  return(jsonNetwork)
+}
+
+handleJSONChannels <- function(jsonNetwork) {
+  if (all(jsonNetwork$edges$channel == "")) {
+    jsonNetwork$edges$channel <- NULL
+  } else if (any(jsonNetwork$edges$channel == "")) {
+    jsonNetwork$edges$channel <- NULL
+    renderWarning("At least one edge has no channel name.\n
+                  Removing channels completely.")
+  }
   return(jsonNetwork)
 }
 
@@ -483,6 +495,8 @@ parseJSONEdgesIntoNetwork <- function(edges) {
     channelColumn <- "Channel"
   df <- df[, c(MANDATORY_NETWORK_COLUMNS, channelColumn, "Weight",
                "SourceNode_Layer", "TargetNode_Layer", "ScaledWeight")]
+  # in case channels were badly imported, removing remaining duplicates here
+  df <- removeDuplicateNetworkRows(df) 
   return(df)
 }
 
