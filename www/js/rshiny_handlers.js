@@ -250,7 +250,7 @@ const importNetwork = (jsonNetwork) => {
       edge_channels.push([]);
     }
     
-    if (jsonNetwork.edges.channel[i] !== null) {
+    if (jsonNetwork.edges.channel != null) {
       //create edge_attributes.Channel
       if (!edge_attributes.Channel) {
         edge_attributes.Channel = []
