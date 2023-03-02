@@ -263,13 +263,13 @@ existMandatoryEdgeColumns <- function(edges) {
 parseUploadedJSON <- function(jsonNetwork) {
   jsonNetwork <- subsetLegitObjects(jsonNetwork)
   jsonNetwork <- trimJSONData(jsonNetwork)
+  jsonNetwork <- handleJSONChannels(jsonNetwork)
   jsonNetwork$edges <- removeDuplicateJSONEdges(jsonNetwork$edges)
   jsonNetwork <- chooseSceneOrDefaults(jsonNetwork)
   jsonNetwork <- chooseLayersOrDefaults(jsonNetwork)
   jsonNetwork <- chooseToScrambleNodes(jsonNetwork)
   jsonNetwork <- chooseNodesOrDefaults(jsonNetwork)
   jsonNetwork <- chooseEdgesOrDefaults(jsonNetwork)
-  jsonNetwork <- handleJSONChannels(jsonNetwork)
   jsonNetwork <- addExtraJSONCommands(jsonNetwork)
   return(jsonNetwork)
 }
@@ -294,8 +294,26 @@ trimJSONData <- function(jsonNetwork) {
   return(jsonNetwork)
 }
 
+handleJSONChannels <- function(jsonNetwork) {
+  saveRDS(jsonNetwork, "jsonNetwork.RDS")
+  if (!is.null(jsonNetwork$edges$channel)) {
+    if (all(jsonNetwork$edges$channel == "")) {
+      jsonNetwork$edges$channel <- NULL
+    } else if ((any(jsonNetwork$edges$channel == "")) ||
+                (any(is.na(jsonNetwork$edges$channel)))) {
+      jsonNetwork$edges$channel <- NULL
+      renderWarning("At least one edge has no channel name.\n
+                    Removing channels completely.")
+    }
+  }
+  return(jsonNetwork)
+}
+
 removeDuplicateJSONEdges <- function(edges) {
-  edges <- dplyr::distinct(edges, src, trg, channel, .keep_all = T)
+  if (is.null(edges$channel))
+    edges <- dplyr::distinct(edges, src, trg, .keep_all = T)
+  else
+    edges <- dplyr::distinct(edges, src, trg, channel, .keep_all = T)
   return(edges)
 }
 
@@ -428,19 +446,6 @@ chooseEdgesOrDefaults <- function(jsonNetwork) {
     keepValuesOrDefault(jsonNetwork$edges$opacity, 1)
   jsonNetwork$edges$color <-
     keepValuesOrDefault(jsonNetwork$edges$color, EDGE_DEFAULT_COLOR)
-  jsonNetwork$edges$channel <-
-    keepValuesOrDefault(jsonNetwork$edges$channel, "")
-  return(jsonNetwork)
-}
-
-handleJSONChannels <- function(jsonNetwork) {
-  if (all(jsonNetwork$edges$channel == "")) {
-    jsonNetwork$edges$channel <- NULL
-  } else if (any(jsonNetwork$edges$channel == "")) {
-    jsonNetwork$edges$channel <- NULL
-    renderWarning("At least one edge has no channel name.\n
-                  Removing channels completely.")
-  }
   return(jsonNetwork)
 }
 
@@ -495,8 +500,6 @@ parseJSONEdgesIntoNetwork <- function(edges) {
     channelColumn <- "Channel"
   df <- df[, c(MANDATORY_NETWORK_COLUMNS, channelColumn, "Weight",
                "SourceNode_Layer", "TargetNode_Layer", "ScaledWeight")]
-  # in case channels were badly imported, removing remaining duplicates here
-  df <- removeDuplicateNetworkRows(df) 
   return(df)
 }
 
