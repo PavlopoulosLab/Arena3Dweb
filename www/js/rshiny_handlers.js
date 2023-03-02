@@ -708,15 +708,15 @@ const resizeLabels = (message) => {
 }
 
 // Layouts and Topology ====================
-const assignXYZ = (nodePositions) => {
+const assignXYZ = (nodeCoords) => {
   let y_arr = [], //x always 0, assign on floor every time
       z_arr = [],
       node_name = "",
       y_coord = z_coord = 0,
     layerIndex = "";
-  for (let i = 0; i < nodePositions.name.length; i++){
-    y_arr.push(Number(nodePositions.y[i]));
-    z_arr.push(Number(nodePositions.z[i]));
+  for (let i = 0; i < nodeCoords.name.length; i++){
+    y_arr.push(Number(nodeCoords.y[i]));
+    z_arr.push(Number(nodeCoords.z[i]));
   }
   let y_min = Math.min.apply(Math, y_arr),
       y_max = Math.max.apply(Math, y_arr),
@@ -727,11 +727,11 @@ const assignXYZ = (nodePositions) => {
       target_z_min = zBoundMin,
       target_z_max = zBoundMax;
   if (localLayoutFlag){ //if local layout, change target mins and maxes and then unset flag
-    layerIndex = layer_groups[node_groups[nodePositions.name[0]]];
-    target_y_min = target_y_max = nodes[node_whole_names.indexOf(nodePositions.name[0].trim())].position.y/last_layer_scale[layerIndex],
-    target_z_min = target_z_max = nodes[node_whole_names.indexOf(nodePositions.name[0].trim())].position.z/last_layer_scale[layerIndex];
-    for (i = 1; i < nodePositions.name.length; i++) {
-      node_name = nodePositions.name[i].trim();
+    layerIndex = layer_groups[node_groups[nodeCoords.name[0]]];
+    target_y_min = target_y_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.y/last_layer_scale[layerIndex],
+    target_z_min = target_z_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.z/last_layer_scale[layerIndex];
+    for (i = 1; i < nodeCoords.name.length; i++) {
+      node_name = nodeCoords.name[i].trim();
       if (nodes[node_whole_names.indexOf(node_name)]) {
         y_coord = nodes[node_whole_names.indexOf(node_name)].position.y / last_layer_scale[layerIndex];
         z_coord = nodes[node_whole_names.indexOf(node_name)].position.z / last_layer_scale[layerIndex];
@@ -749,10 +749,10 @@ const assignXYZ = (nodePositions) => {
       }
     }
   }
-  for (i = 0; i < nodePositions.name.length; i++){
-    node_name = nodePositions.name[i].trim();
+  for (i = 0; i < nodeCoords.name.length; i++){
+    node_name = nodeCoords.name[i].trim();
     if (session_flag && !localLayoutFlag) {
-      layerIndex = layer_groups[node_groups[nodePositions.name[0]]];
+      layerIndex = layer_groups[node_groups[nodeCoords.name[0]]];
       target_y_max = -layer_planes[layerIndex].geometry.parameters.width / 2;
       target_y_min = layer_planes[layerIndex].geometry.parameters.width/2;
       target_z_max = layer_planes[layerIndex].geometry.parameters.width/2.5;
@@ -769,13 +769,13 @@ const assignXYZ = (nodePositions) => {
   localLayoutFlag = false;
 
   // Clustering + colors
-  if (nodePositions.group != null) {
-    for (i = 0; i < nodePositions.name.length; i++){
-      node_name = nodePositions.name[i].trim();
+  if (nodeCoords.group != null) {
+    for (i = 0; i < nodeCoords.name.length; i++){
+      node_name = nodeCoords.name[i].trim();
       if (nodes[node_whole_names.indexOf(node_name)]) {
-        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colors[nodePositions.group[i]]);
-        node_cluster_colors[node_whole_names.indexOf(node_name)] = colors[nodePositions.group[i]];
-        nodes[node_whole_names.indexOf(node_name)].userData.cluster = nodePositions.group[i];
+        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colors[nodeCoords.group[i]]);
+        node_cluster_colors[node_whole_names.indexOf(node_name)] = colors[nodeCoords.group[i]];
+        nodes[node_whole_names.indexOf(node_name)].userData.cluster = nodeCoords.group[i];
       }
     }
   } // end clustering colors

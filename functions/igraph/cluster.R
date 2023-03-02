@@ -28,10 +28,10 @@ calculateClusteredLayout <- function(networkGraph) {
   globalLayoutFunc <- getLayoutFunction(input$layoutAlgorithmChoice)
   localLayoutFunc <- getLayoutFunction(input$localLayoutAlgorithmChoice)
   
-  nodes_layout <- 
+  nodeCoords <- 
     execute_strategy3_superNodes_strictPartitioning(
       networkGraph, assignedClusters, globalLayoutFunc, localLayoutFunc)
-  return(nodes_layout)
+  return(nodeCoords)
 }
 
 applyClustering <- function(networkGraph) {
@@ -67,66 +67,12 @@ execute_strategy3_superNodes_strictPartitioning <- function(
   expandedGroups <- assignedClusters %>% tidyr::separate_rows(Nodes, sep = ", ")
   subNetworkWithGroups <- appendClusters(subNetwork, expandedGroups)
   groupsGraph <- extractGroupsGraph(subNetworkWithGroups)
-  superNodeCoords <- extractSuperNodeCoords(groupsGraph, globalLayoutFunc,
-                                            repelling_force)
-  
-  
-  # 4. foreach group, add low-weight within group edges and
-  # apply layout (2nd input choice) with the respective (x,y) coords system
-  # extra edges dataframe for all assignedClusters
-  extra_edges <- merge(expandedGroups, expandedGroups, by.x = "Annotations", by.y = "Annotations")
-  lay <- matrix(, nrow = 0, ncol = 3)
-  
-  for (group in unique(expandedGroups$Annotations)){
-    tempFrame <- subNetworkWithGroups
-    tempFrame <- tempFrame[(tempFrame$SourceGroup == group & tempFrame$TargetGroup == group), ]
-    tempFrame <- tempFrame[!is.na(tempFrame$Source) & !is.na(tempFrame$Target), ]
-    tempFrame <- tempFrame[, c('Source', 'Target', 'weight')]
-    
-    # create any missing in-group edges with minimum weight
-    # (all against all in same assignedClusters that do not already exist in tempFrame)
-    temp_extra_edges <- extra_edges[extra_edges$Annotations == group, ]
-    temp_g <- igraph::graph_from_data_frame(temp_extra_edges[, c(2,3)], directed = F)
-    min_weight <- ifelse(identical(min(tempFrame$weight), Inf), 1, min(tempFrame$weight))
-    # Kamada kawai 
-    if ('layout_with_kk' == globalLayoutFunc) igraph::E(temp_g)$weight <- min_weight * repelling_force
-    else igraph::E(temp_g)$weight <- min_weight / repelling_force # * 1.0001 # invisible weight = max network value *2
-    temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "first")
-    temp_extra_edges <- as.data.frame(cbind(igraph::get.edgelist(temp_g) , igraph::E(temp_g)$weight ))
-    colnames(temp_extra_edges) <- c('Source', 'Target', 'weight')
-    
-    tempFrame <- rbind(tempFrame, temp_extra_edges)
-    
-    if (nrow(tempFrame) > 0){
-      temp_g <- igraph::graph_from_data_frame(tempFrame, directed = F)
-      igraph::E(temp_g)$weight <- as.numeric(tempFrame$weight)
-      temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "max")
-      temp_lay <- eval(parse(text = paste0("igraph::", localLayoutFunc, "(temp_g)")))
-      
-      if (identical(typeof(temp_lay), "double")){ # most layout algorithms
-        temp_lay <- cbind(temp_lay, names(igraph::V(temp_g)))
-      } else{ # Sugiyama, list instead of double
-        temp_lay <- cbind(temp_lay$layout, names(igraph::V(temp_g)))
-      }
-      
-      groupX <- superNodeCoords[superNodeCoords$superNode == group, ]$x
-      groupY <- superNodeCoords[superNodeCoords$superNode == group, ]$y
-      temp_lay[, 1] <- as.numeric(temp_lay[, 1]) + groupX
-      temp_lay[, 2] <- as.numeric(temp_lay[, 2]) + groupY
-      lay <- rbind(lay, temp_lay)
-    } else {
-      lay <- rbind(lay, c(superNodeCoords[superNodeCoords$superNode == group, ]$x,
-                          superNodeCoords[superNodeCoords$superNode == group, ]$y,
-                          assignedClusters$Nodes[assignedClusters$Annotations == group]))
-    }
-  } # end for
-  
-  # wrap up
-  lay <- as.data.frame(lay)
-  colnames(lay) <- c("x", "y", "Nodes")
-  nodes_layout <- merge(lay, expandedGroups)
-  colnames(nodes_layout) <- c("name", "y", "z", "group")
-  return(nodes_layout)
+  superNodeCoords <- calculateSuperNodeCoords(groupsGraph, globalLayoutFunc,
+                                              repelling_force)
+  nodeCoords <- calculateNodeCoordsPerCluster(expandedGroups, subNetworkWithGroups,
+                                              superNodeCoords, globalLayoutFunc,
+                                              localLayoutFunc, repelling_force)
+  return(nodeCoords)
 }
 
 convertGraphToDF <- function(networkGraph) {
@@ -158,14 +104,10 @@ extractGroupsGraph <- function(subNetworkWithGroups) {
   return(groupsGraph)
 }
 
-extractSuperNodeCoords <- function(groupsGraph, globalLayoutFunc, repelling_force) {
+calculateSuperNodeCoords <- function(groupsGraph, globalLayoutFunc, repelling_force) {
   superNodeCoords <- eval(parse(text = paste0("igraph::", globalLayoutFunc, "(groupsGraph)")))
-  
-  if (globalLayoutFunc == "layout_with_sugiyama")
-    superNodeCoords <- cbind(superNodeCoords$layout, names(igraph::V(groupsGraph)))
-  else
-    superNodeCoords <- cbind(superNodeCoords, names(igraph::V(groupsGraph)))
-  superNodeCoords <- as.data.frame(superNodeCoords)
+  superNodeCoords <- bindNamesToLayout(globalLayoutFunc, superNodeCoords,
+                                       groupsGraph)
   colnames(superNodeCoords) <- c("x", "y", "superNode")
   
   # The following will repel all super nodes away from 0,0:
@@ -177,4 +119,68 @@ extractSuperNodeCoords <- function(groupsGraph, globalLayoutFunc, repelling_forc
   superNodeCoords$x <- repelling_force * superNodeCoords$x
   superNodeCoords$y <- superNodeCoords$a * superNodeCoords$x
   return(superNodeCoords)
+}
+
+bindNamesToLayout <- function(layoutFunc, nodeCoords, graphObject) {
+  if (layoutFunc == "layout_with_sugiyama")
+    nodeCoords <- cbind(nodeCoords$layout, names(igraph::V(graphObject)))
+  else
+    nodeCoords <- cbind(nodeCoords, names(igraph::V(graphObject)))
+  nodeCoords <- as.data.frame(nodeCoords)
+  return(nodeCoords)
+}
+
+calculateNodeCoordsPerCluster <- function(expandedGroups, subNetworkWithGroups,
+                                          superNodeCoords, globalLayoutFunc,
+                                          localLayoutFunc, repelling_force) {
+  # Foreach group, add low-weight within group edges and
+  # apply local layout on the respective (x,y) superNode coords system
+
+  extra_edges <- merge(expandedGroups, expandedGroups,
+                       by.x = "Annotations", by.y = "Annotations")
+
+  nodeCoords <- do.call(rbind, lapply(unique(expandedGroups$Annotations), function(group) {
+    tempNetwork <- subNetworkWithGroups
+    tempNetwork <- tempNetwork[(tempNetwork$SourceGroup == group & 
+                                  tempNetwork$TargetGroup == group), ]
+    tempNetwork <- tempNetwork[, c('Source', 'Target', 'weight')]
+    
+    # TODO continue from here
+    # create any missing in-group edges with minimum weight
+    # (all against all in same assignedClusters that do not already exist in tempNetwork)
+    temp_extra_edges <- extra_edges[extra_edges$Annotations == group, ]
+    temp_g <- igraph::graph_from_data_frame(temp_extra_edges[, c(2,3)], directed = F)
+    min_weight <- ifelse(identical(min(tempNetwork$weight), Inf), 1, min(tempNetwork$weight))
+    # Kamada kawai 
+    if ('layout_with_kk' == globalLayoutFunc)
+      igraph::E(temp_g)$weight <- min_weight * repelling_force
+    else
+      igraph::E(temp_g)$weight <- min_weight / repelling_force # * 1.0001 # invisible weight = max network value *2
+    
+    temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "first")
+    temp_extra_edges <- as.data.frame(cbind(igraph::get.edgelist(temp_g) , igraph::E(temp_g)$weight ))
+    colnames(temp_extra_edges) <- c('Source', 'Target', 'weight')
+    
+    
+    tempNetwork <- rbind(tempNetwork, temp_extra_edges)
+    
+    
+    temp_g <- igraph::graph_from_data_frame(tempNetwork, directed = F)
+    igraph::E(temp_g)$weight <- as.numeric(tempNetwork$weight)
+    temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "max")
+    
+    tempCoords <- eval(parse(text = paste0("igraph::", localLayoutFunc, "(temp_g)")))
+    tempCoords <- bindNamesToLayout(localLayoutFunc, tempCoords, temp_g)
+    colnames(tempCoords) <- c("x", "y", "Nodes")
+    
+    groupX <- superNodeCoords[superNodeCoords$superNode == group, ]$x
+    groupY <- superNodeCoords[superNodeCoords$superNode == group, ]$y
+    tempCoords$x <- as.numeric(tempCoords$x) + groupX
+    tempCoords$y <- as.numeric(tempCoords$y) + groupY
+    tempCoords # gets rbind
+  }))
+  
+  nodeCoords <- merge(nodeCoords, expandedGroups)
+  colnames(nodeCoords) <- c("name", "y", "z", "group")
+  return(nodeCoords)
 }

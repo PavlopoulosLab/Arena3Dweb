@@ -102,21 +102,21 @@ shiftValuesByOne <- function(vec) {
 applyLayoutWithOptionalClustering <- function(networkGraph) {
   if (class(networkGraph) == "igraph") {
     if (isClusteringEnabled())
-      nodePositions <- calculateClusteredLayout(networkGraph)
+      nodeCoords <- calculateClusteredLayout(networkGraph)
     else
-      nodePositions <- calculateLayout(networkGraph, input$layoutAlgorithmChoice)
-    callJSHandler("handler_layout", nodePositions)
+      nodeCoords <- calculateLayout(networkGraph, input$layoutAlgorithmChoice)
+    callJSHandler("handler_layout", nodeCoords)
   }
 }
 
 calculateLayout <- function(networkGraph, layoutAlgorithm) {
   layoutFunc <- getLayoutFunction(layoutAlgorithm)
-  nodePositions <-
+  nodeCoords <-
     eval(parse(text = paste0("igraph::", layoutFunc, "(networkGraph)")))
-  nodePositions <- as.data.frame(nodePositions)
-  colnames(nodePositions) <- c("y", "z")
-  nodePositions$name <- igraph::V(networkGraph)$name
-  return(nodePositions)
+  nodeCoords <- as.data.frame(nodeCoords)
+  colnames(nodeCoords) <- c("y", "z")
+  nodeCoords$name <- igraph::V(networkGraph)$name
+  return(nodeCoords)
 }
 
 getLayoutFunction <- function(layout_name) {
