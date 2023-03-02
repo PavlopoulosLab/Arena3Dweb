@@ -8,6 +8,10 @@ generateDataDiv <- function() {
         DT::dataTableOutput(outputId = "network_dataView")
       ),
       tabPanel(
+        "Clustering Data",
+        DT::dataTableOutput(outputId = "clustering_dataView")
+      ),
+      tabPanel(
         "Degree",
         DT::dataTableOutput(outputId = "degree_dataView")
       ),

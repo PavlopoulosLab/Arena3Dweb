@@ -6,6 +6,7 @@ server <- function(input, output, session) {
   source("functions/input.R", local = T)
   source("functions/js_handling.R", local = T)
   source("functions/init.R", local = T)
+  source("functions/reset.R", local = T)
   source("functions/render.R", local = T)
   source("functions/general.R", local = T)
   source("functions/igraph/general.R", local = T)
@@ -77,7 +78,7 @@ server <- function(input, output, session) {
     handleLayout()
   }, ignoreInit = T)
   
-  observeEvent(input$selectCluster, {
+  observeEvent(input$clusteringAlgorithmChoice, {
     handleClusterAlgorithmSelection()
   }, ignoreInit = T)
   

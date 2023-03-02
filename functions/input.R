@@ -66,6 +66,7 @@ existsEmptyChannelName <- function(df) {
 parseUploadedNetwork <- function(df) {
   df <- subsetLegitColumns(df)
   df <- trimNetworkData(df)
+  df <- removeDuplicateNetworkRows(df)
   df <- appendScaledNetworkWeights(df)
   df <- appendNodeLayerCombinations(df)
   df <- reorderNetworkColumns(df)
@@ -83,6 +84,17 @@ trimNetworkData <- function(df) {
   invisible(lapply(colnames(df), function(colName) {
     df[[colName]] <<- trimws(df[[colName]])
   }))
+  return(df)
+}
+
+removeDuplicateNetworkRows <- function(df) {
+  if ("Channel" %in% colnames(df)) {
+    df <- dplyr::distinct(df, SourceNode, SourceLayer, TargetNode, TargetLayer,
+                          Channel, .keep_all = T)
+  } else {
+    df <- dplyr::distinct(df, SourceNode, SourceLayer, TargetNode, TargetLayer,
+                          .keep_all = T)
+  }
   return(df)
 }
 
@@ -251,6 +263,8 @@ existMandatoryEdgeColumns <- function(edges) {
 parseUploadedJSON <- function(jsonNetwork) {
   jsonNetwork <- subsetLegitObjects(jsonNetwork)
   jsonNetwork <- trimJSONData(jsonNetwork)
+  jsonNetwork <- handleJSONChannels(jsonNetwork)
+  jsonNetwork$edges <- removeDuplicateJSONEdges(jsonNetwork$edges)
   jsonNetwork <- chooseSceneOrDefaults(jsonNetwork)
   jsonNetwork <- chooseLayersOrDefaults(jsonNetwork)
   jsonNetwork <- chooseToScrambleNodes(jsonNetwork)
@@ -278,6 +292,28 @@ trimJSONData <- function(jsonNetwork) {
       jsonNetwork[[objName]] <<- trimws(jsonNetwork[[objName]])
   }))
   return(jsonNetwork)
+}
+
+handleJSONChannels <- function(jsonNetwork) {
+  if (!is.null(jsonNetwork$edges$channel)) {
+    if (all(jsonNetwork$edges$channel == "")) {
+      jsonNetwork$edges$channel <- NULL
+    } else if ((any(jsonNetwork$edges$channel == "")) ||
+                (any(is.na(jsonNetwork$edges$channel)))) {
+      jsonNetwork$edges$channel <- NULL
+      renderWarning("At least one edge has no channel name.\n
+                    Removing channels completely.")
+    }
+  }
+  return(jsonNetwork)
+}
+
+removeDuplicateJSONEdges <- function(edges) {
+  if (is.null(edges$channel))
+    edges <- dplyr::distinct(edges, src, trg, .keep_all = T)
+  else
+    edges <- dplyr::distinct(edges, src, trg, channel, .keep_all = T)
+  return(edges)
 }
 
 chooseSceneOrDefaults <- function(jsonNetwork) {
@@ -409,8 +445,6 @@ chooseEdgesOrDefaults <- function(jsonNetwork) {
     keepValuesOrDefault(jsonNetwork$edges$opacity, 1)
   jsonNetwork$edges$color <-
     keepValuesOrDefault(jsonNetwork$edges$color, EDGE_DEFAULT_COLOR)
-  jsonNetwork$edges$channel <-
-    keepValuesOrDefault(jsonNetwork$edges$channel, NA)
   return(jsonNetwork)
 }
 

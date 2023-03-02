@@ -23,6 +23,16 @@ renderNetworkDF <- function(formattedNetwork) {
                        hiddenColumns = hiddenColumns, filter = "top")
 }
 
+renderClusteringDF <- function(clusteringData) {
+  showTab(inputId = "dataViewPanel", target = "Clustering Data")
+  updateTabsetPanel(session, "dataViewPanel", selected = "Clustering Data")
+  
+  renderShinyDataTable("clustering_dataView",
+                       clusteringData,
+                       fileName = "clusteringData",
+                       filter = "top")
+}
+
 renderMetricTable <- function(topologyMetricChoice, nodeScale, metric) {
   showTab(inputId = "dataViewPanel", target = topologyMetricChoice)
   updateTabsetPanel(session, "dataViewPanel", selected = topologyMetricChoice)
