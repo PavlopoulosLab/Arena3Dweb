@@ -45,10 +45,10 @@ applyClustering <- function(networkGraph) {
   
   assignedClusters <- data.frame()
   for (i in 1:length(clusteringResults)) {
-    assignedClusters <- rbind(assignedClusters, cbind(i, paste(clusteringResults[[i]], collapse = ",")))
+    assignedClusters <- rbind(assignedClusters, cbind(i, paste(clusteringResults[[i]], collapse = ", ")))
   }
   colnames(assignedClusters) <- c("Annotations", "Nodes")
-  
+  renderClusteringDF(assignedClusters)
   return(assignedClusters)
 }
 
@@ -77,7 +77,7 @@ execute_strategy3_superNodes_strictPartitioning <- function(
     networkGraph, assignedClusters, globalLayoutFunc, localLayoutFunc,
     repeling_force = 3) {
   subNetwork <- convertGraphToDF(networkGraph) # TODO check for Circle layouts etc
-  expandedGroups <- assignedClusters %>% tidyr::separate_rows(Nodes, sep = ",")
+  expandedGroups <- assignedClusters %>% tidyr::separate_rows(Nodes, sep = ", ")
   subNetworkWithGroups <- appendClusters(subNetwork, expandedGroups)
   groupsGraph <- extractGroupsGraph(subNetworkWithGroups)
   

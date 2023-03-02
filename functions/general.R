@@ -23,46 +23,6 @@ mapper <- function(inArr, min, max, defaultValue = DEFAULT_MAP_VALUE){
   return(outArr);
 }
 
-reset_UI_values <- function() {
-  reset("showLabels") #shinyjs resetting checkboxes
-  reset("showSelectedLabels")
-  reset("showSelectedLayerLabels")
-  reset("showLayerLabels")
-  reset("resizeLabels")
-  reset("showLayerCoords")
-  reset("nodeSelectedColorPriority")
-  reset("edgeSelectedColorPriority")
-  reset("edgeFileColorPriority")
-  reset("edgeDirectionToggle")
-  reset("showWireFrames")
-  reset("layerColorFilePriority")
-  shinyjs::hide("layerColorFilePriority")
-  reset("showSceneCoords")
-  reset("autoRotateScene")
-  reset("layerEdgeOpacity")
-  shinyjs::hide("layerEdgeOpacity")
-  reset("interLayerEdgeOpacity")
-  shinyjs::hide("interLayerEdgeOpacity")
-  reset("floorOpacity")
-  reset("selectAll")
-  reset("topologyScaleMetricChoice")
-  reset("layoutAlgorithmChoice")
-  reset("clusteringAlgorithmChoice")
-  reset("localLayoutAlgorithmChoice")
-  shinyjs::hide("localLayoutAlgorithmChoice")
-  reset("nodeSelector")
-  reset("edgeWidthByWeight")
-  reset("fps")
-  reset("predefined_layout")
-  reset("directionArrowSize")
-  shinyjs::hide("directionArrowSize")
-  shinyjs::hide("intraDirectionArrowSize")
-  reset("channelCurvature")
-  shinyjs::hide("channelCurvature")
-  reset("interChannelCurvature")
-  shinyjs::hide("interChannelCurvature") 
-}
-
 extractColumnFrom_node_layerDF <- function(nodeLayerNames, column) { # column = Node or Layer
   nodeLayerNames <- as.data.frame(nodeLayerNames)
   colnames(nodeLayerNames)[1] <- "NodeLayer"

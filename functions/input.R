@@ -295,7 +295,6 @@ trimJSONData <- function(jsonNetwork) {
 }
 
 handleJSONChannels <- function(jsonNetwork) {
-  saveRDS(jsonNetwork, "jsonNetwork.RDS")
   if (!is.null(jsonNetwork$edges$channel)) {
     if (all(jsonNetwork$edges$channel == "")) {
       jsonNetwork$edges$channel <- NULL
