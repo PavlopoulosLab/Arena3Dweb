@@ -121,26 +121,11 @@ execute_strategy3_superNodes_strictPartitioning <- function(
     }
   } # end for
   
-  # 5. calculate coordinates for duplicate nodes
-  dflay <- as.data.frame(lay)
-  dflay$V1 <- as.numeric(dflay$V1)
-  dflay$V2 <- as.numeric(dflay$V2)
-  meanX <- aggregate(dflay$V1, by = list(dflay$V3), FUN = mean)
-  colnames(meanX) <- c("Node", "X")
-  meanY <- aggregate(dflay$V2, by = list(dflay$V3), FUN = mean)
-  colnames(meanY) <- c("Node", "Y")
-  dflay <- merge(meanX, meanY)
-  dflay <- as.matrix(dflay[, c("X", "Y", "Node")])
-  network_nodes <- dflay[, 3]
-  dflay <- cbind(as.numeric(dflay[, 1]), as.numeric(dflay[, 2]))
-  
-  
   # wrap up
-  nodes_layout <- cbind(network_nodes, dflay)
-  nodes_layout <- as.matrix(merge(nodes_layout, expandedGroups,
-                                  by.x = 1, by.y = "Nodes"))
+  lay <- as.data.frame(lay)
+  colnames(lay) <- c("x", "y", "Nodes")
+  nodes_layout <- merge(lay, expandedGroups)
   colnames(nodes_layout) <- c("name", "y", "z", "group")
-  nodes_layout <- as.data.frame(nodes_layout)
   return(nodes_layout)
 }
 
