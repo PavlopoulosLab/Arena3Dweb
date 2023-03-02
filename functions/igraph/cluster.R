@@ -189,13 +189,6 @@ calculateGroupNetworkWithAllEdges <- function(interGroupEdges, group,
   return(groupNetworkAllEdges)
 }
 
-removeExistingEdges <- function(groupNetwork) {
-  groupGraph <- igraph::graph_from_data_frame(groupNetwork, directed = F)
-  groupGraph <- igraph::simplify(groupGraph, remove.multiple = T, remove.loops = F,
-                                edge.attr.comb = "max")
-  return(groupGraph)
-}
-
 executeLocalLayout <- function(groupGraph, localLayoutFunc, superNodeCoords,
                                group) {
   tempCoords <- eval(parse(text = paste0("igraph::", localLayoutFunc, "(groupGraph)")))

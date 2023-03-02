@@ -57,37 +57,88 @@ runLayoutAlgorithm <- function(selectedLayerNames, subgraphChoice) {
 runPerLayerLayout <- function(filteredNetworkDF, selectedLayerNames,
                               subgraphChoice) {
   for (layerName in selectedLayerNames) {
-    if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
-      tempFilteredNetworkDF <- filterPseudoNetworkByLayers(filteredNetworkDF,
-                                                           layerName)
-    } else {
+    if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS)
+      tempFilteredNetworkDF <- filterPseudoNetwork(filteredNetworkDF, layerName)
+    else
       tempFilteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
-    }
     networkGraph <- parseEdgelistIntoGraph(tempFilteredNetworkDF, subgraphChoice,
                                            layerName)
     applyLayoutWithOptionalClustering(networkGraph)
   }
 }
 
-filterPseudoNetworkByLayers <- function(filteredNetworkDF, layerNames) {
-  tempNetworkDF1 <-
-    filteredNetworkDF[(filteredNetworkDF$SourceLayer %in% layerNames), , drop = F]
-  tempNetworkDF1 <- tempNetworkDF1[, c("SourceNode_Layer"), drop = F]
-  tempNetworkDF2 <-
-    filteredNetworkDF[(filteredNetworkDF$TargetLayer %in% layerNames), , drop = F]
-  tempNetworkDF2 <- tempNetworkDF2[, c("TargetNode_Layer"), drop = F]
-  colnames(tempNetworkDF2) <- "SourceNode_Layer"
-  filteredNetworkDF <- interlinkNodeColumns(tempNetworkDF1, tempNetworkDF2)
+filterPseudoNetwork <- function(filteredNetworkDF, layerNames,
+                                selectedNodeNamesWithLayer = NULL) {
+  tinyWeight <- min(filteredNetworkDF$ScaledWeight) / 100
+  
+  tempNetwork <- extractSelectedNetworkEdgelist(filteredNetworkDF, layerNames,
+                                                selectedNodeNamesWithLayer)
+  tempNetworkNodesLinked <- 
+    extractSelectedNetworkEdgelistAllLinks(filteredNetworkDF, layerNames,
+                                           selectedNodeNamesWithLayer, tinyWeight)
+  tempNetwork <- rbind(tempNetwork, tempNetworkNodesLinked)
+  colnames(tempNetwork)[3] <- "weight"
+  tempGraph <- removeExistingEdges(tempNetwork)
+  filteredNetworkDF <- parseGraphIntoPseudoFrame(tempGraph)
   return(filteredNetworkDF)
 }
 
-interlinkNodeColumns <- function(df1, df2) {
+extractSelectedNetworkEdgelist <- function(filteredNetworkDF, layerNames,
+                                           selectedNodeNamesWithLayer) {
+  if (is.null(selectedNodeNamesWithLayer))
+    tempNetwork <- 
+      filteredNetworkDF[(filteredNetworkDF$SourceLayer %in% layerNames) &
+                          (filteredNetworkDF$TargetLayer %in% layerNames), , drop = F]
+  else
+    tempNetwork <- 
+      filteredNetworkDF[(filteredNetworkDF$SourceLayer %in% layerNames) &
+                          (filteredNetworkDF$TargetLayer %in% layerNames) &
+                          (filteredNetworkDF$SourceNode %in% selectedNodeNamesWithLayer) &
+                          (filteredNetworkDF$TargetNode %in% selectedNodeNamesWithLayer),
+                        , drop = F]
+  tempNetwork <- tempNetwork[, c("SourceNode_Layer", "TargetNode_Layer",
+                                 "ScaledWeight")]
+  return(tempNetwork)
+}
+
+extractSelectedNetworkEdgelistAllLinks <- function(filteredNetworkDF, layerNames,
+                                                   selectedNodeNamesWithLayer,
+                                                   tinyWeight) {
+  tempNetworkDF1 <-
+    extractSelectedLayerNodes(filteredNetworkDF, "Source", layerNames,
+                              selectedNodeNamesWithLayer)
+  tempNetworkDF2 <-
+    extractSelectedLayerNodes(filteredNetworkDF, "Target", layerNames,
+                              selectedNodeNamesWithLayer)
+  colnames(tempNetworkDF2) <- "SourceNode_Layer"
+  tempNetworkNodesLinked <- interlinkNodeColumns(tempNetworkDF1, tempNetworkDF2,
+                                                 tinyWeight)
+  return(tempNetworkNodesLinked)
+}
+
+extractSelectedLayerNodes <- function(filteredNetworkDF, column, layerNames,
+                                      selectedNodeNamesWithLayer) {
+  if (is.null(selectedNodeNamesWithLayer))
+    tempDF <- 
+      filteredNetworkDF[(
+        filteredNetworkDF[[paste0(column, "Layer")]] %in% layerNames), , drop = F]
+  else
+    tempDF <- 
+      filteredNetworkDF[
+        (filteredNetworkDF[[paste0(column, "Layer")]] %in% layerNames) &
+          (filteredNetworkDF[[paste0(
+            column, "Node_Layer")]] %in% selectedNodeNamesWithLayer), , drop = F]
+  tempDF <- tempDF[, c(paste0(column, "Node_Layer")), drop = F]
+  return(tempDF)
+}
+
+interlinkNodeColumns <- function(df1, df2, tinyWeight) {
   df <- rbind(df1, df2)
   if (nrow(df) > 0) {
     df <- unique(df)
     df$TargetNode_Layer <- 
       shiftValuesByOne(df$SourceNode_Layer)
-    df$ScaledWeight <- 1
+    df$ScaledWeight <- tinyWeight
   }
   return(df)
 }
@@ -97,6 +148,24 @@ shiftValuesByOne <- function(vec) {
   vec[1] <- tail(vec, n = 1)
   vec <- head(vec, -1)
   return(vec)
+}
+
+removeExistingEdges <- function(networkObject) {
+  graphObject <- igraph::graph_from_data_frame(networkObject, directed = F)
+  graphObject <- igraph::simplify(graphObject, remove.multiple = T,
+                                  remove.loops = F, edge.attr.comb = "max")
+  return(graphObject)
+}
+
+parseGraphIntoPseudoFrame <- function(tempGraph) {
+  filteredNetworkDF <- as.data.frame(igraph::as_edgelist(tempGraph))
+  if (nrow(filteredNetworkDF > 0)) {
+    filteredNetworkDF$weight <- igraph::E(tempGraph)$weight
+    colnames(filteredNetworkDF) <- c('SourceNode_Layer', 'TargetNode_Layer',
+                                     'weight')
+    colnames(filteredNetworkDF)[3] <- "ScaledWeight"
+  }
+  return(filteredNetworkDF)
 }
 
 applyLayoutWithOptionalClustering <- function(networkGraph) {
@@ -141,12 +210,11 @@ getLayoutFunction <- function(layout_name) {
 
 runAllLayersLayout <- function(filteredNetworkDF, selectedLayerNames,
                                subgraphChoice) {
-  if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
-    filteredNetworkDF <- filterPseudoNetworkByLayers(filteredNetworkDF,
-                                                         selectedLayerNames)
-  } else {
-    filteredNetworkDF <- filterAllSelectedLayers(filteredNetworkDF, selectedLayerNames)
-  }
+  if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS)
+    filteredNetworkDF <- filterPseudoNetwork(filteredNetworkDF, selectedLayerNames)
+  else
+    filteredNetworkDF <- filterAllSelectedLayers(filteredNetworkDF,
+                                                 selectedLayerNames)
   
   networkGraph <- parseEdgelistIntoGraph(filteredNetworkDF, subgraphChoice,
                                          layerName)
@@ -164,13 +232,13 @@ runLocalLayout <- function(filteredNetworkDF, selectedLayerNames,
       filteredNetworkDF <- filterPerSelectedNodes(filteredNetworkDF,
                                                   selectedNodeNamesWithLayer)
     for (layerName in selectedLayerNames) {
-      if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
+      if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS)
         tempFilteredNetworkDF <-
-          filterPseudoNetworkByLayersAndNodes(filteredNetworkDF, layerName,
-                                              selectedNodeNamesWithLayer)
-      } else {
+          filterPseudoNetwork(filteredNetworkDF, layerName,
+                              selectedNodeNamesWithLayer)
+      else
         tempFilteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
-      }
+      
       networkGraph <- parseEdgelistIntoGraph(tempFilteredNetworkDF,
                                              subgraphChoice, layerName)
       # map coordinates on local bounds in assignXYZ
@@ -178,21 +246,4 @@ runLocalLayout <- function(filteredNetworkDF, selectedLayerNames,
       applyLayoutWithOptionalClustering(networkGraph)
     }
   }
-}
-
-filterPseudoNetworkByLayersAndNodes <- function(filteredNetworkDF, layerName,
-                                                selectedNodeNamesWithLayer) {
-  tempNetworkDF1 <-
-    filteredNetworkDF[(filteredNetworkDF$SourceLayer == layerName) &
-                        (filteredNetworkDF$SourceNode_Layer %in%
-                           selectedNodeNamesWithLayer), , drop = F]
-  tempNetworkDF1 <- tempNetworkDF1[, c("SourceNode_Layer"), drop = F]
-  tempNetworkDF2 <-
-    filteredNetworkDF[(filteredNetworkDF$TargetLayer == layerName) &
-                        (filteredNetworkDF$TargetNode_Layer %in%
-                           selectedNodeNamesWithLayer), , drop = F]
-  tempNetworkDF2 <- tempNetworkDF2[, c("TargetNode_Layer"), drop = F]
-  colnames(tempNetworkDF2) <- "SourceNode_Layer"
-  filteredNetworkDF <- interlinkNodeColumns(tempNetworkDF1, tempNetworkDF2)
-  return(filteredNetworkDF)
 }
