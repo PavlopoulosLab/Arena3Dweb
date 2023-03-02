@@ -888,8 +888,10 @@ const createCurve = (p1, p2, lgth, color, isLayerEdges, group, tag) => {
   let curve_points = curve.getPoints(points);
   let curve_geometry = new THREE.BufferGeometry().setFromPoints(curve_points);
   let curve_material;
-  if (edgeWidthByWeight) curve_material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edge_values[i] } );
-  else curve_material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05,  transparent: true, opacity: curve_opacity});
+  // TODO check what i corresponds to
+  //if (edgeWidthByWeight) curve_material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edge_values[i] } );
+  //else 
+  curve_material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05,  transparent: true, opacity: curve_opacity});
   
   my_curve = new THREE.Line( curve_geometry, curve_material)
   my_curve.userData.tag = tag;

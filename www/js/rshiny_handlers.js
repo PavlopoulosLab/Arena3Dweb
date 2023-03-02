@@ -1,17 +1,4 @@
 // General ====================
-const clean_array = (message) => {
-  temp = [];
-  for (i = 0; i < message.length; i++) {
-    temp = [];
-    for (j = 0; j < message[i].length; j++) {
-      if( Array.isArray(message[i][j])) temp.push(message[i][j][0]);
-      else temp.push(message[i][j]);
-    }
-    message[i] = temp;
-  }
-  return message;
-};
-
 const startLoader = (m) => {
   let canvas_div = document.getElementById("3d-graph"),
       loader = document.getElementById("loader");
@@ -38,8 +25,8 @@ const browseUrl = url => {
 };
 
 // Files ====================
-const uploadNetwork = (message) => {
-  session_flag = false;
+const uploadNetwork = (network) => {
+  session_flag = false; // TODO figure what this exactly does..
   if (animationPause) pauseAnimate(); //resume rendering
    //init on with darkColors
   colors = darkColors.concat(default_colors);
@@ -48,17 +35,17 @@ const uploadNetwork = (message) => {
   let temp_name1 = temp_name2 = temp_layer1 = temp_layer2 = "",
     layers_counter = 0;
   let temp_channel;
-  for (let i=0; i < message.SourceLayer.length; i++){
-    temp_layer1 = String(message.SourceLayer[i]);
-    temp_layer2 = String(message.TargetLayer[i]);
-    temp_name1 = String(message.SourceNode[i]).concat("_").concat(temp_layer1);
-    temp_name2 = String(message.TargetNode[i]).concat("_").concat(temp_layer2);
-    if (message.Channel) {
-      temp_channel = String(message.Channel[i]);
+  for (let i=0; i < network.SourceLayer.length; i++){
+    temp_layer1 = String(network.SourceLayer[i]);
+    temp_layer2 = String(network.TargetLayer[i]);
+    temp_name1 = network.SourceNode_Layer[i];
+    temp_name2 = network.TargetNode_Layer[i];
+    if (network.Channel) {
+      temp_channel = String(network.Channel[i]);
     }
     //push new nodes, layers, layer_groups and node-layergroup maps
     if (!node_whole_names.includes(temp_name1)){
-      node_names.push(String(message.SourceNode[i]));
+      node_names.push(String(network.SourceNode[i]));
       node_whole_names.push(temp_name1);
       node_groups[temp_name1] = temp_layer1;
       if (!layer_names.includes(temp_layer1)){
@@ -68,7 +55,7 @@ const uploadNetwork = (message) => {
       }
     }
     if (!node_whole_names.includes(temp_name2)){
-      node_names.push(String(message.TargetNode[i]));
+      node_names.push(String(network.TargetNode[i]));
       node_whole_names.push(temp_name2);
       node_groups[temp_name2] = temp_layer2;
       if (!layer_names.includes(temp_layer2)){
@@ -91,7 +78,7 @@ const uploadNetwork = (message) => {
     } else {
       edge_pairs.push(temp_edge_pair);
     }
-    edge_values.push(Number(String(message.Weight[i])));
+    edge_values.push(Number(String(network.Weight[i])));
   }
   node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; });
   layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function () { return false; });
@@ -103,8 +90,8 @@ const uploadNetwork = (message) => {
   updateNodeNamesRShiny(); //for Local Layout algorithms
   updateSelectedNodesRShiny();
   //edge_values = mapper(edge_values, 0.1, 1) //min and max opacities //this is done in R now
-  if (message.Channel) {
-    let channel_values = message.Channel.filter((x, i, a) => a.indexOf(x) == i)
+  if (network.Channel) {
+    let channel_values = network.Channel.filter((x, i, a) => a.indexOf(x) == i)
     if (channel_values.length > MAX_CHANNELS) {
       alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
       return false
@@ -120,7 +107,7 @@ const uploadNetwork = (message) => {
   else {
     attachLayerCheckboxes();
     loadGraph();
-    if (message.Channel) {
+    if (network.Channel) {
       attachChannelEditList();
       toggleChannelCurvatureRange(true);
       attachChannelLayoutList();
@@ -131,9 +118,9 @@ const uploadNetwork = (message) => {
   return true;
 }
 
-const importNetwork = (message) => {
+const importNetwork = (jsonNetwork) => {
+  setLabelColorVariable(jsonNetwork.universalLabelColor);
   session_flag = true;
-  clean_array(message)
   clearCanvas();
   //init on with darkColors
   colors = darkColors.concat(default_colors);
@@ -160,119 +147,141 @@ const importNetwork = (message) => {
     };
   let scrambleNodes_flag = false;
   let adjustLayerSize_flag = false;
-
   let layerSphereGeometry = new THREE.SphereGeometry( 0 );
-  let layerSphereMaterial = new THREE.MeshBasicMaterial( {color:"white", transparent: true, opacity: 0.5});
-  for (let i = 0; i < message.length; i++){
-    if (message[i][0] == "scene") {
-      scene_pan.position.x = Number(message[i][1]);
-      scene_pan.position.y = Number(message[i][2]);
-      scene_pan.scale.x = scene_pan.scale.y = scene_pan.scale.z = Number(message[i][3]);
-      renderer.setClearColor(message[i][4]);
-      scene_sphere.rotation.x = Number(message[i][5]);
-      scene_sphere.rotation.y = Number(message[i][6]);
-      scene_sphere.rotation.z = Number(message[i][7]);
-    } else if (message[i][0] == "layer") {
-      import_width = message[i][9];
-      //create layer geometries
-      let planeGeom = new THREE.PlaneGeometry(import_width, import_width, 8, 8);
-      planeGeom.rotateY(THREE.Math.degToRad(90));
-      floorCurrentColor = new THREE.Color(message[i][8]);
-      floorDefaultColors.push(floorCurrentColor)
-      let planeMat = new THREE.MeshBasicMaterial({
-        color: floorCurrentColor,
-        alphaTest: 0.05,
-        wireframe: false,
-        transparent: true,
-        opacity: floorOpacity,
-        side: THREE.DoubleSide
-      });
-      let plane = new THREE.Mesh(planeGeom, planeMat);
-      let sphere = new THREE.Mesh(layerSphereGeometry, layerSphereMaterial);
-      plane.add(sphere);
-      sphere.translateY(-import_width / 2);
-      sphere.translateZ(import_width / 2);
-      sphere.position.y = sphere.position.y * Number(message[i][4]); //stretch factor for label
-      sphere.position.z = sphere.position.z * Number(message[i][4]); //stretch factor for label
-      layer_planes.push(plane);
-      layer_spheres.push(sphere);
-      scene_sphere.add(plane);
-      if (message[i][10] != 'TRUE') {
-        plane.position.x = Number(message[i][1]); //x
-        plane.position.y = Number(message[i][2]); //y
-        plane.position.z = Number(message[i][3]); //z
-      } else {
-        // set x,y,z
-        plane.position.x = 0; //x
-        plane.position.y = 0; //y
-        plane.position.z = 0; //z
-        plane.move = true
-      }
-      plane.geometry.scale(1, Number(message[i][4]), Number(message[i][4]));
-      last_layer_scale.push(Number(message[i][4]));
-      plane.rotation.x = Number(message[i][5]);
-      plane.rotation.y = Number(message[i][6]);
-      plane.rotation.z = Number(message[i][7]);
-    } else if (message[i][0] == "node") {
-      node_names.push(message[i][1]); //name
-      whole_name = message[i][1].concat("_").concat(message[i][2]);
-      node_whole_names.push(whole_name); //name + group
-      node_attributes.Node.push(whole_name);
-      node_groups[whole_name] = message[i][2]; //layer
-      if (!layer_groups.hasOwnProperty((message[i][2].trim()))) {
-        layer_groups[message[i][2].trim()] = layers_counter;
-        layers_counter++;
-        layer_names.push(message[i][2].trim());
-      }
-      //create node geometries
-      let geometry = new THREE.SphereGeometry(sphereRadius, 4, 3);
-      let material = new THREE.MeshStandardMaterial({ color: message[i][7], transparent: true });
-      node_attributes.Color.push(message[i][7]);
-      node_attributes.Url.push(message[i][8]);
-      node_attributes.Description.push(message[i][9]);
-      let sphere = new THREE.Mesh(geometry, material);
-      nodes.push(sphere);
-      layer_planes[layer_groups[node_groups[whole_name]]].add(sphere);
-      sphere.position.x = Number(message[i][3]); //x
-      sphere.position.y = Number(message[i][4]); //y
-      sphere.position.z = Number(message[i][5]); //z
-      sphere.scale.x = sphere.scale.y = sphere.scale.z = Number(message[i][6]);
-      node_attributes.Size.push(Number(message[i][6]));
-    } else if (message[i][0] == "edge") {
-      if (!edge_pairs.includes(message[i][1])) {
-        edge_pairs.push(message[i][1]);
-        edge_channels.push([])
-      }
-      if (message[i][4]) {
-        //create edge_attributes.Channel
-        if (!edge_attributes.Channel) {
-          edge_attributes.Channel = []
-        }
-        pos = edge_pairs.indexOf(message[i][1]);
-        edge_channels[pos].push(message[i][4]);
-        if (!channel_values.includes(message[i][4])) {
-          channel_values.push(message[i][4])
-        }
-        edge_attributes.Channel.push(message[i][4]);
-      }
-      edge_values.push(Number(message[i][2]));
-      edge_attributes.SourceNode.push(message[i][1]);
-      edge_attributes.TargetNode.push("");
-      edge_attributes.Color.push(message[i][3]);
-    } else if (message[i][0] == "scramble_nodes") {
-      scrambleNodes_flag = message[i][1]
-      scrambleNodes_flag = (message[i][1] === 'TRUE');
-    } else if (message[i][0] == "direction") {
-      isDirectionEnabled = (message[i][1] === 'TRUE')
-      updateCheckboxInput('edgeDirectionToggle', message[i][1] === 'TRUE')
-    } else if (message[i][0] == "edgeopacitybyweight") {
-      edgeWidthByWeight = (message[i][1] === 'TRUE')
-      updateCheckboxInput('edgeWidthByWeight', message[i][1] === 'TRUE')
-    } else if (message[i][0] == "adjust_layer_size") {
-      adjustLayerSize_flag = message[i][1]
-      adjustLayerSize_flag = (message[i][1] === 'TRUE');
+  let layerSphereMaterial = new THREE.MeshBasicMaterial( {
+    color:"white", transparent: true, opacity: 0.5
+    
+  });
+  
+  // SCENE
+  scene_pan.position.x = Number(jsonNetwork.scene.position_x);
+  scene_pan.position.y = Number(jsonNetwork.scene.position_y);
+  scene_pan.scale.x = scene_pan.scale.y = scene_pan.scale.z = 
+    Number(jsonNetwork.scene.scale);
+  renderer.setClearColor(jsonNetwork.scene.color);
+  scene_sphere.rotation.x = Number(jsonNetwork.scene.rotation_x);
+  scene_sphere.rotation.y = Number(jsonNetwork.scene.rotation_y);
+  scene_sphere.rotation.z = Number(jsonNetwork.scene.rotation_z);
+  
+  // LAYER
+  for (let i = 0; i < jsonNetwork.layers.name.length; i++) {
+    import_width = jsonNetwork.layers.geometry_parameters_width[i];
+    //create layer geometries
+    let planeGeom = new THREE.PlaneGeometry(import_width, import_width, 8, 8);
+    planeGeom.rotateY(THREE.Math.degToRad(90));
+    floorCurrentColor = new THREE.Color(jsonNetwork.layers.floor_current_color[i]);
+    floorDefaultColors.push(floorCurrentColor)
+    let planeMat = new THREE.MeshBasicMaterial({
+      color: floorCurrentColor,
+      alphaTest: 0.05,
+      wireframe: false,
+      transparent: true,
+      opacity: floorOpacity,
+      side: THREE.DoubleSide
+    });
+    let plane = new THREE.Mesh(planeGeom, planeMat);
+    let sphere = new THREE.Mesh(layerSphereGeometry, layerSphereMaterial);
+    plane.add(sphere);
+    sphere.translateY(-import_width / 2);
+    sphere.translateZ(import_width / 2);
+    sphere.position.y = sphere.position.y * Number(jsonNetwork.layers.last_layer_scale[i]); //stretch factor for label
+    sphere.position.z = sphere.position.z * Number(jsonNetwork.layers.last_layer_scale[i]); //stretch factor for label
+    layer_planes.push(plane);
+    layer_spheres.push(sphere);
+    scene_sphere.add(plane);
+    if (jsonNetwork.layers.generate_coordinates) { 
+      plane.position.x = Number(jsonNetwork.layers.position_x[i]);
+      plane.position.y = Number(jsonNetwork.layers.position_y[i]);
+      plane.position.z = Number(jsonNetwork.layers.position_z[i]);
+    } else {
+      plane.position.x = 0;
+      plane.position.y = 0;
+      plane.position.z = 0;
+      plane.move = true
     }
+    plane.geometry.scale(1,
+      Number(jsonNetwork.layers.last_layer_scale[i]),
+      Number(jsonNetwork.layers.last_layer_scale[i])
+    );
+    last_layer_scale.push(Number(jsonNetwork.layers.last_layer_scale[i]));
+    plane.rotation.x = Number(jsonNetwork.layers.rotation_x[i]);
+    plane.rotation.y = Number(jsonNetwork.layers.rotation_y[i]);
+    plane.rotation.z = Number(jsonNetwork.layers.rotation_z[i]);
   }
+  
+  // NODE
+  for (let i = 0; i < jsonNetwork.nodes.name.length; i++) {
+    node_names.push(jsonNetwork.nodes.name[i]);
+    currentLayer = jsonNetwork.nodes.layer[i];
+    whole_name = jsonNetwork.nodes.name[i].concat("_").concat(currentLayer);
+    node_whole_names.push(whole_name); //name + group
+    node_attributes.Node.push(whole_name);
+    node_groups[whole_name] = jsonNetwork.nodes.layer[i];
+    if (!layer_groups.hasOwnProperty(currentLayer)) {
+      layer_groups[currentLayer] = layers_counter;
+      layers_counter++;
+      layer_names.push(currentLayer);
+    }
+    //create node geometries
+    let geometry = new THREE.SphereGeometry(sphereRadius, 4, 3);
+    let material = new THREE.MeshStandardMaterial({
+      color: jsonNetwork.nodes.color[i],
+      transparent: true
+    });
+    node_attributes.Color.push(jsonNetwork.nodes.color[i]);
+    node_attributes.Url.push(jsonNetwork.nodes.url[i]);
+    node_attributes.Description.push(jsonNetwork.nodes.descr[i]);
+    let sphere = new THREE.Mesh(geometry, material);
+    nodes.push(sphere);
+    layer_planes[layer_groups[node_groups[whole_name]]].add(sphere);
+    sphere.position.x = Number(jsonNetwork.nodes.position_x[i]);
+    sphere.position.y = Number(jsonNetwork.nodes.position_y[i]);
+    sphere.position.z = Number(jsonNetwork.nodes.position_z[i]);
+    sphere.scale.x = sphere.scale.y = sphere.scale.z = 
+      Number(jsonNetwork.nodes.scale[i]);
+    node_attributes.Size.push(Number(jsonNetwork.nodes.scale[i]));
+  }
+  
+  // EDGE
+  for (let i = 0; i < jsonNetwork.edges.src.length; i++) {
+    let edge_pair = jsonNetwork.edges.src[i].concat("---").concat(jsonNetwork.edges.trg[i]);
+    if (!edge_pairs.includes(edge_pair)) {
+      edge_pairs.push(edge_pair);
+      edge_channels.push([]);
+    }
+    
+    if (jsonNetwork.edges.channel != null) {
+      //create edge_attributes.Channel
+      if (!edge_attributes.Channel) {
+        edge_attributes.Channel = []
+      }
+      pos = edge_pairs.indexOf(edge_pair);
+      edge_channels[pos].push(jsonNetwork.edges.channel[i]);
+      if (!channel_values.includes(jsonNetwork.edges.channel[i])) {
+        channel_values.push(jsonNetwork.edges.channel[i])
+      }
+      edge_attributes.Channel.push(jsonNetwork.edges.channel[i]);
+    }
+    
+    edge_values.push(Number(jsonNetwork.edges.opacity[i]));
+    edge_attributes.SourceNode.push(edge_pair);
+    edge_attributes.TargetNode.push("");
+    edge_attributes.Color.push(jsonNetwork.edges.color[i]);
+  }
+  
+  // EXTRAS
+  if (jsonNetwork.scramble_nodes)
+    scrambleNodes_flag = true;
+    
+  isDirectionEnabled = jsonNetwork.direction;
+  updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
+  edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
+  updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
+
+  if (jsonNetwork.adjust_layer_size)
+    adjustLayerSize_flag = true;
+  
+  //========================
   floorCurrentColor = floorDefaultColor;
   drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
   
@@ -318,6 +327,11 @@ const importNetwork = (message) => {
   if (scrambleNodes_flag) scrambleNodes(import_width / 2, -import_width / 2, -import_width / 2.5, import_width / 2.5);
   if (adjustLayerSize_flag) adjustLayerSize();
   toggleDirection(isDirectionEnabled)
+  return true;
+}
+
+const setLabelColorVariable = (label_color) => {
+  globalLabelColor = label_color;
   return true;
 }
 
@@ -473,82 +487,6 @@ const selectAllLayers = (message) => {
 }
 
 // Nodes ====================
-const assignXYZ = (message) => {
-  let y_arr = [], //x always 0, assign on floor every time
-      z_arr = [],
-      node_name = "",
-      y = z = 0,
-    layerIndex = "";
-  for (let i = 0; i < message.length; i++){
-    y_arr.push(Number(message[i][1]));
-    z_arr.push(Number(message[i][2]));
-  }
-  let y_min = Math.min.apply(Math, y_arr),
-      y_max = Math.max.apply(Math, y_arr),
-      z_min = Math.min.apply(Math, z_arr),
-      z_max = Math.max.apply(Math, z_arr),
-      target_y_min = yBoundMin,
-      target_y_max = yBoundMax,
-      target_z_min = zBoundMin,
-      target_z_max = zBoundMax;
-  if (localLayoutFlag){ //if local layout, change target mins and maxes and then unset flag
-    layerIndex = layer_groups[node_groups[message[0][0]]];
-    target_y_min = target_y_max = nodes[node_whole_names.indexOf(message[0][0].trim())].position.y/last_layer_scale[layerIndex],
-    target_z_min = target_z_max = nodes[node_whole_names.indexOf(message[0][0].trim())].position.z/last_layer_scale[layerIndex];
-    for (i = 1; i < message.length; i++) {
-      node_name = message[i][0].trim();
-      if (nodes[node_whole_names.indexOf(node_name)]) {
-        y = nodes[node_whole_names.indexOf(node_name)].position.y / last_layer_scale[layerIndex];
-        z = nodes[node_whole_names.indexOf(node_name)].position.z / last_layer_scale[layerIndex];
-        if (y < target_y_min) target_y_min = y;
-        if (y > target_y_max) target_y_max = y;
-        if (z < target_z_min) target_z_min = z;
-        if (z > target_z_max) target_z_max = z;
-      }
-      if (target_y_min == target_y_max) { //form a square
-        target_y_min = target_y_min - Math.abs(target_z_min - target_z_max) / 2;
-        target_y_max = target_y_max + Math.abs(target_z_min - target_z_max) / 2;
-      } else if (target_z_min == target_z_max) {
-        target_z_min = target_z_min - Math.abs(target_y_min - target_y_max) / 2;
-        target_z_max = target_z_max + Math.abs(target_y_min - target_y_max) / 2;
-      }
-    }
-  }
-  for (i = 0; i < message.length; i++){
-    node_name = message[i][0].trim();
-    if (session_flag && !localLayoutFlag) {
-      layerIndex = layer_groups[node_groups[message[0][0]]];
-      target_y_max = -layer_planes[layerIndex].geometry.parameters.width / 2;
-      target_y_min = layer_planes[layerIndex].geometry.parameters.width/2;
-      target_z_max = layer_planes[layerIndex].geometry.parameters.width/2.5;
-      target_z_min = -layer_planes[layerIndex].geometry.parameters.width/2.5;
-    }
-    //nodes[node_whole_names.indexOf(node_name)].position.x = -15; // to float over layer
-    if (nodes[node_whole_names.indexOf(node_name)]) {
-      if (y_max - y_min != 0) nodes[node_whole_names.indexOf(node_name)].position.y = ((y_arr[i] - y_min) * (target_y_max - target_y_min) / (y_max - y_min) + target_y_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping * layer stretch scale
-      else nodes[node_whole_names.indexOf(node_name)].position.y = 0;
-      if (z_max - z_min != 0) nodes[node_whole_names.indexOf(node_name)].position.z = ((z_arr[i] - z_min) * (target_z_max - target_z_min) / (z_max - z_min) + target_z_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping
-      else nodes[node_whole_names.indexOf(node_name)].position.z = 0;
-    }
-  }
-  localLayoutFlag = false;
-
-  if (message && message[0] && message[0].length == 4) {
-    for (i = 0; i < message.length; i++){
-      node_name = message[i][0].trim();
-      if (nodes[node_whole_names.indexOf(node_name)]) {
-        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colors[message[i][3]]);
-        node_cluster_colors[node_whole_names.indexOf(node_name)] = colors[message[i][3]];
-        nodes[node_whole_names.indexOf(node_name)].userData.cluster = message[i][3];
-      }
-    }
-  }
-  updateNodesRShiny();
-  redrawEdges();
-
-  return true;
-}
-
 const nodeSelector = (message) => {
   //message -> T | F
   if (message){
@@ -708,11 +646,6 @@ const getDarkChannelColors = (brewerColors) => {
   return true;
 }
 
-const getLabelColor = (label_color) => {
-  globalLabelColor = label_color;
-  return true;
-}
-
 const toggleChannelCurvature = (message) => {
   channelCurvature = message;
   redrawEdges();
@@ -775,6 +708,84 @@ const resizeLabels = (message) => {
 }
 
 // Layouts and Topology ====================
+const assignXYZ = (nodeCoords) => {
+  let y_arr = [], //x always 0, assign on floor every time
+      z_arr = [],
+      node_name = "",
+      y_coord = z_coord = 0,
+    layerIndex = "";
+  for (let i = 0; i < nodeCoords.name.length; i++){
+    y_arr.push(Number(nodeCoords.y[i]));
+    z_arr.push(Number(nodeCoords.z[i]));
+  }
+  let y_min = Math.min.apply(Math, y_arr),
+      y_max = Math.max.apply(Math, y_arr),
+      z_min = Math.min.apply(Math, z_arr),
+      z_max = Math.max.apply(Math, z_arr),
+      target_y_min = yBoundMin,
+      target_y_max = yBoundMax,
+      target_z_min = zBoundMin,
+      target_z_max = zBoundMax;
+  if (localLayoutFlag){ //if local layout, change target mins and maxes and then unset flag
+    layerIndex = layer_groups[node_groups[nodeCoords.name[0]]];
+    target_y_min = target_y_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.y/last_layer_scale[layerIndex],
+    target_z_min = target_z_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.z/last_layer_scale[layerIndex];
+    for (i = 1; i < nodeCoords.name.length; i++) {
+      node_name = nodeCoords.name[i].trim();
+      if (nodes[node_whole_names.indexOf(node_name)]) {
+        y_coord = nodes[node_whole_names.indexOf(node_name)].position.y / last_layer_scale[layerIndex];
+        z_coord = nodes[node_whole_names.indexOf(node_name)].position.z / last_layer_scale[layerIndex];
+        if (y_coord < target_y_min) target_y_min = y_coord;
+        if (y_coord > target_y_max) target_y_max = y_coord;
+        if (z_coord < target_z_min) target_z_min = z_coord;
+        if (z_coord > target_z_max) target_z_max = z_coord;
+      }
+      if (target_y_min == target_y_max) { //form a square
+        target_y_min = target_y_min - Math.abs(target_z_min - target_z_max) / 2;
+        target_y_max = target_y_max + Math.abs(target_z_min - target_z_max) / 2;
+      } else if (target_z_min == target_z_max) {
+        target_z_min = target_z_min - Math.abs(target_y_min - target_y_max) / 2;
+        target_z_max = target_z_max + Math.abs(target_y_min - target_y_max) / 2;
+      }
+    }
+  }
+  for (i = 0; i < nodeCoords.name.length; i++){
+    node_name = nodeCoords.name[i].trim();
+    if (session_flag && !localLayoutFlag) {
+      layerIndex = layer_groups[node_groups[nodeCoords.name[0]]];
+      target_y_max = -layer_planes[layerIndex].geometry.parameters.width / 2;
+      target_y_min = layer_planes[layerIndex].geometry.parameters.width/2;
+      target_z_max = layer_planes[layerIndex].geometry.parameters.width/2.5;
+      target_z_min = -layer_planes[layerIndex].geometry.parameters.width/2.5;
+    }
+    //nodes[node_whole_names.indexOf(node_name)].position.x = -15; // to float over layer
+    if (nodes[node_whole_names.indexOf(node_name)]) {
+      if (y_max - y_min != 0) nodes[node_whole_names.indexOf(node_name)].position.y = ((y_arr[i] - y_min) * (target_y_max - target_y_min) / (y_max - y_min) + target_y_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping * layer stretch scale
+      else nodes[node_whole_names.indexOf(node_name)].position.y = 0;
+      if (z_max - z_min != 0) nodes[node_whole_names.indexOf(node_name)].position.z = ((z_arr[i] - z_min) * (target_z_max - target_z_min) / (z_max - z_min) + target_z_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping
+      else nodes[node_whole_names.indexOf(node_name)].position.z = 0;
+    }
+  }
+  localLayoutFlag = false;
+
+  // Clustering + colors
+  if (nodeCoords.group != null) {
+    for (i = 0; i < nodeCoords.name.length; i++){
+      node_name = nodeCoords.name[i].trim();
+      if (nodes[node_whole_names.indexOf(node_name)]) {
+        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colors[nodeCoords.group[i]]);
+        node_cluster_colors[node_whole_names.indexOf(node_name)] = colors[nodeCoords.group[i]];
+        nodes[node_whole_names.indexOf(node_name)].userData.cluster = nodeCoords.group[i];
+      }
+    }
+  } // end clustering colors
+  
+  updateNodesRShiny();
+  redrawEdges();
+
+  return true;
+}
+
 const setLocalFlag = (message) => { //T
   localLayoutFlag = message;
   return true;
@@ -893,7 +904,6 @@ Shiny.addCustomMessageHandler("handler_showWireFrames", showWireFrames);
 Shiny.addCustomMessageHandler("handler_selectAllLayers", selectAllLayers);
 Shiny.addCustomMessageHandler("handler_layerColorFilePriority", layerColorFilePriority);
 // Nodes ====================
-Shiny.addCustomMessageHandler("handler_layout", assignXYZ);
 Shiny.addCustomMessageHandler("handler_nodeSelector", nodeSelector);
 Shiny.addCustomMessageHandler("handler_nodeSelectedColorPriority", nodeSelectedColorPriority);
 // Edges ====================
@@ -919,8 +929,8 @@ Shiny.addCustomMessageHandler("handler_resizeLayerLabels", resizeLayerLabels);
 Shiny.addCustomMessageHandler("handler_showLabels", showLabels);
 Shiny.addCustomMessageHandler("handler_showSelectedLabels", showSelectedLabels);
 Shiny.addCustomMessageHandler("handler_resizeLabels", resizeLabels);
-Shiny.addCustomMessageHandler("handler_globalLabelColor", getLabelColor);
 // Layouts and Topology ====================
+Shiny.addCustomMessageHandler("handler_layout", assignXYZ);
 Shiny.addCustomMessageHandler("handler_setLocalFlag", setLocalFlag);
 Shiny.addCustomMessageHandler("handler_topologyScale", topologyScale);
 Shiny.addCustomMessageHandler("handler_predefined_layer_layout", applyPredefinedLayout);

@@ -1,14 +1,14 @@
 server <- function(input, output, session) {
   source("config/global_variables.R", local = T)
+  source("config/server_variables.R", local = T)
   source("config/static_variables.R", local = T)
   
-  source("functions/input/api.R", local = T)
-  source("functions/input/files.R", local = T)
+  source("functions/input.R", local = T)
   source("functions/js_handling.R", local = T)
   source("functions/init.R", local = T)
+  source("functions/reset.R", local = T)
   source("functions/render.R", local = T)
   source("functions/general.R", local = T)
-  source("functions/parse.R", local = T)
   source("functions/igraph/general.R", local = T)
   source("functions/igraph/layout.R", local = T)
   source("functions/igraph/cluster.R", local = T)
@@ -29,9 +29,19 @@ server <- function(input, output, session) {
     updateNavbarPage(session, "navBar", selected = "Help")
   }, ignoreInit = T)
   
+  observeEvent(input$link_to_fileInput, {
+    updateNavbarPage(session, "navBar", selected = "File")
+  }, ignoreInit = T)
+  
   # JS variables ####
-  observeEvent(input$js_checkbox_flag, {
-    updateCheckboxInputFromJS()
+  observeEvent(input$js_direction_checkbox_flag, {
+    updateCheckboxInputFromJS(input$js_direction_checkbox_flag[1],
+                              input$js_direction_checkbox_flag[2])
+  }, ignoreInit = T)
+
+  observeEvent(input$js_edgeByWeight_checkbox_flag, {
+    updateCheckboxInputFromJS(input$js_edgeByWeight_checkbox_flag[1],
+                              input$js_edgeByWeight_checkbox_flag[2])
   }, ignoreInit = T)
 
   observeEvent(input$js_channel_curvature_flag, {
@@ -40,11 +50,11 @@ server <- function(input, output, session) {
 
   # FILE I/O ####
   observeEvent(input$input_network_file, {
-    handleInputNetworkFileUpload()
+    handleUploadNetwork()
   }, ignoreInit = T)
   
   observeEvent(input$load_network_file, {
-    handleImportNetworkFileUpload()
+    handleLoadSession()
   }, ignoreInit = T)
   
   observeEvent(input$node_attributes_file, {
@@ -55,12 +65,20 @@ server <- function(input, output, session) {
     handleInputEdgeAttributeFileUpload()
   }, ignoreInit = T)
   
-  # LAYOUT ####
-  observeEvent(input$runClusterLayout, {
-    handleClusterLayout()
+  observeEvent(input$exampleButton, {
+    handleLoadExample()
   }, ignoreInit = T)
   
-  observeEvent(input$selectCluster, {
+  observeEvent(input$loadExample_ok, {
+    handleLoadExampleAccept()
+  }, ignoreInit = T)
+  
+  # LAYOUT ####
+  observeEvent(input$runLayout, {
+    handleLayout()
+  }, ignoreInit = T)
+  
+  observeEvent(input$clusteringAlgorithmChoice, {
     handleClusterAlgorithmSelection()
   }, ignoreInit = T)
   

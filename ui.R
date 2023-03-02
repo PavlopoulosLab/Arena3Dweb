@@ -1,3 +1,4 @@
+source("config/global_variables.R", local = T)
 source("config/ui_variables.R", local = T)
 source("views/home.R", local = T)
 source("views/file.R", local = T)
@@ -7,10 +8,12 @@ source("views/layer.R", local = T)
 source("views/node.R", local = T)
 source("views/edge.R", local = T)
 source("views/fps.R", local = T)
+source("views/data.R", local = T)
 source("views/help.R", local = T)
 source("views/footer.R", local = T)
 
 ui <- fluidPage(
+  useShinyjs(),
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "arena3dweb.css")),
   tags$head(tags$script(src = "js/three/three.js")),
   tags$head(tags$script(src = "js/three/matrix4.js")), # three.js matrix4 for dragcontrols
@@ -36,6 +39,7 @@ ui <- fluidPage(
     tabPanel(title = "Layer Actions", generateLayerDiv()),
     tabPanel(title = "Node Actions", generateNodeDiv()),
     tabPanel(title = "Edge Actions", generateEdgeDiv()),
+    tabPanel(title = "View Data", generateDataDiv()),
     tabPanel(title = "FPS", generateFPSDiv()),
     tabPanel(title = "Help", generateHelpDiv()),
   ),

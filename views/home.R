@@ -82,6 +82,10 @@ generateHomeDiv <- function() {
     &#8594; Visit the'),
     actionLink("link_to_examples", "Help/Examples page"),
     HTML(' to download some Arena3D<sup>web</sup> example files.
+    <br /><br />
+    &#8594; Get started by uploading your networks'),
+    actionLink("link_to_fileInput", "here."),
+    HTML('
   </p>
   <br /><br />
 </div>

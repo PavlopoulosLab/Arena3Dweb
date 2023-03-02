@@ -1,7 +1,5 @@
-updateCheckboxInputFromJS <- function() {
+updateCheckboxInputFromJS <- function(checkboxName, checkboxValue) {
   tryCatch({
-    checkboxName <- input$js_checkbox_flag[1]
-    checkboxValue <- input$js_checkbox_flag[2]
     updateCheckboxInput(session, checkboxName,
                         value = (checkboxValue == 'TRUE'))
   }, error = function(e) {
