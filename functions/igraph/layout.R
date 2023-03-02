@@ -59,7 +59,7 @@ runPerLayerLayout <- function(filteredNetworkDF, selectedLayerNames,
   for (layerName in selectedLayerNames) {
     if (input$layoutAlgorithmChoice %in% NO_EDGE_LAYOUTS) {
       tempFilteredNetworkDF <- filterPseudoNetworkByLayers(filteredNetworkDF,
-                                                               layerName)
+                                                           layerName)
     } else {
       tempFilteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
     }
@@ -110,25 +110,33 @@ applyLayoutWithOptionalClustering <- function(networkGraph) {
 }
 
 calculateLayout <- function(networkGraph, layoutAlgorithm) {
-  nodePositions <- switch(
-    layoutAlgorithm,
-    "Circle" = igraph::layout_in_circle(networkGraph),
-    "Grid" = igraph::layout_on_grid(networkGraph),
-    "Random" = igraph::layout_randomly(networkGraph),
-    "Fruchterman-Reingold" = igraph::layout_with_fr(networkGraph),
-    "Reingold-Tilford" = igraph::layout_as_tree(networkGraph),
-    "DrL" = igraph::layout_with_drl(networkGraph),
-    "Graphopt" = igraph::layout_with_graphopt(networkGraph),
-    "Kamada-Kawai" = igraph::layout_with_kk(networkGraph),
-    "Large Graph Layout" = igraph::layout_with_lgl(networkGraph),
-    "Multidimensional Scaling" = igraph::layout_with_mds(networkGraph),
-    "Sugiyama" = igraph::layout_with_sugiyama(networkGraph)$layout
-  )
-  
+  layoutFunc <- getLayoutFunction(layoutAlgorithm)
+  nodePositions <-
+    eval(parse(text = paste0("igraph::", layoutFunc, "(networkGraph)")))
   nodePositions <- as.data.frame(nodePositions)
   colnames(nodePositions) <- c("y", "z")
   nodePositions$name <- igraph::V(networkGraph)$name
   return(nodePositions)
+}
+
+getLayoutFunction <- function(layout_name) {
+  layoutFunction <- switch(
+    layout_name,
+    "Reingold-Tilford" = "layout_as_tree",
+    "Circle" = "layout_in_circle",
+    "Grid" = "layout_on_grid",
+    "Random" = "layout_randomly",
+    "Davidson-Harel" = "layout_with_dh",
+    "DrL" = "layout_with_drl",
+    "Fruchterman-Reingold" = "layout_with_fr",
+    "GEM" = "layout_with_gem",
+    "Graphopt" = "layout_with_graphopt",
+    "Kamada-Kawai" = "layout_with_kk",
+    "Large Graph Layout" = "layout_with_lgl",
+    "Multidimensional Scaling" = "layout_with_mds",
+    "Sugiyama" = "layout_with_sugiyama"
+  )
+  return(layoutFunction)
 }
 
 runAllLayersLayout <- function(filteredNetworkDF, selectedLayerNames,

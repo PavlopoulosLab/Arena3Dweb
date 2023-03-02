@@ -1,6 +1,6 @@
 handleClusterAlgorithmSelection <- function() {
   tryCatch({
-    if (input$clusteringAlgorithmChoice != "-") { # triggers second event when resetting
+    if (input$clusteringAlgorithmChoice != "-") {
       shinyjs::show("localLayoutAlgorithmChoice")
     } else {
       shinyjs::hide("localLayoutAlgorithmChoice")
@@ -35,13 +35,9 @@ calculateClusteredLayout <- function(networkGraph) {
 }
 
 applyClustering <- function(networkGraph) {
-  clusteringResults <- switch(
-    input$clusteringAlgorithmChoice,
-    "Louvain" = igraph::cluster_louvain(networkGraph),
-    "Walktrap" = igraph::cluster_walktrap(networkGraph),
-    "Fast Greedy" = igraph::cluster_fast_greedy(networkGraph),
-    "Label Propagation" = igraph::cluster_label_prop(networkGraph)
-  )
+  clusterFunction <- getClusteringFunction(input$clusteringAlgorithmChoice)
+  clusteringResults <-
+    eval(parse(text = paste0("igraph::", clusterFunction, "(networkGraph)")))
   
   assignedClusters <- data.frame()
   for (i in 1:length(clusteringResults)) {
@@ -52,58 +48,29 @@ applyClustering <- function(networkGraph) {
   return(assignedClusters)
 }
 
-getLayoutFunction <- function(layout_name) {
-  layoutFunction <- switch(
-    layout_name,
-    "Reingold-Tilford" = "layout_as_tree",
-    "Circle" = "layout_in_circle",
-    "Grid" = "layout_on_grid",
-    "Random" = "layout_randomly",
-    "Davidson-Harel" = "layout_with_dh",
-    "DrL" = "layout_with_drl",
-    "Fruchterman-Reingold" = "layout_with_fr",
-    "GEM" = "layout_with_gem",
-    "Graphopt" = "layout_with_graphopt",
-    "Kamada-Kawai" = "layout_with_kk",
-    "Large Graph Layout" = "layout_with_lgl",
-    "Multidimensional Scaling" = "layout_with_mds",
-    "Sugiyama" = "layout_with_sugiyama",
+getClusteringFunction <- function(clustering_name) {
+  clusterFunction <- switch(
+    clustering_name,
+    "Louvain" = "cluster_louvain",
+    "Walktrap" = "cluster_walktrap",
+    "Fast Greedy" = "cluster_fast_greedy",
+    "Label Propagation" = "cluster_label_prop"
   )
-  return(layoutFunction)
+  return(clusterFunction)
 }
 
 # Strategy 3 ####
 execute_strategy3_superNodes_strictPartitioning <- function(
     networkGraph, assignedClusters, globalLayoutFunc, localLayoutFunc,
-    repeling_force = 3) {
+    repelling_force = 3) {
   subNetwork <- convertGraphToDF(networkGraph) # TODO check for Circle layouts etc
   expandedGroups <- assignedClusters %>% tidyr::separate_rows(Nodes, sep = ", ")
   subNetworkWithGroups <- appendClusters(subNetwork, expandedGroups)
   groupsGraph <- extractGroupsGraph(subNetworkWithGroups)
+  superNodeCoords <- extractSuperNodeCoords(groupsGraph, globalLayoutFunc,
+                                            repelling_force)
   
   
-
-  # TODO continue form here
-  lay_super <- eval(parse(text = paste0("igraph::", globalLayoutFunc, "(groupsGraph)")))
-  
-  if (identical(typeof(lay_super), "double")) { # most layout algorithms
-    lay_super <- cbind(lay_super, names(igraph::V(groupsGraph)))
-  } else{ # Sugiyama, list instead of double
-    lay_super <- cbind(lay_super$layout, names(igraph::V(groupsGraph)))
-  }
-  
-  # 3. push all nodes above away from 0,0 // also check minx maxx for layout as alternative
-  # foreach node, calculate a = y/x
-  # then multiply x by an input number n (e.g.) and solve for y
-  # keep the (x, y) coords system in a matrix for all supernodes
-  lay_super <- as.data.frame(lay_super)
-  lay_super$V1 <- as.numeric(lay_super$V1)
-  lay_super$V2 <- as.numeric(lay_super$V2)
-  lay_super$a <- ifelse(lay_super$V1 != 0, lay_super$V2 / lay_super$V1, lay_super$V2 / 0.01)
-  lay_super$X <- repeling_force * lay_super$V1
-  lay_super$Y <- lay_super$a * lay_super$X
-  lay_super <- lay_super[, c('X', 'Y', 'V3')]
-  colnames(lay_super)[3] <- 'Node'
   # 4. foreach group, add low-weight within group edges and
   # apply layout (2nd input choice) with the respective (x,y) coords system
   # extra edges dataframe for all assignedClusters
@@ -122,8 +89,8 @@ execute_strategy3_superNodes_strictPartitioning <- function(
     temp_g <- igraph::graph_from_data_frame(temp_extra_edges[, c(2,3)], directed = F)
     min_weight <- ifelse(identical(min(tempFrame$weight), Inf), 1, min(tempFrame$weight))
     # Kamada kawai 
-    if ('layout_with_kk' == globalLayoutFunc) igraph::E(temp_g)$weight <- min_weight * repeling_force
-    else igraph::E(temp_g)$weight <- min_weight / repeling_force # * 1.0001 # invisible weight = max network value *2
+    if ('layout_with_kk' == globalLayoutFunc) igraph::E(temp_g)$weight <- min_weight * repelling_force
+    else igraph::E(temp_g)$weight <- min_weight / repelling_force # * 1.0001 # invisible weight = max network value *2
     temp_g <- igraph::simplify(temp_g, remove.multiple = T, remove.loops = F, edge.attr.comb = "first")
     temp_extra_edges <- as.data.frame(cbind(igraph::get.edgelist(temp_g) , igraph::E(temp_g)$weight ))
     colnames(temp_extra_edges) <- c('Source', 'Target', 'weight')
@@ -142,14 +109,14 @@ execute_strategy3_superNodes_strictPartitioning <- function(
         temp_lay <- cbind(temp_lay$layout, names(igraph::V(temp_g)))
       }
       
-      groupX <- lay_super[lay_super[, 3] == group, 1]
-      groupY <- lay_super[lay_super[, 3] == group, 2]
+      groupX <- superNodeCoords[superNodeCoords$superNode == group, ]$x
+      groupY <- superNodeCoords[superNodeCoords$superNode == group, ]$y
       temp_lay[, 1] <- as.numeric(temp_lay[, 1]) + groupX
       temp_lay[, 2] <- as.numeric(temp_lay[, 2]) + groupY
       lay <- rbind(lay, temp_lay)
     } else {
-      lay <- rbind(lay, c(lay_super[lay_super[, 3] == group, 1],
-                          lay_super[lay_super[, 3] == group, 2],
+      lay <- rbind(lay, c(superNodeCoords[superNodeCoords$superNode == group, ]$x,
+                          superNodeCoords[superNodeCoords$superNode == group, ]$y,
                           assignedClusters$Nodes[assignedClusters$Annotations == group]))
     }
   } # end for
@@ -204,4 +171,25 @@ extractGroupsGraph <- function(subNetworkWithGroups) {
   groupsGraph <- igraph::simplify(groupsGraph, remove.multiple = T,
                                   remove.loops = F, edge.attr.comb = "mean")
   return(groupsGraph)
+}
+
+extractSuperNodeCoords <- function(groupsGraph, globalLayoutFunc, repelling_force) {
+  superNodeCoords <- eval(parse(text = paste0("igraph::", globalLayoutFunc, "(groupsGraph)")))
+  
+  if (globalLayoutFunc == "layout_with_sugiyama")
+    superNodeCoords <- cbind(superNodeCoords$layout, names(igraph::V(groupsGraph)))
+  else
+    superNodeCoords <- cbind(superNodeCoords, names(igraph::V(groupsGraph)))
+  superNodeCoords <- as.data.frame(superNodeCoords)
+  colnames(superNodeCoords) <- c("x", "y", "superNode")
+  
+  # The following will repel all super nodes away from 0,0:
+  # Foreach node, calculate a = y/x
+  # Then multiply x by the repeling force and solve for y
+  superNodeCoords$x <- as.double(superNodeCoords$x)
+  superNodeCoords$y <- as.double(superNodeCoords$y)
+  superNodeCoords$a <- ifelse(superNodeCoords$x != 0, superNodeCoords$y / superNodeCoords$x, superNodeCoords$y / 0.01)
+  superNodeCoords$x <- repelling_force * superNodeCoords$x
+  superNodeCoords$y <- superNodeCoords$a * superNodeCoords$x
+  return(superNodeCoords)
 }
