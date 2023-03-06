@@ -1,10 +1,10 @@
 // on mouse wheel scroll
 const sceneZoom = (event) => {
-  if (scene_pan != "") {
-    let new_scale = scene_pan.scale.x;
+  if (scene.pan != "") {
+    let new_scale = scene.pan.scale.x;
     if (event.deltaY < 0 && new_scale < 2) new_scale = new_scale * 1.1;
     else if (event.deltaY > 0 && new_scale > 0.2) new_scale = new_scale * 0.9;
-    scene_pan.scale.set(new_scale, new_scale, new_scale);
+    scene.scale(new_scale);
     updateScenePanRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
@@ -14,14 +14,14 @@ const sceneZoom = (event) => {
 
 // on arrow keys press or axis select ot rotate layers
 const sceneArrowPan = (event) => {
-  if (scene_pan != "") {
+  if (scene.pan != "") {
     if (event.keyCode == 90) axisPressed = 'z';
     if (event.keyCode == 88) axisPressed = 'x';
     if (event.keyCode == 67) axisPressed = 'c';
-    if (event.keyCode == 37) scene_pan.translateX(-25); //left
-    if (event.keyCode == 38) scene_pan.translateY(25); //up
-    if (event.keyCode == 39) scene_pan.translateX(25); //right
-    if (event.keyCode == 40) scene_pan.translateY(-25); // down
+    if (event.keyCode == 37) scene.translateX(-25); //left
+    if (event.keyCode == 38) scene.translateY(25); //up
+    if (event.keyCode == 39) scene.translateX(25); //right
+    if (event.keyCode == 40) scene.translateY(-25); // down
     updateScenePanRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
@@ -30,7 +30,7 @@ const sceneArrowPan = (event) => {
 }
 
 const axisRelease = (event) => {
-  if (scene_pan != "") {
+  if (scene.pan != "") {
     axisPressed = "";
   }
   return true;
@@ -38,7 +38,7 @@ const axisRelease = (event) => {
 
 // mouse keys press event
 const clickDown = (event) => {
-  if (scene_pan != "") {
+  if (scene.pan != "") {
     //console.log(event); //mouse: 0 left, 1 middle, 2 right click
     if (event.button == 0){
       leftClickPressed = true;
@@ -60,7 +60,7 @@ const clickDown = (event) => {
 
 // while mouse button held, drag event
 const clickDrag = (event) => {
-  if (scene_pan != "") {
+  if (scene.pan != "") {
     let distance = Math.sqrt(Math.pow(previousX-event.screenX, 2) + Math.pow(previousY-event.screenY, 2)),
       node_hover_flag = false;
 
@@ -95,7 +95,7 @@ const clickDrag = (event) => {
 }
 
 const clickUp = (event) => {
-  if (scene_pan != "") {
+  if (scene.pan != "") {
     dragging = false;
     if (event.button == 0){
       leftClickPressed = false;
@@ -129,7 +129,7 @@ const clickUp = (event) => {
 
 // double click event (left mouse), uncheck nodes
 const dblClick = (event) => {
-  if (scene_pan != "") {
+  if (scene.pan != "") {
     let node_selection = checkNodeInteraction(event); //priority 1
       if (!node_selection) {
         let layer_selection = checkLayerInteraction(event); //priority 2
@@ -275,7 +275,7 @@ const canvasRescale = () => {
 
 // on node searchbar key-press
 const selectSearchedNodes = (event) => {
-  if (scene_pan != "") {
+  if (scene.pan != "") {
     var key = window.event.keyCode;
     // If the user has pressed enter
     if (key === 13) {

@@ -33,8 +33,6 @@ const clearCanvas = () => {
   x = [],
   y = [],
   z = [],
-  scene_pan = "",
-  scene_sphere = "",
   layer_planes = [],
   layer_spheres = [],
   js_selected_layers = [],
@@ -82,7 +80,7 @@ const loadGraph = () => {
 	  sphere.translateZ(zBoundMax);
     layer_planes.push(plane);
     layer_spheres.push(sphere);
-    scene_sphere.add(plane);
+    scene.sphere.add(plane);
     last_layer_scale.push(1);
   }
   //create node geometries
@@ -105,10 +103,10 @@ const loadGraph = () => {
   //init selected channels for layout with all the channels
   channels_layout = channels;
   Shiny.setInputValue("channels_layout", channels_layout); //R monitors selected Channels
-  scene_sphere.rotation.x = THREE.Math.degToRad(15); //starting a little tilted so layers are visible
-  scene_sphere.rotation.y = THREE.Math.degToRad(15);
-  scene_sphere.rotation.z = THREE.Math.degToRad(5);
-  scene_pan.scale.set(0.9, 0.9, 0.9); //starting a little zoomed out
+  scene.sphere.rotation.x = THREE.Math.degToRad(15); //starting a little tilted so layers are visible
+  scene.sphere.rotation.y = THREE.Math.degToRad(15);
+  scene.sphere.rotation.z = THREE.Math.degToRad(5);
+  scene.scale(0.9); //starting a little zoomed out
 
   if (!animationRunning) animate(); //ensure animation runs only once
     
@@ -145,15 +143,17 @@ const addScenePanAndSphere = () => {
 	let geometry = new THREE.SphereGeometry();
   let material = new THREE.MeshBasicMaterial( {color:"blue", transparent: true, opacity: 0} );
   let sphere = new THREE.Mesh( geometry, material );
-	scene.add(sphere);
-	scene_pan = sphere;
+	
+	scene.addPan(sphere);
+	
   //scene_middle_sphere to apply all rotations
   geometry = new THREE.SphereGeometry();
   material = new THREE.MeshBasicMaterial( {color:"white", transparent: true, opacity: 0} );
   sphere = new THREE.Mesh( geometry, material );
-  scene_pan.add(sphere);
-  scene_sphere = sphere;
-  coordsSystemScene(scene_sphere);
+  
+  scene.addSphere(sphere);
+  
+  coordsSystemScene(scene.sphere);
   return true;
 }
 
@@ -191,9 +191,9 @@ const coordsSystem = (obj) => { //adding coord lines to input object
 
 const coordsSystemScene = (obj) => { //adding coord lines to input object
   if (sceneCoords[0] != ""){ //when re-uploading network
-    scene_sphere.remove(sceneCoords[0]);
-    scene_sphere.remove(sceneCoords[1]);
-    scene_sphere.remove(sceneCoords[2]);
+    scene.sphere.remove(sceneCoords[0]);
+    scene.sphere.remove(sceneCoords[1]);
+    scene.sphere.remove(sceneCoords[2]);
     sceneCoords = ["", "", ""];
   }
   let points = [];
@@ -232,7 +232,7 @@ const coordsSystemScene = (obj) => { //adding coord lines to input object
 // @param color: hex code of color value for background
 const setSceneColor = (color) => {
   //from picker, color = document.getElementById("scene_color").value
-  if (scene_sphere != ""){
+  if (scene.sphere != ""){
     renderer.setClearColor(color);
     updateScenePanRShiny();
   }
@@ -241,8 +241,8 @@ const setSceneColor = (color) => {
 
 // scene drag with mouse
 const sceneDragPan = (x, y) => {
-  scene_pan.translateX(x - previousX);
-  scene_pan.translateY(previousY - y);
+  scene.translateX(x - previousX);
+  scene.translateY(previousY - y);
   updateScenePanRShiny();
   updateLayersRShiny();
   updateNodesRShiny();
@@ -251,7 +251,7 @@ const sceneDragPan = (x, y) => {
 
 // middle click drag
 const sceneOrbit = (x, y) => {
-  if (scene_sphere != ""){
+  if (scene.sphere != ""){
     let deltaMove = {
         x: x-previousX,
         y: y-previousY
@@ -260,7 +260,7 @@ const sceneOrbit = (x, y) => {
 	  let deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
 	    new THREE.Euler( toRadians(deltaMove.y * 1), toRadians(deltaMove.x * 1), 0, 'XYZ'));
         
-    scene_sphere.quaternion.multiplyQuaternions(deltaRotationQuaternion, scene_sphere.quaternion);
+    scene.sphere.quaternion.multiplyQuaternions(deltaRotationQuaternion, scene.sphere.quaternion);
 
 		updateSceneSphereRShiny();
 		updateLayersRShiny();

@@ -1,7 +1,7 @@
 // Objects theme setter
 // @return void
 const applyTheme = (bgColor, floorColor, edgeColor, labelColor, theme_colors, channel_colors_theme) =>{
-  if (scene_sphere != "") {
+  if (scene.sphere != "") {
     colors = theme_colors.concat(default_colors);
     channel_colors = channel_colors_theme;
     createChannelColorMap();

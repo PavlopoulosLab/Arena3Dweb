@@ -154,14 +154,14 @@ const importNetwork = (jsonNetwork) => {
   });
   
   // SCENE
-  scene_pan.position.x = Number(jsonNetwork.scene.position_x);
-  scene_pan.position.y = Number(jsonNetwork.scene.position_y);
-  scene_pan.scale.x = scene_pan.scale.y = scene_pan.scale.z = 
+  scene.pan.position.x = Number(jsonNetwork.scene.position_x);
+  scene.pan.position.y = Number(jsonNetwork.scene.position_y);
+  scene.pan.scale.x = scene.pan.scale.y = scene.pan.scale.z = 
     Number(jsonNetwork.scene.scale);
   renderer.setClearColor(jsonNetwork.scene.color);
-  scene_sphere.rotation.x = Number(jsonNetwork.scene.rotation_x);
-  scene_sphere.rotation.y = Number(jsonNetwork.scene.rotation_y);
-  scene_sphere.rotation.z = Number(jsonNetwork.scene.rotation_z);
+  scene.sphere.rotation.x = Number(jsonNetwork.scene.rotation_x);
+  scene.sphere.rotation.y = Number(jsonNetwork.scene.rotation_y);
+  scene.sphere.rotation.z = Number(jsonNetwork.scene.rotation_z);
   
   // LAYER
   for (let i = 0; i < jsonNetwork.layers.name.length; i++) {
@@ -188,7 +188,7 @@ const importNetwork = (jsonNetwork) => {
     sphere.position.z = sphere.position.z * Number(jsonNetwork.layers.last_layer_scale[i]); //stretch factor for label
     layer_planes.push(plane);
     layer_spheres.push(sphere);
-    scene_sphere.add(plane);
+    scene.sphere.add(plane);
     if (jsonNetwork.layers.generate_coordinates) { 
       plane.position.x = Number(jsonNetwork.layers.position_x[i]);
       plane.position.y = Number(jsonNetwork.layers.position_y[i]);
@@ -395,12 +395,12 @@ const edgeAttributes = (message) => {
 // Scene ====================
 const showSceneCoords = (message) => {
   let sceneCoordsSwitch = message; //message = true or false
-  if (scene_sphere !== ""){
-    if (sceneCoordsSwitch) coordsSystemScene(scene_sphere);
+  if (scene.sphere !== ""){
+    if (sceneCoordsSwitch) coordsSystemScene(scene.sphere);
     else{
-      scene_sphere.remove(sceneCoords[0]);
-      scene_sphere.remove(sceneCoords[1]);
-      scene_sphere.remove(sceneCoords[2]);
+      scene.sphere.remove(sceneCoords[0]);
+      scene.sphere.remove(sceneCoords[1]);
+      scene.sphere.remove(sceneCoords[2]);
       sceneCoords = ["", "", ""];
     }
   }
@@ -808,9 +808,9 @@ const applyPredefinedLayout = (message) => {
   else {
     if (message) {
       // init position in order to position layers more easily
-      scene_sphere.rotation.x = THREE.Math.degToRad(5);
-      scene_sphere.rotation.y = THREE.Math.degToRad(5);
-      scene_sphere.rotation.z = THREE.Math.degToRad(5);
+      scene.sphere.rotation.x = THREE.Math.degToRad(5);
+      scene.sphere.rotation.y = THREE.Math.degToRad(5);
+      scene.sphere.rotation.z = THREE.Math.degToRad(5);
       layer_size = layer_planes[0].geometry.parameters.height;
       for (let i = 0; i < numLayers; i++) {
         layer_planes[i].position.set(0, 0, 0)

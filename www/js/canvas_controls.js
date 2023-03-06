@@ -44,7 +44,7 @@ function rotateSceneXMinus() {
   clearInterval(timeoutFScene);
     timeoutFScene = setInterval(function () {
     let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene_sphere.rotateX(-THREE.Math.degToRad(value));
+    scene.rotateX(-THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
@@ -58,7 +58,7 @@ function rotateSceneXPlus(){
   clearInterval(timeoutFScene);
   timeoutFScene = setInterval(function(){
     let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene_sphere.rotateX(THREE.Math.degToRad(value));
+    scene.rotateX(THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
@@ -72,7 +72,7 @@ function rotateSceneYMinus(){
   clearInterval(timeoutFScene);
   timeoutFScene = setInterval(function(){
     let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene_sphere.rotateY(-THREE.Math.degToRad(value));
+    scene.rotateY(-THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
@@ -86,7 +86,7 @@ function rotateSceneYPlus(){
   clearInterval(timeoutFScene);
   timeoutFScene = setInterval(function(){
     let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene_sphere.rotateY(THREE.Math.degToRad(value));
+    scene.rotateY(THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
@@ -100,7 +100,7 @@ function rotateSceneZMinus(){
   clearInterval(timeoutFScene);
   timeoutFScene = setInterval(function(){
     let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene_sphere.rotateZ(-THREE.Math.degToRad(value));
+    scene.rotateZ(-THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
@@ -114,7 +114,7 @@ function rotateSceneZPlus(){
   clearInterval(timeoutFScene);
    timeoutFScene = setInterval(function(){
     let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene_sphere.rotateZ(THREE.Math.degToRad(value));
+    scene.rotateZ(THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
@@ -124,10 +124,8 @@ function rotateSceneZPlus(){
 }
 
 function recenterNetwork(){
-  if (scene_pan !== ""){
-    scene_pan.position.x = 0;
-    scene_pan.position.y = 0;
-    scene_pan.position.z = 0;
+  if (scene.pan !== ""){
+    scene.recenter();
     updateScenePanRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
