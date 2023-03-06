@@ -57,7 +57,7 @@ p {
 }
 
 #logo1 {
-  background-image: url(../images/logo.png);
+  background-image: url(./images/logo.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 200px;

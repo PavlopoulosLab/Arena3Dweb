@@ -84,12 +84,12 @@ produceHTML <- function(id){
   <head>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-text-sprite"></script>
-    <script src="../aframe-network-component.js"></script>
+    <script src="./aframe-network-component.js"></script>
   </head>
   <body>
     <a-scene background="color: #000000;">
       <a-assets>
-        <img id="logo" src="../Arena_logo.png">
+        <img id="logo" src="./Arena_logo.png">
       </a-assets>
       <a-entity camera look-controls wasd-controls="acceleration: 5;" position="0 1.6 0.0"></a-entity>
       <a-entity light="type: ambient;"></a-entity>
@@ -98,7 +98,7 @@ produceHTML <- function(id){
       <a-icosahedron position="0.0 2.0 -1.0" color="#002640" radius="5" wireframe="true" wireframe-linewidth="5"></a-icosahedron>
       <a-image position="0.0 6.2 -1.3" rotation="70 0 0" src="#logo" width="1.0" height="0.5"></a-image>
       <a-image position="0.0 6.2 -0.7" rotation="70 180 0" src="#logo" width="1.0" height="0.5"></a-image>
-      <a-network position="0.0 2.0 -0.5" node_size="0.05" edge_opacity="0.2" src="url(../plyfile/', id, ')"></a-network>
+      <a-network position="0.0 2.0 -0.5" node_size="0.05" edge_opacity="0.2" src="url(./plyfile/', id, ')"></a-network>
     </a-scene>
   </body>
 </html>')
