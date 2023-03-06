@@ -124,7 +124,7 @@ function rotateSceneZPlus(){
 }
 
 function recenterNetwork(){
-  if (scene.pan !== ""){
+  if (scene.exists()){
     scene.recenter();
     updateScenePanRShiny();
     updateLayersRShiny();

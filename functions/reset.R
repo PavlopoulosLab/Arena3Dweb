@@ -13,7 +13,7 @@ reset_UI_values <- function() {
   reset("showWireFrames")
   reset("layerColorFilePriority")
   shinyjs::hide("layerColorFilePriority")
-  reset("showSceneCoords")
+  reset("toggleSceneCoords")
   reset("autoRotateScene")
   reset("layerEdgeOpacity")
   shinyjs::hide("layerEdgeOpacity")

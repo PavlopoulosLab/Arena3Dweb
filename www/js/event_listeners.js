@@ -1,10 +1,8 @@
 // on mouse wheel scroll
 const sceneZoom = (event) => {
-  if (scene.pan != "") {
-    let new_scale = scene.pan.scale.x;
-    if (event.deltaY < 0 && new_scale < 2) new_scale = new_scale * 1.1;
-    else if (event.deltaY > 0 && new_scale > 0.2) new_scale = new_scale * 0.9;
-    scene.scale(new_scale);
+  if (scene.exists()) {
+    scene.zoom(event.deltaY);
+
     updateScenePanRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
@@ -14,7 +12,7 @@ const sceneZoom = (event) => {
 
 // on arrow keys press or axis select ot rotate layers
 const sceneArrowPan = (event) => {
-  if (scene.pan != "") {
+  if (scene.exists()) {
     if (event.keyCode == 90) axisPressed = 'z';
     if (event.keyCode == 88) axisPressed = 'x';
     if (event.keyCode == 67) axisPressed = 'c';
@@ -30,7 +28,7 @@ const sceneArrowPan = (event) => {
 }
 
 const axisRelease = (event) => {
-  if (scene.pan != "") {
+  if (scene.exists()) {
     axisPressed = "";
   }
   return true;
@@ -38,7 +36,7 @@ const axisRelease = (event) => {
 
 // mouse keys press event
 const clickDown = (event) => {
-  if (scene.pan != "") {
+  if (scene.exists()) {
     //console.log(event); //mouse: 0 left, 1 middle, 2 right click
     if (event.button == 0){
       leftClickPressed = true;
@@ -60,7 +58,7 @@ const clickDown = (event) => {
 
 // while mouse button held, drag event
 const clickDrag = (event) => {
-  if (scene.pan != "") {
+  if (scene.exists()) {
     let distance = Math.sqrt(Math.pow(previousX-event.screenX, 2) + Math.pow(previousY-event.screenY, 2)),
       node_hover_flag = false;
 
@@ -95,7 +93,7 @@ const clickDrag = (event) => {
 }
 
 const clickUp = (event) => {
-  if (scene.pan != "") {
+  if (scene.exists()) {
     dragging = false;
     if (event.button == 0){
       leftClickPressed = false;
@@ -129,7 +127,7 @@ const clickUp = (event) => {
 
 // double click event (left mouse), uncheck nodes
 const dblClick = (event) => {
-  if (scene.pan != "") {
+  if (scene.exists()) {
     let node_selection = checkNodeInteraction(event); //priority 1
       if (!node_selection) {
         let layer_selection = checkLayerInteraction(event); //priority 2
@@ -275,7 +273,7 @@ const canvasRescale = () => {
 
 // on node searchbar key-press
 const selectSearchedNodes = (event) => {
-  if (scene.pan != "") {
+  if (scene.exists()) {
     var key = window.event.keyCode;
     // If the user has pressed enter
     if (key === 13) {

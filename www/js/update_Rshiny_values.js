@@ -1,8 +1,8 @@
 const updateScenePanRShiny = () => {
   let js_scene_pan = {
-    "position_x" : String(scene.pan.position.x),
-    "position_y" : String(scene.pan.position.y),
-    "scale" : String(scene.pan.scale.x),
+    "position_x" : String(scene.getPosition("x")),
+    "position_y" : String(scene.getPosition("y")),
+    "scale" : String(scene.getScale()),
     "color" : "#".concat(renderer.getClearColor().getHexString()) 
   }
   Shiny.setInputValue("js_scene_pan", JSON.stringify(js_scene_pan));
@@ -11,9 +11,9 @@ const updateScenePanRShiny = () => {
 
 const updateSceneSphereRShiny = () => {
   let js_scene_sphere = {
-    "rotation_x" : String(scene.sphere.rotation.x),
-    "rotation_y" : String(scene.sphere.rotation.y),
-    "rotation_z" : String(scene.sphere.rotation.z)
+    "rotation_x" : String(scene.getRotation("x")),
+    "rotation_y" : String(scene.getRotation("y")),
+    "rotation_z" : String(scene.getRotation("z"))
   }
   Shiny.setInputValue("js_scene_sphere", JSON.stringify(js_scene_sphere));
   return true;

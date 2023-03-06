@@ -126,7 +126,7 @@ const importNetwork = (jsonNetwork) => {
   colors = darkColors.concat(default_colors);
   if (!attachedCanvasControls) attachCanvasControls();
   setLights();
-  addScenePanAndSphere();
+  
   
   let layers_counter = 0,
       color = "",
@@ -154,14 +154,13 @@ const importNetwork = (jsonNetwork) => {
   });
   
   // SCENE
-  scene.pan.position.x = Number(jsonNetwork.scene.position_x);
-  scene.pan.position.y = Number(jsonNetwork.scene.position_y);
-  scene.pan.scale.x = scene.pan.scale.y = scene.pan.scale.z = 
-    Number(jsonNetwork.scene.scale);
+  scene.setPosition("x", Number(jsonNetwork.scene.position_x));
+  scene.setPosition("y", Number(jsonNetwork.scene.position_y));
+  scene.setScale(Number(jsonNetwork.scene.scale));
   renderer.setClearColor(jsonNetwork.scene.color);
-  scene.sphere.rotation.x = Number(jsonNetwork.scene.rotation_x);
-  scene.sphere.rotation.y = Number(jsonNetwork.scene.rotation_y);
-  scene.sphere.rotation.z = Number(jsonNetwork.scene.rotation_z);
+  scene.setRotation("x", Number(jsonNetwork.scene.rotation_x));
+  scene.setRotation("y", Number(jsonNetwork.scene.rotation_y));
+  scene.setRotation("z", Number(jsonNetwork.scene.rotation_z));
   
   // LAYER
   for (let i = 0; i < jsonNetwork.layers.name.length; i++) {
@@ -188,7 +187,7 @@ const importNetwork = (jsonNetwork) => {
     sphere.position.z = sphere.position.z * Number(jsonNetwork.layers.last_layer_scale[i]); //stretch factor for label
     layer_planes.push(plane);
     layer_spheres.push(sphere);
-    scene.sphere.add(plane);
+    scene.addLayer(plane);
     if (jsonNetwork.layers.generate_coordinates) { 
       plane.position.x = Number(jsonNetwork.layers.position_x[i]);
       plane.position.y = Number(jsonNetwork.layers.position_y[i]);
@@ -393,17 +392,10 @@ const edgeAttributes = (message) => {
 }
 
 // Scene ====================
-const showSceneCoords = (message) => {
+const toggleSceneCoords = (message) => {
   let sceneCoordsSwitch = message; //message = true or false
-  if (scene.sphere !== ""){
-    if (sceneCoordsSwitch) coordsSystemScene(scene.sphere);
-    else{
-      scene.sphere.remove(sceneCoords[0]);
-      scene.sphere.remove(sceneCoords[1]);
-      scene.sphere.remove(sceneCoords[2]);
-      sceneCoords = ["", "", ""];
-    }
-  }
+  if (scene.exists())
+    scene.toggleCoords(sceneCoordsSwitch);
   return true;
 }
 
@@ -426,7 +418,7 @@ const showLayerCoords = (message) => {
   let labelCoordsSwitch = message; //message = true or false
   if (labelCoordsSwitch){
     for (let i = 0; i < layer_planes.length; i++){
-      coordsSystem(layer_planes[i]);
+      appendCoordsSystem(layer_planes[i]);
     }
   } else{
     for (let i = 0; i < layer_planes.length; i++){
@@ -808,9 +800,7 @@ const applyPredefinedLayout = (message) => {
   else {
     if (message) {
       // init position in order to position layers more easily
-      scene.sphere.rotation.x = THREE.Math.degToRad(5);
-      scene.sphere.rotation.y = THREE.Math.degToRad(5);
-      scene.sphere.rotation.z = THREE.Math.degToRad(5);
+      scene.tiltDefault();
       layer_size = layer_planes[0].geometry.parameters.height;
       for (let i = 0; i < numLayers; i++) {
         layer_planes[i].position.set(0, 0, 0)
@@ -894,7 +884,7 @@ Shiny.addCustomMessageHandler("handler_importNetwork", importNetwork);
 Shiny.addCustomMessageHandler("handler_nodeAttributes", nodeAttributes);
 Shiny.addCustomMessageHandler("handler_edgeAttributes", edgeAttributes);
 // Scene ====================
-Shiny.addCustomMessageHandler("handler_showSceneCoords", showSceneCoords);
+Shiny.addCustomMessageHandler("handler_toggleSceneCoords", toggleSceneCoords);
 // Layers ====================
 Shiny.addCustomMessageHandler("handler_maxAllowedLayers", maxAllowedLayers);
 Shiny.addCustomMessageHandler("handler_showLayerCoords", showLayerCoords);

@@ -82,7 +82,6 @@ let nodes = [], //canvas objects
     edge_values = [],
     edge_channels = [],
     layerCoords = [],
-    sceneCoords = ["", "", ""],
     node_groups = new Map(),
     layer_groups = new Map(),
     layer_labels = [], //divs

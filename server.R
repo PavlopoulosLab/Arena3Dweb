@@ -87,8 +87,8 @@ server <- function(input, output, session) {
   }, ignoreInit = T)
   
   # SCENE ####
-  observeEvent(input$showSceneCoords, {
-    callJSHandler("handler_showSceneCoords", input$showSceneCoords)
+  observeEvent(input$toggleSceneCoords, {
+    callJSHandler("handler_toggleSceneCoords", input$toggleSceneCoords)
   }, ignoreInit = T)
   
   observeEvent(input$autoRotateScene, {
