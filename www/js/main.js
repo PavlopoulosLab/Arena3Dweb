@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+  //console.log(scene.THREE_Object); // TODO remove, testing only
+  
   let canvas_div = document.getElementById("3d-graph");
   canvas_div.style.position='fixed'; //to scroll down togetehr with the page
   canvas_div.appendChild( renderer.domElement ); //create canvas element once

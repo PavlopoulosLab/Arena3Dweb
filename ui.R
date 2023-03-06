@@ -18,6 +18,7 @@ ui <- fluidPage(
   tags$head(tags$script(src = "js/three/three.js")),
   tags$head(tags$script(src = "js/three/matrix4.js")), # three.js matrix4 for dragcontrols
   tags$head(tags$script(src = "js/three/drag_controls.js")), # three.js dragcontrols
+  tags$head(tags$script(src = "js/classes/scene.js")),
   tags$head(tags$script(src = "js/global.js")),
   tags$head(tags$script(src = "js/update_Rshiny_values.js")),
   tags$head(tags$script(src = "js/rshiny_handlers.js")),

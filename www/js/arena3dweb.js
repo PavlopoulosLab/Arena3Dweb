@@ -1,6 +1,7 @@
 // general UI init ====================
 const clearCanvas = () => {
-  scene = new THREE.Scene();
+  scene.reset();
+  
   nodes = [], //canvas objects
   node_labels = [];
   if (!attachedCanvasControls) document.getElementById("info").innerHTML = "1. <b>Zoom</b>: Mouse Wheel<br/>2. <b>Pan</b>: Click Drag Scene / Arrow Keys<br/>3. <b>Orbit</b>: Mouse Middle Drag<br/>4. <b>Drag Layer</b>: Click Drag<br/>5. <b>Rotate Layer</b>: <span class='blue'>Z</span> / <span class='red'>X</span> / <span class='green'>C</span> + Click Drag<br/>6. <b>Move Selected Nodes</b>: <span class='blue'>Z</span> / <span class='green'>C</span> + Click Drag<br/>7. <b>Node/Layer Selection</b>: Double Click <br/>8. <b> Lasso Nodes</b>: Shift + Click Drag<br/>9. <b>Unselect All Nodes</b>: Double Click Scene"; //delete all children of info div (node label divs)
@@ -1369,7 +1370,7 @@ const animate = () => {
     draw_inter_edges_flag = true;
   }
   else if (draw_inter_edges_flag) drawLayerEdges(false);
-	renderer.render( scene, camera );
+	renderer.render( scene.THREE_Object, camera );
 	return true;
 }
         

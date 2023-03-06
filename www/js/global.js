@@ -7,7 +7,7 @@ let xBoundMin = -window.innerWidth/2,
     zBoundMax = window.innerHeight/2.5;
     
 // set scene, camera, renderer
-let scene = new THREE.Scene();
+let scene = new Scene();
 // camera: left, right, top, bottom, near, far
 let camera = new THREE.OrthographicCamera( xBoundMin, xBoundMax, yBoundMax, yBoundMin, -4 * xBoundMax, 4 * xBoundMax );
 camera.position.set( 0, 0, 100 );
