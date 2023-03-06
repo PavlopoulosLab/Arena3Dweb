@@ -139,7 +139,7 @@ generateHelpDiv <- function() {
   <p>This is the action panel that allows the user to upload network data as well as export the network in its current
     state.</p> <br />
   <p>
-    <img src="../images/help/file.png" alt="File Actions"
+    <img src="./images/help/file.png" alt="File Actions"
       style="float:left;width:282px;height:425px;margin:5px;margin-right:20px;">
     <span class="numbering"> 1.</span> The <i> Upload Network </i> option allows the user to upload network data in the
     Arena3D<sup>web</sup> format. This file consists of 4 mandatory columns with headers <b><i>SourceNode, TargetNode,
@@ -489,8 +489,8 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
     in Arena3D<sup>web</sup>.
     Take this aspirin network example, designed in Cytoscape via the StringApp.
   </p>
-  <img src="../images/help/cytoscape_aspirin.png" alt="Cytoscape example" style="float:left;width:1200px;">
-  <img src="../images/help/arena3dwebapp.png" alt="ArenaApp prompt window" style="float:left;width:500px;">
+  <img src="./images/help/cytoscape_aspirin.png" alt="Cytoscape example" style="float:left;width:1200px;">
+  <img src="./images/help/arena3dwebapp.png" alt="ArenaApp prompt window" style="float:left;width:500px;">
   <p>
     The Arena3D<sup>web</sup>App prompt window asks for layer and description information in its dedicated panel.
     The most important setting is choosing which node attribute contains the layer information.
@@ -510,7 +510,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
     it in Arena3D<sup>web</sup>.
     The generated Arena3D<sup>web</sup> should look something like this:
   </p>
-  <img src="../images/help/arena_cytoscape_aspirin.png" alt="Arena Cytoscape Integration"
+  <img src="./images/help/arena_cytoscape_aspirin.png" alt="Arena Cytoscape Integration"
     style="float:left;width:1200px;">
 
 </div>
@@ -644,7 +644,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
   <p> This is the main panel for network transformations in 3D space. The actions are divided into 3 subsections,
     namely, Scene, Layers and Nodes.</p><br />
   <p class="last_p">
-    <img src="../images/help/navigation_panel.png" alt="Navigation Panel"
+    <img src="./images/help/navigation_panel.png" alt="Navigation Panel"
       style="float:left;width:280px;height:1152px;margin:5px;margin-right:20px;">
     <b>General</b> <br />
     <span class="numbering"> 1.</span> The <i> Navigation Controls </i> button is used to hide/show the navigation
@@ -702,7 +702,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
                                                                    apply layout and clustering algorithms and node scaling based on network metrics, on subgraphs of the network.</p>
                                                                      <br />
                                                                      <p>
-                                                                     <img src="../images/help/layouts.png" alt="Layouts"
+                                                                     <img src="./images/help/layouts.png" alt="Layouts"
                                                                    style="float:left;width:360px;height:518px;margin:5px;margin-right:20px;">
                                                                      <span class="numbering"> 1. </span> This consists of a group of 3 exclusive options for subgraph calculations, upon
                                                                    which, layout algorithms (<span class="numbering">3, 5</span>), clustering algorithms (<span
@@ -761,7 +761,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
                                                                    Harel.</li>
                                                                      </ul>
                                                                      
-                                                                     <img src="../images/help/layouts_figure.png" alt="Layouts Figure" style="float:left;height:75%;">
+                                                                     <img src="./images/help/layouts_figure.png" alt="Layouts Figure" style="float:left;height:75%;">
                                                                      
                                                                      <p>Below, we briefly desribe the available clustering algorithms (<span class="numbering">4</span>).</p><br />
                                                                      <ul>
@@ -782,7 +782,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
                                                                    propagated to the unlabeled points throughout the course of the algorithm. </li>
                                                                      </ul>
                                                                      
-                                                                     <img src="../images/help/clustering.png" alt="Clustering" style="float:left;">
+                                                                     <img src="./images/help/clustering.png" alt="Clustering" style="float:left;">
                                                                      
                                                                      <p>Below, we briefly desribe the available network metrics for node scaling (<span class="numbering">6</span>).</p>
                                                                      <br />
@@ -803,7 +803,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
   <h2>Scene Actions</h2>
   <p> In this tab, the user has 2 scene-related options.</p><br />
   <div class="last_p">
-    <img src="../images/help/scene1_1.PNG" alt="Scene"
+    <img src="./images/help/scene1_1.PNG" alt="Scene"
       style="float:left;width:335px;height:333px;margin:5px;margin-right:20px;">
     <span class="numbering"> 1. </span> A checkbox that toggles the visibility of the scene coordinates system. <br />
     <span class="numbering"> 2. </span> A checkbox that enables scene auto rotate. (The user must enable it and then
@@ -816,16 +816,16 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
     <span class="numbering"> 5. </span> A button to see the network in VR. Works only in the online version of the
     tool.<br />
     <div class="scene-actions">
-      <img src="../images/help/predefined_layouts.png" alt="Predefined Layouts" style="float:left;height:35%;">
+      <img src="./images/help/predefined_layouts.png" alt="Predefined Layouts" style="float:left;height:35%;">
     </div>
 
-    <img src="../images/help/vr.png" alt="VR" style="height: 50%;">
+    <img src="./images/help/vr.png" alt="VR" style="height: 50%;">
 
     <p>
       A dedicated theme bar is also offered on the top-right corner of the UI, allowing the user to choose among a
       Light, a Dark and a Gray mode.
     </p>
-    <img src="../images/help/themes.png" alt="Themes" style="margin-bottom:50px;height:45%;">
+    <img src="./images/help/themes.png" alt="Themes" style="margin-bottom:50px;height:45%;">
 
   </div>
 
@@ -836,7 +836,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
   <h2>Layers</h2>
   <p>This control panel incorporates layer-related actions.</p> <br />
   <p class="last_p">
-    <img src="../images/help/layers.png" alt="Layers"
+    <img src="./images/help/layers.png" alt="Layers"
       style="float:left;width:317px;height:434px;margin:5px;margin-right:20px;">
     <span class="numbering"> 1. </span> This checkbox allows the user to show or hide all layer labels.<br />
     <span class="numbering"> 2. </span> This checkbox gives the option of showing the labels of selected layers only.
@@ -858,7 +858,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
   <h2>Nodes</h2>
   <p>This control panel incorporates node-related actions.</p> <br />
   <p>
-    <img src="../images/help/nodes.png" alt="Nodes"
+    <img src="./images/help/nodes.png" alt="Nodes"
       style="float:left;width:580px;height:358px;margin:5px;margin-right:20px;">
     <span class="numbering"> 1. </span> This options allows the user to select/deselect all nodes. Selected nodes can
     then be translated in 3D space via the <i>Navigation Controls</i>, and via the <i>Layer Selection & Layouts</i>
@@ -881,7 +881,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
   </p>
   <br />
   <br />
-  <img src="../images/help/mainview.png" alt="Main View"
+  <img src="./images/help/mainview.png" alt="Main View"
     style="float:left;width:726px;height:555px;margin:5px;margin-right:20px;">
   <ul class="last_p">
     <li>
@@ -904,7 +904,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
   <h2>Edges</h2>
   <p>This control panel incorporates edge-related actions.</p> <br />
   <div class="last_p">
-    <img src="../images/help/edges.png" alt="Edges"
+    <img src="./images/help/edges.png" alt="Edges"
       style="float:left;width:320px;height:auto;margin:5px;margin-right:20px;">
     <span class="numbering"> 1. </span> This option highlights the selected edges.<br />
     <span class="numbering"> 2. </span> This option toggles gives priority to the edge color that it is set on file. If
@@ -938,9 +938,9 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
     This is visible only if option
     (<span class="numbering">2</span>) is not enabled.<br />
     <br />
-    <img src="../images/help/directed_graph.png" alt="Directed Graph"
+    <img src="./images/help/directed_graph.png" alt="Directed Graph"
       style="float:left;height:45%;margin:5px;margin-right:20px;">
-    <img src="../images/help/channels.png" alt="Channels" style="float:left;height:50%;margin:5px;margin-right:20px;">
+    <img src="./images/help/channels.png" alt="Channels" style="float:left;height:50%;margin:5px;margin-right:20px;">
     <br />
   </div>
 
@@ -950,7 +950,7 @@ An	Group1	#6b6a4c	1		This is a node\'s description.
 
   <h2>FPS</h2>
   <p class="last_p"> The option for frames per second. The user is allowed to choose between 3 options: <br /><br />
-    <img src="../images/help/fps2.PNG" alt="FPS"
+    <img src="./images/help/fps2.PNG" alt="FPS"
       style="float:left;width:284px;height:158px;margin:5px;margin-right:20px;">
     &bull; 15FPS, for larger, more processing-heavy networks. <br />
     &bull; 30FPS, the default option. <br />

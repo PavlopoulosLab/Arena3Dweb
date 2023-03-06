@@ -49,7 +49,7 @@ generateHomeDiv <- function() {
   }
 
   #logo1 {
-    background-image: url(../images/logo.png);
+    background-image: url(./images/logo.png);
     background-repeat: no-repeat;
     background-position: center;
     width: 200px;
@@ -66,7 +66,7 @@ generateHomeDiv <- function() {
 
 <div id="MainView_tab" class="main_tabcontent">
   <p class="last_p">
-    <img src="../images/help/mainview2.png" alt="Main View"
+    <img src="./images/help/mainview2.png" alt="Main View"
       style="float:left;width:600px;height:522px;margin:5px;margin-right:20px;">
     Arena3D<sup>web</sup> is the first, fully interactive and dependency-free, web application which allows the
     visualization of multi-layered graphs in 3D space. With Arena3D<sup>web</sup>, users can integrate multiple networks
