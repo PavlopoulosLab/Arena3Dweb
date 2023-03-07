@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
   //console.log(scene.THREE_Object); // TODO remove, testing only
+  setRenderer();
+  resetScreen();
+  scene = new Scene(); // TODO init all objects here
+  
+  // =======================
   
   let canvas_div = document.getElementById("3d-graph");
   canvas_div.style.position='fixed'; //to scroll down togetehr with the page
@@ -34,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementsByClassName("container-fluid")[0].children[0].addEventListener("mouseleave", clickUp); //release mouse buttons on network div exit
 
-  window.onresize = canvasRescale;
+  window.onresize = resetScreen;
   
   //node description div
   let descrDiv = document.getElementById("descrDiv");

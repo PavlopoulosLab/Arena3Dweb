@@ -247,30 +247,6 @@ const replaceContextMenuOverNode = (evt) => {
   return true;
 }
 
-// on window rescale
-const canvasRescale = () => {
-  xBoundMin = -window.innerWidth/2,
-  xBoundMax = window.innerWidth/2,
-  yBoundMin = -window.innerHeight/2,
-  yBoundMax = window.innerHeight/2,
-  zBoundMin = -window.innerHeight/2.5,
-  zBoundMax = window.innerHeight/2.5;
-  camera = new THREE.OrthographicCamera( xBoundMin, xBoundMax, yBoundMax, yBoundMin, -4 * xBoundMax, 4 * xBoundMax );
-  camera.position.set( 0, 0, 100 );
-  camera.lookAt( 0, 0, 0 );
-  renderer.setSize( 2* xBoundMax , 2 * yBoundMax );
-  scene.remove( lights[0] );
-  scene.remove( lights[1] );
-  scene.remove(ambientLight);
-  lights = [];
-  ambientLight = "";
-  setLights();
-  
-  drag_controls = new DragControls( layer_planes, camera, renderer.domElement );
-  
-  return true;
-}
-
 // on node searchbar key-press
 const selectSearchedNodes = (event) => {
   if (scene.exists()) {

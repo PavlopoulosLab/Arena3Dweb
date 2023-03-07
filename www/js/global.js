@@ -1,19 +1,5 @@
-// scene bounds
-let xBoundMin = -window.innerWidth/2,
-    xBoundMax = window.innerWidth/2,
-    yBoundMin = -window.innerHeight/2,
-    yBoundMax = window.innerHeight/2,
-    zBoundMin = -window.innerHeight/2.5,
-    zBoundMax = window.innerHeight/2.5;
-    
-// set scene, camera, renderer
-let scene = new Scene();
-// camera: left, right, top, bottom, near, far
-let camera = new THREE.OrthographicCamera( xBoundMin, xBoundMax, yBoundMax, yBoundMin, -4 * xBoundMax, 4 * xBoundMax );
-camera.position.set( 0, 0, 100 );
-camera.lookAt( 0, 0, 0 );
-let renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize( 2* xBoundMax , 2 * yBoundMax );
+// Global Objects
+let scene; // TODO add rest here
 
 // initializing static variables
 let animationRunning = false, //flag to ensure animation function only executes once!
