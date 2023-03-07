@@ -39,18 +39,18 @@ const clickDown = (event) => {
   if (scene.exists()) {
     //console.log(event); //mouse: 0 left, 1 middle, 2 right click
     if (event.button == 0){
-      leftClickPressed = true;
-      middleClickPressed = false;
+      scene.leftClickPressed = true;
+      scene.middleClickPressed = false;
       if (event.shiftKey && shiftX == ""){
         shiftX = event.layerX - xBoundMax;
         shiftY = yBoundMax - event.layerY; //then implementing drag
       }
     } else if (event.button == 1){
-      middleClickPressed = true;
-      leftClickPressed = false;
-    } else{
-      middleClickPressed = false;
-      leftClickPressed = false;
+      scene.middleClickPressed = true;
+      scene.leftClickPressed = false;
+    } else {
+      scene.middleClickPressed = false;
+      scene.leftClickPressed = false;
     }
   }
   return true;
@@ -66,8 +66,8 @@ const clickDrag = (event) => {
       let x = event.screenX,
         y = event.screenY;
         
-      if (leftClickPressed){
-        dragging = true;
+      if (scene.leftClickPressed){
+        scene.dragging = true;
         if (event.shiftKey){
           last_hovered_layer_index = ""; // to be able to lasso inside layer
           lassoSelectNodes(event.layerX - xBoundMax, yBoundMax - event.layerY);
@@ -75,8 +75,8 @@ const clickDrag = (event) => {
         else if (axisPressed !== "" && selectedNodePositions.length > 0) translateNodes(event);
         else if (axisPressed !== "") rotateLayers(event);
         else if (last_hovered_layer_index === "" && last_hovered_node_index === "") sceneDragPan(x, y); // && !event.ctrlKey
-      } else if (middleClickPressed){
-        dragging = true;
+      } else if (scene.middleClickPressed){
+        scene.dragging = true;
         event.preventDefault();
         sceneOrbit(x, y);
       }
@@ -84,7 +84,7 @@ const clickDrag = (event) => {
       previousY = y;
     } // end if distance
     
-    if (!leftClickPressed && !middleClickPressed) {
+    if (!scene.leftClickPressed && !scene.middleClickPressed) {
       node_hover_flag = checkHoverOverNode(event);
       checkHoverOverLayer(event, node_hover_flag);
     }
@@ -94,14 +94,14 @@ const clickDrag = (event) => {
 
 const clickUp = (event) => {
   if (scene.exists()) {
-    dragging = false;
+    scene.dragging = false;
     if (event.button == 0){
-      leftClickPressed = false;
-      if (optionsList != ""){
+      scene.leftClickPressed = false;
+      if (optionsList != "") {
         document.getElementById("labelDiv").removeChild(optionsList);
         optionsList = "";
       }
-      if (lasso != 0){
+      if (lasso != 0) {
         for (let i = 0; i < nodes.length; i++){
           if (nodes[i].material.opacity == 0.5){
             nodes[i].material.opacity = 1;
@@ -119,10 +119,18 @@ const clickUp = (event) => {
       scene.remove(lasso);
       lasso = "";
     } else if (event.button == 1){
-      middleClickPressed = false;
+      scene.middleClickPressed = false;
     }
   }
   return true;
+}
+
+const mouseOut = (event) => {
+  if (scene.exists()) {
+    scene.dragging = false;
+    scene.leftClickPressed = false;
+    scene.middleClickPressed = false;
+  }
 }
 
 // double click event (left mouse), uncheck nodes

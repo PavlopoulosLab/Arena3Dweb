@@ -49,7 +49,6 @@ const clearCanvas = () => {
   last_layer_scale = [];
   channel_values = [];
   isDirectionEnabled = false;
-  autoRotateFlag = false;
   toggleChannelCurvatureRange(false);
   return true;
 }
@@ -646,7 +645,7 @@ const drawEdges = () => {
 // runs constantly on animate
 const drawLayerEdges = (flag) => {
   let i;
-  if (!flag && (dragging || animationPause)){
+  if (!flag && (scene.dragging || animationPause)){
     for (let i = 0; i < layer_edges_pairs.length; i++){
       scene.remove(layerEdges[i]);
     }
@@ -1301,7 +1300,7 @@ const animate = () => {
   if (layerLabelSwitch) redrawLayerLabels();
   else if (selectedLayerLabelSwitch && js_selected_layers !== []) redrawSelectedLayerLabels();
   // draw inter-layer edges only when necessary for performance improvement
-  if (dragging || animationPause){
+  if (scene.dragging || animationPause){
     drawLayerEdges(false);
   } 
   else if (edgeWidthByWeight || interLayerEdgeOpacity > 0){

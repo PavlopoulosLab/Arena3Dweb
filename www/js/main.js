@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
   canvas.addEventListener('mousedown', clickDown);
   canvas.addEventListener('mousemove', clickDrag);
   canvas.addEventListener('mouseup', clickUp);
+  canvas.addEventListener("mouseout", mouseOut);
   canvas.addEventListener('dblclick', dblClick);
   canvas.addEventListener('contextmenu', replaceContextMenuOverNode); //implementing right click toolbox over nodes
 
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   //scene colorpicker
   let sceneColorDiv = document.getElementById("sceneColorPicker");
-  sceneColorDiv.innerHTML = '<input type="color" id="scene_color" name="scene_color" value="'.concat(sceneDefaultColor).concat('" onchange="setSceneColor(this.value)"> <label for="scene_color">Background Color</label>');
+  sceneColorDiv.innerHTML = '<input type="color" id="scene_color" name="scene_color" value="'.concat(scene.defaultColor).concat('" onchange="setSceneColor(this.value)"> <label for="scene_color">Background Color</label>');
   //floor colorpicker
   let floorColorDiv = document.getElementById("floorColorPicker");
   floorColorDiv.innerHTML = '<input type="color" id="floor_color" name="floor_color" value="'.concat(floorDefaultColor).concat('" onchange="setFloorColor(this.value)"> <label for="floor_color">Floor Color</label>');

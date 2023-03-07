@@ -8,6 +8,12 @@ class Scene {
     this.pan = "";
     this.sphere = "";
     this.coordSystem = ["", "", ""];
+    this.defaultColor = "#000000";
+    this.intervalTimeout = "";
+    this.autoRotate = false;
+    this.dragging = false;
+    this.leftClickPressed = false, // drag translating scene
+    this.middleClickPressed = false, // drag rotating scene
     
     this.addPan();
     this.addSphere();

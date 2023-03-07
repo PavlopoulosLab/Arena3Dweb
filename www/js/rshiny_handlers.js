@@ -392,20 +392,17 @@ const edgeAttributes = (message) => {
 }
 
 // Scene ====================
-const toggleSceneCoords = (message) => {
-  let sceneCoordsSwitch = message; //message = true or false
+const toggleSceneCoords = (sceneCoordsSwitch) => { // true or false
   if (scene.exists())
     scene.toggleCoords(sceneCoordsSwitch);
-  return true;
 }
 
-const autoRotateScene = (message) => {
-  autoRotateFlag = message;
-  if (!autoRotateFlag) {
-    dragging = false;
-    clearInterval(timeoutFScene); 
+const autoRotateScene = (autoRotateFlag) => {
+  if (scene.exists()) {
+    scene.autoRotate = autoRotateFlag;
+    if (!scene.autoRotate)
+      clearInterval(scene.intervalTimeout);
   }
-  return true;
 }
 
 // Layers ====================
@@ -869,8 +866,6 @@ const applyPredefinedLayout = (message) => {
   return true;
 }
 
-
-
 //RSHINY HANDLERS----------------------------
 
 // General ====================
@@ -885,10 +880,10 @@ Shiny.addCustomMessageHandler("handler_nodeAttributes", nodeAttributes);
 Shiny.addCustomMessageHandler("handler_edgeAttributes", edgeAttributes);
 // Scene ====================
 Shiny.addCustomMessageHandler("handler_toggleSceneCoords", toggleSceneCoords);
+Shiny.addCustomMessageHandler("handler_autoRotateScene", autoRotateScene);
 // Layers ====================
 Shiny.addCustomMessageHandler("handler_maxAllowedLayers", maxAllowedLayers);
 Shiny.addCustomMessageHandler("handler_showLayerCoords", showLayerCoords);
-Shiny.addCustomMessageHandler("handler_autoRotateScene", autoRotateScene);
 Shiny.addCustomMessageHandler("handler_floorOpacity", setFloorOpacity);
 Shiny.addCustomMessageHandler("handler_showWireFrames", showWireFrames);
 Shiny.addCustomMessageHandler("handler_selectAllLayers", selectAllLayers);

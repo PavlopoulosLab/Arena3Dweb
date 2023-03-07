@@ -69,7 +69,7 @@ class DragControls extends THREE.EventDispatcher {
 
 			_raycaster.setFromCamera( _pointer, _camera );
 
-			if ( _selected && last_hovered_layer_index !== "" && leftClickPressed) {
+			if ( _selected && last_hovered_layer_index !== "" && scene.leftClickPressed) {
 			  if (findIndexByUuid(layer_planes, _selected.uuid) != -1){ //vag update
 			    if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
 

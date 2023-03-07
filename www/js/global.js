@@ -4,8 +4,6 @@ let scene; // TODO add rest here
 // initializing static variables
 let animationRunning = false, //flag to ensure animation function only executes once!
     animationPause = false, //user button from Shiny to pause rendering at any moment
-    leftClickPressed = false, //flag to check if dragging scene
-    middleClickPressed = false, //flag to check if rotating scene
     axisPressed = "",
     previousX = 0, //variable to calculate drag and orbit controls
     previousY = 0, //variable to calculate drag and orbit controls
@@ -38,7 +36,6 @@ let animationRunning = false, //flag to ensure animation function only executes 
     channel_colors = [],
     CHANNEL_COLORS_LIGHT = [],
     CHANNEL_COLORS_DARK = [],
-    sceneDefaultColor = "#000000",
     floorDefaultColors = [],
     floorDefaultColor = "#777777",
     floorCurrentColor = floorDefaultColor,
@@ -47,7 +44,6 @@ let animationRunning = false, //flag to ensure animation function only executes 
     edgeDefaultColor = "#CFCFCF",
     nodeLabelDefaultSize = "12px",
     draw_inter_edges_flag = true,
-    dragging = false,
     downstreamCheckedNodes = [], // for 3rd option of onRightClick on node
     drag_controls; // for dragging
     
@@ -95,8 +91,7 @@ let nodes = [], //canvas objects
     channels = [],
     channel_color = {},
     channelVisibility = {},
-    timeoutF,
-    timeoutFScene;
+    timeoutF;
 
 // for Raycasting
 const raycaster = new THREE.Raycaster();

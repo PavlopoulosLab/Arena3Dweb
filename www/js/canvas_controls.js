@@ -1,14 +1,12 @@
 //drawing and implementation of button controls for node and layer translations and rotations
 function mouseUpClearScene() {
-  if (!autoRotateFlag) {
-    dragging = false;
-    clearInterval(timeoutFScene);
+  if (!scene.autoRotate) {
+    clearInterval(scene.intervalTimeout);
   }
   return false;
 }
 
 function mouseUpClear() {
-  dragging = false;
   clearInterval(timeoutF);
   return false;
 }
@@ -40,9 +38,8 @@ function sliderSceneRotate(){
 }
 
 function rotateSceneXMinus() {
-  dragging = !autoRotateFlag;
-  clearInterval(timeoutFScene);
-    timeoutFScene = setInterval(function () {
+  clearInterval(scene.intervalTimeout);
+    scene.intervalTimeout = setInterval(function () {
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateX(-THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -53,10 +50,9 @@ function rotateSceneXMinus() {
   return true;
 }
 
-function rotateSceneXPlus(){
-  dragging = !autoRotateFlag;
-  clearInterval(timeoutFScene);
-  timeoutFScene = setInterval(function(){
+function rotateSceneXPlus() {
+  clearInterval(scene.intervalTimeout);
+  scene.intervalTimeout = setInterval(function(){
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateX(THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -67,10 +63,9 @@ function rotateSceneXPlus(){
   return true;
 }
 
-function rotateSceneYMinus(){
-  dragging = !autoRotateFlag;
-  clearInterval(timeoutFScene);
-  timeoutFScene = setInterval(function(){
+function rotateSceneYMinus() {
+  clearInterval(scene.intervalTimeout);
+  scene.intervalTimeout = setInterval(function(){
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateY(-THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -81,10 +76,9 @@ function rotateSceneYMinus(){
   return true;
 }
 
-function rotateSceneYPlus(){
-  dragging = !autoRotateFlag;
-  clearInterval(timeoutFScene);
-  timeoutFScene = setInterval(function(){
+function rotateSceneYPlus() {
+  clearInterval(scene.intervalTimeout);
+  scene.intervalTimeout = setInterval(function(){
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateY(THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -96,9 +90,8 @@ function rotateSceneYPlus(){
 }
 
 function rotateSceneZMinus(){
-  dragging = !autoRotateFlag;
-  clearInterval(timeoutFScene);
-  timeoutFScene = setInterval(function(){
+  clearInterval(scene.intervalTimeout);
+  scene.intervalTimeout = setInterval(function(){
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateZ(-THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -110,9 +103,8 @@ function rotateSceneZMinus(){
 }
 
 function rotateSceneZPlus(){
-  dragging = !autoRotateFlag;
-  clearInterval(timeoutFScene);
-   timeoutFScene = setInterval(function(){
+  clearInterval(scene.intervalTimeout);
+   scene.intervalTimeout = setInterval(function(){
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateZ(THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
