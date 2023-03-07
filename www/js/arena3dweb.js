@@ -393,15 +393,15 @@ const rotateLayers = (e) => {
   if (e.screenX - e.screenY >= previousX - previousY) rads = 0.05;
   else rads = -0.05;
 
-  if (axisPressed=="z"){
+  if (scene.axisPressed=="z"){
     for (i = 0; i < js_selected_layers.length; i++){
       layer_planes[js_selected_layers[i]].rotateZ(rads);
     }
-  } else if (axisPressed=="x"){
+  } else if (scene.axisPressed=="x"){
     for (i = 0; i < js_selected_layers.length; i++){
       layer_planes[js_selected_layers[i]].rotateX(rads);
     }
-  } else if (axisPressed=="c"){
+  } else if (scene.axisPressed=="c"){
     for (i = 0; i < js_selected_layers.length; i++){
       layer_planes[js_selected_layers[i]].rotateY(rads);
     }
@@ -566,15 +566,15 @@ const translateNodes = (e) => {
   if (e.screenX - e.screenY >=  previousX - previousY) step = 20;
   else step =-20;
   
-  if (axisPressed=="z"){
+  if (scene.axisPressed=="z"){
     for (i = 0; i < selectedNodePositions.length; i++){
       nodes[selectedNodePositions[i]].translateZ(step);
     }
-  /*} else if (axisPressed=="x"){
+  /*} else if (scene.axisPressed=="x"){
     for (i = 0; i < selectedNodePositions.length; i++){
       nodes[selectedNodePositions[i]].translateX(step);
     }*/
-  } else if (axisPressed=="c"){
+  } else if (scene.axisPressed=="c"){
     for (i = 0; i < selectedNodePositions.length; i++){
       nodes[selectedNodePositions[i]].translateY(step);
     }

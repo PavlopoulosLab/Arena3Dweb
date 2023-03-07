@@ -4,7 +4,6 @@ let scene; // TODO add rest here
 // initializing static variables
 let animationRunning = false, //flag to ensure animation function only executes once!
     animationPause = false, //user button from Shiny to pause rendering at any moment
-    axisPressed = "",
     previousX = 0, //variable to calculate drag and orbit controls
     previousY = 0, //variable to calculate drag and orbit controls
     sphereRadius = 8,

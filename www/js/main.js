@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let canvas = document.getElementsByTagName("canvas")[0];
   canvas.tabIndex = 1; //default value = -1, giving focus on canvas so it can register keydown events
   canvas.addEventListener("wheel", sceneZoom);
-  canvas.addEventListener("keydown", sceneArrowPan);
+  canvas.addEventListener("keydown", keyPressed);
   canvas.addEventListener("keyup", axisRelease);
   canvas.addEventListener('mousedown', clickDown);
   canvas.addEventListener('mousemove', clickDrag);
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let channelColorLayout = document.getElementById("channelColorLayout");
   
   let searchBar = document.getElementById("searchBar");
-  searchBar.onkeypress = selectSearchedNodes;
+  searchBar.onkeydown = selectSearchedNodes;
   
   // themeDiv
   attachThemeButtons();

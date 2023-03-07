@@ -12,8 +12,9 @@ class Scene {
     this.intervalTimeout = "";
     this.autoRotate = false;
     this.dragging = false;
-    this.leftClickPressed = false, // drag translating scene
-    this.middleClickPressed = false, // drag rotating scene
+    this.leftClickPressed = false; // drag translating scene
+    this.middleClickPressed = false; // drag rotating scene
+    this.axisPressed = ""; // z, x, c
     
     this.addPan();
     this.addSphere();
@@ -88,6 +89,13 @@ class Scene {
     this.pan.translateY(y);
   }
   
+  translatePanWithArrow(code) {
+    if (code == 37) this.translateX(-25); //left
+    if (code == 38) this.translateY(25); //up
+    if (code == 39) this.translateX(25); //right
+    if (code == 40) this.translateY(-25); // down
+  }
+
   rotateX(x) {
     this.sphere.rotateX(x);
   }

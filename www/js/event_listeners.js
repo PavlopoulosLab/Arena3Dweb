@@ -2,7 +2,6 @@
 const sceneZoom = (event) => {
   if (scene.exists()) {
     scene.zoom(event.deltaY);
-
     updateScenePanRShiny();
     updateLayersRShiny();
     updateNodesRShiny();
@@ -11,25 +10,23 @@ const sceneZoom = (event) => {
 }
 
 // on arrow keys press or axis select ot rotate layers
-const sceneArrowPan = (event) => {
+const keyPressed = (event) => {
   if (scene.exists()) {
-    if (event.keyCode == 90) axisPressed = 'z';
-    if (event.keyCode == 88) axisPressed = 'x';
-    if (event.keyCode == 67) axisPressed = 'c';
-    if (event.keyCode == 37) scene.translateX(-25); //left
-    if (event.keyCode == 38) scene.translateY(25); //up
-    if (event.keyCode == 39) scene.translateX(25); //right
-    if (event.keyCode == 40) scene.translateY(-25); // down
-    updateScenePanRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
+    let code = event.keyCode;
+    if (code == 90) scene.axisPressed = 'z';
+    if (code == 88) scene.axisPressed = 'x';
+    if (code == 67) scene.axisPressed = 'c';
+    if (code == 37 || code == 38 || code == 39 || code == 40)
+      scene.translatePanWithArrow(code);
+      updateScenePanRShiny();
+      updateLayersRShiny();
+      updateNodesRShiny();
   }
-  return true;
 }
 
 const axisRelease = (event) => {
   if (scene.exists()) {
-    axisPressed = "";
+    scene.axisPressed = "";
   }
   return true;
 }
@@ -72,8 +69,8 @@ const clickDrag = (event) => {
           last_hovered_layer_index = ""; // to be able to lasso inside layer
           lassoSelectNodes(event.layerX - xBoundMax, yBoundMax - event.layerY);
         } 
-        else if (axisPressed !== "" && selectedNodePositions.length > 0) translateNodes(event);
-        else if (axisPressed !== "") rotateLayers(event);
+        else if (scene.axisPressed !== "" && selectedNodePositions.length > 0) translateNodes(event);
+        else if (scene.axisPressed !== "") rotateLayers(event);
         else if (last_hovered_layer_index === "" && last_hovered_node_index === "") sceneDragPan(x, y); // && !event.ctrlKey
       } else if (scene.middleClickPressed){
         scene.dragging = true;
