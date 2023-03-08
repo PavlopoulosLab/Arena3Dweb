@@ -124,9 +124,7 @@ const importNetwork = (jsonNetwork) => {
   clearCanvas();
   //init on with darkColors
   colors = darkColors.concat(default_colors);
-  if (!attachedCanvasControls) attachCanvasControls();
-  setLights();
-  
+  if (!attachedCanvasControls) attachCanvasControls();  
   
   let layers_counter = 0,
       color = "",

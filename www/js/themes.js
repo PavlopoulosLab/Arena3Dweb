@@ -5,7 +5,7 @@ const applyTheme = (bgColor, floorColor, edgeColor, labelColor, theme_colors, ch
     colors = theme_colors.concat(default_colors);
     channel_colors = channel_colors_theme;
     createChannelColorMap();
-    setSceneColor(bgColor);
+    setRendererColor(bgColor);
     updateScenePanRShiny();
     setFloorColor(floorColor);
     attachChannelEditList();

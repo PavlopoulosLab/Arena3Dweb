@@ -1,5 +1,5 @@
 let xBoundMin, xBoundMax, yBoundMin, yBoundMax, zBoundMin, zBoundMax,
-  camera, renderer;
+  camera, renderer, mousePreviousX = 0, mousePreviousY = 0;
 
 const setRenderer = () => {
   renderer = new THREE.WebGLRenderer({antialias: true});
@@ -18,6 +18,7 @@ const setWindowBounds = () => {
   yBoundMax = window.innerHeight/2,
   zBoundMin = -window.innerHeight/2.5,
   zBoundMax = window.innerHeight/2.5;
+  // TODO probably communicate to R form here
 }
 
 const setCamera = () => {
@@ -30,4 +31,11 @@ const setCamera = () => {
 
 const resizeRenderer = () => {
   renderer.setSize(2 * xBoundMax , 2 * yBoundMax);
+}
+
+const setRendererColor = (hexColor) => {
+  if (scene.exists()) {
+    renderer.setClearColor(hexColor);
+    updateScenePanRShiny();
+  }
 }

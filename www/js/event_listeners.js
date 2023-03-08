@@ -56,30 +56,31 @@ const clickDown = (event) => {
 // while mouse button held, drag event
 const clickDrag = (event) => {
   if (scene.exists()) {
-    let distance = Math.sqrt(Math.pow(previousX-event.screenX, 2) + Math.pow(previousY-event.screenY, 2)),
+    let distance = Math.sqrt(Math.pow(mousePreviousX-event.screenX, 2) + Math.pow(mousePreviousY-event.screenY, 2)),
       node_hover_flag = false;
 
-    if (distance > 10){
+    if (distance > 10) {
       let x = event.screenX,
         y = event.screenY;
-        
-      if (scene.leftClickPressed){
+      if (scene.leftClickPressed) {
         scene.dragging = true;
-        if (event.shiftKey){
+        if (event.shiftKey) {
           last_hovered_layer_index = ""; // to be able to lasso inside layer
           lassoSelectNodes(event.layerX - xBoundMax, yBoundMax - event.layerY);
-        } 
-        else if (scene.axisPressed !== "" && selectedNodePositions.length > 0) translateNodes(event);
-        else if (scene.axisPressed !== "") rotateLayers(event);
-        else if (last_hovered_layer_index === "" && last_hovered_node_index === "") sceneDragPan(x, y); // && !event.ctrlKey
-      } else if (scene.middleClickPressed){
+        } else if (scene.axisPressed !== "" && selectedNodePositions.length > 0)
+          translateNodes(event);
+        else if (scene.axisPressed !== "")
+          rotateLayers(event);
+        else if (last_hovered_layer_index === "" && last_hovered_node_index === "")
+          sceneDragPan(x, y); // && !event.ctrlKey
+      } else if (scene.middleClickPressed) {
         scene.dragging = true;
         event.preventDefault();
         sceneOrbit(x, y);
       }
-      previousX = x;
-      previousY = y;
-    } // end if distance
+      mousePreviousX = x;
+      mousePreviousY = y;
+    } 
     
     if (!scene.leftClickPressed && !scene.middleClickPressed) {
       node_hover_flag = checkHoverOverNode(event);
@@ -87,6 +88,22 @@ const clickDrag = (event) => {
     }
   }
   return true;
+}
+
+// left-click drag
+const sceneDragPan = (x, y) => {
+  scene.translatePanWithMouse(x, y);
+  updateScenePanRShiny();
+  updateLayersRShiny();
+  updateNodesRShiny();
+}
+
+// middle-click drag
+const sceneOrbit = (x, y) => {
+  scene.orbitSphereWithMouse(x, y);    
+  updateSceneSphereRShiny();
+  updateLayersRShiny();
+  updateNodesRShiny();
 }
 
 const clickUp = (event) => {

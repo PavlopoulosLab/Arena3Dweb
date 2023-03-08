@@ -40,8 +40,6 @@ const clearCanvas = () => {
   shiftX = "",
   shiftY = "",
   lasso = "",
-  lights = [],
-  ambientLight = "",
   optionsList = "",
   node_cluster_colors = [],
   node_attributes = "",
@@ -54,8 +52,6 @@ const clearCanvas = () => {
 }
 
 const loadGraph = () => {
-  setLights();
-
   //create layer planes
   let layerSphereGeometry = new THREE.SphereGeometry( 0 );
   let layerSphereMaterial = new THREE.MeshBasicMaterial( {color:"white", transparent: true, opacity: 0.5} );
@@ -117,24 +113,7 @@ const loadGraph = () => {
   return true;
 }
 
-const setLights = () => {
-	let sphereGeom = new THREE.SphereGeometry();
-	lights[0] = new THREE.PointLight( 0xffffff, 1, 2*yBoundMax );
-  lights[0].add( new THREE.Mesh( sphereGeom, new THREE.MeshBasicMaterial( { color: 0xffffff } ) ) );
-  lights[0].position.set( 0, yBoundMax, 0 );
-  lights[0].rotateX(THREE.Math.degToRad(90));
-  scene.add( lights[0] );
-  lights[1] = new THREE.PointLight( 0xffffff, 1, 2*yBoundMax );
-  lights[1].add( new THREE.Mesh( sphereGeom, new THREE.MeshBasicMaterial( { color: 0xffffff } ) ) );
-  lights[1].position.set( 0, -yBoundMax, 0 );
-  lights[1].rotateX(THREE.Math.degToRad(90));
-  scene.add( lights[1] );
-  ambientLight = new THREE.AmbientLight(0xffffff);
-  scene.add(ambientLight);
-  return true;
-}
-
-// Scene ====================
+// Layers ====================
 const appendCoordsSystem = (obj) => { //adding coord lines to input object
   let points = [];
   
@@ -167,47 +146,6 @@ const appendCoordsSystem = (obj) => { //adding coord lines to input object
   return true;
 }
 
-// @param color: hex code of color value for background
-const setSceneColor = (color) => {
-  //from picker, color = document.getElementById("scene_color").value
-  if (scene.exists()){
-    renderer.setClearColor(color);
-    updateScenePanRShiny();
-  }
-  return true;
-}
-
-// scene drag with mouse
-const sceneDragPan = (x, y) => {
-  scene.translateX(x - previousX);
-  scene.translateY(previousY - y);
-  updateScenePanRShiny();
-  updateLayersRShiny();
-  updateNodesRShiny();
-  return true;
-}
-
-// middle click drag
-const sceneOrbit = (x, y) => {
-  if (scene.exists()){
-    let deltaMove = {
-        x: x-previousX,
-        y: y-previousY
-    };
-	  
-	  let deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
-	    new THREE.Euler( toRadians(deltaMove.y * 1), toRadians(deltaMove.x * 1), 0, 'XYZ'));
-        
-    scene.setQuaternion(deltaRotationQuaternion);
-
-		updateSceneSphereRShiny();
-		updateLayersRShiny();
-    updateNodesRShiny();
-  }
-  return true;
-}
-
-// Layers ====================
 const selectCheckedLayers = () => {
   js_selected_layers = [];
   let c = document.getElementById("checkboxdiv").children;
@@ -390,7 +328,7 @@ const checkLayerInteraction = (e) => {
 const rotateLayers = (e) => {
   let rads, i;
 
-  if (e.screenX - e.screenY >= previousX - previousY) rads = 0.05;
+  if (e.screenX - e.screenY >= mousePreviousX - mousePreviousY) rads = 0.05;
   else rads = -0.05;
 
   if (scene.axisPressed=="z"){
@@ -563,7 +501,7 @@ const lassoSelectNodes = (x, y) => {
 const translateNodes = (e) => {
   let step, i;
     
-  if (e.screenX - e.screenY >=  previousX - previousY) step = 20;
+  if (e.screenX - e.screenY >=  mousePreviousX - mousePreviousY) step = 20;
   else step =-20;
   
   if (scene.axisPressed=="z"){

@@ -16,11 +16,27 @@ class Scene {
     this.middleClickPressed = false; // drag rotating scene
     this.axisPressed = ""; // z, x, c
     
+    this.addLights();
     this.addPan();
     this.addSphere();
     this.appendCoordSystem();
   }
   
+  addLights() {
+    this.add(this.createPointLight(1));
+    this.add(this.createPointLight(-1));
+    this.add(new THREE.AmbientLight(0xffffff));
+  }
+
+  createPointLight(orientation) {
+    let sphereGeom = new THREE.SphereGeometry();
+    let lightObject = new THREE.PointLight(0xffffff, 1, 2 * yBoundMax);
+    lightObject.add(new THREE.Mesh(sphereGeom, new THREE.MeshBasicMaterial({color: 0xffffff})));
+    lightObject.position.set(0, orientation * yBoundMax, 0);
+    lightObject.rotateX(THREE.Math.degToRad(90));
+    return(lightObject)
+  }
+
   addPan() { // scene translations are applied on pan
     let threePan = this.createSphere();
     this.add(threePan);
@@ -96,6 +112,32 @@ class Scene {
     if (code == 40) this.translateY(-25); // down
   }
 
+  translatePanWithMouse(x, y) {
+    this.translateX(x - mousePreviousX);
+    this.translateY(mousePreviousY - y);
+  }
+
+  orbitSphereWithMouse(x, y) {
+    let deltaMove = {
+      x: x - mousePreviousX,
+      y: y - mousePreviousY
+    };
+ 
+    let deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
+      new THREE.Euler(toRadians(deltaMove.y), toRadians(deltaMove.x), 0, 'XYZ'));
+        
+    this.setQuaternion(deltaRotationQuaternion);
+  }
+
+  setQuaternion(deltaRotationQuaternion) {
+    this.sphere.quaternion.multiplyQuaternions(deltaRotationQuaternion,
+      this.getQuaternion());
+  }
+
+  getQuaternion() {
+    return(this.sphere.quaternion);
+  }
+
   rotateX(x) {
     this.sphere.rotateX(x);
   }
@@ -152,14 +194,5 @@ class Scene {
   
   setScale(value) {
     this.pan.scale.set(value, value, value);
-  }
-  
-  getQuaternion() {
-    return(this.sphere.quaternion);
-  }
-  
-  setQuaternion(deltaRotationQuaternion) {
-    this.sphere.quaternion.multiplyQuaternions(deltaRotationQuaternion,
-      this.getQuaternion());
   }
 }
