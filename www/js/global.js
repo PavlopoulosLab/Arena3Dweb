@@ -88,12 +88,6 @@ let nodes = [], //canvas objects
     channelVisibility = {},
     timeoutF;
 
-// for Raycasting
-const raycaster = new THREE.Raycaster();
-const vector = new THREE.Vector3();
-const dir = new THREE.Vector3();
-
-
 let colors = [];
 const darkColors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628","#f781bf", "#999999"];
 const lightColors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#000000"];

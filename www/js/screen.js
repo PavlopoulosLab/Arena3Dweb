@@ -1,5 +1,9 @@
 let xBoundMin, xBoundMax, yBoundMin, yBoundMax, zBoundMin, zBoundMax,
   camera, renderer, mousePreviousX = 0, mousePreviousY = 0;
+const raycaster = new THREE.Raycaster(),
+  rayvector = new THREE.Vector3(),
+  raydir = new THREE.Vector3();
+
 
 const setRenderer = () => {
   renderer = new THREE.WebGLRenderer({antialias: true});
@@ -38,4 +42,12 @@ const setRendererColor = (hexColor) => {
     renderer.setClearColor(hexColor);
     updateScenePanRShiny();
   }
+}
+
+const setRaycaster = (event) => {
+  rayvector.set((event.clientX / window.innerWidth) * 2 - 1,
+    -(event.clientY / window.innerHeight) * 2 + 1, -1 ); // z = - 1 important!
+  rayvector.unproject(camera);
+  raydir.set(0, 0, -1).transformDirection(camera.matrixWorld);
+  raycaster.set(rayvector, raydir);
 }

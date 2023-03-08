@@ -290,11 +290,7 @@ const setFloorColor = (color) => {
 }
 
 const checkHoverOverLayer = (event, node_hover_flag) => {
-  vector.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, - 1 ); // z = - 1 important!
-  vector.unproject( camera );
-  dir.set( 0, 0, - 1 ).transformDirection( camera.matrixWorld );
-  raycaster.set( vector, dir );
-  
+  setRaycaster(event);
   let intersects = raycaster.intersectObjects(layer_planes);
   
   if (intersects.length > 0 & !node_hover_flag) {
@@ -401,11 +397,7 @@ const adjustLayerSize = () => {
 // Called from mouse move event
 // @return bool
 const checkHoverOverNode = (event) => {
-  vector.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, - 1 ); // z = - 1 important!
-  vector.unproject( camera );
-  dir.set( 0, 0, - 1 ).transformDirection( camera.matrixWorld );
-  raycaster.set( vector, dir );
-  
+  setRaycaster(event);
   let intersects = raycaster.intersectObjects(nodes),
     event_flag = false, //for performance optimization
     index,
@@ -439,16 +431,11 @@ const checkHoverOverNode = (event) => {
 }
 
 // with ray caster
-const checkNodeInteraction = (e) => {
-  let node_selection = false;
-  //if (event.ctrlKey) {
-  vector.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, - 1 ); // z = - 1 important!
-  vector.unproject( camera );
-  dir.set( 0, 0, - 1 ).transformDirection( camera.matrixWorld );
-  raycaster.set( vector, dir );
-  
+const checkNodeInteraction = (event) => {
+  setRaycaster(event);
   let intersects = raycaster.intersectObjects(nodes);
-  if (intersects.length > 0){
+  let node_selection = false;
+  if (intersects.length > 0) {
     node_selection = true;
     let ind = findIndexByUuid(nodes, intersects[0].object.uuid);
     if (exists(selectedNodePositions, ind)){
@@ -467,7 +454,6 @@ const checkNodeInteraction = (e) => {
 
   decideNodeLabelFlags();
   updateSelectedNodesRShiny();
-  //}
   return node_selection;
 }
 
