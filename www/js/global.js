@@ -1,10 +1,6 @@
-// Global Objects
-let scene; // TODO add rest of the objects here
-
 // initializing static variables
 let animationRunning = false, //flag to ensure animation function only executes once!
     animationPause = false, //user button from Shiny to pause rendering at any moment
-    sphereRadius = 8,
     attachedCanvasControls = false,
     labelSwitch = false,
     selectedLabelSwitch = true,
@@ -26,7 +22,6 @@ let animationRunning = false, //flag to ensure animation function only executes 
     channelCurvature = 0.05,
     interChannelCurvature = 0.05,
     floorOpacity = 0.6,
-    fps = 30,
     MAX_EDGES = "",
     MAX_CHANNELS = "",
     MAX_LAYERS = "",

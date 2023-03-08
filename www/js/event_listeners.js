@@ -215,7 +215,7 @@ const replaceContextMenuOverNode = (evt) => {
   for (let i = 0; i < nodes.length; i++){
     let nodeX = xBoundMax + nodes[i].getWorldPosition(new THREE.Vector3()).x;
     let nodeY = yBoundMax - nodes[i].getWorldPosition(new THREE.Vector3()).y;
-    if (Math.pow(nodeX - evt.layerX, 2) + Math.pow(nodeY - evt.layerY, 2) <= Math.pow((sphereRadius+1), 2)){
+    if (Math.pow(nodeX - evt.layerX, 2) + Math.pow(nodeY - evt.layerY, 2) <= Math.pow((SPHERE_RADIUS + 1), 2)){
       evt.preventDefault();
       //creating list and appending to 3d-graph div
       optionsList = document.createElement("select");

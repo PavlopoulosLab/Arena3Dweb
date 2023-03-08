@@ -1,12 +1,12 @@
 {
-    "scene_pan": {
-        "position_x": "-320",
-        "position_y": "10",
-        "scale": "0.456302989349695",
+    "scene": {
+        "position_x": "-173",
+        "position_y": "-25",
+        "scale": "0.3972113341526898",
         "color": "#000000",
-        "rotation_x": "0.279252680319093",
-        "rotation_y": "0.279252680319093",
-        "rotation_z": "-1.58824961931484"
+        "rotation_x": "-0.2660686134278486",
+        "rotation_y": "-0.1904743616327548",
+        "rotation_z": "-1.5349656316265918"
     },
     "layers": [
         {
@@ -11975,5 +11975,6 @@
         }
     ],
     "universalLabelColor": "#ffffff",
-    "direction": true
+    "direction": true,
+    "edgeOpacityByWeight": true
 }

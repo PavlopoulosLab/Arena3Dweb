@@ -1,4 +1,12 @@
 // General ====================
+const initializeGlobals = (RGlobalsList) => {
+  MAX_LAYERS = RGlobalsList.MAX_LAYERS;
+  MAX_EDGES = RGlobalsList.MAX_EDGES;
+  MAX_CHANNELS = RGlobalsList.MAX_CHANNELS;
+  CHANNEL_COLORS_LIGHT = RGlobalsList.CHANNEL_COLORS_LIGHT;
+  CHANNEL_COLORS_DARK = RGlobalsList.CHANNEL_COLORS_DARK;
+}
+
 const startLoader = (m) => {
   let canvas_div = document.getElementById("3d-graph"),
       loader = document.getElementById("loader");
@@ -17,6 +25,8 @@ const finishLoader = (m) => {
 
 const changeFPS = (message) => {
   fps = Number(message);
+  if (isNaN(fps))
+    fps = 30;
   return true;
 };
 
@@ -220,7 +230,7 @@ const importNetwork = (jsonNetwork) => {
       layer_names.push(currentLayer);
     }
     //create node geometries
-    let geometry = new THREE.SphereGeometry(sphereRadius, 4, 3);
+    let geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
     let material = new THREE.MeshStandardMaterial({
       color: jsonNetwork.nodes.color[i],
       transparent: true
@@ -404,11 +414,6 @@ const autoRotateScene = (autoRotateFlag) => {
 }
 
 // Layers ====================
-const maxAllowedLayers = (limit) => {
-  MAX_LAYERS = limit;
-  return true;
-}
-
 const showLayerCoords = (message) => {
   let labelCoordsSwitch = message; //message = true or false
   if (labelCoordsSwitch){
@@ -516,11 +521,6 @@ const nodeSelectedColorPriority = (message) => {
 }
 
 // Edges ====================
-const maxAllowedEdges = (limit) => {
-  MAX_EDGES = limit;
-  return true;
-}
-
 const setLayerEdgeOpacity = (message) => {
   layerEdgeOpacity = message;
   redrawEdges(); //because not on animate
@@ -618,21 +618,6 @@ const toggleDirection = (message) => {
 }
 
 // Channels ====================
-const maxAllowedChannels = (limit) => {
-  MAX_CHANNELS = limit;
-  return true;
-}
-
-const getChannelColors = (brewerColors) => {
-  CHANNEL_COLORS_LIGHT = brewerColors;
-  return true;
-}
-
-const getDarkChannelColors = (brewerColors) => {
-  CHANNEL_COLORS_DARK = brewerColors;
-  return true;
-}
-
 const toggleChannelCurvature = (message) => {
   channelCurvature = message;
   redrawEdges();
@@ -870,6 +855,7 @@ const applyPredefinedLayout = (message) => {
 //RSHINY HANDLERS----------------------------
 
 // General ====================
+Shiny.addCustomMessageHandler("handler_initializeGlobals", initializeGlobals);
 Shiny.addCustomMessageHandler("handler_startLoader", startLoader);
 Shiny.addCustomMessageHandler("handler_finishLoader", finishLoader);
 Shiny.addCustomMessageHandler("handler_fps", changeFPS);
@@ -883,7 +869,6 @@ Shiny.addCustomMessageHandler("handler_edgeAttributes", edgeAttributes);
 Shiny.addCustomMessageHandler("handler_toggleSceneCoords", toggleSceneCoords);
 Shiny.addCustomMessageHandler("handler_autoRotateScene", autoRotateScene);
 // Layers ====================
-Shiny.addCustomMessageHandler("handler_maxAllowedLayers", maxAllowedLayers);
 Shiny.addCustomMessageHandler("handler_showLayerCoords", showLayerCoords);
 Shiny.addCustomMessageHandler("handler_floorOpacity", setFloorOpacity);
 Shiny.addCustomMessageHandler("handler_showWireFrames", showWireFrames);
@@ -893,7 +878,6 @@ Shiny.addCustomMessageHandler("handler_layerColorFilePriority", layerColorFilePr
 Shiny.addCustomMessageHandler("handler_nodeSelector", nodeSelector);
 Shiny.addCustomMessageHandler("handler_nodeSelectedColorPriority", nodeSelectedColorPriority);
 // Edges ====================
-Shiny.addCustomMessageHandler("handler_maxAllowedEdges", maxAllowedEdges);
 Shiny.addCustomMessageHandler("handler_directionArrowSize", setDirectionArrowSize);
 Shiny.addCustomMessageHandler("handler_intraDirectionArrowSize", setIntraDirectionArrowSize);
 Shiny.addCustomMessageHandler("handler_layerEdgeOpacity", setLayerEdgeOpacity);
@@ -903,9 +887,6 @@ Shiny.addCustomMessageHandler("handler_edgeSelectedColorPriority", edgeSelectedC
 Shiny.addCustomMessageHandler("handler_edgeFileColorPriority", edgeFileColorPriority);
 Shiny.addCustomMessageHandler("handler_toggleDirection", toggleDirection);
 // Channels ====================
-Shiny.addCustomMessageHandler("handler_maxAllowedChannels", maxAllowedChannels);
-Shiny.addCustomMessageHandler("handler_colorBrewerPallete", getChannelColors);
-Shiny.addCustomMessageHandler("handler_colorBrewerPallete_dark", getDarkChannelColors);
 Shiny.addCustomMessageHandler("handler_channelCurvature", toggleChannelCurvature);
 Shiny.addCustomMessageHandler("handler_interChannelCurvature", interToggleChannelCurvature);
 // Labels ====================

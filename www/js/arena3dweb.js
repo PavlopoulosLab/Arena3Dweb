@@ -79,7 +79,7 @@ const loadGraph = () => {
   }
   //create node geometries
   for (i = 0; i < node_whole_names.length; i++){
-    geometry = new THREE.SphereGeometry( sphereRadius ); //default width and height segments -> 8,6
+    geometry = new THREE.SphereGeometry( SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS );
     material = new THREE.MeshStandardMaterial( {color: colors[(layer_groups[node_groups[node_whole_names[i]]])%colors.length], transparent: true} ); //standard material allows light reaction
     sphere = new THREE.Mesh( geometry, material );
     nodes.push(sphere);
