@@ -807,10 +807,10 @@ const applyPredefinedLayout = (message) => {
           for (let i = 1; i < numLayers; i+=2){
             layer_planes[i].translateY(500);
           }
-          moveLayers()
+          moveLayers();
           break;
         case "parallel":
-         moveLayers()
+         moveLayers();
           break;
         case "cube":
           let cube_size = 6;
@@ -846,6 +846,8 @@ const applyPredefinedLayout = (message) => {
               k++;
             }
           }
+          updateLayersRShiny();
+          updateNodesRShiny(); // for VR global posistions
           break;
         case "starLike":
           degree =  360 / numLayers ;
@@ -853,12 +855,13 @@ const applyPredefinedLayout = (message) => {
             layer_planes[i].rotateZ(THREE.Math.degToRad(degree * i));
             layer_planes[i].translateY(-layer_planes[i].geometry.parameters.height/2 - 100);
           }
+          updateLayersRShiny();
+          updateNodesRShiny(); // for VR global posistions
           break;
         default:
           break;
       }
     }
-    updateLayersRShiny();
   }
 
   return true;

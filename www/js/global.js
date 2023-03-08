@@ -1,5 +1,5 @@
 // Global Objects
-let scene; // TODO add rest here
+let scene; // TODO add rest of the objects here
 
 // initializing static variables
 let animationRunning = false, //flag to ensure animation function only executes once!
@@ -42,7 +42,7 @@ let animationRunning = false, //flag to ensure animation function only executes 
     nodeLabelDefaultSize = "12px",
     draw_inter_edges_flag = true,
     downstreamCheckedNodes = [], // for 3rd option of onRightClick on node
-    drag_controls; // for dragging
+    drag_controls; // for dragging layers
     
 // Variables that are being refreshed on new network upload/import (nodes, edges, coords)
 let nodes = [], //canvas objects

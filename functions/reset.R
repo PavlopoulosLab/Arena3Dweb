@@ -29,7 +29,6 @@ reset_UI_values <- function() {
   reset("nodeSelector")
   reset("edgeWidthByWeight")
   reset("fps")
-  reset("predefined_layout")
   reset("directionArrowSize")
   shinyjs::hide("directionArrowSize")
   shinyjs::hide("intraDirectionArrowSize")

@@ -1,37 +1,33 @@
 const updateScenePanRShiny = () => {
   let js_scene_pan = {
-    "position_x" : String(scene.getPosition("x")),
-    "position_y" : String(scene.getPosition("y")),
-    "scale" : String(scene.getScale()),
-    "color" : "#".concat(renderer.getClearColor().getHexString()) 
+    "position_x": String(scene.getPosition("x")),
+    "position_y": String(scene.getPosition("y")),
+    "scale": String(scene.getScale()),
+    "color": "#".concat(renderer.getClearColor().getHexString()) 
   }
   Shiny.setInputValue("js_scene_pan", JSON.stringify(js_scene_pan));
-  return true;
 }
 
 const updateSceneSphereRShiny = () => {
   let js_scene_sphere = {
-    "rotation_x" : String(scene.getRotation("x")),
-    "rotation_y" : String(scene.getRotation("y")),
-    "rotation_z" : String(scene.getRotation("z"))
+    "rotation_x": String(scene.getRotation("x")),
+    "rotation_y": String(scene.getRotation("y")),
+    "rotation_z": String(scene.getRotation("z"))
   }
   Shiny.setInputValue("js_scene_sphere", JSON.stringify(js_scene_sphere));
-  return true;
 }
 
 const updateLayersRShiny = () => {
   let js_layers = [],
     js_layers_world = [], // VR
     target = new THREE.Vector3(), // VR
-    targetQ = new THREE.Quaternion(); // VR
   temp_js_layers = [];
-  let temp_size;
   if (typeof floorCurrentColor === 'object') {
     tempColor = '#' + floorCurrentColor.getHexString();
   } else {
     tempColor = floorCurrentColor;
   }
-  for (let i = 0; i < layer_planes.length; i++){
+  for (let i = 0; i < layer_planes.length; i++) {
     if (layerColorFile) {
         if (typeof floorDefaultColors[i] === 'object') {
           layerColor = '#' + floorDefaultColors[i].getHexString();
@@ -50,12 +46,10 @@ const updateLayersRShiny = () => {
   }
   Shiny.setInputValue("js_layers", JSON.stringify(js_layers));
   Shiny.setInputValue("js_layers_world", JSON.stringify(js_layers_world));
-  return true;
 }
 
 const updateLayerNamesRShiny = () => {
   Shiny.setInputValue("js_layer_names", layer_names);
-  return true;
 }
 
 const updateNodesRShiny = () => {
@@ -94,17 +88,14 @@ const updateNodesRShiny = () => {
   }
   Shiny.setInputValue("js_nodes", JSON.stringify(js_nodes));
   Shiny.setInputValue("js_nodes_world", JSON.stringify(js_nodes_world)); // VR
-  return true;
 }
 
 const updateNodeNamesRShiny = () => {
   Shiny.setInputValue("js_node_names", node_whole_names);
-  return true;
 }
 
 const updateSelectedNodesRShiny = () => {
   Shiny.setInputValue("js_selectedNodePositions", selectedNodePositions);
-  return true;
 }
 
 const updateEdgesRShiny = () => {
@@ -145,12 +136,10 @@ const updateEdgesRShiny = () => {
     }
   }
   Shiny.setInputValue("js_edge_pairs", JSON.stringify(js_edge_pairs));
-  return true;
 }
 
 const updateLabelColorRShiny = () => {
   Shiny.setInputValue("js_label_color", globalLabelColor);
-  return true;
 }
 
 const updateDirectionCheckboxRShiny = (name, value) => {
