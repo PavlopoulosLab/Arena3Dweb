@@ -109,7 +109,8 @@ const uploadNetwork = (network) => {
     }
   }
 
-  if (edge_values.length > MAX_EDGES) alert("Network must contain no more than ".concat(MAX_EDGES).concat(" edges.")); //edge limit
+  if (edge_values.length > MAX_EDGES)
+    alert("Network must contain no more than ".concat(MAX_EDGES).concat(" edges.")); //edge limit
   else {
     attachLayerCheckboxes();
     loadGraph();
@@ -121,7 +122,8 @@ const uploadNetwork = (network) => {
       toggleChannelCurvatureRange(false);
     }
   }
-  return true;
+  
+  executePostNetworkSetup();
 }
 
 const importNetwork = (jsonNetwork) => {
@@ -283,7 +285,6 @@ const importNetwork = (jsonNetwork) => {
   
   //========================
   floorCurrentColor = floorDefaultColor;
-  drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
   
   if (channel_values.length > 0) {
     if (channel_values.length > MAX_CHANNELS) {
@@ -315,22 +316,14 @@ const importNetwork = (jsonNetwork) => {
   drawEdges();
   drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
   createLabels();
-  if (!animationRunning) {
-    animate(); //ensure animation runs only once
-    animationRunning = true;
-  }
-  //communicating variables to rshiny, to optionally export the network on demand
-  updateScenePanRShiny();
-  updateSceneSphereRShiny();
-  updateLayersRShiny();
-  updateNodesRShiny();
-  updateEdgesRShiny();
-  updateLabelColorRShiny();
+
   moveLayers(true);
   if (scrambleNodes_flag) scrambleNodes(import_width / 2, -import_width / 2, -import_width / 2.5, import_width / 2.5);
   if (adjustLayerSize_flag) adjustLayerSize();
   toggleDirection(isDirectionEnabled)
-  return true;
+  
+  
+  executePostNetworkSetup();
 }
 
 const setLabelColorVariable = (label_color) => {
@@ -434,12 +427,10 @@ const setFloorOpacity = (message) => {
   return true;
 }
 
-const showWireFrames = (message) => {
-  wireframeFlag = message; //message = true or false
-  for(let i = 0; i < layer_planes.length; i++){
+const showWireFrames = (wireframeFlag) => { // true or false
+  for (let i = 0; i < layer_planes.length; i++) {
     layer_planes[i].material.wireframe = wireframeFlag;
   }
-  return true;
 }
 
 const layerColorFilePriority = (message) => {
@@ -627,24 +618,22 @@ const interToggleChannelCurvature = (message) => {
 }
 
 // Labels ====================
-const showLayerLabels = (message) => {
-  layerLabelSwitch = message; //message = true or false
-  if (!layerLabelSwitch){
-    for (let i = 0; i < layer_planes.length; i++){
+const showAllLayerLabels = (flag) => { // true or false
+  showAllLayerLabelsFlag = flag;
+  if (!showAllLayerLabelsFlag) {
+    for (let i = 0; i < layer_planes.length; i++) {
       layer_labels[i].style.display = "none";
     }
   }
-  return true;
 }
 
-const showSelectedLayerLabels = (message) => {
-  selectedLayerLabelSwitch = message; //message = true or false
-  if (!selectedLayerLabelSwitch){
-    for (let i = 0; i < js_selected_layers.length; i++){
+const showSelectedLayerLabels = (flag) => { // true or false
+  showSelectedLayerLabelsFlag = flag;
+  if (!showSelectedLayerLabelsFlag) {
+    for (let i = 0; i < js_selected_layers.length; i++) {
       layer_labels[js_selected_layers[i]].style.display = "none";
     }
   }
-  return true;
 }
 
 const resizeLayerLabels = (message) => {
@@ -655,16 +644,14 @@ const resizeLayerLabels = (message) => {
   return true;
 }
 
-const showLabels = (message) => {
-  labelSwitch = message; //message = true or false
+const showAllNodeLabels = (flag) => { // true or false
+  showAllNodeLabelsFlag = flag;
   decideNodeLabelFlags();
-  return true;
 }
 
-const showSelectedLabels = (message) => {
-  selectedLabelSwitch = message; //message = true or false
+const showSelectedNodeLabels = (flag) => { // true or false
+  showSelectedNodeLabelsFlag = flag;
   decideNodeLabelFlags();
-  return true;
 }
 
 const resizeLabels = (message) => {
@@ -883,11 +870,11 @@ Shiny.addCustomMessageHandler("handler_toggleDirection", toggleDirection);
 Shiny.addCustomMessageHandler("handler_channelCurvature", toggleChannelCurvature);
 Shiny.addCustomMessageHandler("handler_interChannelCurvature", interToggleChannelCurvature);
 // Labels ====================
-Shiny.addCustomMessageHandler("handler_showLayerLabels", showLayerLabels);
+Shiny.addCustomMessageHandler("handler_showAllLayerLabels", showAllLayerLabels);
 Shiny.addCustomMessageHandler("handler_showSelectedLayerLabels", showSelectedLayerLabels);
 Shiny.addCustomMessageHandler("handler_resizeLayerLabels", resizeLayerLabels);
-Shiny.addCustomMessageHandler("handler_showLabels", showLabels);
-Shiny.addCustomMessageHandler("handler_showSelectedLabels", showSelectedLabels);
+Shiny.addCustomMessageHandler("handler_showNodeLabels", showAllNodeLabels);
+Shiny.addCustomMessageHandler("handler_showSelectedNodeLabels", showSelectedNodeLabels);
 Shiny.addCustomMessageHandler("handler_resizeLabels", resizeLabels);
 // Layouts and Topology ====================
 Shiny.addCustomMessageHandler("handler_layout", assignXYZ);

@@ -2,8 +2,8 @@ generateNodeDiv <- function() {
   tags$div(
     checkboxInput("nodeSelector", "Select/Deselect all Nodes",
                   value = F, width = NULL),
-    checkboxInput("showLabels", "Show Labels (Warning: Heavy Processing)", F),
-    checkboxInput("showSelectedLabels", "Show Labels of Selected Nodes", T),
+    checkboxInput("showAllNodeLabels", "Show Labels (Warning: Heavy Processing)", F),
+    checkboxInput("showSelectedNodeLabels", "Show Labels of Selected Nodes", T),
     checkboxInput("nodeSelectedColorPriority", "Highlight Selected Nodes in Color", T),
     sliderInput("resizeLabels", "Resize Labels:",
                 min = 5, max = 15, value = 12, step = 1),

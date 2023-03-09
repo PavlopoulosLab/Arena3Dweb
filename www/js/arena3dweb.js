@@ -85,7 +85,7 @@ const loadGraph = () => {
     layer_planes[layer_groups[node_groups[node_whole_names[i]]]].add(sphere); //attaching to corresponding layer centroid
   }
   
-  drag_controls = new DragControls( layer_planes, camera, renderer.domElement );
+  
   channel_colors = CHANNEL_COLORS_LIGHT;
   createChannelColorMap();
   scrambleNodes();
@@ -99,20 +99,6 @@ const loadGraph = () => {
   
   scene.tiltDefault();
   scene.setScale(0.9); //starting a little zoomed out
-
-  if (!animationRunning) {
-    animate(); //ensure animation runs only once
-    animationRunning = true;
-  }
-    
-  //communicating variables to rshiny, to optionally export the network on demand
-  updateScenePanRShiny();
-  updateSceneSphereRShiny();
-  updateLayersRShiny();
-  updateNodesRShiny();
-  updateEdgesRShiny();
-  updateLabelColorRShiny();
-  return true;
 }
 
 // Layers ====================
@@ -162,16 +148,18 @@ const selectCheckedLayers = () => {
 
 const paintSelectedLayers = () => {
   selectCheckedLayers();
-  for (i = 0; i < layer_planes.length; i++){
-    if (exists(js_selected_layers, i)) layer_planes[i].material.color = new THREE.Color( "#f7f43e" );
+  for (i = 0; i < layer_planes.length; i++) {
+    if (exists(js_selected_layers, i))
+      layer_planes[i].material.color = new THREE.Color( "#f7f43e" );
     else {
       if (floorDefaultColors.length > 0 && layerColorFile) {
         layer_planes[i].material.color = new THREE.Color(floorDefaultColors[i]);
-      } else layer_planes[i].material.color = new THREE.Color(floorCurrentColor);
-      if (!layerLabelSwitch && selectedLayerLabelSwitch) layer_labels[i].style.display = "none";
+      } else
+        layer_planes[i].material.color = new THREE.Color(floorCurrentColor);
+      if (!showAllLayerLabelsFlag && showSelectedLayerLabelsFlag)
+        layer_labels[i].style.display = "none";
     }
   }
-  return true;
 }
 
 const hideLayers = () => {
@@ -1055,11 +1043,11 @@ const decideNodeLabelFlags = () => {
     node_layer = layer_groups[node_groups[node_whole_names[i]]];
     if (c[node_layer*7+2].checked){ //1. if node's layer not hidden 
       node_label_flags[i] = false;
-    } else if (labelSwitch){ //2. if showing all node labels
+    } else if (showAllNodeLabelsFlag){ //2. if showing all node labels
       node_label_flags[i] = true;
     } else if (layer_node_labels_flags[node_layer]){ //3. if showing layer node labels
       node_label_flags[i] = true;
-    } else if (selectedLabelSwitch && exists(selectedNodePositions, i)){ //4. if showing selected node labels, and node is selected
+    } else if (showSelectedNodeLabelsFlag && exists(selectedNodePositions, i)){ //4. if showing selected node labels, and node is selected
       node_label_flags[i] = true;
     } else if (exists(hovered_nodes, i)){ //5. if hovering over node(s)
       node_label_flags[i] = true;

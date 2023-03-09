@@ -1,6 +1,6 @@
 generateLayerDiv <- function() {
   tags$div(
-    checkboxInput("showLayerLabels", "Show Labels", T),
+    checkboxInput("showAllLayerLabels", "Show Labels", T),
     checkboxInput("showSelectedLayerLabels", "Show Labels of Selected Layers", F),
     checkboxInput("showLayerCoords", "Show Layer Coord System", F),
     checkboxInput("showWireFrames", "Show Layer Wireframed Floor", F),

@@ -1,16 +1,9 @@
 // initializing static variables
-let animationRunning = false, //flag to ensure animation function only executes once!
-    labelSwitch = false,
-    selectedLabelSwitch = true,
-    selectedLayerLabelSwitch = false,
-    layerLabelSwitch = true,
-    edgeWidthByWeight = true,
-    wireframeFlag = false,
+let edgeWidthByWeight = true,
     nodeAttributesPriority = true,
     selectedNodeColorFlag = true,
     selectedEdgeColorFlag = true,
     edgeAttributesPriority = true,
-    localLayoutFlag = false,
     isDirectionEnabled = false,
     layerColorFile = true,
     layerEdgeOpacity = 1,
@@ -29,8 +22,7 @@ let animationRunning = false, //flag to ensure animation function only executes 
     edgeDefaultColor = "#CFCFCF",
     nodeLabelDefaultSize = "12px",
     draw_inter_edges_flag = true,
-    downstreamCheckedNodes = [], // for 3rd option of onRightClick on node
-    drag_controls; // for dragging layers
+    downstreamCheckedNodes = []; // for 3rd option of onRightClick on node
     
 // Variables that are being refreshed on new network upload/import (nodes, edges, coords)
 let nodes = [], //canvas objects

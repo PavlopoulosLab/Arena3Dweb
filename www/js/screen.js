@@ -1,5 +1,5 @@
 let xBoundMin, xBoundMax, yBoundMin, yBoundMax, zBoundMin, zBoundMax,
-  camera, renderer, mousePreviousX = 0, mousePreviousY = 0;
+  camera, renderer, mousePreviousX = 0, mousePreviousY = 0, animationRunning = false;
 const raycaster = new THREE.Raycaster(),
   rayvector = new THREE.Vector3(),
   raydir = new THREE.Vector3();
@@ -74,9 +74,9 @@ const animate = () => { // TODO optimize performance
 }
 
 const renderLayerLabels = () => {
-  if (layerLabelSwitch)
+  if (showAllLayerLabelsFlag)
     redrawLayerLabels("all");
-  else if (selectedLayerLabelSwitch && js_selected_layers !== [])
+  else if (showSelectedLayerLabelsFlag && js_selected_layers !== [])
     redrawLayerLabels("selected");
 }
 
