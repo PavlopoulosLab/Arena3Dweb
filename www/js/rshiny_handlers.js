@@ -37,7 +37,7 @@ const browseUrl = url => {
 // Files ====================
 const uploadNetwork = (network) => {
   session_flag = false; // TODO figure what this exactly does..
-  if (animationPause) pauseAnimate(); //resume rendering
+  if (interLayerEdgesRenderPauseFlag) pauseAnimate(); //resume rendering
    //init on with darkColors
   colors = darkColors.concat(default_colors);
   clearCanvas();
@@ -322,7 +322,10 @@ const importNetwork = (jsonNetwork) => {
   drawEdges();
   drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
   createLabels();
-  if (!animationRunning) animate();
+  if (!animationRunning) {
+    animate(); //ensure animation runs only once
+    animationRunning = true;
+  }
   //communicating variables to rshiny, to optionally export the network on demand
   updateScenePanRShiny();
   updateSceneSphereRShiny();

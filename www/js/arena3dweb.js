@@ -101,7 +101,10 @@ const loadGraph = () => {
   scene.tiltDefault();
   scene.setScale(0.9); //starting a little zoomed out
 
-  if (!animationRunning) animate(); //ensure animation runs only once
+  if (!animationRunning) {
+    animate(); //ensure animation runs only once
+    animationRunning = true;
+  }
     
   //communicating variables to rshiny, to optionally export the network on demand
   updateScenePanRShiny();
@@ -389,7 +392,7 @@ const adjustLayerSize = () => {
     layer_planes[i].geometry.parameters.height =  layer_planes[i].geometry.parameters.width = distance;
   }
   updateLayersRShiny();
-  redrawLayerLabels();
+  redrawLayerLabels("all");
 }
 
 
@@ -561,82 +564,6 @@ const drawEdges = () => {
       edges.push(i); //pushing this to keep count of edges for redraw
       layer_edges_pairs.push(i);
       edge_channels &&  layer_edges_pairs_channels.push(edge_channels[i]); 
-    }
-  }
-  return true;
-}
-
-// runs constantly on animate
-const drawLayerEdges = (flag) => {
-  let i;
-  if (!flag && (scene.dragging || animationPause)){
-    for (let i = 0; i < layer_edges_pairs.length; i++){
-      scene.remove(layerEdges[i]);
-    }
-  }
-  else if (!flag && !(edgeWidthByWeight && interLayerEdgeOpacity > 0)){ //this optimizes execution for many connections by making them disappear
-    for (let i = 0; i < layer_edges_pairs.length; i++){
-      scene.remove(layerEdges[i]);
-    }
-    draw_inter_edges_flag = false;
-  } else {
-    let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1;
-    let c = document.getElementById("checkboxdiv").children;
-    for (i = 0; i < layer_edges_pairs.length; i++){
-      scene.remove(layerEdges[i]);
-      // Keep default color
-      if (layer_edges_pairs_channels && layer_edges_pairs_channels[i] &&  layer_edges_pairs_channels[i].length === 1) {  
-        color = channel_color[layer_edges_pairs_channels[i][0]];
-      } else {
-        color = edgeDefaultColor;
-      }
-      let points = [];
-      let edge_split = edge_pairs[layer_edges_pairs[i]].split("---");
-      let node_layer1 = layer_groups[node_groups[edge_split[0]]];
-      let node_layer2 = layer_groups[node_groups[edge_split[1]]];
-      if (!c[node_layer1*7+2].checked && !c[node_layer2*7+2].checked){
-        index1 = node_whole_names.indexOf(edge_split[0]);
-        index2 = node_whole_names.indexOf(edge_split[1]);
-        points.push( nodes[index1].getWorldPosition(new THREE.Vector3()), nodes[index2].getWorldPosition(new THREE.Vector3()) );
-    		let geometry = new THREE.BufferGeometry().setFromPoints( points );
-        let material = "";
-        // set color to selectedDefault if the edge is selected
-    		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag) color = selectedDefaultColor;
-        else if (edge_attributes !== "" && edgeAttributesPriority) {
-    		  pos = edges.indexOf(layer_edges_pairs[i]);
-    		  pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[pos]);
-    		  pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[pos]);
-          if (checkIfAttributeColorExist(edge_attributes, pos1)) color = edge_attributes.Color[pos1];
-          else if (checkIfAttributeColorExist(edge_attributes, pos2)) color = edge_attributes.Color[pos2];
-    		}
-        if (edgeWidthByWeight) material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: edge_values[layer_edges_pairs[i]] });
-        else {
-          material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: interLayerEdgeOpacity });
-        }
-        let arrowHelper = createArrow(points, color,null, true);
-        let ver_line = new THREE.Line(geometry, material);
-
-        // if the edge is multi channel create the multiple channels
-        
-        if (layer_edges_pairs_channels[i]) {
-          let curve_group = new THREE.Group();
-          curve_group = createChannels(points[0], points[1], interChannelCurvature, ver_line, i, true);
-          scene.add(curve_group);
-          layerEdges[i] = curve_group;
-        } else {
-          //directed
-          if (isDirectionEnabled) {
-            const group = new THREE.Group();
-            group.add( ver_line );
-            group.add( arrowHelper );
-            scene.add(group);
-            layerEdges[i] = group;
-          } else {
-            scene.add(ver_line);
-            layerEdges[i] = ver_line;
-          }
-        }
-      }
     }
   }
   return true;
@@ -1114,54 +1041,6 @@ const createLabels = () => {
   return true;
 }
 
-const redrawLayerLabels = () => {
-  let  layerX = "",
-       layerY = "",
-       labelX = "",
-       labelY = "",
-       c = document.getElementById("checkboxdiv").children;
-  for (let i = 0; i < layer_names.length; i++){
-    if (!c[i*7+2].checked){ //if node's layer not hidden
-      layerX = layer_spheres[i].getWorldPosition(new THREE.Vector3()).x,
-      layerY = layer_spheres[i].getWorldPosition(new THREE.Vector3()).y;
-      labelX = xBoundMax + layerX;
-      labelY = yBoundMax - layerY;
-      layer_labels[i].style.left = labelX.toString().concat("px");
-      layer_labels[i].style.top = labelY.toString().concat("px");
-      //check if overlapping with canvas div to set visibility
-      let canvas_div = document.getElementById("3d-graph");
-      if (labelX < 0 || labelY < 0  || labelY >= canvas_div.offsetHeight
-          || labelX > document.getElementsByTagName("canvas")[0].offsetWidth) layer_labels[i].style.display = "none";
-      else layer_labels[i].style.display = "inline-block";
-    } else layer_labels[i].style.display = "none";
-  }
-  return true;
-}
-
-const redrawSelectedLayerLabels = () => {
-  let  layerX = "",
-       layerY = "",
-       labelX = "",
-       labelY = "",
-       c = document.getElementById("checkboxdiv").children;
-  for (let i = 0; i < js_selected_layers.length; i++){
-    if (!c[i*7+2].checked){ //if node's layer not hidden
-      layerX = layer_spheres[js_selected_layers[i]].getWorldPosition(new THREE.Vector3()).x,
-      layerY = layer_spheres[js_selected_layers[i]].getWorldPosition(new THREE.Vector3()).y;
-      labelX = xBoundMax + layerX;
-      labelY = yBoundMax - layerY;
-      layer_labels[js_selected_layers[i]].style.left = labelX.toString().concat("px");
-      layer_labels[js_selected_layers[i]].style.top = labelY.toString().concat("px");
-      //check if overlapping with canvas div to set visibility
-      let canvas_div = document.getElementById("3d-graph");
-      if (labelX < 0 || labelY < 0  || labelY >= canvas_div.offsetHeight
-          || labelX > document.getElementsByTagName("canvas")[0].offsetWidth) layer_labels[js_selected_layers[i]].style.display = "none";
-      else layer_labels[js_selected_layers[i]].style.display = "inline-block";
-    } else layer_labels[js_selected_layers[i]].style.display = "none";
-  }
-  return true;
-}
-
 const setLabelColor = () =>{
   let i;
   for (i=0; i<layer_labels.length; i++) layer_labels[i].style.color = globalLabelColor;
@@ -1188,51 +1067,4 @@ const decideNodeLabelFlags = () => {
     } else node_label_flags[i] = false; //6. if none of the above apply, don't show label
   }
   return true;
-}
-
-const renderNodeLabels = () => {
-  let nodeX = "",
-      nodeY = "",
-      labelX = "",
-      labelY = "";
-  for (let i = 0; i < node_label_flags.length; i++){
-    let node_layer = layer_groups[node_groups[node_whole_names[i]]];
-    if (node_label_flags[i]){ //ONLY CHECK THIS 
-      nodeX = nodes[i].getWorldPosition(new THREE.Vector3()).x,
-      nodeY = nodes[i].getWorldPosition(new THREE.Vector3()).y;
-      labelX = xBoundMax + nodeX + 7;
-      labelY = yBoundMax - nodeY - 10;
-      node_labels[i].style.left = labelX.toString().concat("px");
-      node_labels[i].style.top = labelY.toString().concat("px");
-      //check if overlapping with canvas div to set visibility
-      let canvas_div = document.getElementById("3d-graph");
-      if (labelX < 0 || labelY < 0  || labelY >= canvas_div.offsetHeight
-          || labelX > document.getElementsByTagName("canvas")[0].offsetWidth) node_labels[i].style.display = "none";
-      else node_labels[i].style.display = "inline-block";
-    } else node_labels[i].style.display = "none";
-  }
-  return true;
-}
-
-// 3D graphics render animation ====================
-const animate = () => {
-  animationRunning = true;
-  setTimeout( function() { //limiting FPS
-    requestAnimationFrame( animate ); //pauses when the user navigates to another browser tab
-  }, 1000 / fps );
-  renderNodeLabels();
-  if (layerLabelSwitch) redrawLayerLabels();
-  else if (selectedLayerLabelSwitch && js_selected_layers !== []) redrawSelectedLayerLabels();
-  // draw inter-layer edges only when necessary for performance improvement
-  if (scene.dragging || animationPause){
-    drawLayerEdges(false);
-  } 
-  else if (edgeWidthByWeight || interLayerEdgeOpacity > 0){
-    drawLayerEdges(true);
-    draw_inter_edges_flag = true;
-  }
-  else if (draw_inter_edges_flag) drawLayerEdges(false);
-	renderer.render( scene.THREE_Object, camera );
-	return true;
-}
-        
+}      

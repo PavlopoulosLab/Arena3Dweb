@@ -20,12 +20,12 @@ function displayControlTable(){
 
 function pauseAnimate() {
   let pauseAnimateButton = document.getElementById('pauseAnimeateButton');
-  if (animationPause){
-    animationPause = false;
+  if (interLayerEdgesRenderPauseFlag){
+    interLayerEdgesRenderPauseFlag = false;
     pauseAnimateButton.innerText = "Stop:Render Inter-Layer Edges";
   }
   else{
-    animationPause = true;
+    interLayerEdgesRenderPauseFlag = true;
     pauseAnimateButton.innerText = "Render Inter-Layer Edges";
   } 
   return true;

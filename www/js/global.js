@@ -1,6 +1,6 @@
 // initializing static variables
 let animationRunning = false, //flag to ensure animation function only executes once!
-    animationPause = false, //user button from Shiny to pause rendering at any moment
+    interLayerEdgesRenderPauseFlag = false,
     attachedCanvasControls = false,
     labelSwitch = false,
     selectedLabelSwitch = true,
@@ -22,12 +22,7 @@ let animationRunning = false, //flag to ensure animation function only executes 
     channelCurvature = 0.05,
     interChannelCurvature = 0.05,
     floorOpacity = 0.6,
-    MAX_EDGES = "",
-    MAX_CHANNELS = "",
-    MAX_LAYERS = "",
     channel_colors = [],
-    CHANNEL_COLORS_LIGHT = [],
-    CHANNEL_COLORS_DARK = [],
     floorDefaultColors = [],
     floorDefaultColor = "#777777",
     floorCurrentColor = floorDefaultColor,
