@@ -37,8 +37,9 @@ const browseUrl = url => {
 // Files ====================
 const uploadNetwork = (network) => {
   session_flag = false; // TODO figure what this exactly does..
-  if (interLayerEdgesRenderPauseFlag) pauseAnimate(); //resume rendering
-   //init on with darkColors
+  if (interLayerEdgesRenderPauseFlag)
+    pauseInterLayerEdgesRendering(); //resume rendering
+  //init on with darkColors
   colors = darkColors.concat(default_colors);
   clearCanvas();
   if (!attachedCanvasControls) attachCanvasControls();

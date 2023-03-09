@@ -25,13 +25,13 @@ ui <- fluidPage(
   tags$head(tags$script(src = "js/classes/node.js")),
   tags$head(tags$script(src = "js/classes/edge.js")),
   tags$head(tags$script(src = "js/screen.js")),
-  tags$head(tags$script(src = "js/global.js")),
+  tags$head(tags$script(src = "js/global.js")), # TODO remove
   tags$head(tags$script(src = "js/update_Rshiny_values.js")),
   tags$head(tags$script(src = "js/rshiny_handlers.js")),
   tags$head(tags$script(src = "js/general.js")),
   tags$head(tags$script(src = "js/canvas_controls.js")), # 3d interaction/navigation panel
   tags$head(tags$script(src = "js/right_click_menu_actions.js")), # right click on node
-  tags$head(tags$script(src = "js/arena3dweb.js")), # 3D object functions and animate
+  tags$head(tags$script(src = "js/arena3dweb.js")), # TODO remove
   tags$head(tags$script(src = "js/themes.js")), # theme buttons (light, dark, gray)
   tags$head(tags$script(src = "js/event_listeners.js")), # window event listeners
   tags$head(tags$script(src = "js/main.js")), # on window load event init

@@ -1,45 +1,43 @@
 //drawing and implementation of button controls for node and layer translations and rotations
-function mouseUpClearScene() {
+const mouseUpClearScene = () => {
   if (!scene.autoRotate) {
     clearInterval(scene.intervalTimeout);
   }
   return false;
 }
 
-function mouseUpClear() {
+const mouseUpClear = () => {
   clearInterval(timeoutF);
   return false;
 }
 
-function displayControlTable(){
+const displayControlTable = () => {
   t = document.getElementById("info");
   if (t.style.display == "inline-block") t.style.display = "none";
   else t.style.display = "inline-block";
   return true;
 }
 
-function pauseAnimate() {
-  let pauseAnimateButton = document.getElementById('pauseAnimeateButton');
-  if (interLayerEdgesRenderPauseFlag){
+const pauseInterLayerEdgesRendering = () => {
+  let interLayerEdgesRenderPauseButton = document.getElementById('pauseAnimeateButton');
+  if (interLayerEdgesRenderPauseFlag) {
     interLayerEdgesRenderPauseFlag = false;
-    pauseAnimateButton.innerText = "Stop:Render Inter-Layer Edges";
-  }
-  else{
+    interLayerEdgesRenderPauseButton.innerText = "Stop:Render Inter-Layer Edges";
+  } else {
     interLayerEdgesRenderPauseFlag = true;
-    pauseAnimateButton.innerText = "Render Inter-Layer Edges";
-  } 
-  return true;
+    interLayerEdgesRenderPauseButton.innerText = "Render Inter-Layer Edges";
+  }
 }
 
-function sliderSceneRotate(){
-  td = document.getElementById("sliderValue1");
-  td.innerHTML = "Angle: ".concat(this.value).concat("&#730;");
-  return true;
+const sliderSceneRotate = () => {
+  let cavnasSlider = document.getElementsByClassName("canvasSlider")[0],
+    td = document.getElementById("sliderValue1");
+  td.innerHTML = "Angle: ".concat(cavnasSlider.value).concat("&#730;");
 }
 
-function rotateSceneXMinus() {
+const rotateSceneXMinus = () => {
   clearInterval(scene.intervalTimeout);
-    scene.intervalTimeout = setInterval(function () {
+    scene.intervalTimeout = setInterval(function() {
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateX(-THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -50,9 +48,9 @@ function rotateSceneXMinus() {
   return true;
 }
 
-function rotateSceneXPlus() {
+const rotateSceneXPlus = () => {
   clearInterval(scene.intervalTimeout);
-  scene.intervalTimeout = setInterval(function(){
+  scene.intervalTimeout = setInterval(function() {
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateX(THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -63,9 +61,9 @@ function rotateSceneXPlus() {
   return true;
 }
 
-function rotateSceneYMinus() {
+const rotateSceneYMinus = () => {
   clearInterval(scene.intervalTimeout);
-  scene.intervalTimeout = setInterval(function(){
+  scene.intervalTimeout = setInterval(function() {
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateY(-THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -76,9 +74,9 @@ function rotateSceneYMinus() {
   return true;
 }
 
-function rotateSceneYPlus() {
+const rotateSceneYPlus = () => {
   clearInterval(scene.intervalTimeout);
-  scene.intervalTimeout = setInterval(function(){
+  scene.intervalTimeout = setInterval(function() {
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateY(THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -89,9 +87,9 @@ function rotateSceneYPlus() {
   return true;
 }
 
-function rotateSceneZMinus(){
+const rotateSceneZMinus = () => {
   clearInterval(scene.intervalTimeout);
-  scene.intervalTimeout = setInterval(function(){
+  scene.intervalTimeout = setInterval(function() {
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateZ(-THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -102,9 +100,9 @@ function rotateSceneZMinus(){
   return true;
 }
 
-function rotateSceneZPlus(){
+const rotateSceneZPlus = () => {
   clearInterval(scene.intervalTimeout);
-   scene.intervalTimeout = setInterval(function(){
+   scene.intervalTimeout = setInterval(function() {
     let value = document.getElementsByClassName("canvasSlider")[0].value;
     scene.rotateZ(THREE.Math.degToRad(value));
     updateSceneSphereRShiny();
@@ -115,7 +113,7 @@ function rotateSceneZPlus(){
   return true;
 }
 
-function recenterNetwork(){
+const recenterNetwork = () => {
   if (scene.exists()){
     scene.recenter();
     updateScenePanRShiny();
@@ -125,17 +123,17 @@ function recenterNetwork(){
   return true;
 }
 
-function sliderLayerRotate(){
-  td = document.getElementById("sliderValue2");
-  td.innerHTML = "Angle: ".concat(this.value).concat("&#730;");
-  return true;
+const sliderLayerRotate = () => {
+  let cavnasSlider = document.getElementsByClassName("canvasSlider")[1],
+    td = document.getElementById("sliderValue2");
+  td.innerHTML = "Angle: ".concat(cavnasSlider.value).concat("&#730;");
 }
 
-function rotateLayersXMinus(){
+const rotateLayersXMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateX(-THREE.Math.degToRad(value));
@@ -148,11 +146,11 @@ function rotateLayersXMinus(){
   return true;
 }
 
-function rotateLayersXPlus(){
+const rotateLayersXPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateX(THREE.Math.degToRad(value));
@@ -165,11 +163,11 @@ function rotateLayersXPlus(){
   return true;
 }
 
-function rotateLayersYMinus(){
+const rotateLayersYMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateY(-THREE.Math.degToRad(value));
@@ -182,11 +180,11 @@ function rotateLayersYMinus(){
   return true;
 }
 
-function rotateLayersYPlus(){
+const rotateLayersYPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateY(THREE.Math.degToRad(value));
@@ -199,11 +197,11 @@ function rotateLayersYPlus(){
   return true;
 }
 
-function rotateLayersZMinus(){
+const rotateLayersZMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateZ(-THREE.Math.degToRad(value));
@@ -216,11 +214,11 @@ function rotateLayersZMinus(){
   return true;
 }
 
-function rotateLayersZPlus(){
+const rotateLayersZPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateZ(THREE.Math.degToRad(value));
@@ -233,13 +231,13 @@ function rotateLayersZPlus(){
   return true;
 }
 
-function sliderLayerTranslate(){
-  td = document.getElementById("sliderValue3");
-  td.innerHTML = "Step: ".concat(this.value);
-  return true;
+const sliderLayerTranslate = () => {
+  let cavnasSlider = document.getElementsByClassName("canvasSlider")[2],
+    td = document.getElementById("sliderValue3");
+  td.innerHTML = "Step: ".concat(cavnasSlider.value);
 }
 
-function spreadLayers() {
+const spreadLayers = () => {
   let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
       numLayers = layer_planes.length;
   for (let i = 0; i < numLayers; i++){
@@ -252,7 +250,7 @@ function spreadLayers() {
   return true;
 }
 
-function congregateLayers() {
+const congregateLayers = () => {
   let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
       numLayers = layer_planes.length;
   for (let i = 0; i < numLayers; i++){
@@ -265,11 +263,11 @@ function congregateLayers() {
   return true;
 }
 
-function moveLayersXMinus(){
+const moveLayersXMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateX(-value);
@@ -282,11 +280,11 @@ function moveLayersXMinus(){
   return true;
 }
 
-function moveLayersXPlus(){
+const moveLayersXPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateX(value);
@@ -299,11 +297,11 @@ function moveLayersXPlus(){
   return true;
 }
 
-function moveLayersYMinus(){
+const moveLayersYMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateY(-value);
@@ -316,11 +314,11 @@ function moveLayersYMinus(){
   return true;
 }
 
-function moveLayersYPlus(){
+const moveLayersYPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateY(value);
@@ -333,11 +331,11 @@ function moveLayersYPlus(){
   return true;
 }
 
-function moveLayersZMinus(){
+const moveLayersZMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateZ(-value);
@@ -350,11 +348,11 @@ function moveLayersZMinus(){
   return true;
 }
 
-function moveLayersZPlus(){
+const moveLayersZPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateZ(value);
@@ -367,19 +365,20 @@ function moveLayersZPlus(){
   return true;
 }
 
-function scaleLayers(){
-  td = document.getElementById("sliderValue4");
-  td.innerHTML = "x".concat(this.value);
+const scaleLayers = (canvasSlider) => {
+  let td = document.getElementById("sliderValue4"),
+    cavnasSlider = document.getElementsByClassName("canvasSlider")[3];
+  td.innerHTML = "x".concat(cavnasSlider.value);
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
     for (let i = 0; i < js_selected_layers.length; i++){
-      layer_planes[js_selected_layers[i]].geometry.scale(1, parseFloat(this.value)/last_layer_scale[js_selected_layers[i]], parseFloat(this.value)/last_layer_scale[js_selected_layers[i]]);
+      layer_planes[js_selected_layers[i]].geometry.scale(1, parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]], parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]]);
       for (let j = 0; j < layer_planes[js_selected_layers[i]].children.length; j++){
-        layer_planes[js_selected_layers[i]].children[j].position.y = layer_planes[js_selected_layers[i]].children[j].position.y * parseFloat(this.value)/last_layer_scale[js_selected_layers[i]];
-        layer_planes[js_selected_layers[i]].children[j].position.z = layer_planes[js_selected_layers[i]].children[j].position.z * parseFloat(this.value)/last_layer_scale[js_selected_layers[i]];
+        layer_planes[js_selected_layers[i]].children[j].position.y = layer_planes[js_selected_layers[i]].children[j].position.y * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
+        layer_planes[js_selected_layers[i]].children[j].position.z = layer_planes[js_selected_layers[i]].children[j].position.z * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
       }
-      last_layer_scale[js_selected_layers[i]] = parseFloat(this.value);
+      last_layer_scale[js_selected_layers[i]] = parseFloat(cavnasSlider.value);
     }
     redrawEdges();
     updateLayersRShiny();
@@ -388,7 +387,7 @@ function scaleLayers(){
   return true;
 }
 
-function spreadNodes() {
+const spreadNodes = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
     for (let i=0;i<selectedNodePositions.length;i++){
@@ -401,7 +400,7 @@ function spreadNodes() {
   return true;
 }
 
-function congregateNodes() {
+const congregateNodes = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
     for (let i=0;i<selectedNodePositions.length;i++){
@@ -414,16 +413,16 @@ function congregateNodes() {
   return true;
 }
 
-function sliderNodeTranslate(){
+const sliderNodeTranslate = () => {
+  let cavnasSliders = document.getElementsByClassName("canvasSlider")[4];
   td = document.getElementById("sliderValue5");
-  td.innerHTML = "Step: ".concat(this.value);
-  return true;
+  td.innerHTML = "Step: ".concat(cavnasSliders.value);
 }
 
-function moveNodesXMinus(){
+const moveNodesXMinus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateX(-value);
@@ -436,10 +435,10 @@ function moveNodesXMinus(){
   return true;
 }
 
-function moveNodesXPlus(){
+const moveNodesXPlus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateX(value);
@@ -452,10 +451,10 @@ function moveNodesXPlus(){
   return true;
 }
 
-function moveNodesYMinus(){
+const moveNodesYMinus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateY(-value);
@@ -468,10 +467,10 @@ function moveNodesYMinus(){
   return true;
 }
 
-function moveNodesYPlus(){
+const moveNodesYPlus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateY(value);
@@ -484,10 +483,10 @@ function moveNodesYPlus(){
   return true;
 }
 
-function moveNodesZMinus(){
+const moveNodesZMinus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateZ(-value);
@@ -500,10 +499,10 @@ function moveNodesZMinus(){
   return true;
 }
 
-function moveNodesZPlus(){
+const moveNodesZPlus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function(){
+    timeoutF = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateZ(value);
@@ -516,15 +515,15 @@ function moveNodesZPlus(){
   return true;
 }
 
-function scaleNodes(){
-  td = document.getElementById("sliderValue6");
-  td.innerHTML = "x".concat(this.value);
+const scaleNodes = () => {
+  let cavnasSlider = document.getElementsByClassName("canvasSlider")[5],
+    td = document.getElementById("sliderValue6");
+  td.innerHTML = "x".concat(cavnasSlider.value);
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    for (let i = 0; i < selectedNodePositions.length; i++){
-      nodes[selectedNodePositions[i]].scale.x = parseFloat(this.value);
-      nodes[selectedNodePositions[i]].scale.y = parseFloat(this.value);
-      nodes[selectedNodePositions[i]].scale.z = parseFloat(this.value);
+    for (let i = 0; i < selectedNodePositions.length; i++) {
+      nodes[selectedNodePositions[i]].scale.x = nodes[selectedNodePositions[i]].scale.y = 
+        nodes[selectedNodePositions[i]].scale.z = parseFloat(cavnasSlider.value);
     }
     updateNodesRShiny();
   }
@@ -532,7 +531,7 @@ function scaleNodes(){
 }
 
 // main
-function attachCanvasControls(){ //adding control buttons above the canvas layer
+const attachCanvasControls = () => { //adding control buttons above the canvas layer
   attachedCanvasControls = true;
   let info = document.getElementById("info"),
       navDiv = document.getElementById("navDiv"),
@@ -891,7 +890,7 @@ function attachCanvasControls(){ //adding control buttons above the canvas layer
   //implementing functionality
   let recenterNetworkButton = document.getElementById("recenterButton");
   
-  pauseAnimeateButton.onclick = pauseAnimate;
+  pauseAnimeateButton.onclick = pauseInterLayerEdgesRendering;
   showBtn.onclick = displayControlTable;
   recenterNetworkButton.onclick = recenterNetwork;
   
