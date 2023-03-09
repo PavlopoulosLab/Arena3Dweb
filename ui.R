@@ -25,6 +25,7 @@ ui <- fluidPage(
   tags$head(tags$script(src = "js/classes/node.js")),
   tags$head(tags$script(src = "js/classes/edge.js")),
   tags$head(tags$script(src = "js/screen.js")),
+  tags$head(tags$script(src = "js/file.js")),
   tags$head(tags$script(src = "js/global.js")), # TODO remove
   tags$head(tags$script(src = "js/update_Rshiny_values.js")),
   tags$head(tags$script(src = "js/rshiny_handlers.js")),

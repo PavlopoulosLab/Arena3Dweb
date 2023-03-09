@@ -4,7 +4,6 @@ const clearCanvas = () => {
   
   nodes = [], //canvas objects
   node_labels = [];
-  if (!attachedCanvasControls) document.getElementById("info").innerHTML = "1. <b>Zoom</b>: Mouse Wheel<br/>2. <b>Pan</b>: Click Drag Scene / Arrow Keys<br/>3. <b>Orbit</b>: Mouse Middle Drag<br/>4. <b>Drag Layer</b>: Click Drag<br/>5. <b>Rotate Layer</b>: <span class='blue'>Z</span> / <span class='red'>X</span> / <span class='green'>C</span> + Click Drag<br/>6. <b>Move Selected Nodes</b>: <span class='blue'>Z</span> / <span class='green'>C</span> + Click Drag<br/>7. <b>Node/Layer Selection</b>: Double Click <br/>8. <b> Lasso Nodes</b>: Shift + Click Drag<br/>9. <b>Unselect All Nodes</b>: Double Click Scene"; //delete all children of info div (node label divs)
   document.getElementById("labelDiv").innerHTML = "";
   if (document.getElementById("channelColorLayoutDiv")) document.getElementById("channelColorLayoutDiv").innerHTML = "";
   if (document.getElementById("channelColorPicker")) document.getElementById("channelColorPicker").innerHTML = "";
@@ -80,7 +79,7 @@ const loadGraph = () => {
   //create node geometries
   for (i = 0; i < node_whole_names.length; i++){
     geometry = new THREE.SphereGeometry( SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS );
-    material = new THREE.MeshStandardMaterial( {color: colors[(layer_groups[node_groups[node_whole_names[i]]])%colors.length], transparent: true} ); //standard material allows light reaction
+    material = new THREE.MeshStandardMaterial( {color: colorVector[(layer_groups[node_groups[node_whole_names[i]]])%colorVector.length], transparent: true} ); //standard material allows light reaction
     sphere = new THREE.Mesh( geometry, material );
     nodes.push(sphere);
     layer_planes[layer_groups[node_groups[node_whole_names[i]]]].add(sphere); //attaching to corresponding layer centroid
@@ -446,8 +445,8 @@ const checkNodeInteraction = (event) => {
         pos = node_attributes.Node.indexOf(node_whole_names[ind]);
         if (pos > -1 && node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
           nodes[ind].material.color = new THREE.Color( node_attributes.Color[pos] );
-        else nodes[ind].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[ind]]])%colors.length]);
-      } else nodes[ind].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[ind]]])%colors.length]);
+        else nodes[ind].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[ind]]])%colorVector.length]);
+      } else nodes[ind].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[ind]]])%colorVector.length]);
       selectedNodePositions = selectedNodePositions.filter(function(value, index, arr){ return value != ind;}); //array remove/filter
     } else {
       selectedNodePositions.push(ind);

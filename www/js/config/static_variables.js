@@ -1,3 +1,6 @@
 let scene; // TODO add rest of the class objects here
 
-let fps = 30;
+let interLayerEdgesRenderPauseFlag = false,
+    canvasControlsAttached = false,
+    colorVector = [];
+    fps = 30;

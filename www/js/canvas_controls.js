@@ -18,8 +18,8 @@ const displayControlTable = () => {
   return true;
 }
 
-const pauseInterLayerEdgesRendering = () => {
-  let interLayerEdgesRenderPauseButton = document.getElementById('pauseAnimeateButton');
+const toggleInterLayerEdgesRendering = () => {
+  let interLayerEdgesRenderPauseButton = document.getElementById('interLayerEdgesRenderPauseButton');
   if (interLayerEdgesRenderPauseFlag) {
     interLayerEdgesRenderPauseFlag = false;
     interLayerEdgesRenderPauseButton.innerText = "Stop:Render Inter-Layer Edges";
@@ -532,16 +532,26 @@ const scaleNodes = () => {
 
 // main
 const attachCanvasControls = () => { //adding control buttons above the canvas layer
-  attachedCanvasControls = true;
   let info = document.getElementById("info"),
       navDiv = document.getElementById("navDiv"),
       tbl = document.createElement('table'),
-      pauseAnimeateButton = document.createElement("button"),
+      interLayerEdgesRenderPauseButton = document.createElement("button"),
       showBtn = document.createElement("button"),
       tbdy ="",
       tr = "",
       td = "",
       btn = "";
+
+  info.innerHTML = `1. <b>Zoom</b>: Mouse Wheel<br/>
+    2. <b>Pan</b>: Click Drag Scene / Arrow Keys<br/>
+    3. <b>Orbit</b>: Mouse Middle Drag<br/>
+    4. <b>Drag Layer</b>: Click Drag<br/>
+    5. <b>Rotate Layer</b>: <span class='blue'>Z</span> / <span class='red'>X</span> / <span class='green'>C</span> + Click Drag<br/>
+    6. <b>Move Selected Nodes</b>: <span class='blue'>Z</span> / <span class='green'>C</span> + Click Drag<br/>
+    7. <b>Node/Layer Selection</b>: Double Click <br/>
+    8. <b> Lasso Nodes</b>: Shift + Click Drag<br/>
+    9. <b>Unselect All Nodes</b>: Double Click Scene`;
+
   tbl.id = "canvasControls_table";
   tbdy = document.createElement('tbody');
 
@@ -870,12 +880,12 @@ const attachCanvasControls = () => { //adding control buttons above the canvas l
   tbdy.appendChild(tr);
   
   tbl.appendChild(tbdy);
-  pauseAnimeateButton.className = "displayCanvasControls";
-  pauseAnimeateButton.id = "pauseAnimeateButton";
-  pauseAnimeateButton.innerHTML = "Stop:Render Inter-Layer Edges";
-  pauseAnimeateButton.style.position = "fixed";
-  pauseAnimeateButton.style.zIndex = 1;
-  navDiv.appendChild(pauseAnimeateButton);
+  interLayerEdgesRenderPauseButton.className = "displayCanvasControls";
+  interLayerEdgesRenderPauseButton.id = "interLayerEdgesRenderPauseButton";
+  interLayerEdgesRenderPauseButton.innerHTML = "Stop:Render Inter-Layer Edges";
+  interLayerEdgesRenderPauseButton.style.position = "fixed";
+  interLayerEdgesRenderPauseButton.style.zIndex = 1;
+  navDiv.appendChild(interLayerEdgesRenderPauseButton);
   navDiv.appendChild(document.createElement('br'));
   showBtn.className = "displayCanvasControls";
   showBtn.id = "displayCanvasControlsButton";
@@ -890,7 +900,7 @@ const attachCanvasControls = () => { //adding control buttons above the canvas l
   //implementing functionality
   let recenterNetworkButton = document.getElementById("recenterButton");
   
-  pauseAnimeateButton.onclick = pauseInterLayerEdgesRendering;
+  interLayerEdgesRenderPauseButton.onclick = toggleInterLayerEdgesRendering;
   showBtn.onclick = displayControlTable;
   recenterNetworkButton.onclick = recenterNetwork;
   
@@ -956,5 +966,5 @@ const attachCanvasControls = () => { //adding control buttons above the canvas l
   cavnasButtons[27].onmousedown = moveNodesZPlus;
   cavnasButtons[27].onmousemove = cavnasButtons[27].onmouseup = mouseUpClear;
   
-  return true;
+  canvasControlsAttached = true;
 }

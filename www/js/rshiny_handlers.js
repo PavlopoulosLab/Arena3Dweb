@@ -35,14 +35,9 @@ const browseUrl = url => {
 };
 
 // Files ====================
-const uploadNetwork = (network) => {
-  session_flag = false; // TODO figure what this exactly does..
-  if (interLayerEdgesRenderPauseFlag)
-    pauseInterLayerEdgesRendering(); //resume rendering
-  //init on with darkColors
-  colors = darkColors.concat(default_colors);
-  clearCanvas();
-  if (!attachedCanvasControls) attachCanvasControls();
+const uploadNetwork = (network) => {  
+  executePreNetworkSetup();
+    
   let temp_name1 = temp_name2 = temp_layer1 = temp_layer2 = "",
     layers_counter = 0;
   let temp_channel;
@@ -130,12 +125,9 @@ const uploadNetwork = (network) => {
 }
 
 const importNetwork = (jsonNetwork) => {
-  setLabelColorVariable(jsonNetwork.universalLabelColor);
-  session_flag = true;
-  clearCanvas();
-  //init on with darkColors
-  colors = darkColors.concat(default_colors);
-  if (!attachedCanvasControls) attachCanvasControls();  
+  executePreNetworkSetup();
+
+  setLabelColorVariable(jsonNetwork.universalLabelColor);  
   
   let layers_counter = 0,
       color = "",
@@ -501,9 +493,9 @@ const nodeSelector = (message) => {
         pos = node_attributes.Node.indexOf(node_whole_names[i]);
         if(checkIfAttributeColorExist(node_attributes, pos)) //if node exists in node attributes file
           nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
-        else nodes[i].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[i]]])%colors.length]);
-      } else if (nodes[i].userData.cluster)  nodes[i].material.color = new THREE.Color(colors[nodes[i].userData.cluster]);
-      else nodes[i].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[i]]]) % colors.length]);
+        else nodes[i].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[i]]])%colorVector.length]);
+      } else if (nodes[i].userData.cluster)  nodes[i].material.color = new THREE.Color(colorVector[nodes[i].userData.cluster]);
+      else nodes[i].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[i]]]) % colorVector.length]);
     }
   }
   decideNodeLabelFlags();
@@ -518,8 +510,8 @@ const nodeSelectedColorPriority = (message) => {
       pos = node_attributes.Node.indexOf(node_whole_names[selectedNodePositions[i]]);
       if(checkIfAttributeColorExist(node_attributes, pos))//if node exists in node attributes file
         nodes[selectedNodePositions[i]].material.color = new THREE.Color( node_attributes.Color[pos] );
-      else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colors.length]);
-    } else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colors[(layer_groups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colors.length]);
+      else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colorVector.length]);
+    } else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colorVector.length]);
   }
   return true;
 }
@@ -702,7 +694,7 @@ const assignXYZ = (nodeCoords) => {
       target_y_max = yBoundMax,
       target_z_min = zBoundMin,
       target_z_max = zBoundMax;
-  if (localLayoutFlag){ //if local layout, change target mins and maxes and then unset flag
+  if (localLayoutFlag) { //if local layout, change target mins and maxes and then unset flag
     layerIndex = layer_groups[node_groups[nodeCoords.name[0]]];
     target_y_min = target_y_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.y/last_layer_scale[layerIndex],
     target_z_min = target_z_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.z/last_layer_scale[layerIndex];
@@ -724,47 +716,44 @@ const assignXYZ = (nodeCoords) => {
         target_z_max = target_z_max + Math.abs(target_y_min - target_y_max) / 2;
       }
     }
+    localLayoutFlag = false;
   }
   for (i = 0; i < nodeCoords.name.length; i++){
     node_name = nodeCoords.name[i].trim();
-    if (session_flag && !localLayoutFlag) {
-      layerIndex = layer_groups[node_groups[nodeCoords.name[0]]];
-      target_y_max = -layer_planes[layerIndex].geometry.parameters.width / 2;
-      target_y_min = layer_planes[layerIndex].geometry.parameters.width/2;
-      target_z_max = layer_planes[layerIndex].geometry.parameters.width/2.5;
-      target_z_min = -layer_planes[layerIndex].geometry.parameters.width/2.5;
-    }
-    //nodes[node_whole_names.indexOf(node_name)].position.x = -15; // to float over layer
     if (nodes[node_whole_names.indexOf(node_name)]) {
-      if (y_max - y_min != 0) nodes[node_whole_names.indexOf(node_name)].position.y = ((y_arr[i] - y_min) * (target_y_max - target_y_min) / (y_max - y_min) + target_y_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping * layer stretch scale
-      else nodes[node_whole_names.indexOf(node_name)].position.y = 0;
-      if (z_max - z_min != 0) nodes[node_whole_names.indexOf(node_name)].position.z = ((z_arr[i] - z_min) * (target_z_max - target_z_min) / (z_max - z_min) + target_z_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping
-      else nodes[node_whole_names.indexOf(node_name)].position.z = 0;
+      if (y_max - y_min != 0)
+        nodes[node_whole_names.indexOf(node_name)].position.y = 
+          ((y_arr[i] - y_min) * (target_y_max - target_y_min) /
+            (y_max - y_min) + target_y_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping * layer stretch scale
+      else
+        nodes[node_whole_names.indexOf(node_name)].position.y = 0;
+      if (z_max - z_min != 0)
+        nodes[node_whole_names.indexOf(node_name)].position.z = 
+          ((z_arr[i] - z_min) * (target_z_max - target_z_min) / 
+            (z_max - z_min) + target_z_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping
+      else
+        nodes[node_whole_names.indexOf(node_name)].position.z = 0;
     }
   }
-  localLayoutFlag = false;
-
-  // Clustering + colors
+  
+  // Clustering + colorVector
   if (nodeCoords.group != null) {
     for (i = 0; i < nodeCoords.name.length; i++){
       node_name = nodeCoords.name[i].trim();
       if (nodes[node_whole_names.indexOf(node_name)]) {
-        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colors[nodeCoords.group[i]]);
-        node_cluster_colors[node_whole_names.indexOf(node_name)] = colors[nodeCoords.group[i]];
+        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colorVector[nodeCoords.group[i]]);
+        node_cluster_colors[node_whole_names.indexOf(node_name)] = colorVector[nodeCoords.group[i]];
         nodes[node_whole_names.indexOf(node_name)].userData.cluster = nodeCoords.group[i];
       }
     }
-  } // end clustering colors
+  }
   
   updateNodesRShiny();
   redrawEdges();
-
-  return true;
 }
 
-const setLocalFlag = (message) => { //T
-  localLayoutFlag = message;
-  return true;
+const setLocalFlag = (flag) => { // flag always true here
+  localLayoutFlag = flag;
 }
 
 const topologyScale = (nodeScale) => {

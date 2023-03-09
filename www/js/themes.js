@@ -2,7 +2,7 @@
 // @return void
 const applyTheme = (bgColor, floorColor, edgeColor, labelColor, theme_colors, channel_colors_theme) =>{
   if (scene.exists()) {
-    colors = theme_colors.concat(default_colors);
+    colorVector = theme_colors.concat(COLOR_VECTOR_271);
     channel_colors = channel_colors_theme;
     createChannelColorMap();
     setRendererColor(bgColor);
@@ -41,9 +41,9 @@ const attachThemeButtons = () =>{
   grayThemeButton.id = "grayThemeButton";
   grayThemeButton.innerHTML = "Gray";
 
-  lightThemeButton.addEventListener("click", () => {applyTheme('#ffffff', '#8aa185', '#5c5c5c', '#000000', lightColors, CHANNEL_COLORS_DARK)});
-  darkThemeButton.addEventListener("click", () => {applyTheme('#000000', '#777777', '#ffffff', '#ffffff', darkColors, CHANNEL_COLORS_LIGHT)});
-  grayThemeButton.addEventListener("click", () => {applyTheme('#999999', '#1d4991', '#6e2a5a', '#ffffff', grayColors, CHANNEL_COLORS_LIGHT)});
+  lightThemeButton.addEventListener("click", () => {applyTheme('#ffffff', '#8aa185', '#5c5c5c', '#000000', COLOR_VECTOR_LIGHT, CHANNEL_COLORS_DARK)});
+  darkThemeButton.addEventListener("click", () => {applyTheme('#000000', '#777777', '#ffffff', '#ffffff', COLOR_VECTOR_DARK, CHANNEL_COLORS_LIGHT)});
+  grayThemeButton.addEventListener("click", () => {applyTheme('#999999', '#1d4991', '#6e2a5a', '#ffffff', COLOR_VECTOR_GRAY, CHANNEL_COLORS_LIGHT)});
 
   themeDiv.appendChild(lightThemeButton);
   themeDiv.appendChild(darkThemeButton);
