@@ -19,7 +19,6 @@ reset_UI_values <- function() {
   shinyjs::hide("layerEdgeOpacity")
   reset("interLayerEdgeOpacity")
   shinyjs::hide("interLayerEdgeOpacity")
-  reset("floorOpacity")
   reset("selectAll")
   reset("topologyScaleMetricChoice")
   reset("layoutAlgorithmChoice")

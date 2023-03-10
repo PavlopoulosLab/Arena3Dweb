@@ -28,7 +28,7 @@ const updateLayersRShiny = () => {
     tempColor = floorCurrentColor;
   }
   for (let i = 0; i < layer_planes.length; i++) {
-    if (layerColorFile) {
+    if (layerColorFromFile) {
         if (typeof floorDefaultColors[i] === 'object') {
           layerColor = '#' + floorDefaultColors[i].getHexString();
         } else layerColor = floorDefaultColors[i]

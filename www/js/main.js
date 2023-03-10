@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
   sceneColorDiv.innerHTML = '<input type="color" id="scene_color" name="scene_color" value="'.concat(scene.defaultColor).concat('" onchange="setRendererColor(this.value)"> <label for="scene_color">Background Color</label>');
   //floor colorpicker
   let floorColorDiv = document.getElementById("floorColorPicker");
-  floorColorDiv.innerHTML = '<input type="color" id="floor_color" name="floor_color" value="'.concat(floorDefaultColor).concat('" onchange="setFloorColor(this.value)"> <label for="floor_color">Floor Color</label>');
+  floorColorDiv.innerHTML = '<input type="color" id="floor_color" name="floor_color" value="'.concat(LAYER_DEFAULT_COLOR).concat('" onchange="setFloorColor(this.value)"> <label for="floor_color">Floor Color</label>');
   
   let channelColorDiv = document.getElementById("channelColorPicker");
 

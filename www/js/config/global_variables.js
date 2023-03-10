@@ -1,10 +1,17 @@
 // final variables
-const  SPHERE_RADIUS = 8,
+//screen
+const RAYCASTER = new THREE.Raycaster(),
+    RAYVECTOR = new THREE.Vector3(),
+    RAYDIR = new THREE.Vector3();
+
+// graphics
+const SPHERE_RADIUS = 8,
     SPHERE_WIDTHSEGMENTS = 8,
     SPHERE_HEIGHTSEGMENTS = 8,
-    COLOR_VECTOR_DARK = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628","#f781bf", "#999999"];
-    COLOR_VECTOR_LIGHT = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#000000"];
-    COLOR_VECTOR_GRAY = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628","#f781bf", "#000000"];
+    LAYER_DEFAULT_COLOR = "#777777",
+    COLOR_VECTOR_DARK = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628","#f781bf", "#999999"],
+    COLOR_VECTOR_LIGHT = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#000000"],
+    COLOR_VECTOR_GRAY = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628","#f781bf", "#000000"],
     COLOR_VECTOR_271 = ["#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",
     "#d2737d", "#c0a43c", "#f2510e", "#651be6", "#79806e", "#61da5e", "#cd2f00", 
     "#9348af", "#01ac53", "#c5a4fb", "#996635", "#b11573", "#4bb473", "#75d89e", 

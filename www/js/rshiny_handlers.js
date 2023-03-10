@@ -178,7 +178,7 @@ const importNetwork = (jsonNetwork) => {
       alphaTest: 0.05,
       wireframe: false,
       transparent: true,
-      opacity: floorOpacity,
+      opacity: layerOpacity,
       side: THREE.DoubleSide
     });
     let plane = new THREE.Mesh(planeGeom, planeMat);
@@ -283,8 +283,7 @@ const importNetwork = (jsonNetwork) => {
   if (jsonNetwork.adjust_layer_size)
     adjustLayerSize_flag = true;
   
-  //========================
-  floorCurrentColor = floorDefaultColor;
+  //=========================
   
   if (channel_values.length > 0) {
     if (channel_values.length > MAX_CHANNELS) {
@@ -420,9 +419,10 @@ const showLayerCoords = (message) => {
   return true;
 }
 
-const setFloorOpacity = (message) => {
-  for (let i = 0; i < layer_planes.length; i++){
-    layer_planes[i].material.opacity = message;
+const setFloorOpacity = (selectedOpacity) => {
+  layerOpacity = selectedOpacity;
+  for (let i = 0; i < layer_planes.length; i++) {
+    layer_planes[i].material.opacity = layerOpacity;
   }
   return true;
 }
@@ -434,9 +434,9 @@ const showWireFrames = (wireframeFlag) => { // true or false
 }
 
 const layerColorFilePriority = (message) => {
-  layerColorFile = message;
+  layerColorFromFile = message;
   for (let i = 0; i < layer_planes.length; i++){
-    if (!layerColorFile) layer_planes[i].material.color = new THREE.Color(floorCurrentColor)
+    if (!layerColorFromFile) layer_planes[i].material.color = new THREE.Color(floorCurrentColor)
     else layer_planes[i].material.color = new THREE.Color(floorDefaultColors[i]);
   }
   updateLayersRShiny();
@@ -454,7 +454,7 @@ const selectAllLayers = (message) => {
         layer_planes[i/7].material.color = new THREE.Color( "#f7f43e" );
       } else {
         c[i].checked = false;
-        if (floorDefaultColors.length > 0 && layerColorFile) {
+        if (floorDefaultColors.length > 0 && layerColorFromFile) {
           layer_planes[i/7].material.color = new THREE.Color(floorDefaultColors[i/7]);
         } else layer_planes[i/7].material.color = new THREE.Color(floorCurrentColor);
         layer_labels[i/7].style.display = "none";

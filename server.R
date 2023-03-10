@@ -133,8 +133,8 @@ server <- function(input, output, session) {
     callJSHandler("handler_layerColorFilePriority", input$layerColorFilePriority)
   }, ignoreInit = T)
   
-  observeEvent(input$floorOpacity, {
-    callJSHandler("handler_floorOpacity", input$floorOpacity)
+  observeEvent(input$layerOpacity, {
+    callJSHandler("handler_floorOpacity", input$layerOpacity)
   }, ignoreInit = T)
   
   # NODES ####

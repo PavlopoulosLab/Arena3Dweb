@@ -15,18 +15,17 @@ source("views/footer.R", local = T)
 ui <- fluidPage(
   useShinyjs(),
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "arena3dweb.css")),
-  tags$head(tags$script(src = "js/config/global_variables.js")),
-  tags$head(tags$script(src = "js/config/static_variables.js")),
   tags$head(tags$script(src = "js/three/three.js")),
   tags$head(tags$script(src = "js/three/matrix4.js")), # three.js matrix4 for dragcontrols
   tags$head(tags$script(src = "js/three/drag_controls.js")), # three.js dragcontrols
+  tags$head(tags$script(src = "js/config/global_variables.js")),
+  tags$head(tags$script(src = "js/config/static_variables.js")),
   tags$head(tags$script(src = "js/classes/scene.js")),
   tags$head(tags$script(src = "js/classes/layer.js")),
   tags$head(tags$script(src = "js/classes/node.js")),
   tags$head(tags$script(src = "js/classes/edge.js")),
   tags$head(tags$script(src = "js/screen.js")),
   tags$head(tags$script(src = "js/file.js")),
-  tags$head(tags$script(src = "js/global.js")), # TODO remove
   tags$head(tags$script(src = "js/update_Rshiny_values.js")),
   tags$head(tags$script(src = "js/rshiny_handlers.js")),
   tags$head(tags$script(src = "js/general.js")),

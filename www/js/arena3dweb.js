@@ -28,9 +28,6 @@ const clearCanvas = () => {
   layer_names = [],
   layer_node_labels_flags = [],
   floorDefaultColors = [], 
-  x = [],
-  y = [],
-  z = [],
   layer_planes = [],
   layer_spheres = [],
   js_selected_layers = [],
@@ -57,13 +54,12 @@ const loadGraph = () => {
   for(let i = 0; i < Object.getOwnPropertyNames(layer_groups).length; i++){
     let planeGeom = new THREE.PlaneGeometry(2*yBoundMax, 2*yBoundMax, 8, 8);
     planeGeom.rotateY(THREE.Math.degToRad(90));
-    floorCurrentColor = floorDefaultColor;
     let planeMat = new THREE.MeshBasicMaterial({
-      color: floorDefaultColor,
+      color: floorCurrentColor,
       alphaTest: 0.05,
       wireframe: false,
       transparent: true,
-      opacity: floorOpacity,
+      opacity: layerOpacity,
       side: THREE.DoubleSide,
     });
     let plane = new THREE.Mesh(planeGeom, planeMat);
@@ -152,7 +148,7 @@ const paintSelectedLayers = () => {
     if (exists(js_selected_layers, i))
       layer_planes[i].material.color = new THREE.Color( "#f7f43e" );
     else {
-      if (floorDefaultColors.length > 0 && layerColorFile) {
+      if (floorDefaultColors.length > 0 && layerColorFromFile) {
         layer_planes[i].material.color = new THREE.Color(floorDefaultColors[i]);
       } else
         layer_planes[i].material.color = new THREE.Color(floorCurrentColor);
@@ -269,9 +265,8 @@ const moveLayers = (checkMoveFlag) => {
 const setFloorColor = (color) => {
   // from picker: floorCurrentColor = document.getElementById("floor_color").value;
   floorCurrentColor = color;
-  floorDefaultColor = color;
   for (let i = 0; i < layer_planes.length; i++) {
-      if (floorDefaultColors.length > 0 && layerColorFile) {
+      if (floorDefaultColors.length > 0 && layerColorFromFile) {
         layer_planes[i].material.color = new THREE.Color(floorDefaultColors[i]);
       } else layer_planes[i].material.color = new THREE.Color(color);
   }
@@ -281,7 +276,7 @@ const setFloorColor = (color) => {
 
 const checkHoverOverLayer = (event, node_hover_flag) => {
   setRaycaster(event);
-  let intersects = raycaster.intersectObjects(layer_planes);
+  let intersects = RAYCASTER.intersectObjects(layer_planes);
   
   if (intersects.length > 0 & !node_hover_flag) {
     if (last_hovered_layer_index != ""){
@@ -341,14 +336,9 @@ const scrambleNodes = (yMin, yMax, zMin, zMax) => {
   !zMin && (zMin = zBoundMin)
   !zMax && (zMax = zBoundMax)
   for (let i = 0; i < nodes.length; i++){ //random y,z
-    x.push(0);
-    y.push(getRandomArbitrary(yMin, yMax));
-    z.push(getRandomArbitrary(zMin, zMax));
-    nodes[i].translateX(x[i]);
-    nodes[i].translateY(y[i]);
-    nodes[i].translateZ(z[i]);
+    nodes[i].translateY(getRandomArbitrary(yMin, yMax));
+    nodes[i].translateZ(getRandomArbitrary(zMin, zMax));
   }
-  return true;
 }
 
 const adjustLayerSize = () => {
@@ -388,7 +378,7 @@ const adjustLayerSize = () => {
 // @return bool
 const checkHoverOverNode = (event) => {
   setRaycaster(event);
-  let intersects = raycaster.intersectObjects(nodes),
+  let intersects = RAYCASTER.intersectObjects(nodes),
     event_flag = false, //for performance optimization
     index,
     hover_flag = false;
@@ -423,7 +413,7 @@ const checkHoverOverNode = (event) => {
 // with ray caster
 const checkNodeInteraction = (event) => {
   setRaycaster(event);
-  let intersects = raycaster.intersectObjects(nodes);
+  let intersects = RAYCASTER.intersectObjects(nodes);
   let node_selection = false;
   if (intersects.length > 0) {
     node_selection = true;

@@ -7,7 +7,8 @@ const mouseUpClearScene = () => {
 }
 
 const mouseUpClear = () => {
-  clearInterval(timeoutF);
+  clearInterval(layerIntervalTimeout);
+  clearInterval(nodeIntervalTimeout);
   return false;
 }
 
@@ -133,7 +134,7 @@ const rotateLayersXMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateX(-THREE.Math.degToRad(value));
@@ -150,7 +151,7 @@ const rotateLayersXPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateX(THREE.Math.degToRad(value));
@@ -167,7 +168,7 @@ const rotateLayersYMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateY(-THREE.Math.degToRad(value));
@@ -184,7 +185,7 @@ const rotateLayersYPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateY(THREE.Math.degToRad(value));
@@ -201,7 +202,7 @@ const rotateLayersZMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateZ(-THREE.Math.degToRad(value));
@@ -218,7 +219,7 @@ const rotateLayersZPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].rotateZ(THREE.Math.degToRad(value));
@@ -267,7 +268,7 @@ const moveLayersXMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateX(-value);
@@ -284,7 +285,7 @@ const moveLayersXPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateX(value);
@@ -301,7 +302,7 @@ const moveLayersYMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateY(-value);
@@ -318,7 +319,7 @@ const moveLayersYPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateY(value);
@@ -335,7 +336,7 @@ const moveLayersZMinus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateZ(-value);
@@ -352,7 +353,7 @@ const moveLayersZPlus = () => {
   selectCheckedLayers();
   if (js_selected_layers.length == 0) alert("Please select at least one layer.");
   else{
-    timeoutF = setInterval(function() {
+    layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       for (let i = 0; i < js_selected_layers.length; i++){
         layer_planes[js_selected_layers[i]].translateZ(value);
@@ -422,7 +423,7 @@ const sliderNodeTranslate = () => {
 const moveNodesXMinus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function() {
+    nodeIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateX(-value);
@@ -438,7 +439,7 @@ const moveNodesXMinus = () => {
 const moveNodesXPlus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function() {
+    nodeIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateX(value);
@@ -454,7 +455,7 @@ const moveNodesXPlus = () => {
 const moveNodesYMinus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function() {
+    nodeIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateY(-value);
@@ -470,7 +471,7 @@ const moveNodesYMinus = () => {
 const moveNodesYPlus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function() {
+    nodeIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateY(value);
@@ -486,7 +487,7 @@ const moveNodesYPlus = () => {
 const moveNodesZMinus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function() {
+    nodeIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateZ(-value);
@@ -502,7 +503,7 @@ const moveNodesZMinus = () => {
 const moveNodesZPlus = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
   else{
-    timeoutF = setInterval(function() {
+    nodeIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         nodes[selectedNodePositions[i]].translateZ(value);
