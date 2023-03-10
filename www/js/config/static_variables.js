@@ -1,5 +1,5 @@
 // class objects
-let scene; // TODO add rest of the class objects here
+let scene, layers = []; // TODO add rest of the class objects here
 
 // screen
 let xBoundMin, xBoundMax, yBoundMin, yBoundMax, zBoundMin, zBoundMax,
@@ -69,15 +69,19 @@ let nodes = [], //canvas objects
     layer_edges_pairs_channels = [],
     edge_values = [],
     edge_channels = [],
-    layerCoords = [],
     node_groups = new Map(),
-    layer_groups = new Map(),
+
     layer_labels = [], //divs
-    layer_names = [],
-    layer_node_labels_flags = [],
+    layer_groups = new Map(),
+    
+    layerCoords = [], // TODO this.coordSystem
+    layer_names = [], // TODO this.name
+    layer_node_labels_flags = [], // TODO this.showNodeLabels
     layer_planes = [],
     layer_spheres = [],
-    js_selected_layers = [],
+    last_layer_scale = [], // TODO this.last_layer_scale
+    js_selected_layers = [], // TODO this.isSelected
+
     selectedNodePositions = [],
     selected_edges = [],
     channels_layout = [],
@@ -88,7 +92,6 @@ let nodes = [], //canvas objects
     node_cluster_colors = [],
     node_attributes = "",
     edge_attributes = "",
-    last_layer_scale = [],
     channels = [],
     channel_color = {},
     channelVisibility = {};

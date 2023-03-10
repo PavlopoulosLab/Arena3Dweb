@@ -52,7 +52,7 @@ const loadGraph = () => {
   let layerSphereGeometry = new THREE.SphereGeometry( 0 );
   let layerSphereMaterial = new THREE.MeshBasicMaterial( {color:"white", transparent: true, opacity: 0.5} );
   for(let i = 0; i < Object.getOwnPropertyNames(layer_groups).length; i++){
-    let planeGeom = new THREE.PlaneGeometry(2*yBoundMax, 2*yBoundMax, 8, 8);
+    let planeGeom = new THREE.PlaneGeometry(2*yBoundMax, 2*yBoundMax, PLANE_WIDTHSEGMENTS, PLANE_HEIGHTSEGMENTS);
     planeGeom.rotateY(THREE.Math.degToRad(90));
     let planeMat = new THREE.MeshBasicMaterial({
       color: floorCurrentColor,
@@ -69,7 +69,7 @@ const loadGraph = () => {
 	  sphere.translateZ(zBoundMax);
     layer_planes.push(plane);
     layer_spheres.push(sphere);
-    scene.addLayer(plane);
+    scene.addLayer(plane); // TODO swap with scene.addLayer(newLayer.plane) where newLayer = new Layer(params)
     last_layer_scale.push(1);
   }
   //create node geometries

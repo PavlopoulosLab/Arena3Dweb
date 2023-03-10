@@ -73,15 +73,15 @@ class Scene {
   }
   
   appendLine(x, y, z, color) {
-      let points = [];
-    	points.push(this.getPointPosition(), new THREE.Vector3(x, y, z) );
-    	points.push(this.getPointPosition(), new THREE.Vector3(-x, -y, -z));
-    	let geometry = new THREE.BufferGeometry().setFromPoints(points);
-    	let material = new THREE.LineBasicMaterial({color: color});
-    	let line = new THREE.Line(geometry, material);
-    	this.sphere.add(line);
-      return(line)
-    }
+    let points = [];
+    points.push(this.getPointPosition(), new THREE.Vector3(x, y, z) );
+    points.push(this.getPointPosition(), new THREE.Vector3(-x, -y, -z));
+    let geometry = new THREE.BufferGeometry().setFromPoints(points);
+    let material = new THREE.LineBasicMaterial({color: color});
+    let line = new THREE.Line(geometry, material);
+    this.sphere.add(line);
+    return(line)
+  }
   
   exists() {
     return(this.pan != "");

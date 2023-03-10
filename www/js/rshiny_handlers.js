@@ -169,7 +169,7 @@ const importNetwork = (jsonNetwork) => {
   for (let i = 0; i < jsonNetwork.layers.name.length; i++) {
     import_width = jsonNetwork.layers.geometry_parameters_width[i];
     //create layer geometries
-    let planeGeom = new THREE.PlaneGeometry(import_width, import_width, 8, 8);
+    let planeGeom = new THREE.PlaneGeometry(import_width, import_width, PLANE_WIDTHSEGMENTS, PLANE_HEIGHTSEGMENTS);
     planeGeom.rotateY(THREE.Math.degToRad(90));
     floorCurrentColor = new THREE.Color(jsonNetwork.layers.floor_current_color[i]);
     floorDefaultColors.push(floorCurrentColor)
