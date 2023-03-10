@@ -1,14 +1,14 @@
 class Layer {
-  constructor(id = 1, name = "Layer1",
+  constructor({id = 1, name = "Layer1",
     position_x = 0, position_y = 0, position_z = 0,
     last_layer_scale = 1, rotation_x = 0, rotation_y = 0, rotation_z = 0,
-    floor_current_color = LAYER_DEFAULT_COLOR, geometry_parameters_width = 2 * yBoundMax) {
+    floor_current_color = LAYER_DEFAULT_COLOR, geometry_parameters_width = 2 * yBoundMax}) {
       this.plane = "";
       this.sphere = "";
 
       this.id = id; // TODO counter ++
       this.name = name;
-      this.position_x = position_x; // TODO set three obj parameters
+      this.position_x = position_x; // TODO set as three obj parameters
       this.position_y = position_y;
       this.position_z = position_z;
       this.last_layer_scale = last_layer_scale;
@@ -18,15 +18,17 @@ class Layer {
       this.floor_current_color = floor_current_color; // TODO rename to importedColor
       this.geometry_parameters_width = geometry_parameters_width;
 
-      // TODO add three object
       this.showNodeLabels = false;
-      this.isSelected = false;
+      this.isSelected = false; // TODO check if this over js_selected_layers
       this.coordSystem = ["", "", ""];
       this.color = floor_current_color;
 
       this.createPlane(geometry_parameters_width);
       this.addSphere(geometry_parameters_width, last_layer_scale);
       this.appendCoordSystem();
+
+      // updateLayerNamesRShiny
+      // updateLayersRShiny
   }
 
   createPlane(width) {

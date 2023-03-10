@@ -61,7 +61,6 @@ let nodes = [], //canvas objects
     node_label_flags = [],
     hovered_nodes = [], // if allowing more than one hovered nodes at a time
     last_hovered_node_index = "",
-    last_hovered_layer_index = "",
     edges = [], //canvas objects
     layerEdges = [], //canvas objects
     edge_pairs = [],
@@ -75,12 +74,13 @@ let nodes = [], //canvas objects
     layer_groups = new Map(),
     
     layerCoords = [], // TODO this.coordSystem
-    layer_names = [], // TODO this.name
+    layer_names = [], // TODO let layer_names = layers.map(({ name }) => name)
     layer_node_labels_flags = [], // TODO this.showNodeLabels
-    layer_planes = [],
+    layer_planes = [], // TODO let layer_planes = layers.map(({ plane }) => plane)
     layer_spheres = [],
     last_layer_scale = [], // TODO this.last_layer_scale
-    js_selected_layers = [], // TODO this.isSelected
+    last_hovered_layer_index = "",
+    js_selected_layers = [], // TODO check if swithcing with this.isSelected
 
     selectedNodePositions = [],
     selected_edges = [],

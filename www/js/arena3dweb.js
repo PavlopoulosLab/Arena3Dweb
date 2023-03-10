@@ -1,7 +1,9 @@
 // general UI init ====================
 const clearCanvas = () => {
   scene.reset();
-  
+  layers = [];
+
+
   nodes = [], //canvas objects
   node_labels = [];
   document.getElementById("labelDiv").innerHTML = "";
@@ -138,7 +140,11 @@ const selectCheckedLayers = () => {
       if (c[i].checked) js_selected_layers.push(i/7); //7 -> checkbox, label, checkbox2, label2, checkbox3, label3, br
     }
   }
-  Shiny.setInputValue("js_selected_layers", js_selected_layers); //R monitors selected Layers to apply Layouts correctly
+  // js_selected_layers = layers.map(function(l) { if (l.isSelected) return l.id; });
+  // js_selected_layers = js_selected_layers.filter(function(id) { return id !== undefined; });
+  //  TODO check if switching to this
+  // 
+  Shiny.setInputValue("js_selected_layers", js_selected_layers); // TODO layers.map(({ isSelected }) => isSelected)
   return true;
 }
 
@@ -276,7 +282,7 @@ const setFloorColor = (color) => {
 
 const checkHoverOverLayer = (event, node_hover_flag) => {
   setRaycaster(event);
-  let intersects = RAYCASTER.intersectObjects(layer_planes);
+  let intersects = RAYCASTER.intersectObjects(layer_planes); //TODO get all layer object planes in an array first
   
   if (intersects.length > 0 & !node_hover_flag) {
     if (last_hovered_layer_index != ""){
@@ -295,7 +301,8 @@ const checkHoverOverLayer = (event, node_hover_flag) => {
 
 const checkLayerInteraction = (e) => {
   let layer_selection = false;
-  if (last_hovered_layer_index !== ""){
+  if (last_hovered_layer_index !== "") {
+    // layers[last_hovered_layer_index].isSelected = true; // TODO check if swithc to this
     layer_selection = true;
     let c = document.getElementById("checkboxdiv").children;
     c[last_hovered_layer_index*7].checked ? c[last_hovered_layer_index*7].checked = false : c[last_hovered_layer_index*7].checked = true;

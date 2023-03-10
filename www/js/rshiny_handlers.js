@@ -35,9 +35,11 @@ const browseUrl = url => {
 };
 
 // Files ====================
-const uploadNetwork = (network) => {  
+const uploadNetwork = (network) => { 
+  console.log(network);
   executePreNetworkSetup();
-    
+  
+
   let temp_name1 = temp_name2 = temp_layer1 = temp_layer2 = "",
     layers_counter = 0;
   let temp_channel;
@@ -56,6 +58,7 @@ const uploadNetwork = (network) => {
       node_groups[temp_name1] = temp_layer1;
       if (!layer_names.includes(temp_layer1)){
         layer_names.push(temp_layer1);
+        layers.push(new Layer({id: layers_counter, name: temp_layer1}));
         layer_groups[temp_layer1] = layers_counter;
         layers_counter++;
       }
@@ -66,6 +69,7 @@ const uploadNetwork = (network) => {
       node_groups[temp_name2] = temp_layer2;
       if (!layer_names.includes(temp_layer2)){
         layer_names.push(temp_layer2);
+        layers.push(new Layer({id: layers_counter, name: temp_layer2}));
         layer_groups[temp_layer2] = layers_counter;
         layers_counter++;
       }
