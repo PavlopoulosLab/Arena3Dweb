@@ -202,3 +202,62 @@ const nodeSelectedColorPriority = (message) => {
   }
   return true;
 }
+
+const spreadNodes = () => {
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
+  else{
+    for (let i=0;i<selectedNodePositions.length;i++){
+      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 1.1;
+      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 1.1;
+    }
+    updateNodesRShiny();
+    redrawEdges();
+  }
+}
+
+const congregateNodes = () => {
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
+  else{
+    for (let i=0;i<selectedNodePositions.length;i++){
+      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 0.9;
+      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 0.9;
+    }
+    updateNodesRShiny();
+    redrawEdges();
+  }
+}
+
+const moveNodes = (direction, axis) => {
+  if (selectedNodePositions.length == 0)
+    alert("Please select at least one node.");
+  else {
+    nodeIntervalTimeout = setInterval(function() {
+      let value = document.getElementsByClassName("canvasSlider")[4].value;
+      value = direction * value;
+      for (let i = 0; i < selectedNodePositions.length; i++){
+        if (axis == "X")
+          nodes[selectedNodePositions[i]].translateX(value);
+        else if (axis == "Y")
+          nodes[selectedNodePositions[i]].translateY(value);
+        else if (axis == "Z")
+          nodes[selectedNodePositions[i]].translateZ(value);
+      }
+      redrawEdges();
+      updateNodesRShiny();
+    }, 70);
+  }
+}
+
+const scaleNodes = () => {
+  let cavnasSlider = document.getElementsByClassName("canvasSlider")[5],
+    td = document.getElementById("sliderValue6");
+  td.innerHTML = "x".concat(cavnasSlider.value);
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
+  else{
+    for (let i = 0; i < selectedNodePositions.length; i++) {
+      nodes[selectedNodePositions[i]].scale.x = nodes[selectedNodePositions[i]].scale.y = 
+        nodes[selectedNodePositions[i]].scale.z = parseFloat(cavnasSlider.value);
+    }
+    updateNodesRShiny();
+  }
+}

@@ -327,3 +327,92 @@ const selectAllLayers = (message) => {
   Shiny.setInputValue("js_selected_layers", js_selected_layers);
   return true;
 }
+
+const rotateSelectedLayers = (direction, axis) => {
+  selectCheckedLayers();
+  if (js_selected_layers.length == 0)
+    alert("Please select at least one layer.");
+  else {
+    layerIntervalTimeout = setInterval(function() {
+      let value = document.getElementsByClassName("canvasSlider")[1].value;
+      value = direction * THREE.Math.degToRad(value);
+      for (let i = 0; i < js_selected_layers.length; i++) {
+        if (axis == "X")
+          layer_planes[js_selected_layers[i]].rotateX(value);
+        else if (axis == "Y")
+          layer_planes[js_selected_layers[i]].rotateY(value);
+        else if (axis == "Z")
+          layer_planes[js_selected_layers[i]].rotateZ(value);
+      }
+      updateLayersRShiny();
+      updateNodesRShiny(); // VR node world positions update
+    }, 70);
+  }
+}
+
+const spreadLayers = () => {
+  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
+      numLayers = layer_planes.length;
+  for (let i = 0; i < numLayers; i++){
+    layer_planes[i].rotation.x = layer_planes[i].rotation.y = layer_planes[i].rotation.z = 0;
+    if (numLayers % 2) layer_planes[i].translateX( (-Math.floor(layer_planes.length/2) + i) * window_width); //odd number of Layers
+    else layer_planes[i].translateX( (-layer_planes.length/2 + i) * window_width + window_width/2); //even number of Layers
+  }
+  updateLayersRShiny();
+  updateNodesRShiny(); // VR node world positions update
+}
+
+const congregateLayers = () => {
+  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
+      numLayers = layer_planes.length;
+  for (let i = 0; i < numLayers; i++){
+    layer_planes[i].rotation.x = layer_planes[i].rotation.y = layer_planes[i].rotation.z = 0;
+    if (numLayers % 2) layer_planes[i].translateX( -((-Math.floor(layer_planes.length/2) + i) * window_width)); //odd number of Layers
+    else layer_planes[i].translateX( -((-layer_planes.length/2 + i) * window_width + window_width/2)); //even number of Layers
+  }
+  updateLayersRShiny();
+  updateNodesRShiny(); // VR node world positions update
+}
+
+const moveLayers = (direction, axis) => {
+  selectCheckedLayers();
+  if (js_selected_layers.length == 0)
+    alert("Please select at least one layer.");
+  else {
+    layerIntervalTimeout = setInterval(function() {
+      let value = document.getElementsByClassName("canvasSlider")[2].value;
+      value = direction * value;
+      for (let i = 0; i < js_selected_layers.length; i++) {
+        if (axis == "X")
+          layer_planes[js_selected_layers[i]].translateX(value);
+        else if (axis == "Y")
+          layer_planes[js_selected_layers[i]].translateY(value);
+        else if (axis == "Z")
+          layer_planes[js_selected_layers[i]].translateZ(value);
+      }
+      updateLayersRShiny();
+      updateNodesRShiny(); // VR node world positions update
+    }, 70);
+  }
+}
+
+const scaleLayers = (canvasSlider) => {
+  let td = document.getElementById("sliderValue4"),
+    cavnasSlider = document.getElementsByClassName("canvasSlider")[3];
+  td.innerHTML = "x".concat(cavnasSlider.value);
+  selectCheckedLayers();
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    for (let i = 0; i < js_selected_layers.length; i++){
+      layer_planes[js_selected_layers[i]].geometry.scale(1, parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]], parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]]);
+      for (let j = 0; j < layer_planes[js_selected_layers[i]].children.length; j++){
+        layer_planes[js_selected_layers[i]].children[j].position.y = layer_planes[js_selected_layers[i]].children[j].position.y * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
+        layer_planes[js_selected_layers[i]].children[j].position.z = layer_planes[js_selected_layers[i]].children[j].position.z * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
+      }
+      last_layer_scale[js_selected_layers[i]] = parseFloat(cavnasSlider.value);
+    }
+    redrawEdges();
+    updateLayersRShiny();
+    updateNodesRShiny();
+  }
+}

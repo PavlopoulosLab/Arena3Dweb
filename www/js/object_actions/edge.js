@@ -647,3 +647,14 @@ const interToggleChannelCurvature = (message) => {
   redrawEdges();
   return true;
 }
+
+const toggleInterLayerEdgesRendering = () => {
+  let interLayerEdgesRenderPauseButton = document.getElementById('interLayerEdgesRenderPauseButton');
+  if (interLayerEdgesRenderPauseFlag) {
+    interLayerEdgesRenderPauseFlag = false;
+    interLayerEdgesRenderPauseButton.innerText = "Stop:Render Inter-Layer Edges";
+  } else {
+    interLayerEdgesRenderPauseFlag = true;
+    interLayerEdgesRenderPauseButton.innerText = "Render Inter-Layer Edges";
+  }
+}

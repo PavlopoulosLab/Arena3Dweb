@@ -138,6 +138,24 @@ class Scene {
     return(this.sphere.quaternion);
   }
 
+  // direction 1 or -1
+  rotate(direction, axis) {
+    clearInterval(this.intervalTimeout);
+      this.intervalTimeout = setInterval(function() {
+      let value = document.getElementsByClassName("canvasSlider")[0].value;
+      value = direction * THREE.Math.degToRad(value);
+      if (axis == "X")
+        scene.rotateX(value);
+      else if (axis == "Y")
+        scene.rotateY(value);
+      else if (axis == "Z")
+        scene.rotateZ(value);
+      updateSceneSphereRShiny();
+      updateLayersRShiny();
+      updateNodesRShiny();
+    }, 70);
+  }
+
   rotateX(x) {
     this.sphere.rotateX(x);
   }

@@ -381,17 +381,17 @@ const attachCanvasControls = () => { //adding control buttons above the canvas l
   cavnasSliders[5].oninput = scaleNodes;
   
   let cavnasButtons = document.getElementsByClassName("canvasControls");
-  cavnasButtons[0].addEventListener("mousedown", function() { rotateScene(-1, "X") });
+  cavnasButtons[0].addEventListener("mousedown", function() { scene.rotate(-1, "X") });
   cavnasButtons[0].onmousemove = cavnasButtons[0].onmouseup = mouseUpClearScene;
-  cavnasButtons[1].addEventListener("mousedown", function() { rotateScene(1, "X") });
+  cavnasButtons[1].addEventListener("mousedown", function() { scene.rotate(1, "X") });
   cavnasButtons[1].onmousemove = cavnasButtons[1].onmouseup = mouseUpClearScene;
-  cavnasButtons[2].addEventListener("mousedown", function() { rotateScene(-1, "Y") });
+  cavnasButtons[2].addEventListener("mousedown", function() { scene.rotate(-1, "Y") });
   cavnasButtons[2].onmousemove = cavnasButtons[2].onmouseup = mouseUpClearScene;
-  cavnasButtons[3].addEventListener("mousedown", function() { rotateScene(1, "Y") });
+  cavnasButtons[3].addEventListener("mousedown", function() { scene.rotate(1, "Y") });
   cavnasButtons[3].onmousemove = cavnasButtons[3].onmouseup = mouseUpClearScene;
-  cavnasButtons[4].addEventListener("mousedown", function() { rotateScene(-1, "Z") });
+  cavnasButtons[4].addEventListener("mousedown", function() { scene.rotate(-1, "Z") });
   cavnasButtons[4].onmousemove = cavnasButtons[4].onmouseup = mouseUpClearScene;
-  cavnasButtons[5].addEventListener("mousedown", function() { rotateScene(1, "Z") });
+  cavnasButtons[5].addEventListener("mousedown", function() { scene.rotate(1, "Z") });
   cavnasButtons[5].onmousemove = cavnasButtons[5].onmouseup = mouseUpClearScene;
   cavnasButtons[6].addEventListener("mousedown", function() { rotateSelectedLayers(-1, "X") });
   cavnasButtons[6].onmousemove = cavnasButtons[6].onmouseup = mouseUpClear;
@@ -451,43 +451,16 @@ const mouseUpClear = () => {
 
 const displayControlTable = () => {
   t = document.getElementById("info");
-  if (t.style.display == "inline-block") t.style.display = "none";
-  else t.style.display = "inline-block";
-}
-
-const toggleInterLayerEdgesRendering = () => {
-  let interLayerEdgesRenderPauseButton = document.getElementById('interLayerEdgesRenderPauseButton');
-  if (interLayerEdgesRenderPauseFlag) {
-    interLayerEdgesRenderPauseFlag = false;
-    interLayerEdgesRenderPauseButton.innerText = "Stop:Render Inter-Layer Edges";
-  } else {
-    interLayerEdgesRenderPauseFlag = true;
-    interLayerEdgesRenderPauseButton.innerText = "Render Inter-Layer Edges";
-  }
+  if (t.style.display == "inline-block")
+    t.style.display = "none";
+  else
+    t.style.display = "inline-block";
 }
 
 const sliderSceneRotate = () => {
   let cavnasSlider = document.getElementsByClassName("canvasSlider")[0],
     td = document.getElementById("sliderValue1");
   td.innerHTML = "Angle: ".concat(cavnasSlider.value).concat("&#730;");
-}
-
-// direction 1 or -1
-const rotateScene = (direction, axis) => {
-  clearInterval(scene.intervalTimeout);
-    scene.intervalTimeout = setInterval(function() {
-    let value = document.getElementsByClassName("canvasSlider")[0].value;
-    value = direction * THREE.Math.degToRad(value);
-    if (axis == "X")
-      scene.rotateX(value);
-    else if (axis == "Y")
-      scene.rotateY(value);
-    else if (axis == "Z")
-      scene.rotateZ(value);
-    updateSceneSphereRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
-  }, 70);
 }
 
 const recenterNetwork = () => {
@@ -497,7 +470,6 @@ const recenterNetwork = () => {
     updateLayersRShiny();
     updateNodesRShiny();
   }
-  return true;
 }
 
 const sliderLayerRotate = () => {
@@ -506,168 +478,14 @@ const sliderLayerRotate = () => {
   td.innerHTML = "Angle: ".concat(cavnasSlider.value).concat("&#730;");
 }
 
-const rotateSelectedLayers = (direction, axis) => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0)
-    alert("Please select at least one layer.");
-  else {
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[1].value;
-      value = direction * THREE.Math.degToRad(value);
-      for (let i = 0; i < js_selected_layers.length; i++) {
-        if (axis == "X")
-          layer_planes[js_selected_layers[i]].rotateX(value);
-        else if (axis == "Y")
-          layer_planes[js_selected_layers[i]].rotateY(value);
-        else if (axis == "Z")
-          layer_planes[js_selected_layers[i]].rotateZ(value);
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-    }, 70);
-  }
-}
-
 const sliderLayerTranslate = () => {
   let cavnasSlider = document.getElementsByClassName("canvasSlider")[2],
     td = document.getElementById("sliderValue3");
   td.innerHTML = "Step: ".concat(cavnasSlider.value);
 }
 
-const spreadLayers = () => {
-  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
-      numLayers = layer_planes.length;
-  for (let i = 0; i < numLayers; i++){
-    layer_planes[i].rotation.x = layer_planes[i].rotation.y = layer_planes[i].rotation.z = 0;
-    if (numLayers % 2) layer_planes[i].translateX( (-Math.floor(layer_planes.length/2) + i) * window_width); //odd number of Layers
-    else layer_planes[i].translateX( (-layer_planes.length/2 + i) * window_width + window_width/2); //even number of Layers
-  }
-  updateLayersRShiny();
-  updateNodesRShiny(); // VR node world positions update
-  return true;
-}
-
-const congregateLayers = () => {
-  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
-      numLayers = layer_planes.length;
-  for (let i = 0; i < numLayers; i++){
-    layer_planes[i].rotation.x = layer_planes[i].rotation.y = layer_planes[i].rotation.z = 0;
-    if (numLayers % 2) layer_planes[i].translateX( -((-Math.floor(layer_planes.length/2) + i) * window_width)); //odd number of Layers
-    else layer_planes[i].translateX( -((-layer_planes.length/2 + i) * window_width + window_width/2)); //even number of Layers
-  }
-  updateLayersRShiny();
-  updateNodesRShiny(); // VR node world positions update
-  return true;
-}
-
-const moveLayers = (direction, axis) => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0)
-    alert("Please select at least one layer.");
-  else {
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[2].value;
-      value = direction * value;
-      for (let i = 0; i < js_selected_layers.length; i++) {
-        if (axis == "X")
-          layer_planes[js_selected_layers[i]].translateX(value);
-        else if (axis == "Y")
-          layer_planes[js_selected_layers[i]].translateY(value);
-        else if (axis == "Z")
-          layer_planes[js_selected_layers[i]].translateZ(value);
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-    }, 70);
-  }
-}
-
-const scaleLayers = (canvasSlider) => {
-  let td = document.getElementById("sliderValue4"),
-    cavnasSlider = document.getElementsByClassName("canvasSlider")[3];
-  td.innerHTML = "x".concat(cavnasSlider.value);
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    for (let i = 0; i < js_selected_layers.length; i++){
-      layer_planes[js_selected_layers[i]].geometry.scale(1, parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]], parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]]);
-      for (let j = 0; j < layer_planes[js_selected_layers[i]].children.length; j++){
-        layer_planes[js_selected_layers[i]].children[j].position.y = layer_planes[js_selected_layers[i]].children[j].position.y * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
-        layer_planes[js_selected_layers[i]].children[j].position.z = layer_planes[js_selected_layers[i]].children[j].position.z * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
-      }
-      last_layer_scale[js_selected_layers[i]] = parseFloat(cavnasSlider.value);
-    }
-    redrawEdges();
-    updateLayersRShiny();
-    updateNodesRShiny();
-  }
-  return true;
-}
-
-const spreadNodes = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    for (let i=0;i<selectedNodePositions.length;i++){
-      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 1.1;
-      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 1.1;
-    }
-    updateNodesRShiny();
-    redrawEdges();
-  }
-  return true;
-}
-
-const congregateNodes = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    for (let i=0;i<selectedNodePositions.length;i++){
-      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 0.9;
-      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 0.9;
-    }
-    updateNodesRShiny();
-    redrawEdges();
-  }
-  return true;
-}
-
 const sliderNodeTranslate = () => {
   let cavnasSliders = document.getElementsByClassName("canvasSlider")[4];
   td = document.getElementById("sliderValue5");
   td.innerHTML = "Step: ".concat(cavnasSliders.value);
-}
-
-const moveNodes = (direction, axis) => {
-  if (selectedNodePositions.length == 0)
-    alert("Please select at least one node.");
-  else {
-    nodeIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[4].value;
-      value = direction * value;
-      for (let i = 0; i < selectedNodePositions.length; i++){
-        if (axis == "X")
-          nodes[selectedNodePositions[i]].translateX(value);
-        else if (axis == "Y")
-          nodes[selectedNodePositions[i]].translateY(value);
-        else if (axis == "Z")
-          nodes[selectedNodePositions[i]].translateZ(value);
-      }
-      redrawEdges();
-      updateNodesRShiny();
-    }, 70);
-  }
-}
-
-const scaleNodes = () => {
-  let cavnasSlider = document.getElementsByClassName("canvasSlider")[5],
-    td = document.getElementById("sliderValue6");
-  td.innerHTML = "x".concat(cavnasSlider.value);
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    for (let i = 0; i < selectedNodePositions.length; i++) {
-      nodes[selectedNodePositions[i]].scale.x = nodes[selectedNodePositions[i]].scale.y = 
-        nodes[selectedNodePositions[i]].scale.z = parseFloat(cavnasSlider.value);
-    }
-    updateNodesRShiny();
-  }
-  return true;
 }
