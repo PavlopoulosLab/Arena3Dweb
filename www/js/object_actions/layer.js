@@ -264,3 +264,66 @@ const adjustLayerSize = () => {
   updateLayersRShiny();
   redrawLayerLabels("all");
 }
+
+const showLayerCoords = (message) => {
+  let labelCoordsSwitch = message; //message = true or false
+  if (labelCoordsSwitch){
+    for (let i = 0; i < layer_planes.length; i++){
+      appendCoordsSystem(layer_planes[i]);
+    }
+  } else{
+    for (let i = 0; i < layer_planes.length; i++){
+      layer_planes[i].remove(layerCoords[3*i]);
+      layer_planes[i].remove(layerCoords[3*i+1]);
+      layer_planes[i].remove(layerCoords[3*i+2]);
+    }
+    layerCoords = [];
+  }
+  return true;
+}
+
+const setFloorOpacity = (selectedOpacity) => {
+  layerOpacity = selectedOpacity;
+  for (let i = 0; i < layer_planes.length; i++) {
+    layer_planes[i].material.opacity = layerOpacity;
+  }
+  return true;
+}
+
+const showWireFrames = (wireframeFlag) => { // true or false
+  for (let i = 0; i < layer_planes.length; i++) {
+    layer_planes[i].material.wireframe = wireframeFlag;
+  }
+}
+
+const layerColorFilePriority = (message) => {
+  layerColorFromFile = message;
+  for (let i = 0; i < layer_planes.length; i++){
+    if (!layerColorFromFile) layer_planes[i].material.color = new THREE.Color(floorCurrentColor)
+    else layer_planes[i].material.color = new THREE.Color(floorDefaultColors[i]);
+  }
+  updateLayersRShiny();
+  return true;
+}
+
+const selectAllLayers = (message) => {
+  js_selected_layers = [];
+  let c = document.getElementById("checkboxdiv").children;
+  for (let i = 0; i < c.length; i++){
+    if (i%7 === 0){ //(c[i].type == "checkbox"){
+      if (message){
+        c[i].checked = true;
+        js_selected_layers.push(i/7);
+        layer_planes[i/7].material.color = new THREE.Color( "#f7f43e" );
+      } else {
+        c[i].checked = false;
+        if (floorDefaultColors.length > 0 && layerColorFromFile) {
+          layer_planes[i/7].material.color = new THREE.Color(floorDefaultColors[i/7]);
+        } else layer_planes[i/7].material.color = new THREE.Color(floorCurrentColor);
+        layer_labels[i/7].style.display = "none";
+      }
+    }
+  }
+  Shiny.setInputValue("js_selected_layers", js_selected_layers);
+  return true;
+}

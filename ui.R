@@ -27,6 +27,7 @@ ui <- fluidPage(
   tags$head(tags$script(src = "js/object_actions/screen.js")),
   tags$head(tags$script(src = "js/object_actions/network.js")),
   tags$head(tags$script(src = "js/object_actions/themes.js")),
+  tags$head(tags$script(src = "js/object_actions/layout.js")),
   tags$head(tags$script(src = "js/object_actions/labels.js")),
   tags$head(tags$script(src = "js/object_actions/layer.js")),
   tags$head(tags$script(src = "js/object_actions/node.js")),

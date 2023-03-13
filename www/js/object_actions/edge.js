@@ -500,3 +500,150 @@ const assignColor = (checkChannels, i, channels, tag, color, edgeNoChannel) => {
         edgeNoChannel.material.color = new THREE.Color(color);
       }
 }
+
+const edgeAttributes = (message) => {
+  edge_attributes = message;
+  let pos1 = -1,
+      pos2 = -1,
+      pos3 = -1;
+  for (let i = 0; i < edges.length; i++){
+    if (edgeAttributesPriority){
+
+      pos1arr = findIndices(edge_attributes.SourceNode, edge_pairs[i]);
+      pos2arr = findIndices(edge_attributes.TargetNode, edge_pairs[i]);
+      pos1arr != -1 && pos1arr.forEach(pos1 => {
+        if (checkIfAttributeColorExist(edge_attributes, pos1)) {//if node not currently selected and exists in node attributes file and color is assigned
+          if (typeof (edges[i]) == "number") { //edge is inter-layer
+            pos3 = layer_edges_pairs.indexOf(i);
+            if (edge_attributes && edge_attributes.Channel) {
+              assignColor(layer_edges_pairs_channels, pos3, layerEdges[pos3].children, edge_attributes.Channel[pos1], edge_attributes.Color[pos1], layerEdges[pos3]);
+            } else {
+              assignColor(layer_edges_pairs_channels, pos3, layerEdges[pos3].children, [], edge_attributes.Color[pos1], layerEdges[pos3]);
+            }
+            }
+          else {
+            assignColor(edge_channels, i, edges[i].children, edge_attributes.Channel[pos1], edge_attributes.Color[pos1], edges[i]);
+          }
+        }
+      });
+      pos2arr != -1 && pos2arr.forEach(pos2 => {
+      if (checkIfAttributeColorExist(edge_attributes, pos2)) { 
+        if (typeof(edges[i]) == "number"){ //edge is inter-layer
+          pos3 = layer_edges_pairs.indexOf(i);
+          layerEdges[pos3].material.color = new THREE.Color( edge_attributes.Color[pos2] );
+        } else edges[i].material.color = new THREE.Color( edge_attributes.Color[pos2] );
+      }
+      });
+    }
+  }
+  updateEdgesRShiny();
+  return true;
+}
+
+const setLayerEdgeOpacity = (message) => {
+  layerEdgeOpacity = message;
+  redrawEdges(); //because not on animate
+  return true;
+}
+
+const setDirectionArrowSize = (message) => {
+  directionArrowSize = message;
+  redrawEdges(); //because not on animate
+  return true;
+}
+
+const setIntraDirectionArrowSize = (message) => {
+  intraDirectionArrowSize = message;
+  redrawEdges(); //because not on animate
+  return true;
+}
+
+const setInterLayerEdgeOpacity = (message) => {
+  interLayerEdgeOpacity = message;
+  return true;
+}
+
+const redrawEdgeWidthByWeight = (message) => {
+  edgeWidthByWeight = message; //message = true or false
+  redrawEdges();
+  return true;
+}
+
+const edgeFileColorPriority = (message) => {
+  edgeAttributesPriority = message; //message = true or false
+  if (edgeAttributesPriority) document.getElementById('channelColorPicker').style.display = 'none';
+  else document.getElementById('channelColorPicker').style.display = 'block';
+  redrawEdges();
+  return true;
+}
+
+const edgeSelectedColorPriority = (message) => {
+  selectedEdgeColorFlag = message;
+  let pos1 = pos2 = pos3 = "";
+  for (let i=0; i<selected_edges.length; i++){
+    if (selectedEdgeColorFlag){
+      if (typeof (edges[selected_edges[i]]) == "number") {
+        pos3 = layer_edges_pairs.indexOf(selected_edges[i]);
+        assign2Children(layerEdges[pos3], selectedDefaultColor);
+      } else {
+        assign2Children(edges[selected_edges[i]], selectedDefaultColor);
+      }
+    }else if (edge_attributes !== "" && edgeAttributesPriority){ //check if color is overidden by user
+      pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[selected_edges[i]]);
+      pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[selected_edges[i]]);
+      if(checkIfAttributeColorExist(edge_attributes, pos1)){//if node not currently selected and exists in node attributes file and color is assigned
+        if (typeof (edges[selected_edges[i]]) == "number") { //edge is inter-layer
+          pos3 = layer_edges_pairs.indexOf(i);
+           assign2Children(layerEdges[pos3], edge_attributes.Color[pos1]);
+        }
+        else {
+          assign2Children(edges[selected_edges[i]], edge_attributes.Color[pos1]);//edge is intra layer
+        }
+        }
+      else if(checkIfAttributeColorExist(edge_attributes, pos2)){
+        if (typeof (edges[selected_edges[i]]) == "number") { //edge is inter-layer
+          pos3 = layer_edges_pairs.indexOf(i);
+            assign2Children(layerEdges[pos3], edge_attributes.Color[pos2]);
+        } else {
+            assign2Children(edges[selected_edges[i]], edge_attributes.Color[pos2]);
+        }
+      }
+      else{
+        if (typeof (edges[selected_edges[i]]) == "number") {
+          pos3 = layer_edges_pairs.indexOf(i);
+          assign2Children(layerEdges[pos3], edgeDefaultColor, true);
+        } else {
+          assign2Children( edges[selected_edges[i]], edgeDefaultColor,  true);
+        }   
+      }
+    } else{
+      if (typeof (edges[selected_edges[i]]) == "number") {
+        pos3 = layer_edges_pairs.indexOf(i);
+        assign2Children(layerEdges[pos3], edgeDefaultColor, true);
+      } else {
+        assign2Children( edges[selected_edges[i]], edgeDefaultColor, true);
+
+      }
+    } 
+  }
+  return true;
+}
+
+const toggleDirection = (message) => {
+  isDirectionEnabled = message;
+  redrawEdges();
+  return true;
+}
+
+// Channels ====================
+const toggleChannelCurvature = (message) => {
+  channelCurvature = message;
+  redrawEdges();
+  return true;
+}
+
+const interToggleChannelCurvature = (message) => {
+  interChannelCurvature = message;
+  redrawEdges();
+  return true;
+}
