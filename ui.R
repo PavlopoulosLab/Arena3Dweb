@@ -16,25 +16,28 @@ ui <- fluidPage(
   useShinyjs(),
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "arena3dweb.css")),
   tags$head(tags$script(src = "js/three/three.js")),
-  tags$head(tags$script(src = "js/three/matrix4.js")), # three.js matrix4 for dragcontrols
-  tags$head(tags$script(src = "js/three/drag_controls.js")), # three.js dragcontrols
+  tags$head(tags$script(src = "js/three/matrix4.js")), # for dragcontrols
+  tags$head(tags$script(src = "js/three/drag_controls.js")),
   tags$head(tags$script(src = "js/config/global_variables.js")),
   tags$head(tags$script(src = "js/config/static_variables.js")),
   tags$head(tags$script(src = "js/classes/Scene.js")),
   tags$head(tags$script(src = "js/classes/Layer.js")),
   tags$head(tags$script(src = "js/classes/Node.js")),
   tags$head(tags$script(src = "js/classes/Edge.js")),
-  tags$head(tags$script(src = "js/screen.js")),
-  tags$head(tags$script(src = "js/file.js")),
-  tags$head(tags$script(src = "js/update_Rshiny_values.js")),
+  tags$head(tags$script(src = "js/object_actions/screen.js")),
+  tags$head(tags$script(src = "js/object_actions/network.js")),
+  tags$head(tags$script(src = "js/object_actions/themes.js")),
+  tags$head(tags$script(src = "js/object_actions/labels.js")),
+  tags$head(tags$script(src = "js/object_actions/layer.js")),
+  tags$head(tags$script(src = "js/object_actions/node.js")),
+  tags$head(tags$script(src = "js/object_actions/edge.js")),
+  tags$head(tags$script(src = "js/object_actions/canvas_controls.js")),
+  tags$head(tags$script(src = "js/object_actions/right_click_menu.js")),
   tags$head(tags$script(src = "js/rshiny_handlers.js")),
+  tags$head(tags$script(src = "js/rshiny_update.js")),
   tags$head(tags$script(src = "js/general.js")),
-  tags$head(tags$script(src = "js/canvas_controls.js")), # 3d interaction/navigation panel
-  tags$head(tags$script(src = "js/right_click_menu_actions.js")), # right click on node
-  tags$head(tags$script(src = "js/arena3dweb.js")), # TODO remove
-  tags$head(tags$script(src = "js/themes.js")), # theme buttons (light, dark, gray)
-  tags$head(tags$script(src = "js/event_listeners.js")), # window event listeners
-  tags$head(tags$script(src = "js/onPageLoad.js")), # on window load event init
+  tags$head(tags$script(src = "js/event_listeners.js")),
+  tags$head(tags$script(src = "js/on_page_load.js")),
   theme = shinytheme("darkly"),
   navbarPage(
     title = "", id = "navBar", selected = "Home", windowTitle = "Arena3Dweb",
