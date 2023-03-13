@@ -290,7 +290,7 @@ const importNetwork = (jsonNetwork) => {
   drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
   createLabels();
 
-  moveLayers(true);
+  positionLayers(true);
   if (scrambleNodes_flag) scrambleNodes(import_width / 2, -import_width / 2, -import_width / 2.5, import_width / 2.5);
   if (adjustLayerSize_flag) adjustLayerSize();
   toggleDirection(isDirectionEnabled)
@@ -387,7 +387,7 @@ const loadGraph = () => {
   channel_colors = CHANNEL_COLORS_LIGHT;
   createChannelColorMap();
   scrambleNodes();
-  moveLayers();
+  positionLayers();
   drawEdges();
   createLabels();
 
@@ -398,7 +398,6 @@ const loadGraph = () => {
   scene.tiltDefault();
   scene.setScale(0.9); //starting a little zoomed out
 }
-
 
 const executePostNetworkSetup = () => {
     drag_controls = new DragControls(layer_planes, camera, renderer.domElement);

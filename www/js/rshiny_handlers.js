@@ -34,7 +34,6 @@ const browseUrl = url => {
   window.open(url, "_blank");
 };
 
-
 // Scene ====================
 const toggleSceneCoords = (sceneCoordsSwitch) => { // true or false
   if (scene.exists())

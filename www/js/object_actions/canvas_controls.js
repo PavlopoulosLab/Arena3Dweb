@@ -1,537 +1,4 @@
-//drawing and implementation of button controls for node and layer translations and rotations
-const mouseUpClearScene = () => {
-  if (!scene.autoRotate) {
-    clearInterval(scene.intervalTimeout);
-  }
-  return false;
-}
 
-const mouseUpClear = () => {
-  clearInterval(layerIntervalTimeout);
-  clearInterval(nodeIntervalTimeout);
-  return false;
-}
-
-const displayControlTable = () => {
-  t = document.getElementById("info");
-  if (t.style.display == "inline-block") t.style.display = "none";
-  else t.style.display = "inline-block";
-  return true;
-}
-
-const toggleInterLayerEdgesRendering = () => {
-  let interLayerEdgesRenderPauseButton = document.getElementById('interLayerEdgesRenderPauseButton');
-  if (interLayerEdgesRenderPauseFlag) {
-    interLayerEdgesRenderPauseFlag = false;
-    interLayerEdgesRenderPauseButton.innerText = "Stop:Render Inter-Layer Edges";
-  } else {
-    interLayerEdgesRenderPauseFlag = true;
-    interLayerEdgesRenderPauseButton.innerText = "Render Inter-Layer Edges";
-  }
-}
-
-const sliderSceneRotate = () => {
-  let cavnasSlider = document.getElementsByClassName("canvasSlider")[0],
-    td = document.getElementById("sliderValue1");
-  td.innerHTML = "Angle: ".concat(cavnasSlider.value).concat("&#730;");
-}
-
-const rotateSceneXMinus = () => {
-  clearInterval(scene.intervalTimeout);
-    scene.intervalTimeout = setInterval(function() {
-    let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene.rotateX(-THREE.Math.degToRad(value));
-    updateSceneSphereRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
-    return true;
-  }, 70);
-  return true;
-}
-
-const rotateSceneXPlus = () => {
-  clearInterval(scene.intervalTimeout);
-  scene.intervalTimeout = setInterval(function() {
-    let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene.rotateX(THREE.Math.degToRad(value));
-    updateSceneSphereRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
-    return true;
-  }, 70);
-  return true;
-}
-
-const rotateSceneYMinus = () => {
-  clearInterval(scene.intervalTimeout);
-  scene.intervalTimeout = setInterval(function() {
-    let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene.rotateY(-THREE.Math.degToRad(value));
-    updateSceneSphereRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
-    return true;
-  }, 70);
-  return true;
-}
-
-const rotateSceneYPlus = () => {
-  clearInterval(scene.intervalTimeout);
-  scene.intervalTimeout = setInterval(function() {
-    let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene.rotateY(THREE.Math.degToRad(value));
-    updateSceneSphereRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
-    return true;
-  }, 70);
-  return true;
-}
-
-const rotateSceneZMinus = () => {
-  clearInterval(scene.intervalTimeout);
-  scene.intervalTimeout = setInterval(function() {
-    let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene.rotateZ(-THREE.Math.degToRad(value));
-    updateSceneSphereRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
-    return true;
-  }, 70);
-  return true;
-}
-
-const rotateSceneZPlus = () => {
-  clearInterval(scene.intervalTimeout);
-   scene.intervalTimeout = setInterval(function() {
-    let value = document.getElementsByClassName("canvasSlider")[0].value;
-    scene.rotateZ(THREE.Math.degToRad(value));
-    updateSceneSphereRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
-    return true;
-  }, 70);
-  return true;
-}
-
-const recenterNetwork = () => {
-  if (scene.exists()){
-    scene.recenter();
-    updateScenePanRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
-  }
-  return true;
-}
-
-const sliderLayerRotate = () => {
-  let cavnasSlider = document.getElementsByClassName("canvasSlider")[1],
-    td = document.getElementById("sliderValue2");
-  td.innerHTML = "Angle: ".concat(cavnasSlider.value).concat("&#730;");
-}
-
-const rotateLayersXMinus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].rotateX(-THREE.Math.degToRad(value));
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const rotateLayersXPlus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].rotateX(THREE.Math.degToRad(value));
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const rotateLayersYMinus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].rotateY(-THREE.Math.degToRad(value));
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const rotateLayersYPlus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].rotateY(THREE.Math.degToRad(value));
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const rotateLayersZMinus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].rotateZ(-THREE.Math.degToRad(value));
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const rotateLayersZPlus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[1].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].rotateZ(THREE.Math.degToRad(value));
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const sliderLayerTranslate = () => {
-  let cavnasSlider = document.getElementsByClassName("canvasSlider")[2],
-    td = document.getElementById("sliderValue3");
-  td.innerHTML = "Step: ".concat(cavnasSlider.value);
-}
-
-const spreadLayers = () => {
-  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
-      numLayers = layer_planes.length;
-  for (let i = 0; i < numLayers; i++){
-    layer_planes[i].rotation.x = layer_planes[i].rotation.y = layer_planes[i].rotation.z = 0;
-    if (numLayers % 2) layer_planes[i].translateX( (-Math.floor(layer_planes.length/2) + i) * window_width); //odd number of Layers
-    else layer_planes[i].translateX( (-layer_planes.length/2 + i) * window_width + window_width/2); //even number of Layers
-  }
-  updateLayersRShiny();
-  updateNodesRShiny(); // VR node world positions update
-  return true;
-}
-
-const congregateLayers = () => {
-  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
-      numLayers = layer_planes.length;
-  for (let i = 0; i < numLayers; i++){
-    layer_planes[i].rotation.x = layer_planes[i].rotation.y = layer_planes[i].rotation.z = 0;
-    if (numLayers % 2) layer_planes[i].translateX( -((-Math.floor(layer_planes.length/2) + i) * window_width)); //odd number of Layers
-    else layer_planes[i].translateX( -((-layer_planes.length/2 + i) * window_width + window_width/2)); //even number of Layers
-  }
-  updateLayersRShiny();
-  updateNodesRShiny(); // VR node world positions update
-  return true;
-}
-
-const moveLayersXMinus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].translateX(-value);
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const moveLayersXPlus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].translateX(value);
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const moveLayersYMinus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].translateY(-value);
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const moveLayersYPlus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].translateY(value);
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const moveLayersZMinus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].translateZ(-value);
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const moveLayersZPlus = () => {
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    layerIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[2].value;
-      for (let i = 0; i < js_selected_layers.length; i++){
-        layer_planes[js_selected_layers[i]].translateZ(value);
-      }
-      updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const scaleLayers = (canvasSlider) => {
-  let td = document.getElementById("sliderValue4"),
-    cavnasSlider = document.getElementsByClassName("canvasSlider")[3];
-  td.innerHTML = "x".concat(cavnasSlider.value);
-  selectCheckedLayers();
-  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
-  else{
-    for (let i = 0; i < js_selected_layers.length; i++){
-      layer_planes[js_selected_layers[i]].geometry.scale(1, parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]], parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]]);
-      for (let j = 0; j < layer_planes[js_selected_layers[i]].children.length; j++){
-        layer_planes[js_selected_layers[i]].children[j].position.y = layer_planes[js_selected_layers[i]].children[j].position.y * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
-        layer_planes[js_selected_layers[i]].children[j].position.z = layer_planes[js_selected_layers[i]].children[j].position.z * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
-      }
-      last_layer_scale[js_selected_layers[i]] = parseFloat(cavnasSlider.value);
-    }
-    redrawEdges();
-    updateLayersRShiny();
-    updateNodesRShiny();
-  }
-  return true;
-}
-
-const spreadNodes = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    for (let i=0;i<selectedNodePositions.length;i++){
-      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 1.1;
-      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 1.1;
-    }
-    updateNodesRShiny();
-    redrawEdges();
-  }
-  return true;
-}
-
-const congregateNodes = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    for (let i=0;i<selectedNodePositions.length;i++){
-      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 0.9;
-      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 0.9;
-    }
-    updateNodesRShiny();
-    redrawEdges();
-  }
-  return true;
-}
-
-const sliderNodeTranslate = () => {
-  let cavnasSliders = document.getElementsByClassName("canvasSlider")[4];
-  td = document.getElementById("sliderValue5");
-  td.innerHTML = "Step: ".concat(cavnasSliders.value);
-}
-
-const moveNodesXMinus = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    nodeIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selectedNodePositions.length; i++){
-        nodes[selectedNodePositions[i]].translateX(-value);
-      }
-      redrawEdges();
-      updateNodesRShiny();
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const moveNodesXPlus = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    nodeIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selectedNodePositions.length; i++){
-        nodes[selectedNodePositions[i]].translateX(value);
-      }
-      redrawEdges();
-      updateNodesRShiny();
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const moveNodesYMinus = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    nodeIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selectedNodePositions.length; i++){
-        nodes[selectedNodePositions[i]].translateY(-value);
-      }
-      redrawEdges();
-      updateNodesRShiny();
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const moveNodesYPlus = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    nodeIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selectedNodePositions.length; i++){
-        nodes[selectedNodePositions[i]].translateY(value);
-      }
-      redrawEdges();
-      updateNodesRShiny();
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const moveNodesZMinus = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    nodeIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selectedNodePositions.length; i++){
-        nodes[selectedNodePositions[i]].translateZ(-value);
-      }
-      redrawEdges();
-      updateNodesRShiny();
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const moveNodesZPlus = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    nodeIntervalTimeout = setInterval(function() {
-      let value = document.getElementsByClassName("canvasSlider")[4].value;
-      for (let i = 0; i < selectedNodePositions.length; i++){
-        nodes[selectedNodePositions[i]].translateZ(value);
-      }
-      redrawEdges();
-      updateNodesRShiny();
-      return true;
-    }, 70);
-  }
-  return true;
-}
-
-const scaleNodes = () => {
-  let cavnasSlider = document.getElementsByClassName("canvasSlider")[5],
-    td = document.getElementById("sliderValue6");
-  td.innerHTML = "x".concat(cavnasSlider.value);
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    for (let i = 0; i < selectedNodePositions.length; i++) {
-      nodes[selectedNodePositions[i]].scale.x = nodes[selectedNodePositions[i]].scale.y = 
-        nodes[selectedNodePositions[i]].scale.z = parseFloat(cavnasSlider.value);
-    }
-    updateNodesRShiny();
-  }
-  return true;
-}
-
-// main
 const attachCanvasControls = () => { //adding control buttons above the canvas layer
   let info = document.getElementById("info"),
       navDiv = document.getElementById("navDiv"),
@@ -914,58 +381,293 @@ const attachCanvasControls = () => { //adding control buttons above the canvas l
   cavnasSliders[5].oninput = scaleNodes;
   
   let cavnasButtons = document.getElementsByClassName("canvasControls");
-  cavnasButtons[0].onmousedown = rotateSceneXMinus;
+  cavnasButtons[0].addEventListener("mousedown", function() { rotateScene(-1, "X") });
   cavnasButtons[0].onmousemove = cavnasButtons[0].onmouseup = mouseUpClearScene;
-  cavnasButtons[1].onmousedown = rotateSceneXPlus;
+  cavnasButtons[1].addEventListener("mousedown", function() { rotateScene(1, "X") });
   cavnasButtons[1].onmousemove = cavnasButtons[1].onmouseup = mouseUpClearScene;
-  cavnasButtons[2].onmousedown = rotateSceneYMinus;
+  cavnasButtons[2].addEventListener("mousedown", function() { rotateScene(-1, "Y") });
   cavnasButtons[2].onmousemove = cavnasButtons[2].onmouseup = mouseUpClearScene;
-  cavnasButtons[3].onmousedown = rotateSceneYPlus;
+  cavnasButtons[3].addEventListener("mousedown", function() { rotateScene(1, "Y") });
   cavnasButtons[3].onmousemove = cavnasButtons[3].onmouseup = mouseUpClearScene;
-  cavnasButtons[4].onmousedown = rotateSceneZMinus;
+  cavnasButtons[4].addEventListener("mousedown", function() { rotateScene(-1, "Z") });
   cavnasButtons[4].onmousemove = cavnasButtons[4].onmouseup = mouseUpClearScene;
-  cavnasButtons[5].onmousedown = rotateSceneZPlus;
+  cavnasButtons[5].addEventListener("mousedown", function() { rotateScene(1, "Z") });
   cavnasButtons[5].onmousemove = cavnasButtons[5].onmouseup = mouseUpClearScene;
-  cavnasButtons[6].onmousedown = rotateLayersXMinus;
+  cavnasButtons[6].addEventListener("mousedown", function() { rotateSelectedLayers(-1, "X") });
   cavnasButtons[6].onmousemove = cavnasButtons[6].onmouseup = mouseUpClear;
-  cavnasButtons[7].onmousedown = rotateLayersXPlus;
+  cavnasButtons[7].addEventListener("mousedown", function() { rotateSelectedLayers(1, "X") });
   cavnasButtons[7].onmousemove = cavnasButtons[7].onmouseup = mouseUpClear;
-  cavnasButtons[8].onmousedown = rotateLayersYMinus;
+  cavnasButtons[8].addEventListener("mousedown", function() { rotateSelectedLayers(-1, "Y") });
   cavnasButtons[8].onmousemove = cavnasButtons[8].onmouseup = mouseUpClear;
-  cavnasButtons[9].onmousedown = rotateLayersYPlus;
+  cavnasButtons[9].addEventListener("mousedown", function() { rotateSelectedLayers(1, "Y") });
   cavnasButtons[9].onmousemove = cavnasButtons[9].onmouseup = mouseUpClear;
-  cavnasButtons[10].onmousedown = rotateLayersZMinus;
+  cavnasButtons[10].addEventListener("mousedown", function() { rotateSelectedLayers(-1, "Z") });
   cavnasButtons[10].onmousemove = cavnasButtons[10].onmouseup = mouseUpClear;
-  cavnasButtons[11].onmousedown = rotateLayersZPlus;
+  cavnasButtons[11].addEventListener("mousedown", function() { rotateSelectedLayers(1, "Z") });
   cavnasButtons[11].onmousemove = cavnasButtons[11].onmouseup = mouseUpClear;
   cavnasButtons[12].onclick = spreadLayers;
   cavnasButtons[13].onclick = congregateLayers;
-  cavnasButtons[14].onmousedown = moveLayersXMinus;
+  cavnasButtons[14].addEventListener("mousedown", function() { moveLayers(-1, "X") });
   cavnasButtons[14].onmousemove = cavnasButtons[14].onmouseup = mouseUpClear;
-  cavnasButtons[15].onmousedown = moveLayersXPlus;
+  cavnasButtons[15].addEventListener("mousedown", function() { moveLayers(1, "X") });
   cavnasButtons[15].onmousemove = cavnasButtons[15].onmouseup = mouseUpClear;
-  cavnasButtons[16].onmousedown = moveLayersYMinus;
+  cavnasButtons[16].addEventListener("mousedown", function() { moveLayers(-1, "Y") });
   cavnasButtons[16].onmousemove = cavnasButtons[16].onmouseup = mouseUpClear;
-  cavnasButtons[17].onmousedown = moveLayersYPlus;
+  cavnasButtons[17].addEventListener("mousedown", function() { moveLayers(1, "Y") });
   cavnasButtons[17].onmousemove = cavnasButtons[17].onmouseup = mouseUpClear;
-  cavnasButtons[18].onmousedown = moveLayersZMinus;
+  cavnasButtons[18].addEventListener("mousedown", function() { moveLayers(-1, "Z") });
   cavnasButtons[18].onmousemove = cavnasButtons[18].onmouseup = mouseUpClear;
-  cavnasButtons[19].onmousedown = moveLayersZPlus;
+  cavnasButtons[19].addEventListener("mousedown", function() { moveLayers(1, "Z") });
   cavnasButtons[19].onmousemove = cavnasButtons[19].onmouseup = mouseUpClear;
   cavnasButtons[20].onclick = spreadNodes;
   cavnasButtons[21].onclick = congregateNodes;
-  cavnasButtons[22].onmousedown = moveNodesXMinus;
+  cavnasButtons[22].addEventListener("mousedown", function() { moveNodes(-1, "X") });
   cavnasButtons[22].onmousemove = cavnasButtons[22].onmouseup = mouseUpClear;
-  cavnasButtons[23].onmousedown = moveNodesXPlus;
+  cavnasButtons[23].addEventListener("mousedown", function() { moveNodes(1, "X") });
   cavnasButtons[23].onmousemove = cavnasButtons[23].onmouseup = mouseUpClear;
-  cavnasButtons[24].onmousedown = moveNodesYMinus;
+  cavnasButtons[24].addEventListener("mousedown", function() { moveNodes(-1, "Y") });
   cavnasButtons[24].onmousemove = cavnasButtons[24].onmouseup = mouseUpClear;
-  cavnasButtons[25].onmousedown = moveNodesYPlus;
+  cavnasButtons[25].addEventListener("mousedown", function() { moveNodes(1, "Y") });
   cavnasButtons[25].onmousemove = cavnasButtons[25].onmouseup = mouseUpClear;
-  cavnasButtons[26].onmousedown = moveNodesZMinus;
+  cavnasButtons[26].addEventListener("mousedown", function() { moveNodes(-1, "Z") });
   cavnasButtons[26].onmousemove = cavnasButtons[26].onmouseup = mouseUpClear;
-  cavnasButtons[27].onmousedown = moveNodesZPlus;
+  cavnasButtons[27].addEventListener("mousedown", function() { moveNodes(1, "Z") });
   cavnasButtons[27].onmousemove = cavnasButtons[27].onmouseup = mouseUpClear;
   
   canvasControlsAttached = true;
+}
+
+//drawing and implementation of button controls for node and layer translations and rotations
+const mouseUpClearScene = () => {
+  if (!scene.autoRotate) {
+    clearInterval(scene.intervalTimeout);
+  }
+}
+
+const mouseUpClear = () => {
+  clearInterval(layerIntervalTimeout);
+  clearInterval(nodeIntervalTimeout);
+}
+
+const displayControlTable = () => {
+  t = document.getElementById("info");
+  if (t.style.display == "inline-block") t.style.display = "none";
+  else t.style.display = "inline-block";
+}
+
+const toggleInterLayerEdgesRendering = () => {
+  let interLayerEdgesRenderPauseButton = document.getElementById('interLayerEdgesRenderPauseButton');
+  if (interLayerEdgesRenderPauseFlag) {
+    interLayerEdgesRenderPauseFlag = false;
+    interLayerEdgesRenderPauseButton.innerText = "Stop:Render Inter-Layer Edges";
+  } else {
+    interLayerEdgesRenderPauseFlag = true;
+    interLayerEdgesRenderPauseButton.innerText = "Render Inter-Layer Edges";
+  }
+}
+
+const sliderSceneRotate = () => {
+  let cavnasSlider = document.getElementsByClassName("canvasSlider")[0],
+    td = document.getElementById("sliderValue1");
+  td.innerHTML = "Angle: ".concat(cavnasSlider.value).concat("&#730;");
+}
+
+// direction 1 or -1
+const rotateScene = (direction, axis) => {
+  clearInterval(scene.intervalTimeout);
+    scene.intervalTimeout = setInterval(function() {
+    let value = document.getElementsByClassName("canvasSlider")[0].value;
+    value = direction * THREE.Math.degToRad(value);
+    if (axis == "X")
+      scene.rotateX(value);
+    else if (axis == "Y")
+      scene.rotateY(value);
+    else if (axis == "Z")
+      scene.rotateZ(value);
+    updateSceneSphereRShiny();
+    updateLayersRShiny();
+    updateNodesRShiny();
+  }, 70);
+}
+
+const recenterNetwork = () => {
+  if (scene.exists()){
+    scene.recenter();
+    updateScenePanRShiny();
+    updateLayersRShiny();
+    updateNodesRShiny();
+  }
+  return true;
+}
+
+const sliderLayerRotate = () => {
+  let cavnasSlider = document.getElementsByClassName("canvasSlider")[1],
+    td = document.getElementById("sliderValue2");
+  td.innerHTML = "Angle: ".concat(cavnasSlider.value).concat("&#730;");
+}
+
+const rotateSelectedLayers = (direction, axis) => {
+  selectCheckedLayers();
+  if (js_selected_layers.length == 0)
+    alert("Please select at least one layer.");
+  else {
+    layerIntervalTimeout = setInterval(function() {
+      let value = document.getElementsByClassName("canvasSlider")[1].value;
+      value = direction * THREE.Math.degToRad(value);
+      for (let i = 0; i < js_selected_layers.length; i++) {
+        if (axis == "X")
+          layer_planes[js_selected_layers[i]].rotateX(value);
+        else if (axis == "Y")
+          layer_planes[js_selected_layers[i]].rotateY(value);
+        else if (axis == "Z")
+          layer_planes[js_selected_layers[i]].rotateZ(value);
+      }
+      updateLayersRShiny();
+      updateNodesRShiny(); // VR node world positions update
+    }, 70);
+  }
+}
+
+const sliderLayerTranslate = () => {
+  let cavnasSlider = document.getElementsByClassName("canvasSlider")[2],
+    td = document.getElementById("sliderValue3");
+  td.innerHTML = "Step: ".concat(cavnasSlider.value);
+}
+
+const spreadLayers = () => {
+  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
+      numLayers = layer_planes.length;
+  for (let i = 0; i < numLayers; i++){
+    layer_planes[i].rotation.x = layer_planes[i].rotation.y = layer_planes[i].rotation.z = 0;
+    if (numLayers % 2) layer_planes[i].translateX( (-Math.floor(layer_planes.length/2) + i) * window_width); //odd number of Layers
+    else layer_planes[i].translateX( (-layer_planes.length/2 + i) * window_width + window_width/2); //even number of Layers
+  }
+  updateLayersRShiny();
+  updateNodesRShiny(); // VR node world positions update
+  return true;
+}
+
+const congregateLayers = () => {
+  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
+      numLayers = layer_planes.length;
+  for (let i = 0; i < numLayers; i++){
+    layer_planes[i].rotation.x = layer_planes[i].rotation.y = layer_planes[i].rotation.z = 0;
+    if (numLayers % 2) layer_planes[i].translateX( -((-Math.floor(layer_planes.length/2) + i) * window_width)); //odd number of Layers
+    else layer_planes[i].translateX( -((-layer_planes.length/2 + i) * window_width + window_width/2)); //even number of Layers
+  }
+  updateLayersRShiny();
+  updateNodesRShiny(); // VR node world positions update
+  return true;
+}
+
+const moveLayers = (direction, axis) => {
+  selectCheckedLayers();
+  if (js_selected_layers.length == 0)
+    alert("Please select at least one layer.");
+  else {
+    layerIntervalTimeout = setInterval(function() {
+      let value = document.getElementsByClassName("canvasSlider")[2].value;
+      value = direction * value;
+      for (let i = 0; i < js_selected_layers.length; i++) {
+        if (axis == "X")
+          layer_planes[js_selected_layers[i]].translateX(value);
+        else if (axis == "Y")
+          layer_planes[js_selected_layers[i]].translateY(value);
+        else if (axis == "Z")
+          layer_planes[js_selected_layers[i]].translateZ(value);
+      }
+      updateLayersRShiny();
+      updateNodesRShiny(); // VR node world positions update
+    }, 70);
+  }
+}
+
+const scaleLayers = (canvasSlider) => {
+  let td = document.getElementById("sliderValue4"),
+    cavnasSlider = document.getElementsByClassName("canvasSlider")[3];
+  td.innerHTML = "x".concat(cavnasSlider.value);
+  selectCheckedLayers();
+  if (js_selected_layers.length == 0) alert("Please select at least one layer.");
+  else{
+    for (let i = 0; i < js_selected_layers.length; i++){
+      layer_planes[js_selected_layers[i]].geometry.scale(1, parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]], parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]]);
+      for (let j = 0; j < layer_planes[js_selected_layers[i]].children.length; j++){
+        layer_planes[js_selected_layers[i]].children[j].position.y = layer_planes[js_selected_layers[i]].children[j].position.y * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
+        layer_planes[js_selected_layers[i]].children[j].position.z = layer_planes[js_selected_layers[i]].children[j].position.z * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
+      }
+      last_layer_scale[js_selected_layers[i]] = parseFloat(cavnasSlider.value);
+    }
+    redrawEdges();
+    updateLayersRShiny();
+    updateNodesRShiny();
+  }
+  return true;
+}
+
+const spreadNodes = () => {
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
+  else{
+    for (let i=0;i<selectedNodePositions.length;i++){
+      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 1.1;
+      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 1.1;
+    }
+    updateNodesRShiny();
+    redrawEdges();
+  }
+  return true;
+}
+
+const congregateNodes = () => {
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
+  else{
+    for (let i=0;i<selectedNodePositions.length;i++){
+      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 0.9;
+      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 0.9;
+    }
+    updateNodesRShiny();
+    redrawEdges();
+  }
+  return true;
+}
+
+const sliderNodeTranslate = () => {
+  let cavnasSliders = document.getElementsByClassName("canvasSlider")[4];
+  td = document.getElementById("sliderValue5");
+  td.innerHTML = "Step: ".concat(cavnasSliders.value);
+}
+
+const moveNodes = (direction, axis) => {
+  if (selectedNodePositions.length == 0)
+    alert("Please select at least one node.");
+  else {
+    nodeIntervalTimeout = setInterval(function() {
+      let value = document.getElementsByClassName("canvasSlider")[4].value;
+      value = direction * value;
+      for (let i = 0; i < selectedNodePositions.length; i++){
+        if (axis == "X")
+          nodes[selectedNodePositions[i]].translateX(value);
+        else if (axis == "Y")
+          nodes[selectedNodePositions[i]].translateY(value);
+        else if (axis == "Z")
+          nodes[selectedNodePositions[i]].translateZ(value);
+      }
+      redrawEdges();
+      updateNodesRShiny();
+    }, 70);
+  }
+}
+
+const scaleNodes = () => {
+  let cavnasSlider = document.getElementsByClassName("canvasSlider")[5],
+    td = document.getElementById("sliderValue6");
+  td.innerHTML = "x".concat(cavnasSlider.value);
+  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
+  else{
+    for (let i = 0; i < selectedNodePositions.length; i++) {
+      nodes[selectedNodePositions[i]].scale.x = nodes[selectedNodePositions[i]].scale.y = 
+        nodes[selectedNodePositions[i]].scale.z = parseFloat(cavnasSlider.value);
+    }
+    updateNodesRShiny();
+  }
+  return true;
 }

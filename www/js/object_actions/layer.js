@@ -151,7 +151,7 @@ const attachLayerCheckboxes = () => { //insert #groups Checkboxes
   return true;
 }
 
-const moveLayers = (checkMoveFlag) => {
+const positionLayers = (checkMoveFlag) => {
   let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
     numLayers = layer_planes.length;
   for (let i = 0; i < numLayers; i++){

@@ -106,10 +106,10 @@ const applyPredefinedLayout = (message) => {
           for (let i = 1; i < numLayers; i+=2){
             layer_planes[i].translateY(500);
           }
-          moveLayers();
+          positionLayers();
           break;
         case "parallel":
-         moveLayers();
+         positionLayers();
           break;
         case "cube":
           let cube_size = 6;
