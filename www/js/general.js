@@ -11,7 +11,7 @@ const getAllIndexes = (arr, val) => {
   return indexes;
 }
 
-const findIndices = (array, el) => {
+const findIndices = (array, el) => { // TODO remove one
   let indices = [];
   let idx = array.indexOf(el);
   while (idx != -1) {

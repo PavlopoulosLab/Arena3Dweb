@@ -34,7 +34,7 @@ ui <- fluidPage(
   tags$head(tags$script(src = "js/arena3dweb.js")), # TODO remove
   tags$head(tags$script(src = "js/themes.js")), # theme buttons (light, dark, gray)
   tags$head(tags$script(src = "js/event_listeners.js")), # window event listeners
-  tags$head(tags$script(src = "js/main.js")), # on window load event init
+  tags$head(tags$script(src = "js/onPageLoad.js")), # on window load event init
   theme = shinytheme("darkly"),
   navbarPage(
     title = "", id = "navBar", selected = "Home", windowTitle = "Arena3Dweb",

@@ -268,7 +268,7 @@ input[type="checkbox"] {
 }
 
 .image_minusX {
-  background-image: url(images/minusX.png);
+  background-image: url(images/canvas_control/minusX.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -276,15 +276,15 @@ input[type="checkbox"] {
 }
 
 .image_minusX:hover {
-  background-image: url(images/minusX_hover.png);
+  background-image: url(images/canvas_control/minusX_hover.png);
 }
 
 .image_minusX:active {
-  background-image: url(images/minusX_active.png);
+  background-image: url(images/canvas_control/minusX_active.png);
 }
 
 .image_plusX {
-  background-image: url(images/plusX.png);
+  background-image: url(images/canvas_control/plusX.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -292,15 +292,15 @@ input[type="checkbox"] {
 }
 
 .image_plusX:hover {
-  background-image: url(images/plusX_hover.png);
+  background-image: url(images/canvas_control/plusX_hover.png);
 }
 
 .image_plusX:active {
-  background-image: url(images/plusX_active.png);
+  background-image: url(images/canvas_control/plusX_active.png);
 }
 
 .image_minusY {
-  background-image: url(images/minusY.png);
+  background-image: url(images/canvas_control/minusY.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -308,15 +308,15 @@ input[type="checkbox"] {
 }
 
 .image_minusY:hover {
-  background-image: url(images/minusY_hover.png);
+  background-image: url(images/canvas_control/minusY_hover.png);
 }
 
 .image_minusY:active {
-  background-image: url(images/minusY_active.png);
+  background-image: url(images/canvas_control/minusY_active.png);
 }
 
 .image_plusY {
-  background-image: url(images/plusY.png);
+  background-image: url(images/canvas_control/plusY.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -324,15 +324,15 @@ input[type="checkbox"] {
 }
 
 .image_plusY:hover {
-  background-image: url(images/plusY_hover.png);
+  background-image: url(images/canvas_control/plusY_hover.png);
 }
 
 .image_plusY:active {
-  background-image: url(images/plusY_active.png);
+  background-image: url(images/canvas_control/plusY_active.png);
 }
 
 .image_minusZ {
-  background-image: url(images/minusZ.png);
+  background-image: url(images/canvas_control/minusZ.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -340,15 +340,15 @@ input[type="checkbox"] {
 }
 
 .image_minusZ:hover {
-  background-image: url(images/minusZ_hover.png);
+  background-image: url(images/canvas_control/minusZ_hover.png);
 }
 
 .image_minusZ:active {
-  background-image: url(images/minusZ_active.png);
+  background-image: url(images/canvas_control/minusZ_active.png);
 }
 
 .image_plusZ {
-  background-image: url(images/plusZ.png);
+  background-image: url(images/canvas_control/plusZ.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -356,15 +356,15 @@ input[type="checkbox"] {
 }
 
 .image_plusZ:hover {
-  background-image: url(images/plusZ_hover.png);
+  background-image: url(images/canvas_control/plusZ_hover.png);
 }
 
 .image_plusZ:active {
-  background-image: url(images/plusZ_active.png);
+  background-image: url(images/canvas_control/plusZ_active.png);
 }
 
 .image_minusX_T {
-  background-image: url(images/minusX_t.png);
+  background-image: url(images/canvas_control/minusX_t.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -372,15 +372,15 @@ input[type="checkbox"] {
 }
 
 .image_minusX_T:hover {
-  background-image: url(images/minusX_hover_t.png);
+  background-image: url(images/canvas_control/minusX_hover_t.png);
 }
 
 .image_minusX_T:active {
-  background-image: url(images/minusX_active_t.png);
+  background-image: url(images/canvas_control/minusX_active_t.png);
 }
 
 .image_plusX_T {
-  background-image: url(images/plusX_t.png);
+  background-image: url(images/canvas_control/plusX_t.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -388,15 +388,15 @@ input[type="checkbox"] {
 }
 
 .image_plusX_T:hover {
-  background-image: url(images/plusX_hover_t.png);
+  background-image: url(images/canvas_control/plusX_hover_t.png);
 }
 
 .image_plusX_T:active {
-  background-image: url(images/plusX_active_t.png);
+  background-image: url(images/canvas_control/plusX_active_t.png);
 }
 
 .image_minusY_T {
-  background-image: url(images/minusY_t.png);
+  background-image: url(images/canvas_control/minusY_t.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -404,15 +404,15 @@ input[type="checkbox"] {
 }
 
 .image_minusY_T:hover {
-  background-image: url(images/minusY_hover_t.png);
+  background-image: url(images/canvas_control/minusY_hover_t.png);
 }
 
 .image_minusY_T:active {
-  background-image: url(images/minusY_active_t.png);
+  background-image: url(images/canvas_control/minusY_active_t.png);
 }
 
 .image_plusY_T {
-  background-image: url(images/plusY_t.png);
+  background-image: url(images/canvas_control/plusY_t.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -420,15 +420,15 @@ input[type="checkbox"] {
 }
 
 .image_plusY_T:hover {
-  background-image: url(images/plusY_hover_t.png);
+  background-image: url(images/canvas_control/plusY_hover_t.png);
 }
 
 .image_plusY_T:active {
-  background-image: url(images/plusY_active_t.png);
+  background-image: url(images/canvas_control/plusY_active_t.png);
 }
 
 .image_minusZ_T {
-  background-image: url(images/minusZ_t.png);
+  background-image: url(images/canvas_control/minusZ_t.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -436,15 +436,15 @@ input[type="checkbox"] {
 }
 
 .image_minusZ_T:hover {
-  background-image: url(images/minusZ_hover_t.png);
+  background-image: url(images/canvas_control/minusZ_hover_t.png);
 }
 
 .image_minusZ_T:active {
-  background-image: url(images/minusZ_active_t.png);
+  background-image: url(images/canvas_control/minusZ_active_t.png);
 }
 
 .image_plusZ_T {
-  background-image: url(images/plusZ_t.png);
+  background-image: url(images/canvas_control/plusZ_t.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 40px;
@@ -452,15 +452,15 @@ input[type="checkbox"] {
 }
 
 .image_plusZ_T:hover {
-  background-image: url(images/plusZ_hover_t.png);
+  background-image: url(images/canvas_control/plusZ_hover_t.png);
 }
 
 .image_plusZ_T:active {
-  background-image: url(images/plusZ_active_t.png);
+  background-image: url(images/canvas_control/plusZ_active_t.png);
 }
 
 .image_expandLayers {
-  background-image: url(images/expandLayers.png);
+  background-image: url(images/canvas_control/expandLayers.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 50%;
@@ -468,15 +468,15 @@ input[type="checkbox"] {
 }
 
 .image_expandLayers:hover {
-  background-image: url(images/expandLayers_hover.png);
+  background-image: url(images/canvas_control/expandLayers_hover.png);
 }
 
 .image_expandLayers:active {
-  background-image: url(images/expandLayers_active.png);
+  background-image: url(images/canvas_control/expandLayers_active.png);
 }
 
 .image_collapseLayers {
-  background-image: url(images/collapseLayers.png);
+  background-image: url(images/canvas_control/collapseLayers.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 50%;
@@ -484,15 +484,15 @@ input[type="checkbox"] {
 }
 
 .image_collapseLayers:hover {
-  background-image: url(images/collapseLayers_hover.png);
+  background-image: url(images/canvas_control/collapseLayers_hover.png);
 }
 
 .image_collapseLayers:active {
-  background-image: url(images/collapseLayers_active.png);
+  background-image: url(images/canvas_control/collapseLayers_active.png);
 }
 
 .image_nodeExpand {
-  background-image: url(images/expandNodes.png);
+  background-image: url(images/canvas_control/expandNodes.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 50%;
@@ -500,15 +500,15 @@ input[type="checkbox"] {
 }
 
 .image_nodeExpand:hover {
-  background-image: url(images/expandNodes_hover.png);
+  background-image: url(images/canvas_control/expandNodes_hover.png);
 }
 
 .image_nodeExpand:active {
-  background-image: url(images/expandNodes_active.png);
+  background-image: url(images/canvas_control/expandNodes_active.png);
 }
 
 .image_nodeCollapse {
-  background-image: url(images/collapseNodes.png);
+  background-image: url(images/canvas_control/collapseNodes.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 50%;
@@ -516,11 +516,11 @@ input[type="checkbox"] {
 }
 
 .image_nodeCollapse:hover {
-  background-image: url(images/collapseNodes_hover.png);
+  background-image: url(images/canvas_control/collapseNodes_hover.png);
 }
 
 .image_nodeCollapse:active {
-  background-image: url(images/collapseNodes_active.png);
+  background-image: url(images/canvas_control/collapseNodes_active.png);
 }
 
 .hideButton {
@@ -651,7 +651,7 @@ input[type="checkbox"] {
 }
 
 #image_td {
-  background-image: url(images/coordsColors_transparent.png);
+  background-image: url(images/canvas_control/coordsColors_transparent.png);
   background-repeat: no-repeat;
   background-position: center;
   width: 90px;
