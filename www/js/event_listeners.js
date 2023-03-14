@@ -6,43 +6,44 @@ const sceneZoom = (event) => {
     updateLayersRShiny();
     updateNodesRShiny();
   }
-  return true;
-}
+};
 
-// on arrow keys press or axis select ot rotate layers
+// on arrow keys press or axis select to rotate layers
 const keyPressed = (event) => {
   if (scene.exists()) {
     let code = event.keyCode;
-    if (code == 90) scene.axisPressed = 'z';
-    if (code == 88) scene.axisPressed = 'x';
-    if (code == 67) scene.axisPressed = 'c';
-    if (code == 37 || code == 38 || code == 39 || code == 40)
+    if (code == 90)
+      scene.axisPressed = 'z';
+    else if (code == 88)
+      scene.axisPressed = 'x';
+    else if (code == 67)
+      scene.axisPressed = 'c';
+    else if (code == 37 || code == 38 || code == 39 || code == 40)
       scene.translatePanWithArrow(code);
       updateScenePanRShiny();
       updateLayersRShiny();
       updateNodesRShiny();
   }
-}
+};
 
-const axisRelease = (event) => {
+const axisRelease = () => {
   if (scene.exists()) {
     scene.axisPressed = "";
   }
-  return true;
-}
+};
 
 // mouse keys press event
 const clickDown = (event) => {
   if (scene.exists()) {
-    //console.log(event); //mouse: 0 left, 1 middle, 2 right click
-    if (event.button == 0){
+    //mouse: 0 left, 1 middle, 2 right click
+    if (event.button == 0) {
       scene.leftClickPressed = true;
       scene.middleClickPressed = false;
-      if (event.shiftKey && shiftX == ""){
+      if (event.shiftKey && shiftX == "") {
         shiftX = event.layerX - xBoundMax;
-        shiftY = yBoundMax - event.layerY; //then implementing drag
+        shiftY = yBoundMax - event.layerY; // used in drag
       }
-    } else if (event.button == 1){
+    } else if (event.button == 1) {
       scene.middleClickPressed = true;
       scene.leftClickPressed = false;
     } else {
@@ -50,14 +51,12 @@ const clickDown = (event) => {
       scene.leftClickPressed = false;
     }
   }
-  return true;
-}
+};
 
 // while mouse button held, drag event
 const clickDrag = (event) => {
   if (scene.exists()) {
-    let distance = Math.sqrt(Math.pow(mousePreviousX-event.screenX, 2) + Math.pow(mousePreviousY-event.screenY, 2)),
-      node_hover_flag = false;
+    let distance = Math.sqrt(Math.pow(mousePreviousX-event.screenX, 2) + Math.pow(mousePreviousY-event.screenY, 2));
 
     if (distance > 10) {
       let x = event.screenX,
@@ -72,7 +71,7 @@ const clickDrag = (event) => {
         else if (scene.axisPressed !== "")
           rotateLayers(event);
         else if (last_hovered_layer_index === "" && last_hovered_node_index === "")
-          sceneDragPan(x, y); // && !event.ctrlKey
+          sceneDragPan(x, y);
       } else if (scene.middleClickPressed) {
         scene.dragging = true;
         event.preventDefault();
@@ -87,41 +86,41 @@ const clickDrag = (event) => {
       checkHoverOverLayer(event, node_hover_flag);
     }
   }
-  return true;
-}
+};
 
-// left-click drag
+// left-click drag on scene
 const sceneDragPan = (x, y) => {
   scene.translatePanWithMouse(x, y);
   updateScenePanRShiny();
   updateLayersRShiny();
   updateNodesRShiny();
-}
+};
 
-// middle-click drag
+// middle-click drag on scene
 const sceneOrbit = (x, y) => {
   scene.orbitSphereWithMouse(x, y);    
   updateSceneSphereRShiny();
   updateLayersRShiny();
   updateNodesRShiny();
-}
+};
 
 const clickUp = (event) => {
   if (scene.exists()) {
     scene.dragging = false;
-    if (event.button == 0){
+    if (event.button == 0) {
       scene.leftClickPressed = false;
       if (optionsList != "") {
         document.getElementById("labelDiv").removeChild(optionsList);
         optionsList = "";
       }
-      if (lasso != 0) {
-        for (let i = 0; i < nodes.length; i++){
-          if (nodes[i].material.opacity == 0.5){
+      if (lasso != "") {
+        for (let i = 0; i < nodes.length; i++) {
+          if (nodes[i].material.opacity == 0.5) {
             nodes[i].material.opacity = 1;
             if (!exists(selectedNodePositions, i)){
               selectedNodePositions.push(i);
-              if (selectedNodeColorFlag) nodes[i].material.color = new THREE.Color( selectedDefaultColor );
+              if (selectedNodeColorFlag)
+                nodes[i].material.color = new THREE.Color(selectedDefaultColor);
             }
           }
         }
@@ -132,20 +131,19 @@ const clickUp = (event) => {
       shiftY = "";
       scene.remove(lasso);
       lasso = "";
-    } else if (event.button == 1){
+    } else if (event.button == 1) {
       scene.middleClickPressed = false;
     }
   }
-  return true;
-}
+};
 
-const mouseOut = (event) => {
-  if (scene.exists()) {
-    scene.dragging = false;
-    scene.leftClickPressed = false;
-    scene.middleClickPressed = false;
-  }
-}
+// const mouseOut = (event) => { // breaks lasso while hovering over labels
+//   if (scene.exists()) {
+//     scene.dragging = false;
+//     scene.leftClickPressed = false;
+//     scene.middleClickPressed = false;
+//   }
+// };
 
 // double click event (left mouse), uncheck nodes
 const dblClick = (event) => {
@@ -202,8 +200,7 @@ const dblClick = (event) => {
         }
       }
   }
-  return true;
-}
+};
 
 // right mouse click on node
 const replaceContextMenuOverNode = (evt) => { 
@@ -266,5 +263,4 @@ const replaceContextMenuOverNode = (evt) => {
       break;
     }
   }
-  return true;
-}
+};
