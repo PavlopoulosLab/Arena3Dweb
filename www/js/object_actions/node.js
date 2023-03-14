@@ -261,3 +261,46 @@ const scaleNodes = () => {
     updateNodesRShiny();
   }
 }
+
+// on node searchbar key-press
+const selectSearchedNodes = (event) => {
+  if (scene.exists()) {
+    var key = window.event.keyCode;
+    // If the user has pressed enter
+    if (key === 13) {
+      event.preventDefault(); //bypassing newline enter
+      startLoader(true);
+      var searchString = document.getElementById("searchBar").value.replace(/\n/g, ""),
+          tempIndexes, i, j;
+      searchString = searchString.split(",");
+      for (i=0; i<searchString.length; i++){
+        tempIndexes = getAllIndexes(node_names, searchString[i].trim()) //case insensitive function
+        if (tempIndexes.length > 0){
+          for (j=0; j < tempIndexes.length; j++){
+            if (!exists(selectedNodePositions, tempIndexes[j])){
+              selectedNodePositions.push(tempIndexes[j]);
+              if (selectedNodeColorFlag) nodes[tempIndexes[j]].material.color = new THREE.Color( selectedDefaultColor );
+            }
+          }
+        }
+      }
+      decideNodeLabelFlags();
+      updateSelectedNodesRShiny();
+      finishLoader(true);
+    }
+  }
+}
+
+const createNodeDescriptionDiv = () => {
+    let descrDiv = document.getElementById("descrDiv"),
+        btn = document.createElement("button");
+    btn.id = "closeButton";
+    btn.innerHTML = "X";
+    btn.onclick = function() {
+        descrDiv.style.display = "none";
+    };
+    let p = document.createElement('p');
+    p.className = "descrDiv_paragraph";
+    descrDiv.appendChild(btn);
+    descrDiv.appendChild(p);
+};
