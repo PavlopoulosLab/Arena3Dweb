@@ -40,7 +40,8 @@ const setLabelColorVariable = (label_color) => {
   return true;
 }
 
-const showAllLayerLabels = (showAllLayerLabelsFlag) => { // true or false
+const showAllLayerLabels = (flag) => { // true or false
+  showAllLayerLabelsFlag = flag;
   if (!showAllLayerLabelsFlag) {
     //for (let i = 0; i < layer_names.length; i++) {
     for (let i = 0; i < layers.length; i++)

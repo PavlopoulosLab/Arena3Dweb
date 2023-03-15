@@ -73,7 +73,7 @@ let nodes = [], //canvas objects
     layer_labels = [], //divs
     layer_groups = new Map(),
     last_hovered_layer_index = "",
-
+    
     // layerCoords = [], // TODO this.coordSystem
     // layer_names = [], // TODO let layer_names = layers.map(({ name }) => name);
     // layer_node_labels_flags = [], // TODO this.showNodeLabels
