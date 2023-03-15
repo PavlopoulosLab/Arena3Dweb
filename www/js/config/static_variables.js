@@ -17,10 +17,10 @@ let layerDragControls = "",
     showAllLayerLabelsFlag = true,
     showSelectedLayerLabelsFlag = false,
     layerColorFromFile = true,
-    layerOpacity = 0.6,
     floorDefaultColors = [], // TODO per class object element
     floorCurrentColor = LAYER_DEFAULT_COLOR,
-    layerIntervalTimeout = "";
+    layerIntervalTimeout = "",
+    hoveredLayerPaintedFlag = false; // for correct hover coloring
     //defaultLayerColor, importedLayerColor, pickerLayerColor, themeLayerColor
 
 // nodes
@@ -70,17 +70,13 @@ let nodes = [], //canvas objects
     edge_channels = [],
     node_groups = new Map(),
 
+    //===
     layer_labels = [], //divs
     layer_groups = new Map(),
     last_hovered_layer_index = "",
-
-    layerCoords = [], // TODO this.coordSystem
-    layer_names = [], // TODO let layer_names = layers.map(({ name }) => name)
-    layer_node_labels_flags = [], // TODO this.showNodeLabels
-    layer_planes = [], // TODO let layer_planes = layers.map(({ plane }) => plane)
-    layer_spheres = [],
-    last_layer_scale = [], // TODO this.last_layer_scale
-    js_selected_layers = [], // TODO check if swithcing with this.isSelected
+    
+    //js_selected_layers = [], // TODO check if swithcing with this.isSelected
+    //===
 
     selectedNodePositions = [],
     selected_edges = [],

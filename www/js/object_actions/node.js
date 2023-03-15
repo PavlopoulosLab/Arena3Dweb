@@ -133,7 +133,7 @@ const decideNodeLabelFlags = () => {
       node_label_flags[i] = false;
     } else if (showAllNodeLabelsFlag){ //2. if showing all node labels
       node_label_flags[i] = true;
-    } else if (layer_node_labels_flags[node_layer]){ //3. if showing layer node labels
+    } else if (layers[node_layer].showNodeLabels) { //3. if showing layer node labels
       node_label_flags[i] = true;
     } else if (showSelectedNodeLabelsFlag && exists(selectedNodePositions, i)){ //4. if showing selected node labels, and node is selected
       node_label_flags[i] = true;
@@ -274,7 +274,7 @@ const selectSearchedNodes = (event) => {
           tempIndexes, i, j;
       searchString = searchString.split(",");
       for (i=0; i<searchString.length; i++){
-        tempIndexes = getAllIndexes(node_names, searchString[i].trim()) //case insensitive function
+        tempIndexes = getCaseInsensitiveIndices(node_names, searchString[i].trim()) //case insensitive function
         if (tempIndexes.length > 0){
           for (j=0; j < tempIndexes.length; j++){
             if (!exists(selectedNodePositions, tempIndexes[j])){

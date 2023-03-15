@@ -2,16 +2,16 @@ const exists = (arr, el) => {
   return(arr.some(l => l == el));
 }
 
-const getAllIndexes = (arr, val) => {
+const getCaseInsensitiveIndices = (arr, val) => {
   var indexes = [], i;
   val = val.toLowerCase(); //case insensitive
-  for(i = 0; i < arr.length; i++)
+  for (i = 0; i < arr.length; i++)
     if (arr[i].toLowerCase() === val)
       indexes.push(i);
   return indexes;
 }
 
-const findIndices = (array, el) => { // TODO remove one
+const findIndices = (array, el) => {
   let indices = [];
   let idx = array.indexOf(el);
   while (idx != -1) {

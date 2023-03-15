@@ -14,6 +14,7 @@ class Layer {
 
       this.showNodeLabels = false;
       this.isSelected = false; // TODO check if this over js_selected_layers
+      this.isVisible = true; // TODO check if use to not render hidden layers in loops
       this.coordSystem = ["", "", ""];
       this.color = floor_current_color;
 
@@ -25,9 +26,6 @@ class Layer {
 
       this.addSphere(geometry_parameters_width, last_layer_scale);
       this.initRotateSphere(rotation_x, rotation_y, rotation_z);
-      
-      // updateLayerNamesRShiny
-      // updateLayersRShiny
   }
 
   createPlane(width) {
@@ -38,7 +36,7 @@ class Layer {
       alphaTest: 0.05,
       wireframe: false,
       transparent: true,
-      opacity: layerOpacity,
+      opacity: 0.6,
       side: THREE.DoubleSide,
     });
     this.plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -48,6 +46,7 @@ class Layer {
     this.coordSystem[0] = this.appendLine(150, 0, 0, "#FB3D2A") // red
     this.coordSystem[1] = this.appendLine(0, 150, 0, "#46FB2A") // green
     this.coordSystem[2] = this.appendLine(0, 0, 150, "#2AC2FB") // blue
+    this.toggleCoords(false);
   }
   
   appendLine(x, y, z, color) {
@@ -105,6 +104,18 @@ class Layer {
     this.setRotation("z", z);
   }
 
+  toggleSelection() {
+    this.isSelected = !this.isSelected;
+  }
+
+  toggleVisibility(flag) {
+    this.plane.visible = flag;
+  }
+
+  toggleWireframe(flag) {
+    this.plane.material.wireframe = flag;
+  }
+
   // transformations
   translateX(x) {
     this.plane.translateX(x);
@@ -119,18 +130,22 @@ class Layer {
   }
 
   rotateX(x) {
-    this.sphere.rotateX(x);
+    this.plane.rotateX(x);
   }
   
   rotateY(y) {
-    this.sphere.rotateY(y);
+    this.plane.rotateY(y);
   }
   
   rotateZ(z) {
-    this.sphere.rotateZ(z);
+    this.plane.rotateZ(z);
   }
 
   // setters and getters
+  getName() {
+    return(this.name);
+  }
+
   setPosition(axis, value) {
     this.plane.position[axis] = value;
   }
@@ -140,16 +155,21 @@ class Layer {
   }
   
   setRotation(axis, value) {
-    this.sphere.rotation[axis] = value;
+    this.plane.rotation[axis] = value;
   }
   
   getRotation(axis) {
-    return(this.sphere.rotation[axis]);
+    return(this.plane.rotation[axis]);
   }
   
+  getWidth() {
+    return(this.geometry_parameters_width);
+  }
+
   setScale(value) {
-    this.last_layer_scale = value;
-    this.plane.geometry.scale(1, value, value);
+    let newScaleValue = parseFloat(value) / this.getScale();
+    this.plane.geometry.scale(1, newScaleValue, newScaleValue);
+    this.last_layer_scale = parseFloat(value);
   }
 
   getScale() {
@@ -163,5 +183,9 @@ class Layer {
 
   getColor() {
     return(this.color);
+  }
+
+  setOpacity(value) {
+    this.plane.material.opacity = value;
   }
 }

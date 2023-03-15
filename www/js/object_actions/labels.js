@@ -8,21 +8,21 @@ const createLabels = () => {
     document.getElementById("labelDiv").appendChild(div);
     node_labels.push(div);
     node_labels[i].style.fontSize = nodeLabelDefaultSize;
-    node_labels[i].style.display = "none"; //hiding labels on creation
+    node_labels[i].style.display = "none";
     node_labels[i].style.color = globalLabelColor;
   }
   //layers
-  for (i = 0; i < layer_names.length; i++){
-    let div = document.createElement('div');
-    div.textContent = layer_names[i];
+  for (i = 0; i < layers.length; i++) {
+    let div = document.createElement('div'),
+      name = layers[i].getName();
+    div.textContent = name;
     div.setAttribute('class', 'layer-labels');
-    div.setAttribute('id', layer_names[i].concat("_label"));
+    div.setAttribute('id', name.concat("_label"));
     document.getElementById("labelDiv").appendChild(div);
     layer_labels.push(div);
-    layer_labels[i].style.display = "inline-block"; //hiding labels on creation
+    layer_labels[i].style.display = "inline-block";
     layer_labels[i].style.color = globalLabelColor;
   }
-  return true;
 }
 
 const setLabelColor = () =>{
@@ -39,11 +39,10 @@ const setLabelColorVariable = (label_color) => {
 const showAllLayerLabels = (flag) => { // true or false
   showAllLayerLabelsFlag = flag;
   if (!showAllLayerLabelsFlag) {
-    for (let i = 0; i < layer_planes.length; i++) {
+    for (let i = 0; i < layers.length; i++)
       layer_labels[i].style.display = "none";
-    }
   }
-}
+};
 
 const showSelectedLayerLabels = (flag) => { // true or false
   showSelectedLayerLabelsFlag = flag;
@@ -54,13 +53,10 @@ const showSelectedLayerLabels = (flag) => { // true or false
   }
 }
 
-const resizeLayerLabels = (message) => {
-  let size = message; //message = [1, 20]
-  for (i = 0; i < layer_planes.length; i++){
+const resizeLayerLabels = (size) => { // [1, 20]
+  for (i = 0; i < layers.length; i++)
     layer_labels[i].style.fontSize = size.toString().concat("px");
-  }
-  return true;
-}
+};
 
 const showAllNodeLabels = (flag) => { // true or false
   showAllNodeLabelsFlag = flag;
