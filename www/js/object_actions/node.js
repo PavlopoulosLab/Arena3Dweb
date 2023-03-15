@@ -3,7 +3,7 @@ const scrambleNodes = (yMin, yMax, zMin, zMax) => {
   !yMax && (yMax = yBoundMax)
   !zMin && (zMin = zBoundMin)
   !zMax && (zMax = zBoundMax)
-  for (let i = 0; i < nodes.length; i++){ //random y,z
+  for (let i = 0; i < nodes.length; i++) { //random y,z
     nodes[i].translateY(getRandomArbitrary(yMin, yMax));
     nodes[i].translateZ(getRandomArbitrary(zMin, zMax));
   }

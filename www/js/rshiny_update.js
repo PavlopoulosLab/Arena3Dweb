@@ -38,7 +38,7 @@ const updateLayersRShiny = () => {
     } else 
       layerColor = tempColor;
     temp_js_layers = [layers[i].getName(), layers[i].getPosition("x"), layers[i].getPosition("y"), layers[i].getPosition("z"), layers[i].getScale(),
-                      layers[i].getRotation("x"), layers[i].getRotation("y"), layers[i].getRotation("z"), layers[i].getColor(), layers[i].geometry_parameters_width];
+                      layers[i].getRotation("x"), layers[i].getRotation("y"), layers[i].getRotation("z"), layers[i].getColor(), layers[i].getWidth()];
     js_layers.push(temp_js_layers);
     
     // VR

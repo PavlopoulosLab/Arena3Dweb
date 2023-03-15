@@ -10,7 +10,6 @@ class Layer {
       this.name = name;
       this.last_layer_scale = last_layer_scale;
       this.floor_current_color = floor_current_color; // TODO rename to importedColor
-      this.geometry_parameters_width = geometry_parameters_width;
 
       this.showNodeLabels = false;
       this.isSelected = false; // TODO check if this over js_selected_layers
@@ -21,7 +20,7 @@ class Layer {
       this.createPlane(geometry_parameters_width);
       this.appendCoordSystem();
       this.initTranslatePlane(position_x, position_y, position_z);
-      this.setScale(last_layer_scale);
+      this.initScale(last_layer_scale);
       this.setColor(floor_current_color);
 
       this.addSphere(geometry_parameters_width, last_layer_scale);
@@ -69,6 +68,10 @@ class Layer {
     this.setPosition("x", x);
     this.setPosition("y", y);
     this.setPosition("z", z);
+  }
+
+  initScale(value) {
+    this.plane.geometry.scale(1, Number(value), Number(value));
   }
 
   addSphere(width, scale) { // label will be attched here
@@ -163,7 +166,7 @@ class Layer {
   }
   
   getWidth() {
-    return(this.geometry_parameters_width);
+    return(this.plane.geometry.parameters.width);
   }
 
   setScale(value) {

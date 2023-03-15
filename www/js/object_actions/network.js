@@ -102,13 +102,11 @@ const uploadNetwork = (network) => {
 const importNetwork = (jsonNetwork) => {
   executePreNetworkSetup();
 
+  
   setLabelColorVariable(jsonNetwork.universalLabelColor);  
   
-  let layers_counter = 0,
-    layer_names = "",
-    layer_planes = [],
-    whole_name = "",
-    import_width = "",
+  let whole_name = "",
+    min_import_width = "",
     channel_values = [],
     node_attributes = {
       "Node": [],
@@ -121,14 +119,9 @@ const importNetwork = (jsonNetwork) => {
       "SourceNode": [],
       "TargetNode": [],
       "Color": []
-    };
-  let scrambleNodes_flag = false;
-  let adjustLayerSize_flag = false;
-  let layerSphereGeometry = new THREE.SphereGeometry( 0 );
-  let layerSphereMaterial = new THREE.MeshBasicMaterial( {
-    color:"white", transparent: true, opacity: 0.5
-    
-  });
+    },
+    scrambleNodes_flag = false;
+    adjustLayerSize_flag = false;
   
   // SCENE
   scene.setPosition("x", Number(jsonNetwork.scene.position_x));
@@ -141,49 +134,20 @@ const importNetwork = (jsonNetwork) => {
   
   // LAYER
   for (let i = 0; i < jsonNetwork.layers.name.length; i++) {
-    import_width = jsonNetwork.layers.geometry_parameters_width[i];
-    //create layer geometries
-    let planeGeom = new THREE.PlaneGeometry(import_width, import_width, PLANE_WIDTHSEGMENTS, PLANE_HEIGHTSEGMENTS);
-    planeGeom.rotateY(THREE.Math.degToRad(90));
-    floorCurrentColor = new THREE.Color(jsonNetwork.layers.floor_current_color[i]);
-    floorDefaultColors.push(floorCurrentColor)
-    let planeMat = new THREE.MeshBasicMaterial({
-      color: floorCurrentColor,
-      alphaTest: 0.05,
-      wireframe: false,
-      transparent: true,
-      opacity: 0.6,
-      side: THREE.DoubleSide
-    });
-    let plane = new THREE.Mesh(planeGeom, planeMat);
-    let sphere = new THREE.Mesh(layerSphereGeometry, layerSphereMaterial);
-    plane.add(sphere);
-    sphere.translateY(-import_width / 2);
-    sphere.translateZ(import_width / 2);
-    sphere.position.y = sphere.position.y * Number(jsonNetwork.layers.last_layer_scale[i]); //stretch factor for label
-    sphere.position.z = sphere.position.z * Number(jsonNetwork.layers.last_layer_scale[i]); //stretch factor for label
-    // layer_planes.push(plane); // TODO remove
-    // layer_spheres.push(sphere);
-    scene.addLayer(plane);
-    if (jsonNetwork.layers.generate_coordinates) { 
-      plane.position.x = Number(jsonNetwork.layers.position_x[i]);
-      plane.position.y = Number(jsonNetwork.layers.position_y[i]);
-      plane.position.z = Number(jsonNetwork.layers.position_z[i]);
-    } else {
-      plane.position.x = 0;
-      plane.position.y = 0;
-      plane.position.z = 0;
-      plane.move = true
-    }
-    plane.geometry.scale(1,
-      Number(jsonNetwork.layers.last_layer_scale[i]),
-      Number(jsonNetwork.layers.last_layer_scale[i])
-    );
-    plane.rotation.x = Number(jsonNetwork.layers.rotation_x[i]);
-    plane.rotation.y = Number(jsonNetwork.layers.rotation_y[i]);
-    plane.rotation.z = Number(jsonNetwork.layers.rotation_z[i]);
+    layer_groups[jsonNetwork.layers.name[i]] = i;
+    layers.push(new Layer({id: i, name: jsonNetwork.layers.name[i],
+      position_x: Number(jsonNetwork.layers.position_x[i]),
+      position_y: Number(jsonNetwork.layers.position_y[i]),
+      position_z: Number(jsonNetwork.layers.position_z[i]),
+      last_layer_scale: Number(jsonNetwork.layers.last_layer_scale[i]),
+      rotation_x: Number(jsonNetwork.layers.rotation_x[i]),
+      rotation_y: Number(jsonNetwork.layers.rotation_y[i]),
+      rotation_z: Number(jsonNetwork.layers.rotation_z[i]),
+      floor_current_color: jsonNetwork.layers.floor_current_color[i],
+      geometry_parameters_width: Number(jsonNetwork.layers.geometry_parameters_width[i])}));
+    scene.addLayer(layers[i].plane);
   }
-  
+
   // NODE
   for (let i = 0; i < jsonNetwork.nodes.name.length; i++) {
     node_names.push(jsonNetwork.nodes.name[i]);
@@ -192,11 +156,6 @@ const importNetwork = (jsonNetwork) => {
     node_whole_names.push(whole_name); //name + group
     node_attributes.Node.push(whole_name);
     node_groups[whole_name] = jsonNetwork.nodes.layer[i];
-    if (!layer_groups.hasOwnProperty(currentLayer)) {
-      layer_groups[currentLayer] = layers_counter;
-      layers_counter++;
-      layer_names.push(currentLayer);
-    }
     //create node geometries
     let geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
     let material = new THREE.MeshStandardMaterial({
@@ -208,7 +167,7 @@ const importNetwork = (jsonNetwork) => {
     node_attributes.Description.push(jsonNetwork.nodes.descr[i]);
     let sphere = new THREE.Mesh(geometry, material);
     nodes.push(sphere);
-    layer_planes[layer_groups[node_groups[whole_name]]].add(sphere);
+    layers[layer_groups[node_groups[whole_name]]].plane.add(sphere);
     sphere.position.x = Number(jsonNetwork.nodes.position_x[i]);
     sphere.position.y = Number(jsonNetwork.nodes.position_y[i]);
     sphere.position.z = Number(jsonNetwork.nodes.position_z[i]);
@@ -245,19 +204,11 @@ const importNetwork = (jsonNetwork) => {
   }
   
   // EXTRAS
-  if (jsonNetwork.scramble_nodes)
-    scrambleNodes_flag = true;
-    
   isDirectionEnabled = jsonNetwork.direction;
   updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
   edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
   updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
 
-  if (jsonNetwork.adjust_layer_size)
-    adjustLayerSize_flag = true;
-  
-  //=========================
-  
   if (channel_values.length > 0) {
     if (channel_values.length > MAX_CHANNELS) {
       alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
@@ -288,9 +239,21 @@ const importNetwork = (jsonNetwork) => {
   drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
   createLabels();
 
-  positionLayers(true);
-  if (scrambleNodes_flag) scrambleNodes(import_width / 2, -import_width / 2, -import_width / 2.5, import_width / 2.5);
-  if (adjustLayerSize_flag) adjustLayerSize();
+  //positionLayers(true);
+  if (jsonNetwork.scramble_nodes)
+    scrambleNodes_flag = true;
+  if (scrambleNodes_flag) {
+    min_import_width = jsonNetwork.layers.geometry_parameters_width.map(function(str) {
+      return Number(str);
+    });
+    min_import_width = Math.min(...min_import_width);
+    scrambleNodes(min_import_width / 2, -min_import_width / 2, -min_import_width / 2, min_import_width / 2);
+  }
+
+  if (jsonNetwork.adjust_layer_size)
+    adjustLayerSize_flag = true;
+  if (adjustLayerSize_flag)
+    adjustLayerSize();
   toggleDirection(isDirectionEnabled)
   
   
@@ -300,44 +263,41 @@ const importNetwork = (jsonNetwork) => {
 const clearCanvas = () => {
   scene.reset();
   layers = [];
-
-
-  nodes = [], //canvas objects
+  nodes = []; //canvas objects
   node_labels = [];
   document.getElementById("labelDiv").innerHTML = "";
   if (document.getElementById("channelColorLayoutDiv")) document.getElementById("channelColorLayoutDiv").innerHTML = "";
   if (document.getElementById("channelColorPicker")) document.getElementById("channelColorPicker").innerHTML = "";
-  node_names = [],
-  node_whole_names = [],
-  node_label_flags = [],
-  hovered_nodes = [],
-  last_hovered_node_index = "",
-  last_hovered_layer_index = "",
-  edges = [], //canvas objects
-  layerEdges = [], //canvas objects
-  edge_pairs = [],
-  layer_edges_pairs = [], //canvas objects
-  layer_edges_pairs_channels = [], //canvas objects
-  edge_values = [],
-  edge_channels = [],
-  channels = [],
-  node_groups = new Map(),
-  layer_groups = new Map(),
-  layer_label_divs = [], //divs
-  floorDefaultColors = [], 
-  selectedNodePositions = [],
-  selected_edges = [],
-  shiftX = "",
-  shiftY = "",
-  lasso = "",
-  optionsList = "",
-  node_cluster_colors = [],
-  node_attributes = "",
-  edge_attributes = "",
+  node_names = [];
+  node_whole_names = [];
+  node_label_flags = [];
+  hovered_nodes = [];
+  last_hovered_node_index = "";
+  last_hovered_layer_index = "";
+  edges = []; //canvas objects
+  layerEdges = []; //canvas objects
+  edge_pairs = [];
+  layer_edges_pairs = []; //canvas objects
+  layer_edges_pairs_channels = []; //canvas objects
+  edge_values = [];
+  edge_channels = [];
+  channels = [];
+  node_groups = new Map();
+  layer_groups = new Map();
+  layer_label_divs = []; //divs
+  floorDefaultColors = []; 
+  selectedNodePositions = [];
+  selected_edges = [];
+  shiftX = "";
+  shiftY = "";
+  lasso = "";
+  optionsList = "";
+  node_cluster_colors = [];
+  node_attributes = "";
+  edge_attributes = "";
   channel_values = [];
   isDirectionEnabled = false;
   toggleChannelCurvatureRange(false);
-  return true;
 }
 
 const loadGraph = () => {

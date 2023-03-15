@@ -356,7 +356,7 @@ const scaleLayers = () => {
         layers[js_selected_layers[i]].plane.children[j].position.z =
           layers[js_selected_layers[i]].plane.children[j].position.z * parseFloat(cavnasSlider.value) / layers[js_selected_layers[i]].getScale();
       }
-      layers[js_selected_layers[i]].setScale(cavnasSlider.value)
+      layers[js_selected_layers[i]].setScale(cavnasSlider.value);
     }
     redrawEdges();
     updateLayersRShiny();
