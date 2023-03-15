@@ -68,7 +68,7 @@ const redrawEdges = () => {
     index2 = node_whole_names.indexOf(edge_split[1]);
     if (node_groups[node_whole_names[index1]] == node_groups[node_whole_names[index2]]){ //(exists(selectedNodePositions, index1) || exists(selectedNodePositions, index2)) &&
       let points = [];
-      layer_planes[layer_groups[node_groups[node_whole_names[index1]]]].remove(edges[i]);
+      layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.remove(edges[i]);
   		points.push( nodes[index1].position, nodes[index2].position );
   		let geometry = new THREE.BufferGeometry().setFromPoints( points );
       let material = "";
@@ -91,17 +91,17 @@ const redrawEdges = () => {
       if (edge_channels[i]) {
         let curve_group = new THREE.Group();
         curve_group = createChannels(points[0], points[1], channelCurvature, ver_line, i, false);
-        layer_planes[layer_groups[node_groups[node_whole_names[index1]]]].add(curve_group);
+        layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(curve_group);
         edges[i] = curve_group;
       } else {
-        layer_planes[layer_groups[node_groups[node_whole_names[index1]]]].add(ver_line);
+        layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(ver_line);
         edges[i] = ver_line;
 
         if (isDirectionEnabled) {
           const group = new THREE.Group();
           group.add( ver_line);
           group.add( arrowHelper );
-          layer_planes[layer_groups[node_groups[node_whole_names[index1]]]].add(group);
+          layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(group);
           edges[i] = group;
         }
       }

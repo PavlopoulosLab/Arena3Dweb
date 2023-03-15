@@ -457,20 +457,19 @@ const scaleLayers = () => {
   if (js_selected_layers.length == 0)
     alert("Please select at least one layer.");
   else {
-    let layer_planes = layers.map(({ plane }) => plane);
     for (let i = 0; i < js_selected_layers.length; i++) {
       //layer_planes[js_selected_layers[i]].geometry.scale(1, parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]], parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]]);
       layers[js_selected_layers[i]].setScale(cavnasSlider.value)
       // last_layer_scale[js_selected_layers[i]] = parseFloat(cavnasSlider.value);
-      for (let j = 0; j < layer_planes[js_selected_layers[i]].children.length; j++) {
+      for (let j = 0; j < layers[js_selected_layers[i]].plane.children.length; j++) {
         // layer_planes[js_selected_layers[i]].children[j].position.y = 
         //   layer_planes[js_selected_layers[i]].children[j].position.y * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
         // layer_planes[js_selected_layers[i]].children[j].position.z =
         //   layer_planes[js_selected_layers[i]].children[j].position.z * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
-        layer_planes[js_selected_layers[i]].children[j].position.y = 
-          layer_planes[js_selected_layers[i]].children[j].position.y * parseFloat(cavnasSlider.value) / layers[js_selected_layers[i]].getScale();
-        layer_planes[js_selected_layers[i]].children[j].position.z =
-          layer_planes[js_selected_layers[i]].children[j].position.z * parseFloat(cavnasSlider.value) / layers[js_selected_layers[i]].getScale();
+        layers[js_selected_layers[i]].plane.children[j].position.y = 
+          layers[js_selected_layers[i]].plane.children[j].position.y * parseFloat(cavnasSlider.value) / layers[js_selected_layers[i]].getScale();
+        layers[js_selected_layers[i]].plane.children[j].position.z =
+          layers[js_selected_layers[i]].plane.children[j].position.z * parseFloat(cavnasSlider.value) / layers[js_selected_layers[i]].getScale();
       }
     }
     redrawEdges();
