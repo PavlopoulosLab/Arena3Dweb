@@ -43,7 +43,7 @@ const paintSelectedLayers = () => {
       } else
        layers[i].setColor(floorCurrentColor);
       if (!showAllLayerLabelsFlag && showSelectedLayerLabelsFlag)
-        layer_labels[i].style.display = "none";
+        layer_label_divs[i].style.display = "none";
     }
   }
 }

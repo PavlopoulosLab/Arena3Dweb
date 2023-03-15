@@ -97,17 +97,17 @@ const redrawLayerLabels = (mode) => {
       layerY = layer_spheres[position].getWorldPosition(new THREE.Vector3()).y;
       labelX = xBoundMax + layerX;
       labelY = yBoundMax - layerY;
-      layer_labels[position].style.left = labelX.toString().concat("px");
-      layer_labels[position].style.top = labelY.toString().concat("px");
+      layer_label_divs[position].style.left = labelX.toString().concat("px");
+      layer_label_divs[position].style.top = labelY.toString().concat("px");
       //check if overlapping with canvas div to set visibility
       let canvas_div = document.getElementById("3d-graph");
       if (labelX < 0 || labelY < 0  || labelY >= canvas_div.offsetHeight
           || labelX > document.getElementsByTagName("canvas")[0].offsetWidth)
-          layer_labels[position].style.display = "none";
+          layer_label_divs[position].style.display = "none";
       else
-        layer_labels[position].style.display = "inline-block";
+        layer_label_divs[position].style.display = "inline-block";
     } else
-      layer_labels[position].style.display = "none";
+      layer_label_divs[position].style.display = "none";
   }
 }
 

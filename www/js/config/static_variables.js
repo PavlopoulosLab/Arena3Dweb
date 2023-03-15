@@ -10,18 +10,21 @@ let localLayoutFlag = false;
 
 // labels
 let globalLabelColor = "#ffffff",
-    nodeLabelDefaultSize = "12px";
+    nodeLabelDefaultSize = "12px",
+    layer_label_divs = [];
 
 // layers
-let layerDragControls = "",
+let last_hovered_layer_index = "", // for correct hover coloring
+    layerDragControls = "",
+    layerIntervalTimeout = "",
     showAllLayerLabelsFlag = true,
     showSelectedLayerLabelsFlag = false,
+    layer_groups = new Map(),
     layerColorFromFile = true,
     floorDefaultColors = [], // TODO per class object element
     floorCurrentColor = LAYER_DEFAULT_COLOR,
-    layerIntervalTimeout = "",
-    hoveredLayerPaintedFlag = false; // for correct hover coloring
-    //defaultLayerColor, importedLayerColor, pickerLayerColor, themeLayerColor
+    hoveredLayerPaintedFlag = false;
+    //defaultLayerColor, importedLayerColor, pickerLayerColor == themeLayerColor
 
 // nodes
 let showAllNodeLabelsFlag = false,
@@ -69,15 +72,6 @@ let nodes = [], //canvas objects
     edge_values = [],
     edge_channels = [],
     node_groups = new Map(),
-
-    //===
-    layer_labels = [], //divs
-    layer_groups = new Map(),
-    last_hovered_layer_index = "",
-    
-    //js_selected_layers = [], // TODO check if swithcing with this.isSelected
-    //===
-
     selectedNodePositions = [],
     selected_edges = [],
     channels_layout = [],

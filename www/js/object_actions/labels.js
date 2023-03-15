@@ -19,15 +19,15 @@ const createLabels = () => {
     div.setAttribute('class', 'layer-labels');
     div.setAttribute('id', name.concat("_label"));
     document.getElementById("labelDiv").appendChild(div);
-    layer_labels.push(div);
-    layer_labels[i].style.display = "inline-block";
-    layer_labels[i].style.color = globalLabelColor;
+    layer_label_divs.push(div);
+    layer_label_divs[i].style.display = "inline-block";
+    layer_label_divs[i].style.color = globalLabelColor;
   }
 }
 
 const setLabelColor = () =>{
   let i;
-  for (i=0; i<layer_labels.length; i++) layer_labels[i].style.color = globalLabelColor;
+  for (i=0; i<layer_label_divs.length; i++) layer_label_divs[i].style.color = globalLabelColor;
   for (i=0; i<node_labels.length; i++) node_labels[i].style.color = globalLabelColor;
 }
 
@@ -40,7 +40,7 @@ const showAllLayerLabels = (flag) => { // true or false
   showAllLayerLabelsFlag = flag;
   if (!showAllLayerLabelsFlag) {
     for (let i = 0; i < layers.length; i++)
-      layer_labels[i].style.display = "none";
+      layer_label_divs[i].style.display = "none";
   }
 };
 
@@ -48,14 +48,14 @@ const showSelectedLayerLabels = (flag) => { // true or false
   showSelectedLayerLabelsFlag = flag;
   if (!showSelectedLayerLabelsFlag) {
     for (let i = 0; i < js_selected_layers.length; i++) {
-      layer_labels[js_selected_layers[i]].style.display = "none";
+      layer_label_divs[js_selected_layers[i]].style.display = "none";
     }
   }
 }
 
 const resizeLayerLabels = (size) => { // [1, 20]
   for (i = 0; i < layers.length; i++)
-    layer_labels[i].style.fontSize = size.toString().concat("px");
+    layer_label_divs[i].style.fontSize = size.toString().concat("px");
 };
 
 const showAllNodeLabels = (flag) => { // true or false
