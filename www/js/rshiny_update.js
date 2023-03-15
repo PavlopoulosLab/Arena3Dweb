@@ -6,7 +6,7 @@ const updateScenePanRShiny = () => {
     "color": "#".concat(renderer.getClearColor().getHexString()) 
   }
   Shiny.setInputValue("js_scene_pan", JSON.stringify(js_scene_pan));
-}
+};
 
 const updateSceneSphereRShiny = () => {
   let js_scene_sphere = {
@@ -15,7 +15,7 @@ const updateSceneSphereRShiny = () => {
     "rotation_z": String(scene.getRotation("z"))
   }
   Shiny.setInputValue("js_scene_sphere", JSON.stringify(js_scene_sphere));
-}
+};
 
 const updateLayersRShiny = () => {
   let js_layers = [],
@@ -143,13 +143,11 @@ const updateLabelColorRShiny = () => {
 }
 
 const updateDirectionCheckboxRShiny = (name, value) => {
-  // to always trigger
   Shiny.setInputValue('js_direction_checkbox_flag', [name, !value])
   Shiny.setInputValue('js_direction_checkbox_flag', [name, value])
 }
 
 const updateEdgeByWeightCheckboxRShiny = (name, value) => {
-  // to always trigger
   Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, !value])
   Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, value])
 }

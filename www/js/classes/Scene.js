@@ -83,6 +83,11 @@ class Scene {
     return(line)
   }
   
+  toggleCoords(sceneCoordsSwitch) {
+    this.coordSystem[0].visible = this.coordSystem[1].visible = 
+      this.coordSystem[2].visible = sceneCoordsSwitch;
+  }
+
   exists() {
     return(this.pan != "");
   }
@@ -179,11 +184,6 @@ class Scene {
     else if (deltaY > 0 && tempScale > 0.2)
       tempScale = tempScale * 0.9;
     this.setScale(tempScale);
-  }
-  
-  toggleCoords(sceneCoordsSwitch) {
-    this.coordSystem[0].visible = this.coordSystem[1].visible = 
-      this.coordSystem[2].visible = sceneCoordsSwitch;
   }
   
   getPosition(axis) {

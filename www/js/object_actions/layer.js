@@ -1,3 +1,4 @@
+// TODO replace with class specific
 const appendCoordsSystem = (obj) => { //adding coord lines to input object
   let points = [];
   

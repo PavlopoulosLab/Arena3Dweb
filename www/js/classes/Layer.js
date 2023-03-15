@@ -8,13 +8,7 @@ class Layer {
 
       this.id = id; // TODO counter ++
       this.name = name;
-      this.position_x = position_x; // TODO set as three obj parameters
-      this.position_y = position_y;
-      this.position_z = position_z;
       this.last_layer_scale = last_layer_scale;
-      this.rotation_x = rotation_x;
-      this.rotation_y = rotation_y;
-      this.rotation_z = rotation_z;
       this.floor_current_color = floor_current_color; // TODO rename to importedColor
       this.geometry_parameters_width = geometry_parameters_width;
 
@@ -24,9 +18,14 @@ class Layer {
       this.color = floor_current_color;
 
       this.createPlane(geometry_parameters_width);
-      this.addSphere(geometry_parameters_width, last_layer_scale);
       this.appendCoordSystem();
+      this.initTranslatePlane(position_x, position_y, position_z);
+      this.setScale(last_layer_scale);
+      this.setColor(floor_current_color);
 
+      this.addSphere(geometry_parameters_width, last_layer_scale);
+      this.initRotateSphere(rotation_x, rotation_y, rotation_z);
+      
       // updateLayerNamesRShiny
       // updateLayersRShiny
   }
@@ -42,9 +41,37 @@ class Layer {
       opacity: layerOpacity,
       side: THREE.DoubleSide,
     });
-    this.plane = new THREE.Mesh(planeGeometry, planeMaterial);;
+    this.plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  }
+
+  appendCoordSystem() {
+    this.coordSystem[0] = this.appendLine(150, 0, 0, "#FB3D2A") // red
+    this.coordSystem[1] = this.appendLine(0, 150, 0, "#46FB2A") // green
+    this.coordSystem[2] = this.appendLine(0, 0, 150, "#2AC2FB") // blue
   }
   
+  appendLine(x, y, z, color) {
+    let points = [];
+    points.push(this.plane.position, new THREE.Vector3(x, y, z) );
+    points.push(this.plane.position, new THREE.Vector3(-x, -y, -z));
+    let geometry = new THREE.BufferGeometry().setFromPoints(points);
+    let material = new THREE.LineBasicMaterial({color: color});
+    let line = new THREE.Line(geometry, material);
+    this.plane.add(line);
+    return(line)
+  }
+
+  toggleCoords(layerCoordsSwitch) {
+    this.coordSystem[0].visible = this.coordSystem[1].visible = 
+      this.coordSystem[2].visible = layerCoordsSwitch;
+  }
+
+  initTranslatePlane(x, y, z) {
+    this.setPosition("x", x);
+    this.setPosition("y", y);
+    this.setPosition("z", z);
+  }
+
   addSphere(width, scale) { // label will be attched here
     let threeSphere = this.createSphere();
     this.plane.add(threeSphere);
@@ -72,20 +99,69 @@ class Layer {
     this.THREE_Object.remove(threeObject);
   }
   
-  appendCoordSystem() {
-    this.coordSystem[0] = this.appendLine(150, 0, 0, "#FB3D2A") // red
-    this.coordSystem[1] = this.appendLine(0, 150, 0, "#46FB2A") // green
-    this.coordSystem[2] = this.appendLine(0, 0, 150, "#2AC2FB") // blue
+  initRotateSphere(x, y, z) {
+    this.setRotation("x", x);
+    this.setRotation("y", y);
+    this.setRotation("z", z);
+  }
+
+  // transformations
+  translateX(x) {
+    this.plane.translateX(x);
   }
   
-  appendLine(x, y, z, color) {
-    let points = [];
-    points.push(this.plane.position, new THREE.Vector3(x, y, z) );
-    points.push(this.plane.position, new THREE.Vector3(-x, -y, -z));
-    let geometry = new THREE.BufferGeometry().setFromPoints(points);
-    let material = new THREE.LineBasicMaterial({color: color});
-    let line = new THREE.Line(geometry, material);
-    this.plane.add(line);
-    return(line)
+  translateY(y) {
+    this.plane.translateY(y);
+  }
+
+  translateZ(z) {
+    this.plane.translateY(z);
+  }
+
+  rotateX(x) {
+    this.sphere.rotateX(x);
+  }
+  
+  rotateY(y) {
+    this.sphere.rotateY(y);
+  }
+  
+  rotateZ(z) {
+    this.sphere.rotateZ(z);
+  }
+
+  // setters and getters
+  setPosition(axis, value) {
+    this.plane.position[axis] = value;
+  }
+  
+  getPosition(axis) {
+    return(this.plane.position[axis]);
+  }
+  
+  setRotation(axis, value) {
+    this.sphere.rotation[axis] = value;
+  }
+  
+  getRotation(axis) {
+    return(this.sphere.rotation[axis]);
+  }
+  
+  setScale(value) {
+    this.last_layer_scale = value;
+    this.plane.geometry.scale(1, value, value);
+  }
+
+  getScale() {
+    return(this.last_layer_scale);
+  }
+  
+  setColor(color) {
+    this.color = color;
+    this.plane.material.color = new THREE.Color(color);
+  }
+
+  getColor() {
+    return(this.color);
   }
 }
