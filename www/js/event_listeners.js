@@ -69,7 +69,7 @@ const clickDrag = (event) => {
         } else if (scene.axisPressed !== "" && selectedNodePositions.length > 0)
           translateNodes(event);
         else if (scene.axisPressed !== "")
-          rotateLayers(event);
+          rotateLayersWithHeldKey(event);
         else if (last_hovered_layer_index === "" && last_hovered_node_index === "")
           sceneDragPan(x, y);
       } else if (scene.middleClickPressed) {
@@ -150,7 +150,7 @@ const dblClick = (event) => {
   if (scene.exists()) {
     let node_selection = checkNodeInteraction(event); //priority 1, select node
       if (!node_selection) {
-        let layer_selection = checkLayerInteraction(event); //priority 2, select layer
+        let layer_selection = existsClickedLayer(event); //priority 2, select layer
         if (!layer_selection) { //priority 3, unselect all nodes
           unselectAllNodes();
           unselectAllEdges();

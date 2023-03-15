@@ -1,23 +1,41 @@
-const selectCheckedLayers = () => {
-  js_selected_layers = [];
-  let c = document.getElementById("checkboxdiv").children;
-  for (let i = 0; i < c.length; i++){
-    if (i%7 === 0){ //(c[i].type == "checkbox"){
-      if (c[i].checked) js_selected_layers.push(i/7); //7 -> checkbox, label, checkbox2, label2, checkbox3, label3, br
-    }
+const selectAllLayers = (flag) => {
+  let layerCheckboxes = document.getElementsByClassName("layer_checkbox");
+  for (let i = 0; i < layerCheckboxes.length; i++) {
+    layerCheckboxes[i].checked = flag;
+    layers[i].isSelected = flag;
   }
-  // js_selected_layers = layers.map(function(l) { if (l.isSelected) return l.id; });
-  // js_selected_layers = js_selected_layers.filter(function(id) { return id !== undefined; });
-  //  TODO check if switching to this
-  // 
-  Shiny.setInputValue("js_selected_layers", js_selected_layers); // TODO layers.map(({ isSelected }) => isSelected)
-  return true;
+  paintSelectedLayers();
+  updateSelectedLayersRShiny();
 }
 
+const selectCheckedLayer = (checkbox) => {
+  layers[checkbox.value].isSelected = checkbox.checked;
+  updateSelectedLayersRShiny();
+  paintSelectedLayers();
+}
+
+const existsClickedLayer = (e) => {
+  let exists = false;
+  if (last_hovered_layer_index !== "") {
+    exists = true;
+    performDoubleClickLayerSelection(last_hovered_layer_index);
+    last_hovered_layer_index = "";
+    updateSelectedLayersRShiny();
+    paintSelectedLayers();
+  }
+  return exists;
+}
+
+const performDoubleClickLayerSelection = (index) => {
+  layers[index].toggleSelection();
+  // toggle respective checkbox
+  let layerCheckboxes = document.getElementsByClassName("layer_checkbox");
+  layerCheckboxes[index].checked ? layerCheckboxes[index].checked = false : layerCheckboxes[index].checked = true;
+};
+
 const paintSelectedLayers = () => {
-  selectCheckedLayers();
   for (i = 0; i < layers.length; i++) {
-    if (exists(js_selected_layers, i))
+    if (layers[i].isSelected)
       layers[i].setColor("#f7f43e");
     else {
       if (floorDefaultColors.length > 0 && layerColorFromFile) {
@@ -31,46 +49,37 @@ const paintSelectedLayers = () => {
 }
 
 const hideLayers = () => {
-  let c = document.getElementById("checkboxdiv").children;
+  let hideLayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
   //layers
-  for (let i = 0; i < c.length; i++) {
-    if (i >= 2 && i%7 == 2) { //(c[i].type == "checkbox"){
-      layers[Math.floor(i/7)].toggleVisibility(!c[i].checked);
-    }
-  }
+  for (let i = 0; i < hideLayerCheckboxes.length; i++)
+    layers[i].toggleVisibility(!hideLayerCheckboxes[i].checked);
   //node labels
   decideNodeLabelFlags();
-}
+};
 
 const showLayerNodeLabels = () => {
-  let c = document.getElementById("checkboxdiv").children;
-  for (let i = 0; i < c.length; i++){
-    if (i >= 2 && i%7 == 4){
-      if (!c[i].checked) {
-        layers[Math.floor(i/7)].showNodeLabels = false;
-      } else
-        layers[Math.floor(i/7)].showNodeLabels = true;
-    }
-  }
+  let showLayerNodesCheckboxes = document.getElementsByClassName("showLayerNodes_checkbox");
+  for (let i = 0; i < showLayerNodesCheckboxes.length; i++)
+    layers[Math.floor(i)].showNodeLabels = showLayerNodesCheckboxes[i].checked;
   decideNodeLabelFlags();
-  return true;
-}
+};
 
-const attachLayerCheckboxes = () => { //insert #groups Checkboxes
+const attachLayerCheckboxes = () => {
   let checkbox = "",
     label = "",
     br = "",
     temp = "",
     container = document.getElementById('checkboxdiv');
   container.innerHTML = ''; //clear previous checkboxes
+
   for(let i = 0; i < Object.getOwnPropertyNames(layer_groups).length; i++) {
     checkbox = document.createElement('input');
     checkbox.type = "checkbox";
     checkbox.name = "checkbox".concat(i);
-    checkbox.className = "checkbox_check";
+    checkbox.className = "checkbox_check layer_checkbox";
     checkbox.value = i;
     checkbox.id = "checkbox".concat(i);
-    checkbox.setAttribute('onclick', 'paintSelectedLayers()');
+    checkbox.setAttribute('onclick', 'selectCheckedLayer(this)');
     
     label = document.createElement('label');
     label.className = "checkbox_element layer_label";
@@ -80,7 +89,7 @@ const attachLayerCheckboxes = () => { //insert #groups Checkboxes
     label.appendChild(document.createTextNode(temp));
     
     checkbox2 = document.createElement('input');
-    checkbox2.className = "checkbox_check";
+    checkbox2.className = "checkbox_check hideLayer_checkbox";
     checkbox2.type = "checkbox";
     checkbox2.name = "checkbox2".concat(i);
     checkbox2.value = "show_hide".concat(i);
@@ -93,7 +102,7 @@ const attachLayerCheckboxes = () => { //insert #groups Checkboxes
     label2.appendChild(document.createTextNode('Hide'));
     
     checkbox3 = document.createElement('input');
-    checkbox3.className = "checkbox_check";
+    checkbox3.className = "checkbox_check showLayerNodes_checkbox";
     checkbox3.type = "checkbox";
     checkbox3.name = "checkbox3".concat(i);
     checkbox3.value = "show_labels".concat(i);
@@ -115,7 +124,6 @@ const attachLayerCheckboxes = () => { //insert #groups Checkboxes
     container.appendChild(label3);
     container.appendChild(br);
   }
-  return true;
 }
 
 const positionLayers = () => {
@@ -154,32 +162,23 @@ const checkHoverOverLayer = (event, node_hover_flag) => {
   if (intersects.length > 0 & !node_hover_flag) {
     if (last_hovered_layer_index != ""){
       paintSelectedLayers();
+      hoveredLayerPaintedFlag = true;
       last_hovered_layer_index = "";
     }
     intersects[0].object.material.color.set( 0xff0000 );
     last_hovered_layer_index = findIndexByUuid(layer_planes, intersects[0].object.uuid);
   } else {
-    paintSelectedLayers();
+    if (hoveredLayerPaintedFlag) {
+      paintSelectedLayers(); // remove red color from last hovered
+      hoveredLayerPaintedFlag = false;
+    }
     last_hovered_layer_index = "";
   }
 }
 
-const checkLayerInteraction = (e) => {
-  let layer_selection = false;
-  if (last_hovered_layer_index !== "") {
-    // layers[last_hovered_layer_index].isSelected = true; // TODO check if swithc to this
-    layer_selection = true;
-    let c = document.getElementById("checkboxdiv").children;
-    c[last_hovered_layer_index*7].checked ? c[last_hovered_layer_index*7].checked = false : c[last_hovered_layer_index*7].checked = true;
-    // altering the checkbox is enough, the rest are tirggered elsewhere
-    last_hovered_layer_index = "";
-    paintSelectedLayers();
-  }
-  return layer_selection;
-}
-
-const rotateLayers = (e) => {
-  let rads, i;
+const rotateLayersWithHeldKey = (e) => {
+  let rads, i,
+    js_selected_layers = getSelectedLayers();
 
   if (e.screenX - e.screenY >= mousePreviousX - mousePreviousY) rads = 0.05;
   else rads = -0.05;
@@ -200,6 +199,12 @@ const rotateLayers = (e) => {
   updateLayersRShiny();
   updateNodesRShiny(); // VR node world positions update
 }
+
+const getSelectedLayers = () => {
+  let js_selected_layers = layers.map(function(layer) { if (layer.isSelected) return layer.id; });
+  js_selected_layers = js_selected_layers.filter(function(id) { return id !== undefined; });
+  return(js_selected_layers)
+};
 
 const adjustLayerSize = () => { // TODO check if works with import different width/height
   let maxY = minY = maxZ = minZ = nodes[0].position,
@@ -259,31 +264,9 @@ const layerColorFilePriority = (message) => {
   updateLayersRShiny();
 }
 
-const selectAllLayers = (message) => {
-  js_selected_layers = [];
-  let c = document.getElementById("checkboxdiv").children;
-  for (let i = 0; i < c.length; i++){
-    if (i%7 === 0){ //(c[i].type == "checkbox"){
-      if (message){
-        c[i].checked = true;
-        js_selected_layers.push(i/7);
-        layers[i/7].setColor("#f7f43e");
-      } else {
-        c[i].checked = false;
-        if (floorDefaultColors.length > 0 && layerColorFromFile) {
-          layers[i/7].setColor(floorDefaultColors[i/7]);
-        } else 
-          layers[i/7].setColor(floorCurrentColor);
-
-        layer_labels[i/7].style.display = "none";
-      }
-    }
-  }
-  Shiny.setInputValue("js_selected_layers", js_selected_layers);
-}
-
+// Canvas Controls =====
 const rotateSelectedLayers = (direction, axis) => {
-  selectCheckedLayers();
+  let js_selected_layers = getSelectedLayers();
   if (js_selected_layers.length == 0)
     alert("Please select at least one layer.");
   else {
@@ -337,7 +320,7 @@ const congregateLayers = () => {
 }
 
 const moveLayers = (direction, axis) => {
-  selectCheckedLayers();
+  let js_selected_layers = getSelectedLayers();
   if (js_selected_layers.length == 0)
     alert("Please select at least one layer.");
   else {
@@ -360,9 +343,9 @@ const moveLayers = (direction, axis) => {
 
 const scaleLayers = () => {
   let td = document.getElementById("sliderValue4"),
-    cavnasSlider = document.getElementsByClassName("canvasSlider")[3];
+    cavnasSlider = document.getElementsByClassName("canvasSlider")[3],
+    js_selected_layers = getSelectedLayers();;
   td.innerHTML = "x".concat(cavnasSlider.value);
-  selectCheckedLayers();
   if (js_selected_layers.length == 0)
     alert("Please select at least one layer.");
   else {

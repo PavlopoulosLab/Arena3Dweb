@@ -274,7 +274,7 @@ const selectSearchedNodes = (event) => {
           tempIndexes, i, j;
       searchString = searchString.split(",");
       for (i=0; i<searchString.length; i++){
-        tempIndexes = getAllIndexes(node_names, searchString[i].trim()) //case insensitive function
+        tempIndexes = getCaseInsensitiveIndices(node_names, searchString[i].trim()) //case insensitive function
         if (tempIndexes.length > 0){
           for (j=0; j < tempIndexes.length; j++){
             if (!exists(selectedNodePositions, tempIndexes[j])){

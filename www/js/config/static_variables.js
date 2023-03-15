@@ -19,7 +19,8 @@ let layerDragControls = "",
     layerColorFromFile = true,
     floorDefaultColors = [], // TODO per class object element
     floorCurrentColor = LAYER_DEFAULT_COLOR,
-    layerIntervalTimeout = "";
+    layerIntervalTimeout = "",
+    hoveredLayerPaintedFlag = false; // for correct hover coloring
     //defaultLayerColor, importedLayerColor, pickerLayerColor, themeLayerColor
 
 // nodes
@@ -74,7 +75,7 @@ let nodes = [], //canvas objects
     layer_groups = new Map(),
     last_hovered_layer_index = "",
     
-    js_selected_layers = [], // TODO check if swithcing with this.isSelected
+    //js_selected_layers = [], // TODO check if swithcing with this.isSelected
     //===
 
     selectedNodePositions = [],

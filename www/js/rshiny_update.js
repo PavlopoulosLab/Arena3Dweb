@@ -60,6 +60,11 @@ const updateLayerNamesRShiny = () => {
   Shiny.setInputValue("js_layer_names", layer_names);
 }
 
+const updateSelectedLayersRShiny = () => {
+  let js_selected_layers = getSelectedLayers();
+  Shiny.setInputValue("js_selected_layers", js_selected_layers);
+}
+
 const updateNodesRShiny = () => {
   let js_nodes = [],
     js_nodes_world = [], // VR

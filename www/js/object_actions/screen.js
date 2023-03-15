@@ -69,8 +69,13 @@ const animate = () => { // TODO optimize performance
 const renderLayerLabels = () => {
   if (showAllLayerLabelsFlag)
     redrawLayerLabels("all");
-  else if (showSelectedLayerLabelsFlag && js_selected_layers !== [])
-    redrawLayerLabels("selected");
+  else {
+    if (showSelectedLayerLabelsFlag) {
+      let js_selected_layers = getSelectedLayers();
+      if (js_selected_layers.length > 0)
+        redrawLayerLabels("selected");
+    }
+  }
 }
 
 const redrawLayerLabels = (mode) => {
@@ -82,7 +87,7 @@ const redrawLayerLabels = (mode) => {
       layerArray = layers.map(({ name }) => name);
       break;
     case "selected":
-      layerArray = js_selected_layers;
+      layerArray = getSelectedLayers();
   }
   
   for (i = 0; i < layerArray.length; i++) { // TODO replace for loop with map (objects)

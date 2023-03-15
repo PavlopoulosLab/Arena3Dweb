@@ -104,6 +104,10 @@ class Layer {
     this.setRotation("z", z);
   }
 
+  toggleSelection() {
+    this.isSelected = !this.isSelected;
+  }
+
   toggleVisibility(flag) {
     this.plane.visible = flag;
   }

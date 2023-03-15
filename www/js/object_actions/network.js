@@ -325,8 +325,6 @@ const clearCanvas = () => {
   layer_groups = new Map(),
   layer_labels = [], //divs
   floorDefaultColors = [], 
-  layer_planes = [], // TODO remove
-  js_selected_layers = [],
   selectedNodePositions = [],
   selected_edges = [],
   shiftX = "",
