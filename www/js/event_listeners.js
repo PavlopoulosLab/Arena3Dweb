@@ -145,56 +145,16 @@ const clickUp = (event) => {
 //   }
 // };
 
-// double click event (left mouse), uncheck nodes
+// double click event (left mouse), select node -> select layer -> unselect all nodes
 const dblClick = (event) => {
   if (scene.exists()) {
-    let node_selection = checkNodeInteraction(event); //priority 1
+    let node_selection = checkNodeInteraction(event); //priority 1, select node
       if (!node_selection) {
-        let layer_selection = checkLayerInteraction(event); //priority 2
-        if (!layer_selection) { //priority 3
-          selectedNodePositions = [],
-          selected_edges = [];
-          let pos1 = pos2 = pos3 = -1;
-          for (let i = 0; i < nodes.length; i++){
-            if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
-              pos = node_attributes.Node.indexOf(node_whole_names[i]);
-              if (pos > -1 && node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
-                nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
-              else nodes[i].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[i]]])%colorVector.length]);
-            } else if (nodes[i].userData.cluster)  nodes[i].material.color = new THREE.Color(colorVector[nodes[i].userData.cluster]);
-            else nodes[i].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[i]]]) % colorVector.length]);
-          }
-          decideNodeLabelFlags();
-          for (i = 0; i < edges.length; i++){
-            if (edge_attributes !== "" && edgeAttributesPriority){ //check if color is overidden by user
-              pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[i]);
-              pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[i]);
-              if (pos1 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos1] !== "" && edge_attributes.Color[pos1] != " "){//if node not currently selected and exists in node attributes file and color is assigned
-                if (typeof (edges[i]) == "number") { //edge is inter-layer
-                  pos3 = layer_edges_pairs.indexOf(i);
-                  changeColor(layerEdges[pos3], edge_attributes.Color[pos3]);
-                }
-                else changeColor(edges[i], edge_attributes.Color[pos3]);
-              }
-              else if (pos2 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos2] !== "" && edge_attributes.Color[pos2] != " "){ 
-                if (typeof(edges[i]) == "number"){ //edge is inter-layer
-                  pos3 = layer_edges_pairs.indexOf(i);
-                  changeColor(layerEdges[pos3], edge_attributes.Color[pos2]);
-                } else changeColor(edges[i], edge_attributes.Color[pos2]);
-              }
-              else{
-                if (typeof(edges[i]) == "number") {
-                  pos3 = layer_edges_pairs.indexOf(i);
-                  changeColor(layerEdges[pos3], edgeDefaultColor);
-                } else changeColor(edges[i], edgeDefaultColor);
-              }
-            } else{
-              if (typeof (edges[i]) == "number") {
-                pos3 = layer_edges_pairs.indexOf(i);
-                changeColor(layerEdges[pos3], edgeDefaultColor);
-              } else changeColor(edges[i], edgeDefaultColor);
-            } 
-          }
+        let layer_selection = checkLayerInteraction(event); //priority 2, select layer
+        if (!layer_selection) { //priority 3, unselect all nodes
+          unselectAllNodes();
+          unselectAllEdges();
+          
           redrawEdges();
           updateSelectedNodesRShiny();
         }
@@ -209,10 +169,10 @@ const replaceContextMenuOverNode = (evt) => {
     optionsList = "";
   }
   let pos = "";
-  for (let i = 0; i < nodes.length; i++){
+  for (let i = 0; i < nodes.length; i++) {
     let nodeX = xBoundMax + nodes[i].getWorldPosition(new THREE.Vector3()).x;
     let nodeY = yBoundMax - nodes[i].getWorldPosition(new THREE.Vector3()).y;
-    if (Math.pow(nodeX - evt.layerX, 2) + Math.pow(nodeY - evt.layerY, 2) <= Math.pow((SPHERE_RADIUS + 1), 2)){
+    if (Math.pow(nodeX - evt.layerX, 2) + Math.pow(nodeY - evt.layerY, 2) <= Math.pow((SPHERE_RADIUS + 1), 2)) {
       evt.preventDefault();
       //creating list and appending to 3d-graph div
       optionsList = document.createElement("select");

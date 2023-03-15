@@ -658,3 +658,40 @@ const toggleInterLayerEdgesRendering = () => {
     interLayerEdgesRenderPauseButton.innerText = "Render Inter-Layer Edges";
   }
 }
+
+const unselectAllEdges = () => {
+  let pos1 = pos2 = pos3 = -1;
+  for (i = 0; i < edges.length; i++) {
+    if (edge_attributes !== "" && edgeAttributesPriority){ //check if color is overidden by user
+      pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[i]);
+      pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[i]);
+      //if node not currently selected and exists in node attributes file and color is assigned
+      if (pos1 > -1 && edge_attributes.Color !== undefined &&
+        edge_attributes.Color[pos1] !== "" && edge_attributes.Color[pos1] != " ") {
+          if (typeof (edges[i]) == "number") { //edge is inter-layer
+            pos3 = layer_edges_pairs.indexOf(i);
+            changeColor(layerEdges[pos3], edge_attributes.Color[pos3]);
+          } else
+            changeColor(edges[i], edge_attributes.Color[pos3]);
+      } else if (pos2 > -1 && edge_attributes.Color !== undefined &&
+        edge_attributes.Color[pos2] !== "" && edge_attributes.Color[pos2] != " ") { 
+          if (typeof(edges[i]) == "number"){ //edge is inter-layer
+            pos3 = layer_edges_pairs.indexOf(i);
+            changeColor(layerEdges[pos3], edge_attributes.Color[pos2]);
+          } else
+            changeColor(edges[i], edge_attributes.Color[pos2]);
+      } else {
+        if (typeof(edges[i]) == "number") {
+          pos3 = layer_edges_pairs.indexOf(i);
+          changeColor(layerEdges[pos3], edgeDefaultColor);
+        } else changeColor(edges[i], edgeDefaultColor);
+      }
+    } else {
+      if (typeof (edges[i]) == "number") {
+        pos3 = layer_edges_pairs.indexOf(i);
+        changeColor(layerEdges[pos3], edgeDefaultColor);
+      } else
+        changeColor(edges[i], edgeDefaultColor);
+    } 
+  }
+};

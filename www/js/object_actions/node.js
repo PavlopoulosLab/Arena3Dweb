@@ -304,3 +304,26 @@ const createNodeDescriptionDiv = () => {
     descrDiv.appendChild(btn);
     descrDiv.appendChild(p);
 };
+
+const unselectAllNodes = () => {
+  selectedNodePositions = [],
+  selected_edges = [];
+  decideNodeColors();
+  decideNodeLabelFlags();
+};
+
+const decideNodeColors = () => { // TODO reusable 
+  for (let i = 0; i < nodes.length; i++) {
+    if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
+      pos = node_attributes.Node.indexOf(node_whole_names[i]);
+      if (pos > -1 && node_attributes.Color !== undefined &&
+        node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
+          nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
+      else
+        nodes[i].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[i]]])%colorVector.length]);
+    } else if (nodes[i].userData.cluster)
+      nodes[i].material.color = new THREE.Color(colorVector[nodes[i].userData.cluster]);
+    else
+      nodes[i].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[i]]]) % colorVector.length]);
+  }
+};
