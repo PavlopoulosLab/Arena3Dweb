@@ -459,7 +459,6 @@ const scaleLayers = () => {
   else {
     for (let i = 0; i < js_selected_layers.length; i++) {
       //layer_planes[js_selected_layers[i]].geometry.scale(1, parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]], parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]]);
-      layers[js_selected_layers[i]].setScale(cavnasSlider.value)
       // last_layer_scale[js_selected_layers[i]] = parseFloat(cavnasSlider.value);
       for (let j = 0; j < layers[js_selected_layers[i]].plane.children.length; j++) {
         // layer_planes[js_selected_layers[i]].children[j].position.y = 
@@ -471,6 +470,7 @@ const scaleLayers = () => {
         layers[js_selected_layers[i]].plane.children[j].position.z =
           layers[js_selected_layers[i]].plane.children[j].position.z * parseFloat(cavnasSlider.value) / layers[js_selected_layers[i]].getScale();
       }
+      layers[js_selected_layers[i]].setScale(cavnasSlider.value)
     }
     redrawEdges();
     updateLayersRShiny();
