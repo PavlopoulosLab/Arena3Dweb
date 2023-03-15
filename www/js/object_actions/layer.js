@@ -1,36 +1,3 @@
-// TODO replace with class specific
-// const appendCoordsSystem = (obj) => { //adding coord lines to input object
-//   let points = [];
-  
-//   //x axis red
-// 	points.push( new THREE.Vector3(0, 0, 0), new THREE.Vector3(150, 0, 0), new THREE.Vector3(-150, 0, 0) );
-// 	let geometry = new THREE.BufferGeometry().setFromPoints( points );
-// 	let material = new THREE.LineBasicMaterial( { color: "#FB3D2A" } );
-// 	let line = new THREE.Line( geometry, material );
-// 	obj.add(line);
-//   layerCoords.push(line);
-  
-// 	//y axis green
-// 	points = [];
-// 	points.push( new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 150, 0), new THREE.Vector3(0, -150, 0) );
-// 	geometry = new THREE.BufferGeometry().setFromPoints( points );
-// 	material = new THREE.LineBasicMaterial( { color: "#46FB2A" } );
-// 	line = new THREE.Line( geometry, material );
-// 	obj.add(line);
-// 	layerCoords.push(line);
-	
-//   //z axis blue
-//   points = [];
-//   points.push( new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 150), new THREE.Vector3(0, 0, -150 ) );
-//   geometry = new THREE.BufferGeometry().setFromPoints( points );
-// 	material = new THREE.LineBasicMaterial( { color: "#2AC2FB" } );
-//   line = new THREE.Line( geometry, material );
-//   obj.add(line);
-//   layerCoords.push(line);
-  
-//   return true;
-// }
-
 const selectCheckedLayers = () => {
   js_selected_layers = [];
   let c = document.getElementById("checkboxdiv").children;
@@ -51,14 +18,11 @@ const paintSelectedLayers = () => {
   selectCheckedLayers();
   for (i = 0; i < layers.length; i++) {
     if (exists(js_selected_layers, i))
-      //layer_planes[i].material.color = new THREE.Color( "#f7f43e" );
       layers[i].setColor("#f7f43e");
     else {
       if (floorDefaultColors.length > 0 && layerColorFromFile) {
-        //layer_planes[i].material.color = new THREE.Color(floorDefaultColors[i]);
         layers[i].setColor(floorDefaultColors[i]);
       } else
-       // layer_planes[i].material.color = new THREE.Color(floorCurrentColor);
        layers[i].setColor(floorCurrentColor);
       if (!showAllLayerLabelsFlag && showSelectedLayerLabelsFlag)
         layer_labels[i].style.display = "none";
@@ -69,19 +33,13 @@ const paintSelectedLayers = () => {
 const hideLayers = () => {
   let c = document.getElementById("checkboxdiv").children;
   //layers
-  for (let i = 0; i < c.length; i++){
-    if (i >= 2 && i%7 == 2){ //(c[i].type == "checkbox"){
-      if (!c[i].checked)
-        layers[Math.floor(i/7)].plane.visible = true;
-        //layer_planes[Math.floor(i/7)].visible = true;
-      else
-        layers[Math.floor(i/7)].plane.visible = false;
-        //layer_planes[Math.floor(i/7)].visible = false;
+  for (let i = 0; i < c.length; i++) {
+    if (i >= 2 && i%7 == 2) { //(c[i].type == "checkbox"){
+      layers[Math.floor(i/7)].toggleVisibility(!c[i].checked);
     }
   }
   //node labels
   decideNodeLabelFlags();
-  return true;
 }
 
 const showLayerNodeLabels = () => {
@@ -90,10 +48,8 @@ const showLayerNodeLabels = () => {
     if (i >= 2 && i%7 == 4){
       if (!c[i].checked) {
         layers[Math.floor(i/7)].showNodeLabels = false;
-        //layer_node_labels_flags[Math.floor(i/7)] = false;
       } else
         layers[Math.floor(i/7)].showNodeLabels = true;
-        //layer_node_labels_flags[Math.floor(i/7)] = true;
     }
   }
   decideNodeLabelFlags();
@@ -119,8 +75,6 @@ const attachLayerCheckboxes = () => { //insert #groups Checkboxes
     label = document.createElement('label');
     label.className = "checkbox_element layer_label";
     label.htmlFor = i;
-    // temp = layer_names[i];
-    // label.title = layer_names[i];
     temp = layers[i].getName();
     label.title = layers[i].getName();
     label.appendChild(document.createTextNode(temp));
@@ -167,15 +121,12 @@ const attachLayerCheckboxes = () => { //insert #groups Checkboxes
 const positionLayers = () => {
   let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
     numLayers = layers.length;
-  for (let i = 0; i < numLayers; i++){
+  for (let i = 0; i < numLayers; i++) {
     //if(checkMoveFlag && layer_planes[i].move || !checkMoveFlag) {
-      //if (checkMoveFlag) {
       if (numLayers % 2)
         layers[i].translateX( (-Math.floor(layers.length/2) + i) * window_width); //odd number of Layers
-        // layer_planes[i].translateX( (-Math.floor(layer_planes.length/2) + i) * window_width); //odd number of Layers
       else
         layers[i].translateX( (-layers.length/2 + i) * window_width + window_width/2); //even number of Layers
-        //layer_planes[i].translateX( (-layer_planes.length/2 + i) * window_width + window_width/2); //even number of Layers
     //}
   }
   updateLayersRShiny();
@@ -189,10 +140,8 @@ const setFloorColor = (color) => {
   for (let i = 0; i < layers.length; i++) {
       if (floorDefaultColors.length > 0 && layerColorFromFile) {
         layers[i].setColor(floorDefaultColors[i]);
-        //layer_planes[i].material.color = new THREE.Color(floorDefaultColors[i]);
       } else
         layers[i].setColor(color);
-        //layer_planes[i].material.color = new THREE.Color(color);
   }
   updateLayersRShiny();
 }
@@ -238,24 +187,21 @@ const rotateLayers = (e) => {
   if (scene.axisPressed=="z"){
     for (i = 0; i < js_selected_layers.length; i++) {
       layers[js_selected_layers[i]].rotateZ(rads);
-      //layer_planes[js_selected_layers[i]].rotateZ(rads);
     }
   } else if (scene.axisPressed=="x"){
     for (i = 0; i < js_selected_layers.length; i++) {
       layers[js_selected_layers[i]].rotateX(rads);
-      //layer_planes[js_selected_layers[i]].rotateX(rads);
     }
   } else if (scene.axisPressed=="c"){
     for (i = 0; i < js_selected_layers.length; i++) {
       layers[js_selected_layers[i]].rotateY(rads);
-      //layer_planes[js_selected_layers[i]].rotateY(rads);
     }
   }
   updateLayersRShiny();
   updateNodesRShiny(); // VR node world positions update
 }
 
-const adjustLayerSize = () => {
+const adjustLayerSize = () => { // TODO check if works with import different width/height
   let maxY = minY = maxZ = minZ = nodes[0].position,
     layer_planes = layers.map(({ plane }) => plane);
     
@@ -291,47 +237,24 @@ const showLayerCoords = (labelCoordsSwitch) => { //message = true or false
   for (let i = 0; i < layers.length; i++)
     layers[i].toggleCoords(labelCoordsSwitch);
 };
-// const showLayerCoords = (message) => {
-//   let labelCoordsSwitch = message; //message = true or false
-//   if (labelCoordsSwitch){
-//     for (let i = 0; i < layer_planes.length; i++){
-//       appendCoordsSystem(layer_planes[i]);
-//     }
-//   } else{
-//     for (let i = 0; i < layer_planes.length; i++){
-//       layer_planes[i].remove(layerCoords[3*i]);
-//       layer_planes[i].remove(layerCoords[3*i+1]);
-//       layer_planes[i].remove(layerCoords[3*i+2]);
-//     }
-//     layerCoords = [];
-//   }
-//   return true;
-// }
 
 const setFloorOpacity = (selectedOpacity) => {
-  layerOpacity = selectedOpacity;
-  let layer_planes = layers.map(({ plane }) => plane);
-  for (let i = 0; i < layer_planes.length; i++) {
-    layer_planes[i].material.opacity = layerOpacity;
-  }
-}
+  for (let i = 0; i < layers.length; i++)
+    layers[i].setOpacity(selectedOpacity);
+};
 
 const showWireFrames = (wireframeFlag) => { // true or false
-  let layer_planes = layers.map(({ plane }) => plane);
-  for (let i = 0; i < layer_planes.length; i++) {
-    layer_planes[i].material.wireframe = wireframeFlag;
-  }
+  for (let i = 0; i < layers.length; i++)
+    layers[i].toggleWireframe(wireframeFlag);
 }
 
 const layerColorFilePriority = (message) => {
   layerColorFromFile = message;
-  for (let i = 0; i < layers.length; i++){
+  for (let i = 0; i < layers.length; i++) {
     if (!layerColorFromFile)
-      layers[i].setColor(floorCurrentColor)
-      //layer_planes[i].material.color = new THREE.Color(floorCurrentColor)
+      layers[i].setColor(floorCurrentColor);
     else
-      layers[i].setColor(floorDefaultColors[i])
-      //layer_planes[i].material.color = new THREE.Color(floorDefaultColors[i]);
+      layers[i].setColor(floorDefaultColors[i]);
   }
   updateLayersRShiny();
 }
@@ -345,12 +268,10 @@ const selectAllLayers = (message) => {
         c[i].checked = true;
         js_selected_layers.push(i/7);
         layers[i/7].setColor("#f7f43e");
-        //layer_planes[i/7].material.color = new THREE.Color( "#f7f43e" );
       } else {
         c[i].checked = false;
         if (floorDefaultColors.length > 0 && layerColorFromFile) {
           layers[i/7].setColor(floorDefaultColors[i/7]);
-          //layer_planes[i/7].material.color = new THREE.Color(floorDefaultColors[i/7]);
         } else 
           layers[i/7].setColor(floorCurrentColor);
 
@@ -372,13 +293,10 @@ const rotateSelectedLayers = (direction, axis) => {
       for (let i = 0; i < js_selected_layers.length; i++) {
         if (axis == "X")
           layers[js_selected_layers[i]].rotateX(value);
-          //layer_planes[js_selected_layers[i]].rotateX(value);
         else if (axis == "Y")
           layers[js_selected_layers[i]].rotateY(value);
-          //layer_planes[js_selected_layers[i]].rotateY(value);
         else if (axis == "Z")
           layers[js_selected_layers[i]].rotateZ(value);
-          //layer_planes[js_selected_layers[i]].rotateZ(value);
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -390,16 +308,13 @@ const spreadLayers = () => {
   let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
       numLayers = layers.length;
   for (let i = 0; i < numLayers; i++) {
-    //layer_planes[i].rotation.x = layer_planes[i].rotation.y = layer_planes[i].rotation.z = 0;
     layers[i].setRotation("x", 0);
     layers[i].setRotation("y", 0);
     layers[i].setRotation("z", 0);
     if (numLayers % 2)
       layers.translateX( (-Math.floor(layers.length/2) + i) * window_width); //odd number of Layers
-      //layer_planes[i].translateX( (-Math.floor(layers.length/2) + i) * window_width); //odd number of Layers
     else
       layers[i].translateX( (-layers.length/2 + i) * window_width + window_width/2); //even number of Layers
-      //layer_planes[i].translateX( (-layers.length/2 + i) * window_width + window_width/2); //even number of Layers
   }
   updateLayersRShiny();
   updateNodesRShiny(); // VR node world positions update
@@ -409,16 +324,13 @@ const congregateLayers = () => {
   let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
       numLayers = layers.length;
   for (let i = 0; i < numLayers; i++) {
-    // layer_planes[i].rotation.x = layer_planes[i].rotation.y = layer_planes[i].rotation.z = 0;
     layers[i].setRotation("x", 0);
     layers[i].setRotation("y", 0);
     layers[i].setRotation("z", 0);
     if (numLayers % 2)
       layers[i].translateX( -((-Math.floor(layers.length/2) + i) * window_width)); //odd number of Layers
-      //layer_planes[i].translateX( -((-Math.floor(layer_planes.length/2) + i) * window_width)); //odd number of Layers
     else
       layers[i].translateX( -((-layers.length/2 + i) * window_width + window_width/2)); //even number of Layers
-      //layer_planes[i].translateX( -((-layer_planes.length/2 + i) * window_width + window_width/2)); //even number of Layers
   }
   updateLayersRShiny();
   updateNodesRShiny(); // VR node world positions update
@@ -435,13 +347,10 @@ const moveLayers = (direction, axis) => {
       for (let i = 0; i < js_selected_layers.length; i++) {
         if (axis == "X")
           layers[js_selected_layers[i]].translateX(value);
-          //layer_planes[js_selected_layers[i]].translateX(value);
         else if (axis == "Y")
           layers[js_selected_layers[i]].translateY(value);
-          //layer_planes[js_selected_layers[i]].translateY(value);
         else if (axis == "Z")
           layers[js_selected_layers[i]].translateZ(value);
-          //layer_planes[js_selected_layers[i]].translateZ(value);
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
@@ -458,13 +367,7 @@ const scaleLayers = () => {
     alert("Please select at least one layer.");
   else {
     for (let i = 0; i < js_selected_layers.length; i++) {
-      //layer_planes[js_selected_layers[i]].geometry.scale(1, parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]], parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]]);
-      // last_layer_scale[js_selected_layers[i]] = parseFloat(cavnasSlider.value);
       for (let j = 0; j < layers[js_selected_layers[i]].plane.children.length; j++) {
-        // layer_planes[js_selected_layers[i]].children[j].position.y = 
-        //   layer_planes[js_selected_layers[i]].children[j].position.y * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
-        // layer_planes[js_selected_layers[i]].children[j].position.z =
-        //   layer_planes[js_selected_layers[i]].children[j].position.z * parseFloat(cavnasSlider.value)/last_layer_scale[js_selected_layers[i]];
         layers[js_selected_layers[i]].plane.children[j].position.y = 
           layers[js_selected_layers[i]].plane.children[j].position.y * parseFloat(cavnasSlider.value) / layers[js_selected_layers[i]].getScale();
         layers[js_selected_layers[i]].plane.children[j].position.z =

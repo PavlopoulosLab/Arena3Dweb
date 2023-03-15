@@ -14,6 +14,7 @@ class Layer {
 
       this.showNodeLabels = false;
       this.isSelected = false; // TODO check if this over js_selected_layers
+      this.isVisible = true; // TODO check if use to not render hidden layers in loops
       this.coordSystem = ["", "", ""];
       this.color = floor_current_color;
 
@@ -35,7 +36,7 @@ class Layer {
       alphaTest: 0.05,
       wireframe: false,
       transparent: true,
-      opacity: layerOpacity,
+      opacity: 0.6,
       side: THREE.DoubleSide,
     });
     this.plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -45,6 +46,7 @@ class Layer {
     this.coordSystem[0] = this.appendLine(150, 0, 0, "#FB3D2A") // red
     this.coordSystem[1] = this.appendLine(0, 150, 0, "#46FB2A") // green
     this.coordSystem[2] = this.appendLine(0, 0, 150, "#2AC2FB") // blue
+    this.toggleCoords(false);
   }
   
   appendLine(x, y, z, color) {
@@ -102,6 +104,14 @@ class Layer {
     this.setRotation("z", z);
   }
 
+  toggleVisibility(flag) {
+    this.plane.visible = flag;
+  }
+
+  toggleWireframe(flag) {
+    this.plane.material.wireframe = flag;
+  }
+
   // transformations
   translateX(x) {
     this.plane.translateX(x);
@@ -148,6 +158,10 @@ class Layer {
     return(this.plane.rotation[axis]);
   }
   
+  getWidth() {
+    return(this.geometry_parameters_width);
+  }
+
   setScale(value) {
     let newScaleValue = parseFloat(value) / this.getScale();
     this.plane.geometry.scale(1, newScaleValue, newScaleValue);
@@ -165,5 +179,9 @@ class Layer {
 
   getColor() {
     return(this.color);
+  }
+
+  setOpacity(value) {
+    this.plane.material.opacity = value;
   }
 }

@@ -79,7 +79,6 @@ const redrawLayerLabels = (mode) => {
     layer_spheres = layers.map(({ sphere }) => sphere);
   switch (mode) {
     case "all":
-      // layerArray = layer_names;
       layerArray = layers.map(({ name }) => name);
       break;
     case "selected":

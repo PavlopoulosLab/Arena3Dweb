@@ -133,7 +133,6 @@ const decideNodeLabelFlags = () => {
       node_label_flags[i] = false;
     } else if (showAllNodeLabelsFlag){ //2. if showing all node labels
       node_label_flags[i] = true;
-    // } else if (layer_node_labels_flags[node_layer]){ //3. if showing layer node labels
     } else if (layers[node_layer].showNodeLabels) { //3. if showing layer node labels
       node_label_flags[i] = true;
     } else if (showSelectedNodeLabelsFlag && exists(selectedNodePositions, i)){ //4. if showing selected node labels, and node is selected

@@ -1,6 +1,5 @@
 const drawEdges = () => {
   let index1 = 0, index2 = 0, color = "";
-  let layer_planes = layers.map(({ plane }) => plane);
   for (let i = 0; i < edge_pairs.length; i++){ //random x,y,z
     color = edgeDefaultColor;
     if (edge_channels && edge_channels[i] && edge_channels[i].length === 1) {
@@ -33,17 +32,17 @@ const drawEdges = () => {
       if (edge_channels[i]) {
         let curve_group = new THREE.Group();
         curve_group = createChannels(points[0], points[1], channelCurvature, ver_line, i, false);
-        layer_planes[layer_groups[node_groups[node_whole_names[index1]]]].add(curve_group);
+        layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(curve_group);
         edges.push(curve_group);
       } else {
-        layer_planes[layer_groups[node_groups[node_whole_names[index1]]]].add(ver_line);
+        layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(ver_line);
         edges.push(ver_line);
         //directed
         if (isDirectionEnabled) {
           const group = new THREE.Group();
           group.add( ver_line);
           group.add( arrowHelper );
-          layer_planes[layer_groups[node_groups[node_whole_names[index1]]]].add(group);
+          layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(group);
           edges[i] = group;
         }
       }
