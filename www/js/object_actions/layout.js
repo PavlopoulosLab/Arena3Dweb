@@ -18,13 +18,17 @@ const assignXYZ = (nodeCoords) => {
       target_z_max = zBoundMax;
   if (localLayoutFlag) { //if local layout, change target mins and maxes and then unset flag
     layerIndex = layer_groups[node_groups[nodeCoords.name[0]]];
-    target_y_min = target_y_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.y/last_layer_scale[layerIndex],
-    target_z_min = target_z_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.z/last_layer_scale[layerIndex];
+    // target_y_min = target_y_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.y / last_layer_scale[layerIndex];
+    // target_z_min = target_z_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.z / last_layer_scale[layerIndex];
+    target_y_min = target_y_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.y / layers[layerIndex].getScale();
+    target_z_min = target_z_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.z / layers[layerIndex].getScale();
     for (i = 1; i < nodeCoords.name.length; i++) {
       node_name = nodeCoords.name[i].trim();
       if (nodes[node_whole_names.indexOf(node_name)]) {
-        y_coord = nodes[node_whole_names.indexOf(node_name)].position.y / last_layer_scale[layerIndex];
-        z_coord = nodes[node_whole_names.indexOf(node_name)].position.z / last_layer_scale[layerIndex];
+        // y_coord = nodes[node_whole_names.indexOf(node_name)].position.y / last_layer_scale[layerIndex];
+        // z_coord = nodes[node_whole_names.indexOf(node_name)].position.z / last_layer_scale[layerIndex];
+        y_coord = nodes[node_whole_names.indexOf(node_name)].position.y / layers[layerIndex].getScale();
+        z_coord = nodes[node_whole_names.indexOf(node_name)].position.z / layers[layerIndex].getScale();
         if (y_coord < target_y_min) target_y_min = y_coord;
         if (y_coord > target_y_max) target_y_max = y_coord;
         if (z_coord < target_z_min) target_z_min = z_coord;
@@ -46,13 +50,15 @@ const assignXYZ = (nodeCoords) => {
       if (y_max - y_min != 0)
         nodes[node_whole_names.indexOf(node_name)].position.y = 
           ((y_arr[i] - y_min) * (target_y_max - target_y_min) /
-            (y_max - y_min) + target_y_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping * layer stretch scale
+            (y_max - y_min) + target_y_min) * layers[layer_groups[node_groups[node_name]]].getScale(); //mapping * layer stretch scale
+           // (y_max - y_min) + target_y_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping * layer stretch scale
       else
         nodes[node_whole_names.indexOf(node_name)].position.y = 0;
       if (z_max - z_min != 0)
         nodes[node_whole_names.indexOf(node_name)].position.z = 
           ((z_arr[i] - z_min) * (target_z_max - target_z_min) / 
-            (z_max - z_min) + target_z_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping
+            (z_max - z_min) + target_z_min) * layers[layer_groups[node_groups[node_name]]].getScale(); //mapping
+            //(z_max - z_min) + target_z_min) * last_layer_scale[layer_groups[node_groups[node_name]]]; //mapping
       else
         nodes[node_whole_names.indexOf(node_name)].position.z = 0;
     }
@@ -89,22 +95,25 @@ const topologyScale = (nodeScale) => {
 };
 
 const applyPredefinedLayout = (message) => {
-  let numLayers = layer_planes.length;
+  let numLayers = layers.length;
   if (numLayers <= 1)  alert("You need at least 2 layers for the layouts");
   else {
     if (message) {
+      let layer_planes = layers.map(({ plane }) => plane);
       // init position in order to position layers more easily
       scene.tiltDefault();
       layer_size = layer_planes[0].geometry.parameters.height;
       for (let i = 0; i < numLayers; i++) {
         layer_planes[i].position.set(0, 0, 0)
         layer_planes[i].quaternion.copy(camera.quaternion);
-        if(layer_size < layer_planes[i].geometry.parameters.height) layer_size = layer_planes[i].geometry.parameters.height
+        if (layer_size < layer_planes[i].geometry.parameters.height) // TODO probably remove this
+          layer_size = layer_planes[i].geometry.parameters.height
       }
       switch (message) {
         case "zigZag":
-          for (let i = 1; i < numLayers; i+=2){
-            layer_planes[i].translateY(500);
+          for (let i = 1; i < numLayers; i+=2) {
+            layers[i].translateY(500);
+            //layer_planes[i].translateY(500);
           }
           positionLayers();
           break;
@@ -162,6 +171,4 @@ const applyPredefinedLayout = (message) => {
       }
     }
   }
-
-  return true;
 }

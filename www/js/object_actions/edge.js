@@ -1,5 +1,6 @@
 const drawEdges = () => {
   let index1 = 0, index2 = 0, color = "";
+  let layer_planes = layers.map(({ plane }) => plane);
   for (let i = 0; i < edge_pairs.length; i++){ //random x,y,z
     color = edgeDefaultColor;
     if (edge_channels && edge_channels[i] && edge_channels[i].length === 1) {
@@ -45,7 +46,6 @@ const drawEdges = () => {
           layer_planes[layer_groups[node_groups[node_whole_names[index1]]]].add(group);
           edges[i] = group;
         }
-        
       }
     } else { //identify between-layer edges
       edges.push(i); //pushing this to keep count of edges for redraw
@@ -53,7 +53,6 @@ const drawEdges = () => {
       edge_channels &&  layer_edges_pairs_channels.push(edge_channels[i]); 
     }
   }
-  return true;
 }
 
 const redrawEdges = () => {
@@ -108,7 +107,6 @@ const redrawEdges = () => {
       }
     }
   }
-  return true;
 }
 
 const createArrow = (points, color, extra_point, isInterLayer) => {

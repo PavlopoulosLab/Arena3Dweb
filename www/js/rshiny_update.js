@@ -27,21 +27,29 @@ const updateLayersRShiny = () => {
   } else {
     tempColor = floorCurrentColor;
   }
+  let layer_planes = layers.map(({ plane }) => plane);
   for (let i = 0; i < layer_planes.length; i++) {
     if (layerColorFromFile) {
         if (typeof floorDefaultColors[i] === 'object') {
           layerColor = '#' + floorDefaultColors[i].getHexString();
-        } else layerColor = floorDefaultColors[i]
-    } else layerColor = tempColor;
-     temp_js_layers = [layer_names[i], layer_planes[i].position.x, layer_planes[i].position.y, layer_planes[i].position.z, last_layer_scale[i],
-                      layer_planes[i].rotation.x, layer_planes[i].rotation.y, layer_planes[i].rotation.z, layerColor,  layer_planes[i].geometry.parameters.width];
+        } else
+          layerColor = floorDefaultColors[i]
+    } else 
+      layerColor = tempColor;
+    //  temp_js_layers = [layer_names[i], layer_planes[i].position.x, layer_planes[i].position.y, layer_planes[i].position.z, last_layer_scale[i],
+    //                   layer_planes[i].rotation.x, layer_planes[i].rotation.y, layer_planes[i].rotation.z, layerColor,  layer_planes[i].geometry.parameters.width];
+    temp_js_layers = [layers[i].getName(), layers[i].getPosition("x"), layers[i].getPosition("y"), layers[i].getPosition("z"), layers[i].getScale(),
+                      layers[i].getRotation("x"), layers[i].getRotation("y"), layers[i].getRotation("z"), layers[i].getColor(), layers[i].geometry_parameters_width];
     js_layers.push(temp_js_layers);
     
     // VR
     temp_js_layers = [
-      layer_names[i], layer_planes[i].getWorldPosition(target).x,
+      // layer_names[i], layer_planes[i].getWorldPosition(target).x,
+      layers[i].getName(),
+      layer_planes[i].getWorldPosition(target).x,
       layer_planes[i].getWorldPosition(target).y,
-      layer_planes[i].getWorldPosition(target).z];
+      layer_planes[i].getWorldPosition(target).z
+    ];
     js_layers_world.push(temp_js_layers);
   }
   Shiny.setInputValue("js_layers", JSON.stringify(js_layers));
@@ -49,6 +57,7 @@ const updateLayersRShiny = () => {
 }
 
 const updateLayerNamesRShiny = () => {
+  let layer_names = layers.map(({ name }) => name);
   Shiny.setInputValue("js_layer_names", layer_names);
 }
 

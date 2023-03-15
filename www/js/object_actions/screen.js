@@ -75,10 +75,12 @@ const renderLayerLabels = () => {
 
 const redrawLayerLabels = (mode) => {
   let  layerArray, layerX, layerY, labelX, labelY,
-    i, position, c = document.getElementById("checkboxdiv").children;
+    i, position, c = document.getElementById("checkboxdiv").children,
+    layer_spheres = layers.map(({ sphere }) => sphere);
   switch (mode) {
     case "all":
-      layerArray = layer_names;
+      // layerArray = layer_names;
+      layerArray = layers.map(({ name }) => name);
       break;
     case "selected":
       layerArray = js_selected_layers;

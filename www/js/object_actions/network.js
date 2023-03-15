@@ -6,12 +6,10 @@ const executePreNetworkSetup = () => {
 };
 
 const uploadNetwork = (network) => { 
-  console.log(network);
   executePreNetworkSetup();
-  
 
   let temp_name1 = temp_name2 = temp_layer1 = temp_layer2 = "",
-    layers_counter = 0;
+    layers_counter = 0, layer_names = [];
   let temp_channel;
   for (let i=0; i < network.SourceLayer.length; i++){
     temp_layer1 = String(network.SourceLayer[i]);
@@ -60,44 +58,46 @@ const uploadNetwork = (network) => {
     }
     edge_values.push(Number(String(network.Weight[i])));
   }
-  node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; });
-  layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function () { return false; });
-  if (layer_names.length > MAX_LAYERS) {
-     alert("Network must contain no more than ".concat(MAX_LAYERS).concat(" layers.")); //layer limit
-      return false
-  }
-  updateLayerNamesRShiny(); //correct order of layer names to avoid bugs with positions
-  updateNodeNamesRShiny(); //for Local Layout algorithms
-  updateSelectedNodesRShiny();
-  //edge_values = mapper(edge_values, 0.1, 1) //min and max opacities //this is done in R now
-  if (network.Channel) {
-    let channel_values = network.Channel.filter((x, i, a) => a.indexOf(x) == i)
-    if (channel_values.length > MAX_CHANNELS) {
-      alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
-      return false
-    } else {
-      channels = channel_values;
-      channels.forEach(c => {
-        channelVisibility[c] = true;
-      });
-    }
-  }
-
-  if (edge_values.length > MAX_EDGES)
-    alert("Network must contain no more than ".concat(MAX_EDGES).concat(" edges.")); //edge limit
-  else {
-    attachLayerCheckboxes();
-    loadGraph();
-    if (network.Channel) {
-      attachChannelEditList();
-      toggleChannelCurvatureRange(true);
-      attachChannelLayoutList();
-    } else {
-      toggleChannelCurvatureRange(false);
-    }
-  }
   
-  executePostNetworkSetup();
+  if (layer_names.length > MAX_LAYERS) {
+    alert("Network must contain no more than ".concat(MAX_LAYERS).concat(" layers.")); //layer limit
+  } else {
+    node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; });
+    // layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function () { return false; });
+
+    updateLayerNamesRShiny(); //correct order of layer names to avoid bugs with positions
+    updateNodeNamesRShiny(); //for Local Layout algorithms
+    updateSelectedNodesRShiny();
+    //edge_values = mapper(edge_values, 0.1, 1) //min and max opacities //this is done in R now
+    if (network.Channel) {
+      let channel_values = network.Channel.filter((x, i, a) => a.indexOf(x) == i)
+      if (channel_values.length > MAX_CHANNELS) {
+        alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
+        return false
+      } else {
+        channels = channel_values;
+        channels.forEach(c => {
+          channelVisibility[c] = true;
+        });
+      }
+    }
+  
+    if (edge_values.length > MAX_EDGES)
+      alert("Network must contain no more than ".concat(MAX_EDGES).concat(" edges.")); //edge limit
+    else {
+      attachLayerCheckboxes();
+      loadGraph();
+      if (network.Channel) {
+        attachChannelEditList();
+        toggleChannelCurvatureRange(true);
+        attachChannelLayoutList();
+      } else {
+        toggleChannelCurvatureRange(false);
+      }
+    }
+    
+    executePostNetworkSetup();
+  }
 }
 
 const importNetwork = (jsonNetwork) => {
@@ -106,8 +106,9 @@ const importNetwork = (jsonNetwork) => {
   setLabelColorVariable(jsonNetwork.universalLabelColor);  
   
   let layers_counter = 0,
-      color = "",
-      whole_name = "",
+    layer_names = "",
+    layer_planes = [];
+    whole_name = "",
     import_width = "",
     channel_values = [];
   node_attributes = {
@@ -179,7 +180,7 @@ const importNetwork = (jsonNetwork) => {
       Number(jsonNetwork.layers.last_layer_scale[i]),
       Number(jsonNetwork.layers.last_layer_scale[i])
     );
-    last_layer_scale.push(Number(jsonNetwork.layers.last_layer_scale[i]));
+    // last_layer_scale.push(Number(jsonNetwork.layers.last_layer_scale[i])); // TODO add as parameter on new Layer
     plane.rotation.x = Number(jsonNetwork.layers.rotation_x[i]);
     plane.rotation.y = Number(jsonNetwork.layers.rotation_y[i]);
     plane.rotation.z = Number(jsonNetwork.layers.rotation_z[i]);
@@ -281,7 +282,7 @@ const importNetwork = (jsonNetwork) => {
     toggleChannelCurvatureRange(false);
   }
   node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; }); //for node label rendering
-  layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function() { return false; }); //for specific-layer node label rendering
+  // layer_node_labels_flags = Array.apply(0, Array(layer_names.length)).map(function() { return false; }); //for specific-layer node label rendering
   updateLayerNamesRShiny();
   updateNodeNamesRShiny();
   updateSelectedNodesRShiny();
@@ -323,15 +324,15 @@ const clearCanvas = () => {
   edge_values = [],
   edge_channels = [],
   channels = [],
-  layerCoords = [],
+  // layerCoords = [],
   node_groups = new Map(),
   layer_groups = new Map(),
   layer_labels = [], //divs
-  layer_names = [],
-  layer_node_labels_flags = [],
+  // layer_names = [],
+  // layer_node_labels_flags = [],
   floorDefaultColors = [], 
   layer_planes = [],
-  layer_spheres = [],
+  //layer_spheres = [],
   js_selected_layers = [],
   selectedNodePositions = [],
   selected_edges = [],
@@ -342,7 +343,7 @@ const clearCanvas = () => {
   node_cluster_colors = [],
   node_attributes = "",
   edge_attributes = "",
-  last_layer_scale = [];
+  // last_layer_scale = [];
   channel_values = [];
   isDirectionEnabled = false;
   toggleChannelCurvatureRange(false);
@@ -369,10 +370,11 @@ const loadGraph = () => {
     plane.add(sphere);
     sphere.translateY(-yBoundMax);
 	  sphere.translateZ(zBoundMax);
-    layer_planes.push(plane);
-    layer_spheres.push(sphere);
-    scene.addLayer(plane); // TODO swap with scene.addLayer(newLayer.plane) where newLayer = new Layer(params)
-    last_layer_scale.push(1);
+    //layer_planes.push(plane);
+    //layer_spheres.push(sphere);
+    scene.addLayer(layers[i].plane); // TODO swap with scene.addLayer(newLayer.plane) where newLayer = new Layer(params)
+    //scene.addLayer(plane); // TODO swap with scene.addLayer(newLayer.plane) where newLayer = new Layer(params)
+    // last_layer_scale.push(1);
   }
   //create node geometries
   for (i = 0; i < node_whole_names.length; i++){
@@ -380,9 +382,9 @@ const loadGraph = () => {
     material = new THREE.MeshStandardMaterial( {color: colorVector[(layer_groups[node_groups[node_whole_names[i]]])%colorVector.length], transparent: true} ); //standard material allows light reaction
     sphere = new THREE.Mesh( geometry, material );
     nodes.push(sphere);
-    layer_planes[layer_groups[node_groups[node_whole_names[i]]]].add(sphere); //attaching to corresponding layer centroid
+    layers[layer_groups[node_groups[node_whole_names[i]]]].plane.add(sphere); //attaching to corresponding layer centroid
+    //layer_planes[layer_groups[node_groups[node_whole_names[i]]]].add(sphere); //attaching to corresponding layer centroid
   }
-  
   
   channel_colors = CHANNEL_COLORS_LIGHT;
   createChannelColorMap();
@@ -400,6 +402,7 @@ const loadGraph = () => {
 }
 
 const executePostNetworkSetup = () => {
+    let layer_planes = layers.map(({ plane }) => plane);
     drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
 
     updateScenePanRShiny();

@@ -25,9 +25,6 @@ class Layer {
 
       this.addSphere(geometry_parameters_width, last_layer_scale);
       this.initRotateSphere(rotation_x, rotation_y, rotation_z);
-      
-      // updateLayerNamesRShiny
-      // updateLayersRShiny
   }
 
   createPlane(width) {
@@ -119,18 +116,22 @@ class Layer {
   }
 
   rotateX(x) {
-    this.sphere.rotateX(x);
+    this.plane.rotateX(x);
   }
   
   rotateY(y) {
-    this.sphere.rotateY(y);
+    this.plane.rotateY(y);
   }
   
   rotateZ(z) {
-    this.sphere.rotateZ(z);
+    this.plane.rotateZ(z);
   }
 
   // setters and getters
+  getName() {
+    return(this.name);
+  }
+
   setPosition(axis, value) {
     this.plane.position[axis] = value;
   }
@@ -140,16 +141,17 @@ class Layer {
   }
   
   setRotation(axis, value) {
-    this.sphere.rotation[axis] = value;
+    this.plane.rotation[axis] = value;
   }
   
   getRotation(axis) {
-    return(this.sphere.rotation[axis]);
+    return(this.plane.rotation[axis]);
   }
   
   setScale(value) {
-    this.last_layer_scale = value;
-    this.plane.geometry.scale(1, value, value);
+    let newScaleValue = parseFloat(value) / this.getScale();
+    this.plane.geometry.scale(1, newScaleValue, newScaleValue);
+    this.last_layer_scale = parseFloat(value);
   }
 
   getScale() {
