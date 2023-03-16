@@ -20,11 +20,8 @@ let last_hovered_layer_index = "", // for correct hover coloring
     showAllLayerLabelsFlag = true,
     showSelectedLayerLabelsFlag = false,
     layer_groups = new Map(),
-    layerColorFromFile = true,
-    floorDefaultColors = [], // TODO per class object element
-    floorCurrentColor = LAYER_DEFAULT_COLOR,
+    layerColorPrioritySource = "default", // or "picker"
     hoveredLayerPaintedFlag = false;
-    //defaultLayerColor, importedLayerColor, pickerLayerColor == themeLayerColor
 
 // nodes
 let showAllNodeLabelsFlag = false,

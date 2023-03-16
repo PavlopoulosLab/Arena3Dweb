@@ -4,14 +4,14 @@ const selectAllLayers = (flag) => {
     layerCheckboxes[i].checked = flag;
     layers[i].isSelected = flag;
   }
-  paintSelectedLayers();
+  repaintLayers();
   updateSelectedLayersRShiny();
 }
 
 const selectCheckedLayer = (checkbox) => {
   layers[checkbox.value].isSelected = checkbox.checked;
   updateSelectedLayersRShiny();
-  paintSelectedLayers();
+  repaintLayers();
 }
 
 const existsClickedLayer = (e) => {
@@ -21,7 +21,7 @@ const existsClickedLayer = (e) => {
     performDoubleClickLayerSelection(last_hovered_layer_index);
     last_hovered_layer_index = "";
     updateSelectedLayersRShiny();
-    paintSelectedLayers();
+    repaintLayers();
   }
   return exists;
 }
@@ -33,19 +33,29 @@ const performDoubleClickLayerSelection = (index) => {
   layerCheckboxes[index].checked ? layerCheckboxes[index].checked = false : layerCheckboxes[index].checked = true;
 };
 
-const paintSelectedLayers = () => {
+const repaintLayers = () => { 
   for (i = 0; i < layers.length; i++) {
     if (layers[i].isSelected)
-      layers[i].setColor("#f7f43e");
+      layers[i].setColor(SELECTED_LAYER_DEFAULT_COLOR);
     else {
-      if (floorDefaultColors.length > 0 && layerColorFromFile) {
-        layers[i].setColor(floorDefaultColors[i]);
-      } else
-       layers[i].setColor(floorCurrentColor);
-      if (!showAllLayerLabelsFlag && showSelectedLayerLabelsFlag)
-        layer_label_divs[i].style.display = "none";
+      if (layerColorPrioritySource == "default") {
+        layers[i].setColor(layers[i].importedColor);
+      } else if (layerColorPrioritySource == "picker") {
+        layers[i].setColor(document.getElementById("floor_color").value);
+      }
     }
   }
+  updateLayersRShiny();
+};
+
+const repaintLayersFromPicker = () => {
+  chooseColorpickerPriority();
+  repaintLayers();
+};
+
+const chooseColorpickerPriority = () => {
+  let radioButtonDiv = document.getElementById("layerColorPriorityRadio");
+  radioButtonDiv.children[1].children[1].click(); // choosing Theme/Colorpicker priority
 }
 
 const hideLayers = () => {
@@ -141,27 +151,13 @@ const positionLayers = () => {
   updateNodesRShiny(); // VR node world positions update
 }
 
-// @param color (string): hex color
-const setFloorColor = (color) => {
-  // from picker: floorCurrentColor = document.getElementById("floor_color").value;
-  floorCurrentColor = color;
-  for (let i = 0; i < layers.length; i++) {
-      if (floorDefaultColors.length > 0 && layerColorFromFile) {
-        layers[i].setColor(floorDefaultColors[i]);
-      } else
-        layers[i].setColor(color);
-  }
-  updateLayersRShiny();
-}
-
 const checkHoverOverLayer = (event, node_hover_flag) => {
   setRaycaster(event);
   let layer_planes = layers.map(({ plane }) => plane);
   let intersects = RAYCASTER.intersectObjects(layer_planes); // TODO get all layer object planes in an array first
-  
   if (intersects.length > 0 & !node_hover_flag) {
-    if (last_hovered_layer_index != ""){
-      paintSelectedLayers();
+    if (last_hovered_layer_index !== "") {
+      repaintLayers();
       hoveredLayerPaintedFlag = true;
       last_hovered_layer_index = "";
     }
@@ -169,7 +165,7 @@ const checkHoverOverLayer = (event, node_hover_flag) => {
     last_hovered_layer_index = findIndexByUuid(layer_planes, intersects[0].object.uuid);
   } else {
     if (hoveredLayerPaintedFlag) {
-      paintSelectedLayers(); // remove red color from last hovered
+      repaintLayers(); // remove red color from last hovered
       hoveredLayerPaintedFlag = false;
     }
     last_hovered_layer_index = "";
@@ -253,15 +249,9 @@ const showWireFrames = (wireframeFlag) => { // true or false
     layers[i].toggleWireframe(wireframeFlag);
 }
 
-const layerColorFilePriority = (message) => {
-  layerColorFromFile = message;
-  for (let i = 0; i < layers.length; i++) {
-    if (!layerColorFromFile)
-      layers[i].setColor(floorCurrentColor);
-    else
-      layers[i].setColor(floorDefaultColors[i]);
-  }
-  updateLayersRShiny();
+const layerColorPriority = (colorPriority) => {
+  layerColorPrioritySource = colorPriority;
+  repaintLayers();
 }
 
 // Canvas Controls =====

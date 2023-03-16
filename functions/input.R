@@ -502,10 +502,7 @@ parseJSONEdgesIntoNetwork <- function(edges) {
   return(df)
 }
 
-generateNetworkFromDF_JSONVersion <- function(jsonNetwork) {
-  shinyjs::show("layerColorFilePriority")
-  updateCheckboxInput(session, 'layerColorFilePriority', value = T)
-  
+generateNetworkFromDF_JSONVersion <- function(jsonNetwork) {  
   callJSHandler("handler_importNetwork", jsonNetwork)
   renderNetworkDF(networkDF)
   

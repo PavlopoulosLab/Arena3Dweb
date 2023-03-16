@@ -68,7 +68,7 @@ Shiny.addCustomMessageHandler("handler_showLayerCoords", showLayerCoords);
 Shiny.addCustomMessageHandler("handler_floorOpacity", setFloorOpacity);
 Shiny.addCustomMessageHandler("handler_showWireFrames", showWireFrames);
 Shiny.addCustomMessageHandler("handler_selectAllLayers", selectAllLayers);
-Shiny.addCustomMessageHandler("handler_layerColorFilePriority", layerColorFilePriority);
+Shiny.addCustomMessageHandler("handler_layerColorPriority", layerColorPriority);
 // Nodes ====================
 Shiny.addCustomMessageHandler("handler_nodeSelector", nodeSelector);
 Shiny.addCustomMessageHandler("handler_nodeSelectedColorPriority", nodeSelectedColorPriority);

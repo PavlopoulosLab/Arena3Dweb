@@ -40,7 +40,7 @@ const showLayerLabels = (mode) => {
     showAllLayerLabels();
   } else if (mode == "selected") {
     showSelectedLayerLabels();
-  } else { // none
+  } else if (mode == "none") {
     hideAllLayerLabels();
   }
 };

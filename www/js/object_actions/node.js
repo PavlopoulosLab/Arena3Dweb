@@ -21,7 +21,7 @@ const checkHoverOverNode = (event) => {
   if (intersects.length > 0) {
     hover_flag = true;
     
-    if (last_hovered_node_index != ""){
+    if (last_hovered_node_index !== ""){
       hovered_nodes = hovered_nodes.filter(function(value, index, arr){ return value != last_hovered_node_index;});
       nodes[last_hovered_node_index].material.opacity = 1;
       last_hovered_node_index = "";
@@ -32,7 +32,7 @@ const checkHoverOverNode = (event) => {
     if (!exists(hovered_nodes, last_hovered_node_index)) hovered_nodes.push(last_hovered_node_index);
     event_flag = true;
   } else {
-    if (last_hovered_node_index != ""){
+    if (last_hovered_node_index !== ""){
       hovered_nodes = hovered_nodes.filter(function(value, index, arr){ return value != last_hovered_node_index;});
       nodes[last_hovered_node_index].material.opacity = 1;
       last_hovered_node_index = "";

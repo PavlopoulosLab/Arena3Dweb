@@ -39,7 +39,7 @@ const clickDown = (event) => {
     if (event.button == 0) {
       scene.leftClickPressed = true;
       scene.middleClickPressed = false;
-      if (event.shiftKey && shiftX == "") {
+      if (event.shiftKey && shiftX === "") {
         shiftX = event.layerX - xBoundMax;
         shiftY = yBoundMax - event.layerY; // used in drag
       }
@@ -109,11 +109,11 @@ const clickUp = (event) => {
     scene.dragging = false;
     if (event.button == 0) {
       scene.leftClickPressed = false;
-      if (optionsList != "") {
+      if (optionsList !== "") {
         document.getElementById("labelDiv").removeChild(optionsList);
         optionsList = "";
       }
-      if (lasso != "") {
+      if (lasso !== "") {
         for (let i = 0; i < nodes.length; i++) {
           if (nodes[i].material.opacity == 0.5) {
             nodes[i].material.opacity = 1;
@@ -164,7 +164,7 @@ const dblClick = (event) => {
 
 // right mouse click on node
 const replaceContextMenuOverNode = (evt) => { 
-  if (optionsList != ""){
+  if (optionsList !== ""){
     document.getElementById("labelDiv").removeChild(optionsList);
     optionsList = "";
   }

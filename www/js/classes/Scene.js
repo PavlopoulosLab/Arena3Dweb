@@ -89,7 +89,7 @@ class Scene {
   }
 
   exists() {
-    return(this.pan != "");
+    return(this.pan !== "");
   }
   
   tiltDefault() {

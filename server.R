@@ -125,8 +125,8 @@ server <- function(input, output, session) {
     callJSHandler("handler_showWireFrames", input$showWireFrames)
   }, ignoreInit = T)
   
-  observeEvent(input$layerColorFilePriority, {
-    callJSHandler("handler_layerColorFilePriority", input$layerColorFilePriority)
+  observeEvent(input$layerColorPriorityRadio, {
+    callJSHandler("handler_layerColorPriority", input$layerColorPriorityRadio)
   }, ignoreInit = T)
   
   observeEvent(input$layerOpacity, {

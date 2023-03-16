@@ -41,8 +41,8 @@ const applyTheme = (bgColor, floorColor, edgeColor, labelColor, theme_colors, ch
     createChannelColorMap();
     setRendererColor(bgColor);
     updateScenePanRShiny();
-    setFloorColor(floorColor);
     document.getElementById("floor_color").value = floorColor;
+    repaintLayersFromPicker();
     attachChannelEditList();
     updateLayersRShiny();
     edgeDefaultColor = edgeColor; // global for inter-layer edges

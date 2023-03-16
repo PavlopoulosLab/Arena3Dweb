@@ -21,22 +21,10 @@ const updateLayersRShiny = () => {
   let js_layers = [],
     js_layers_world = [], // VR
     target = new THREE.Vector3(), // VR
-  temp_js_layers = [];
-  if (typeof floorCurrentColor === 'object') {
-    tempColor = '#' + floorCurrentColor.getHexString();
-  } else {
-    tempColor = floorCurrentColor;
-  }
+    temp_js_layers = [];
 
   let layer_planes = layers.map(({ plane }) => plane);
   for (let i = 0; i < layers.length; i++) {
-    if (layerColorFromFile) {
-        if (typeof floorDefaultColors[i] === 'object') {
-          layerColor = '#' + floorDefaultColors[i].getHexString();
-        } else
-          layerColor = floorDefaultColors[i]
-    } else 
-      layerColor = tempColor;
     temp_js_layers = [layers[i].getName(), layers[i].getPosition("x"), layers[i].getPosition("y"), layers[i].getPosition("z"), layers[i].getScale(),
                       layers[i].getRotation("x"), layers[i].getRotation("y"), layers[i].getRotation("z"), layers[i].getColor(), layers[i].getWidth()];
     js_layers.push(temp_js_layers);

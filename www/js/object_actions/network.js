@@ -285,7 +285,6 @@ const clearCanvas = () => {
   node_groups = new Map();
   layer_groups = new Map();
   layer_label_divs = []; //divs
-  floorDefaultColors = []; 
   selectedNodePositions = [];
   selected_edges = [];
   shiftX = "";

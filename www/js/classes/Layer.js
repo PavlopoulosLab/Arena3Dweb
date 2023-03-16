@@ -177,7 +177,16 @@ class Layer {
   }
 
   getColor() {
-    return(this.color);
+    let color = LAYER_DEFAULT_COLOR;
+    if (this.isSelected) {
+      if (layerColorPrioritySource == "default") {
+        color = this.importedColor;
+      } else if (layerColorPrioritySource == "picker") {
+        color = document.getElementById("floor_color").value;
+      }
+    } else 
+      color = this.color;
+    return(color);
   }
 
   setOpacity(value) {
