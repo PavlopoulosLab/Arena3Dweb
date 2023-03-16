@@ -85,8 +85,7 @@ Shiny.addCustomMessageHandler("handler_toggleDirection", toggleDirection);
 Shiny.addCustomMessageHandler("handler_channelCurvature", toggleChannelCurvature);
 Shiny.addCustomMessageHandler("handler_interChannelCurvature", interToggleChannelCurvature);
 // Labels ====================
-Shiny.addCustomMessageHandler("handler_showAllLayerLabels", showAllLayerLabels);
-Shiny.addCustomMessageHandler("handler_showSelectedLayerLabels", showSelectedLayerLabels);
+Shiny.addCustomMessageHandler("handler_showLayerLabels", showLayerLabels);
 Shiny.addCustomMessageHandler("handler_resizeLayerLabels", resizeLayerLabels);
 Shiny.addCustomMessageHandler("handler_showNodeLabels", showAllNodeLabels);
 Shiny.addCustomMessageHandler("handler_showSelectedNodeLabels", showSelectedNodeLabels);

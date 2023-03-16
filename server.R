@@ -109,12 +109,8 @@ server <- function(input, output, session) {
     callJSHandler("handler_selectAllLayers", input$selectAll)
   }, ignoreInit = T)
   
-  observeEvent(input$showSelectedLayerLabels, {
-    callJSHandler("handler_showSelectedLayerLabels", input$showSelectedLayerLabels)
-  }, ignoreInit = T)
-  
-  observeEvent(input$showAllLayerLabels, {
-    callJSHandler("handler_showAllLayerLabels", input$showAllLayerLabels)
+  observeEvent(input$showLayerLabelsRadio, {
+    callJSHandler("handler_showLayerLabels", input$showLayerLabelsRadio)
   }, ignoreInit = T)
   
   observeEvent(input$resizeLayerLabels, {

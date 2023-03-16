@@ -2,8 +2,7 @@ reset_UI_values <- function() {
   hideDataMetricTabs()
   reset("showAllNodeLabels") #shinyjs resetting checkboxes
   reset("showSelectedNodeLabels")
-  reset("showSelectedLayerLabels")
-  reset("showAllLayerLabels")
+  reset("showLayerLabelsRadio")
   reset("resizeLabels")
   reset("showLayerCoords")
   reset("nodeSelectedColorPriority")

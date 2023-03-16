@@ -33,25 +33,44 @@ const setLabelColor = () =>{
 
 const setLabelColorVariable = (label_color) => {
   globalLabelColor = label_color;
-  return true;
+};
+
+const showLayerLabels = (mode) => {
+  if (mode == "all") {
+    showAllLayerLabels();
+  } else if (mode == "selected") {
+    showSelectedLayerLabels();
+  } else { // none
+    hideAllLayerLabels();
+  }
+};
+
+const showAllLayerLabels = () => {
+  setGlobalLayerLabelFlags(true, false);
+  for (let i = 0; i < layers.length; i++)
+    layer_label_divs[i].style.display = "inline-block";
+};
+
+const setGlobalLayerLabelFlags = (allFlag, selectedFLag) => {
+  showAllLayerLabelsFlag = allFlag;
+  showSelectedLayerLabelsFlag = selectedFLag;
 }
 
-const showAllLayerLabels = (flag) => { // true or false
-  showAllLayerLabelsFlag = flag;
-  if (!showAllLayerLabelsFlag) {
-    for (let i = 0; i < layers.length; i++)
+const showSelectedLayerLabels = () => {
+  setGlobalLayerLabelFlags(false, true);
+  for (let i = 0; i < layers.length; i++) {
+    if (layers[i].isSelected)
+      layer_label_divs[i].style.display = "inline-block";
+    else
       layer_label_divs[i].style.display = "none";
   }
 };
 
-const showSelectedLayerLabels = (flag) => { // true or false
-  showSelectedLayerLabelsFlag = flag;
-  if (!showSelectedLayerLabelsFlag) {
-    for (let i = 0; i < js_selected_layers.length; i++) {
-      layer_label_divs[js_selected_layers[i]].style.display = "none";
-    }
-  }
-}
+const hideAllLayerLabels = () => {
+  setGlobalLayerLabelFlags(false, false);
+  for (let i = 0; i < layers.length; i++)
+      layer_label_divs[i].style.display = "none";
+};
 
 const resizeLayerLabels = (size) => { // [1, 20]
   for (i = 0; i < layers.length; i++)
