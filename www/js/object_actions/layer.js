@@ -75,66 +75,42 @@ const showLayerNodeLabels = () => {
 };
 
 const attachLayerCheckboxes = () => {
-  let checkbox = "",
-    label = "",
-    br = "",
-    temp = "",
+  let br,
     container = document.getElementById('checkboxdiv');
   container.innerHTML = ''; //clear previous checkboxes
 
-  for(let i = 0; i < Object.getOwnPropertyNames(layer_groups).length; i++) {
-    checkbox = document.createElement('input');
-    checkbox.type = "checkbox";
-    checkbox.name = "checkbox".concat(i);
-    checkbox.className = "checkbox_check layer_checkbox";
-    checkbox.value = i;
-    checkbox.id = "checkbox".concat(i);
-    checkbox.setAttribute('onclick', 'selectCheckedLayer(this)');
-    
-    label = document.createElement('label');
-    label.className = "checkbox_element layer_label";
-    label.htmlFor = i;
-    temp = layers[i].getName();
-    label.title = layers[i].getName();
-    label.appendChild(document.createTextNode(temp));
-    
-    checkbox2 = document.createElement('input');
-    checkbox2.className = "checkbox_check hideLayer_checkbox";
-    checkbox2.type = "checkbox";
-    checkbox2.name = "checkbox2".concat(i);
-    checkbox2.value = "show_hide".concat(i);
-    checkbox2.id = "checkbox2".concat(i);
-    checkbox2.setAttribute('onclick', 'hideLayers()');
-    
-    label2 = document.createElement('label');
-    label2.className = "checkbox_element";
-    label2.htmlFor = "show_hide".concat(i);
-    label2.appendChild(document.createTextNode('Hide'));
-    
-    checkbox3 = document.createElement('input');
-    checkbox3.className = "checkbox_check showLayerNodes_checkbox";
-    checkbox3.type = "checkbox";
-    checkbox3.name = "checkbox3".concat(i);
-    checkbox3.value = "show_labels".concat(i);
-    checkbox3.id = "checkbox3".concat(i);
-    checkbox3.setAttribute('onclick', 'showLayerNodeLabels()');
-    
-    label3 = document.createElement('label');
-    label3.className = "checkbox_element";
-    label3.htmlFor = "show_labels".concat(i);
-    label3.appendChild(document.createTextNode('Labels'));
-    
+  for (let i = 0; i < layers.length; i++) {
+    attachLayerCheckBox("checkbox_".concat(i), i, "layer_checkbox",
+      "selectCheckedLayer(this)", " layer_label", layers[i].getName())
+    attachLayerCheckBox("checkbox2_".concat(i), "show_hide".concat(i), "hideLayer_checkbox",
+      "hideLayers()", "", 'Hide')
+    attachLayerCheckBox("checkbox3_".concat(i), "show_labels".concat(i), "showLayerNodes_checkbox",
+      "showLayerNodeLabels()", "", 'Labels')
+
     br = document.createElement('br');
-    
-    container.appendChild(checkbox);
-    container.appendChild(label);
-    container.appendChild(checkbox2);
-    container.appendChild(label2);
-    container.appendChild(checkbox3);
-    container.appendChild(label3);
     container.appendChild(br);
   }
-}
+};
+
+const attachLayerCheckBox = (c_id, c_value, c_class, c_func, l_class, l_title) => {
+  let checkbox, label,
+    container = document.getElementById('checkboxdiv');
+    
+  checkbox = document.createElement('input');
+  checkbox.type = "checkbox";
+  checkbox.id = c_id;
+  checkbox.value = c_value;
+  checkbox.className = "checkbox_check ".concat(c_class);
+  checkbox.setAttribute("onclick", c_func);
+  
+  label = document.createElement('label');
+  label.htmlFor = c_value;
+  label.className = "checkbox_element".concat(l_class);
+  label.appendChild(document.createTextNode(l_title));
+
+  container.appendChild(checkbox);
+  container.appendChild(label);
+};
 
 const positionLayers = () => {
   let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
@@ -234,6 +210,7 @@ const adjustLayerSize = () => { // TODO check if works with import different wid
   redrawLayerLabels("all");
 }
 
+// Handlers =====
 const showLayerCoords = (labelCoordsSwitch) => { //message = true or false
   for (let i = 0; i < layers.length; i++)
     layers[i].toggleCoords(labelCoordsSwitch);
