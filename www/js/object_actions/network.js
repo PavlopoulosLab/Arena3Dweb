@@ -19,7 +19,7 @@ const uploadNetwork = (network) => {
     if (network.Channel) {
       temp_channel = String(network.Channel[i]);
     }
-    //push new nodes, layers, layer_groups and node-layergroup maps
+    //push new nodes, layers, layerGroups and node-layergroup maps
     if (!node_whole_names.includes(temp_name1)){
       node_names.push(String(network.SourceNode[i]));
       node_whole_names.push(temp_name1);
@@ -27,7 +27,7 @@ const uploadNetwork = (network) => {
       if (!layer_names.includes(temp_layer1)){
         layer_names.push(temp_layer1);
         layers.push(new Layer({id: layers_counter, name: temp_layer1}));
-        layer_groups[temp_layer1] = layers_counter;
+        layerGroups[temp_layer1] = layers_counter;
         layers_counter++;
       }
     }
@@ -38,7 +38,7 @@ const uploadNetwork = (network) => {
       if (!layer_names.includes(temp_layer2)){
         layer_names.push(temp_layer2);
         layers.push(new Layer({id: layers_counter, name: temp_layer2}));
-        layer_groups[temp_layer2] = layers_counter;
+        layerGroups[temp_layer2] = layers_counter;
         layers_counter++;
       }
     }
@@ -134,7 +134,7 @@ const importNetwork = (jsonNetwork) => {
   
   // LAYER
   for (let i = 0; i < jsonNetwork.layers.name.length; i++) {
-    layer_groups[jsonNetwork.layers.name[i]] = i;
+    layerGroups[jsonNetwork.layers.name[i]] = i;
     layers.push(new Layer({id: i, name: jsonNetwork.layers.name[i],
       position_x: Number(jsonNetwork.layers.position_x[i]),
       position_y: Number(jsonNetwork.layers.position_y[i]),
@@ -167,7 +167,7 @@ const importNetwork = (jsonNetwork) => {
     node_attributes.Description.push(jsonNetwork.nodes.descr[i]);
     let sphere = new THREE.Mesh(geometry, material);
     nodes.push(sphere);
-    layers[layer_groups[node_groups[whole_name]]].plane.add(sphere);
+    layers[layerGroups[node_groups[whole_name]]].plane.add(sphere);
     sphere.position.x = Number(jsonNetwork.nodes.position_x[i]);
     sphere.position.y = Number(jsonNetwork.nodes.position_y[i]);
     sphere.position.z = Number(jsonNetwork.nodes.position_z[i]);
@@ -273,7 +273,7 @@ const clearCanvas = () => {
   node_label_flags = [];
   hovered_nodes = [];
   last_hovered_node_index = "";
-  last_hovered_layer_index = "";
+  lastHoveredLayerIndex = "";
   edges = []; //canvas objects
   layerEdges = []; //canvas objects
   edge_pairs = [];
@@ -283,7 +283,7 @@ const clearCanvas = () => {
   edge_channels = [];
   channels = [];
   node_groups = new Map();
-  layer_groups = new Map();
+  layerGroups = new Map();
   layer_label_divs = []; //divs
   selectedNodePositions = [];
   selected_edges = [];
@@ -303,16 +303,16 @@ const loadGraph = () => {
   //create layer planes
   let layerSphereGeometry = new THREE.SphereGeometry( 0 );
   let layerSphereMaterial = new THREE.MeshBasicMaterial( {color:"white", transparent: true, opacity: 0.5} );
-  for(let i = 0; i < Object.getOwnPropertyNames(layer_groups).length; i++) {
+  for(let i = 0; i < Object.getOwnPropertyNames(layerGroups).length; i++) {
     scene.addLayer(layers[i].plane); 
   }
   //create node geometries
   for (i = 0; i < node_whole_names.length; i++){
     geometry = new THREE.SphereGeometry( SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS );
-    material = new THREE.MeshStandardMaterial( {color: colorVector[(layer_groups[node_groups[node_whole_names[i]]])%colorVector.length], transparent: true} ); //standard material allows light reaction
+    material = new THREE.MeshStandardMaterial( {color: colorVector[(layerGroups[node_groups[node_whole_names[i]]])%colorVector.length], transparent: true} ); //standard material allows light reaction
     sphere = new THREE.Mesh( geometry, material );
     nodes.push(sphere);
-    layers[layer_groups[node_groups[node_whole_names[i]]]].plane.add(sphere); //attaching to corresponding layer centroid
+    layers[layerGroups[node_groups[node_whole_names[i]]]].plane.add(sphere); //attaching to corresponding layer centroid
   }
   
   channel_colors = CHANNEL_COLORS_LIGHT;

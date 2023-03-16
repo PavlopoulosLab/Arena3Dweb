@@ -1,3 +1,4 @@
+// Scene
 const updateScenePanRShiny = () => {
   let js_scene_pan = {
     "position_x": String(scene.getPosition("x")),
@@ -17,6 +18,7 @@ const updateSceneSphereRShiny = () => {
   Shiny.setInputValue("js_scene_sphere", JSON.stringify(js_scene_sphere));
 };
 
+// Layers
 const updateLayersRShiny = () => {
   let js_layers = [],
     js_layers_world = [], // VR
@@ -53,6 +55,7 @@ const updateSelectedLayersRShiny = () => {
   Shiny.setInputValue("js_selected_layers", js_selected_layers);
 }
 
+// Nodes
 const updateNodesRShiny = () => {
   let js_nodes = [],
     js_nodes_world = [], // VR
@@ -66,14 +69,14 @@ const updateNodesRShiny = () => {
       if (pos > -1){
         if (node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " " && node_attributes.Color[pos] !== null) //if node exists in node attributes file
           color = node_attributes.Color[pos];
-        else color = colorVector[(layer_groups[node_groups[node_whole_names[i]]])%colorVector.length];
+        else color = colorVector[(layerGroups[node_groups[node_whole_names[i]]])%colorVector.length];
         if (node_attributes.Url !== undefined && node_attributes.Url[pos] !== "" && node_attributes.Url[pos] != " " && node_attributes.Url[pos] !== null)
           url = node_attributes.Url[pos];
         if (node_attributes.Description !== undefined && node_attributes.Description[pos] !== "" && node_attributes.Description[pos] != " " && node_attributes.Description[pos] !== null)
           descr = node_attributes.Description[pos];
-      } else color = colorVector[(layer_groups[node_groups[node_whole_names[i]]])%colorVector.length];
+      } else color = colorVector[(layerGroups[node_groups[node_whole_names[i]]])%colorVector.length];
     }  else if (nodes[i].userData.cluster) nodes[i].material.color = new THREE.Color(colorVector[nodes[i].userData.cluster]);
-    else color = colorVector[(layer_groups[node_groups[node_whole_names[i]]]) % colorVector.length];
+    else color = colorVector[(layerGroups[node_groups[node_whole_names[i]]]) % colorVector.length];
 
     if (node_cluster_colors.length !== 0) color = node_cluster_colors[i];
     
@@ -99,6 +102,7 @@ const updateSelectedNodesRShiny = () => {
   Shiny.setInputValue("js_selectedNodePositions", selectedNodePositions);
 }
 
+// Edges
 const updateEdgesRShiny = () => {
   let js_edge_pairs = [],
     temp_js_edge_pairs = [],
@@ -139,10 +143,6 @@ const updateEdgesRShiny = () => {
   Shiny.setInputValue("js_edge_pairs", JSON.stringify(js_edge_pairs));
 }
 
-const updateLabelColorRShiny = () => {
-  Shiny.setInputValue("js_label_color", globalLabelColor);
-}
-
 const updateDirectionCheckboxRShiny = (name, value) => {
   Shiny.setInputValue('js_direction_checkbox_flag', [name, !value])
   Shiny.setInputValue('js_direction_checkbox_flag', [name, value])
@@ -151,4 +151,9 @@ const updateDirectionCheckboxRShiny = (name, value) => {
 const updateEdgeByWeightCheckboxRShiny = (name, value) => {
   Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, !value])
   Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, value])
+}
+
+// Labels
+const updateLabelColorRShiny = () => {
+  Shiny.setInputValue("js_label_color", globalLabelColor);
 }

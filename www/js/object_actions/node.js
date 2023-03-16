@@ -58,8 +58,8 @@ const checkNodeInteraction = (event) => {
         pos = node_attributes.Node.indexOf(node_whole_names[ind]);
         if (pos > -1 && node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
           nodes[ind].material.color = new THREE.Color( node_attributes.Color[pos] );
-        else nodes[ind].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[ind]]])%colorVector.length]);
-      } else nodes[ind].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[ind]]])%colorVector.length]);
+        else nodes[ind].material.color = new THREE.Color(colorVector[(layerGroups[node_groups[node_whole_names[ind]]])%colorVector.length]);
+      } else nodes[ind].material.color = new THREE.Color(colorVector[(layerGroups[node_groups[node_whole_names[ind]]])%colorVector.length]);
       selectedNodePositions = selectedNodePositions.filter(function(value, index, arr){ return value != ind;}); //array remove/filter
     } else {
       selectedNodePositions.push(ind);
@@ -128,7 +128,7 @@ const decideNodeLabelFlags = () => {
   let c = document.getElementById("checkboxdiv").children,
       node_layer = "";
   for (i = 0; i < node_names.length; i++){
-    node_layer = layer_groups[node_groups[node_whole_names[i]]];
+    node_layer = layerGroups[node_groups[node_whole_names[i]]];
     if (c[node_layer*7+2].checked){ //1. if node's layer not hidden 
       node_label_flags[i] = false;
     } else if (showAllNodeLabelsFlag){ //2. if showing all node labels
@@ -180,9 +180,9 @@ const nodeSelector = (message) => {
         pos = node_attributes.Node.indexOf(node_whole_names[i]);
         if(checkIfAttributeColorExist(node_attributes, pos)) //if node exists in node attributes file
           nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
-        else nodes[i].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[i]]])%colorVector.length]);
+        else nodes[i].material.color = new THREE.Color(colorVector[(layerGroups[node_groups[node_whole_names[i]]])%colorVector.length]);
       } else if (nodes[i].userData.cluster)  nodes[i].material.color = new THREE.Color(colorVector[nodes[i].userData.cluster]);
-      else nodes[i].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[i]]]) % colorVector.length]);
+      else nodes[i].material.color = new THREE.Color(colorVector[(layerGroups[node_groups[node_whole_names[i]]]) % colorVector.length]);
     }
   }
   decideNodeLabelFlags();
@@ -197,8 +197,8 @@ const nodeSelectedColorPriority = (message) => {
       pos = node_attributes.Node.indexOf(node_whole_names[selectedNodePositions[i]]);
       if(checkIfAttributeColorExist(node_attributes, pos))//if node exists in node attributes file
         nodes[selectedNodePositions[i]].material.color = new THREE.Color( node_attributes.Color[pos] );
-      else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colorVector.length]);
-    } else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colorVector.length]);
+      else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colorVector[(layerGroups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colorVector.length]);
+    } else nodes[selectedNodePositions[i]].material.color = new THREE.Color(colorVector[(layerGroups[node_groups[node_whole_names[selectedNodePositions[i]]]])%colorVector.length]);
   }
   return true;
 }
@@ -320,10 +320,10 @@ const decideNodeColors = () => { // TODO reusable
         node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
           nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
       else
-        nodes[i].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[i]]])%colorVector.length]);
+        nodes[i].material.color = new THREE.Color(colorVector[(layerGroups[node_groups[node_whole_names[i]]])%colorVector.length]);
     } else if (nodes[i].userData.cluster)
       nodes[i].material.color = new THREE.Color(colorVector[nodes[i].userData.cluster]);
     else
-      nodes[i].material.color = new THREE.Color(colorVector[(layer_groups[node_groups[node_whole_names[i]]]) % colorVector.length]);
+      nodes[i].material.color = new THREE.Color(colorVector[(layerGroups[node_groups[node_whole_names[i]]]) % colorVector.length]);
   }
 };

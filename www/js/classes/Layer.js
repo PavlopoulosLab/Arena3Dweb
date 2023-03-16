@@ -121,7 +121,7 @@ class Layer {
   }
 
   translateZ(z) {
-    this.plane.translateY(z);
+    this.plane.translateZ(z);
   }
 
   rotateX(x) {

@@ -64,13 +64,13 @@ const clickDrag = (event) => {
       if (scene.leftClickPressed) {
         scene.dragging = true;
         if (event.shiftKey) {
-          last_hovered_layer_index = ""; // to be able to lasso inside layer
+          lastHoveredLayerIndex = ""; // to be able to lasso inside layer
           lassoSelectNodes(event.layerX - xBoundMax, yBoundMax - event.layerY);
         } else if (scene.axisPressed !== "" && selectedNodePositions.length > 0)
           translateNodes(event);
         else if (scene.axisPressed !== "")
           rotateLayersWithHeldKey(event);
-        else if (last_hovered_layer_index === "" && last_hovered_node_index === "")
+        else if (lastHoveredLayerIndex === "" && last_hovered_node_index === "")
           sceneDragPan(x, y);
       } else if (scene.middleClickPressed) {
         scene.dragging = true;
@@ -150,7 +150,7 @@ const dblClick = (event) => {
   if (scene.exists()) {
     let node_selection = checkNodeInteraction(event); //priority 1, select node
       if (!node_selection) {
-        let layer_selection = existsClickedLayer(event); //priority 2, select layer
+        let layer_selection = existsClickedLayer(); //priority 2, select layer
         if (!layer_selection) { //priority 3, unselect all nodes
           unselectAllNodes();
           unselectAllEdges();

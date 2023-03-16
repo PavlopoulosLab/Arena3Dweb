@@ -32,17 +32,17 @@ const drawEdges = () => {
       if (edge_channels[i]) {
         let curve_group = new THREE.Group();
         curve_group = createChannels(points[0], points[1], channelCurvature, ver_line, i, false);
-        layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(curve_group);
+        layers[layerGroups[node_groups[node_whole_names[index1]]]].plane.add(curve_group);
         edges.push(curve_group);
       } else {
-        layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(ver_line);
+        layers[layerGroups[node_groups[node_whole_names[index1]]]].plane.add(ver_line);
         edges.push(ver_line);
         //directed
         if (isDirectionEnabled) {
           const group = new THREE.Group();
           group.add( ver_line);
           group.add( arrowHelper );
-          layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(group);
+          layers[layerGroups[node_groups[node_whole_names[index1]]]].plane.add(group);
           edges[i] = group;
         }
       }
@@ -67,7 +67,7 @@ const redrawEdges = () => {
     index2 = node_whole_names.indexOf(edge_split[1]);
     if (node_groups[node_whole_names[index1]] == node_groups[node_whole_names[index2]]){ //(exists(selectedNodePositions, index1) || exists(selectedNodePositions, index2)) &&
       let points = [];
-      layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.remove(edges[i]);
+      layers[layerGroups[node_groups[node_whole_names[index1]]]].plane.remove(edges[i]);
   		points.push( nodes[index1].position, nodes[index2].position );
   		let geometry = new THREE.BufferGeometry().setFromPoints( points );
       let material = "";
@@ -90,17 +90,17 @@ const redrawEdges = () => {
       if (edge_channels[i]) {
         let curve_group = new THREE.Group();
         curve_group = createChannels(points[0], points[1], channelCurvature, ver_line, i, false);
-        layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(curve_group);
+        layers[layerGroups[node_groups[node_whole_names[index1]]]].plane.add(curve_group);
         edges[i] = curve_group;
       } else {
-        layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(ver_line);
+        layers[layerGroups[node_groups[node_whole_names[index1]]]].plane.add(ver_line);
         edges[i] = ver_line;
 
         if (isDirectionEnabled) {
           const group = new THREE.Group();
           group.add( ver_line);
           group.add( arrowHelper );
-          layers[layer_groups[node_groups[node_whole_names[index1]]]].plane.add(group);
+          layers[layerGroups[node_groups[node_whole_names[index1]]]].plane.add(group);
           edges[i] = group;
         }
       }

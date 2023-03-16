@@ -17,7 +17,7 @@ const assignXYZ = (nodeCoords) => {
       target_z_min = zBoundMin,
       target_z_max = zBoundMax;
   if (localLayoutFlag) { //if local layout, change target mins and maxes and then unset flag
-    layerIndex = layer_groups[node_groups[nodeCoords.name[0]]];
+    layerIndex = layerGroups[node_groups[nodeCoords.name[0]]];
     target_y_min = target_y_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.y / layers[layerIndex].getScale();
     target_z_min = target_z_max = nodes[node_whole_names.indexOf(nodeCoords.name[0].trim())].position.z / layers[layerIndex].getScale();
     for (i = 1; i < nodeCoords.name.length; i++) {
@@ -46,13 +46,13 @@ const assignXYZ = (nodeCoords) => {
       if (y_max - y_min != 0)
         nodes[node_whole_names.indexOf(node_name)].position.y = 
           ((y_arr[i] - y_min) * (target_y_max - target_y_min) /
-            (y_max - y_min) + target_y_min) * layers[layer_groups[node_groups[node_name]]].getScale(); //mapping * layer stretch scale
+            (y_max - y_min) + target_y_min) * layers[layerGroups[node_groups[node_name]]].getScale(); //mapping * layer stretch scale
       else
         nodes[node_whole_names.indexOf(node_name)].position.y = 0;
       if (z_max - z_min != 0)
         nodes[node_whole_names.indexOf(node_name)].position.z = 
           ((z_arr[i] - z_min) * (target_z_max - target_z_min) / 
-            (z_max - z_min) + target_z_min) * layers[layer_groups[node_groups[node_name]]].getScale(); //mapping
+            (z_max - z_min) + target_z_min) * layers[layerGroups[node_groups[node_name]]].getScale(); //mapping
       else
         nodes[node_whole_names.indexOf(node_name)].position.z = 0;
     }

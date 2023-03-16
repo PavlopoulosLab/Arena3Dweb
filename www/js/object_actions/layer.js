@@ -1,79 +1,4 @@
-const selectAllLayers = (flag) => {
-  let layerCheckboxes = document.getElementsByClassName("layer_checkbox");
-  for (let i = 0; i < layerCheckboxes.length; i++) {
-    layerCheckboxes[i].checked = flag;
-    layers[i].isSelected = flag;
-  }
-  repaintLayers();
-  updateSelectedLayersRShiny();
-}
-
-const selectCheckedLayer = (checkbox) => {
-  layers[checkbox.value].isSelected = checkbox.checked;
-  updateSelectedLayersRShiny();
-  repaintLayers();
-}
-
-const existsClickedLayer = (e) => {
-  let exists = false;
-  if (last_hovered_layer_index !== "") {
-    exists = true;
-    performDoubleClickLayerSelection(last_hovered_layer_index);
-    last_hovered_layer_index = "";
-    updateSelectedLayersRShiny();
-    repaintLayers();
-  }
-  return exists;
-}
-
-const performDoubleClickLayerSelection = (index) => {
-  layers[index].toggleSelection();
-  // toggle respective checkbox
-  let layerCheckboxes = document.getElementsByClassName("layer_checkbox");
-  layerCheckboxes[index].checked ? layerCheckboxes[index].checked = false : layerCheckboxes[index].checked = true;
-};
-
-const repaintLayers = () => { 
-  for (i = 0; i < layers.length; i++) {
-    if (layers[i].isSelected)
-      layers[i].setColor(SELECTED_LAYER_DEFAULT_COLOR);
-    else {
-      if (layerColorPrioritySource == "default") {
-        layers[i].setColor(layers[i].importedColor);
-      } else if (layerColorPrioritySource == "picker") {
-        layers[i].setColor(document.getElementById("floor_color").value);
-      }
-    }
-  }
-  updateLayersRShiny();
-};
-
-const repaintLayersFromPicker = () => {
-  chooseColorpickerPriority();
-  repaintLayers();
-};
-
-const chooseColorpickerPriority = () => {
-  let radioButtonDiv = document.getElementById("layerColorPriorityRadio");
-  radioButtonDiv.children[1].children[1].click(); // choosing Theme/Colorpicker priority
-}
-
-const hideLayers = () => {
-  let hideLayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
-  //layers
-  for (let i = 0; i < hideLayerCheckboxes.length; i++)
-    layers[i].toggleVisibility(!hideLayerCheckboxes[i].checked);
-  //node labels
-  decideNodeLabelFlags();
-};
-
-const showLayerNodeLabels = () => {
-  let showLayerNodesCheckboxes = document.getElementsByClassName("showLayerNodes_checkbox");
-  for (let i = 0; i < showLayerNodesCheckboxes.length; i++)
-    layers[Math.floor(i)].showNodeLabels = showLayerNodesCheckboxes[i].checked;
-  decideNodeLabelFlags();
-};
-
+// Layer Selection Checkbox Group =====
 const attachLayerCheckboxes = () => {
   let br,
     container = document.getElementById('checkboxdiv');
@@ -112,71 +37,57 @@ const attachLayerCheckBox = (c_id, c_value, c_class, c_func, l_class, l_title) =
   container.appendChild(label);
 };
 
+const selectCheckedLayer = (checkbox) => {
+  layers[checkbox.value].isSelected = checkbox.checked;
+  repaintLayers();
+  updateSelectedLayersRShiny();
+};
+
+const repaintLayers = () => { 
+  for (i = 0; i < layers.length; i++) {
+    if (layers[i].isSelected)
+      layers[i].setColor(SELECTED_LAYER_DEFAULT_COLOR);
+    else {
+      if (layerColorPrioritySource == "default") {
+        layers[i].setColor(layers[i].importedColor);
+      } else if (layerColorPrioritySource == "picker") {
+        layers[i].setColor(document.getElementById("floor_color").value);
+      }
+    }
+  }
+  updateLayersRShiny();
+};
+
+const hideLayers = () => {
+  let hideLayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
+  for (let i = 0; i < hideLayerCheckboxes.length; i++)
+    layers[i].toggleVisibility(!hideLayerCheckboxes[i].checked);
+  decideNodeLabelFlags();
+};
+
+const showLayerNodeLabels = () => {
+  let showLayerNodesCheckboxes = document.getElementsByClassName("showLayerNodes_checkbox");
+  for (let i = 0; i < showLayerNodesCheckboxes.length; i++)
+    layers[i].showNodeLabels = showLayerNodesCheckboxes[i].checked;
+  decideNodeLabelFlags();
+};
+
+// From R actions (layouts and upload/import) =====
 const positionLayers = () => {
-  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
-    numLayers = layers.length;
+  let numLayers = layers.length;
+  let window_width = xBoundMax * 2 / numLayers;
+    
   for (let i = 0; i < numLayers; i++) {
-    //if(checkMoveFlag && layer_planes[i].move || !checkMoveFlag) {
-      if (numLayers % 2)
-        layers[i].translateX( (-Math.floor(layers.length/2) + i) * window_width); //odd number of Layers
-      else
-        layers[i].translateX( (-layers.length/2 + i) * window_width + window_width/2); //even number of Layers
+    //if(checkMoveFlag && layer_planes[i].move || !checkMoveFlag) { // TODO check these flags
+      if (numLayers % 2) //odd
+        layers[i].translateX((-Math.floor(layers.length / 2) + i) * window_width);
+      else //even
+        layers[i].translateX((-layers.length / 2 + i) * window_width + window_width / 2);
     //}
   }
   updateLayersRShiny();
   updateNodesRShiny(); // VR node world positions update
 }
-
-const checkHoverOverLayer = (event, node_hover_flag) => {
-  setRaycaster(event);
-  let layer_planes = layers.map(({ plane }) => plane);
-  let intersects = RAYCASTER.intersectObjects(layer_planes); // TODO get all layer object planes in an array first
-  if (intersects.length > 0 & !node_hover_flag) {
-    if (last_hovered_layer_index !== "") {
-      repaintLayers();
-      hoveredLayerPaintedFlag = true;
-      last_hovered_layer_index = "";
-    }
-    intersects[0].object.material.color.set( 0xff0000 );
-    last_hovered_layer_index = findIndexByUuid(layer_planes, intersects[0].object.uuid);
-  } else {
-    if (hoveredLayerPaintedFlag) {
-      repaintLayers(); // remove red color from last hovered
-      hoveredLayerPaintedFlag = false;
-    }
-    last_hovered_layer_index = "";
-  }
-}
-
-const rotateLayersWithHeldKey = (e) => {
-  let rads, i,
-    js_selected_layers = getSelectedLayers();
-
-  if (e.screenX - e.screenY >= mousePreviousX - mousePreviousY) rads = 0.05;
-  else rads = -0.05;
-
-  if (scene.axisPressed=="z"){
-    for (i = 0; i < js_selected_layers.length; i++) {
-      layers[js_selected_layers[i]].rotateZ(rads);
-    }
-  } else if (scene.axisPressed=="x"){
-    for (i = 0; i < js_selected_layers.length; i++) {
-      layers[js_selected_layers[i]].rotateX(rads);
-    }
-  } else if (scene.axisPressed=="c"){
-    for (i = 0; i < js_selected_layers.length; i++) {
-      layers[js_selected_layers[i]].rotateY(rads);
-    }
-  }
-  updateLayersRShiny();
-  updateNodesRShiny(); // VR node world positions update
-}
-
-const getSelectedLayers = () => {
-  let js_selected_layers = layers.map(function(layer) { if (layer.isSelected) return layer.id; });
-  js_selected_layers = js_selected_layers.filter(function(id) { return id !== undefined; });
-  return(js_selected_layers)
-};
 
 const adjustLayerSize = () => { // TODO check if works with import different width/height
   let maxY = minY = maxZ = minZ = nodes[0].position,
@@ -210,10 +121,103 @@ const adjustLayerSize = () => { // TODO check if works with import different wid
   redrawLayerLabels("all");
 }
 
+// Event Listeners =====
+const checkHoverOverLayer = (event, node_hover_flag) => {
+  setRaycaster(event);
+  let layer_planes = layers.map(({ plane }) => plane);
+  let intersects = RAYCASTER.intersectObjects(layer_planes);
+  if (intersects.length > 0 & !node_hover_flag) {
+    if (lastHoveredLayerIndex !== "") {
+      repaintLayers();
+      hoveredLayerPaintedFlag = true;
+      lastHoveredLayerIndex = "";
+    }
+    intersects[0].object.material.color.set( 0xff0000 );
+    lastHoveredLayerIndex = findIndexByUuid(layer_planes, intersects[0].object.uuid);
+  } else {
+    if (hoveredLayerPaintedFlag) {
+      repaintLayers(); // remove red color from last hovered
+      hoveredLayerPaintedFlag = false;
+    }
+    lastHoveredLayerIndex = "";
+  }
+};
+
+const existsClickedLayer = () => {
+  let exists = false;
+  if (lastHoveredLayerIndex !== "") {
+    exists = true;
+    performDoubleClickLayerSelection(lastHoveredLayerIndex);
+    lastHoveredLayerIndex = "";
+    repaintLayers();
+    updateSelectedLayersRShiny();
+  }
+  return exists;
+};
+
+const performDoubleClickLayerSelection = (index) => {
+  layers[index].toggleSelection();
+  // toggle respective checkbox
+  let layerCheckboxes = document.getElementsByClassName("layer_checkbox");
+  layerCheckboxes[index].checked ? layerCheckboxes[index].checked = false : layerCheckboxes[index].checked = true;
+};
+
+const rotateLayersWithHeldKey = (event) => {
+  let rads, selected_layers = getSelectedLayers();
+
+  if (event.screenX - event.screenY >= mousePreviousX - mousePreviousY)
+    rads = 0.05;
+  else
+    rads = -0.05;
+
+  for (let i = 0; i < selected_layers.length; i++) {
+    if (scene.axisPressed == "z")
+      layers[selected_layers[i]].rotateZ(rads);
+    else if (scene.axisPressed == "x")
+      layers[selected_layers[i]].rotateX(rads);
+    else if (scene.axisPressed == "c")
+      layers[selected_layers[i]].rotateY(rads);
+  }
+
+  updateLayersRShiny();
+  updateNodesRShiny(); // VR node world positions update
+};
+
+const getSelectedLayers = () => {
+  let selected_layers = layers.map(function(layer) {
+    if (layer.isSelected)
+      return(layer.id)
+  });
+  selected_layers = selected_layers.filter(function(id) {
+    return(id !== undefined)
+  });
+  return(selected_layers)
+};
+
+const repaintLayersFromPicker = () => {
+  chooseColorpickerPriority();
+  repaintLayers();
+};
+
+const chooseColorpickerPriority = () => {
+  let radioButtonDiv = document.getElementById("layerColorPriorityRadio");
+  radioButtonDiv.children[1].children[1].click(); // choosing Theme / Colorpicker priority
+};
+
 // Handlers =====
-const showLayerCoords = (labelCoordsSwitch) => { //message = true or false
+const selectAllLayers = (flag) => {
+  let layerCheckboxes = document.getElementsByClassName("layer_checkbox");
+  for (let i = 0; i < layerCheckboxes.length; i++) {
+    layerCheckboxes[i].checked = flag;
+    layers[i].isSelected = flag;
+  }
+  repaintLayers();
+  updateSelectedLayersRShiny();
+};
+
+const showLayerCoords = (showLabelCoordsFlag) => {
   for (let i = 0; i < layers.length; i++)
-    layers[i].toggleCoords(labelCoordsSwitch);
+    layers[i].toggleCoords(showLabelCoordsFlag);
 };
 
 const setFloorOpacity = (selectedOpacity) => {
@@ -221,41 +225,40 @@ const setFloorOpacity = (selectedOpacity) => {
     layers[i].setOpacity(selectedOpacity);
 };
 
-const showWireFrames = (wireframeFlag) => { // true or false
+const showWireFrames = (wireframeFlag) => {
   for (let i = 0; i < layers.length; i++)
     layers[i].toggleWireframe(wireframeFlag);
-}
+};
 
 const layerColorPriority = (colorPriority) => {
   layerColorPrioritySource = colorPriority;
   repaintLayers();
-}
+};
 
 // Canvas Controls =====
 const rotateSelectedLayers = (direction, axis) => {
-  let js_selected_layers = getSelectedLayers();
-  if (js_selected_layers.length == 0)
-    alert("Please select at least one layer.");
-  else {
+  let selected_layers = getSelectedLayers();
+  if (selected_layers.length > 0) {
     layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[1].value;
       value = direction * THREE.Math.degToRad(value);
-      for (let i = 0; i < js_selected_layers.length; i++) {
+      for (let i = 0; i < selected_layers.length; i++) {
         if (axis == "X")
-          layers[js_selected_layers[i]].rotateX(value);
+          layers[selected_layers[i]].rotateX(value);
         else if (axis == "Y")
-          layers[js_selected_layers[i]].rotateY(value);
+          layers[selected_layers[i]].rotateY(value);
         else if (axis == "Z")
-          layers[js_selected_layers[i]].rotateZ(value);
+          layers[selected_layers[i]].rotateZ(value);
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
     }, 70);
-  }
-}
+  } else
+    alert("Please select at least one layer.");
+};
 
 const spreadLayers = () => {
-  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
+  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layerGroups).length,
       numLayers = layers.length;
   for (let i = 0; i < numLayers; i++) {
     layers[i].setRotation("x", 0);
@@ -271,7 +274,7 @@ const spreadLayers = () => {
 }
 
 const congregateLayers = () => {
-  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layer_groups).length,
+  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layerGroups).length,
       numLayers = layers.length;
   for (let i = 0; i < numLayers; i++) {
     layers[i].setRotation("x", 0);
@@ -287,43 +290,42 @@ const congregateLayers = () => {
 }
 
 const moveLayers = (direction, axis) => {
-  let js_selected_layers = getSelectedLayers();
-  if (js_selected_layers.length == 0)
-    alert("Please select at least one layer.");
-  else {
+  let selected_layers = getSelectedLayers();
+  if (selected_layers.length > 0) {
     layerIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[2].value;
       value = direction * value;
-      for (let i = 0; i < js_selected_layers.length; i++) {
+      for (let i = 0; i < selected_layers.length; i++) {
         if (axis == "X")
-          layers[js_selected_layers[i]].translateX(value);
+          layers[selected_layers[i]].translateX(value);
         else if (axis == "Y")
-          layers[js_selected_layers[i]].translateY(value);
+          layers[selected_layers[i]].translateY(value);
         else if (axis == "Z")
-          layers[js_selected_layers[i]].translateZ(value);
+          layers[selected_layers[i]].translateZ(value);
       }
       updateLayersRShiny();
       updateNodesRShiny(); // VR node world positions update
     }, 70);
-  }
-}
+  } else
+    alert("Please select at least one layer.");
+};
 
 const scaleLayers = () => {
   let td = document.getElementById("sliderValue4"),
     cavnasSlider = document.getElementsByClassName("canvasSlider")[3],
-    js_selected_layers = getSelectedLayers();;
+    selected_layers = getSelectedLayers();;
   td.innerHTML = "x".concat(cavnasSlider.value);
-  if (js_selected_layers.length == 0)
+  if (selected_layers.length == 0)
     alert("Please select at least one layer.");
   else {
-    for (let i = 0; i < js_selected_layers.length; i++) {
-      for (let j = 0; j < layers[js_selected_layers[i]].plane.children.length; j++) {
-        layers[js_selected_layers[i]].plane.children[j].position.y = 
-          layers[js_selected_layers[i]].plane.children[j].position.y * parseFloat(cavnasSlider.value) / layers[js_selected_layers[i]].getScale();
-        layers[js_selected_layers[i]].plane.children[j].position.z =
-          layers[js_selected_layers[i]].plane.children[j].position.z * parseFloat(cavnasSlider.value) / layers[js_selected_layers[i]].getScale();
+    for (let i = 0; i < selected_layers.length; i++) {
+      for (let j = 0; j < layers[selected_layers[i]].plane.children.length; j++) {
+        layers[selected_layers[i]].plane.children[j].position.y = 
+          layers[selected_layers[i]].plane.children[j].position.y * parseFloat(cavnasSlider.value) / layers[selected_layers[i]].getScale();
+        layers[selected_layers[i]].plane.children[j].position.z =
+          layers[selected_layers[i]].plane.children[j].position.z * parseFloat(cavnasSlider.value) / layers[selected_layers[i]].getScale();
       }
-      layers[js_selected_layers[i]].setScale(cavnasSlider.value);
+      layers[selected_layers[i]].setScale(cavnasSlider.value);
     }
     redrawEdges();
     updateLayersRShiny();

@@ -14,14 +14,14 @@ let globalLabelColor = "#ffffff",
     layer_label_divs = [];
 
 // layers
-let last_hovered_layer_index = "", // for correct hover coloring
+let layerGroups = new Map(),
+    lastHoveredLayerIndex = "", // for correct hover coloring
+    hoveredLayerPaintedFlag = false,
     layerDragControls = "",
     layerIntervalTimeout = "",
     showAllLayerLabelsFlag = true,
     showSelectedLayerLabelsFlag = false,
-    layer_groups = new Map(),
-    layerColorPrioritySource = "default", // or "picker"
-    hoveredLayerPaintedFlag = false;
+    layerColorPrioritySource = "default"; // or "picker"
 
 // nodes
 let showAllNodeLabelsFlag = false,

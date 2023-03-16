@@ -13,7 +13,7 @@ generateLayerDiv <- function() {
                 min = 0, max = 1, value = 0.6, step = 0.05),
     radioButtons("layerColorPriorityRadio", "Color Priority:",
       inline = T,
-      choiceNames = list("Default/Imported", "Theme/Colorpicker"),
+      choiceNames = list("Default / Imported", "Theme / Colorpicker"),
       choiceValues = list("default", "picker")
     ),        
     tags$div(id = "floorColorPicker", class = "colorPicker"),

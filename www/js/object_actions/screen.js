@@ -117,7 +117,7 @@ const renderNodeLabels = () => { // TODO add/check flag conditions
       labelX = "",
       labelY = "";
   for (let i = 0; i < node_label_flags.length; i++){
-    let node_layer = layer_groups[node_groups[node_whole_names[i]]];
+    let node_layer = layerGroups[node_groups[node_whole_names[i]]];
     if (node_label_flags[i]){ //ONLY CHECK THIS 
       nodeX = nodes[i].getWorldPosition(new THREE.Vector3()).x,
       nodeY = nodes[i].getWorldPosition(new THREE.Vector3()).y;
@@ -159,8 +159,8 @@ const drawLayerEdges = (flag) => {
       }
       let points = [];
       let edge_split = edge_pairs[layer_edges_pairs[i]].split("---");
-      let node_layer1 = layer_groups[node_groups[edge_split[0]]];
-      let node_layer2 = layer_groups[node_groups[edge_split[1]]];
+      let node_layer1 = layerGroups[node_groups[edge_split[0]]];
+      let node_layer2 = layerGroups[node_groups[edge_split[1]]];
       if (!c[node_layer1*7+2].checked && !c[node_layer2*7+2].checked){
         index1 = node_whole_names.indexOf(edge_split[0]);
         index2 = node_whole_names.indexOf(edge_split[1]);
