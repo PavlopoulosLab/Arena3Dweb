@@ -1,24 +1,3 @@
-const applyTheme = (bgColor, floorColor, edgeColor, labelColor, theme_colors, channel_colors_theme) =>{
-  if (scene.exists()) {
-    colorVector = theme_colors.concat(COLOR_VECTOR_271);
-    channel_colors = channel_colors_theme;
-    createChannelColorMap();
-    setRendererColor(bgColor);
-    updateScenePanRShiny();
-    setFloorColor(floorColor);
-    attachChannelEditList();
-    updateLayersRShiny();
-    edgeDefaultColor = edgeColor; // global for inter-layer edges
-    setEdgeColor();
-    updateEdgesRShiny();
-    globalLabelColor = labelColor;
-    setLabelColor();
-    updateLabelColorRShiny();
-    updateNodesRShiny();
-    redrawEdges();
-  }
-};
-
 const attachThemeButtons = () => {
   let themeDiv = document.getElementById("themeDiv"),
     lightThemeButton = document.createElement("button"),
@@ -53,4 +32,26 @@ const attachThemeButtons = () => {
   themeDiv.appendChild(lightThemeButton);
   themeDiv.appendChild(darkThemeButton);
   themeDiv.appendChild(grayThemeButton);
+};
+
+const applyTheme = (bgColor, floorColor, edgeColor, labelColor, theme_colors, channel_colors_theme) =>{
+  if (scene.exists()) {
+    colorVector = theme_colors.concat(COLOR_VECTOR_271);
+    channel_colors = channel_colors_theme;
+    createChannelColorMap();
+    setRendererColor(bgColor);
+    updateScenePanRShiny();
+    setFloorColor(floorColor);
+    document.getElementById("floor_color").value = floorColor;
+    attachChannelEditList();
+    updateLayersRShiny();
+    edgeDefaultColor = edgeColor; // global for inter-layer edges
+    setEdgeColor();
+    updateEdgesRShiny();
+    globalLabelColor = labelColor;
+    setLabelColor();
+    updateLabelColorRShiny();
+    updateNodesRShiny();
+    redrawEdges();
+  }
 };

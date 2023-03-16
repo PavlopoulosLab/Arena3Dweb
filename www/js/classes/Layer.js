@@ -6,32 +6,31 @@ class Layer {
       this.plane = "";
       this.sphere = "";
 
-      this.id = id; // TODO counter ++
+      this.id = id;
       this.name = name;
       this.last_layer_scale = last_layer_scale;
-      this.floor_current_color = floor_current_color; // TODO rename to importedColor
-
-      this.showNodeLabels = false;
-      this.isSelected = false; // TODO check if this over js_selected_layers
-      this.isVisible = true; // TODO check if use to not render hidden layers in loops
-      this.coordSystem = ["", "", ""];
+      this.importedColor = floor_current_color;
       this.color = floor_current_color;
 
-      this.createPlane(geometry_parameters_width);
-      this.appendCoordSystem();
-      this.initTranslatePlane(position_x, position_y, position_z);
-      this.initScale(last_layer_scale);
-      this.setColor(floor_current_color);
+      this.showNodeLabels = false;
+      this.isSelected = false;
+      this.isVisible = true; // TODO check if use to not render hidden layers in loops
+      this.coordSystem = ["", "", ""];
 
-      this.addSphere(geometry_parameters_width, last_layer_scale);
-      this.initRotateSphere(rotation_x, rotation_y, rotation_z);
+      this.createPlane(geometry_parameters_width, floor_current_color);
+      this.appendCoordSystem();
+      this.addLabelSphere(geometry_parameters_width, last_layer_scale);
+      this.initTranslate(position_x, position_y, position_z);
+      this.initRotate(rotation_x, rotation_y, rotation_z);
+      this.initScale(last_layer_scale);
   }
 
-  createPlane(width) {
+  // inits
+  createPlane(width, color) {
     let planeGeometry = new THREE.PlaneGeometry(width, width, PLANE_WIDTHSEGMENTS, PLANE_HEIGHTSEGMENTS);
       planeGeometry.rotateY(THREE.Math.degToRad(90));
     let planeMaterial = new THREE.MeshBasicMaterial({
-      color: floorCurrentColor,
+      color: color,
       alphaTest: 0.05,
       wireframe: false,
       transparent: true,
@@ -59,22 +58,7 @@ class Layer {
     return(line)
   }
 
-  toggleCoords(layerCoordsSwitch) {
-    this.coordSystem[0].visible = this.coordSystem[1].visible = 
-      this.coordSystem[2].visible = layerCoordsSwitch;
-  }
-
-  initTranslatePlane(x, y, z) {
-    this.setPosition("x", x);
-    this.setPosition("y", y);
-    this.setPosition("z", z);
-  }
-
-  initScale(value) {
-    this.plane.geometry.scale(1, Number(value), Number(value));
-  }
-
-  addSphere(width, scale) { // label will be attched here
+  addLabelSphere(width, scale) { // label will be attched here
     let threeSphere = this.createSphere();
     this.plane.add(threeSphere);
     threeSphere.translateY(-width / 2);
@@ -93,26 +77,34 @@ class Layer {
     return(sphere);
   }
 
-  add(threeObject) {
-    this.THREE_Object.add(threeObject);
+  initTranslate(x, y, z) {
+    this.setPosition("x", x);
+    this.setPosition("y", y);
+    this.setPosition("z", z);
   }
-  
-  remove(threeObject) {
-    this.THREE_Object.remove(threeObject);
-  }
-  
-  initRotateSphere(x, y, z) {
+
+  initRotate(x, y, z) {
     this.setRotation("x", x);
     this.setRotation("y", y);
     this.setRotation("z", z);
   }
+  
+  initScale(value) {
+    this.plane.geometry.scale(1, Number(value), Number(value));
+  }
 
+  // toggle functions
   toggleSelection() {
     this.isSelected = !this.isSelected;
   }
 
   toggleVisibility(flag) {
     this.plane.visible = flag;
+  }
+
+  toggleCoords(layerCoordsSwitch) {
+    this.coordSystem[0].visible = this.coordSystem[1].visible = 
+      this.coordSystem[2].visible = layerCoordsSwitch;
   }
 
   toggleWireframe(flag) {
