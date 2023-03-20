@@ -175,6 +175,7 @@ class DragControls extends THREE.EventDispatcher {
 
 				_selected = null;
 				updateLayersRShiny();
+				updateVRLayerLabelsRShiny();
 				updateNodesRShiny(); // for VR global posistions
 			}
 

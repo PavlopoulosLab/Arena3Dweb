@@ -156,7 +156,7 @@ class Scene {
       else if (axis == "Z")
         scene.rotateZ(value);
       updateSceneSphereRShiny();
-      updateLayersRShiny();
+      updateVRLayerLabelsRShiny();
       updateNodesRShiny();
     }, 70);
   }
@@ -174,7 +174,7 @@ class Scene {
   }
   
   recenter() {
-    this.pan.position.x = this.pan.position.y = this.pan.position.z = 0;
+    this.pan.position.x = this.pan.position.y = 0;
   }
   
   zoom(deltaY) {

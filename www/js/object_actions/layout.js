@@ -109,9 +109,15 @@ const applyPredefinedLayout = (message) => {
             layers[i].translateY(500);
           }
           positionLayers();
+          updateLayersRShiny();
+          updateVRLayerLabelsRShiny();
+          updateNodesRShiny(); // VR node world positions update
           break;
         case "parallel":
-         positionLayers();
+          positionLayers();
+          updateLayersRShiny();
+          updateVRLayerLabelsRShiny();
+          updateNodesRShiny(); // VR node world positions update
           break;
         case "cube":
           let cube_size = 6;
@@ -148,6 +154,7 @@ const applyPredefinedLayout = (message) => {
             }
           }
           updateLayersRShiny();
+          updateVRLayerLabelsRShiny();
           updateNodesRShiny(); // for VR global posistions
           break;
         case "starLike":
@@ -157,6 +164,7 @@ const applyPredefinedLayout = (message) => {
             layer_planes[i].translateY(-layer_planes[i].geometry.parameters.height/2 - 100);
           }
           updateLayersRShiny();
+          updateVRLayerLabelsRShiny();
           updateNodesRShiny(); // for VR global posistions
           break;
         default:

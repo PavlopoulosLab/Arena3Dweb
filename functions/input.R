@@ -583,7 +583,7 @@ handleInputEdgeAttributeFileUpload <- function() {
 convertSessionToJSON <- function() {
   js_scene_pan <- fromJSON(input$js_scene_pan)
   js_scene_sphere <- fromJSON(input$js_scene_sphere)
-  js_layers <- as.data.frame(fromJSON(input$js_layers))
+  js_layers <- fromJSON(input$js_layers)
   js_nodes <- as.data.frame(fromJSON(input$js_nodes))
   js_edge_pairs <- as.data.frame(fromJSON(input$js_edge_pairs))
   js_label_color <- input$js_label_color
@@ -592,14 +592,6 @@ convertSessionToJSON <- function() {
   edgeByWeight_flag <- input$edgeWidthByWeight
   
   scene <- c(js_scene_pan, js_scene_sphere)
-
-  # Layers
-  layer_df <- data.frame()
-  for (i in 1:nrow(js_layers)){
-    layer_df <- rbind(layer_df, c(js_layers[i, 1], js_layers[i, 2], js_layers[i, 3], js_layers[i, 4], js_layers[i, 5],
-                                  js_layers[i, 6], js_layers[i, 7],js_layers[i, 8], js_layers[i, 9], js_layers[i, 10]))                        
-  }
-  colnames(layer_df) <- c("name", "position_x", "position_y", "position_z", "last_layer_scale", "rotation_x", "rotation_y", "rotation_z", "floor_current_color", "geometry_parameters_width")
   
   # Nodes
   nodes_df <- data.frame()
@@ -622,7 +614,7 @@ convertSessionToJSON <- function() {
   
   exportData <- list(
     scene = scene,
-    layers = layer_df, nodes = nodes_df, edges = edges_df,
+    layers = js_layers, nodes = nodes_df, edges = edges_df,
     universalLabelColor = js_label_color,
     direction = direction_flag, edgeOpacityByWeight = edgeByWeight_flag
   )

@@ -3,8 +3,8 @@ const sceneZoom = (event) => {
   if (scene.exists()) {
     scene.zoom(event.deltaY);
     updateScenePanRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
+    updateVRLayerLabelsRShiny();
+    updateNodesRShiny(); // TODO only for VR
   }
 };
 
@@ -18,11 +18,12 @@ const keyPressed = (event) => {
       scene.axisPressed = 'x';
     else if (code == 67)
       scene.axisPressed = 'c';
-    else if (code == 37 || code == 38 || code == 39 || code == 40)
+    else if (code == 37 || code == 38 || code == 39 || code == 40) {
       scene.translatePanWithArrow(code);
       updateScenePanRShiny();
-      updateLayersRShiny();
-      updateNodesRShiny();
+      updateVRLayerLabelsRShiny();
+      updateNodesRShiny(); // TODO only for VR
+    }
   }
 };
 
@@ -92,16 +93,16 @@ const clickDrag = (event) => {
 const sceneDragPan = (x, y) => {
   scene.translatePanWithMouse(x, y);
   updateScenePanRShiny();
-  updateLayersRShiny();
-  updateNodesRShiny();
+  updateVRLayerLabelsRShiny();
+  updateNodesRShiny(); // TODO only for VR
 };
 
 // middle-click drag on scene
 const sceneOrbit = (x, y) => {
   scene.orbitSphereWithMouse(x, y);    
   updateSceneSphereRShiny();
-  updateLayersRShiny();
-  updateNodesRShiny();
+  updateVRLayerLabelsRShiny();
+  updateNodesRShiny(); // TODO only for VR
 };
 
 const clickUp = (event) => {

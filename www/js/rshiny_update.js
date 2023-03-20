@@ -1,9 +1,9 @@
 // Scene
 const updateScenePanRShiny = () => {
   let js_scene_pan = {
-    "position_x": String(scene.getPosition("x")),
-    "position_y": String(scene.getPosition("y")),
-    "scale": String(scene.getScale()),
+    "position_x": scene.getPosition("x"),
+    "position_y": scene.getPosition("y"),
+    "scale": scene.getScale(),
     "color": "#".concat(renderer.getClearColor().getHexString()) 
   }
   Shiny.setInputValue("js_scene_pan", JSON.stringify(js_scene_pan));
@@ -11,49 +11,51 @@ const updateScenePanRShiny = () => {
 
 const updateSceneSphereRShiny = () => {
   let js_scene_sphere = {
-    "rotation_x": String(scene.getRotation("x")),
-    "rotation_y": String(scene.getRotation("y")),
-    "rotation_z": String(scene.getRotation("z"))
+    "rotation_x": scene.getRotation("x"),
+    "rotation_y": scene.getRotation("y"),
+    "rotation_z": scene.getRotation("z")
   }
   Shiny.setInputValue("js_scene_sphere", JSON.stringify(js_scene_sphere));
 };
 
 // Layers
 const updateLayersRShiny = () => {
-  let js_layers = [],
-    js_layers_world = [], // VR
-    target = new THREE.Vector3(), // VR
-    temp_js_layers = [];
+  let js_layers = [];
 
-  let layer_planes = layers.map(({ plane }) => plane);
   for (let i = 0; i < layers.length; i++) {
-    temp_js_layers = [layers[i].getName(), layers[i].getPosition("x"), layers[i].getPosition("y"), layers[i].getPosition("z"), layers[i].getScale(),
-                      layers[i].getRotation("x"), layers[i].getRotation("y"), layers[i].getRotation("z"), layers[i].getColor(), layers[i].getWidth()];
-    js_layers.push(temp_js_layers);
-    
-    // VR
-    temp_js_layers = [
-      layers[i].getName(),
-      layer_planes[i].getWorldPosition(target).x,
-      layer_planes[i].getWorldPosition(target).y,
-      layer_planes[i].getWorldPosition(target).z
-    ];
-    js_layers_world.push(temp_js_layers);
+    js_layers.push(
+      [layers[i].getName(), layers[i].getPosition("x"), layers[i].getPosition("y"), layers[i].getPosition("z"),
+      layers[i].getScale(), layers[i].getRotation("x"), layers[i].getRotation("y"), layers[i].getRotation("z"),
+      layers[i].getColor(), layers[i].getWidth()]
+    );
   }
   
+  js_layers = js_layers.map(layer => {
+    return {
+      name: layer[0],
+      position_x: layer[1],
+      position_y: layer[2],
+      position_z: layer[3],
+      last_layer_scale: layer[4],
+      rotation_x: layer[5],
+      rotation_y: layer[6],
+      rotation_z: layer[7],
+      floor_current_color: layer[8],
+      geometry_parameters_width: layer[9],
+    }
+  });
   Shiny.setInputValue("js_layers", JSON.stringify(js_layers));
-  Shiny.setInputValue("js_layers_world", JSON.stringify(js_layers_world));
-}
+};
 
 const updateLayerNamesRShiny = () => {
   let layer_names = layers.map(({ name }) => name);
   Shiny.setInputValue("js_layer_names", layer_names);
-}
+};
 
 const updateSelectedLayersRShiny = () => {
   let js_selected_layers = getSelectedLayers();
   Shiny.setInputValue("js_selected_layers", js_selected_layers);
-}
+};
 
 // Nodes
 const updateNodesRShiny = () => {
@@ -157,3 +159,26 @@ const updateEdgeByWeightCheckboxRShiny = (name, value) => {
 const updateLabelColorRShiny = () => {
   Shiny.setInputValue("js_label_color", globalLabelColor);
 }
+
+const updateVRLayerLabelsRShiny = () => {
+  let js_vr_layer_labels = [],
+  target = new THREE.Vector3(),
+  layer_planes = layers.map(({ plane }) => plane);
+
+for (let i = 0; i < layers.length; i++) {
+  js_vr_layer_labels.push(
+    [layers[i].getName(), layer_planes[i].getWorldPosition(target).x,
+    layer_planes[i].getWorldPosition(target).y, layer_planes[i].getWorldPosition(target).z]
+  );
+}
+
+js_vr_layer_labels = js_vr_layer_labels.map(layer => {
+  return {
+    name: layer[0],
+    worldPosition_x: layer[1],
+    worldPosition_y: layer[2],
+    worldPosition_z: layer[3]
+  }
+});
+Shiny.setInputValue("js_vr_layer_labels", JSON.stringify(js_vr_layer_labels));
+};

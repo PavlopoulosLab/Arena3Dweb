@@ -464,11 +464,11 @@ const sliderSceneRotate = () => {
 }
 
 const recenterNetwork = () => {
-  if (scene.exists()){
+  if (scene.exists()) {
     scene.recenter();
     updateScenePanRShiny();
-    updateLayersRShiny();
-    updateNodesRShiny();
+    updateVRLayerLabelsRShiny();
+    updateNodesRShiny(); // TODO only VR
   }
 }
 

@@ -55,7 +55,6 @@ const repaintLayers = () => {
       }
     }
   }
-  updateLayersRShiny();
 };
 
 const hideLayers = () => {
@@ -85,8 +84,6 @@ const positionLayers = () => {
         layers[i].translateX((-layers.length / 2 + i) * window_width + window_width / 2);
     //}
   }
-  updateLayersRShiny();
-  updateNodesRShiny(); // VR node world positions update
 }
 
 const adjustLayerSize = () => { // TODO check if works with import different width/height
@@ -117,7 +114,6 @@ const adjustLayerSize = () => { // TODO check if works with import different wid
     layer_planes[i].geometry.scale(1, scale, scale);
     layer_planes[i].geometry.parameters.height =  layer_planes[i].geometry.parameters.width = distance;
   }
-  updateLayersRShiny();
   redrawLayerLabels("all");
 }
 
@@ -191,6 +187,7 @@ const getSelectedLayers = () => {
 const repaintLayersFromPicker = () => {
   chooseColorpickerPriority();
   repaintLayers();
+  updateLayersRShiny();
 };
 
 const chooseColorpickerPriority = () => {
@@ -227,6 +224,7 @@ const showWireFrames = (wireframeFlag) => {
 const layerColorPriority = (colorPriority) => {
   layerColorPrioritySource = colorPriority;
   repaintLayers();
+  updateLayersRShiny();
 };
 
 // Canvas Controls =====
@@ -264,6 +262,7 @@ const spreadLayers = () => {
       layers[i].translateX( (-layers.length/2 + i) * window_width + window_width/2); //even number of Layers
   }
   updateLayersRShiny();
+  updateVRLayerLabelsRShiny();
   updateNodesRShiny(); // VR node world positions update
 }
 
@@ -280,6 +279,7 @@ const congregateLayers = () => {
       layers[i].translateX( -((-layers.length/2 + i) * window_width + window_width/2)); //even number of Layers
   }
   updateLayersRShiny();
+  updateVRLayerLabelsRShiny();
   updateNodesRShiny(); // VR node world positions update
 }
 
@@ -298,6 +298,7 @@ const moveLayers = (direction, axis) => {
           layers[selected_layers[i]].translateZ(value);
       }
       updateLayersRShiny();
+      updateVRLayerLabelsRShiny();
       updateNodesRShiny(); // VR node world positions update
     }, 70);
   } else

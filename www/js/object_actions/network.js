@@ -5,6 +5,45 @@ const executePreNetworkSetup = () => {
         attachCanvasControls();
 };
 
+const clearCanvas = () => {
+  scene.reset();
+  layers = [];
+  nodes = []; //canvas objects
+  node_labels = [];
+  document.getElementById("labelDiv").innerHTML = "";
+  if (document.getElementById("channelColorLayoutDiv")) document.getElementById("channelColorLayoutDiv").innerHTML = "";
+  if (document.getElementById("channelColorPicker")) document.getElementById("channelColorPicker").innerHTML = "";
+  node_names = [];
+  node_whole_names = [];
+  node_label_flags = [];
+  hovered_nodes = [];
+  last_hovered_node_index = "";
+  lastHoveredLayerIndex = "";
+  edges = []; //canvas objects
+  layerEdges = []; //canvas objects
+  edge_pairs = [];
+  layer_edges_pairs = []; //canvas objects
+  layer_edges_pairs_channels = []; //canvas objects
+  edge_values = [];
+  edge_channels = [];
+  channels = [];
+  node_groups = new Map();
+  layerGroups = new Map();
+  layer_label_divs = []; //divs
+  selectedNodePositions = [];
+  selected_edges = [];
+  shiftX = "";
+  shiftY = "";
+  lasso = "";
+  optionsList = "";
+  node_cluster_colors = [];
+  node_attributes = "";
+  edge_attributes = "";
+  channel_values = [];
+  isDirectionEnabled = false;
+  toggleChannelCurvatureRange(false);
+}
+
 const uploadNetwork = (network) => { 
   executePreNetworkSetup();
 
@@ -93,6 +132,60 @@ const uploadNetwork = (network) => {
     }
     
     executePostNetworkSetup();
+  }
+}
+
+const loadGraph = () => {
+  //create layer planes
+  let layerSphereGeometry = new THREE.SphereGeometry( 0 );
+  let layerSphereMaterial = new THREE.MeshBasicMaterial( {color:"white", transparent: true, opacity: 0.5} );
+  for(let i = 0; i < Object.getOwnPropertyNames(layerGroups).length; i++) {
+    scene.addLayer(layers[i].plane); 
+  }
+  //create node geometries
+  for (i = 0; i < node_whole_names.length; i++){
+    geometry = new THREE.SphereGeometry( SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS );
+    material = new THREE.MeshStandardMaterial( {color: colorVector[(layerGroups[node_groups[node_whole_names[i]]])%colorVector.length], transparent: true} ); //standard material allows light reaction
+    sphere = new THREE.Mesh( geometry, material );
+    nodes.push(sphere);
+    layers[layerGroups[node_groups[node_whole_names[i]]]].plane.add(sphere); //attaching to corresponding layer centroid
+  }
+  
+  channel_colors = CHANNEL_COLORS_LIGHT;
+  createChannelColorMap();
+  scrambleNodes();
+  positionLayers();
+  drawEdges();
+  createLabels();
+
+  //init selected channels for layout with all the channels
+  channels_layout = channels;
+  Shiny.setInputValue("channels_layout", channels_layout); //R monitors selected Channels
+  
+  scene.tiltDefault();
+  scene.setScale(0.9); //starting a little zoomed out
+}
+
+const executePostNetworkSetup = () => {
+  let layer_planes = layers.map(({ plane }) => plane);
+  drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
+
+  updateScenePanRShiny();
+  updateSceneSphereRShiny();
+  updateLayersRShiny();
+  updateVRLayerLabelsRShiny();
+  updateLayerNamesRShiny();
+
+  updateNodesRShiny();
+  updateNodeNamesRShiny(); //for Local Layout algorithms
+  updateSelectedNodesRShiny();
+
+  updateEdgesRShiny();
+  updateLabelColorRShiny();
+
+  if (!animationRunning) { // ensure animation runs only once
+      animate();
+      animationRunning = true;
   }
 }
 
@@ -253,96 +346,4 @@ const importNetwork = (jsonNetwork) => {
   
   
   executePostNetworkSetup();
-}
-
-const clearCanvas = () => {
-  scene.reset();
-  layers = [];
-  nodes = []; //canvas objects
-  node_labels = [];
-  document.getElementById("labelDiv").innerHTML = "";
-  if (document.getElementById("channelColorLayoutDiv")) document.getElementById("channelColorLayoutDiv").innerHTML = "";
-  if (document.getElementById("channelColorPicker")) document.getElementById("channelColorPicker").innerHTML = "";
-  node_names = [];
-  node_whole_names = [];
-  node_label_flags = [];
-  hovered_nodes = [];
-  last_hovered_node_index = "";
-  lastHoveredLayerIndex = "";
-  edges = []; //canvas objects
-  layerEdges = []; //canvas objects
-  edge_pairs = [];
-  layer_edges_pairs = []; //canvas objects
-  layer_edges_pairs_channels = []; //canvas objects
-  edge_values = [];
-  edge_channels = [];
-  channels = [];
-  node_groups = new Map();
-  layerGroups = new Map();
-  layer_label_divs = []; //divs
-  selectedNodePositions = [];
-  selected_edges = [];
-  shiftX = "";
-  shiftY = "";
-  lasso = "";
-  optionsList = "";
-  node_cluster_colors = [];
-  node_attributes = "";
-  edge_attributes = "";
-  channel_values = [];
-  isDirectionEnabled = false;
-  toggleChannelCurvatureRange(false);
-}
-
-const loadGraph = () => {
-  //create layer planes
-  let layerSphereGeometry = new THREE.SphereGeometry( 0 );
-  let layerSphereMaterial = new THREE.MeshBasicMaterial( {color:"white", transparent: true, opacity: 0.5} );
-  for(let i = 0; i < Object.getOwnPropertyNames(layerGroups).length; i++) {
-    scene.addLayer(layers[i].plane); 
-  }
-  //create node geometries
-  for (i = 0; i < node_whole_names.length; i++){
-    geometry = new THREE.SphereGeometry( SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS );
-    material = new THREE.MeshStandardMaterial( {color: colorVector[(layerGroups[node_groups[node_whole_names[i]]])%colorVector.length], transparent: true} ); //standard material allows light reaction
-    sphere = new THREE.Mesh( geometry, material );
-    nodes.push(sphere);
-    layers[layerGroups[node_groups[node_whole_names[i]]]].plane.add(sphere); //attaching to corresponding layer centroid
-  }
-  
-  channel_colors = CHANNEL_COLORS_LIGHT;
-  createChannelColorMap();
-  scrambleNodes();
-  positionLayers();
-  drawEdges();
-  createLabels();
-
-  //init selected channels for layout with all the channels
-  channels_layout = channels;
-  Shiny.setInputValue("channels_layout", channels_layout); //R monitors selected Channels
-  
-  scene.tiltDefault();
-  scene.setScale(0.9); //starting a little zoomed out
-}
-
-const executePostNetworkSetup = () => {
-    let layer_planes = layers.map(({ plane }) => plane);
-    drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
-
-    updateScenePanRShiny();
-    updateSceneSphereRShiny();
-    updateLayersRShiny();
-    updateLayerNamesRShiny();
-
-    updateNodesRShiny();
-    updateNodeNamesRShiny(); //for Local Layout algorithms
-    updateSelectedNodesRShiny();
-
-    updateEdgesRShiny();
-    updateLabelColorRShiny();
-
-    if (!animationRunning) { // ensure animation runs only once
-        animate();
-        animationRunning = true;
-    }
 }
