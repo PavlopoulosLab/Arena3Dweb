@@ -143,23 +143,17 @@ const checkHoverOverLayer = (event, node_hover_flag) => {
   }
 };
 
-const existsClickedLayer = () => {
-  let exists = false;
-  if (lastHoveredLayerIndex !== "") {
-    exists = true;
-    performDoubleClickLayerSelection(lastHoveredLayerIndex);
-    lastHoveredLayerIndex = "";
-    repaintLayers();
-    updateSelectedLayersRShiny();
-  }
-  return exists;
-};
-
-const performDoubleClickLayerSelection = (index) => {
-  layers[index].toggleSelection();
+const performDoubleClickLayerSelection = () => {
+  layers[lastHoveredLayerIndex].toggleSelection();
   // toggle respective checkbox
   let layerCheckboxes = document.getElementsByClassName("layer_checkbox");
-  layerCheckboxes[index].checked ? layerCheckboxes[index].checked = false : layerCheckboxes[index].checked = true;
+  layerCheckboxes[lastHoveredLayerIndex].checked ?
+    layerCheckboxes[lastHoveredLayerIndex].checked = false :
+    layerCheckboxes[lastHoveredLayerIndex].checked = true;
+  
+  lastHoveredLayerIndex = "";
+  repaintLayers();
+  updateSelectedLayersRShiny();
 };
 
 const rotateLayersWithHeldKey = (event) => {

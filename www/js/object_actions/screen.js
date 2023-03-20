@@ -71,8 +71,8 @@ const renderLayerLabels = () => {
     redrawLayerLabels("all");
   else {
     if (showSelectedLayerLabelsFlag) {
-      let js_selected_layers = getSelectedLayers();
-      if (js_selected_layers.length > 0)
+      let selected_layers = getSelectedLayers();
+      if (selected_layers.length > 0)
         redrawLayerLabels("selected");
     }
   }

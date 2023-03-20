@@ -148,10 +148,10 @@ const clickUp = (event) => {
 // double click event (left mouse), select node -> select layer -> unselect all nodes
 const dblClick = (event) => {
   if (scene.exists()) {
-    let node_selection = checkNodeInteraction(event); //priority 1, select node
-      if (!node_selection) {
-        let layer_selection = existsClickedLayer(); //priority 2, select layer
-        if (!layer_selection) { //priority 3, unselect all nodes
+      if (!checkNodeInteraction(event)) { //priority 1, select node
+        if (lastHoveredLayerIndex !== "") { //priority 2, select layer
+          performDoubleClickLayerSelection();
+        } else { //priority 3, unselect all nodes
           unselectAllNodes();
           unselectAllEdges();
           

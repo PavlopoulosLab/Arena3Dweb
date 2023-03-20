@@ -64,9 +64,6 @@ const uploadNetwork = (network) => {
   } else {
     node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; });
 
-    updateLayerNamesRShiny(); //correct order of layer names to avoid bugs with positions
-    updateNodeNamesRShiny(); //for Local Layout algorithms
-    updateSelectedNodesRShiny();
     //edge_values = mapper(edge_values, 0.1, 1) //min and max opacities //this is done in R now
     if (network.Channel) {
       let channel_values = network.Channel.filter((x, i, a) => a.indexOf(x) == i)
@@ -231,9 +228,7 @@ const importNetwork = (jsonNetwork) => {
     toggleChannelCurvatureRange(false);
   }
   node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; }); //for node label rendering
-  updateLayerNamesRShiny();
-  updateNodeNamesRShiny();
-  updateSelectedNodesRShiny();
+
   attachLayerCheckboxes();
   drawEdges();
   drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
@@ -337,7 +332,12 @@ const executePostNetworkSetup = () => {
     updateScenePanRShiny();
     updateSceneSphereRShiny();
     updateLayersRShiny();
+    updateLayerNamesRShiny();
+
     updateNodesRShiny();
+    updateNodeNamesRShiny(); //for Local Layout algorithms
+    updateSelectedNodesRShiny();
+
     updateEdgesRShiny();
     updateLabelColorRShiny();
 
