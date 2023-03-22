@@ -279,24 +279,29 @@ const moveLayers = (direction, axis) => {
 };
 
 const scaleLayers = () => {
-  let td = document.getElementById("sliderValue4"),
-    cavnasSlider = document.getElementsByClassName("canvasSlider")[3],
-    selected_layers = getSelectedLayers();;
-  td.innerHTML = "x".concat(cavnasSlider.value);
-  if (selected_layers.length == 0)
-    alert("Please select at least one layer.");
-  else {
+  let moveFactor, childrenArray,
+    sliderString = document.getElementById("sliderValue4"),
+    scalingValue = document.getElementsByClassName("canvasSlider")[3].value,
+    selected_layers = getSelectedLayers();
+
+  sliderString.innerHTML = "x".concat(scalingValue);
+
+  if (selected_layers.length > 0) {
     for (let i = 0; i < selected_layers.length; i++) {
-      for (let j = 0; j < layers[selected_layers[i]].plane.children.length; j++) {
-        layers[selected_layers[i]].plane.children[j].position.y = 
-          layers[selected_layers[i]].plane.children[j].position.y * parseFloat(cavnasSlider.value) / layers[selected_layers[i]].getScale();
-        layers[selected_layers[i]].plane.children[j].position.z =
-          layers[selected_layers[i]].plane.children[j].position.z * parseFloat(cavnasSlider.value) / layers[selected_layers[i]].getScale();
+      moveFactor = parseFloat(scalingValue) / layers[selected_layers[i]].getScale();
+      childrenArray = layers[selected_layers[i]].plane.children;
+      for (let j = 0; j < childrenArray.length; j++) { // TODO probably replace dpuble for loop with node.getLayer.getScale()
+        if (childrenArray[j].type === "Mesh") { // only nodes, edges are "Line"
+          childrenArray[j].position.y *= moveFactor;
+          childrenArray[j].position.z *= moveFactor;
+        }
       }
-      layers[selected_layers[i]].setScale(cavnasSlider.value);
+      layers[selected_layers[i]].setScale(scalingValue);
     }
+
     redrawEdges();
     updateLayersRShiny();
     updateNodesRShiny();
-  }
-}
+  } else
+    alert("Please select at least one layer.");
+};
