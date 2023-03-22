@@ -211,7 +211,6 @@ const importNetwork = (jsonNetwork) => {
       "Color": []
     },
     scrambleNodes_flag = false;
-    adjustLayerSize_flag = false;
   
   // SCENE
   scene.setPosition("x", Number(jsonNetwork.scene.position_x));
@@ -337,11 +336,7 @@ const importNetwork = (jsonNetwork) => {
     min_import_width = Math.min(...min_import_width);
     scrambleNodes(min_import_width / 2, -min_import_width / 2, -min_import_width / 2, min_import_width / 2);
   }
-
-  if (jsonNetwork.adjust_layer_size)
-    adjustLayerSize_flag = true;
-  if (adjustLayerSize_flag)
-    adjustLayerSize();
+  
   toggleDirection(isDirectionEnabled)
   
   

@@ -85,37 +85,6 @@ const initialSpreadLayers = (direction = 1) => {
   }
 };
 
-const adjustLayerSize = () => { // TODO check if works with import different width/height
-  let maxY = minY = maxZ = minZ = nodes[0].position,
-    layer_planes = layers.map(({ plane }) => plane);
-    
-  for (let i = 1; i < nodes.length; i++) {
-    if (nodes[i].position.y > maxY.y) maxY = nodes[i].position;
-    if (nodes[i].position.y < minY.y) minY = nodes[i].position;
-    if (nodes[i].position.z > maxZ.z) maxZ = nodes[i].position;
-    if (nodes[i].position.z < maxZ.z) minZ = nodes[i].position;
-  }
-  y_distance = maxY.manhattanDistanceTo(new THREE.Vector3( )) + new THREE.Vector3( ).manhattanDistanceTo(minY)
-  z_distance = maxZ.manhattanDistanceTo(new THREE.Vector3()) + new THREE.Vector3().manhattanDistanceTo(minZ)
-  if (y_distance < parseFloat(layer_planes[0].geometry.parameters.height)/2) y_distance = parseFloat(layer_planes[0].geometry.parameters.height)/2;
-  if (z_distance < parseFloat(layer_planes[0].geometry.parameters.width)/2) z_distance = parseFloat(layer_planes[0].geometry.parameters.width)/2;
-  scale_y = y_distance / parseFloat(layer_planes[0].geometry.parameters.height);
-  scale_z = z_distance / parseFloat(layer_planes[0].geometry.parameters.width);
-  //Keep the largest dimension
-  if (scale_y > scale_z) {
-    scale = scale_y;
-    distance = y_distance
-  } else {
-    scale = scale_z;
-    distance = z_distance
-  }
-  for (let i = 0; i < layer_planes.length; i++) {
-    layer_planes[i].geometry.scale(1, scale, scale);
-    layer_planes[i].geometry.parameters.height =  layer_planes[i].geometry.parameters.width = distance;
-  }
-  redrawLayerLabels("all");
-}
-
 // Event Listeners =====
 const checkHoverOverLayer = (event, node_hover_flag) => {
   setRaycaster(event);

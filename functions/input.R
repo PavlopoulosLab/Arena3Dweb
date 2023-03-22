@@ -354,8 +354,6 @@ chooseLayersOrDefaults <- function(jsonNetwork) {
   # flag to move layer with JS if a coord was not given
   jsonNetwork$layers$generate_coordinates <-
     decideGenerateCoordinatesFlag(jsonNetwork$layers)
-  jsonNetwork$layers$adjust_layer_size <-
-    decideAdjustLayerSize(jsonNetwork$layers)
   jsonNetwork$layers$position_x <-
     keepValuesOrDefault(jsonNetwork$layers$position_x)
   jsonNetwork$layers$position_y <-
@@ -393,19 +391,6 @@ decideGenerateCoordinatesFlag <- function(layers) {
     }))
   }
   return(layers$generate_coordinates)
-}
-
-decideAdjustLayerSize <- function(layers) {
-  layers$adjust_layer_size <- F
-  if (is.null(layers$geometry_parameters_width)) {
-    layers$adjust_layer_size <- T
-  } else {
-    layers$adjust_layer_size[
-      which(is.na(layers$geometry_parameters_width))] <- T
-    layers$adjust_layer_size[
-      which(layers$geometry_parameters_width == "")] <- T
-  }
-  return(layers$adjust_layer_size)
 }
 
 chooseToScrambleNodes <- function(jsonNetwork) {
