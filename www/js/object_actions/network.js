@@ -154,7 +154,7 @@ const loadGraph = () => {
   channel_colors = CHANNEL_COLORS_LIGHT;
   createChannelColorMap();
   scrambleNodes();
-  positionLayers();
+  initialSpreadLayers(1);
   drawEdges();
   createLabels();
 
@@ -327,7 +327,7 @@ const importNetwork = (jsonNetwork) => {
   drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
   createLabels();
 
-  //positionLayers(true);
+  // initialSpreadLayers(1);
   if (jsonNetwork.scramble_nodes)
     scrambleNodes_flag = true;
   if (scrambleNodes_flag) {

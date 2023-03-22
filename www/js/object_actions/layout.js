@@ -105,16 +105,16 @@ const applyPredefinedLayout = (message) => {
       }
       switch (message) {
         case "zigZag":
-          for (let i = 1; i < numLayers; i+=2) {
+          for (let i = 1; i < numLayers; i += 2) {
             layers[i].translateY(500);
           }
-          positionLayers();
+          initialSpreadLayers(1);
           updateLayersRShiny();
           updateVRLayerLabelsRShiny();
           updateNodesRShiny(); // VR node world positions update
           break;
         case "parallel":
-          positionLayers();
+          initialSpreadLayers(1);
           updateLayersRShiny();
           updateVRLayerLabelsRShiny();
           updateNodesRShiny(); // VR node world positions update
@@ -142,14 +142,15 @@ const applyPredefinedLayout = (message) => {
                 }
                 layer_planes[i].position.set(x , 0, 0);
               }
-              if (!(k % 2)) layer_planes[i].rotateZ(THREE.Math.degToRad(90));
-              if (k >= 4) layer_planes[i].rotateY(THREE.Math.degToRad(90));
+              if (!(k % 2))
+                layer_planes[i].rotateZ(THREE.Math.degToRad(90));
+              if (k >= 4)
+                layer_planes[i].rotateY(THREE.Math.degToRad(90));
               // move
-              if (k == 0 || k == 1 || k == 5) {
+              if (k == 0 || k == 1 || k == 5)
                 layer_planes[i].translateX(layer_planes[i].geometry.parameters.height/2 + 100);
-              } else {
-                 layer_planes[i].translateX(-layer_planes[i].geometry.parameters.height/2 - 100);
-              }
+              else
+                layer_planes[i].translateX(-layer_planes[i].geometry.parameters.height/2 - 100);
               k++;
             }
           }

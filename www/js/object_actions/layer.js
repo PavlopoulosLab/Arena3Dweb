@@ -72,19 +72,18 @@ const showLayerNodeLabels = () => {
 };
 
 // From R actions (layouts and upload/import) =====
-const positionLayers = () => {
+// called from predefined layouts (parallel/zigzag), from upload and canvas controls
+const initialSpreadLayers = (direction = 1) => {
   let numLayers = layers.length;
-  let window_width = xBoundMax * 2 / numLayers;
+  let spacing = xBoundMax * 2 / numLayers;
     
   for (let i = 0; i < numLayers; i++) {
-    //if(checkMoveFlag && layer_planes[i].move || !checkMoveFlag) { // TODO check these flags
-      if (numLayers % 2) //odd
-        layers[i].translateX((-Math.floor(layers.length / 2) + i) * window_width);
-      else //even
-        layers[i].translateX((-layers.length / 2 + i) * window_width + window_width / 2);
-    //}
+    if (numLayers % 2) // odd
+      layers[i].translateX(direction * ((-Math.floor(layers.length / 2) + i) * spacing));
+    else // even
+      layers[i].translateX(direction * ((-layers.length / 2 + i) * spacing + spacing / 2));
   }
-}
+};
 
 const adjustLayerSize = () => { // TODO check if works with import different width/height
   let maxY = minY = maxZ = minZ = nodes[0].position,
@@ -249,39 +248,13 @@ const rotateSelectedLayers = (direction, axis) => {
     alert("Please select at least one layer.");
 };
 
-const spreadLayers = () => {
-  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layerGroups).length,
-      numLayers = layers.length;
-  for (let i = 0; i < numLayers; i++) {
-    layers[i].setRotation("x", 0);
-    layers[i].setRotation("y", 0);
-    layers[i].setRotation("z", 0);
-    if (numLayers % 2)
-      layers.translateX( (-Math.floor(layers.length/2) + i) * window_width); //odd number of Layers
-    else
-      layers[i].translateX( (-layers.length/2 + i) * window_width + window_width/2); //even number of Layers
-  }
-  updateLayersRShiny();
-  updateVRLayerLabelsRShiny();
-  updateNodesRShiny(); // VR node world positions update
-}
+const spreadLayers = (direction) => {
+  initialSpreadLayers(direction);
 
-const congregateLayers = () => {
-  let window_width = xBoundMax * 2 / Object.getOwnPropertyNames(layerGroups).length,
-      numLayers = layers.length;
-  for (let i = 0; i < numLayers; i++) {
-    layers[i].setRotation("x", 0);
-    layers[i].setRotation("y", 0);
-    layers[i].setRotation("z", 0);
-    if (numLayers % 2)
-      layers[i].translateX( -((-Math.floor(layers.length/2) + i) * window_width)); //odd number of Layers
-    else
-      layers[i].translateX( -((-layers.length/2 + i) * window_width + window_width/2)); //even number of Layers
-  }
   updateLayersRShiny();
   updateVRLayerLabelsRShiny();
   updateNodesRShiny(); // VR node world positions update
-}
+};
 
 const moveLayers = (direction, axis) => {
   let selected_layers = getSelectedLayers();

@@ -405,8 +405,8 @@ const attachCanvasControls = () => { //adding control buttons above the canvas l
   cavnasButtons[10].onmousemove = cavnasButtons[10].onmouseup = mouseUpClear;
   cavnasButtons[11].addEventListener("mousedown", function() { rotateSelectedLayers(1, "Z") });
   cavnasButtons[11].onmousemove = cavnasButtons[11].onmouseup = mouseUpClear;
-  cavnasButtons[12].onclick = spreadLayers;
-  cavnasButtons[13].onclick = congregateLayers;
+  cavnasButtons[12].addEventListener("click", function() { spreadLayers(1) });
+  cavnasButtons[13].addEventListener("click", function() { spreadLayers(-1) });
   cavnasButtons[14].addEventListener("mousedown", function() { moveLayers(-1, "X") });
   cavnasButtons[14].onmousemove = cavnasButtons[14].onmouseup = mouseUpClear;
   cavnasButtons[15].addEventListener("mousedown", function() { moveLayers(1, "X") });
