@@ -36,7 +36,7 @@ const attachThemeButtons = () => {
 
 const applyTheme = (bgColor, floorColor, edgeColor, labelColor, theme_colors, channel_colors_theme) =>{
   if (scene.exists()) {
-    colorVector = theme_colors.concat(COLOR_VECTOR_271);
+    nodeColorVector = theme_colors.concat(COLOR_VECTOR_271);
     channel_colors = channel_colors_theme;
     createChannelColorMap();
     setRendererColor(bgColor);

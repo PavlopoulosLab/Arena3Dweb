@@ -1,56 +1,12 @@
-const executePreNetworkSetup = () => {
-    colorVector = COLOR_VECTOR_DARK.concat(COLOR_VECTOR_271);
-    clearCanvas();
-    if (!canvasControlsAttached)
-        attachCanvasControls();
-};
-
-const clearCanvas = () => {
-  scene.reset();
-  layers = [];
-  nodes = []; //canvas objects
-  node_labels = [];
-  document.getElementById("labelDiv").innerHTML = "";
-  if (document.getElementById("channelColorLayoutDiv")) document.getElementById("channelColorLayoutDiv").innerHTML = "";
-  if (document.getElementById("channelColorPicker")) document.getElementById("channelColorPicker").innerHTML = "";
-  node_names = [];
-  node_whole_names = [];
-  node_label_flags = [];
-  hovered_nodes = [];
-  last_hovered_node_index = "";
-  lastHoveredLayerIndex = "";
-  edges = []; //canvas objects
-  layerEdges = []; //canvas objects
-  edge_pairs = [];
-  layer_edges_pairs = []; //canvas objects
-  layer_edges_pairs_channels = []; //canvas objects
-  edge_values = [];
-  edge_channels = [];
-  channels = [];
-  node_groups = new Map();
-  layerGroups = new Map();
-  layer_label_divs = []; //divs
-  selectedNodePositions = [];
-  selected_edges = [];
-  shiftX = "";
-  shiftY = "";
-  lasso = "";
-  optionsList = "";
-  node_cluster_colors = [];
-  node_attributes = "";
-  edge_attributes = "";
-  channel_values = [];
-  isDirectionEnabled = false;
-  toggleChannelCurvatureRange(false);
-}
-
 const uploadNetwork = (network) => { 
   executePreNetworkSetup();
+
 
   let temp_name1 = temp_name2 = temp_layer1 = temp_layer2 = "",
     layers_counter = 0, layer_names = [];
   let temp_channel;
-  for (let i=0; i < network.SourceLayer.length; i++){
+  console.log(network);
+  for (let i = 0; i < network.SourceLayer.length; i++) {
     temp_layer1 = String(network.SourceLayer[i]);
     temp_layer2 = String(network.TargetLayer[i]);
     temp_name1 = network.SourceNode_Layer[i];
@@ -103,7 +59,6 @@ const uploadNetwork = (network) => {
   } else {
     node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; });
 
-    //edge_values = mapper(edge_values, 0.1, 1) //min and max opacities //this is done in R now
     if (network.Channel) {
       let channel_values = network.Channel.filter((x, i, a) => a.indexOf(x) == i)
       if (channel_values.length > MAX_CHANNELS) {
@@ -135,6 +90,65 @@ const uploadNetwork = (network) => {
   }
 }
 
+const executePreNetworkSetup = () => {
+  resetValues();
+  if (!canvasControlsAttached)
+    attachCanvasControls();
+};
+
+const resetValues = () => {
+  scene.reset();
+
+  // labels
+  document.getElementById("labelDiv").innerHTML = "";
+  layer_label_divs = []; //divs
+  node_labels = [];
+  node_label_flags = [];
+
+  // layers
+  layers = [];
+  layerGroups = new Map();
+  lastHoveredLayerIndex = "";
+
+  // nodes
+  nodes = []; //canvas objects
+  node_names = [];
+  node_whole_names = [];
+  node_groups = new Map();
+  hovered_nodes = [];
+  last_hovered_node_index = "";
+  selectedNodePositions = [];
+  nodeColorVector = COLOR_VECTOR_DARK.concat(COLOR_VECTOR_271);
+  node_cluster_colors = [];
+  node_attributes = "";
+
+  // edges
+  edges = []; //canvas objects
+  layerEdges = []; //canvas objects
+  edge_pairs = [];
+  layer_edges_pairs = []; //canvas objects
+  layer_edges_pairs_channels = []; //canvas objects
+  edge_values = [];
+  selected_edges = [];
+  edge_attributes = "";
+  // channels
+  if (document.getElementById("channelColorLayoutDiv"))
+    document.getElementById("channelColorLayoutDiv").innerHTML = "";
+  if (document.getElementById("channelColorPicker"))
+    document.getElementById("channelColorPicker").innerHTML = "";
+  edge_channels = [];
+  channels = [];
+  channel_values = [];
+  isDirectionEnabled = false;
+  toggleChannelCurvatureRange(false);
+  
+  // others
+  shiftX = "";
+  shiftY = "";
+  lasso = "";
+  optionsList = "";
+}
+
 const loadGraph = () => {
   //create layer planes
   let layerSphereGeometry = new THREE.SphereGeometry( 0 );
@@ -145,7 +159,7 @@ const loadGraph = () => {
   //create node geometries
   for (i = 0; i < node_whole_names.length; i++){
     geometry = new THREE.SphereGeometry( SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS );
-    material = new THREE.MeshStandardMaterial( {color: colorVector[(layerGroups[node_groups[node_whole_names[i]]])%colorVector.length], transparent: true} ); //standard material allows light reaction
+    material = new THREE.MeshStandardMaterial( {color: nodeColorVector[(layerGroups[node_groups[node_whole_names[i]]])%nodeColorVector.length], transparent: true} ); //standard material allows light reaction
     sphere = new THREE.Mesh( geometry, material );
     nodes.push(sphere);
     layers[layerGroups[node_groups[node_whole_names[i]]]].plane.add(sphere); //attaching to corresponding layer centroid

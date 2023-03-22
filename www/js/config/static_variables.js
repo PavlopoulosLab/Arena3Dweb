@@ -11,7 +11,9 @@ let localLayoutFlag = false;
 // labels
 let globalLabelColor = "#ffffff",
     nodeLabelDefaultSize = "12px",
-    layer_label_divs = [];
+    layer_label_divs = [],
+    node_labels = [],
+    node_label_flags = []; //divs to be overlaid above canvas
 
 // layers
 let layerGroups = new Map(),
@@ -29,7 +31,17 @@ let showAllNodeLabelsFlag = false,
     nodeIntervalTimeout = "",
     nodeAttributesPriority = true,
     selectedNodeColorFlag = true,
-    selectedDefaultColor = "#A3FF00";
+    selectedDefaultColor = "#A3FF00",
+    nodes = [], //canvas objects
+    node_names = [],
+    node_whole_names = [],
+    node_groups = new Map(),
+    hovered_nodes = [], // if allowing more than one hovered nodes at a time
+    nodeColorVector = [],
+    last_hovered_node_index = "",
+    node_cluster_colors = [],
+    node_attributes = "",
+    selectedNodePositions = [];
 
 // edges
 let selectedEdgeColorFlag = true,
@@ -44,41 +56,41 @@ let selectedEdgeColorFlag = true,
     interChannelCurvature = 0.05,
     channelCurvature = 0.05,
     channel_colors = [],
-    draw_inter_edges_flag = true;
-
-// others
-let interLayerEdgesRenderPauseFlag = false,
-    canvasControlsAttached = false,
-    colorVector = [];
-    fps = 30,
-    downstreamCheckedNodes = []; // for recursive 3rd option of onRightClick on node
-
-// Variables that are being refreshed on new network upload/import (nodes, edges, coords)
-let nodes = [], //canvas objects
-    node_labels = [], //divs to be overlaid above canvas
-    node_names = [],
-    node_whole_names = [],
-    node_label_flags = [],
-    hovered_nodes = [], // if allowing more than one hovered nodes at a time
-    last_hovered_node_index = "",
+    draw_inter_edges_flag = true,
     edges = [], //canvas objects
     layerEdges = [], //canvas objects
     edge_pairs = [],
     layer_edges_pairs = [], //canvas objects
-    layer_edges_pairs_channels = [],
     edge_values = [],
-    edge_channels = [],
-    node_groups = new Map(),
-    selectedNodePositions = [],
     selected_edges = [],
+    edge_attributes = "",
+    // channels
+    channels = [],
     channels_layout = [],
+    channel_color = {},
+    channelVisibility = {},
+    edge_channels = [],
+    layer_edges_pairs_channels = [];
+
+// others
+let interLayerEdgesRenderPauseFlag = false,
+    canvasControlsAttached = false,
+    fps = 30,
     shiftX = "",
     shiftY = "",
     lasso = "",
     optionsList = "",
-    node_cluster_colors = [],
-    node_attributes = "",
-    edge_attributes = "",
-    channels = [],
-    channel_color = {},
-    channelVisibility = {};
+    downstreamCheckedNodes = []; // for recursive 3rd option of onRightClick on node
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

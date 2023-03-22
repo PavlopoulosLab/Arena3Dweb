@@ -58,13 +58,13 @@ const assignXYZ = (nodeCoords) => {
     }
   }
   
-  // Clustering + colorVector
+  // Clustering + nodeColorVector
   if (nodeCoords.group != null) {
     for (i = 0; i < nodeCoords.name.length; i++){
       node_name = nodeCoords.name[i].trim();
       if (nodes[node_whole_names.indexOf(node_name)]) {
-        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(colorVector[nodeCoords.group[i]]);
-        node_cluster_colors[node_whole_names.indexOf(node_name)] = colorVector[nodeCoords.group[i]];
+        nodes[node_whole_names.indexOf(node_name)].material.color = new THREE.Color(nodeColorVector[nodeCoords.group[i]]);
+        node_cluster_colors[node_whole_names.indexOf(node_name)] = nodeColorVector[nodeCoords.group[i]];
         nodes[node_whole_names.indexOf(node_name)].userData.cluster = nodeCoords.group[i];
       }
     }

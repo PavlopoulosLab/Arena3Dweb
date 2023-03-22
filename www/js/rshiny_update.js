@@ -71,14 +71,14 @@ const updateNodesRShiny = () => {
       if (pos > -1){
         if (node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " " && node_attributes.Color[pos] !== null) //if node exists in node attributes file
           color = node_attributes.Color[pos];
-        else color = colorVector[(layerGroups[node_groups[node_whole_names[i]]])%colorVector.length];
+        else color = nodeColorVector[(layerGroups[node_groups[node_whole_names[i]]])%nodeColorVector.length];
         if (node_attributes.Url !== undefined && node_attributes.Url[pos] !== "" && node_attributes.Url[pos] != " " && node_attributes.Url[pos] !== null)
           url = node_attributes.Url[pos];
         if (node_attributes.Description !== undefined && node_attributes.Description[pos] !== "" && node_attributes.Description[pos] != " " && node_attributes.Description[pos] !== null)
           descr = node_attributes.Description[pos];
-      } else color = colorVector[(layerGroups[node_groups[node_whole_names[i]]])%colorVector.length];
-    }  else if (nodes[i].userData.cluster) nodes[i].material.color = new THREE.Color(colorVector[nodes[i].userData.cluster]);
-    else color = colorVector[(layerGroups[node_groups[node_whole_names[i]]]) % colorVector.length];
+      } else color = nodeColorVector[(layerGroups[node_groups[node_whole_names[i]]])%nodeColorVector.length];
+    }  else if (nodes[i].userData.cluster) nodes[i].material.color = new THREE.Color(nodeColorVector[nodes[i].userData.cluster]);
+    else color = nodeColorVector[(layerGroups[node_groups[node_whole_names[i]]]) % nodeColorVector.length];
 
     if (node_cluster_colors.length !== 0) color = node_cluster_colors[i];
     
