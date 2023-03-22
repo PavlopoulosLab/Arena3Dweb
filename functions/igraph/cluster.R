@@ -63,7 +63,7 @@ getClusteringFunction <- function(clustering_name) {
 execute_strategy3_superNodes_strictPartitioning <- function(
     networkGraph, assignedClusters, globalLayoutFunc, localLayoutFunc,
     repelling_force = 3) {
-  subNetwork <- convertGraphToDF(networkGraph) # TODO check for Circle layouts etc
+  subNetwork <- convertGraphToDF(networkGraph)
   expandedGroups <- assignedClusters %>% tidyr::separate_rows(Nodes, sep = ", ")
   subNetworkWithGroups <- appendClusters(subNetwork, expandedGroups)
   groupsGraph <- extractGroupsGraph(subNetworkWithGroups)

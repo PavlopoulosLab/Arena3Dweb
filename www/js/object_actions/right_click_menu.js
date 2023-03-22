@@ -4,7 +4,6 @@
 //@return int array of neighbor IDs
 const interLayerNeighbors = (node) => {
   let i, edge_split, index1, index2, neighbors = [];
-  //TODO
   for (i = 0; i < edge_pairs.length; i++){
     edge_split = edge_pairs[i].split("---");
     index1 = node_whole_names.indexOf(edge_split[0]);
@@ -22,7 +21,6 @@ const interLayerNeighbors = (node) => {
 //@return: String of inter-layer edge pair (as found in the edge_pairs array) or null if not found
 const getInterLayerEdge = (node1, node2) => {
   let i, edge_split, index1, index2;
-  //TODO
   for (i = 0; i < edge_pairs.length; i++){
     edge_split = edge_pairs[i].split("---");
     index1 = node_whole_names.indexOf(edge_split[0]);

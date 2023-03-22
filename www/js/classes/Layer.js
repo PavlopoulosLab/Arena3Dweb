@@ -14,7 +14,7 @@ class Layer {
 
       this.showNodeLabels = false;
       this.isSelected = false;
-      this.isVisible = true; // TODO check if use to not render hidden layers in loops
+      this.isVisible = true;
       this.coordSystem = ["", "", ""];
 
       this.createPlane(geometry_parameters_width, floor_current_color);

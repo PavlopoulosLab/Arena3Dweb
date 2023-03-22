@@ -123,13 +123,12 @@ const translateNodes = (e) => {
 }
 
 // logic behind node label show/hide
-// TODO change checked calculation with checkbox names
 const decideNodeLabelFlags = () => {
-  let c = document.getElementById("checkboxdiv").children,
+  let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
       node_layer = "";
-  for (i = 0; i < node_names.length; i++){
+  for (i = 0; i < node_names.length; i++) {
     node_layer = layerGroups[node_groups[node_whole_names[i]]];
-    if (c[node_layer*7+2].checked){ //1. if node's layer not hidden 
+    if (hidelayerCheckboxes[node_layer].checked){ //1. if node's layer not hidden 
       node_label_flags[i] = false;
     } else if (showAllNodeLabelsFlag){ //2. if showing all node labels
       node_label_flags[i] = true;
@@ -312,7 +311,7 @@ const unselectAllNodes = () => {
   decideNodeLabelFlags();
 };
 
-const decideNodeColors = () => { // TODO reusable 
+const decideNodeColors = () => {
   for (let i = 0; i < nodes.length; i++) {
     if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
       pos = node_attributes.Node.indexOf(node_whole_names[i]);

@@ -15,7 +15,6 @@ const setWindowBounds = () => {
   yBoundMax = window.innerHeight/2,
   zBoundMin = -window.innerHeight/2.5,
   zBoundMax = window.innerHeight/2.5;
-  // TODO probably communicate to R form here
 }
 
 const setCamera = () => {
@@ -80,7 +79,7 @@ const renderLayerLabels = () => {
 
 const redrawLayerLabels = (mode) => {
   let  layerArray, layerX, layerY, labelX, labelY,
-    i, position, c = document.getElementById("checkboxdiv").children,
+    i, position, hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
     layer_spheres = layers.map(({ sphere }) => sphere);
   switch (mode) {
     case "all":
@@ -92,7 +91,7 @@ const redrawLayerLabels = (mode) => {
   
   for (i = 0; i < layerArray.length; i++) { // TODO replace for loop with map (objects)
     position = mode == "selected" ? layerArray[i] : i;
-    if (!c[position * 7 + 2].checked) { // if node's layer not hidden, counting elements
+    if (!hidelayerCheckboxes[position].checked) { // if node's layer not hidden, counting elements
       layerX = layer_spheres[position].getWorldPosition(new THREE.Vector3()).x,
       layerY = layer_spheres[position].getWorldPosition(new THREE.Vector3()).y;
       labelX = xBoundMax + layerX;
@@ -148,7 +147,7 @@ const drawLayerEdges = (flag) => {
     draw_inter_edges_flag = false;
   } else {
     let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1;
-    let c = document.getElementById("checkboxdiv").children;
+    let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
     for (i = 0; i < layer_edges_pairs.length; i++){
       scene.remove(layerEdges[i]);
       // Keep default color
@@ -161,7 +160,7 @@ const drawLayerEdges = (flag) => {
       let edge_split = edge_pairs[layer_edges_pairs[i]].split("---");
       let node_layer1 = layerGroups[node_groups[edge_split[0]]];
       let node_layer2 = layerGroups[node_groups[edge_split[1]]];
-      if (!c[node_layer1*7+2].checked && !c[node_layer2*7+2].checked){
+      if (!hidelayerCheckboxes[node_layer1].checked && !hidelayerCheckboxes[node_layer2].checked) {
         index1 = node_whole_names.indexOf(edge_split[0]);
         index2 = node_whole_names.indexOf(edge_split[1]);
         points.push( nodes[index1].getWorldPosition(new THREE.Vector3()), nodes[index2].getWorldPosition(new THREE.Vector3()) );

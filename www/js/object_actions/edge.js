@@ -345,7 +345,6 @@ const attachChannelLayoutList = () => {
   channelContainer.setAttribute("class", "channelsLayout display-none");
 
   channels.forEach(channel => {
-      //TODO for each channel add a row with a checkbox and channels name
     row = document.createElement('div');
 
     checkbox = document.createElement('input');
