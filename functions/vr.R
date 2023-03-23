@@ -50,13 +50,13 @@ end_header\n"), file = con)
                 js_nodes[i, 3], js_nodes[i, 4], js_nodes[i, 5],
                 rgbColor[1], rgbColor[2], rgbColor[3]), file = con) # r,g,b
   }
-  node_names <- paste0(js_nodes[,1], "_", js_nodes[,2])
+  nodeNames <- paste0(js_nodes[,1], "_", js_nodes[,2])
   # edge parsing
   for (i in 1:nrow(js_edge_pairs)){
     rgbColor <- col2rgb(js_edge_pairs[i, 3]) # 3rd col is edge color
     edge <- strsplit(js_edge_pairs[i, 1], "---")[[1]]
-    nodeIndex1 <- match(edge[1], node_names) - 1 # starting from index 0
-    nodeIndex2 <- match(edge[2], node_names) - 1
+    nodeIndex1 <- match(edge[1], nodeNames) - 1 # starting from index 0
+    nodeIndex2 <- match(edge[2], nodeNames) - 1
     cat(sprintf("%s %s %s %s %s\n",
                 nodeIndex1, nodeIndex2, # from,to
                 rgbColor[1], rgbColor[2], rgbColor[3]), file = con) # r,g,b

@@ -67,27 +67,27 @@ const updateNodesRShiny = () => {
   for (let i = 0; i < nodes.length; i++){
     let url = descr = " ";
     if (node_attributes !== ""){
-      pos = node_attributes.Node.indexOf(node_whole_names[i]);
+      pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
       if (pos > -1){
         if (node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " " && node_attributes.Color[pos] !== null) //if node exists in node attributes file
           color = node_attributes.Color[pos];
-        else color = nodeColorVector[(layerGroups[nodeGroups[node_whole_names[i]]])%nodeColorVector.length];
+        else color = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length];
         if (node_attributes.Url !== undefined && node_attributes.Url[pos] !== "" && node_attributes.Url[pos] != " " && node_attributes.Url[pos] !== null)
           url = node_attributes.Url[pos];
         if (node_attributes.Description !== undefined && node_attributes.Description[pos] !== "" && node_attributes.Description[pos] != " " && node_attributes.Description[pos] !== null)
           descr = node_attributes.Description[pos];
-      } else color = nodeColorVector[(layerGroups[nodeGroups[node_whole_names[i]]])%nodeColorVector.length];
+      } else color = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length];
     }  else if (nodes[i].userData.cluster) nodes[i].material.color = new THREE.Color(nodeColorVector[nodes[i].userData.cluster]);
-    else color = nodeColorVector[(layerGroups[nodeGroups[node_whole_names[i]]]) % nodeColorVector.length];
+    else color = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length];
 
     if (node_cluster_colors.length !== 0) color = node_cluster_colors[i];
     
-    temp_js_nodes = [node_names[i], nodeGroups[node_whole_names[i]], nodes[i].position.x, nodes[i].position.y, nodes[i].position.z,
+    temp_js_nodes = [nodeNames[i], nodeGroups[nodeLayerNames[i]], nodes[i].position.x, nodes[i].position.y, nodes[i].position.z,
       nodes[i].scale.x, color, url, descr];
     js_nodes.push(temp_js_nodes);
     
     // VR
-    temp_js_nodes = [node_names[i], nodeGroups[node_whole_names[i]],
+    temp_js_nodes = [nodeNames[i], nodeGroups[nodeLayerNames[i]],
       nodes[i].getWorldPosition(target).x, nodes[i].getWorldPosition(target).y, nodes[i].getWorldPosition(target).z,
       nodes[i].scale.x, color];
     js_nodes_world.push(temp_js_nodes);
@@ -97,7 +97,7 @@ const updateNodesRShiny = () => {
 }
 
 const updateNodeNamesRShiny = () => {
-  Shiny.setInputValue("js_node_names", node_whole_names);
+  Shiny.setInputValue("js_node_names", nodeLayerNames);
 }
 
 const updateSelectedNodesRShiny = () => {

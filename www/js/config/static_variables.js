@@ -12,8 +12,8 @@ let localLayoutFlag = false;
 let globalLabelColor = "#ffffff",
     nodeLabelDefaultSize = "12px",
     layer_label_divs = [],
-    node_labels = [],
-    node_label_flags = []; //divs to be overlaid above canvas
+    node_labels = [], //divs to be overlaid above canvas
+    nodeLabelFlags = []; // TODO add to Node class as this.showLabel()
 
 // layers
 let layerGroups = new Map(),
@@ -33,8 +33,8 @@ let showAllNodeLabelsFlag = false,
     selectedNodeColorFlag = true,
     selectedDefaultColor = "#A3FF00",
     nodes = [], //canvas objects
-    node_names = [],
-    node_whole_names = [],
+    nodeNames = [],
+    nodeLayerNames = [],
     nodeGroups = new Map(),
     hovered_nodes = [], // if allowing more than one hovered nodes at a time
     nodeColorVector = [],

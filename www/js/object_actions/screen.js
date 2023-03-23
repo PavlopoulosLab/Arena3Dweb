@@ -115,9 +115,9 @@ const renderNodeLabels = () => { // TODO add/check flag conditions
       nodeY = "",
       labelX = "",
       labelY = "";
-  for (let i = 0; i < node_label_flags.length; i++){
-    let node_layer = layerGroups[nodeGroups[node_whole_names[i]]];
-    if (node_label_flags[i]){ //ONLY CHECK THIS 
+  for (let i = 0; i < nodeLabelFlags.length; i++){
+    let node_layer = layerGroups[nodeGroups[nodeLayerNames[i]]];
+    if (nodeLabelFlags[i]){ // ONLY CHECK THIS 
       nodeX = nodes[i].getWorldPosition(new THREE.Vector3()).x,
       nodeY = nodes[i].getWorldPosition(new THREE.Vector3()).y;
       labelX = xBoundMax + nodeX + 7;
@@ -161,8 +161,8 @@ const drawLayerEdges = (flag) => {
       let node_layer1 = layerGroups[nodeGroups[edge_split[0]]];
       let node_layer2 = layerGroups[nodeGroups[edge_split[1]]];
       if (!hidelayerCheckboxes[node_layer1].checked && !hidelayerCheckboxes[node_layer2].checked) {
-        index1 = node_whole_names.indexOf(edge_split[0]);
-        index2 = node_whole_names.indexOf(edge_split[1]);
+        index1 = nodeLayerNames.indexOf(edge_split[0]);
+        index2 = nodeLayerNames.indexOf(edge_split[1]);
         points.push( nodes[index1].getWorldPosition(new THREE.Vector3()), nodes[index2].getWorldPosition(new THREE.Vector3()) );
     		let geometry = new THREE.BufferGeometry().setFromPoints( points );
         let material = "";

@@ -1,33 +1,13 @@
 const uploadNetwork = (network) => { 
   executePreNetworkSetup();
-
-  initializeLayers(network);
-  initializeNodes(network);
-  initializeEdges(network);
-
-  let layer_names = layers.map(({ name }) => name);
-  if (layer_names.length > MAX_LAYERS) {
-    alert("Network must contain no more than ".concat(MAX_LAYERS).concat(" layers.")); //layer limit
-  } else {
-    node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; });
-
-    if (network.Channel) {
-      let channel_values = network.Channel.filter((x, i, a) => a.indexOf(x) == i)
-      if (channel_values.length > MAX_CHANNELS) {
-        alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
-        return false
-      } else {
-        channels = channel_values;
-        channels.forEach(c => {
-          channelVisibility[c] = true;
-        });
-      }
-    }
   
-    if (edge_values.length > MAX_EDGES)
-      alert("Network must contain no more than ".concat(MAX_EDGES).concat(" edges.")); //edge limit
-    else {
-      attachLayerCheckboxes();
+  initializeLayers(network);
+  if (areObjectsWithinLimit(layers, MAX_LAYERS, "layers")) {
+    initializeNodesAndEdges(network);
+    if (areObjectsWithinLimit(edge_values, MAX_EDGES, "edges") &&
+      areObjectsWithinLimit(channels, MAX_CHANNELS, "channels")) {
+
+      
       loadGraph();
       if (network.Channel) {
         attachChannelEditList();
@@ -36,10 +16,11 @@ const uploadNetwork = (network) => {
       } else {
         toggleChannelCurvatureRange(false);
       }
+
+      attachLayerCheckboxes(); // TODO check if can enter executePostNetworkSetup
+      executePostNetworkSetup();
     }
-    
-    executePostNetworkSetup();
-  }
+  }  
 }
 
 const executePreNetworkSetup = () => {
@@ -55,7 +36,7 @@ const resetValues = () => {
   document.getElementById("labelDiv").innerHTML = "";
   layer_label_divs = []; //divs
   node_labels = [];
-  node_label_flags = [];
+  nodeLabelFlags = [];
 
   // layers
   layers = [];
@@ -64,8 +45,8 @@ const resetValues = () => {
 
   // nodes
   nodes = []; //canvas objects
-  node_names = [];
-  node_whole_names = [];
+  nodeNames = [];
+  nodeLayerNames = [];
   nodeGroups = new Map();
   hovered_nodes = [];
   last_hovered_node_index = "";
@@ -110,38 +91,46 @@ const initializeLayers = (network) => {
   }
 };
 
-const initializeNodes = (network) => {
-  node_names = network.SourceNode.concat(network.TargetNode);
-  node_names = getUniqueValues(node_names);
-  node_whole_names = network.SourceNode_Layer.concat(network.TargetNode_Layer);
-  node_whole_names = getUniqueValues(node_whole_names);
+const areObjectsWithinLimit = (object, limit, objectName) => {
+  let areWithinLimit = true;
+  if (object.length > limit) {
+    areWithinLimit = false;
+    alert(`Network must contain no more than ${limit} ${objectName}.`);
+  }
+  return(areWithinLimit);
+}
 
-  // TODO change arrays with node objects
-  // for (let i = 0; i < node_names.length; i++) {}
-};
-
-const initializeEdges = (network) => {
+const initializeNodesAndEdges = (network) => {
   let sourceNodeLayerName, targetNodeLayerName, edgePair;
 
   for (let i = 0; i < network.SourceNode.length; i++) {
     sourceNodeLayerName = network.SourceNode_Layer[i];
     targetNodeLayerName = network.TargetNode_Layer[i];
-    // push node-layer group maps, TODO probably move into initializeNodes when Node class ready
-    nodeGroups[sourceNodeLayerName] = network.SourceLayer[i]; // faster if here, in one for loop
-    nodeGroups[targetNodeLayerName] = network.TargetLayer[i];
     
-    //push edges and values
+    updateNodeArrays(sourceNodeLayerName, network.SourceNode[i], network.SourceLayer[i]);
+    updateNodeArrays(targetNodeLayerName, network.TargetNode[i], network.TargetLayer[i]);
+
     edgePair = sourceNodeLayerName.concat("---").concat(targetNodeLayerName);
     if (network.Channel)
-      updateChannelArrays(network.Channel[i], edgePair);
+      updateEdgeChannelArrays(network.Channel[i], edgePair);
     else
       edge_pairs.push(edgePair);
 
     edge_values.push(network.Weight[i]);
   }
+
+  updateChannelArrays(network.Channel);
 };
 
-const updateChannelArrays = (channelName, edgePair) => {
+const updateNodeArrays = (nodeLayerName, nodeName, layerName) => {
+  if (!nodeLayerNames.includes(nodeLayerName)) {
+    nodeLayerNames.push(nodeLayerName);
+    nodeNames.push(nodeName);
+    nodeGroups[nodeLayerName] = layerName; 
+  }
+};
+
+const updateEdgeChannelArrays = (channelName, edgePair) => {
   let position;
   if (edge_pairs.includes(edgePair) ) {
     position = edge_pairs.indexOf(edgePair);
@@ -152,20 +141,25 @@ const updateChannelArrays = (channelName, edgePair) => {
   }
 };
 
+const updateChannelArrays = (channelArray) => {
+  if (channelArray) {
+    channels = getUniqueValues(channelArray);
+    for (let i = 0; i < channels.length; i++)
+      channelVisibility[channels[i]] = true;
+  }
+};
+
 const loadGraph = () => {
-  //create layer planes
-  let layerSphereGeometry = new THREE.SphereGeometry( 0 );
-  let layerSphereMaterial = new THREE.MeshBasicMaterial( {color:"white", transparent: true, opacity: 0.5} );
-  for(let i = 0; i < Object.getOwnPropertyNames(layerGroups).length; i++) {
+  for (let i = 0; i < Object.getOwnPropertyNames(layerGroups).length; i++) {
     scene.addLayer(layers[i].plane); 
   }
   //create node geometries
-  for (i = 0; i < node_whole_names.length; i++){
+  for (i = 0; i < nodeLayerNames.length; i++){
     geometry = new THREE.SphereGeometry( SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS );
-    material = new THREE.MeshStandardMaterial( {color: nodeColorVector[(layerGroups[nodeGroups[node_whole_names[i]]])%nodeColorVector.length], transparent: true} ); //standard material allows light reaction
+    material = new THREE.MeshStandardMaterial( {color: nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length], transparent: true} ); //standard material allows light reaction
     sphere = new THREE.Mesh( geometry, material );
     nodes.push(sphere);
-    layers[layerGroups[nodeGroups[node_whole_names[i]]]].plane.add(sphere); //attaching to corresponding layer centroid
+    layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].plane.add(sphere); //attaching to corresponding layer centroid
   }
   
   channel_colors = CHANNEL_COLORS_LIGHT;
@@ -193,6 +187,7 @@ const executePostNetworkSetup = () => {
   updateVRLayerLabelsRShiny();
   updateLayerNamesRShiny();
 
+  nodeLabelFlags = new Array(nodeLayerNames.length).fill(false);
   updateNodesRShiny();
   updateNodeNamesRShiny(); //for Local Layout algorithms
   updateSelectedNodesRShiny();
@@ -201,8 +196,8 @@ const executePostNetworkSetup = () => {
   updateLabelColorRShiny();
 
   if (!animationRunning) { // ensure animation runs only once
-      animate();
-      animationRunning = true;
+    animate();
+    animationRunning = true;
   }
 }
 
@@ -256,10 +251,10 @@ const importNetwork = (jsonNetwork) => {
 
   // NODE
   for (let i = 0; i < jsonNetwork.nodes.name.length; i++) {
-    node_names.push(jsonNetwork.nodes.name[i]);
+    nodeNames.push(jsonNetwork.nodes.name[i]);
     currentLayer = jsonNetwork.nodes.layer[i];
     whole_name = jsonNetwork.nodes.name[i].concat("_").concat(currentLayer);
-    node_whole_names.push(whole_name); //name + group
+    nodeLayerNames.push(whole_name); //name + group
     node_attributes.Node.push(whole_name);
     nodeGroups[whole_name] = jsonNetwork.nodes.layer[i];
     //create node geometries
@@ -336,7 +331,6 @@ const importNetwork = (jsonNetwork) => {
     edge_channels = []
     toggleChannelCurvatureRange(false);
   }
-  node_label_flags = Array.apply(0, Array(node_names.length)).map(function() { return false; }); //for node label rendering
 
   attachLayerCheckboxes();
   drawEdges();

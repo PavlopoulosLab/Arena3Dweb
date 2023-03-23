@@ -6,8 +6,8 @@ const interLayerNeighbors = (node) => {
   let i, edge_split, index1, index2, neighbors = [];
   for (i = 0; i < edge_pairs.length; i++){
     edge_split = edge_pairs[i].split("---");
-    index1 = node_whole_names.indexOf(edge_split[0]);
-    index2 = node_whole_names.indexOf(edge_split[1]);
+    index1 = nodeLayerNames.indexOf(edge_split[0]);
+    index2 = nodeLayerNames.indexOf(edge_split[1]);
     if (node == index1) neighbors.push(index2);
     else if (node == index2) neighbors.push(index1);
   }
@@ -23,8 +23,8 @@ const getInterLayerEdge = (node1, node2) => {
   let i, edge_split, index1, index2;
   for (i = 0; i < edge_pairs.length; i++){
     edge_split = edge_pairs[i].split("---");
-    index1 = node_whole_names.indexOf(edge_split[0]);
-    index2 = node_whole_names.indexOf(edge_split[1]);
+    index1 = nodeLayerNames.indexOf(edge_split[0]);
+    index2 = nodeLayerNames.indexOf(edge_split[1]);
     if ((node1 == index1 && node2 == index2) || (node1 == index2 && node2 == index1)) return edge_pairs[i];
   }
   return null;
@@ -60,7 +60,7 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
     //find node inter-layer neighbors and continue recursively
     neighbors = interLayerNeighbors(currentNode);
     for (i = 0; i < neighbors.length; i++){
-      toCheckLayer = nodeGroups[node_whole_names[neighbors[i]]];
+      toCheckLayer = nodeGroups[nodeLayerNames[neighbors[i]]];
       if (!exists(layerPath, toCheckLayer)){
         layerPath.push(toCheckLayer);
         recursiveDownstreamHighlight(layerPath, neighbors[i], currentNode);
@@ -77,8 +77,8 @@ const executeCommand = (item) => {
     let pos = -1;
     for (let i = 0; i < edge_pairs.length; i++){ //random x,y,z
       let edge_split = edge_pairs[i].split("---");
-      index1 = node_whole_names.indexOf(edge_split[0]);
-      index2 = node_whole_names.indexOf(edge_split[1]);
+      index1 = nodeLayerNames.indexOf(edge_split[0]);
+      index2 = nodeLayerNames.indexOf(edge_split[1]);
       if (index1 == item.value) {
         if (!exists(selectedNodePositions, index2)) {
           selectedNodePositions.push(index2);
@@ -116,15 +116,15 @@ const executeCommand = (item) => {
         checkedNodes = [],
         flag = false,
         currentNode = item.value,
-        startingLayer = nodeGroups[node_whole_names[currentNode]];
+        startingLayer = nodeGroups[nodeLayerNames[currentNode]];
     startLoader(true);
     while (!flag){
       let pos = -1;
       for (let i = 0; i < edge_pairs.length; i++){
         let edge_split = edge_pairs[i].split("---");
-        index1 = node_whole_names.indexOf(edge_split[0]);
-        index2 = node_whole_names.indexOf(edge_split[1]);
-        if (index1 == currentNode && nodeGroups[node_whole_names[index2]] != startingLayer && nodeGroups[node_whole_names[index2]] != nodeGroups[node_whole_names[index1]] && !(exists(tempSelectedNodes, index2))){ //path must not contain other nodes in starting layer or its own layer
+        index1 = nodeLayerNames.indexOf(edge_split[0]);
+        index2 = nodeLayerNames.indexOf(edge_split[1]);
+        if (index1 == currentNode && nodeGroups[nodeLayerNames[index2]] != startingLayer && nodeGroups[nodeLayerNames[index2]] != nodeGroups[nodeLayerNames[index1]] && !(exists(tempSelectedNodes, index2))){ //path must not contain other nodes in starting layer or its own layer
           tempSelectedNodes.push(index2);
           // code from Select neighbors above
           if (!exists(selectedNodePositions, index2)){
@@ -140,7 +140,7 @@ const executeCommand = (item) => {
               } else changeColor( edges[i], new_color);
             }
           } //until here
-        } else if (index2 == currentNode && nodeGroups[node_whole_names[index1]] != startingLayer && nodeGroups[node_whole_names[index2]] != nodeGroups[node_whole_names[index1]] && !(exists(tempSelectedNodes, index1))){
+        } else if (index2 == currentNode && nodeGroups[nodeLayerNames[index1]] != startingLayer && nodeGroups[nodeLayerNames[index2]] != nodeGroups[nodeLayerNames[index1]] && !(exists(tempSelectedNodes, index1))){
           tempSelectedNodes.push(index1);
           // code from Select neighbors above
           if (!exists(selectedNodePositions, index1)){
@@ -169,7 +169,7 @@ const executeCommand = (item) => {
     finishLoader(true);
   } else if (item.options[item.selectedIndex].text == "Select Downstream Path"){
     let currentNode = item.value, //int
-        layerPath = [nodeGroups[node_whole_names[currentNode]]]; //array of 1 element at start
+        layerPath = [nodeGroups[nodeLayerNames[currentNode]]]; //array of 1 element at start
     startLoader(true);
     ///////////////////////////////
     recursiveDownstreamHighlight(layerPath, currentNode, currentNode);

@@ -2,9 +2,9 @@ const createLabels = () => {
   //nodes
   for (let i = 0; i < nodes.length; i++){
     let div = document.createElement('div');
-    div.textContent = node_names[i];
+    div.textContent = nodeNames[i];
     div.setAttribute('class', 'labels');
-    div.setAttribute('id', node_whole_names[i].concat("_label"));
+    div.setAttribute('id', nodeLayerNames[i].concat("_label"));
     document.getElementById("labelDiv").appendChild(div);
     node_labels.push(div);
     node_labels[i].style.fontSize = nodeLabelDefaultSize;

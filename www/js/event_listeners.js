@@ -203,7 +203,7 @@ const replaceContextMenuOverNode = (evt) => {
       option.text = "Select Downstream Path";
       optionsList.appendChild(option);
       if (node_attributes !== ""){
-        pos = node_attributes.Node.indexOf(node_whole_names[i]);
+        pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
         if (pos > -1){
           if (node_attributes.Url !== undefined && node_attributes.Url[pos] !== "" && node_attributes.Url[pos] != " " && node_attributes.Url[pos] != null){
             option = document.createElement("option");

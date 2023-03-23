@@ -55,11 +55,11 @@ const checkNodeInteraction = (event) => {
     let ind = findIndexByUuid(nodes, intersects[0].object.uuid);
     if (exists(selectedNodePositions, ind)){
       if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
-        pos = node_attributes.Node.indexOf(node_whole_names[ind]);
+        pos = node_attributes.Node.indexOf(nodeLayerNames[ind]);
         if (pos > -1 && node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
           nodes[ind].material.color = new THREE.Color( node_attributes.Color[pos] );
-        else nodes[ind].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[node_whole_names[ind]]])%nodeColorVector.length]);
-      } else nodes[ind].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[node_whole_names[ind]]])%nodeColorVector.length]);
+        else nodes[ind].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[ind]]])%nodeColorVector.length]);
+      } else nodes[ind].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[ind]]])%nodeColorVector.length]);
       selectedNodePositions = selectedNodePositions.filter(function(value, index, arr){ return value != ind;}); //array remove/filter
     } else {
       selectedNodePositions.push(ind);
@@ -126,19 +126,19 @@ const translateNodes = (e) => {
 const decideNodeLabelFlags = () => {
   let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
       node_layer = "";
-  for (i = 0; i < node_names.length; i++) {
-    node_layer = layerGroups[nodeGroups[node_whole_names[i]]];
+  for (i = 0; i < nodeNames.length; i++) {
+    node_layer = layerGroups[nodeGroups[nodeLayerNames[i]]];
     if (hidelayerCheckboxes[node_layer].checked){ //1. if node's layer not hidden 
-      node_label_flags[i] = false;
+      nodeLabelFlags[i] = false;
     } else if (showAllNodeLabelsFlag){ //2. if showing all node labels
-      node_label_flags[i] = true;
+      nodeLabelFlags[i] = true;
     } else if (layers[node_layer].showNodeLabels) { //3. if showing layer node labels
-      node_label_flags[i] = true;
+      nodeLabelFlags[i] = true;
     } else if (showSelectedNodeLabelsFlag && exists(selectedNodePositions, i)){ //4. if showing selected node labels, and node is selected
-      node_label_flags[i] = true;
+      nodeLabelFlags[i] = true;
     } else if (exists(hovered_nodes, i)){ //5. if hovering over node(s)
-      node_label_flags[i] = true;
-    } else node_label_flags[i] = false; //6. if none of the above apply, don't show label
+      nodeLabelFlags[i] = true;
+    } else nodeLabelFlags[i] = false; //6. if none of the above apply, don't show label
   }
   return true;
 }      
@@ -147,7 +147,7 @@ const nodeAttributes = (message) => {
   node_attributes = message;
   let pos;
   for (let i = 0; i < nodes.length; i++){
-    pos = node_attributes.Node.indexOf(node_whole_names[i]);
+    pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
     if (pos > -1){ //if node exists in attributes file
       if (nodeAttributesPriority){
         if (!exists(selectedNodePositions, i) && checkIfAttributeColorExist(node_attributes, pos)) //if node not currently selected and color is assigned
@@ -176,12 +176,12 @@ const nodeSelector = (message) => {
     updateSelectedNodesRShiny();
     for (i=0; i < nodes.length; i++){
       if (node_attributes !== ""){
-        pos = node_attributes.Node.indexOf(node_whole_names[i]);
+        pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
         if(checkIfAttributeColorExist(node_attributes, pos)) //if node exists in node attributes file
           nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
-        else nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[node_whole_names[i]]])%nodeColorVector.length]);
+        else nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length]);
       } else if (nodes[i].userData.cluster)  nodes[i].material.color = new THREE.Color(nodeColorVector[nodes[i].userData.cluster]);
-      else nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[node_whole_names[i]]]) % nodeColorVector.length]);
+      else nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
     }
   }
   decideNodeLabelFlags();
@@ -193,11 +193,11 @@ const nodeSelectedColorPriority = (message) => {
   for (let i=0; i<selectedNodePositions.length; i++){
     if (selectedNodeColorFlag) nodes[selectedNodePositions[i]].material.color = new THREE.Color( selectedDefaultColor );
     else if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
-      pos = node_attributes.Node.indexOf(node_whole_names[selectedNodePositions[i]]);
+      pos = node_attributes.Node.indexOf(nodeLayerNames[selectedNodePositions[i]]);
       if(checkIfAttributeColorExist(node_attributes, pos))//if node exists in node attributes file
         nodes[selectedNodePositions[i]].material.color = new THREE.Color( node_attributes.Color[pos] );
-      else nodes[selectedNodePositions[i]].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[node_whole_names[selectedNodePositions[i]]]])%nodeColorVector.length]);
-    } else nodes[selectedNodePositions[i]].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[node_whole_names[selectedNodePositions[i]]]])%nodeColorVector.length]);
+      else nodes[selectedNodePositions[i]].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[selectedNodePositions[i]]]])%nodeColorVector.length]);
+    } else nodes[selectedNodePositions[i]].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[selectedNodePositions[i]]]])%nodeColorVector.length]);
   }
   return true;
 }
@@ -273,7 +273,7 @@ const selectSearchedNodes = (event) => {
           tempIndexes, i, j;
       searchString = searchString.split(",");
       for (i=0; i<searchString.length; i++){
-        tempIndexes = getCaseInsensitiveIndices(node_names, searchString[i].trim()) //case insensitive function
+        tempIndexes = getCaseInsensitiveIndices(nodeNames, searchString[i].trim()) //case insensitive function
         if (tempIndexes.length > 0){
           for (j=0; j < tempIndexes.length; j++){
             if (!exists(selectedNodePositions, tempIndexes[j])){
@@ -314,15 +314,15 @@ const unselectAllNodes = () => {
 const decideNodeColors = () => {
   for (let i = 0; i < nodes.length; i++) {
     if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
-      pos = node_attributes.Node.indexOf(node_whole_names[i]);
+      pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
       if (pos > -1 && node_attributes.Color !== undefined &&
         node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
           nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
       else
-        nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[node_whole_names[i]]])%nodeColorVector.length]);
+        nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length]);
     } else if (nodes[i].userData.cluster)
       nodes[i].material.color = new THREE.Color(nodeColorVector[nodes[i].userData.cluster]);
     else
-      nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[node_whole_names[i]]]) % nodeColorVector.length]);
+      nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
   }
 };
