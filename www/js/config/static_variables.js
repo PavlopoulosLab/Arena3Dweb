@@ -35,7 +35,7 @@ let showAllNodeLabelsFlag = false,
     nodes = [], //canvas objects
     node_names = [],
     node_whole_names = [],
-    node_groups = new Map(),
+    nodeGroups = new Map(),
     hovered_nodes = [], // if allowing more than one hovered nodes at a time
     nodeColorVector = [],
     last_hovered_node_index = "",
@@ -81,16 +81,3 @@ let interLayerEdgesRenderPauseFlag = false,
     lasso = "",
     optionsList = "",
     downstreamCheckedNodes = []; // for recursive 3rd option of onRightClick on node
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

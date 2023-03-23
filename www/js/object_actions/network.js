@@ -1,59 +1,11 @@
 const uploadNetwork = (network) => { 
   executePreNetworkSetup();
 
+  initializeLayers(network);
+  initializeNodes(network);
+  initializeEdges(network);
 
-  let temp_name1 = temp_name2 = temp_layer1 = temp_layer2 = "",
-    layers_counter = 0, layer_names = [];
-  let temp_channel;
-  console.log(network);
-  for (let i = 0; i < network.SourceLayer.length; i++) {
-    temp_layer1 = String(network.SourceLayer[i]);
-    temp_layer2 = String(network.TargetLayer[i]);
-    temp_name1 = network.SourceNode_Layer[i];
-    temp_name2 = network.TargetNode_Layer[i];
-    if (network.Channel) {
-      temp_channel = String(network.Channel[i]);
-    }
-    //push new nodes, layers, layerGroups and node-layergroup maps
-    if (!node_whole_names.includes(temp_name1)){
-      node_names.push(String(network.SourceNode[i]));
-      node_whole_names.push(temp_name1);
-      node_groups[temp_name1] = temp_layer1;
-      if (!layer_names.includes(temp_layer1)){
-        layer_names.push(temp_layer1);
-        layers.push(new Layer({id: layers_counter, name: temp_layer1}));
-        layerGroups[temp_layer1] = layers_counter;
-        layers_counter++;
-      }
-    }
-    if (!node_whole_names.includes(temp_name2)){
-      node_names.push(String(network.TargetNode[i]));
-      node_whole_names.push(temp_name2);
-      node_groups[temp_name2] = temp_layer2;
-      if (!layer_names.includes(temp_layer2)){
-        layer_names.push(temp_layer2);
-        layers.push(new Layer({id: layers_counter, name: temp_layer2}));
-        layerGroups[temp_layer2] = layers_counter;
-        layers_counter++;
-      }
-    }
-    //push edges and values
-    //check if edges_pair already exists if yes add a channel to edges_channels if not create new
-    temp_edge_pair = temp_name1.concat("---").concat(temp_name2);
-    if (temp_channel) {
-       if (edge_pairs.includes(temp_edge_pair) ) {
-        pos = edge_pairs.indexOf(temp_edge_pair);
-        edge_channels[pos].push(temp_channel);
-      } else {
-        edge_pairs.push(temp_edge_pair);
-        edge_channels.push([temp_channel]);
-      }
-    } else {
-      edge_pairs.push(temp_edge_pair);
-    }
-    edge_values.push(Number(String(network.Weight[i])));
-  }
-  
+  let layer_names = layers.map(({ name }) => name);
   if (layer_names.length > MAX_LAYERS) {
     alert("Network must contain no more than ".concat(MAX_LAYERS).concat(" layers.")); //layer limit
   } else {
@@ -114,7 +66,7 @@ const resetValues = () => {
   nodes = []; //canvas objects
   node_names = [];
   node_whole_names = [];
-  node_groups = new Map();
+  nodeGroups = new Map();
   hovered_nodes = [];
   last_hovered_node_index = "";
   selectedNodePositions = [];
@@ -147,7 +99,58 @@ const resetValues = () => {
   shiftY = "";
   lasso = "";
   optionsList = "";
-}
+};
+
+const initializeLayers = (network) => {
+  let layer_names = network.SourceLayer.concat(network.TargetLayer);
+  layer_names = getUniqueValues(layer_names);
+  for (let i = 0; i < layer_names.length; i++) {
+    layers.push(new Layer({id: i, name: layer_names[i]}));
+    layerGroups[layer_names[i]] = i;
+  }
+};
+
+const initializeNodes = (network) => {
+  node_names = network.SourceNode.concat(network.TargetNode);
+  node_names = getUniqueValues(node_names);
+  node_whole_names = network.SourceNode_Layer.concat(network.TargetNode_Layer);
+  node_whole_names = getUniqueValues(node_whole_names);
+
+  // TODO change arrays with node objects
+  // for (let i = 0; i < node_names.length; i++) {}
+};
+
+const initializeEdges = (network) => {
+  let sourceNodeLayerName, targetNodeLayerName, edgePair;
+
+  for (let i = 0; i < network.SourceNode.length; i++) {
+    sourceNodeLayerName = network.SourceNode_Layer[i];
+    targetNodeLayerName = network.TargetNode_Layer[i];
+    // push node-layer group maps, TODO probably move into initializeNodes when Node class ready
+    nodeGroups[sourceNodeLayerName] = network.SourceLayer[i]; // faster if here, in one for loop
+    nodeGroups[targetNodeLayerName] = network.TargetLayer[i];
+    
+    //push edges and values
+    edgePair = sourceNodeLayerName.concat("---").concat(targetNodeLayerName);
+    if (network.Channel)
+      updateChannelArrays(network.Channel[i], edgePair);
+    else
+      edge_pairs.push(edgePair);
+
+    edge_values.push(network.Weight[i]);
+  }
+};
+
+const updateChannelArrays = (channelName, edgePair) => {
+  let position;
+  if (edge_pairs.includes(edgePair) ) {
+    position = edge_pairs.indexOf(edgePair);
+    edge_channels[position].push(channelName);
+  } else {
+    edge_pairs.push(edgePair);
+    edge_channels.push([channelName]);
+  }
+};
 
 const loadGraph = () => {
   //create layer planes
@@ -159,10 +162,10 @@ const loadGraph = () => {
   //create node geometries
   for (i = 0; i < node_whole_names.length; i++){
     geometry = new THREE.SphereGeometry( SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS );
-    material = new THREE.MeshStandardMaterial( {color: nodeColorVector[(layerGroups[node_groups[node_whole_names[i]]])%nodeColorVector.length], transparent: true} ); //standard material allows light reaction
+    material = new THREE.MeshStandardMaterial( {color: nodeColorVector[(layerGroups[nodeGroups[node_whole_names[i]]])%nodeColorVector.length], transparent: true} ); //standard material allows light reaction
     sphere = new THREE.Mesh( geometry, material );
     nodes.push(sphere);
-    layers[layerGroups[node_groups[node_whole_names[i]]]].plane.add(sphere); //attaching to corresponding layer centroid
+    layers[layerGroups[nodeGroups[node_whole_names[i]]]].plane.add(sphere); //attaching to corresponding layer centroid
   }
   
   channel_colors = CHANNEL_COLORS_LIGHT;
@@ -258,7 +261,7 @@ const importNetwork = (jsonNetwork) => {
     whole_name = jsonNetwork.nodes.name[i].concat("_").concat(currentLayer);
     node_whole_names.push(whole_name); //name + group
     node_attributes.Node.push(whole_name);
-    node_groups[whole_name] = jsonNetwork.nodes.layer[i];
+    nodeGroups[whole_name] = jsonNetwork.nodes.layer[i];
     //create node geometries
     let geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
     let material = new THREE.MeshStandardMaterial({
@@ -270,7 +273,7 @@ const importNetwork = (jsonNetwork) => {
     node_attributes.Description.push(jsonNetwork.nodes.descr[i]);
     let sphere = new THREE.Mesh(geometry, material);
     nodes.push(sphere);
-    layers[layerGroups[node_groups[whole_name]]].plane.add(sphere);
+    layers[layerGroups[nodeGroups[whole_name]]].plane.add(sphere);
     sphere.position.x = Number(jsonNetwork.nodes.position_x[i]);
     sphere.position.y = Number(jsonNetwork.nodes.position_y[i]);
     sphere.position.z = Number(jsonNetwork.nodes.position_z[i]);

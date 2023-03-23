@@ -60,7 +60,7 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
     //find node inter-layer neighbors and continue recursively
     neighbors = interLayerNeighbors(currentNode);
     for (i = 0; i < neighbors.length; i++){
-      toCheckLayer = node_groups[node_whole_names[neighbors[i]]];
+      toCheckLayer = nodeGroups[node_whole_names[neighbors[i]]];
       if (!exists(layerPath, toCheckLayer)){
         layerPath.push(toCheckLayer);
         recursiveDownstreamHighlight(layerPath, neighbors[i], currentNode);
@@ -116,7 +116,7 @@ const executeCommand = (item) => {
         checkedNodes = [],
         flag = false,
         currentNode = item.value,
-        startingLayer = node_groups[node_whole_names[currentNode]];
+        startingLayer = nodeGroups[node_whole_names[currentNode]];
     startLoader(true);
     while (!flag){
       let pos = -1;
@@ -124,7 +124,7 @@ const executeCommand = (item) => {
         let edge_split = edge_pairs[i].split("---");
         index1 = node_whole_names.indexOf(edge_split[0]);
         index2 = node_whole_names.indexOf(edge_split[1]);
-        if (index1 == currentNode && node_groups[node_whole_names[index2]] != startingLayer && node_groups[node_whole_names[index2]] != node_groups[node_whole_names[index1]] && !(exists(tempSelectedNodes, index2))){ //path must not contain other nodes in starting layer or its own layer
+        if (index1 == currentNode && nodeGroups[node_whole_names[index2]] != startingLayer && nodeGroups[node_whole_names[index2]] != nodeGroups[node_whole_names[index1]] && !(exists(tempSelectedNodes, index2))){ //path must not contain other nodes in starting layer or its own layer
           tempSelectedNodes.push(index2);
           // code from Select neighbors above
           if (!exists(selectedNodePositions, index2)){
@@ -140,7 +140,7 @@ const executeCommand = (item) => {
               } else changeColor( edges[i], new_color);
             }
           } //until here
-        } else if (index2 == currentNode && node_groups[node_whole_names[index1]] != startingLayer && node_groups[node_whole_names[index2]] != node_groups[node_whole_names[index1]] && !(exists(tempSelectedNodes, index1))){
+        } else if (index2 == currentNode && nodeGroups[node_whole_names[index1]] != startingLayer && nodeGroups[node_whole_names[index2]] != nodeGroups[node_whole_names[index1]] && !(exists(tempSelectedNodes, index1))){
           tempSelectedNodes.push(index1);
           // code from Select neighbors above
           if (!exists(selectedNodePositions, index1)){
@@ -169,7 +169,7 @@ const executeCommand = (item) => {
     finishLoader(true);
   } else if (item.options[item.selectedIndex].text == "Select Downstream Path"){
     let currentNode = item.value, //int
-        layerPath = [node_groups[node_whole_names[currentNode]]]; //array of 1 element at start
+        layerPath = [nodeGroups[node_whole_names[currentNode]]]; //array of 1 element at start
     startLoader(true);
     ///////////////////////////////
     recursiveDownstreamHighlight(layerPath, currentNode, currentNode);

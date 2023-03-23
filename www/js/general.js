@@ -1,25 +1,31 @@
-const exists = (arr, el) => {
-  return(arr.some(l => l == el));
+const exists = (array, element) => {
+  return(array.some(l => l == element));
 }
 
-const getCaseInsensitiveIndices = (arr, val) => {
+const getUniqueValues = (array) => {
+  return([...new Set(array)]);
+}
+
+const getCaseInsensitiveIndices = (array, element) => {
   var indexes = [], i;
-  val = val.toLowerCase(); //case insensitive
-  for (i = 0; i < arr.length; i++)
-    if (arr[i].toLowerCase() === val)
+  element = element.toLowerCase(); //case insensitive
+  for (i = 0; i < array.length; i++)
+    if (array[i].toLowerCase() === element)
       indexes.push(i);
-  return indexes;
+  return(indexes);
 }
 
-const findIndices = (array, el) => {
+const findIndices = (array, element) => {
   let indices = [];
-  let idx = array.indexOf(el);
+  let idx = array.indexOf(element);
   while (idx != -1) {
     indices.push(idx);
-    idx = array.indexOf(el, idx + 1);
+    idx = array.indexOf(element, idx + 1);
   }
-  if (indices.length === 0) return -1
-  else return indices;
+  if (indices.length === 0)
+    return(-1);
+  else
+    return(indices);
 }
 
 // @param array (object): object Array
@@ -29,7 +35,7 @@ const findIndexByUuid = (array, uuid) => {
   const index = array.findIndex(object => {
     return object.uuid === uuid;
   });
-  return index;
+  return(index);
 }
 
 const mapper = (inArr, min, max) => {
