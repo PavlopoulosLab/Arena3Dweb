@@ -55,7 +55,6 @@ let selectedEdgeColorFlag = true,
     layerEdgeOpacity = 1,
     interChannelCurvature = 0.05,
     channelCurvature = 0.05,
-    channel_colors = [],
     draw_inter_edges_flag = true,
     edges = [], //canvas objects
     layerEdges = [], //canvas objects
@@ -67,7 +66,7 @@ let selectedEdgeColorFlag = true,
     // channels
     channels = [],
     selectedChannels = [], // selected ones from Layout tab
-    channel_color = {},
+    channelColors = {},
     channelVisibility = {},
     edge_channels = [],
     layer_edges_pairs_channels = [];

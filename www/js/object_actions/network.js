@@ -1,17 +1,20 @@
 const uploadNetwork = (network) => { 
   executePreNetworkSetup();
   
+  scene.tiltDefault();
+  scene.setScale(0.9);
   initializeLayers(network);
   if (areObjectsWithinLimit(layers, MAX_LAYERS, "layers")) {
-    initializeNodesAndEdges(network);
-    if (areObjectsWithinLimit(edge_values, MAX_EDGES, "edges") &&
+    initializeNodeAndEdgeArrays(network);
+    if (areObjectsWithinLimit(edge_values, MAX_EDGES, "edges") && 
       areObjectsWithinLimit(channels, MAX_CHANNELS, "channels")) {
+        initializeNodes();
+        initializeEdges();
 
-      loadGraph();
-      toggleChannelUIComponents();
-      attachLayerCheckboxes(); // TODO check if can enter executePostNetworkSetup
+        toggleChannelUIComponents(); // TODO executePostNetworkSetup?
+        attachLayerCheckboxes(); // TODO executePostNetworkSetup?
 
-      executePostNetworkSetup();
+        executePostNetworkSetup();
     }
   }  
 }
@@ -80,8 +83,10 @@ const initializeLayers = (network) => {
   layer_names = getUniqueValues(layer_names);
   for (let i = 0; i < layer_names.length; i++) {
     layers.push(new Layer({id: i, name: layer_names[i]}));
+    scene.addLayer(layers[i].plane);
     layerGroups[layer_names[i]] = i;
   }
+  initialSpreadLayers(1);
 };
 
 const areObjectsWithinLimit = (object, limit, objectName) => {
@@ -93,7 +98,7 @@ const areObjectsWithinLimit = (object, limit, objectName) => {
   return(areWithinLimit);
 }
 
-const initializeNodesAndEdges = (network) => {
+const initializeNodeAndEdgeArrays = (network) => {
   let sourceNodeLayerName, targetNodeLayerName, edgePair;
 
   for (let i = 0; i < network.SourceNode.length; i++) {
@@ -134,44 +139,27 @@ const updateEdgeChannelArrays = (channelName, edgePair) => {
   }
 };
 
-const updateChannelArrays = (channelArray) => {
+const updateChannelArrays = (channelArray) => { // TODO continue from here
   if (channelArray) {
     channels = getUniqueValues(channelArray);
+    selectedChannels = channels.slice(); // copy by value, and not by reference
+    
     for (let i = 0; i < channels.length; i++)
       channelVisibility[channels[i]] = true;
+
+    getChannelColorsFromPalette(CHANNEL_COLORS_LIGHT);
+    
+    Shiny.setInputValue("js_selectedChannels", selectedChannels); // R monitors selected Channels
   }
 };
 
-const loadGraph = () => {
-  for (let i = 0; i < Object.getOwnPropertyNames(layerGroups).length; i++) {
-    scene.addLayer(layers[i].plane); 
-  }
-  //create node geometries
-  for (i = 0; i < nodeLayerNames.length; i++){
-    geometry = new THREE.SphereGeometry( SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS );
-    material = new THREE.MeshStandardMaterial( {color: nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length], transparent: true} ); //standard material allows light reaction
-    sphere = new THREE.Mesh( geometry, material );
-    nodes.push(sphere);
-    layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].plane.add(sphere); //attaching to corresponding layer centroid
-  }
-  
-  channel_colors = CHANNEL_COLORS_LIGHT;
-  createChannelColorMap();
+const initializeNodes = () => {
+  createNodeObjects();
   scrambleNodes();
-  initialSpreadLayers(1);
-  drawEdges();
-  createLabels();
+};
 
-  //init selected channels for layout with all the channels
-  selectedChannels = channels.slice(); // copy by value, and not by reference
-  Shiny.setInputValue("js_selectedChannels", selectedChannels); // R monitors selected Channels
-  
-  scene.tiltDefault();
-  scene.setScale(0.9); //starting a little zoomed out
-}
-
-const toggleChannelUIComponents = () => {
-  if (channels.length > 0) {
+const toggleChannelUIComponents = () => { // TODO probably move in executePostNetworkSetup
+  if (channels.length > 0) {    
     attachChannelEditList();
     attachChannelLayoutList();
     updateToggleCurvatureComponentsRShiny(true);
@@ -190,6 +178,7 @@ const executePostNetworkSetup = () => {
   updateLayerNamesRShiny();
 
   nodeLabelFlags = new Array(nodeLayerNames.length).fill(false);
+  createLabels();
   updateNodesRShiny();
   updateNodeNamesRShiny(); //for Local Layout algorithms
   updateSelectedNodesRShiny();
@@ -317,12 +306,11 @@ const importNetwork = (jsonNetwork) => {
       alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
       return false
     } else {
-        channel_colors = CHANNEL_COLORS_LIGHT;
         channels = channel_values;
         channels.forEach(c => {
           channelVisibility[c] = true;
         });
-        createChannelColorMap()
+        getChannelColorsFromPalette(CHANNEL_COLORS_LIGHT);
     }
 
     attachChannelEditList();
@@ -336,9 +324,8 @@ const importNetwork = (jsonNetwork) => {
   }
 
   attachLayerCheckboxes();
-  drawEdges();
+  initializeEdges();
   drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
-  createLabels();
 
   // initialSpreadLayers(1);
   if (jsonNetwork.scramble_nodes)

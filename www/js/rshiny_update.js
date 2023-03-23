@@ -131,7 +131,7 @@ const updateEdgesRShiny = () => {
     } else color = edgeDefaultColor;
     if (edge_channels && edge_channels[i] && edge_channels[i].length > 0) {
       edge_channels[i].forEach((channel) => {
-        temp_js_edge_pairs = [edge_pairs[i], edge_values[j], channel_color[channel], channel];
+        temp_js_edge_pairs = [edge_pairs[i], edge_values[j], channelColors[channel], channel];
         js_edge_pairs.push(temp_js_edge_pairs);
         j++;
       });

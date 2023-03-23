@@ -152,7 +152,7 @@ const drawLayerEdges = (flag) => {
       scene.remove(layerEdges[i]);
       // Keep default color
       if (layer_edges_pairs_channels && layer_edges_pairs_channels[i] &&  layer_edges_pairs_channels[i].length === 1) {  
-        color = channel_color[layer_edges_pairs_channels[i][0]];
+        color = channelColors[layer_edges_pairs_channels[i][0]];
       } else {
         color = edgeDefaultColor;
       }

@@ -1,9 +1,9 @@
-const drawEdges = () => {
+const initializeEdges = () => {
   let index1 = 0, index2 = 0, color = "";
   for (let i = 0; i < edge_pairs.length; i++){ //random x,y,z
     color = edgeDefaultColor;
     if (edge_channels && edge_channels[i] && edge_channels[i].length === 1) {
-      color = channel_color[edge_channels[i][0]];
+      color = channelColors[edge_channels[i][0]];
     } else {
       color = edgeDefaultColor;
     }
@@ -58,7 +58,7 @@ const redrawEdges = () => {
   let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1;
   for (let i = 0; i < edge_pairs.length; i++){
     if ( edge_channels && edge_channels[i] && edge_channels[i].length === 1) {
-      color = channel_color[edge_channels[i][0]];
+      color = channelColors[edge_channels[i][0]];
     } else {
       color = edgeDefaultColor;
     }
@@ -192,10 +192,10 @@ const setEdgeColor = () =>{
         edges[i].children.forEach(child => {
           if (child.material && child.material.color) {
               if (exists(selected_edges, i) && selectedEdgeColorFlag) child.material.color = new THREE.Color(selectedDefaultColor);
-              else if (child.userData && child.userData.tag) child.material.color = new THREE.Color(channel_color[child.userData.tag]);
+              else if (child.userData && child.userData.tag) child.material.color = new THREE.Color(channelColors[child.userData.tag]);
               else child.material.color = new THREE.Color(edgeDefaultColor);
             } else {
-              if (child.userData && child.userData.tag) child.setColor(channel_color[child.userData.tag])
+              if (child.userData && child.userData.tag) child.setColor(channelColors[child.userData.tag])
               else child.setColor(edgeDefaultColor)
             }
         });
@@ -210,7 +210,7 @@ const setEdgeColor = () =>{
 // Channels ====================
 const changeChannelColor = (el) => {
   channel_name = el.id.substring(5);
-  channel_color[channel_name] = el.value;
+  channelColors[channel_name] = el.value;
   redrawEdges();
   updateEdgesRShiny();
   return true;
@@ -331,7 +331,7 @@ const attachChannelEditList = () => {
       colorPicker.className = "colorPicker channel_colorPicker";
       colorPicker.name = "color".concat(channel);
       colorPicker.id = "color".concat(channel);
-      colorPicker.value = channel_color[channel];
+      colorPicker.value = channelColors[channel];
       colorPicker.setAttribute('onchange', "changeChannelColor(this)");
       
 
@@ -361,11 +361,10 @@ const attachChannelEditList = () => {
     document.getElementById('channelColorPicker').style.display = 'block';
 }
 
-const createChannelColorMap = () => {
-  for (let i = 0; i < channels.length; i++) {
-    channel_color[channels[i]] = channel_colors[i];
-  }
-}
+const getChannelColorsFromPalette = (palette) => {
+  for (let i = 0; i < channels.length; i++)
+    channelColors[channels[i]] = palette[i];
+};
 
 const getChannelColor = (i, c, isLayerEdges) => {
   let color, pos = -1;
@@ -416,7 +415,7 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
     ver_line.userData.tag = temp_channels[0];
     ver_line.visible = channelVisibility[ver_line.userData.tag];
     color = getChannelColor(group_pos, ver_line.userData.tag, isLayerEdges);
-    !color && (color = channel_color[ver_line.userData.tag]);
+    !color && (color = channelColors[ver_line.userData.tag]);
     ver_line.material.color = new THREE.Color(color);
     curve_group.add(ver_line);
     if (isDirectionEnabled) {
@@ -435,13 +434,13 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
       lgth = ver_line_const * (loopTotal - i) / loopTotal;
 
       color = getChannelColor(group_pos, temp_channels[i], isLayerEdges);
-      !color && (color = channel_color[temp_channels[i]]);
+      !color && (color = channelColors[temp_channels[i]]);
       curve_group = createCurve(p1, p2, lgth, color, isLayerEdges, curve_group, temp_channels[i]);
     }
     for (let i = 0; i < loopTotal; i++) {
       lgth = ver_line_const * (loopTotal - i) / loopTotal;
       color = getChannelColor(group_pos, temp_channels[loopTotal + i], isLayerEdges);
-      !color && (color = channel_color[temp_channels[loopTotal + i]]);
+      !color && (color = channelColors[temp_channels[loopTotal + i]]);
       curve_group = createCurve(p1, p2, -1 * lgth, color, isLayerEdges,curve_group, temp_channels[loopTotal + i]);
     }
 
@@ -451,7 +450,7 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
       ver_line.userData.tag = temp_channels[temp_channels.length - 1];
       ver_line.visible = channelVisibility[ver_line.userData.tag];
       color = getChannelColor(group_pos, ver_line.userData.tag, isLayerEdges);
-      !color && (color = channel_color[ver_line.userData.tag]);
+      !color && (color = channelColors[ver_line.userData.tag]);
       ver_line.material.color = new THREE.Color(color);
       curve_group.add(ver_line);
       if (isDirectionEnabled) {

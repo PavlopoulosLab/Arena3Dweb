@@ -1,13 +1,27 @@
+const createNodeObjects = () => {
+  let geometry, material, sphere;
+  for (let i = 0; i < nodeLayerNames.length; i++) {
+    geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
+    material = new THREE.MeshStandardMaterial({
+      color: nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length],
+      transparent: true
+    }); // standard material allows light reaction
+    sphere = new THREE.Mesh(geometry, material);
+    nodes.push(sphere);
+    layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].plane.add(sphere); // attaching to corresponding layer centroid
+  }
+};
+
 const scrambleNodes = (yMin, yMax, zMin, zMax) => {
-  !yMin && (yMin = yBoundMin)
-  !yMax && (yMax = yBoundMax)
-  !zMin && (zMin = zBoundMin)
-  !zMax && (zMax = zBoundMax)
-  for (let i = 0; i < nodes.length; i++) { //random y,z
+  !yMin && (yMin = yBoundMin);
+  !yMax && (yMax = yBoundMax);
+  !zMin && (zMin = zBoundMin);
+  !zMax && (zMax = zBoundMax);
+  for (let i = 0; i < nodes.length; i++) {
     nodes[i].translateY(getRandomArbitrary(yMin, yMax));
     nodes[i].translateZ(getRandomArbitrary(zMin, zMax));
   }
-}
+};
 
 // Called from mouse move event
 // @return bool

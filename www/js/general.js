@@ -85,7 +85,7 @@ const assign2Children = (parent, color, getColorsFromMap) => {
   if (parent.children && parent.children.length > 0) {
     parent.children.forEach(child => {
       if (getColorsFromMap) {
-         child.material.color.set(channel_color[child.userData.tag]);
+         child.material.color.set(channelColors[child.userData.tag]);
       } else {
         child.material && child.material.color && (child.material.color.set(color));
       }
