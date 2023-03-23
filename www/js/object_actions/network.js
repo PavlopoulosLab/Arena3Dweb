@@ -201,19 +201,20 @@ const importNetwork = (jsonNetwork) => {
   let whole_name = "",
     min_import_width = "",
     channel_values = [],
-    node_attributes = {
-      "Node": [],
-      "Size": [],
-      "Color": [],
-      "Url": [],
-      "Description": [],
-    },
-    edge_attributes = {
-      "SourceNode": [],
-      "TargetNode": [],
-      "Color": []
-    },
     scrambleNodes_flag = false;
+
+  node_attributes = {
+    "Node": [],
+    "Size": [],
+    "Color": [],
+    "Url": [],
+    "Description": [],
+  };
+  edge_attributes = {
+    "SourceNode": [],
+    "TargetNode": [],
+    "Color": []
+  };
   
   // SCENE
   scene.setPosition("x", Number(jsonNetwork.scene.position_x));
