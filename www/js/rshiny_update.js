@@ -155,6 +155,20 @@ const updateEdgeByWeightCheckboxRShiny = (name, value) => {
   Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, value])
 }
 
+const updateToggleCurvatureComponentsRShiny = (message) => {
+  Shiny.setInputValue("js_channel_curvature_flag", message);
+};
+
+const updateSelectedChannelsRShiny = (element) => {
+  const index = selectedChannels.indexOf(element.name);
+  if (index > -1)
+    selectedChannels.splice(index, 1);
+  else
+    selectedChannels.push(element.name);
+
+  Shiny.setInputValue("js_selectedChannels", selectedChannels); // R monitors selected Channels
+};
+
 // Labels
 const updateLabelColorRShiny = () => {
   Shiny.setInputValue("js_label_color", globalLabelColor);

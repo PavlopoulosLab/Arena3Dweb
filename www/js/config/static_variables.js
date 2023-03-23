@@ -66,7 +66,7 @@ let selectedEdgeColorFlag = true,
     edge_attributes = "",
     // channels
     channels = [],
-    channels_layout = [],
+    selectedChannels = [], // selected ones from Layout tab
     channel_color = {},
     channelVisibility = {},
     edge_channels = [],

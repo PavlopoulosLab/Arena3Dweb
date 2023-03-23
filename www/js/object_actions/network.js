@@ -7,17 +7,10 @@ const uploadNetwork = (network) => {
     if (areObjectsWithinLimit(edge_values, MAX_EDGES, "edges") &&
       areObjectsWithinLimit(channels, MAX_CHANNELS, "channels")) {
 
-      
       loadGraph();
-      if (network.Channel) {
-        attachChannelEditList();
-        toggleChannelCurvatureRange(true);
-        attachChannelLayoutList();
-      } else {
-        toggleChannelCurvatureRange(false);
-      }
-
+      toggleChannelUIComponents();
       attachLayerCheckboxes(); // TODO check if can enter executePostNetworkSetup
+
       executePostNetworkSetup();
     }
   }  
@@ -73,7 +66,7 @@ const resetValues = () => {
   channels = [];
   channel_values = [];
   isDirectionEnabled = false;
-  toggleChannelCurvatureRange(false);
+  updateToggleCurvatureComponentsRShiny(false);
   
   // others
   shiftX = "";
@@ -170,12 +163,21 @@ const loadGraph = () => {
   createLabels();
 
   //init selected channels for layout with all the channels
-  channels_layout = channels;
-  Shiny.setInputValue("channels_layout", channels_layout); //R monitors selected Channels
+  selectedChannels = channels.slice(); // copy by value, and not by reference
+  Shiny.setInputValue("js_selectedChannels", selectedChannels); // R monitors selected Channels
   
   scene.tiltDefault();
   scene.setScale(0.9); //starting a little zoomed out
 }
+
+const toggleChannelUIComponents = () => {
+  if (channels.length > 0) {
+    attachChannelEditList();
+    attachChannelLayoutList();
+    updateToggleCurvatureComponentsRShiny(true);
+  } else
+    updateToggleCurvatureComponentsRShiny(false);
+};
 
 const executePostNetworkSetup = () => {
   let layer_planes = layers.map(({ plane }) => plane);
@@ -322,14 +324,15 @@ const importNetwork = (jsonNetwork) => {
         });
         createChannelColorMap()
     }
+
     attachChannelEditList();
-    toggleChannelCurvatureRange(true);
+    updateToggleCurvatureComponentsRShiny(true);
     attachChannelLayoutList();
-    channels_layout = channels;
-    Shiny.setInputValue("channels_layout", channels_layout); //R monitors selected Channels
-    } else {
-    edge_channels = []
-    toggleChannelCurvatureRange(false);
+    selectedChannels = channels.slice(); // copy by value, and not by reference
+    Shiny.setInputValue("js_selectedChannels", selectedChannels); //R monitors selected Channels
+  } else {
+    edge_channels = [];
+    updateToggleCurvatureComponentsRShiny(false);
   }
 
   attachLayerCheckboxes();

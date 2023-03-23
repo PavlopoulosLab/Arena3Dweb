@@ -251,14 +251,56 @@ const toggleChannelLayoutMenu = (el) => {
   return true;
 }
 
-const toggleChannelLayout = (el) => {
-  const index = channels_layout.indexOf(el.name);
-  if (index > -1) {
-    channels_layout.splice(index, 1);
-  } else {
-    channels_layout.push(el.name);
-  }
-   Shiny.setInputValue("channels_layout", channels_layout); //R monitors selected Channels
+const attachChannelLayoutList = () => {
+  let
+    checkbox = '',
+    label = document.createElement("label"),
+    p = '',
+    container = document.getElementById('channelColorLayoutDiv'),
+    channelContainer  = document.createElement('div'),
+    icon = document.createElement('i'),
+    subcontainer = document.createElement('div');
+    item = document.createElement('div');
+  
+  container.innerHTML = ''; // clear
+  icon.setAttribute('class', 'fas fa-angle-up buttonChannelLayout close');
+  icon.setAttribute('id', 'buttonChannelLayout');
+  icon.setAttribute('onclick', "toggleChannelLayoutMenu(this)");
+  label.textContent = 'Select Channels for Layouts';
+  label.setAttribute("for", "channelsLayout");
+
+  channelContainer.setAttribute("name", "channelsLayout");
+  channelContainer.setAttribute("id", "channelsLayout");
+  channelContainer.setAttribute("class", "channelsLayout display-none");
+
+  channels.forEach(channel => {
+    row = document.createElement('div');
+
+    checkbox = document.createElement('input');
+    checkbox.type = "checkbox";
+    checkbox.name = channel;
+    checkbox.className = "checkbox_check channel_checkbox";
+    checkbox.id = "checkbox_layout".concat(channel);
+    checkbox.checked = true;
+    checkbox.setAttribute('onclick', "updateSelectedChannelsRShiny(this)");
+
+    p = document.createElement("p");
+    p.className = "channel_layout_name";
+    p.textContent = channel;
+
+    row.appendChild(checkbox);
+    row.appendChild(p);
+
+    channelContainer.appendChild(row);
+    row = '';
+  });
+  item.appendChild(label);
+  subcontainer.appendChild(item);
+  subcontainer.appendChild(icon);
+  subcontainer.setAttribute('class', 'channelLayoutsub');
+  container.appendChild(subcontainer);
+  container.appendChild(channelContainer);
+
 }
 
 const attachChannelEditList = () => {
@@ -313,66 +355,10 @@ const attachChannelEditList = () => {
       container.appendChild(subcontainer);
       subcontainer = '';
     });
-  if (edgeAttributesPriority) document.getElementById('channelColorPicker').style.display = 'none';
-  else document.getElementById('channelColorPicker').style.display = 'block';
-}
-
-const attachChannelLayoutList = () => {
-  let
-    checkbox = '',
-    label = document.createElement("label"),
-    p = '',
-    container = document.getElementById('channelColorLayoutDiv'),
-    channelContainer  = document.createElement('div'),
-    icon = document.createElement('i'),
-    tooltip = document.createElement('i'),
-    subcontainer = document.createElement('div');
-    item = document.createElement('div');
-  
-  
-  container.innerHTML = ''; // clear
-  icon.setAttribute('class', 'fas fa-angle-up buttonChannelLayout close');
-  icon.setAttribute('id', 'buttonChannelLayout');
-  icon.setAttribute('onclick', "toggleChannelLayoutMenu(this)");
-  label.textContent = 'Select Channels for layouts';
-  label.setAttribute("for", "channelsLayout");
-
-  tooltip.setAttribute('class', 'fas fa-info-circle channel-tooltip');
-  tooltip.setAttribute('title', 'Channels selection do not apply for Circle, Grid and Random layout');
-
-  channelContainer.setAttribute("name", "channelsLayout");
-  channelContainer.setAttribute("id", "channelsLayout");
-  channelContainer.setAttribute("class", "channelsLayout display-none");
-
-  channels.forEach(channel => {
-    row = document.createElement('div');
-
-    checkbox = document.createElement('input');
-    checkbox.type = "checkbox";
-    checkbox.name = channel;
-    checkbox.className = "checkbox_check channel_checkbox";
-    checkbox.id = "checkbox_layout".concat(channel);
-    checkbox.checked = true;
-    checkbox.setAttribute('onclick', "toggleChannelLayout(this)");
-
-    p = document.createElement("p");
-    p.className = "channel_layout_name";
-    p.textContent = channel;
-
-    row.appendChild(checkbox);
-    row.appendChild(p);
-
-    channelContainer.appendChild(row);
-    row = '';
-  });
-  item.appendChild(label);
-  item.appendChild(tooltip);
-  subcontainer.appendChild(item);
-  subcontainer.appendChild(icon);
-  subcontainer.setAttribute('class', 'channelLayoutsub');
-  container.appendChild(subcontainer);
-  container.appendChild(channelContainer);
-
+  if (edgeAttributesPriority)
+    document.getElementById('channelColorPicker').style.display = 'none';
+  else
+    document.getElementById('channelColorPicker').style.display = 'block';
 }
 
 const createChannelColorMap = () => {
@@ -477,11 +463,6 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
     }
   }
   return curve_group;
-}
-
-const toggleChannelCurvatureRange = (message) => {
-  Shiny.setInputValue("js_channel_curvature_flag", message); //R monitors selected Channels
-  return true;
 }
 
 // TODO rename to assignEdgeColor
