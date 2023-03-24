@@ -1,17 +1,15 @@
 const uploadNetwork = (network) => { 
   executePreNetworkSetup();
   
-  scene.tiltDefault();
-  scene.setScale(0.9);
+  initializeScene();
   initializeLayers(network);
   if (areObjectsWithinLimit(layers, MAX_LAYERS, "layers")) {
     initializeNodeAndEdgeArrays(network);
-    if (areObjectsWithinLimit(edge_values, MAX_EDGES, "edges") && 
+    if (areObjectsWithinLimit(edgeValues, MAX_EDGES, "edges") && 
       areObjectsWithinLimit(channels, MAX_CHANNELS, "channels")) {
         initializeNodes();
         initializeEdges();
 
-        toggleChannelUIComponents(); // TODO executePostNetworkSetup?
         attachLayerCheckboxes(); // TODO executePostNetworkSetup?
 
         executePostNetworkSetup();
@@ -54,28 +52,37 @@ const resetValues = () => {
   // edges
   edges = []; //canvas objects
   layerEdges = []; //canvas objects
-  edge_pairs = [];
+  edgePairs = [];
   layer_edges_pairs = []; //canvas objects
-  layer_edges_pairs_channels = []; //canvas objects
-  edge_values = [];
+  edgeValues = [];
   selected_edges = [];
   edge_attributes = "";
+  isDirectionEnabled = false;
+  updateToggleCurvatureComponentsRShiny(false);
   // channels
   if (document.getElementById("channelColorLayoutDiv"))
     document.getElementById("channelColorLayoutDiv").innerHTML = "";
   if (document.getElementById("channelColorPicker"))
     document.getElementById("channelColorPicker").innerHTML = "";
-  edge_channels = [];
   channels = [];
-  channel_values = [];
-  isDirectionEnabled = false;
-  updateToggleCurvatureComponentsRShiny(false);
-  
+  selectedChannels = [];
+  channelColors = {};
+  channelVisibility = {};
+  edge_channels = [];
+  layer_edges_pairs_channels = [];
+
   // others
   shiftX = "";
   shiftY = "";
   lasso = "";
   optionsList = "";
+};
+
+const initializeScene = () => {
+  scene.tiltDefault();
+  scene.setScale(0.9);
+  applyTheme('#000000', '#777777', '#ffffff', '#ffffff',
+    COLOR_VECTOR_DARK, CHANNEL_COLORS_LIGHT);
 };
 
 const initializeLayers = (network) => {
@@ -112,9 +119,9 @@ const initializeNodeAndEdgeArrays = (network) => {
     if (network.Channel)
       updateEdgeChannelArrays(network.Channel[i], edgePair);
     else
-      edge_pairs.push(edgePair);
+      edgePairs.push(edgePair);
 
-    edge_values.push(network.Weight[i]);
+    edgeValues.push(network.Weight[i]);
   }
 
   updateChannelArrays(network.Channel);
@@ -130,11 +137,11 @@ const updateNodeArrays = (nodeLayerName, nodeName, layerName) => {
 
 const updateEdgeChannelArrays = (channelName, edgePair) => {
   let position;
-  if (edge_pairs.includes(edgePair) ) {
-    position = edge_pairs.indexOf(edgePair);
+  if (edgePairs.includes(edgePair) ) {
+    position = edgePairs.indexOf(edgePair);
     edge_channels[position].push(channelName);
   } else {
-    edge_pairs.push(edgePair);
+    edgePairs.push(edgePair);
     edge_channels.push([channelName]);
   }
 };
@@ -142,13 +149,13 @@ const updateEdgeChannelArrays = (channelName, edgePair) => {
 const updateChannelArrays = (channelArray) => { // TODO continue from here
   if (channelArray) {
     channels = getUniqueValues(channelArray);
-    selectedChannels = channels.slice(); // copy by value, and not by reference
     
     for (let i = 0; i < channels.length; i++)
       channelVisibility[channels[i]] = true;
 
     getChannelColorsFromPalette(CHANNEL_COLORS_LIGHT);
-    
+
+    selectedChannels = channels.slice(); // copy by value, and not by reference
     Shiny.setInputValue("js_selectedChannels", selectedChannels); // R monitors selected Channels
   }
 };
@@ -183,6 +190,7 @@ const executePostNetworkSetup = () => {
   updateNodeNamesRShiny(); //for Local Layout algorithms
   updateSelectedNodesRShiny();
 
+  toggleChannelUIComponents();
   updateEdgesRShiny();
   updateLabelColorRShiny();
 
@@ -198,88 +206,28 @@ const importNetwork = (jsonNetwork) => {
   initializeSceneFromJSON(jsonNetwork.scene);
   initializeLayersFromJSON(jsonNetwork.layers);
   if (areObjectsWithinLimit(layers, MAX_LAYERS, "layers")) {
-    initializeNodesFromJSON(jsonNetwork.nodes, jsonNetwork.scramble_nodes);
-    
+    initializeEdgesFromJSON(jsonNetwork.edges);
+    if (areObjectsWithinLimit(edgeValues, MAX_EDGES, "edges") && 
+      areObjectsWithinLimit(channels, MAX_CHANNELS, "channels")) {
+        initializeNodesFromJSON(jsonNetwork.nodes, jsonNetwork.scramble_nodes); // TODO check if needed before edges after Classes done
 
-    
-    
-    
-    let channel_values = [];
+        // EXTRAS
+        setLabelColorVariable(jsonNetwork.universalLabelColor);  
 
-    edge_attributes = {
-      "SourceNode": [],
-      "TargetNode": [],
-      "Color": []
-    };
+        isDirectionEnabled = jsonNetwork.direction;
+        updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
+        edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
+        updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
 
-    
-    // EDGE
-    for (let i = 0; i < jsonNetwork.edges.src.length; i++) {
-      let edge_pair = jsonNetwork.edges.src[i].concat("---").concat(jsonNetwork.edges.trg[i]);
-      if (!edge_pairs.includes(edge_pair)) {
-        edge_pairs.push(edge_pair);
-        edge_channels.push([]);
+        attachLayerCheckboxes();
+        initializeEdges();
+        drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
+
+        toggleDirection(isDirectionEnabled)
+        
+        
+        executePostNetworkSetup();
       }
-      
-      if (jsonNetwork.edges.channel != null) {
-        //create edge_attributes.Channel
-        if (!edge_attributes.Channel) {
-          edge_attributes.Channel = []
-        }
-        pos = edge_pairs.indexOf(edge_pair);
-        edge_channels[pos].push(jsonNetwork.edges.channel[i]);
-        if (!channel_values.includes(jsonNetwork.edges.channel[i])) {
-          channel_values.push(jsonNetwork.edges.channel[i])
-        }
-        edge_attributes.Channel.push(jsonNetwork.edges.channel[i]);
-      }
-      
-      edge_values.push(Number(jsonNetwork.edges.opacity[i]));
-      edge_attributes.SourceNode.push(edge_pair);
-      edge_attributes.TargetNode.push("");
-      edge_attributes.Color.push(jsonNetwork.edges.color[i]);
-    }
-    
-    // EXTRAS
-    setLabelColorVariable(jsonNetwork.universalLabelColor);  
-
-    isDirectionEnabled = jsonNetwork.direction;
-    updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
-    edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
-    updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
-
-    if (channel_values.length > 0) {
-      if (channel_values.length > MAX_CHANNELS) {
-        alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
-        return false
-      } else {
-          channels = channel_values;
-          channels.forEach(c => {
-            channelVisibility[c] = true;
-          });
-          getChannelColorsFromPalette(CHANNEL_COLORS_LIGHT);
-      }
-
-      attachChannelEditList();
-      updateToggleCurvatureComponentsRShiny(true);
-      attachChannelLayoutList();
-      selectedChannels = channels.slice(); // copy by value, and not by reference
-      Shiny.setInputValue("js_selectedChannels", selectedChannels); //R monitors selected Channels
-    } else {
-      edge_channels = [];
-      updateToggleCurvatureComponentsRShiny(false);
-    }
-
-    attachLayerCheckboxes();
-    initializeEdges();
-    drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
-
-    
-    
-    toggleDirection(isDirectionEnabled)
-    
-    
-    executePostNetworkSetup();
   }
 }
 
@@ -353,4 +301,33 @@ const initializeNodesFromJSON = (jsonNodes, jsonScrambleFlag) => {
     minWidth = Math.min(...layerWidths);
     scrambleNodes(-minWidth / 2, minWidth / 2, -minWidth / 2, minWidth / 2);
   }
+};
+
+const initializeEdgesFromJSON = (jsonEdges) => {
+  let edgePair;
+
+  edge_attributes = {
+    "SourceNode": [],
+    "TargetNode": [],
+    "Color": []
+  };
+  if (jsonEdges.channel)
+    edge_attributes.Channel = [];
+
+  for (let i = 0; i < jsonEdges.src.length; i++) {
+    edgePair = jsonEdges.src[i].concat("---").concat(jsonEdges.trg[i]);
+    if (jsonEdges.channel)
+      updateEdgeChannelArrays(jsonEdges.channel[i], edgePair);
+    else
+      edgePairs.push(edgePair);
+
+    edgeValues.push(Number(jsonEdges.opacity[i]));
+
+    edge_attributes.SourceNode.push(jsonEdges.src[i]);
+    edge_attributes.TargetNode.push(jsonEdges.trg[i]);
+    edge_attributes.Color.push(jsonEdges.color[i]);
+    if (jsonEdges.channel)
+      edge_attributes.Channel.push(jsonEdges.channel[i]);
+  }
+  updateChannelArrays(jsonEdges.channel);
 };

@@ -111,10 +111,10 @@ const updateEdgesRShiny = () => {
     pos1 = (pos2 = pos3 = -1);
     temp_channel = '';
   j = 0;
-  for (let i = 0; i < edge_pairs.length; i++) {
+  for (let i = 0; i < edgePairs.length; i++) {
     if (edge_attributes !== "") {
-      pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[i]);
-      pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[i]);
+      pos1 = edge_attributes.SourceNode.indexOf(edgePairs[i]);
+      pos2 = edge_attributes.TargetNode.indexOf(edgePairs[i]);
       if (pos1 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos1] !== "" && edge_attributes.Color[pos1] != " " && edge_attributes.Color[pos1] !== null) {
         if (edge_attributes.Channel && edge_attributes.Channel[pos1]) {
           temp_channel = edge_attributes.Channel[pos1];
@@ -131,13 +131,13 @@ const updateEdgesRShiny = () => {
     } else color = edgeDefaultColor;
     if (edge_channels && edge_channels[i] && edge_channels[i].length > 0) {
       edge_channels[i].forEach((channel) => {
-        temp_js_edge_pairs = [edge_pairs[i], edge_values[j], channelColors[channel], channel];
+        temp_js_edge_pairs = [edgePairs[i], edgeValues[j], channelColors[channel], channel];
         js_edge_pairs.push(temp_js_edge_pairs);
         j++;
       });
 
     } else {
-      temp_js_edge_pairs = [edge_pairs[i], edge_values[j], color, ""];
+      temp_js_edge_pairs = [edgePairs[i], edgeValues[j], color, ""];
       js_edge_pairs.push(temp_js_edge_pairs);
       j++;
     }

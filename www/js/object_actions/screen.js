@@ -157,7 +157,7 @@ const drawLayerEdges = (flag) => {
         color = edgeDefaultColor;
       }
       let points = [];
-      let edge_split = edge_pairs[layer_edges_pairs[i]].split("---");
+      let edge_split = edgePairs[layer_edges_pairs[i]].split("---");
       let node_layer1 = layerGroups[nodeGroups[edge_split[0]]];
       let node_layer2 = layerGroups[nodeGroups[edge_split[1]]];
       if (!hidelayerCheckboxes[node_layer1].checked && !hidelayerCheckboxes[node_layer2].checked) {
@@ -170,12 +170,12 @@ const drawLayerEdges = (flag) => {
     		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag) color = selectedDefaultColor;
         else if (edge_attributes !== "" && edgeAttributesPriority) {
     		  pos = edges.indexOf(layer_edges_pairs[i]);
-    		  pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[pos]);
-    		  pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[pos]);
+    		  pos1 = edge_attributes.SourceNode.indexOf(edgePairs[pos]);
+    		  pos2 = edge_attributes.TargetNode.indexOf(edgePairs[pos]);
           if (checkIfAttributeColorExist(edge_attributes, pos1)) color = edge_attributes.Color[pos1];
           else if (checkIfAttributeColorExist(edge_attributes, pos2)) color = edge_attributes.Color[pos2];
     		}
-        if (edgeWidthByWeight) material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: edge_values[layer_edges_pairs[i]] });
+        if (edgeWidthByWeight) material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[layer_edges_pairs[i]] });
         else {
           material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: interLayerEdgeOpacity });
         }

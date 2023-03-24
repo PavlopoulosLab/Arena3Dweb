@@ -21,7 +21,6 @@ const createNodeObject = (nodeColor) => {
 
 const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax, // TODO remove parameters
     zMin = zBoundMin, zMax = zBoundMax) => {
-    console.log("scrambled")
     for (let i = 0; i < nodes.length; i++) {
       nodes[i].translateY(getRandomArbitrary(yMin, yMax)); // TODO and do this: node.getLayer.getWidth() * scale(?)
       nodes[i].translateZ(getRandomArbitrary(zMin, zMax));

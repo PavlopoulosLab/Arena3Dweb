@@ -1,6 +1,6 @@
 const initializeEdges = () => {
   let index1 = 0, index2 = 0, color = "";
-  for (let i = 0; i < edge_pairs.length; i++){ //random x,y,z
+  for (let i = 0; i < edgePairs.length; i++){ //random x,y,z
     color = edgeDefaultColor;
     if (edge_channels && edge_channels[i] && edge_channels[i].length === 1) {
       color = channelColors[edge_channels[i][0]];
@@ -8,7 +8,7 @@ const initializeEdges = () => {
       color = edgeDefaultColor;
     }
     let points = [];
-    let edge_split = edge_pairs[i].split("---");
+    let edge_split = edgePairs[i].split("---");
     index1 = nodeLayerNames.indexOf(edge_split[0]);
     index2 = nodeLayerNames.indexOf(edge_split[1]);
     if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]){ //check if edge inside same Layer
@@ -16,8 +16,8 @@ const initializeEdges = () => {
   		let geometry = new THREE.BufferGeometry().setFromPoints( points );
   		let material = "";
   		if (edge_attributes !== "" && edgeAttributesPriority){
-  		  pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[i]);
-        pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[i]);
+  		  pos1 = edge_attributes.SourceNode.indexOf(edgePairs[i]);
+        pos2 = edge_attributes.TargetNode.indexOf(edgePairs[i]);
         if (checkIfAttributeColorExist(edge_attributes, pos1)){ //if node not currently selected and exists in node attributes file and color is assigned
           color = edge_attributes.Color[pos1]; //edge is intra-layer
         } else if (checkIfAttributeColorExist(edge_attributes, pos2)){ 
@@ -25,7 +25,7 @@ const initializeEdges = () => {
         }
       }
 
-  		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edge_values[i] } );
+  		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[i] } );
       else material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: layerEdgeOpacity });
       let arrowHelper = createArrow(points, color,null, false);
       let ver_line = new THREE.Line(geometry, material);
@@ -56,13 +56,13 @@ const initializeEdges = () => {
 
 const redrawEdges = () => {
   let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1;
-  for (let i = 0; i < edge_pairs.length; i++){
+  for (let i = 0; i < edgePairs.length; i++){
     if ( edge_channels && edge_channels[i] && edge_channels[i].length === 1) {
       color = channelColors[edge_channels[i][0]];
     } else {
       color = edgeDefaultColor;
     }
-    let edge_split = edge_pairs[i].split("---");
+    let edge_split = edgePairs[i].split("---");
     index1 = nodeLayerNames.indexOf(edge_split[0]);
     index2 = nodeLayerNames.indexOf(edge_split[1]);
     if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]){ //(exists(selectedNodePositions, index1) || exists(selectedNodePositions, index2)) &&
@@ -73,8 +73,8 @@ const redrawEdges = () => {
       let material = "";
       if (exists(selected_edges, i) && selectedEdgeColorFlag) color = selectedDefaultColor;
       else if (edge_attributes !== "" && edgeAttributesPriority){
-  	    pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[i]);
-        pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[i]);
+  	    pos1 = edge_attributes.SourceNode.indexOf(edgePairs[i]);
+        pos2 = edge_attributes.TargetNode.indexOf(edgePairs[i]);
 
         if (checkIfAttributeColorExist(edge_attributes, pos1)){//if node not currently selected and exists in node attributes file and color is assigned
           color = edge_attributes.Color[pos1]; //edge is intra-layer
@@ -82,7 +82,7 @@ const redrawEdges = () => {
           color = edge_attributes.Color[pos2];
         }
       }      
-  		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edge_values[i]}  );
+  		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[i]}  );
   		else material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: layerEdgeOpacity}  );
       let arrowHelper = createArrow(points, color,null, false);
       let ver_line = new THREE.Line(geometry, material);
@@ -163,7 +163,7 @@ const createCurve = (p1, p2, lgth, color, isLayerEdges, group, tag) => {
   let curve_geometry = new THREE.BufferGeometry().setFromPoints(curve_points);
   let curve_material;
   // TODO check what i corresponds to
-  //if (edgeWidthByWeight) curve_material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edge_values[i] } );
+  //if (edgeWidthByWeight) curve_material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[i] } );
   //else 
   curve_material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05,  transparent: true, opacity: curve_opacity});
   
@@ -376,8 +376,8 @@ const getChannelColor = (i, c, isLayerEdges) => {
     return selectedDefaultColor;
   }
   else if (edge_attributes !== "" && edgeAttributesPriority) {
-    pos1arr = findIndices(edge_attributes.SourceNode, edge_pairs[j]);
-    pos2arr = findIndices(edge_attributes.TargetNode, edge_pairs[j]);
+    pos1arr = findIndices(edge_attributes.SourceNode, edgePairs[j]);
+    pos2arr = findIndices(edge_attributes.TargetNode, edgePairs[j]);
     pos1arr != -1 && pos1arr.forEach(pos1 => {
       if (checkIfAttributeColorExist(edge_attributes, pos1)){//if node not currently selected and exists in node attributes file and color is assigned
         if (edge_attributes.Channel[pos1] === c) {
@@ -479,14 +479,14 @@ const assignColor = (checkChannels, i, channels, tag, color, edgeNoChannel) => {
 
 const edgeAttributes = (message) => {
   edge_attributes = message;
-  let pos1 = -1,
-      pos2 = -1,
-      pos3 = -1;
+  let pos1arr = -1,
+    pos2arr = -1,
+    pos3 = -1;
   for (let i = 0; i < edges.length; i++){
-    if (edgeAttributesPriority){
+    if (edgeAttributesPriority) {
 
-      pos1arr = findIndices(edge_attributes.SourceNode, edge_pairs[i]);
-      pos2arr = findIndices(edge_attributes.TargetNode, edge_pairs[i]);
+      pos1arr = findIndices(edge_attributes.SourceNode, edgePairs[i]);
+      pos2arr = findIndices(edge_attributes.TargetNode, edgePairs[i]);
       pos1arr != -1 && pos1arr.forEach(pos1 => {
         if (checkIfAttributeColorExist(edge_attributes, pos1)) {//if node not currently selected and exists in node attributes file and color is assigned
           if (typeof (edges[i]) == "number") { //edge is inter-layer
@@ -565,8 +565,8 @@ const edgeSelectedColorPriority = (message) => {
         assign2Children(edges[selected_edges[i]], selectedDefaultColor);
       }
     }else if (edge_attributes !== "" && edgeAttributesPriority){ //check if color is overidden by user
-      pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[selected_edges[i]]);
-      pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[selected_edges[i]]);
+      pos1 = edge_attributes.SourceNode.indexOf(edgePairs[selected_edges[i]]);
+      pos2 = edge_attributes.TargetNode.indexOf(edgePairs[selected_edges[i]]);
       if(checkIfAttributeColorExist(edge_attributes, pos1)){//if node not currently selected and exists in node attributes file and color is assigned
         if (typeof (edges[selected_edges[i]]) == "number") { //edge is inter-layer
           pos3 = layer_edges_pairs.indexOf(i);
@@ -639,8 +639,8 @@ const unselectAllEdges = () => {
   let pos1 = pos2 = pos3 = -1;
   for (i = 0; i < edges.length; i++) {
     if (edge_attributes !== "" && edgeAttributesPriority){ //check if color is overidden by user
-      pos1 = edge_attributes.SourceNode.indexOf(edge_pairs[i]);
-      pos2 = edge_attributes.TargetNode.indexOf(edge_pairs[i]);
+      pos1 = edge_attributes.SourceNode.indexOf(edgePairs[i]);
+      pos2 = edge_attributes.TargetNode.indexOf(edgePairs[i]);
       //if node not currently selected and exists in node attributes file and color is assigned
       if (pos1 > -1 && edge_attributes.Color !== undefined &&
         edge_attributes.Color[pos1] !== "" && edge_attributes.Color[pos1] != " ") {

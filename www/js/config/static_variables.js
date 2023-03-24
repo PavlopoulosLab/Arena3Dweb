@@ -58,9 +58,9 @@ let selectedEdgeColorFlag = true,
     draw_inter_edges_flag = true,
     edges = [], //canvas objects
     layerEdges = [], //canvas objects
-    edge_pairs = [],
+    edgePairs = [],
     layer_edges_pairs = [], //canvas objects
-    edge_values = [],
+    edgeValues = [],
     selected_edges = [],
     edge_attributes = "",
     // channels
