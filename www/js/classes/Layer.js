@@ -9,6 +9,7 @@ class Layer {
       this.id = id;
       this.name = name;
       this.last_layer_scale = last_layer_scale;
+      this.geometry_parameters_width = geometry_parameters_width;
       this.importedColor = floor_current_color;
       this.color = floor_current_color;
 

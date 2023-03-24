@@ -1,26 +1,31 @@
 const createNodeObjects = () => {
-  let geometry, material, sphere;
+  let nodeColor, sphere;
   for (let i = 0; i < nodeLayerNames.length; i++) {
-    geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
-    material = new THREE.MeshStandardMaterial({
-      color: nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length],
-      transparent: true
-    }); // standard material allows light reaction
-    sphere = new THREE.Mesh(geometry, material);
-    nodes.push(sphere);
-    layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].plane.add(sphere); // attaching to corresponding layer centroid
+    nodeColor = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length];
+    sphere = createNodeObject(nodeColor);
+    layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].plane.add(sphere);
   }
 };
 
-const scrambleNodes = (yMin, yMax, zMin, zMax) => {
-  !yMin && (yMin = yBoundMin);
-  !yMax && (yMax = yBoundMax);
-  !zMin && (zMin = zBoundMin);
-  !zMax && (zMax = zBoundMax);
-  for (let i = 0; i < nodes.length; i++) {
-    nodes[i].translateY(getRandomArbitrary(yMin, yMax));
-    nodes[i].translateZ(getRandomArbitrary(zMin, zMax));
-  }
+const createNodeObject = (nodeColor) => {
+  let geometry, material, sphere;
+  geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
+  material = new THREE.MeshStandardMaterial({
+    color: nodeColor,
+    transparent: true
+  });
+  sphere = new THREE.Mesh(geometry, material);
+  nodes.push(sphere);
+  return(sphere);
+};
+
+const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax, // TODO remove parameters
+    zMin = zBoundMin, zMax = zBoundMax) => {
+    console.log("scrambled")
+    for (let i = 0; i < nodes.length; i++) {
+      nodes[i].translateY(getRandomArbitrary(yMin, yMax)); // TODO and do this: node.getLayer.getWidth() * scale(?)
+      nodes[i].translateZ(getRandomArbitrary(zMin, zMax));
+    }
 };
 
 // Called from mouse move event

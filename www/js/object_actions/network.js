@@ -17,7 +17,7 @@ const uploadNetwork = (network) => {
         executePostNetworkSetup();
     }
   }  
-}
+};
 
 const executePreNetworkSetup = () => {
   resetValues();
@@ -82,9 +82,9 @@ const initializeLayers = (network) => {
   let layer_names = network.SourceLayer.concat(network.TargetLayer);
   layer_names = getUniqueValues(layer_names);
   for (let i = 0; i < layer_names.length; i++) {
+    layerGroups[layer_names[i]] = i;
     layers.push(new Layer({id: i, name: layer_names[i]}));
     scene.addLayer(layers[i].plane);
-    layerGroups[layer_names[i]] = i;
   }
   initialSpreadLayers(1);
 };
@@ -194,14 +194,127 @@ const executePostNetworkSetup = () => {
 
 const importNetwork = (jsonNetwork) => {
   executePreNetworkSetup();
+  
+  initializeSceneFromJSON(jsonNetwork.scene);
+  initializeLayersFromJSON(jsonNetwork.layers);
+  if (areObjectsWithinLimit(layers, MAX_LAYERS, "layers")) {
+    initializeNodesFromJSON(jsonNetwork.nodes, jsonNetwork.scramble_nodes);
+    
 
-  
-  setLabelColorVariable(jsonNetwork.universalLabelColor);  
-  
-  let whole_name = "",
-    min_import_width = "",
-    channel_values = [],
-    scrambleNodes_flag = false;
+    
+    
+    
+    let channel_values = [];
+
+    edge_attributes = {
+      "SourceNode": [],
+      "TargetNode": [],
+      "Color": []
+    };
+
+    
+    // EDGE
+    for (let i = 0; i < jsonNetwork.edges.src.length; i++) {
+      let edge_pair = jsonNetwork.edges.src[i].concat("---").concat(jsonNetwork.edges.trg[i]);
+      if (!edge_pairs.includes(edge_pair)) {
+        edge_pairs.push(edge_pair);
+        edge_channels.push([]);
+      }
+      
+      if (jsonNetwork.edges.channel != null) {
+        //create edge_attributes.Channel
+        if (!edge_attributes.Channel) {
+          edge_attributes.Channel = []
+        }
+        pos = edge_pairs.indexOf(edge_pair);
+        edge_channels[pos].push(jsonNetwork.edges.channel[i]);
+        if (!channel_values.includes(jsonNetwork.edges.channel[i])) {
+          channel_values.push(jsonNetwork.edges.channel[i])
+        }
+        edge_attributes.Channel.push(jsonNetwork.edges.channel[i]);
+      }
+      
+      edge_values.push(Number(jsonNetwork.edges.opacity[i]));
+      edge_attributes.SourceNode.push(edge_pair);
+      edge_attributes.TargetNode.push("");
+      edge_attributes.Color.push(jsonNetwork.edges.color[i]);
+    }
+    
+    // EXTRAS
+    setLabelColorVariable(jsonNetwork.universalLabelColor);  
+
+    isDirectionEnabled = jsonNetwork.direction;
+    updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
+    edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
+    updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
+
+    if (channel_values.length > 0) {
+      if (channel_values.length > MAX_CHANNELS) {
+        alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
+        return false
+      } else {
+          channels = channel_values;
+          channels.forEach(c => {
+            channelVisibility[c] = true;
+          });
+          getChannelColorsFromPalette(CHANNEL_COLORS_LIGHT);
+      }
+
+      attachChannelEditList();
+      updateToggleCurvatureComponentsRShiny(true);
+      attachChannelLayoutList();
+      selectedChannels = channels.slice(); // copy by value, and not by reference
+      Shiny.setInputValue("js_selectedChannels", selectedChannels); //R monitors selected Channels
+    } else {
+      edge_channels = [];
+      updateToggleCurvatureComponentsRShiny(false);
+    }
+
+    attachLayerCheckboxes();
+    initializeEdges();
+    drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
+
+    
+    
+    toggleDirection(isDirectionEnabled)
+    
+    
+    executePostNetworkSetup();
+  }
+}
+
+const initializeSceneFromJSON = (jsonScene) => {
+  scene.setPosition("x", Number(jsonScene.position_x));
+  scene.setPosition("y", Number(jsonScene.position_y));
+  scene.setScale(Number(jsonScene.scale));
+  renderer.setClearColor(jsonScene.color);
+  scene.setRotation("x", Number(jsonScene.rotation_x));
+  scene.setRotation("y", Number(jsonScene.rotation_y));
+  scene.setRotation("z", Number(jsonScene.rotation_z));
+};
+
+const initializeLayersFromJSON = (jsonLayers) => {
+  for (let i = 0; i < jsonLayers.name.length; i++) {
+    layerGroups[jsonLayers.name[i]] = i;
+    layers.push(new Layer({
+      id: i, name: jsonLayers.name[i],
+      position_x: Number(jsonLayers.position_x[i]),
+      position_y: Number(jsonLayers.position_y[i]),
+      position_z: Number(jsonLayers.position_z[i]),
+      last_layer_scale: Number(jsonLayers.last_layer_scale[i]),
+      rotation_x: Number(jsonLayers.rotation_x[i]),
+      rotation_y: Number(jsonLayers.rotation_y[i]),
+      rotation_z: Number(jsonLayers.rotation_z[i]),
+      floor_current_color: jsonLayers.floor_current_color[i],
+      geometry_parameters_width: Number(jsonLayers.geometry_parameters_width[i])
+    }));
+    scene.addLayer(layers[i].plane);
+  }
+};
+
+const initializeNodesFromJSON = (jsonNodes, jsonScrambleFlag) => {
+  let nodeLayerName = "",
+    nodeColor, sphere;
 
   node_attributes = {
     "Node": [],
@@ -210,137 +323,34 @@ const importNetwork = (jsonNetwork) => {
     "Url": [],
     "Description": [],
   };
-  edge_attributes = {
-    "SourceNode": [],
-    "TargetNode": [],
-    "Color": []
-  };
   
-  // SCENE
-  scene.setPosition("x", Number(jsonNetwork.scene.position_x));
-  scene.setPosition("y", Number(jsonNetwork.scene.position_y));
-  scene.setScale(Number(jsonNetwork.scene.scale));
-  renderer.setClearColor(jsonNetwork.scene.color);
-  scene.setRotation("x", Number(jsonNetwork.scene.rotation_x));
-  scene.setRotation("y", Number(jsonNetwork.scene.rotation_y));
-  scene.setRotation("z", Number(jsonNetwork.scene.rotation_z));
-  
-  // LAYER
-  for (let i = 0; i < jsonNetwork.layers.name.length; i++) {
-    layerGroups[jsonNetwork.layers.name[i]] = i;
-    layers.push(new Layer({id: i, name: jsonNetwork.layers.name[i],
-      position_x: Number(jsonNetwork.layers.position_x[i]),
-      position_y: Number(jsonNetwork.layers.position_y[i]),
-      position_z: Number(jsonNetwork.layers.position_z[i]),
-      last_layer_scale: Number(jsonNetwork.layers.last_layer_scale[i]),
-      rotation_x: Number(jsonNetwork.layers.rotation_x[i]),
-      rotation_y: Number(jsonNetwork.layers.rotation_y[i]),
-      rotation_z: Number(jsonNetwork.layers.rotation_z[i]),
-      floor_current_color: jsonNetwork.layers.floor_current_color[i],
-      geometry_parameters_width: Number(jsonNetwork.layers.geometry_parameters_width[i])}));
-    scene.addLayer(layers[i].plane);
-  }
+  for (let i = 0; i < jsonNodes.name.length; i++) {
+    nodeNames.push(jsonNodes.name[i]);
+    currentLayer = jsonNodes.layer[i];
+    nodeLayerName = jsonNodes.name[i].concat("_").concat(currentLayer);
+    nodeLayerNames.push(nodeLayerName); //name + group
+    nodeGroups[nodeLayerName] = jsonNodes.layer[i];
 
-  // NODE
-  for (let i = 0; i < jsonNetwork.nodes.name.length; i++) {
-    nodeNames.push(jsonNetwork.nodes.name[i]);
-    currentLayer = jsonNetwork.nodes.layer[i];
-    whole_name = jsonNetwork.nodes.name[i].concat("_").concat(currentLayer);
-    nodeLayerNames.push(whole_name); //name + group
-    node_attributes.Node.push(whole_name);
-    nodeGroups[whole_name] = jsonNetwork.nodes.layer[i];
-    //create node geometries
-    let geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
-    let material = new THREE.MeshStandardMaterial({
-      color: jsonNetwork.nodes.color[i],
-      transparent: true
-    });
-    node_attributes.Color.push(jsonNetwork.nodes.color[i]);
-    node_attributes.Url.push(jsonNetwork.nodes.url[i]);
-    node_attributes.Description.push(jsonNetwork.nodes.descr[i]);
-    let sphere = new THREE.Mesh(geometry, material);
-    nodes.push(sphere);
-    layers[layerGroups[nodeGroups[whole_name]]].plane.add(sphere);
-    sphere.position.x = Number(jsonNetwork.nodes.position_x[i]);
-    sphere.position.y = Number(jsonNetwork.nodes.position_y[i]);
-    sphere.position.z = Number(jsonNetwork.nodes.position_z[i]);
-    sphere.scale.x = sphere.scale.y = sphere.scale.z = 
-      Number(jsonNetwork.nodes.scale[i]);
-    node_attributes.Size.push(Number(jsonNetwork.nodes.scale[i]));
-  }
-  
-  // EDGE
-  for (let i = 0; i < jsonNetwork.edges.src.length; i++) {
-    let edge_pair = jsonNetwork.edges.src[i].concat("---").concat(jsonNetwork.edges.trg[i]);
-    if (!edge_pairs.includes(edge_pair)) {
-      edge_pairs.push(edge_pair);
-      edge_channels.push([]);
-    }
+    node_attributes.Node.push(nodeLayerName);
+    node_attributes.Size.push(Number(jsonNodes.scale[i]));
+    node_attributes.Color.push(jsonNodes.color[i]);
+    node_attributes.Url.push(jsonNodes.url[i]);
+    node_attributes.Description.push(jsonNodes.descr[i]);
     
-    if (jsonNetwork.edges.channel != null) {
-      //create edge_attributes.Channel
-      if (!edge_attributes.Channel) {
-        edge_attributes.Channel = []
-      }
-      pos = edge_pairs.indexOf(edge_pair);
-      edge_channels[pos].push(jsonNetwork.edges.channel[i]);
-      if (!channel_values.includes(jsonNetwork.edges.channel[i])) {
-        channel_values.push(jsonNetwork.edges.channel[i])
-      }
-      edge_attributes.Channel.push(jsonNetwork.edges.channel[i]);
-    }
-    
-    edge_values.push(Number(jsonNetwork.edges.opacity[i]));
-    edge_attributes.SourceNode.push(edge_pair);
-    edge_attributes.TargetNode.push("");
-    edge_attributes.Color.push(jsonNetwork.edges.color[i]);
-  }
-  
-  // EXTRAS
-  isDirectionEnabled = jsonNetwork.direction;
-  updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
-  edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
-  updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
+    nodeColor = jsonNodes.color[i];
+    sphere = createNodeObject(nodeColor);
+    layers[layerGroups[nodeGroups[nodeLayerName]]].plane.add(sphere);
 
-  if (channel_values.length > 0) {
-    if (channel_values.length > MAX_CHANNELS) {
-      alert("Network must contain no more than ".concat(MAX_CHANNELS).concat(" channels.")); //channel limit
-      return false
-    } else {
-        channels = channel_values;
-        channels.forEach(c => {
-          channelVisibility[c] = true;
-        });
-        getChannelColorsFromPalette(CHANNEL_COLORS_LIGHT);
-    }
-
-    attachChannelEditList();
-    updateToggleCurvatureComponentsRShiny(true);
-    attachChannelLayoutList();
-    selectedChannels = channels.slice(); // copy by value, and not by reference
-    Shiny.setInputValue("js_selectedChannels", selectedChannels); //R monitors selected Channels
-  } else {
-    edge_channels = [];
-    updateToggleCurvatureComponentsRShiny(false);
+    sphere.position.x = Number(jsonNodes.position_x[i]);
+    sphere.position.y = Number(jsonNodes.position_y[i]);
+    sphere.position.z = Number(jsonNodes.position_z[i]);
+    sphere.scale.x = sphere.scale.y = sphere.scale.z = Number(jsonNodes.scale[i]);
   }
 
-  attachLayerCheckboxes();
-  initializeEdges();
-  drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
-
-  // initialSpreadLayers(1);
-  if (jsonNetwork.scramble_nodes)
-    scrambleNodes_flag = true;
-  if (scrambleNodes_flag) {
-    min_import_width = jsonNetwork.layers.geometry_parameters_width.map(function(str) {
-      return Number(str);
-    });
-    min_import_width = Math.min(...min_import_width);
-    scrambleNodes(min_import_width / 2, -min_import_width / 2, -min_import_width / 2, min_import_width / 2);
+  if (jsonScrambleFlag) {
+    let minWidth,
+      layerWidths = layers.map(({ geometry_parameters_width }) => geometry_parameters_width);
+    minWidth = Math.min(...layerWidths);
+    scrambleNodes(-minWidth / 2, minWidth / 2, -minWidth / 2, minWidth / 2);
   }
-  
-  toggleDirection(isDirectionEnabled)
-  
-  
-  executePostNetworkSetup();
-}
+};

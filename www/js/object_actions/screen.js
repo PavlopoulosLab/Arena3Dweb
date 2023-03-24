@@ -1,6 +1,6 @@
 const setRenderer = () => {
-  renderer = new THREE.WebGLRenderer({antialias: true});
-}
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+};
 
 const resetScreen = () => {
   setWindowBounds();
