@@ -63,6 +63,7 @@ runPerLayerLayout <- function(filteredNetworkDF, selectedLayerNames,
       tempFilteredNetworkDF <- filterPerLayer(filteredNetworkDF, layerName)
     networkGraph <- parseEdgelistIntoGraph(tempFilteredNetworkDF, subgraphChoice,
                                            layerName)
+    callJSHandler("handler_setPerLayerFlag", layerName)
     applyLayoutWithOptionalClustering(networkGraph)
   }
 }
@@ -241,7 +242,7 @@ runLocalLayout <- function(filteredNetworkDF, selectedLayerNames,
       
       networkGraph <- parseEdgelistIntoGraph(tempFilteredNetworkDF,
                                              subgraphChoice, layerName)
-      # map coordinates on local bounds in assignXYZ
+      # map coordinates on local bounds in assignYZ
       callJSHandler("handler_setLocalFlag", T)
       applyLayoutWithOptionalClustering(networkGraph)
     }

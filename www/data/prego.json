@@ -18,7 +18,7 @@
             "rotation_x": "0",
             "rotation_y": "0",
             "rotation_z": "0",
-            "floor_current_color": "16758968",
+            "floor_current_color": "#777777",
             "geometry_parameters_width": "865"
         },
         {
@@ -30,7 +30,7 @@
             "rotation_x": "0",
             "rotation_y": "0",
             "rotation_z": "0",
-            "floor_current_color": "16758968",
+            "floor_current_color": "#777777",
             "geometry_parameters_width": "865"
         },
         {
@@ -42,7 +42,7 @@
             "rotation_x": "0",
             "rotation_y": "0",
             "rotation_z": "0",
-            "floor_current_color": "16758968",
+            "floor_current_color": "#777777",
             "geometry_parameters_width": "865"
         }
     ],

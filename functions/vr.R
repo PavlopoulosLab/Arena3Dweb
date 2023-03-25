@@ -50,13 +50,13 @@ end_header\n"), file = con)
                 js_nodes[i, 3], js_nodes[i, 4], js_nodes[i, 5],
                 rgbColor[1], rgbColor[2], rgbColor[3]), file = con) # r,g,b
   }
-  node_names <- paste0(js_nodes[,1], "_", js_nodes[,2])
+  nodeNames <- paste0(js_nodes[,1], "_", js_nodes[,2])
   # edge parsing
   for (i in 1:nrow(js_edge_pairs)){
     rgbColor <- col2rgb(js_edge_pairs[i, 3]) # 3rd col is edge color
     edge <- strsplit(js_edge_pairs[i, 1], "---")[[1]]
-    nodeIndex1 <- match(edge[1], node_names) - 1 # starting from index 0
-    nodeIndex2 <- match(edge[2], node_names) - 1
+    nodeIndex1 <- match(edge[1], nodeNames) - 1 # starting from index 0
+    nodeIndex2 <- match(edge[2], nodeNames) - 1
     cat(sprintf("%s %s %s %s %s\n",
                 nodeIndex1, nodeIndex2, # from,to
                 rgbColor[1], rgbColor[2], rgbColor[3]), file = con) # r,g,b
@@ -66,16 +66,17 @@ end_header\n"), file = con)
 
 # void function that creates the user-specific VR html file
 # and moves it to the api folder
-produceHTML <- function(id){
-  js_layers <- as.data.frame(fromJSON(input$js_layers_world))
-  js_layers$V2 <- as.numeric(js_layers$V2)/VR_DOWNSCALE_FACTOR # pos x
-  js_layers$V3 <- as.numeric(js_layers$V3)/VR_DOWNSCALE_FACTOR + 1.5 # pos y
-  js_layers$V4 <- as.numeric(js_layers$V4)/VR_DOWNSCALE_FACTOR - 5 # pos z
+produceHTML <- function(id) {
+  js_layers <- fromJSON(input$js_vr_layer_labels)
+  js_layers$worldPosition_x <- as.numeric(js_layers$worldPosition_x) / VR_DOWNSCALE_FACTOR # pos x
+  js_layers$worldPosition_y <- as.numeric(js_layers$worldPosition_y) / VR_DOWNSCALE_FACTOR + 1.5 # pos y
+  js_layers$worldPosition_z <- as.numeric(js_layers$worldPosition_z) / VR_DOWNSCALE_FACTOR - 5 # pos z
 
   layers_string <- ""
-  for (i in 1: nrow(js_layers)){
+  for (i in 1:nrow(js_layers)) {
     temp_str <- sprintf('<a-entity text-sprite="text:%s" scale="0.2 0.2 0.2" position="%f %f %f"></a-entity>',
-                        js_layers[i, 1], js_layers[i, 2], js_layers[i, 3], js_layers[i, 4])
+                        js_layers$name[i], js_layers$worldPosition_x[i],
+                        js_layers$worldPosition_y[i], js_layers$worldPosition_z[i])
     layers_string <- paste0(layers_string, temp_str, "\n")
   }
 

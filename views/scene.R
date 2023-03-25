@@ -1,6 +1,6 @@
 generateSceneDiv <- function() {
   tags$div(
-    checkboxInput("showSceneCoords", "Show Scene Coord System", T),
+    checkboxInput("toggleSceneCoords", "Show Scene Coord System", T),
     checkboxInput("autoRotateScene", "Enable Scene Auto Rotate", F),
     radioButtons("predefined_layout", "Select Predefined Layout:",
                  c("Parallel Coordinates" = "parallel", "Zig Zag" = "zigZag",

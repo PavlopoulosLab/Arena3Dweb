@@ -19,8 +19,8 @@ existsSelectedLayer <- function() {
 
 filterSelectedChannels <- function(netData) {
   if ("Channel" %in% colnames(netData)) {
-    netData <- netData[(netData$Channel %in% input$channels_layout), , drop = F]
-    if (is.null(input$channels_layout))
+    netData <- netData[(netData$Channel %in% input$js_selectedChannels), , drop = F]
+    if (is.null(input$js_selectedChannels))
       renderWarning("Select at least one channel.")
   }
   return(netData)
@@ -76,7 +76,7 @@ createGraph <- function(edgelist) {
   graph <- igraph::graph_from_data_frame(edgelist, directed = F)
   igraph::E(graph)$weight <- as.double(edgelist[, 'ScaledWeight'])
   # if it does not have channels remove multiple edges else not 
-  removeMultiple <- is.na(input$channels_layout) 
+  removeMultiple <- is.na(input$js_selectedChannels) 
   # remove loops and multiple edges, simplify sum aggregates same edges
   graph <- igraph::simplify(graph, remove.multiple = removeMultiple,
                             remove.loops = F, edge.attr.comb = "sum")
