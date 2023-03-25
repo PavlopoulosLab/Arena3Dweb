@@ -8,10 +8,7 @@ const uploadNetwork = (network) => {
     if (areObjectsWithinLimit(edgeValues, MAX_EDGES, "edges") && 
       areObjectsWithinLimit(channels, MAX_CHANNELS, "channels")) {
         initializeNodes();
-        initializeEdges();
-
-        attachLayerCheckboxes(); // TODO executePostNetworkSetup?
-
+        
         executePostNetworkSetup();
     }
   }  
@@ -165,7 +162,35 @@ const initializeNodes = () => {
   scrambleNodes();
 };
 
-const toggleChannelUIComponents = () => { // TODO probably move in executePostNetworkSetup
+const executePostNetworkSetup = () => {
+  let layer_planes = layers.map(({ plane }) => plane);
+  drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
+
+  createEdgeObjects();
+  nodeLabelFlags = new Array(nodeLayerNames.length).fill(false);
+  createLabels();
+
+  attachLayerCheckboxes();
+  toggleChannelUIComponents();
+
+  if (!animationRunning) { // ensure animation runs only once
+    animate();
+    animationRunning = true;
+  }
+
+  updateScenePanRShiny();
+  updateSceneSphereRShiny();
+  updateLayersRShiny();
+  updateVRLayerLabelsRShiny();
+  updateLayerNamesRShiny();
+  updateNodesRShiny();
+  updateNodeNamesRShiny();
+  updateSelectedNodesRShiny();
+  updateEdgesRShiny();
+  updateLabelColorRShiny();
+}
+
+const toggleChannelUIComponents = () => {
   if (channels.length > 0) {    
     attachChannelEditList();
     attachChannelLayoutList();
@@ -173,32 +198,6 @@ const toggleChannelUIComponents = () => { // TODO probably move in executePostNe
   } else
     updateToggleCurvatureComponentsRShiny(false);
 };
-
-const executePostNetworkSetup = () => {
-  let layer_planes = layers.map(({ plane }) => plane);
-  drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
-
-  updateScenePanRShiny();
-  updateSceneSphereRShiny();
-  updateLayersRShiny();
-  updateVRLayerLabelsRShiny();
-  updateLayerNamesRShiny();
-
-  nodeLabelFlags = new Array(nodeLayerNames.length).fill(false);
-  createLabels();
-  updateNodesRShiny();
-  updateNodeNamesRShiny(); //for Local Layout algorithms
-  updateSelectedNodesRShiny();
-
-  toggleChannelUIComponents();
-  updateEdgesRShiny();
-  updateLabelColorRShiny();
-
-  if (!animationRunning) { // ensure animation runs only once
-    animate();
-    animationRunning = true;
-  }
-}
 
 const importNetwork = (jsonNetwork) => {
   executePreNetworkSetup();
@@ -210,26 +209,13 @@ const importNetwork = (jsonNetwork) => {
     if (areObjectsWithinLimit(edgeValues, MAX_EDGES, "edges") && 
       areObjectsWithinLimit(channels, MAX_CHANNELS, "channels")) {
         initializeNodesFromJSON(jsonNetwork.nodes, jsonNetwork.scramble_nodes); // TODO check if needed before edges after Classes done
-
-        // EXTRAS
-        setLabelColorVariable(jsonNetwork.universalLabelColor);  
-
-        isDirectionEnabled = jsonNetwork.direction;
-        updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
-        edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
-        updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
-
-        attachLayerCheckboxes();
-        initializeEdges();
-        drawLayerEdges(); // important, to create inter-layer edges beforehand, to avoid updateEdgesRShiny() bug
-
-        toggleDirection(isDirectionEnabled)
-        
         
         executePostNetworkSetup();
+
+        setJSONExtras(jsonNetwork);
       }
   }
-}
+};
 
 const initializeSceneFromJSON = (jsonScene) => {
   scene.setPosition("x", Number(jsonScene.position_x));
@@ -258,6 +244,35 @@ const initializeLayersFromJSON = (jsonLayers) => {
     }));
     scene.addLayer(layers[i].plane);
   }
+};
+
+const initializeEdgesFromJSON = (jsonEdges) => {
+  let edgePair;
+
+  edge_attributes = {
+    "SourceNode": [],
+    "TargetNode": [],
+    "Color": []
+  };
+  if (jsonEdges.channel)
+    edge_attributes.Channel = [];
+
+  for (let i = 0; i < jsonEdges.src.length; i++) {
+    edgePair = jsonEdges.src[i].concat("---").concat(jsonEdges.trg[i]);
+    if (jsonEdges.channel)
+      updateEdgeChannelArrays(jsonEdges.channel[i], edgePair);
+    else
+      edgePairs.push(edgePair);
+
+    edgeValues.push(Number(jsonEdges.opacity[i]));
+
+    edge_attributes.SourceNode.push(jsonEdges.src[i]);
+    edge_attributes.TargetNode.push(jsonEdges.trg[i]);
+    edge_attributes.Color.push(jsonEdges.color[i]);
+    if (jsonEdges.channel)
+      edge_attributes.Channel.push(jsonEdges.channel[i]);
+  }
+  updateChannelArrays(jsonEdges.channel);
 };
 
 const initializeNodesFromJSON = (jsonNodes, jsonScrambleFlag) => {
@@ -303,31 +318,13 @@ const initializeNodesFromJSON = (jsonNodes, jsonScrambleFlag) => {
   }
 };
 
-const initializeEdgesFromJSON = (jsonEdges) => {
-  let edgePair;
+const setJSONExtras = (jsonNetwork) => {
+  setLabelColorVariable(jsonNetwork.universalLabelColor);  
 
-  edge_attributes = {
-    "SourceNode": [],
-    "TargetNode": [],
-    "Color": []
-  };
-  if (jsonEdges.channel)
-    edge_attributes.Channel = [];
+  isDirectionEnabled = jsonNetwork.direction;
+  toggleDirection(isDirectionEnabled);
+  updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
 
-  for (let i = 0; i < jsonEdges.src.length; i++) {
-    edgePair = jsonEdges.src[i].concat("---").concat(jsonEdges.trg[i]);
-    if (jsonEdges.channel)
-      updateEdgeChannelArrays(jsonEdges.channel[i], edgePair);
-    else
-      edgePairs.push(edgePair);
-
-    edgeValues.push(Number(jsonEdges.opacity[i]));
-
-    edge_attributes.SourceNode.push(jsonEdges.src[i]);
-    edge_attributes.TargetNode.push(jsonEdges.trg[i]);
-    edge_attributes.Color.push(jsonEdges.color[i]);
-    if (jsonEdges.channel)
-      edge_attributes.Channel.push(jsonEdges.channel[i]);
-  }
-  updateChannelArrays(jsonEdges.channel);
+  edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
+  updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
 };

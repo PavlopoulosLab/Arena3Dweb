@@ -1,4 +1,4 @@
-const initializeEdges = () => {
+const createEdgeObjects = () => {
   let index1 = 0, index2 = 0, color = "";
   for (let i = 0; i < edgePairs.length; i++){ //random x,y,z
     color = edgeDefaultColor;
@@ -608,8 +608,7 @@ const edgeSelectedColorPriority = (message) => {
 const toggleDirection = (message) => {
   isDirectionEnabled = message;
   redrawEdges();
-  return true;
-}
+};
 
 // Channels ====================
 const toggleChannelCurvature = (message) => {
