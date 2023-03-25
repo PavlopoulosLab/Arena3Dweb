@@ -6,7 +6,8 @@ let xBoundMin, xBoundMax, yBoundMin, yBoundMax, zBoundMin, zBoundMax,
     camera, renderer, mousePreviousX = 0, mousePreviousY = 0, animationRunning = false;
 
 // layouts
-let localLayoutFlag = false;
+let perLayerLayoutFLag = undefined,
+    localLayoutFlag = false;
 
 // labels
 let globalLabelColor = "#ffffff",

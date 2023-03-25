@@ -91,7 +91,8 @@ Shiny.addCustomMessageHandler("handler_showNodeLabels", showAllNodeLabels);
 Shiny.addCustomMessageHandler("handler_showSelectedNodeLabels", showSelectedNodeLabels);
 Shiny.addCustomMessageHandler("handler_resizeLabels", resizeLabels);
 // Layouts and Topology ====================
-Shiny.addCustomMessageHandler("handler_layout", assignXYZ);
+Shiny.addCustomMessageHandler("handler_layout", assignYZ);
+Shiny.addCustomMessageHandler("handler_setPerLayerFlag", setPerLayerFlag);
 Shiny.addCustomMessageHandler("handler_setLocalFlag", setLocalFlag);
 Shiny.addCustomMessageHandler("handler_topologyScale", topologyScale);
 Shiny.addCustomMessageHandler("handler_predefined_layer_layout", applyPredefinedLayout);

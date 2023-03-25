@@ -1,21 +1,34 @@
-const assignXYZ = (nodeCoords) => {
+const assignYZ = (nodeCoords) => {
   let y_arr = [], //x always 0, assign on floor every time
       z_arr = [],
       node_name = "",
       y_coord = z_coord = 0,
     layerIndex = "";
+
   for (let i = 0; i < nodeCoords.name.length; i++){
     y_arr.push(Number(nodeCoords.y[i]));
     z_arr.push(Number(nodeCoords.z[i]));
   }
+
   let y_min = Math.min.apply(Math, y_arr),
-      y_max = Math.max.apply(Math, y_arr),
-      z_min = Math.min.apply(Math, z_arr),
-      z_max = Math.max.apply(Math, z_arr),
-      target_y_min = yBoundMin,
-      target_y_max = yBoundMax,
-      target_z_min = zBoundMin,
-      target_z_max = zBoundMax;
+    y_max = Math.max.apply(Math, y_arr),
+    z_min = Math.min.apply(Math, z_arr),
+    z_max = Math.max.apply(Math, z_arr),
+    minWidth,
+    target_y_min, target_y_max,
+    target_z_min, target_z_max,
+    layerWidths = layers.map(({ geometry_parameters_width }) => geometry_parameters_width);
+
+  minWidth = Math.min(...layerWidths); 
+
+  if (perLayerLayoutFLag !== undefined) {
+    minWidth = layers.find(x => x.name === perLayerLayoutFLag).geometry_parameters_width;
+    perLayerLayoutFLag = undefined;
+  }
+
+  target_y_min = target_z_min = -minWidth / 2;
+  target_y_max = target_z_max = minWidth / 2;
+
   if (localLayoutFlag) { //if local layout, change target mins and maxes and then unset flag
     layerIndex = layerGroups[nodeGroups[nodeCoords.name[0]]];
     target_y_min = target_y_max = nodes[nodeLayerNames.indexOf(nodeCoords.name[0].trim())].position.y / layers[layerIndex].getScale();
@@ -40,8 +53,10 @@ const assignXYZ = (nodeCoords) => {
     }
     localLayoutFlag = false;
   }
-  for (i = 0; i < nodeCoords.name.length; i++){
-    node_name = nodeCoords.name[i].trim();
+
+  for (i = 0; i < nodeCoords.name.length; i++) {
+
+    node_name = nodeCoords.name[i];
     if (nodes[nodeLayerNames.indexOf(node_name)]) {
       if (y_max - y_min != 0)
         nodes[nodeLayerNames.indexOf(node_name)].position.y = 
@@ -72,6 +87,10 @@ const assignXYZ = (nodeCoords) => {
   
   updateNodesRShiny();
   redrawEdges();
+}
+
+const setPerLayerFlag = (numFlag) => { // from -1: to length of Layers
+  perLayerLayoutFLag = numFlag;
 }
 
 const setLocalFlag = (flag) => { // flag always true here
