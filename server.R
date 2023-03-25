@@ -87,8 +87,8 @@ server <- function(input, output, session) {
   }, ignoreInit = T)
   
   # SCENE ####
-  observeEvent(input$showSceneCoords, {
-    callJSHandler("handler_showSceneCoords", input$showSceneCoords)
+  observeEvent(input$toggleSceneCoords, {
+    callJSHandler("handler_toggleSceneCoords", input$toggleSceneCoords)
   }, ignoreInit = T)
   
   observeEvent(input$autoRotateScene, {
@@ -109,12 +109,8 @@ server <- function(input, output, session) {
     callJSHandler("handler_selectAllLayers", input$selectAll)
   }, ignoreInit = T)
   
-  observeEvent(input$showSelectedLayerLabels, {
-    callJSHandler("handler_showSelectedLayerLabels", input$showSelectedLayerLabels)
-  }, ignoreInit = T)
-  
-  observeEvent(input$showLayerLabels, {
-    callJSHandler("handler_showLayerLabels", input$showLayerLabels)
+  observeEvent(input$showLayerLabelsRadio, {
+    callJSHandler("handler_showLayerLabels", input$showLayerLabelsRadio)
   }, ignoreInit = T)
   
   observeEvent(input$resizeLayerLabels, {
@@ -129,21 +125,21 @@ server <- function(input, output, session) {
     callJSHandler("handler_showWireFrames", input$showWireFrames)
   }, ignoreInit = T)
   
-  observeEvent(input$layerColorFilePriority, {
-    callJSHandler("handler_layerColorFilePriority", input$layerColorFilePriority)
+  observeEvent(input$layerColorPriorityRadio, {
+    callJSHandler("handler_layerColorPriority", input$layerColorPriorityRadio)
   }, ignoreInit = T)
   
-  observeEvent(input$floorOpacity, {
-    callJSHandler("handler_floorOpacity", input$floorOpacity)
+  observeEvent(input$layerOpacity, {
+    callJSHandler("handler_floorOpacity", input$layerOpacity)
   }, ignoreInit = T)
   
   # NODES ####
-  observeEvent(input$showLabels, {
-    callJSHandler("handler_showLabels", input$showLabels)
+  observeEvent(input$showAllNodeLabels, {
+    callJSHandler("handler_showNodeLabels", input$showAllNodeLabels)
   }, ignoreInit = T)
   
-  observeEvent(input$showSelectedLabels, {
-    callJSHandler("handler_showSelectedLabels", input$showSelectedLabels)
+  observeEvent(input$showSelectedNodeLabels, {
+    callJSHandler("handler_showSelectedNodeLabels", input$showSelectedNodeLabels)
   }, ignoreInit = T)
   
   observeEvent(input$resizeLabels, {

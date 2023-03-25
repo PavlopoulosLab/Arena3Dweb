@@ -33,7 +33,7 @@ class DragControls extends THREE.EventDispatcher {
 		}
 
 		function deactivate() {
-
+			
 			_domElement.removeEventListener( 'pointermove', onPointerMove );
 			_domElement.removeEventListener( 'pointerdown', onPointerDown );
 			_domElement.removeEventListener( 'pointerup', onPointerCancel );
@@ -62,14 +62,13 @@ class DragControls extends THREE.EventDispatcher {
 		}
 
 		function onPointerMove( event ) {
-
 			if ( scope.enabled === false ) return;
 
 			updatePointer( event );
 
 			_raycaster.setFromCamera( _pointer, _camera );
-
-			if ( _selected && last_hovered_layer_index !== "" && leftClickPressed) {
+			let layer_planes = layers.map(({ plane }) => plane);
+			if ( _selected && lastHoveredLayerIndex !== "" && scene.leftClickPressed) {
 			  if (findIndexByUuid(layer_planes, _selected.uuid) != -1){ //vag update
 			    if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
 
@@ -135,7 +134,6 @@ class DragControls extends THREE.EventDispatcher {
 		}
 
 		function onPointerDown( event ) {
-
 			if ( scope.enabled === false ) return;
 
 			updatePointer( event );
@@ -168,15 +166,17 @@ class DragControls extends THREE.EventDispatcher {
 		}
 
 		function onPointerCancel() {
-
+			
 			if ( scope.enabled === false ) return;
 
 			if ( _selected ) {
-
+				
 				scope.dispatchEvent( { type: 'dragend', object: _selected } );
 
 				_selected = null;
-
+				updateLayersRShiny();
+				updateVRLayerLabelsRShiny();
+				updateNodesRShiny(); // for VR global posistions
 			}
 
 			_domElement.style.cursor = _hovered ? 'pointer' : 'auto';
@@ -184,7 +184,6 @@ class DragControls extends THREE.EventDispatcher {
 		}
 
 		function updatePointer( event ) {
-
 			const rect = _domElement.getBoundingClientRect();
 
 			_pointer.x = ( event.clientX - rect.left ) / rect.width * 2 - 1;

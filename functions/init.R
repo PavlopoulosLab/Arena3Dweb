@@ -4,12 +4,11 @@ initializeServerApp <- function() {
   hideDataMetricTabs()
 }
 
-initializeJSVariables <- function() { # TODO one call with one JSON object
-  callJSHandler("handler_maxAllowedEdges", MAX_EDGES) 
-  callJSHandler("handler_maxAllowedChannels", MAX_CHANNELS)
-  callJSHandler("handler_maxAllowedLayers", MAX_LAYERS)
-  callJSHandler("handler_colorBrewerPallete_dark", CHANNEL_COLORS_DARK)
-  callJSHandler("handler_colorBrewerPallete", CHANNEL_COLORS_LIGHT)
+initializeJSVariables <- function() {
+  callJSHandler("handler_initializeGlobals",
+                list(MAX_EDGES = MAX_EDGES, MAX_CHANNELS = MAX_CHANNELS,
+                     MAX_LAYERS = MAX_LAYERS, CHANNEL_COLORS_DARK = CHANNEL_COLORS_DARK,
+                     CHANNEL_COLORS_LIGHT = CHANNEL_COLORS_LIGHT))
 }
 
 attachDownloadHandler <- function() {
