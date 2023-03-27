@@ -33,16 +33,16 @@ let showAllNodeLabelsFlag = false,
     nodeAttributesPriority = true,
     selectedNodeColorFlag = true,
     selectedDefaultColor = "#A3FF00",
+    nodeGroups = new Map(),
+    hovered_nodes = [], // if allowing more than one hovered nodes at a time
+    last_hovered_node_index = "",
+    selectedNodePositions = [],
     nodes = [], //canvas objects
     nodeNames = [],
     nodeLayerNames = [],
-    nodeGroups = new Map(),
-    hovered_nodes = [], // if allowing more than one hovered nodes at a time
     nodeColorVector = [],
-    last_hovered_node_index = "",
     node_cluster_colors = [],
-    node_attributes = "",
-    selectedNodePositions = [];
+    node_attributes = "";
 
 // edges
 let selectedEdgeColorFlag = true,
