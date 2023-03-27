@@ -58,13 +58,11 @@ const redrawEdges = () => {
   let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1,
     edge_split, points, geometry, material, arrowHelper, ver_line, curve_group, group;
 
-
   for (let i = 0; i < edgePairs.length; i++) {
-    if (edge_channels && edge_channels[i] && edge_channels[i].length === 1) {
+    if (edge_channels && edge_channels[i] && edge_channels[i].length === 1)
       color = channelColors[edge_channels[i][0]];
-    } else {
+    else
       color = edgeDefaultColor;
-    }
 
     edge_split = edgePairs[i].split("---");
     index1 = nodeLayerNames.indexOf(edge_split[0]);
@@ -81,13 +79,12 @@ const redrawEdges = () => {
   	    pos1 = edge_attributes.SourceNode.indexOf(edge_split[0]);
         pos2 = edge_attributes.TargetNode.indexOf(edge_split[1]);
 
-        if (checkIfAttributeColorExist(edge_attributes, pos1)) {//if node not currently selected and exists in node attributes file and color is assigned
+        if (checkIfAttributeColorExist(edge_attributes, pos1)) //if node not currently selected and exists in node attributes file and color is assigned
           color = edge_attributes.Color[pos1]; //edge is intra-layer
-        } else if (checkIfAttributeColorExist(edge_attributes, pos2)){ 
+        else if (checkIfAttributeColorExist(edge_attributes, pos2)) 
           color = edge_attributes.Color[pos2];
-        }
       }
-      console.log(color);
+      
   		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[i]}  );
   		else material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: layerEdgeOpacity}  );
       
