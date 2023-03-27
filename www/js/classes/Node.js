@@ -1,5 +1,5 @@
 class Node {
-    constructor({id = 0, name = "", layer = "",
+    constructor({id = 0, name = "", layer = "", nodeLayerName = "",
       position_x = 0, position_y = 0, position_z = 0,
       scale = 1, color = "#FFFFFF", url = "", descr = ""}) {
         this.sphere = "";
@@ -7,17 +7,17 @@ class Node {
         this.id = id;
         this.name = name;
         this.layer = layer;
-        this.nodeLayerName = name.concat(layer);
-        this.scale = scale;
+        this.nodeLayerName = nodeLayerName;
         this.color = color;
         this.clusterColor = color;
         this.url = url;
         this.descr = descr;
         this.isSelected = false;
+        this.cluster = "";
 
         this.createSphere(color);
         this.initTranslate(position_x, position_y, position_z)
-        this.initScale(scale);
+        this.setScale(scale);
     }
   
     createSphere() {
@@ -34,9 +34,17 @@ class Node {
         this.setPosition("z", z);
     }
 
-    initScale(value) {
-        this.sphere.scale.x = this.sphere.scale.y = 
-            this.sphere.scale.z = Number(value);
+    // transformations
+    translateX(x) {
+        this.sphere.translateX(x);
+    }
+    
+    translateY(y) {
+        this.sphere.translateY(y);
+    }
+
+    translateZ(z) {
+        this.sphere.translateZ(z);
     }
 
     // setters and getters
@@ -44,8 +52,64 @@ class Node {
         return(this.name);
     }
 
+    getLayer() {
+        return(this.layer);
+    }
+
+    getNodeLayerName() {
+        return(this.nodeLayerName);
+    }
+
+    getPosition(axis = "") {
+        if (axis == "")
+            return(this.sphere.position);
+        else 
+            return(this.sphere.position[axis]);
+    }
+
+    getWorldPosition(axis = "") {
+        if (axis == "")
+            return(this.sphere.getWorldPosition(new THREE.Vector3()));
+        else
+            return(this.sphere.getWorldPosition(new THREE.Vector3())[axis]);
+    }
+
+    getOpacity() {
+        return(this.sphere.material.opacity);
+    }
+
+    getColor() {
+        return(this.color);
+    }
+
+    getScale() {
+        return(this.sphere.scale.x);
+    }
+
+    getCluster() {
+        return(this.cluser);
+    }
+
     setPosition(axis, value) {
         this.sphere.position[axis] = value;
+    }
+
+    setOpacity(value) {
+        this.sphere.material.opacity = value;
+    }
+
+    setColor(hexColor) {
+        this.sphere.material.color = new THREE.Color(hexColor);
+        this.color = hexColor;
+    }
+
+    setScale(value) {
+        this.sphere.scale.x = this.sphere.scale.y = 
+            this.sphere.scale.z = value;
+    }
+
+    setCluster(clusterName) {
+        this.cluser = clusterName;
     }
   }
   

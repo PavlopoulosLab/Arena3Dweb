@@ -1,17 +1,18 @@
 const createNodeObjects = () => {
-  let nodeColor, sphere;
+  let nodeColor; // sphere
   for (let i = 0; i < nodeLayerNames.length; i++) {
     nodeColor = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length];
 
-    nodeObjects.push(new Node({id: i, name: nodeLayerNames[i], color: nodeColor}));
-    //layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].addNode(nodeObjects[i].sphere);
+    nodeObjects.push(new Node({id: i, name: nodeNames[i], layer: nodeGroups[nodeLayerNames[i]],
+      nodeLayerName: nodeLayerNames[i], color: nodeColor}));
+    layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].addNode(nodeObjects[i].sphere);
 
-    sphere = createNodeObject(nodeColor);
-    layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].plane.add(sphere);
+    // sphere = createNodeObject(nodeColor);
+    // layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].plane.add(sphere);
   }
 };
 
-const createNodeObject = (nodeColor) => {
+const createNodeObject = (nodeColor) => { // TODO replace with new node Class import
   let geometry, material, sphere;
   geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
   material = new THREE.MeshStandardMaterial({
@@ -25,9 +26,9 @@ const createNodeObject = (nodeColor) => {
 
 const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax, // TODO remove parameters
     zMin = zBoundMin, zMax = zBoundMax) => {
-    for (let i = 0; i < nodes.length; i++) {
-      nodes[i].translateY(getRandomArbitrary(yMin, yMax)); // TODO and do this: node.getLayer.getWidth() * scale(?)
-      nodes[i].translateZ(getRandomArbitrary(zMin, zMax));
+    for (let i = 0; i < nodeObjects.length; i++) {
+      nodeObjects[i].translateY(getRandomArbitrary(yMin, yMax)); // TODO and do this: node.getLayer.getWidth() * scale(?)
+      nodeObjects[i].translateZ(getRandomArbitrary(zMin, zMax));
     }
 };
 
@@ -35,9 +36,9 @@ const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax, // TODO remove parame
 // @return bool
 const checkHoverOverNode = (event) => {
   setRaycaster(event);
-  let intersects = RAYCASTER.intersectObjects(nodes),
+  let node_spheres = nodeObjects.map(({ sphere }) => sphere);
+  let intersects = RAYCASTER.intersectObjects(node_spheres),
     event_flag = false, //for performance optimization
-    index,
     hover_flag = false;
     
   if (intersects.length > 0) {
@@ -45,18 +46,18 @@ const checkHoverOverNode = (event) => {
     
     if (last_hovered_node_index !== ""){
       hovered_nodes = hovered_nodes.filter(function(value, index, arr){ return value != last_hovered_node_index;});
-      nodes[last_hovered_node_index].material.opacity = 1;
+      nodeObjects[last_hovered_node_index].setOpacity(1);
       last_hovered_node_index = "";
       event_flag = true;
     }
     intersects[0].object.material.opacity = 0.5;
-    last_hovered_node_index = findIndexByUuid(nodes, intersects[0].object.uuid);
+    last_hovered_node_index = findIndexByUuid(node_spheres, intersects[0].object.uuid); // TODO check if works properly
     if (!exists(hovered_nodes, last_hovered_node_index)) hovered_nodes.push(last_hovered_node_index);
     event_flag = true;
   } else {
     if (last_hovered_node_index !== ""){
       hovered_nodes = hovered_nodes.filter(function(value, index, arr){ return value != last_hovered_node_index;});
-      nodes[last_hovered_node_index].material.opacity = 1;
+      nodeObjects[last_hovered_node_index].setOpacity(1);
       last_hovered_node_index = "";
       event_flag = true;
     } else hovered_nodes = [];
@@ -70,22 +71,26 @@ const checkHoverOverNode = (event) => {
 // with ray caster
 const checkNodeInteraction = (event) => {
   setRaycaster(event);
-  let intersects = RAYCASTER.intersectObjects(nodes);
+  let node_spheres = nodeObjects.map(({ sphere }) => sphere);
+  let intersects = RAYCASTER.intersectObjects(node_spheres);
   let node_selection = false;
   if (intersects.length > 0) {
     node_selection = true;
-    let ind = findIndexByUuid(nodes, intersects[0].object.uuid);
+    let ind = findIndexByUuid(node_spheres, intersects[0].object.uuid);
     if (exists(selectedNodePositions, ind)){
       if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
         pos = node_attributes.Node.indexOf(nodeLayerNames[ind]);
         if (pos > -1 && node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
-          nodes[ind].material.color = new THREE.Color( node_attributes.Color[pos] );
-        else nodes[ind].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[ind]]])%nodeColorVector.length]);
-      } else nodes[ind].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[ind]]])%nodeColorVector.length]);
+          nodeObjects[ind].setColor(node_attributes.Color[pos]);
+        else
+        nodeObjects[ind].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[ind]]])%nodeColorVector.length]);
+      } else
+        nodeObjects[ind].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[ind]]])%nodeColorVector.length]);
       selectedNodePositions = selectedNodePositions.filter(function(value, index, arr){ return value != ind;}); //array remove/filter
     } else {
       selectedNodePositions.push(ind);
-      if (selectedNodeColorFlag) nodes[ind].material.color = new THREE.Color( selectedDefaultColor );
+      if (selectedNodeColorFlag)
+        nodeObjects[ind].setColor(selectedDefaultColor);
     }
   }
 
@@ -109,16 +114,14 @@ const lassoSelectNodes = (x, y) => {
   let maxX = Math.max(shiftX, x);
   let minY = Math.min(shiftY, y);
   let maxY = Math.max(shiftY, y);
-  for (let i = 0; i < nodes.length; i++){
-    let nodeX = nodes[i].getWorldPosition(new THREE.Vector3()).x;
-    let nodeY = nodes[i].getWorldPosition(new THREE.Vector3()).y;
-    if (nodeX < maxX && nodeX > minX && nodeY < maxY && nodeY > minY){
-      nodes[i].material.opacity = 0.5;
-    } else {
-      nodes[i].material.opacity = 1;
-    }
+  for (let i = 0; i < nodeObjects.length; i++) {
+    let nodeX = nodeObjects[i].getWorldPosition("x");
+    let nodeY = nodeObjects[i].getWorldPosition("y");
+    if (nodeX < maxX && nodeX > minX && nodeY < maxY && nodeY > minY)
+      nodeObjects[i].setOpacity(0.5);
+    else
+      nodeObjects[i].setOpacity(1);
   }
-  return true;
 }
 
 const translateNodes = (e) => {
@@ -128,17 +131,11 @@ const translateNodes = (e) => {
   else step =-20;
   
   if (scene.axisPressed=="z"){
-    for (i = 0; i < selectedNodePositions.length; i++){
-      nodes[selectedNodePositions[i]].translateZ(step);
-    }
-  /*} else if (scene.axisPressed=="x"){
-    for (i = 0; i < selectedNodePositions.length; i++){
-      nodes[selectedNodePositions[i]].translateX(step);
-    }*/
+    for (i = 0; i < selectedNodePositions.length; i++)
+      nodeObjects[selectedNodePositions[i]].translateZ(step);
   } else if (scene.axisPressed=="c"){
-    for (i = 0; i < selectedNodePositions.length; i++){
-      nodes[selectedNodePositions[i]].translateY(step);
-    }
+    for (i = 0; i < selectedNodePositions.length; i++)
+      nodeObjects[selectedNodePositions[i]].translateY(step);
   }
   redrawEdges();
   updateNodesRShiny();
@@ -168,42 +165,45 @@ const decideNodeLabelFlags = () => {
 const nodeAttributes = (message) => {
   node_attributes = message;
   let pos;
-  for (let i = 0; i < nodes.length; i++){
+  for (let i = 0; i < nodeObjects.length; i++){
     pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
     if (pos > -1){ //if node exists in attributes file
       if (nodeAttributesPriority){
         if (!exists(selectedNodePositions, i) && checkIfAttributeColorExist(node_attributes, pos)) //if node not currently selected and color is assigned
-          nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
+          nodeObjects[i].setColor(node_attributes.Color[pos]);
       }
       if (node_attributes.Size !== undefined && node_attributes.Size[pos] !== "" && node_attributes.Size[pos] != " " && node_attributes.Size[pos] !== null)
-        nodes[i].scale.x = nodes[i].scale.y = nodes[i].scale.z = Number(node_attributes.Size[pos]);
+        nodeObjects[i].setScale(Number(node_attributes.Size[pos]));
     }
   }
   updateNodesRShiny();
-  return true;
 }
 
 const nodeSelector = (message) => {
   //message -> T | F
   if (message){
     selectedNodePositions = []; //reseting, else multiple entries -> double transformations
-    for (let i=0; i < nodes.length; i++){
+    for (let i=0; i < nodeObjects.length; i++){
       selectedNodePositions.push(i);
-      if (selectedNodeColorFlag) nodes[i].material.color = new THREE.Color( selectedDefaultColor );
+      if (selectedNodeColorFlag)
+        nodeObjects[i].setColor(selectedDefaultColor);
     }
     updateSelectedNodesRShiny();
   }
   else{
     selectedNodePositions = [];
     updateSelectedNodesRShiny();
-    for (i=0; i < nodes.length; i++){
+    for (i=0; i < nodeObjects.length; i++){
       if (node_attributes !== ""){
         pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
         if(checkIfAttributeColorExist(node_attributes, pos)) //if node exists in node attributes file
-          nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
-        else nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length]);
-      } else if (nodes[i].userData.cluster)  nodes[i].material.color = new THREE.Color(nodeColorVector[nodes[i].userData.cluster]);
-      else nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
+          nodeObjects[i].setColor(node_attributes.Color[pos]);
+        else
+          nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length]);
+      } else if (nodeObjects[i].getCluster() != "")
+        nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()]);
+      else
+      nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
     }
   }
   decideNodeLabelFlags();
@@ -213,23 +213,30 @@ const nodeSelector = (message) => {
 const nodeSelectedColorPriority = (message) => {
   selectedNodeColorFlag = message;
   for (let i=0; i<selectedNodePositions.length; i++){
-    if (selectedNodeColorFlag) nodes[selectedNodePositions[i]].material.color = new THREE.Color( selectedDefaultColor );
+    if (selectedNodeColorFlag)
+      nodeObjects[selectedNodePositions[i]].setColor(selectedDefaultColor);
     else if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
       pos = node_attributes.Node.indexOf(nodeLayerNames[selectedNodePositions[i]]);
       if(checkIfAttributeColorExist(node_attributes, pos))//if node exists in node attributes file
-        nodes[selectedNodePositions[i]].material.color = new THREE.Color( node_attributes.Color[pos] );
-      else nodes[selectedNodePositions[i]].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[selectedNodePositions[i]]]])%nodeColorVector.length]);
-    } else nodes[selectedNodePositions[i]].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[selectedNodePositions[i]]]])%nodeColorVector.length]);
+        nodeObjects[selectedNodePositions[i]].setColor(node_attributes.Color[pos]);
+      else
+        nodeObjects[selectedNodePositions[i]].setColor(nodeColorVector[(
+          layerGroups[nodeGroups[nodeLayerNames[selectedNodePositions[i]]]]) % nodeColorVector.length]);
+    } else
+    nodeObjects[selectedNodePositions[i]].setColor(nodeColorVector[(
+      layerGroups[nodeGroups[nodeLayerNames[selectedNodePositions[i]]]]) % nodeColorVector.length]);
   }
-  return true;
 }
 
 const spreadNodes = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    for (let i=0;i<selectedNodePositions.length;i++){
-      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 1.1;
-      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 1.1;
+  if (selectedNodePositions.length == 0)
+    alert("Please select at least one node.");
+  else {
+    for (let i = 0; i < selectedNodePositions.length; i++) {
+      nodeObjects[selectedNodePositions[i]].setPosition("y",
+        nodeObjects[selectedNodePositions[i]].getPosition("y") * 1.1);
+      nodeObjects[selectedNodePositions[i]].posetPosition("z",
+        nodeObjects[selectedNodePositions[i]].getPosition("z") * 1.1);
     }
     updateNodesRShiny();
     redrawEdges();
@@ -238,10 +245,12 @@ const spreadNodes = () => {
 
 const congregateNodes = () => {
   if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    for (let i=0;i<selectedNodePositions.length;i++){
-      nodes[selectedNodePositions[i]].position.y = nodes[selectedNodePositions[i]].position.y * 0.9;
-      nodes[selectedNodePositions[i]].position.z = nodes[selectedNodePositions[i]].position.z * 0.9;
+  else {
+    for (let i = 0; i < selectedNodePositions.length; i++){
+      nodeObjects[selectedNodePositions[i]].setPosition("y",
+        nodeObjects[selectedNodePositions[i]].getPosition("y") * 0.9);
+      nodeObjects[selectedNodePositions[i]].posetPosition("z",
+        nodeObjects[selectedNodePositions[i]].getPosition("z") * 0.9);
     }
     updateNodesRShiny();
     redrawEdges();
@@ -257,11 +266,11 @@ const moveNodes = (direction, axis) => {
       value = direction * value;
       for (let i = 0; i < selectedNodePositions.length; i++){
         if (axis == "X")
-          nodes[selectedNodePositions[i]].translateX(value);
+          nodeObjects[selectedNodePositions[i]].translateX(value);
         else if (axis == "Y")
-          nodes[selectedNodePositions[i]].translateY(value);
+          nodeObjects[selectedNodePositions[i]].translateY(value);
         else if (axis == "Z")
-          nodes[selectedNodePositions[i]].translateZ(value);
+          nodeObjects[selectedNodePositions[i]].translateZ(value);
       }
       redrawEdges();
       updateNodesRShiny();
@@ -273,12 +282,11 @@ const scaleNodes = () => {
   let cavnasSlider = document.getElementsByClassName("canvasSlider")[5],
     td = document.getElementById("sliderValue6");
   td.innerHTML = "x".concat(cavnasSlider.value);
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else{
-    for (let i = 0; i < selectedNodePositions.length; i++) {
-      nodes[selectedNodePositions[i]].scale.x = nodes[selectedNodePositions[i]].scale.y = 
-        nodes[selectedNodePositions[i]].scale.z = parseFloat(cavnasSlider.value);
-    }
+  if (selectedNodePositions.length == 0)
+    alert("Please select at least one node.");
+  else {
+    for (let i = 0; i < selectedNodePositions.length; i++)
+      nodeObjects[selectedNodePositions[i]].setScale(parseFloat(cavnasSlider.value));
     updateNodesRShiny();
   }
 }
@@ -298,9 +306,10 @@ const selectSearchedNodes = (event) => {
         tempIndexes = getCaseInsensitiveIndices(nodeNames, searchString[i].trim()) //case insensitive function
         if (tempIndexes.length > 0){
           for (j=0; j < tempIndexes.length; j++){
-            if (!exists(selectedNodePositions, tempIndexes[j])){
+            if (!exists(selectedNodePositions, tempIndexes[j])) {
               selectedNodePositions.push(tempIndexes[j]);
-              if (selectedNodeColorFlag) nodes[tempIndexes[j]].material.color = new THREE.Color( selectedDefaultColor );
+              if (selectedNodeColorFlag)
+                nodeObjects[tempIndexes[j]].setColor(selectedDefaultColor);
             }
           }
         }
@@ -334,17 +343,17 @@ const unselectAllNodes = () => {
 };
 
 const decideNodeColors = () => {
-  for (let i = 0; i < nodes.length; i++) {
+  for (let i = 0; i < nodeObjects.length; i++) {
     if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
       pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
       if (pos > -1 && node_attributes.Color !== undefined &&
         node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
-          nodes[i].material.color = new THREE.Color( node_attributes.Color[pos] );
+          nodeObjects[i].setColor(node_attributes.Color[pos]);
       else
-        nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length]);
-    } else if (nodes[i].userData.cluster)
-      nodes[i].material.color = new THREE.Color(nodeColorVector[nodes[i].userData.cluster]);
+        nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length]);
+    } else if (nodeObjects[i].getCluster() != "")
+      nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()]);
     else
-      nodes[i].material.color = new THREE.Color(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
+      nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
   }
 };

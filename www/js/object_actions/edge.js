@@ -12,7 +12,7 @@ const createEdgeObjects = () => {
     index1 = nodeLayerNames.indexOf(edge_split[0]);
     index2 = nodeLayerNames.indexOf(edge_split[1]);
     if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]){ //check if edge inside same Layer
-      points.push( nodes[index1].position, nodes[index2].position );
+      points.push( nodeObjects[index1].getPosition(), nodeObjects[index2].getPosition() );
   		let geometry = new THREE.BufferGeometry().setFromPoints( points );
   		let material = "";
   		if (edge_attributes !== "" && edgeAttributesPriority){
@@ -70,7 +70,7 @@ const redrawEdges = () => {
     if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]){ 
       points = [];
       layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.remove(edges[i]);
-  		points.push( nodes[index1].position, nodes[index2].position );
+  		points.push(nodeObjects[index1].getPosition(), nodeObjects[index2].getPosition());
   		geometry = new THREE.BufferGeometry().setFromPoints( points );
       material = "";
       if (exists(selected_edges, i) && selectedEdgeColorFlag)

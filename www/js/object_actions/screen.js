@@ -117,8 +117,8 @@ const renderNodeLabels = () => { // TODO add/check flag conditions
       labelY = "";
   for (let i = 0; i < nodeLabelFlags.length; i++){
     if (nodeLabelFlags[i]){ // ONLY CHECK THIS 
-      nodeX = nodes[i].getWorldPosition(new THREE.Vector3()).x,
-      nodeY = nodes[i].getWorldPosition(new THREE.Vector3()).y;
+      nodeX = nodeObjects[i].getWorldPosition("x");
+      nodeY = nodeObjects[i].getWorldPosition("y");
       labelX = xBoundMax + nodeX + 7;
       labelY = yBoundMax - nodeY - 10;
       node_labels[i].style.left = labelX.toString().concat("px");
@@ -162,7 +162,10 @@ const drawInterLayerEdges = (showFlag = false) => {
       if (!hidelayerCheckboxes[node_layer1].checked && !hidelayerCheckboxes[node_layer2].checked) {
         index1 = nodeLayerNames.indexOf(edge_split[0]);
         index2 = nodeLayerNames.indexOf(edge_split[1]);
-        points.push( nodes[index1].getWorldPosition(new THREE.Vector3()), nodes[index2].getWorldPosition(new THREE.Vector3()) );
+        points.push(
+          nodeObjects[index1].getWorldPosition(),
+          nodeObjects[index2].getWorldPosition()
+        );
     		let geometry = new THREE.BufferGeometry().setFromPoints( points );
         let material = "";
 

@@ -1,6 +1,6 @@
 const createLabels = () => {
   //nodes
-  for (let i = 0; i < nodes.length; i++){
+  for (let i = 0; i < nodeObjects.length; i++){
     let div = document.createElement('div');
     div.textContent = nodeNames[i];
     div.setAttribute('class', 'labels');
@@ -89,8 +89,6 @@ const showSelectedNodeLabels = (flag) => { // true or false
 
 const resizeLabels = (message) => {
   let size = message; //message = [1, 20]
-  for (let i = 0; i < nodes.length; i++){
+  for (let i = 0; i < nodeObjects.length; i++)
     node_labels[i].style.fontSize = size.toString().concat("px");
-  }
-  return true;
 }

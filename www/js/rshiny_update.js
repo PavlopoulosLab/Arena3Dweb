@@ -61,10 +61,9 @@ const updateSelectedLayersRShiny = () => {
 const updateNodesRShiny = () => {
   let js_nodes = [],
     js_nodes_world = [], // VR
-    target = new THREE.Vector3(), // VR
     temp_js_nodes = [],
     color = "";
-  for (let i = 0; i < nodes.length; i++){
+  for (let i = 0; i < nodeObjects.length; i++){
     let url = descr = " ";
     if (node_attributes !== ""){
       pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
@@ -76,20 +75,24 @@ const updateNodesRShiny = () => {
           url = node_attributes.Url[pos];
         if (node_attributes.Description !== undefined && node_attributes.Description[pos] !== "" && node_attributes.Description[pos] != " " && node_attributes.Description[pos] !== null)
           descr = node_attributes.Description[pos];
-      } else color = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length];
-    }  else if (nodes[i].userData.cluster) nodes[i].material.color = new THREE.Color(nodeColorVector[nodes[i].userData.cluster]);
-    else color = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length];
+      } else 
+      color = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length];
+    }  else if (nodeObjects[i].getCluster() != "")
+      nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()]);
+    else
+      color = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length];
 
     if (node_cluster_colors.length !== 0) color = node_cluster_colors[i];
     
-    temp_js_nodes = [nodeNames[i], nodeGroups[nodeLayerNames[i]], nodes[i].position.x, nodes[i].position.y, nodes[i].position.z,
-      nodes[i].scale.x, color, url, descr];
+    temp_js_nodes = [nodeNames[i], nodeGroups[nodeLayerNames[i]], nodeObjects[i].getPosition("x"),
+      nodeObjects[i].getPosition("y"), nodeObjects[i].getPosition("z"),
+      nodeObjects[i].getScale(), color, url, descr];
     js_nodes.push(temp_js_nodes);
     
     // VR
     temp_js_nodes = [nodeNames[i], nodeGroups[nodeLayerNames[i]],
-      nodes[i].getWorldPosition(target).x, nodes[i].getWorldPosition(target).y, nodes[i].getWorldPosition(target).z,
-      nodes[i].scale.x, color];
+      nodeObjects[i].getWorldPosition("x"), nodeObjects[i].getWorldPosition("y"),
+      nodeObjects[i].getWorldPosition("z"), nodeObjects[i].getScale(), color];
     js_nodes_world.push(temp_js_nodes);
   }
   Shiny.setInputValue("js_nodes", JSON.stringify(js_nodes));

@@ -32,15 +32,15 @@ const assignYZ = (nodeCoords) => {
   if (localLayoutFlag) { // if local layout, change target mins and maxes and then unset flag
     layerIndex = layerGroups[nodeGroups[nodeCoords.name[0]]];
     target_y_min = target_y_max =
-      nodes[nodeLayerNames.indexOf(nodeCoords.name[0])].position.y / layers[layerIndex].getScale();
+      nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[0])].getPosition("y") / layers[layerIndex].getScale();
     target_z_min = target_z_max =
-      nodes[nodeLayerNames.indexOf(nodeCoords.name[0])].position.z / layers[layerIndex].getScale();
+      nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[0])].getPosition("z") / layers[layerIndex].getScale();
 
     for (let i = 1; i < nodeCoords.name.length; i++) {
       node_name = nodeCoords.name[i];
-      if (nodes[nodeLayerNames.indexOf(node_name)]) {
-        y_coord = nodes[nodeLayerNames.indexOf(node_name)].position.y / layers[layerIndex].getScale();
-        z_coord = nodes[nodeLayerNames.indexOf(node_name)].position.z / layers[layerIndex].getScale();
+      if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
+        y_coord = nodeObjects[nodeLayerNames.indexOf(node_name)].getPosition("y") / layers[layerIndex].getScale();
+        z_coord = nodeObjects[nodeLayerNames.indexOf(node_name)].getPosition("z") / layers[layerIndex].getScale();
         if (y_coord < target_y_min)
           target_y_min = y_coord;
         if (y_coord > target_y_max)
@@ -56,19 +56,19 @@ const assignYZ = (nodeCoords) => {
 
   for (i = 0; i < nodeCoords.name.length; i++) {
     node_name = nodeCoords.name[i];
-    if (nodes[nodeLayerNames.indexOf(node_name)]) {
+    if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
       if (y_max - y_min != 0)
-        nodes[nodeLayerNames.indexOf(node_name)].position.y = 
+        nodeObjects[nodeLayerNames.indexOf(node_name)].getPosition("y") = 
           ((y_arr[i] - y_min) * (target_y_max - target_y_min) /
-            (y_max - y_min) + target_y_min) * layers[layerGroups[nodeGroups[node_name]]].getScale(); //mapping * layer stretch scale
+            (y_max - y_min) + target_y_min) * layers[layerGroups[nodeGroups[node_name]]].getScale(); // mapping * layer stretch scale
       else
-        nodes[nodeLayerNames.indexOf(node_name)].position.y = 0;
+        nodeObjects[nodeLayerNames.indexOf(node_name)].setPosition("y", 0);
       if (z_max - z_min != 0)
-        nodes[nodeLayerNames.indexOf(node_name)].position.z = 
+        nodeObjects[nodeLayerNames.indexOf(node_name)].setPosition("z",
           ((z_arr[i] - z_min) * (target_z_max - target_z_min) / 
-            (z_max - z_min) + target_z_min) * layers[layerGroups[nodeGroups[node_name]]].getScale(); //mapping
+            (z_max - z_min) + target_z_min) * layers[layerGroups[nodeGroups[node_name]]].getScale()); // mapping
       else
-        nodes[nodeLayerNames.indexOf(node_name)].position.z = 0;
+        nodeObjects[nodeLayerNames.indexOf(node_name)].setPosition("z", 0);
     }
   }
   
@@ -76,10 +76,10 @@ const assignYZ = (nodeCoords) => {
   if (nodeCoords.group != null) {
     for (i = 0; i < nodeCoords.name.length; i++){
       node_name = nodeCoords.name[i].trim();
-      if (nodes[nodeLayerNames.indexOf(node_name)]) {
-        nodes[nodeLayerNames.indexOf(node_name)].material.color = new THREE.Color(nodeColorVector[nodeCoords.group[i]]);
+      if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
+        nodeObjects[nodeLayerNames.indexOf(node_name)].setColor(nodeColorVector[nodeCoords.group[i]]);
         node_cluster_colors[nodeLayerNames.indexOf(node_name)] = nodeColorVector[nodeCoords.group[i]];
-        nodes[nodeLayerNames.indexOf(node_name)].userData.cluster = nodeCoords.group[i];
+        nodeObjects[nodeLayerNames.indexOf(node_name)].setCluster(nodeCoords.group[i]);
       }
     }
   }
@@ -97,11 +97,10 @@ const setLocalFlag = (flag) => { // flag always true here
 }
 
 const topologyScale = (nodeScale) => {
-  for (i = 0; i < nodeScale.nodeName.length; i++) {
+  let nodeName;
+  for (let i = 0; i < nodeScale.nodeName.length; i++) {
     nodeName = nodeScale.nodeName[i];
-    nodes[nodeLayerNames.indexOf(nodeName)].scale.x =
-      nodes[nodeLayerNames.indexOf(nodeName)].scale.y =
-      nodes[nodeLayerNames.indexOf(nodeName)].scale.z = nodeScale.scale[i];
+    nodeObjects[nodeLayerNames.indexOf(nodeName)].setScale(nodeScale.scale[i]);
   }
   updateNodesRShiny();
 };

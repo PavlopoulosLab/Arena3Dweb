@@ -115,13 +115,13 @@ const clickUp = (event) => {
         optionsList = "";
       }
       if (lasso !== "") {
-        for (let i = 0; i < nodes.length; i++) {
-          if (nodes[i].material.opacity == 0.5) {
-            nodes[i].material.opacity = 1;
+        for (let i = 0; i < nodeObjects.length; i++) {
+          if (nodeObjects[i].getOpacity() == 0.5) {
+            nodeObjects[i].setOpacity(1);
             if (!exists(selectedNodePositions, i)){
               selectedNodePositions.push(i);
               if (selectedNodeColorFlag)
-                nodes[i].material.color = new THREE.Color(selectedDefaultColor);
+                nodeObjects[i].setColor(new THREE.Color(selectedDefaultColor));
             }
           }
         }
@@ -170,9 +170,9 @@ const replaceContextMenuOverNode = (evt) => {
     optionsList = "";
   }
   let pos = "";
-  for (let i = 0; i < nodes.length; i++) {
-    let nodeX = xBoundMax + nodes[i].getWorldPosition(new THREE.Vector3()).x;
-    let nodeY = yBoundMax - nodes[i].getWorldPosition(new THREE.Vector3()).y;
+  for (let i = 0; i < nodeObjects.length; i++) {
+    let nodeX = xBoundMax + nodeObjects[i].getWorldPosition("x");
+    let nodeY = yBoundMax - nodeObjects[i].getWorldPosition("y");
     if (Math.pow(nodeX - evt.layerX, 2) + Math.pow(nodeY - evt.layerY, 2) <= Math.pow((SPHERE_RADIUS + 1), 2)) {
       evt.preventDefault();
       //creating list and appending to 3d-graph div

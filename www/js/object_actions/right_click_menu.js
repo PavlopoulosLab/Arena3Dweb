@@ -43,7 +43,8 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
     //selecting and painting node
     if (!exists(selectedNodePositions, currentNode)){
       selectedNodePositions.push(currentNode);
-      if (selectedNodeColorFlag) nodes[currentNode].material.color = new THREE.Color( selectedDefaultColor );
+      if (selectedNodeColorFlag)
+        nodeObjects[currentNode].setColor(selectedDefaultColor);
     }
     //selecting and painting edge
     if (currentNode != previousNode){ //skipping first node call check wiuth itself
@@ -72,7 +73,7 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
 }
 
 const executeCommand = (item) => {
-  new_color = new THREE.Color( selectedDefaultColor );
+  new_color = new THREE.Color( selectedDefaultColor ); // TODO remove after edges replaced with Classes
   if (item.options[item.selectedIndex].text == "Select Neighbors"){ //select neighbors
     let pos = -1;
     for (let i = 0; i < edgePairs.length; i++){ //random x,y,z
@@ -82,7 +83,8 @@ const executeCommand = (item) => {
       if (index1 == item.value) {
         if (!exists(selectedNodePositions, index2)) {
           selectedNodePositions.push(index2);
-          if (selectedNodeColorFlag) changeColor(nodes[index2], new_color);
+          if (selectedNodeColorFlag)
+            nodeObjects[index2].setColor(selectedDefaultColor);
         }
         if (!exists(selected_edges, i)) {
           selected_edges.push(i);
@@ -96,7 +98,8 @@ const executeCommand = (item) => {
       } else if (index2 == item.value) {
         if (!exists(selectedNodePositions, index1)){
           selectedNodePositions.push(index1);
-          if (selectedNodeColorFlag) changeColor(nodes[index1], new_color);
+          if (selectedNodeColorFlag)
+            nodeObjects[index1].setColor(selectedDefaultColor);
         }
         if (!exists(selected_edges, i)){
           selected_edges.push(i);
@@ -129,7 +132,8 @@ const executeCommand = (item) => {
           // code from Select neighbors above
           if (!exists(selectedNodePositions, index2)){
             selectedNodePositions.push(index2);
-            if (selectedNodeColorFlag) changeColor(nodes[index2], new_color);  
+            if (selectedNodeColorFlag)
+              nodeObjects[index2].setColor(selectedDefaultColor); 
           }
           if (!exists(selected_edges, i)){
             selected_edges.push(i);
@@ -145,7 +149,8 @@ const executeCommand = (item) => {
           // code from Select neighbors above
           if (!exists(selectedNodePositions, index1)){
             selectedNodePositions.push(index1);
-            if (selectedNodeColorFlag) changeColor(nodes[index1], new_color);
+            if (selectedNodeColorFlag)
+              nodeObjects[index1].setColor(selectedDefaultColor);
           }
           if (!exists(selected_edges, i)){
             selected_edges.push(i);

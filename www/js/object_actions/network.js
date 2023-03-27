@@ -35,7 +35,8 @@ const resetValues = () => {
   lastHoveredLayerIndex = "";
 
   // nodes
-  nodes = []; //canvas objects
+  // nodes = []; //canvas objects // TODO remove, replacing with nodeObjects below
+  nodeObjects = [];
   nodeNames = [];
   nodeLayerNames = [];
   nodeGroups = new Map();
