@@ -639,7 +639,7 @@ const toggleInterLayerEdgesRendering = () => {
 
 const unselectAllEdges = () => {
   let pos1 = pos2 = pos3 = -1;
-  for (i = 0; i < edges.length; i++) {
+  for (let i = 0; i < edges.length; i++) {
     if (edge_attributes !== "" && edgeAttributesPriority){ //check if color is overidden by user
       pos1 = edge_attributes.SourceNode.indexOf(edgePairs[i]);
       pos2 = edge_attributes.TargetNode.indexOf(edgePairs[i]);

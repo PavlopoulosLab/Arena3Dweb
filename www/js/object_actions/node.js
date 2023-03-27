@@ -6,22 +6,7 @@ const createNodeObjects = () => {
     nodeObjects.push(new Node({id: i, name: nodeNames[i], layer: nodeGroups[nodeLayerNames[i]],
       nodeLayerName: nodeLayerNames[i], color: nodeColor}));
     layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].addNode(nodeObjects[i].sphere);
-
-    // sphere = createNodeObject(nodeColor);
-    // layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].plane.add(sphere);
   }
-};
-
-const createNodeObject = (nodeColor) => { // TODO replace with new node Class import
-  let geometry, material, sphere;
-  geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
-  material = new THREE.MeshStandardMaterial({
-    color: nodeColor,
-    transparent: true
-  });
-  sphere = new THREE.Mesh(geometry, material);
-  nodes.push(sphere);
-  return(sphere);
 };
 
 const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax, // TODO remove parameters
@@ -145,7 +130,7 @@ const translateNodes = (e) => {
 const decideNodeLabelFlags = () => {
   let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
       node_layer = "";
-  for (i = 0; i < nodeNames.length; i++) {
+  for (let i = 0; i < nodeNames.length; i++) {
     node_layer = layerGroups[nodeGroups[nodeLayerNames[i]]];
     if (hidelayerCheckboxes[node_layer].checked){ //1. if node's layer not hidden 
       nodeLabelFlags[i] = false;
@@ -235,7 +220,7 @@ const spreadNodes = () => {
     for (let i = 0; i < selectedNodePositions.length; i++) {
       nodeObjects[selectedNodePositions[i]].setPosition("y",
         nodeObjects[selectedNodePositions[i]].getPosition("y") * 1.1);
-      nodeObjects[selectedNodePositions[i]].posetPosition("z",
+      nodeObjects[selectedNodePositions[i]].setPosition("z",
         nodeObjects[selectedNodePositions[i]].getPosition("z") * 1.1);
     }
     updateNodesRShiny();
@@ -249,7 +234,7 @@ const congregateNodes = () => {
     for (let i = 0; i < selectedNodePositions.length; i++){
       nodeObjects[selectedNodePositions[i]].setPosition("y",
         nodeObjects[selectedNodePositions[i]].getPosition("y") * 0.9);
-      nodeObjects[selectedNodePositions[i]].posetPosition("z",
+      nodeObjects[selectedNodePositions[i]].setPosition("z",
         nodeObjects[selectedNodePositions[i]].getPosition("z") * 0.9);
     }
     updateNodesRShiny();
@@ -294,12 +279,12 @@ const scaleNodes = () => {
 // on node searchbar key-press
 const selectSearchedNodes = (event) => {
   if (scene.exists()) {
-    var key = window.event.keyCode;
+    let key = window.event.keyCode;
     // If the user has pressed enter
     if (key === 13) {
       event.preventDefault(); //bypassing newline enter
       startLoader(true);
-      var searchString = document.getElementById("searchBar").value.replace(/\n/g, ""),
+      let searchString = document.getElementById("searchBar").value.replace(/\n/g, ""),
           tempIndexes, i, j;
       searchString = searchString.split(",");
       for (i=0; i<searchString.length; i++){
@@ -342,18 +327,18 @@ const unselectAllNodes = () => {
   decideNodeLabelFlags();
 };
 
-const decideNodeColors = () => {
+const decideNodeColors = () => { // TODO change based on new R Shiny input, importColor vs clusterColor
   for (let i = 0; i < nodeObjects.length; i++) {
     if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
-      pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
+      let pos = node_attributes.Node.indexOf(nodeObjects[i].getNodeLayerName());
       if (pos > -1 && node_attributes.Color !== undefined &&
         node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
           nodeObjects[i].setColor(node_attributes.Color[pos]);
       else
         nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length]);
-    } else if (nodeObjects[i].getCluster() != "")
+    } else if (nodeObjects[i].getCluster() != "") {
       nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()]);
-    else
+    } else
       nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
   }
 };

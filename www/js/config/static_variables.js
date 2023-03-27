@@ -37,7 +37,6 @@ let showAllNodeLabelsFlag = false,
     hovered_nodes = [], // if allowing more than one hovered nodes at a time
     last_hovered_node_index = "",
     selectedNodePositions = [],
-    // nodes = [], //canvas objects // TODO replacing with nodeObjects, then rename back to nodes
     nodeNames = [],
     nodeLayerNames = [],
     nodeColorVector = [],

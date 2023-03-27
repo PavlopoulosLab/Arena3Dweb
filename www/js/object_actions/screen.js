@@ -79,7 +79,7 @@ const renderLayerLabels = () => {
 
 const redrawLayerLabels = (mode) => {
   let  layerArray, layerX, layerY, labelX, labelY,
-    i, position, hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
+    position, hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
     layer_spheres = layers.map(({ sphere }) => sphere);
   switch (mode) {
     case "all":
@@ -89,7 +89,7 @@ const redrawLayerLabels = (mode) => {
       layerArray = getSelectedLayers();
   }
   
-  for (i = 0; i < layerArray.length; i++) { // TODO replace for loop with map (objects)
+  for (let i = 0; i < layerArray.length; i++) { // TODO replace for loop with map (objects)
     position = mode == "selected" ? layerArray[i] : i;
     if (!hidelayerCheckboxes[position].checked) { // if node's layer not hidden, counting elements
       layerX = layer_spheres[position].getWorldPosition(new THREE.Vector3()).x,

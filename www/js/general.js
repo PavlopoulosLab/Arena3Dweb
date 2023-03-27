@@ -7,9 +7,9 @@ const getUniqueValues = (array) => {
 }
 
 const getCaseInsensitiveIndices = (array, element) => {
-  var indexes = [], i;
+  let indexes = [];
   element = element.toLowerCase(); //case insensitive
-  for (i = 0; i < array.length; i++)
+  for (let i = 0; i < array.length; i++)
     if (array[i].toLowerCase() === element)
       indexes.push(i);
   return(indexes);

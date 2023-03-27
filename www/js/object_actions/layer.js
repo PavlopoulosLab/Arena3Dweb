@@ -44,7 +44,7 @@ const selectCheckedLayer = (checkbox) => {
 };
 
 const repaintLayers = () => { 
-  for (i = 0; i < layers.length; i++) {
+  for (let i = 0; i < layers.length; i++) {
     if (layers[i].isSelected)
       layers[i].setColor(SELECTED_LAYER_DEFAULT_COLOR);
     else {

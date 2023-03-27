@@ -3,13 +3,15 @@
 //@param node (integer): node whose neighbors are requested
 //@return int array of neighbor IDs
 const interLayerNeighbors = (node) => {
-  let i, edge_split, index1, index2, neighbors = [];
-  for (i = 0; i < edgePairs.length; i++){
+  let edge_split, index1, index2, neighbors = [];
+  for (let i = 0; i < edgePairs.length; i++) {
     edge_split = edgePairs[i].split("---");
     index1 = nodeLayerNames.indexOf(edge_split[0]);
     index2 = nodeLayerNames.indexOf(edge_split[1]);
-    if (node == index1) neighbors.push(index2);
-    else if (node == index2) neighbors.push(index1);
+    if (node == index1)
+      neighbors.push(index2);
+    else if (node == index2)
+      neighbors.push(index1);
   }
   return neighbors;
 }
@@ -20,8 +22,8 @@ const interLayerNeighbors = (node) => {
 //@param node2 (integer): second node
 //@return: String of inter-layer edge pair (as found in the edgePairs array) or null if not found
 const getInterLayerEdge = (node1, node2) => {
-  let i, edge_split, index1, index2;
-  for (i = 0; i < edgePairs.length; i++){
+  let edge_split, index1, index2;
+  for (let i = 0; i < edgePairs.length; i++) {
     edge_split = edgePairs[i].split("---");
     index1 = nodeLayerNames.indexOf(edge_split[0]);
     index2 = nodeLayerNames.indexOf(edge_split[1]);
@@ -37,7 +39,7 @@ const getInterLayerEdge = (node1, node2) => {
 //@param previousNode (integer): previous node, to figure which edge to paint
 //@return void
 const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
-  let neighbors, i, toCheckLayer, interLayerEdge, pos;
+  let neighbors, toCheckLayer, interLayerEdge, pos;
   if (!exists(downstreamCheckedNodes, currentNode)){
     downstreamCheckedNodes.push(currentNode);
     //selecting and painting node
@@ -60,7 +62,7 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
     }
     //find node inter-layer neighbors and continue recursively
     neighbors = interLayerNeighbors(currentNode);
-    for (i = 0; i < neighbors.length; i++){
+    for (let i = 0; i < neighbors.length; i++) {
       toCheckLayer = nodeGroups[nodeLayerNames[neighbors[i]]];
       if (!exists(layerPath, toCheckLayer)){
         layerPath.push(toCheckLayer);

@@ -12,7 +12,7 @@ const createLabels = () => {
     node_labels[i].style.color = globalLabelColor;
   }
   //layers
-  for (i = 0; i < layers.length; i++) {
+  for (let i = 0; i < layers.length; i++) {
     let div = document.createElement('div'),
       name = layers[i].getName();
     div.textContent = name;
@@ -73,7 +73,7 @@ const hideAllLayerLabels = () => {
 };
 
 const resizeLayerLabels = (size) => { // [1, 20]
-  for (i = 0; i < layers.length; i++)
+  for (let i = 0; i < layers.length; i++)
     layer_label_divs[i].style.fontSize = size.toString().concat("px");
 };
 

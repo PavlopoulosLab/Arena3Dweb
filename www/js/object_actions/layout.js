@@ -3,9 +3,10 @@ const assignYZ = (nodeCoords) => {
       z_arr = [],
       node_name = "",
       y_coord = z_coord = 0,
-      layerIndex = "";
+      layerIndex = "",
+      i;
 
-  for (let i = 0; i < nodeCoords.name.length; i++){
+  for (i = 0; i < nodeCoords.name.length; i++){
     y_arr.push(Number(nodeCoords.y[i]));
     z_arr.push(Number(nodeCoords.z[i]));
   }
@@ -36,7 +37,7 @@ const assignYZ = (nodeCoords) => {
     target_z_min = target_z_max =
       nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[0])].getPosition("z") / layers[layerIndex].getScale();
 
-    for (let i = 1; i < nodeCoords.name.length; i++) {
+    for (i = 1; i < nodeCoords.name.length; i++) {
       node_name = nodeCoords.name[i];
       if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
         y_coord = nodeObjects[nodeLayerNames.indexOf(node_name)].getPosition("y") / layers[layerIndex].getScale();
@@ -58,9 +59,9 @@ const assignYZ = (nodeCoords) => {
     node_name = nodeCoords.name[i];
     if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
       if (y_max - y_min != 0)
-        nodeObjects[nodeLayerNames.indexOf(node_name)].getPosition("y") = 
+        nodeObjects[nodeLayerNames.indexOf(node_name)].setPosition("y", 
           ((y_arr[i] - y_min) * (target_y_max - target_y_min) /
-            (y_max - y_min) + target_y_min) * layers[layerGroups[nodeGroups[node_name]]].getScale(); // mapping * layer stretch scale
+            (y_max - y_min) + target_y_min) * layers[layerGroups[nodeGroups[node_name]]].getScale()); // mapping * layer stretch scale
       else
         nodeObjects[nodeLayerNames.indexOf(node_name)].setPosition("y", 0);
       if (z_max - z_min != 0)

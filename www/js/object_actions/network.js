@@ -35,7 +35,6 @@ const resetValues = () => {
   lastHoveredLayerIndex = "";
 
   // nodes
-  // nodes = []; //canvas objects // TODO remove, replacing with nodeObjects below
   nodeObjects = [];
   nodeNames = [];
   nodeLayerNames = [];
@@ -295,6 +294,7 @@ const initializeNodesFromJSON = (jsonNodes, jsonScrambleFlag) => {
     nodeLayerNames.push(nodeLayerName); //name + group
     nodeGroups[nodeLayerName] = jsonNodes.layer[i];
 
+    // TODO remove these
     node_attributes.Node.push(nodeLayerName);
     node_attributes.Size.push(Number(jsonNodes.scale[i]));
     node_attributes.Color.push(jsonNodes.color[i]);
@@ -302,13 +302,14 @@ const initializeNodesFromJSON = (jsonNodes, jsonScrambleFlag) => {
     node_attributes.Description.push(jsonNodes.descr[i]);
     
     nodeColor = jsonNodes.color[i];
-    sphere = createNodeObject(nodeColor);
-    layers[layerGroups[nodeGroups[nodeLayerName]]].plane.add(sphere);
-
-    sphere.position.x = Number(jsonNodes.position_x[i]);
-    sphere.position.y = Number(jsonNodes.position_y[i]);
-    sphere.position.z = Number(jsonNodes.position_z[i]);
-    sphere.scale.x = sphere.scale.y = sphere.scale.z = Number(jsonNodes.scale[i]);
+    nodeObjects.push(new Node({id: i, name: nodeNames[i],
+      layer: nodeGroups[nodeLayerNames[i]], nodeLayerName: nodeLayerNames[i],
+      position_x: Number(jsonNodes.position_x[i]),
+      position_y: Number(jsonNodes.position_y[i]),
+      position_z: Number(jsonNodes.position_z[i]),
+      scale: Number(jsonNodes.scale[i]), color: nodeColor,
+      url: jsonNodes.url[i], descr: jsonNodes.descr[i]}));
+    layers[layerGroups[nodeGroups[nodeLayerName]]].addNode(nodeObjects[i].sphere);
   }
 
   if (jsonScrambleFlag) {

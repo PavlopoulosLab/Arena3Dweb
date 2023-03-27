@@ -121,7 +121,7 @@ const clickUp = (event) => {
             if (!exists(selectedNodePositions, i)){
               selectedNodePositions.push(i);
               if (selectedNodeColorFlag)
-                nodeObjects[i].setColor(new THREE.Color(selectedDefaultColor));
+                nodeObjects[i].setColor(selectedDefaultColor);
             }
           }
         }
@@ -137,14 +137,6 @@ const clickUp = (event) => {
     }
   }
 };
-
-// const mouseOut = (event) => { // breaks lasso while hovering over labels
-//   if (scene.exists()) {
-//     scene.dragging = false;
-//     scene.leftClickPressed = false;
-//     scene.middleClickPressed = false;
-//   }
-// };
 
 // double click event (left mouse), select node -> select layer -> unselect all nodes
 const dblClick = (event) => {

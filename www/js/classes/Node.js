@@ -20,10 +20,11 @@ class Node {
         this.setScale(scale);
     }
   
-    createSphere() {
-        let geometry = new THREE.SphereGeometry();
-        let material = new THREE.MeshBasicMaterial({
-            color: "white", transparent: true, opacity: 0
+    createSphere(nodeColor) {
+        let geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
+        let material = new THREE.MeshStandardMaterial({
+            color: nodeColor,
+            transparent: true
         });
         this.sphere = new THREE.Mesh(geometry, material);
     }
@@ -87,7 +88,7 @@ class Node {
     }
 
     getCluster() {
-        return(this.cluser);
+        return(this.cluster);
     }
 
     setPosition(axis, value) {
@@ -109,7 +110,7 @@ class Node {
     }
 
     setCluster(clusterName) {
-        this.cluser = clusterName;
+        this.cluster = clusterName;
     }
   }
   
