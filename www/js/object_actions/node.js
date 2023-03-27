@@ -2,6 +2,10 @@ const createNodeObjects = () => {
   let nodeColor, sphere;
   for (let i = 0; i < nodeLayerNames.length; i++) {
     nodeColor = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length];
+
+    nodeObjects.push(new Node({id: i, name: nodeLayerNames[i], color: nodeColor}));
+    //layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].addNode(nodeObjects[i].sphere);
+
     sphere = createNodeObject(nodeColor);
     layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].plane.add(sphere);
   }

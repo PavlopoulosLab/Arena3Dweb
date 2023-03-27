@@ -22,11 +22,10 @@ class Node {
   
     createSphere() {
         let geometry = new THREE.SphereGeometry();
-        let material = new THREE.MeshBasicMaterial(
-            {color: "white", transparent: true, opacity: 0}
-        );
-        let sphere = new THREE.Mesh(geometry, material);
-        return(sphere);
+        let material = new THREE.MeshBasicMaterial({
+            color: "white", transparent: true, opacity: 0
+        });
+        this.sphere = new THREE.Mesh(geometry, material);
     }
 
     initTranslate(x, y, z) {

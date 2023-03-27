@@ -71,9 +71,9 @@ class Layer {
 
   createSphere() {
     let geometry = new THREE.SphereGeometry();
-    let material = new THREE.MeshBasicMaterial(
-      {color: "white", transparent: true, opacity: 0}
-    );
+    let material = new THREE.MeshBasicMaterial({
+      color: "white", transparent: true, opacity: 0
+    });
     let sphere = new THREE.Mesh(geometry, material);
     return(sphere);
   }
@@ -92,6 +92,10 @@ class Layer {
   
   initScale(value) {
     this.plane.geometry.scale(1, Number(value), Number(value));
+  }
+
+  addNode(sphere) {
+    this.plane.add(sphere);
   }
 
   // toggle functions

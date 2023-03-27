@@ -1,5 +1,5 @@
 // class objects
-let scene, layers = []; // TODO add rest of the class objects here
+let scene, layers = [], nodeObjects = [], edgeObjects = [];
 
 // screen
 let xBoundMin, xBoundMax, yBoundMin, yBoundMax, zBoundMin, zBoundMax,
