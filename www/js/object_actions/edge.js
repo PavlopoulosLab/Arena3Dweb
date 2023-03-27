@@ -55,41 +55,45 @@ const createEdgeObjects = () => {
 }
 
 const redrawEdges = () => {
-  let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1;
-  for (let i = 0; i < edgePairs.length; i++){
-    if ( edge_channels && edge_channels[i] && edge_channels[i].length === 1) {
+  let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1,
+    edge_split, points, geometry, material, arrowHelper, ver_line, curve_group, group;
+
+
+  for (let i = 0; i < edgePairs.length; i++) {
+    if (edge_channels && edge_channels[i] && edge_channels[i].length === 1) {
       color = channelColors[edge_channels[i][0]];
     } else {
       color = edgeDefaultColor;
     }
-    let edge_split = edgePairs[i].split("---");
+
+    edge_split = edgePairs[i].split("---");
     index1 = nodeLayerNames.indexOf(edge_split[0]);
     index2 = nodeLayerNames.indexOf(edge_split[1]);
-    if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]){ //(exists(selectedNodePositions, index1) || exists(selectedNodePositions, index2)) &&
-      let points = [];
+    if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]){ 
+      points = [];
       layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.remove(edges[i]);
   		points.push( nodes[index1].position, nodes[index2].position );
-  		let geometry = new THREE.BufferGeometry().setFromPoints( points );
-      let material = "";
-      if (exists(selected_edges, i) && selectedEdgeColorFlag) color = selectedDefaultColor;
-      else if (edge_attributes !== "" && edgeAttributesPriority){
+  		geometry = new THREE.BufferGeometry().setFromPoints( points );
+      material = "";
+      if (exists(selected_edges, i) && selectedEdgeColorFlag)
+        color = selectedDefaultColor;
+      else if (edge_attributes !== "" && edgeAttributesPriority) {
   	    pos1 = edge_attributes.SourceNode.indexOf(edge_split[0]);
         pos2 = edge_attributes.TargetNode.indexOf(edge_split[1]);
 
-        if (checkIfAttributeColorExist(edge_attributes, pos1)){//if node not currently selected and exists in node attributes file and color is assigned
+        if (checkIfAttributeColorExist(edge_attributes, pos1)) {//if node not currently selected and exists in node attributes file and color is assigned
           color = edge_attributes.Color[pos1]; //edge is intra-layer
         } else if (checkIfAttributeColorExist(edge_attributes, pos2)){ 
           color = edge_attributes.Color[pos2];
         }
       }
- 
+      console.log(color);
   		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[i]}  );
   		else material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: layerEdgeOpacity}  );
-      let arrowHelper = createArrow(points, color,null, false);
-      let ver_line = new THREE.Line(geometry, material);
-
+      
+      ver_line = new THREE.Line(geometry, material);
       if (edge_channels[i]) {
-        let curve_group = new THREE.Group();
+        curve_group = new THREE.Group();
         curve_group = createChannels(points[0], points[1], channelCurvature, ver_line, i, false);
         layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(curve_group);
         edges[i] = curve_group;
@@ -97,8 +101,9 @@ const redrawEdges = () => {
         layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(ver_line);
         edges[i] = ver_line;
 
-        if (isDirectionEnabled) {
-          const group = new THREE.Group();
+        if (isDirectionEnabled) { // TODO test if works outside else block above
+          arrowHelper = createArrow(points, color, null, false);
+          group = new THREE.Group();
           group.add( ver_line);
           group.add( arrowHelper );
           layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(group);

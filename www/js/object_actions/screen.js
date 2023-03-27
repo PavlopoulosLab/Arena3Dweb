@@ -55,12 +55,12 @@ const animate = () => { // TODO optimize performance
   
   // draw inter-layer edges only when necessary for performance improvement
   if (scene.dragging || interLayerEdgesRenderPauseFlag) {
-    drawLayerEdges(false);
+    drawInterLayerEdges(false);
   } else if (edgeWidthByWeight || interLayerEdgeOpacity > 0) {
-    drawLayerEdges(true);
+    drawInterLayerEdges(true);
     draw_inter_edges_flag = true;
   } else if (draw_inter_edges_flag)
-    drawLayerEdges(false);
+    drawInterLayerEdges(false);
 
 	renderer.render(scene.THREE_Object, camera);
 }
@@ -116,7 +116,6 @@ const renderNodeLabels = () => { // TODO add/check flag conditions
       labelX = "",
       labelY = "";
   for (let i = 0; i < nodeLabelFlags.length; i++){
-    let node_layer = layerGroups[nodeGroups[nodeLayerNames[i]]];
     if (nodeLabelFlags[i]){ // ONLY CHECK THIS 
       nodeX = nodes[i].getWorldPosition(new THREE.Vector3()).x,
       nodeY = nodes[i].getWorldPosition(new THREE.Vector3()).y;
@@ -134,19 +133,19 @@ const renderNodeLabels = () => { // TODO add/check flag conditions
 } 
 
 // runs constantly on animate
-const drawLayerEdges = (flag) => {
+const drawInterLayerEdges = (showFlag = false) => {
   let i;
-  if (!flag && (scene.dragging || interLayerEdgesRenderPauseFlag)){
-    for (let i = 0; i < layer_edges_pairs.length; i++){
+  if (!showFlag && (scene.dragging || interLayerEdgesRenderPauseFlag)){
+    for (i = 0; i < layer_edges_pairs.length; i++){
       scene.remove(layerEdges[i]);
     }
-  } else if (!flag && !(edgeWidthByWeight && interLayerEdgeOpacity > 0)){ //this optimizes execution for many connections by making them disappear
-    for (let i = 0; i < layer_edges_pairs.length; i++){
+  } else if (!showFlag && !(edgeWidthByWeight && interLayerEdgeOpacity > 0)){ //this optimizes execution for many connections by making them disappear
+    for (i = 0; i < layer_edges_pairs.length; i++){
       scene.remove(layerEdges[i]);
     }
     draw_inter_edges_flag = false;
   } else {
-    let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1;
+    let index1 = 0, index2 = 0, color = "";
     let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
     for (i = 0; i < layer_edges_pairs.length; i++){
       scene.remove(layerEdges[i]);
@@ -166,19 +165,18 @@ const drawLayerEdges = (flag) => {
         points.push( nodes[index1].getWorldPosition(new THREE.Vector3()), nodes[index2].getWorldPosition(new THREE.Vector3()) );
     		let geometry = new THREE.BufferGeometry().setFromPoints( points );
         let material = "";
+
         // set color to selectedDefault if the edge is selected
-    		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag) color = selectedDefaultColor;
-        else if (edge_attributes !== "" && edgeAttributesPriority) {
-    		  pos = edges.indexOf(layer_edges_pairs[i]);
-    		  pos1 = edge_attributes.SourceNode.indexOf(edgePairs[pos]);
-    		  pos2 = edge_attributes.TargetNode.indexOf(edgePairs[pos]);
-          if (checkIfAttributeColorExist(edge_attributes, pos1)) color = edge_attributes.Color[pos1];
-          else if (checkIfAttributeColorExist(edge_attributes, pos2)) color = edge_attributes.Color[pos2];
-    		}
-        if (edgeWidthByWeight) material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[layer_edges_pairs[i]] });
-        else {
+    		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag)
+          color = selectedDefaultColor;
+        else if (edge_attributes !== "" && edgeAttributesPriority) 
+          color = edge_attributes.Color[layer_edges_pairs[i]];
+    		  
+        if (edgeWidthByWeight)
+          material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[layer_edges_pairs[i]] });
+        else
           material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: interLayerEdgeOpacity });
-        }
+        
         let arrowHelper = createArrow(points, color,null, true);
         let ver_line = new THREE.Line(geometry, material);
 

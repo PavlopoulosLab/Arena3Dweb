@@ -55,7 +55,6 @@ const assignYZ = (nodeCoords) => {
   }
 
   for (i = 0; i < nodeCoords.name.length; i++) {
-
     node_name = nodeCoords.name[i];
     if (nodes[nodeLayerNames.indexOf(node_name)]) {
       if (y_max - y_min != 0)
