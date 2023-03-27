@@ -3,7 +3,7 @@ const assignYZ = (nodeCoords) => {
       z_arr = [],
       node_name = "",
       y_coord = z_coord = 0,
-    layerIndex = "";
+      layerIndex = "";
 
   for (let i = 0; i < nodeCoords.name.length; i++){
     y_arr.push(Number(nodeCoords.y[i]));
@@ -29,26 +29,26 @@ const assignYZ = (nodeCoords) => {
   target_y_min = target_z_min = -minWidth / 2;
   target_y_max = target_z_max = minWidth / 2;
 
-  if (localLayoutFlag) { //if local layout, change target mins and maxes and then unset flag
+  if (localLayoutFlag) { // if local layout, change target mins and maxes and then unset flag
     layerIndex = layerGroups[nodeGroups[nodeCoords.name[0]]];
-    target_y_min = target_y_max = nodes[nodeLayerNames.indexOf(nodeCoords.name[0].trim())].position.y / layers[layerIndex].getScale();
-    target_z_min = target_z_max = nodes[nodeLayerNames.indexOf(nodeCoords.name[0].trim())].position.z / layers[layerIndex].getScale();
-    for (i = 1; i < nodeCoords.name.length; i++) {
-      node_name = nodeCoords.name[i].trim();
+    target_y_min = target_y_max =
+      nodes[nodeLayerNames.indexOf(nodeCoords.name[0])].position.y / layers[layerIndex].getScale();
+    target_z_min = target_z_max =
+      nodes[nodeLayerNames.indexOf(nodeCoords.name[0])].position.z / layers[layerIndex].getScale();
+
+    for (let i = 1; i < nodeCoords.name.length; i++) {
+      node_name = nodeCoords.name[i];
       if (nodes[nodeLayerNames.indexOf(node_name)]) {
         y_coord = nodes[nodeLayerNames.indexOf(node_name)].position.y / layers[layerIndex].getScale();
         z_coord = nodes[nodeLayerNames.indexOf(node_name)].position.z / layers[layerIndex].getScale();
-        if (y_coord < target_y_min) target_y_min = y_coord;
-        if (y_coord > target_y_max) target_y_max = y_coord;
-        if (z_coord < target_z_min) target_z_min = z_coord;
-        if (z_coord > target_z_max) target_z_max = z_coord;
-      }
-      if (target_y_min == target_y_max) { //form a square
-        target_y_min = target_y_min - Math.abs(target_z_min - target_z_max) / 2;
-        target_y_max = target_y_max + Math.abs(target_z_min - target_z_max) / 2;
-      } else if (target_z_min == target_z_max) {
-        target_z_min = target_z_min - Math.abs(target_y_min - target_y_max) / 2;
-        target_z_max = target_z_max + Math.abs(target_y_min - target_y_max) / 2;
+        if (y_coord < target_y_min)
+          target_y_min = y_coord;
+        if (y_coord > target_y_max)
+          target_y_max = y_coord;
+        if (z_coord < target_z_min)
+          target_z_min = z_coord;
+        if (z_coord > target_z_max)
+          target_z_max = z_coord;
       }
     }
     localLayoutFlag = false;
