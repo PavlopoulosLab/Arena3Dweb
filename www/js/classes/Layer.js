@@ -184,11 +184,10 @@ class Layer {
   getColor() {
     let color = LAYER_DEFAULT_COLOR;
     if (this.isSelected) {
-      if (layerColorPrioritySource == "default") {
+      if (layerColorPrioritySource == "default")
         color = this.importedColor;
-      } else if (layerColorPrioritySource == "picker") {
+      else if (layerColorPrioritySource == "picker")
         color = document.getElementById("floor_color").value;
-      }
     } else 
       color = this.color;
     return(color);

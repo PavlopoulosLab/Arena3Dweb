@@ -33,6 +33,7 @@ let nodeIntervalTimeout = "",
     selectedDefaultColor = "#A3FF00",
     showAllNodeLabelsFlag = false,
     showSelectedNodeLabelsFlag = true,
+    nodeColorPrioritySource = "default", // or "cluster"
     nodeGroups = new Map(),
     hovered_nodes = [], // if allowing more than one hovered nodes at a time
     last_hovered_node_index = "",

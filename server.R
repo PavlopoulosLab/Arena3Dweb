@@ -145,6 +145,10 @@ server <- function(input, output, session) {
   observeEvent(input$nodeSelector, {
     callJSHandler("handler_nodeSelector", input$nodeSelector)
   }, ignoreInit = T)
+
+  observeEvent(input$nodeColorPriorityRadio, {
+    callJSHandler("handler_nodeColorPriority", input$nodeColorPriorityRadio)
+  }, ignoreInit = T)
   
   observeEvent(input$nodeSelectedColorPriority, {
     callJSHandler("handler_nodeSelectedColorPriority", input$nodeSelectedColorPriority)

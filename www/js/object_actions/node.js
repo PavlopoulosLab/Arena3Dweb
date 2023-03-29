@@ -327,6 +327,17 @@ const unselectAllNodes = () => {
   decideNodeLabelFlags();
 };
 
+const nodeColorPriority = (colorPriority) => {
+  nodeColorPrioritySource = colorPriority;
+  decideNodeColors();
+  updateNodesRShiny();
+};
+
+const chooseClusteringColorPriority = (T) => {
+  let radioButtonDiv = document.getElementById("nodeColorPriorityRadio");
+  radioButtonDiv.children[1].children[1].click(); // choosing Clustering color priority
+};
+
 const decideNodeColors = () => { // TODO change based on new R Shiny input, importColor vs clusterColor
   for (let i = 0; i < nodeObjects.length; i++) {
     if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
@@ -336,9 +347,9 @@ const decideNodeColors = () => { // TODO change based on new R Shiny input, impo
           nodeObjects[i].setColor(node_attributes.Color[pos]);
       else
         nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length]);
-    } else if (nodeObjects[i].getCluster() != "") {
-      nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()]);
+    } else if (nodeObjects[i].getCluster() != "" && nodeColorPrioritySource == "cluster") {
+      nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()], clusterMode = true);
     } else
-      nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
+      nodeObjects[i].setColor(nodeObjects[i].getColor());
   }
 };

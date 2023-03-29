@@ -9,6 +9,7 @@ class Node {
         this.layer = layer;
         this.nodeLayerName = nodeLayerName;
         this.color = color;
+        this.importedColor = color;
         this.clusterColor = color;
         this.url = url;
         this.descr = descr;
@@ -80,7 +81,12 @@ class Node {
     }
 
     getColor() {
-        return(this.color);
+        let color = this.color;
+        if (nodeColorPrioritySource == "default")
+            color = this.importedColor;
+        else if (nodeColorPrioritySource == "cluster")
+            color = this.clusterColor;
+        return(color);
     }
 
     getScale() {
@@ -99,9 +105,11 @@ class Node {
         this.sphere.material.opacity = value;
     }
 
-    setColor(hexColor) {
+    setColor(hexColor, clusterMode = false) {
         this.sphere.material.color = new THREE.Color(hexColor);
         this.color = hexColor;
+        if (clusterMode)
+            this.clusterColor = hexColor;
     }
 
     setScale(value) {
