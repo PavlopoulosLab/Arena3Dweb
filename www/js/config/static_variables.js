@@ -28,7 +28,6 @@ let layerGroups = new Map(),
 
 // nodes
 let nodeIntervalTimeout = "",
-    nodeAttributesPriority = true,
     selectedNodeColorFlag = true,
     selectedDefaultColor = "#A3FF00",
     showAllNodeLabelsFlag = false,
@@ -41,8 +40,7 @@ let nodeIntervalTimeout = "",
     nodeNames = [],
     nodeLayerNames = [],
     nodeColorVector = [],
-    node_cluster_colors = [],
-    node_attributes = "";
+    node_cluster_colors = [];
 
 // edges
 let selectedEdgeColorFlag = true,

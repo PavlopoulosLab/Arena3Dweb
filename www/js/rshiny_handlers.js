@@ -58,7 +58,7 @@ Shiny.addCustomMessageHandler("handler_browseUrl", browseUrl);
 // Files ====================
 Shiny.addCustomMessageHandler("handler_uploadNetwork", uploadNetwork);
 Shiny.addCustomMessageHandler("handler_importNetwork", importNetwork);
-Shiny.addCustomMessageHandler("handler_nodeAttributes", nodeAttributes);
+Shiny.addCustomMessageHandler("handler_setNodeAttributes", setNodeAttributes);
 Shiny.addCustomMessageHandler("handler_edgeAttributes", edgeAttributes);
 // Scene ====================
 Shiny.addCustomMessageHandler("handler_toggleSceneCoords", toggleSceneCoords);

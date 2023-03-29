@@ -118,8 +118,9 @@ const clickUp = (event) => {
         for (let i = 0; i < nodeObjects.length; i++) {
           if (nodeObjects[i].getOpacity() == 0.5) {
             nodeObjects[i].setOpacity(1);
-            if (!exists(selectedNodePositions, i)){
+            if (!exists(selectedNodePositions, i)) {
               selectedNodePositions.push(i);
+              // nodeObjects[i].isSelected = true; // TODO replace the above
               if (selectedNodeColorFlag)
                 nodeObjects[i].setColor(selectedDefaultColor);
             }
@@ -194,24 +195,21 @@ const replaceContextMenuOverNode = (evt) => {
       option.value = i; //option 3
       option.text = "Select Downstream Path";
       optionsList.appendChild(option);
-      if (node_attributes !== ""){
-        pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
-        if (pos > -1){
-          if (node_attributes.Url !== undefined && node_attributes.Url[pos] !== "" && node_attributes.Url[pos] != " " && node_attributes.Url[pos] != null){
-            option = document.createElement("option");
-            option.value = node_attributes.Url[pos];
-            option.text = "Link"; //option 3
-            optionsList.appendChild(option);
-          }
-          if (node_attributes.Description !== undefined && node_attributes.Description[pos] !== "" && node_attributes.Description[pos] != " " && node_attributes.Description[pos] != null){
-            option = document.createElement("option");
-            option.value = node_attributes.Description[pos];
-            //option.name = i;
-            option.text = "Description"; //option 4
-            optionsList.appendChild(option);
-          }
-        }
+
+      if (nodeObjects[i].url != "") { // TODO check if working properly
+        option = document.createElement("option");
+        option.value = nodeObjects[i].url;
+        option.text = "Link"; //option 3
+        optionsList.appendChild(option);
       }
+
+      if (nodeObjects[i].descr != "") {
+        option = document.createElement("option");
+        option.value = nodeObjects[i].descr;
+        option.text = "Description"; //option 4
+        optionsList.appendChild(option);
+      }
+
       document.getElementById("labelDiv").appendChild(optionsList);
       break;
     }

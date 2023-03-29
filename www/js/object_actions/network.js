@@ -44,7 +44,6 @@ const resetValues = () => {
   selectedNodePositions = [];
   nodeColorVector = COLOR_VECTOR_DARK.concat(COLOR_VECTOR_271);
   node_cluster_colors = [];
-  node_attributes = "";
 
   // edges
   edges = []; //canvas objects
@@ -277,15 +276,7 @@ const initializeEdgesFromJSON = (jsonEdges) => {
 
 const initializeNodesFromJSON = (jsonNodes, jsonScrambleFlag) => {
   let nodeLayerName = "",
-    nodeColor, sphere;
-
-  node_attributes = {
-    "Node": [],
-    "Size": [],
-    "Color": [],
-    "Url": [],
-    "Description": [],
-  };
+    nodeColor;
   
   for (let i = 0; i < jsonNodes.name.length; i++) {
     nodeNames.push(jsonNodes.name[i]);
@@ -293,13 +284,6 @@ const initializeNodesFromJSON = (jsonNodes, jsonScrambleFlag) => {
     nodeLayerName = jsonNodes.name[i].concat("_").concat(currentLayer);
     nodeLayerNames.push(nodeLayerName); //name + group
     nodeGroups[nodeLayerName] = jsonNodes.layer[i];
-
-    // TODO remove these
-    node_attributes.Node.push(nodeLayerName);
-    node_attributes.Size.push(Number(jsonNodes.scale[i]));
-    node_attributes.Color.push(jsonNodes.color[i]);
-    node_attributes.Url.push(jsonNodes.url[i]);
-    node_attributes.Description.push(jsonNodes.descr[i]);
     
     nodeColor = jsonNodes.color[i];
     nodeObjects.push(new Node({id: i, name: nodeNames[i],

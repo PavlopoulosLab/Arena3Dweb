@@ -62,16 +62,10 @@ const checkNodeInteraction = (event) => {
   if (intersects.length > 0) {
     node_selection = true;
     let ind = findIndexByUuid(node_spheres, intersects[0].object.uuid);
-    if (exists(selectedNodePositions, ind)){
-      if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
-        pos = node_attributes.Node.indexOf(nodeLayerNames[ind]);
-        if (pos > -1 && node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
-          nodeObjects[ind].setColor(node_attributes.Color[pos]);
-        else
-        nodeObjects[ind].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[ind]]])%nodeColorVector.length]);
-      } else
-        nodeObjects[ind].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[ind]]])%nodeColorVector.length]);
-      selectedNodePositions = selectedNodePositions.filter(function(value, index, arr){ return value != ind;}); //array remove/filter
+    if (exists(selectedNodePositions, ind)) {
+      selectedNodePositions = selectedNodePositions.filter(function(value, index, arr){ return value != ind;}); // array remove/filter
+      if (selectedNodeColorFlag)
+        nodeObjects[ind].setColor(nodeObjects[ind].getColor());
     } else {
       selectedNodePositions.push(ind);
       if (selectedNodeColorFlag)
@@ -147,69 +141,55 @@ const decideNodeLabelFlags = () => {
   return true;
 }      
 
-const nodeAttributes = (message) => {
-  node_attributes = message;
+const setNodeAttributes = (nodeAttributes) => {
   let pos;
-  for (let i = 0; i < nodeObjects.length; i++){
-    pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
-    if (pos > -1){ //if node exists in attributes file
-      if (nodeAttributesPriority){
-        if (!exists(selectedNodePositions, i) && checkIfAttributeColorExist(node_attributes, pos)) //if node not currently selected and color is assigned
-          nodeObjects[i].setColor(node_attributes.Color[pos]);
-      }
-      if (node_attributes.Size !== undefined && node_attributes.Size[pos] !== "" && node_attributes.Size[pos] != " " && node_attributes.Size[pos] !== null)
-        nodeObjects[i].setScale(Number(node_attributes.Size[pos]));
+  for (let i = 0; i < nodeObjects.length; i++) { // TODO change nodeAttributes to dataframe and iterate that length
+    pos = nodeAttributes.Node.indexOf(nodeLayerNames[i]);
+    if (pos > -1) { // if node exists in attributes file
+      if (nodeAttributes.Color !== undefined && nodeAttributes.Color[pos] !== null && nodeAttributes.Color[pos].trim() !== "")
+        nodeObjects[i].setColor(nodeAttributes.Color[pos]);
+      if (nodeAttributes.Size !== undefined && nodeAttributes.Size[pos] !== null && nodeAttributes.Size[pos].trim() !== "")
+        nodeObjects[i].setScale(Number(nodeAttributes.Size[pos]));
+      if (nodeAttributes.Url !== undefined && nodeAttributes.Url[pos] !== null && nodeAttributes.Url[pos].trim() !== "")
+        nodeObjects[i].url = nodeAttributes.Url[pos];
+      if (nodeAttributes.Description !== undefined && nodeAttributes.Description[pos] !== null && nodeAttributes.Description[pos].trim() !== "")
+        nodeObjects[i].descr = nodeAttributes.Description[pos];
     }
   }
   updateNodesRShiny();
 }
 
-const nodeSelector = (message) => {
-  //message -> T | F
-  if (message){
-    selectedNodePositions = []; //reseting, else multiple entries -> double transformations
+const nodeSelector = (message) => { // T | F
+  if (message) {
+    selectedNodePositions = []; // reseting, else multiple entries -> double transformations
     for (let i=0; i < nodeObjects.length; i++){
       selectedNodePositions.push(i);
       if (selectedNodeColorFlag)
         nodeObjects[i].setColor(selectedDefaultColor);
     }
     updateSelectedNodesRShiny();
-  }
-  else{
+  } else {
     selectedNodePositions = [];
     updateSelectedNodesRShiny();
-    for (i=0; i < nodeObjects.length; i++){
-      if (node_attributes !== ""){
-        pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
-        if(checkIfAttributeColorExist(node_attributes, pos)) //if node exists in node attributes file
-          nodeObjects[i].setColor(node_attributes.Color[pos]);
-        else
-          nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length]);
-      } else if (nodeObjects[i].getCluster() != "")
+    for (i=0; i < nodeObjects.length; i++) {
+      // TODO replace with decideNodeColors()
+      if (nodeObjects[i].getCluster() != "")
         nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()]);
       else
-      nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
+        nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
     }
   }
   decideNodeLabelFlags();
-  return true;
 }
 
 const nodeSelectedColorPriority = (message) => {
   selectedNodeColorFlag = message;
-  for (let i=0; i<selectedNodePositions.length; i++){
+  for (let i = 0; i < selectedNodePositions.length; i++){
     if (selectedNodeColorFlag)
       nodeObjects[selectedNodePositions[i]].setColor(selectedDefaultColor);
-    else if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
-      pos = node_attributes.Node.indexOf(nodeLayerNames[selectedNodePositions[i]]);
-      if(checkIfAttributeColorExist(node_attributes, pos))//if node exists in node attributes file
-        nodeObjects[selectedNodePositions[i]].setColor(node_attributes.Color[pos]);
-      else
-        nodeObjects[selectedNodePositions[i]].setColor(nodeColorVector[(
-          layerGroups[nodeGroups[nodeLayerNames[selectedNodePositions[i]]]]) % nodeColorVector.length]);
-    } else
-    nodeObjects[selectedNodePositions[i]].setColor(nodeColorVector[(
-      layerGroups[nodeGroups[nodeLayerNames[selectedNodePositions[i]]]]) % nodeColorVector.length]);
+    else
+      nodeObjects[selectedNodePositions[i]].setColor(nodeColorVector[(
+        layerGroups[nodeGroups[nodeLayerNames[selectedNodePositions[i]]]]) % nodeColorVector.length]);
   }
 }
 
@@ -338,18 +318,11 @@ const chooseClusteringColorPriority = (T) => {
   radioButtonDiv.children[1].children[1].click(); // choosing Clustering color priority
 };
 
-const decideNodeColors = () => { // TODO change based on new R Shiny input, importColor vs clusterColor
+const decideNodeColors = () => { // TODO add isSelected condition, rename to repaintNodes
   for (let i = 0; i < nodeObjects.length; i++) {
-    if (node_attributes !== "" && nodeAttributesPriority){ //check if color is overidden by user
-      let pos = node_attributes.Node.indexOf(nodeObjects[i].getNodeLayerName());
-      if (pos > -1 && node_attributes.Color !== undefined &&
-        node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " ") //if node exists in node attributes file
-          nodeObjects[i].setColor(node_attributes.Color[pos]);
-      else
-        nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length]);
-    } else if (nodeObjects[i].getCluster() != "" && nodeColorPrioritySource == "cluster") {
+    if (nodeObjects[i].getCluster() != "" && nodeColorPrioritySource == "cluster")
       nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()], clusterMode = true);
-    } else
+    else
       nodeObjects[i].setColor(nodeObjects[i].getColor());
   }
 };

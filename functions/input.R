@@ -526,7 +526,7 @@ handleInputNodeAttributeFileUpload <- function() {
     if (!identical(nodeAttributes$Url, NULL)) nodeAttributes$Url <- trimws(nodeAttributes$Url)
     if (!identical(nodeAttributes$Description, NULL)) nodeAttributes$Description <- trimws(nodeAttributes$Description)
     if (!is.null(nodeFile)){
-      callJSHandler("handler_nodeAttributes", nodeAttributes)
+      callJSHandler("handler_setNodeAttributes", nodeAttributes)
       updateSelectInput(session, "navBar", selected = "Main View")
     }
   }, error = function(e) {

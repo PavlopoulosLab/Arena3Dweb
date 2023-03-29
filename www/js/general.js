@@ -55,7 +55,7 @@ const getRandomArbitrary = (min, max) => {
   return Math.random() * (max - min) + min;
 }
 
-const checkIfAttributeColorExist = (attributes, pos) => {
+const checkIfAttributeColorExist = (attributes, pos) => { // TODO remove after edge_attributes removed
   return pos > -1 && attributes.Color !== undefined && attributes.Color[pos] !== "" && attributes.Color[pos] != " " && attributes.Color[pos] != null;
 }
 
