@@ -4,7 +4,7 @@ const sceneZoom = (event) => {
     scene.zoom(event.deltaY);
     updateScenePanRShiny();
     updateVRLayerLabelsRShiny();
-    updateNodesRShiny(); // TODO only for VR
+    updateVRNodesRShiny();
   }
 };
 
@@ -22,7 +22,7 @@ const keyPressed = (event) => {
       scene.translatePanWithArrow(code);
       updateScenePanRShiny();
       updateVRLayerLabelsRShiny();
-      updateNodesRShiny(); // TODO only for VR
+      updateVRNodesRShiny();
     }
   }
 };
@@ -94,7 +94,7 @@ const sceneDragPan = (x, y) => {
   scene.translatePanWithMouse(x, y);
   updateScenePanRShiny();
   updateVRLayerLabelsRShiny();
-  updateNodesRShiny(); // TODO only for VR
+  updateVRNodesRShiny();
 };
 
 // middle-click drag on scene
@@ -102,7 +102,7 @@ const sceneOrbit = (x, y) => {
   scene.orbitSphereWithMouse(x, y);    
   updateSceneSphereRShiny();
   updateVRLayerLabelsRShiny();
-  updateNodesRShiny(); // TODO only for VR
+  updateVRNodesRShiny();
 };
 
 const clickUp = (event) => {

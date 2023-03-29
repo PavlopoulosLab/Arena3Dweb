@@ -580,7 +580,7 @@ convertSessionToJSON <- function() {
   
   # Nodes
   nodes_df <- data.frame()
-  for (i in 1:nrow(js_nodes)){
+  for (i in 1:nrow(js_nodes)) {
     nodes_df <- rbind(nodes_df, c(js_nodes[i, 1], js_nodes[i, 2], js_nodes[i, 3], js_nodes[i, 4],
                                   js_nodes[i, 5], js_nodes[i, 6], js_nodes[i, 7],
                                   trimws(js_nodes[i, 8]), trimws(js_nodes[i, 9])))

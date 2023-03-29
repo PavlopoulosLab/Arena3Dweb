@@ -85,6 +85,7 @@ const assignYZ = (nodeCoords) => {
   }
   
   updateNodesRShiny();
+  updateVRNodesRShiny();
   redrawEdges();
 }
 
@@ -128,13 +129,13 @@ const applyPredefinedLayout = (message) => {
           initialSpreadLayers(1);
           updateLayersRShiny();
           updateVRLayerLabelsRShiny();
-          updateNodesRShiny(); // VR node world positions update
+          updateVRNodesRShiny();
           break;
         case "parallel":
           initialSpreadLayers(1);
           updateLayersRShiny();
           updateVRLayerLabelsRShiny();
-          updateNodesRShiny(); // VR node world positions update
+          updateVRNodesRShiny();
           break;
         case "cube":
           let cube_size = 6;
@@ -173,7 +174,7 @@ const applyPredefinedLayout = (message) => {
           }
           updateLayersRShiny();
           updateVRLayerLabelsRShiny();
-          updateNodesRShiny(); // for VR global posistions
+          updateVRNodesRShiny();
           break;
         case "starLike":
           degree =  360 / numLayers ;
@@ -183,7 +184,7 @@ const applyPredefinedLayout = (message) => {
           }
           updateLayersRShiny();
           updateVRLayerLabelsRShiny();
-          updateNodesRShiny(); // for VR global posistions
+          updateVRNodesRShiny();
           break;
         default:
           break;

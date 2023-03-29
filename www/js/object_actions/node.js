@@ -109,15 +109,16 @@ const translateNodes = (e) => {
   if (e.screenX - e.screenY >=  mousePreviousX - mousePreviousY) step = 20;
   else step =-20;
   
-  if (scene.axisPressed=="z"){
+  if (scene.axisPressed=="z") {
     for (i = 0; i < selectedNodePositions.length; i++)
       nodeObjects[selectedNodePositions[i]].translateZ(step);
-  } else if (scene.axisPressed=="c"){
+  } else if (scene.axisPressed=="c") {
     for (i = 0; i < selectedNodePositions.length; i++)
       nodeObjects[selectedNodePositions[i]].translateY(step);
   }
   redrawEdges();
   updateNodesRShiny();
+  updateVRNodesRShiny();
 }
 
 // logic behind node label show/hide
@@ -157,6 +158,7 @@ const setNodeAttributes = (nodeAttributes) => {
     }
   }
   updateNodesRShiny();
+  updateVRNodesRShiny();
 }
 
 const nodeSelector = (message) => { // T | F
@@ -204,6 +206,7 @@ const spreadNodes = () => {
         nodeObjects[selectedNodePositions[i]].getPosition("z") * 1.1);
     }
     updateNodesRShiny();
+    updateVRNodesRShiny();
     redrawEdges();
   }
 }
@@ -218,6 +221,7 @@ const congregateNodes = () => {
         nodeObjects[selectedNodePositions[i]].getPosition("z") * 0.9);
     }
     updateNodesRShiny();
+    updateVRNodesRShiny();
     redrawEdges();
   }
 }
@@ -239,6 +243,7 @@ const moveNodes = (direction, axis) => {
       }
       redrawEdges();
       updateNodesRShiny();
+      updateVRNodesRShiny();
     }, 70);
   }
 }
@@ -312,6 +317,7 @@ const nodeColorPriority = (colorPriority) => {
   nodeColorPrioritySource = colorPriority;
   decideNodeColors();
   updateNodesRShiny();
+  updateVRNodesRShiny();
 };
 
 const chooseClusteringColorPriority = (T) => {

@@ -138,7 +138,7 @@ const rotateLayersWithHeldKey = (event) => {
   }
 
   updateLayersRShiny();
-  updateNodesRShiny(); // VR node world positions update
+  updateVRNodesRShiny();
 };
 
 const getSelectedLayers = () => {
@@ -211,7 +211,7 @@ const rotateSelectedLayers = (direction, axis) => {
           layers[selected_layers[i]].rotateZ(value);
       }
       updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
+      updateVRNodesRShiny();
     }, 70);
   } else
     alert("Please select at least one layer.");
@@ -222,7 +222,7 @@ const spreadLayers = (direction) => {
 
   updateLayersRShiny();
   updateVRLayerLabelsRShiny();
-  updateNodesRShiny(); // VR node world positions update
+  updateVRNodesRShiny();
 };
 
 const moveLayers = (direction, axis) => {
@@ -241,7 +241,7 @@ const moveLayers = (direction, axis) => {
       }
       updateLayersRShiny();
       updateVRLayerLabelsRShiny();
-      updateNodesRShiny(); // VR node world positions update
+      updateVRNodesRShiny();
     }, 70);
   } else
     alert("Please select at least one layer.");
@@ -271,6 +271,7 @@ const scaleLayers = () => {
     redrawEdges();
     updateLayersRShiny();
     updateNodesRShiny();
+    updateVRNodesRShiny();
   } else
     alert("Please select at least one layer.");
 };

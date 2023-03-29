@@ -182,6 +182,7 @@ const executePostNetworkSetup = () => {
   updateVRLayerLabelsRShiny();
   updateLayerNamesRShiny();
   updateNodesRShiny();
+  updateVRNodesRShiny();
   updateNodeNamesRShiny();
   updateSelectedNodesRShiny();
   updateEdgesRShiny();

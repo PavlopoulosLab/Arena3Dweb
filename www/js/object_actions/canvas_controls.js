@@ -468,7 +468,7 @@ const recenterNetwork = () => {
     scene.recenter();
     updateScenePanRShiny();
     updateVRLayerLabelsRShiny();
-    updateNodesRShiny(); // TODO only VR
+    updateVRNodesRShiny();
   }
 }
 
