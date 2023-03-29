@@ -79,7 +79,6 @@ const assignYZ = (nodeCoords) => {
       node_name = nodeCoords.name[i].trim();
       if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
         nodeObjects[nodeLayerNames.indexOf(node_name)].setColor(nodeColorVector[nodeCoords.group[i]]);
-        node_cluster_colors[nodeLayerNames.indexOf(node_name)] = nodeColorVector[nodeCoords.group[i]];
         nodeObjects[nodeLayerNames.indexOf(node_name)].setCluster(nodeCoords.group[i]);
       }
     }

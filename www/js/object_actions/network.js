@@ -43,7 +43,6 @@ const resetValues = () => {
   last_hovered_node_index = "";
   selectedNodePositions = [];
   nodeColorVector = COLOR_VECTOR_DARK.concat(COLOR_VECTOR_271);
-  node_cluster_colors = [];
 
   // edges
   edges = []; //canvas objects
