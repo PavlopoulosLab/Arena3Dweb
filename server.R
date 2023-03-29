@@ -134,16 +134,12 @@ server <- function(input, output, session) {
   }, ignoreInit = T)
   
   # NODES ####
-  observeEvent(input$showAllNodeLabels, {
-    callJSHandler("handler_showNodeLabels", input$showAllNodeLabels)
+  observeEvent(input$showNodeLabelsRadio, {
+    callJSHandler("handler_showNodeLabels", input$showNodeLabelsRadio)
   }, ignoreInit = T)
   
-  observeEvent(input$showSelectedNodeLabels, {
-    callJSHandler("handler_showSelectedNodeLabels", input$showSelectedNodeLabels)
-  }, ignoreInit = T)
-  
-  observeEvent(input$resizeLabels, {
-    callJSHandler("handler_resizeLabels", input$resizeLabels)
+  observeEvent(input$resizeNodeLabels, {
+    callJSHandler("handler_resizeNodeLabels", input$resizeNodeLabels)
   }, ignoreInit = T)
   
   observeEvent(input$nodeSelector, {

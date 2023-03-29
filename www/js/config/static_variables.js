@@ -27,12 +27,12 @@ let layerGroups = new Map(),
     layerColorPrioritySource = "default"; // or "picker"
 
 // nodes
-let showAllNodeLabelsFlag = false,
-    showSelectedNodeLabelsFlag = true,
-    nodeIntervalTimeout = "",
+let nodeIntervalTimeout = "",
     nodeAttributesPriority = true,
     selectedNodeColorFlag = true,
     selectedDefaultColor = "#A3FF00",
+    showAllNodeLabelsFlag = false,
+    showSelectedNodeLabelsFlag = true,
     nodeGroups = new Map(),
     hovered_nodes = [], // if allowing more than one hovered nodes at a time
     last_hovered_node_index = "",

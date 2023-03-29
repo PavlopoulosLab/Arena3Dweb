@@ -77,17 +77,21 @@ const resizeLayerLabels = (size) => { // [1, 20]
     layer_label_divs[i].style.fontSize = size.toString().concat("px");
 };
 
-const showAllNodeLabels = (flag) => { // true or false
-  showAllNodeLabelsFlag = flag;
+const showNodeLabels = (mode) => {
+  if (mode == "all") {
+    showAllNodeLabelsFlag = true;
+    showSelectedNodeLabelsFlag = false;
+  } else if (mode == "selected") {
+    showAllNodeLabelsFlag = false;
+    showSelectedNodeLabelsFlag = true;
+  } else if (mode == "none") {
+    showAllNodeLabelsFlag = false;
+    showSelectedNodeLabelsFlag = false;
+  }
   decideNodeLabelFlags();
-}
+};
 
-const showSelectedNodeLabels = (flag) => { // true or false
-  showSelectedNodeLabelsFlag = flag;
-  decideNodeLabelFlags();
-}
-
-const resizeLabels = (message) => {
+const resizeNodeLabels = (message) => {
   let size = message; //message = [1, 20]
   for (let i = 0; i < nodeObjects.length; i++)
     node_labels[i].style.fontSize = size.toString().concat("px");
