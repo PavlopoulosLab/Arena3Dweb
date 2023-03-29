@@ -1,5 +1,6 @@
 const createLabels = () => {
   //nodes
+  let nodeNames = nodeObjects.map(({ name }) => name);
   for (let i = 0; i < nodeObjects.length; i++){
     let div = document.createElement('div');
     div.textContent = nodeNames[i];

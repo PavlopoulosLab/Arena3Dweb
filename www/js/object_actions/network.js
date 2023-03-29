@@ -277,16 +277,16 @@ const initializeEdgesFromJSON = (jsonEdges) => {
 const initializeNodesFromJSON = (jsonNodes, jsonScrambleFlag) => {
   let nodeLayerName = "",
     nodeColor;
-  
+  nodeNames = undefined; // releasing ram
+
   for (let i = 0; i < jsonNodes.name.length; i++) {
-    nodeNames.push(jsonNodes.name[i]);
     currentLayer = jsonNodes.layer[i];
     nodeLayerName = jsonNodes.name[i].concat("_").concat(currentLayer);
     nodeLayerNames.push(nodeLayerName); //name + group
     nodeGroups[nodeLayerName] = jsonNodes.layer[i];
     
     nodeColor = jsonNodes.color[i];
-    nodeObjects.push(new Node({id: i, name: nodeNames[i],
+    nodeObjects.push(new Node({id: i, name: jsonNodes.name[i],
       layer: nodeGroups[nodeLayerNames[i]], nodeLayerName: nodeLayerNames[i],
       position_x: Number(jsonNodes.position_x[i]),
       position_y: Number(jsonNodes.position_y[i]),

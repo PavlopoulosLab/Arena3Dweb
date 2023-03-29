@@ -7,6 +7,7 @@ const createNodeObjects = () => {
       nodeLayerName: nodeLayerNames[i], color: nodeColor}));
     layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].addNode(nodeObjects[i].sphere);
   }
+  nodeNames = undefined;
 };
 
 const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax, // TODO remove parameters
@@ -124,7 +125,7 @@ const translateNodes = (e) => {
 const decideNodeLabelFlags = () => {
   let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
       node_layer = "";
-  for (let i = 0; i < nodeNames.length; i++) {
+  for (let i = 0; i < nodeObjects.length; i++) {
     node_layer = layerGroups[nodeGroups[nodeLayerNames[i]]];
     if (hidelayerCheckboxes[node_layer].checked){ //1. if node's layer not hidden 
       nodeLabelFlags[i] = false;
@@ -265,12 +266,13 @@ const selectSearchedNodes = (event) => {
       event.preventDefault(); //bypassing newline enter
       startLoader(true);
       let searchString = document.getElementById("searchBar").value.replace(/\n/g, ""),
-          tempIndexes, i, j;
+          tempIndexes, i, j,
+          nodeNames = nodeObjects.map(({ name }) => name);
       searchString = searchString.split(",");
-      for (i=0; i<searchString.length; i++){
+      for (i = 0; i < searchString.length; i++) {
         tempIndexes = getCaseInsensitiveIndices(nodeNames, searchString[i].trim()) //case insensitive function
         if (tempIndexes.length > 0){
-          for (j=0; j < tempIndexes.length; j++){
+          for (j = 0; j < tempIndexes.length; j++) {
             if (!exists(selectedNodePositions, tempIndexes[j])) {
               selectedNodePositions.push(tempIndexes[j]);
               if (selectedNodeColorFlag)
