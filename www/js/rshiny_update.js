@@ -72,6 +72,19 @@ const updateNodesRShiny = () => {
     ]);
   }
 
+  js_nodes = js_nodes.map(node => {
+    return {
+      name: node[0],
+      layer: node[1],
+      position_x: node[2],
+      position_y: node[3],
+      position_z: node[4],
+      scale: node[5],
+      color: node[6],
+      url: node[7],
+      descr: node[8],
+    }
+  });
   Shiny.setInputValue("js_nodes", JSON.stringify(js_nodes));
 }
 
@@ -84,10 +97,20 @@ const updateVRNodesRShiny = () => {
       nodeObjects[i].getWorldPosition("x"),
       nodeObjects[i].getWorldPosition("y"),
       nodeObjects[i].getWorldPosition("z"),
-      nodeObjects[i].getScale(), nodeObjects[i].getColor() // TODO remove scale
+      nodeObjects[i].getColor()
     ]);
   }
-
+  
+  js_nodes_world = js_nodes_world.map(node => {
+    return {
+      name: node[0],
+      layer: node[1],
+      worldPosition_x: node[2],
+      worldPosition_y: node[3],
+      worldPosition_z: node[4],
+      color: node[5]
+    }
+  });
   Shiny.setInputValue("js_nodes_world", JSON.stringify(js_nodes_world));
 }
 

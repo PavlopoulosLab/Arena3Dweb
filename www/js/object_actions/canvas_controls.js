@@ -463,14 +463,18 @@ const sliderSceneRotate = () => {
   td.innerHTML = "Angle: ".concat(cavnasSlider.value).concat("&#730;");
 }
 
-const recenterNetwork = () => {
+const recenterNetwork = async () => {
   if (scene.exists()) {
     scene.recenter();
+    await delay_ms(100);
     updateScenePanRShiny();
     updateVRLayerLabelsRShiny();
     updateVRNodesRShiny();
   }
 }
+
+// needed to correctly recenter network for VR
+const delay_ms = ms => new Promise(res => setTimeout(res, ms));
 
 const sliderLayerRotate = () => {
   let cavnasSlider = document.getElementsByClassName("canvasSlider")[1],

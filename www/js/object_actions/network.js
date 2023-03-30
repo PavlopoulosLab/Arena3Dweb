@@ -76,8 +76,8 @@ const resetValues = () => {
 const initializeScene = () => {
   scene.tiltDefault();
   scene.setScale(0.9);
-  applyTheme('#000000', '#777777', '#ffffff', '#ffffff',
-    COLOR_VECTOR_DARK, CHANNEL_COLORS_LIGHT);
+  applyTheme('#000000', '#777777', COLOR_VECTOR_DARK, '#ffffff',
+     CHANNEL_COLORS_LIGHT, '#ffffff', fromInit = true);
 };
 
 const initializeLayers = (network) => {
