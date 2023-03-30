@@ -569,7 +569,7 @@ convertSessionToJSON <- function() {
   js_scene_pan <- fromJSON(input$js_scene_pan)
   js_scene_sphere <- fromJSON(input$js_scene_sphere)
   js_layers <- fromJSON(input$js_layers)
-  js_nodes <- as.data.frame(fromJSON(input$js_nodes))
+  js_nodes <- fromJSON(input$js_nodes)
   js_edge_pairs <- as.data.frame(fromJSON(input$js_edge_pairs))
   js_label_color <- input$js_label_color
   
@@ -577,15 +577,6 @@ convertSessionToJSON <- function() {
   edgeByWeight_flag <- input$edgeWidthByWeight
   
   scene <- c(js_scene_pan, js_scene_sphere)
-  
-  # Nodes
-  nodes_df <- data.frame()
-  for (i in 1:nrow(js_nodes)) {
-    nodes_df <- rbind(nodes_df, c(js_nodes[i, 1], js_nodes[i, 2], js_nodes[i, 3], js_nodes[i, 4],
-                                  js_nodes[i, 5], js_nodes[i, 6], js_nodes[i, 7],
-                                  trimws(js_nodes[i, 8]), trimws(js_nodes[i, 9])))
-  }
-  colnames(nodes_df) <- c("name", "layer", "position_x", "position_y", "position_z", "scale", "color", "url", "descr")
   
   # Edges
   edges_df <- data.frame()
@@ -598,9 +589,8 @@ convertSessionToJSON <- function() {
   colnames(edges_df) <- c("src", "trg", "opacity", "color", "channel")
   
   exportData <- list(
-    scene = scene,
-    layers = js_layers, nodes = nodes_df, edges = edges_df,
-    universalLabelColor = js_label_color,
+    scene = scene, layers = js_layers, nodes = js_nodes,
+    edges = edges_df, universalLabelColor = js_label_color,
     direction = direction_flag, edgeOpacityByWeight = edgeByWeight_flag
   )
   exportData <- toJSON(exportData, auto_unbox = T)
