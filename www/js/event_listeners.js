@@ -83,10 +83,9 @@ const clickDrag = (event) => {
       mousePreviousY = y;
     } 
     
-    if (!scene.leftClickPressed && !scene.middleClickPressed) {
-      node_hover_flag = checkHoverOverNode(event);
-      checkHoverOverLayer(event, node_hover_flag);
-    }
+    if (!scene.leftClickPressed && !scene.middleClickPressed)
+      if (!checkHoverOverNode(event))
+        checkHoverOverLayer(event);
   }
 };
 

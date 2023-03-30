@@ -86,11 +86,11 @@ const initialSpreadLayers = (direction = 1) => {
 };
 
 // Event Listeners =====
-const checkHoverOverLayer = (event, node_hover_flag) => {
+const checkHoverOverLayer = (event) => {
   setRaycaster(event);
   let layer_planes = layers.map(({ plane }) => plane);
   let intersects = RAYCASTER.intersectObjects(layer_planes);
-  if (intersects.length > 0 & !node_hover_flag) {
+  if (intersects.length > 0) {
     if (lastHoveredLayerIndex !== "") {
       repaintLayers();
       hoveredLayerPaintedFlag = true;

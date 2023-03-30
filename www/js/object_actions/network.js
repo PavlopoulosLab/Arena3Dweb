@@ -39,7 +39,6 @@ const resetValues = () => {
   nodeNames = [];
   nodeLayerNames = [];
   nodeGroups = new Map();
-  hovered_nodes = [];
   last_hovered_node_index = "";
 
   // edges

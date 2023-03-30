@@ -1,8 +1,8 @@
 // Initialization =====
 const createNodeDescriptionDiv = () => {
   let descrDiv = document.getElementById("descrDiv"),
-      btn = document.createElement("button"),
-      p = document.createElement('p');
+    btn = document.createElement("button"),
+    p = document.createElement('p');
 
   btn.id = "closeButton";
   btn.innerHTML = "X";
@@ -30,10 +30,10 @@ const getNodeGroupColor = (nodeLayerName) => {
   return(COLOR_VECTOR_280[(layerGroups[nodeGroups[nodeLayerName]]) % COLOR_VECTOR_280.length])
 };
 
-const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax, // TODO remove parameters
+const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax,
     zMin = zBoundMin, zMax = zBoundMax) => {
     for (let i = 0; i < nodeObjects.length; i++) {
-      nodeObjects[i].translateY(getRandomArbitrary(yMin, yMax)); // TODO and do this: node.getLayer.getWidth() * scale(?)
+      nodeObjects[i].translateY(getRandomArbitrary(yMin, yMax));
       nodeObjects[i].translateZ(getRandomArbitrary(zMin, zMax));
     }
 };
@@ -43,55 +43,47 @@ const checkHoverOverNode = (event) => {
   setRaycaster(event);
   let node_spheres = nodeObjects.map(({ sphere }) => sphere);
   let intersects = RAYCASTER.intersectObjects(node_spheres),
-    event_flag = false, //for performance optimization
+    event_flag = false, // for performance optimization
     hover_flag = false;
-    
-  if (intersects.length > 0) {
-    hover_flag = true;
-    
-    if (last_hovered_node_index !== ""){
-      hovered_nodes = hovered_nodes.filter(function(value, index, arr){ return value != last_hovered_node_index;});
-      nodeObjects[last_hovered_node_index].setOpacity(1);
-      last_hovered_node_index = "";
-      event_flag = true;
-    }
-    intersects[0].object.material.opacity = 0.5;
-    last_hovered_node_index = findIndexByUuid(node_spheres, intersects[0].object.uuid); // TODO check if works properly
-    if (!exists(hovered_nodes, last_hovered_node_index)) hovered_nodes.push(last_hovered_node_index);
-    event_flag = true;
-  } else {
-    if (last_hovered_node_index !== ""){
-      hovered_nodes = hovered_nodes.filter(function(value, index, arr){ return value != last_hovered_node_index;});
-      nodeObjects[last_hovered_node_index].setOpacity(1);
-      last_hovered_node_index = "";
-      event_flag = true;
-    } else hovered_nodes = [];
-  }
-  
-  if (event_flag) decideNodeLabelFlags(); //performance optimization
-  
-  return hover_flag;
-}
 
-// logic behind node label show/hide
+  // release previous hovered node if exists
+  if (last_hovered_node_index !== "") {
+    nodeObjects[last_hovered_node_index].setOpacity(1);
+    last_hovered_node_index = "";
+    event_flag = true;
+  }
+
+  // check for new hovered node
+  if (intersects.length > 0) {
+    last_hovered_node_index = findIndexByUuid(node_spheres, intersects[0].object.uuid);
+    nodeObjects[last_hovered_node_index].setOpacity(0.5);
+    event_flag = true;
+    hover_flag = true;
+  } 
+  
+  if (event_flag)
+    decideNodeLabelFlags();
+  
+  return(hover_flag)
+};
+
 const decideNodeLabelFlags = () => {
   let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
-      node_layer = "";
+    node_layer = "";
   for (let i = 0; i < nodeObjects.length; i++) {
     node_layer = layerGroups[nodeGroups[nodeLayerNames[i]]];
-    if (hidelayerCheckboxes[node_layer].checked){ //1. if node's layer not hidden 
+    if (hidelayerCheckboxes[node_layer].checked) { //1. if node's layer not hidden 
       nodeLabelFlags[i] = false;
-    } else if (showAllNodeLabelsFlag){ //2. if showing all node labels
+    } else if (showAllNodeLabelsFlag) { //2. if showing all node labels
       nodeLabelFlags[i] = true;
     } else if (layers[node_layer].showNodeLabels) { //3. if showing layer node labels
       nodeLabelFlags[i] = true;
-    } else if (showSelectedNodeLabelsFlag && nodeObjects[i].isSelected){ //4. if showing selected node labels, and node is selected
+    } else if (showSelectedNodeLabelsFlag && nodeObjects[i].isSelected) { //4. if showing selected node labels, and node is selected
       nodeLabelFlags[i] = true;
-    } else if (exists(hovered_nodes, i)){ //5. if hovering over node(s)
+    } else if (i === last_hovered_node_index) { //5. if hovering over node
       nodeLabelFlags[i] = true;
     } else nodeLabelFlags[i] = false; //6. if none of the above apply, don't show label
   }
-  return true;
 }  
 
 const checkNodeInteraction = (event) => {
