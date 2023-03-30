@@ -525,8 +525,9 @@ handleInputNodeAttributeFileUpload <- function() {
     if (!identical(nodeAttributes$Size, NULL)) nodeAttributes$Size <- trimws(nodeAttributes$Size)
     if (!identical(nodeAttributes$Url, NULL)) nodeAttributes$Url <- trimws(nodeAttributes$Url)
     if (!identical(nodeAttributes$Description, NULL)) nodeAttributes$Description <- trimws(nodeAttributes$Description)
-    if (!is.null(nodeFile)){
+    if (!is.null(nodeFile)) {
       callJSHandler("handler_setNodeAttributes", nodeAttributes)
+      callJSHandler("handler_chooseNodeColorPriority", "default")
       updateSelectInput(session, "navBar", selected = "Main View")
     }
   }, error = function(e) {

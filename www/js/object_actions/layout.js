@@ -73,12 +73,12 @@ const assignYZ = (nodeCoords) => {
     }
   }
   
-  // Clustering + nodeColorVector
+  // Clustering
   if (nodeCoords.group != null) {
     for (i = 0; i < nodeCoords.name.length; i++){
       node_name = nodeCoords.name[i].trim();
       if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
-        nodeObjects[nodeLayerNames.indexOf(node_name)].setColor(nodeColorVector[nodeCoords.group[i]]);
+        nodeObjects[nodeLayerNames.indexOf(node_name)].setColor(COLOR_VECTOR_280[nodeCoords.group[i]]);
         nodeObjects[nodeLayerNames.indexOf(node_name)].setCluster(nodeCoords.group[i]);
       }
     }

@@ -120,7 +120,7 @@ const updateNodeNamesRShiny = () => {
 };
 
 const updateSelectedNodesRShiny = () => {
-  Shiny.setInputValue("js_selectedNodePositions", selectedNodePositions);
+  Shiny.setInputValue("js_selectedNodePositions", getSelectedNodes());
 };
 
 // Edges

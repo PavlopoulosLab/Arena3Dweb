@@ -43,8 +43,8 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
   if (!exists(downstreamCheckedNodes, currentNode)){
     downstreamCheckedNodes.push(currentNode);
     //selecting and painting node
-    if (!exists(selectedNodePositions, currentNode)){
-      selectedNodePositions.push(currentNode);
+    if (!nodeObjects[currentNode].isSelected) {
+      nodeObjects[currentNode].isSelected = true;
       if (selectedNodeColorFlag)
         nodeObjects[currentNode].setColor(selectedDefaultColor);
     }
@@ -83,8 +83,8 @@ const executeCommand = (item) => {
       index1 = nodeLayerNames.indexOf(edge_split[0]);
       index2 = nodeLayerNames.indexOf(edge_split[1]);
       if (index1 == item.value) {
-        if (!exists(selectedNodePositions, index2)) {
-          selectedNodePositions.push(index2);
+        if (!nodeObjects[index2].isSelected) {
+          nodeObjects[index2].isSelected = true;
           if (selectedNodeColorFlag)
             nodeObjects[index2].setColor(selectedDefaultColor);
         }
@@ -98,8 +98,8 @@ const executeCommand = (item) => {
             }
         }
       } else if (index2 == item.value) {
-        if (!exists(selectedNodePositions, index1)){
-          selectedNodePositions.push(index1);
+        if (!nodeObjects[index1].isSelected){
+          nodeObjects[index1].isSelected = true;
           if (selectedNodeColorFlag)
             nodeObjects[index1].setColor(selectedDefaultColor);
         }
@@ -132,8 +132,8 @@ const executeCommand = (item) => {
         if (index1 == currentNode && nodeGroups[nodeLayerNames[index2]] != startingLayer && nodeGroups[nodeLayerNames[index2]] != nodeGroups[nodeLayerNames[index1]] && !(exists(tempSelectedNodes, index2))){ //path must not contain other nodes in starting layer or its own layer
           tempSelectedNodes.push(index2);
           // code from Select neighbors above
-          if (!exists(selectedNodePositions, index2)){
-            selectedNodePositions.push(index2);
+          if (!nodeObjects[index2].isSelected) {
+            nodeObjects[index2].isSelected = true;
             if (selectedNodeColorFlag)
               nodeObjects[index2].setColor(selectedDefaultColor); 
           }
@@ -149,8 +149,8 @@ const executeCommand = (item) => {
         } else if (index2 == currentNode && nodeGroups[nodeLayerNames[index1]] != startingLayer && nodeGroups[nodeLayerNames[index2]] != nodeGroups[nodeLayerNames[index1]] && !(exists(tempSelectedNodes, index1))){
           tempSelectedNodes.push(index1);
           // code from Select neighbors above
-          if (!exists(selectedNodePositions, index1)){
-            selectedNodePositions.push(index1);
+          if (!nodeObjects[index1].isSelected){
+            nodeObjects[index1].isSelected = true;
             if (selectedNodeColorFlag)
               nodeObjects[index1].setColor(selectedDefaultColor);
           }

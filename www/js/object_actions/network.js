@@ -41,8 +41,6 @@ const resetValues = () => {
   nodeGroups = new Map();
   hovered_nodes = [];
   last_hovered_node_index = "";
-  selectedNodePositions = [];
-  nodeColorVector = COLOR_VECTOR_DARK.concat(COLOR_VECTOR_271);
 
   // edges
   edges = []; //canvas objects
@@ -76,7 +74,7 @@ const resetValues = () => {
 const initializeScene = () => {
   scene.tiltDefault();
   scene.setScale(0.9);
-  applyTheme('#000000', '#777777', COLOR_VECTOR_DARK, '#ffffff',
+  applyTheme('#000000', '#777777', '#ffffff',
      CHANNEL_COLORS_LIGHT, '#ffffff', fromInit = true);
 };
 

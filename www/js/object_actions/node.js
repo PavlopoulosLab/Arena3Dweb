@@ -1,27 +1,33 @@
-// Object Initialization =====
+// Initialization =====
 const createNodeDescriptionDiv = () => {
   let descrDiv = document.getElementById("descrDiv"),
-      btn = document.createElement("button");
+      btn = document.createElement("button"),
+      p = document.createElement('p');
+
   btn.id = "closeButton";
   btn.innerHTML = "X";
-  btn.onclick = function() {
-      descrDiv.style.display = "none";
-  };
-  let p = document.createElement('p');
+  btn.onclick = function() { descrDiv.style.display = "none"; };
   p.className = "descrDiv_paragraph";
+
   descrDiv.appendChild(btn);
   descrDiv.appendChild(p);
 };
 
 const createNodeObjects = () => {
-  let nodeColor; // sphere
+  let nodeColor;
   for (let i = 0; i < nodeLayerNames.length; i++) {
-    nodeColor = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length];
+    nodeColor = getNodeGroupColor(nodeLayerNames[i]);
+    
     nodeObjects.push(new Node({id: i, name: nodeNames[i], layer: nodeGroups[nodeLayerNames[i]],
       nodeLayerName: nodeLayerNames[i], color: nodeColor}));
     layers[layerGroups[nodeGroups[nodeLayerNames[i]]]].addNode(nodeObjects[i].sphere);
   }
   nodeNames = undefined; // releasing ram
+};
+
+// @return: hex color code
+const getNodeGroupColor = (nodeLayerName) => {
+  return(COLOR_VECTOR_280[(layerGroups[nodeGroups[nodeLayerName]]) % COLOR_VECTOR_280.length])
 };
 
 const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax, // TODO remove parameters
@@ -31,7 +37,6 @@ const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax, // TODO remove parame
       nodeObjects[i].translateZ(getRandomArbitrary(zMin, zMax));
     }
 };
-
 
 // Event Listeners =====
 const checkHoverOverNode = (event) => {
@@ -80,7 +85,7 @@ const decideNodeLabelFlags = () => {
       nodeLabelFlags[i] = true;
     } else if (layers[node_layer].showNodeLabels) { //3. if showing layer node labels
       nodeLabelFlags[i] = true;
-    } else if (showSelectedNodeLabelsFlag && exists(selectedNodePositions, i)){ //4. if showing selected node labels, and node is selected
+    } else if (showSelectedNodeLabelsFlag && nodeObjects[i].isSelected){ //4. if showing selected node labels, and node is selected
       nodeLabelFlags[i] = true;
     } else if (exists(hovered_nodes, i)){ //5. if hovering over node(s)
       nodeLabelFlags[i] = true;
@@ -97,12 +102,12 @@ const checkNodeInteraction = (event) => {
   if (intersects.length > 0) {
     node_selection = true;
     let ind = findIndexByUuid(node_spheres, intersects[0].object.uuid);
-    if (exists(selectedNodePositions, ind)) {
-      selectedNodePositions = selectedNodePositions.filter(function(value, index, arr){ return value != ind;}); // array remove/filter
+    if (nodeObjects[ind].isSelected) {
+      nodeObjects[ind].isSelected = false;
       if (selectedNodeColorFlag)
         nodeObjects[ind].setColor(nodeObjects[ind].getColor());
     } else {
-      selectedNodePositions.push(ind);
+      nodeObjects[ind].isSelected = true;
       if (selectedNodeColorFlag)
         nodeObjects[ind].setColor(selectedDefaultColor);
     }
@@ -154,8 +159,8 @@ const selectSearchedNodes = (event) => {
         tempIndexes = getCaseInsensitiveIndices(nodeNames, searchString[i].trim()) //case insensitive function
         if (tempIndexes.length > 0){
           for (j = 0; j < tempIndexes.length; j++) {
-            if (!exists(selectedNodePositions, tempIndexes[j])) {
-              selectedNodePositions.push(tempIndexes[j]);
+            if (!nodeObjects[tempIndexes[j]].isSelected) {
+              nodeObjects[tempIndexes[j]].isSelected = true;
               if (selectedNodeColorFlag)
                 nodeObjects[tempIndexes[j]].setColor(selectedDefaultColor);
             }
@@ -170,27 +175,45 @@ const selectSearchedNodes = (event) => {
 }
 
 const unselectAllNodes = () => {
-  selectedNodePositions = [],
+  for (let i = 0; i < nodeObjects.length; i++)
+    nodeObjects[i].isSelected = false;
+
   selected_edges = [];
-  decideNodeColors();
+  repaintNodes();
   decideNodeLabelFlags();
 };
 
-const decideNodeColors = () => { // TODO add isSelected condition, rename to repaintNodes
+const getSelectedNodes = () => {
+  let selectedNodePositions = nodeObjects.map(function(node) {
+    if (node.isSelected)
+      return(node.id)
+  });
+  selectedNodePositions = selectedNodePositions.filter(function(id) {
+    return(id !== undefined)
+  });
+  return(selectedNodePositions)
+};
+
+const repaintNodes = () => {
   for (let i = 0; i < nodeObjects.length; i++) {
-    if (nodeObjects[i].getCluster() != "" && nodeColorPrioritySource == "cluster")
-      nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()], clusterMode = true);
+    if (selectedNodeColorFlag && nodeObjects[i].isSelected)
+      nodeObjects[i].setColor(selectedDefaultColor);
+    else if (nodeObjects[i].getCluster() != "" && nodeColorPrioritySource == "cluster")
+      nodeObjects[i].setColor(COLOR_VECTOR_280[nodeObjects[i].getCluster()], importMode = false, clusterMode = true);
     else
       nodeObjects[i].setColor(nodeObjects[i].getColor());
   }
 };
 
 const translateNodesWithHeldKey = (e) => {
-  let step, i;
+  let step, i,
+    selectedNodePositions = getSelectedNodes();
     
-  if (e.screenX - e.screenY >=  mousePreviousX - mousePreviousY) step = 20;
-  else step =-20;
-  
+  if (e.screenX - e.screenY >=  mousePreviousX - mousePreviousY)
+    step = 20;
+  else
+    step =-20;
+   
   if (scene.axisPressed=="z") {
     for (i = 0; i < selectedNodePositions.length; i++)
       nodeObjects[selectedNodePositions[i]].translateZ(step);
@@ -211,7 +234,7 @@ const setNodeAttributes = (nodeAttributes) => {
     pos = nodeAttributes.Node.indexOf(nodeLayerNames[i]);
     if (pos > -1) { // if node exists in attributes file
       if (nodeAttributes.Color !== undefined && nodeAttributes.Color[pos] !== null && nodeAttributes.Color[pos].trim() !== "")
-        nodeObjects[i].setColor(nodeAttributes.Color[pos]);
+        nodeObjects[i].setColor(nodeAttributes.Color[pos], importMode = true, clusterMode = false);
       if (nodeAttributes.Size !== undefined && nodeAttributes.Size[pos] !== null && nodeAttributes.Size[pos].trim() !== "")
         nodeObjects[i].setScale(Number(nodeAttributes.Size[pos]));
       if (nodeAttributes.Url !== undefined && nodeAttributes.Url[pos] !== null && nodeAttributes.Url[pos].trim() !== "")
@@ -224,57 +247,40 @@ const setNodeAttributes = (nodeAttributes) => {
   updateVRNodesRShiny();
 }
 
-const selectAllNodes = (message) => { // T | F
-  if (message) {
-    selectedNodePositions = []; // reseting, else multiple entries -> double transformations
-    for (let i=0; i < nodeObjects.length; i++){
-      selectedNodePositions.push(i);
-      if (selectedNodeColorFlag)
-        nodeObjects[i].setColor(selectedDefaultColor);
-    }
-    updateSelectedNodesRShiny();
-  } else {
-    selectedNodePositions = [];
-    updateSelectedNodesRShiny();
-    for (i=0; i < nodeObjects.length; i++) {
-      // TODO replace with decideNodeColors()
-      if (nodeObjects[i].getCluster() != "")
-        nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()]);
-      else
-        nodeObjects[i].setColor(nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length]);
-    }
-  }
+const selectAllNodes = (selectedFlag) => { // T | F
+  for (let i = 0; i < nodeObjects.length; i++)
+    nodeObjects[i].isSelected = selectedFlag;
+
+  updateSelectedNodesRShiny();
+  repaintNodes();
   decideNodeLabelFlags();
-}
+};
 
 const setNodeColorPriority = (colorPriority) => {
   nodeColorPrioritySource = colorPriority;
-  decideNodeColors();
+  
+  repaintNodes();
   updateNodesRShiny();
   updateVRNodesRShiny();
 };
 
 const setNodeSelectedColorPriority = (message) => {
   selectedNodeColorFlag = message;
-  for (let i = 0; i < selectedNodePositions.length; i++){
-    if (selectedNodeColorFlag)
-      nodeObjects[selectedNodePositions[i]].setColor(selectedDefaultColor);
-    else
-      nodeObjects[selectedNodePositions[i]].setColor(nodeColorVector[(
-        layerGroups[nodeGroups[nodeLayerNames[selectedNodePositions[i]]]]) % nodeColorVector.length]);
-  }
+  repaintNodes();
 }
 
-const chooseNodeClusterColorPriority = (T) => {
+const chooseNodeColorPriority = (mode) => {
   let radioButtonDiv = document.getElementById("nodeColorPriorityRadio");
-  radioButtonDiv.children[1].children[1].click(); // choosing Clustering color priority
+  if (mode == "default")
+    radioButtonDiv.children[1].children[0].click();
+  else if (mode == "cluster")
+    radioButtonDiv.children[1].children[1].click();
 };
 
 // Canvas Controls =====
 const spreadNodes = () => {
-  if (selectedNodePositions.length == 0)
-    alert("Please select at least one node.");
-  else {
+  let selectedNodePositions = getSelectedNodes();
+  if (selectedNodePositions.length > 0) {
     for (let i = 0; i < selectedNodePositions.length; i++) {
       nodeObjects[selectedNodePositions[i]].setPosition("y",
         nodeObjects[selectedNodePositions[i]].getPosition("y") * 1.1);
@@ -284,13 +290,14 @@ const spreadNodes = () => {
     updateNodesRShiny();
     updateVRNodesRShiny();
     redrawEdges();
-  }
+  } else
+    alert("Please select at least one node.");
 }
 
 const congregateNodes = () => {
-  if (selectedNodePositions.length == 0) alert("Please select at least one node.");
-  else {
-    for (let i = 0; i < selectedNodePositions.length; i++){
+  let selectedNodePositions = getSelectedNodes();
+  if (selectedNodePositions.length > 0) {
+    for (let i = 0; i < selectedNodePositions.length; i++) {
       nodeObjects[selectedNodePositions[i]].setPosition("y",
         nodeObjects[selectedNodePositions[i]].getPosition("y") * 0.9);
       nodeObjects[selectedNodePositions[i]].setPosition("z",
@@ -299,13 +306,13 @@ const congregateNodes = () => {
     updateNodesRShiny();
     updateVRNodesRShiny();
     redrawEdges();
-  }
+  } else
+    alert("Please select at least one node.");
 }
 
 const moveNodes = (direction, axis) => {
-  if (selectedNodePositions.length == 0)
-    alert("Please select at least one node.");
-  else {
+  let selectedNodePositions = getSelectedNodes();
+  if (selectedNodePositions.length > 0) {
     nodeIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       value = direction * value;
@@ -321,18 +328,21 @@ const moveNodes = (direction, axis) => {
       updateNodesRShiny();
       updateVRNodesRShiny();
     }, 70);
-  }
+  } else
+    alert("Please select at least one node.");
 }
 
 const scaleNodes = () => {
-  let cavnasSlider = document.getElementsByClassName("canvasSlider")[5],
+  let selectedNodePositions = getSelectedNodes(),
+    cavnasSlider = document.getElementsByClassName("canvasSlider")[5],
     td = document.getElementById("sliderValue6");
   td.innerHTML = "x".concat(cavnasSlider.value);
-  if (selectedNodePositions.length == 0)
-    alert("Please select at least one node.");
-  else {
+
+  if (selectedNodePositions.length > 0) {
     for (let i = 0; i < selectedNodePositions.length; i++)
       nodeObjects[selectedNodePositions[i]].setScale(parseFloat(cavnasSlider.value));
+
     updateNodesRShiny();
-  }
-}
+  } else
+    alert("Please select at least one node.");
+};

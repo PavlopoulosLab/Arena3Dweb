@@ -63,6 +63,7 @@ const clickDrag = (event) => {
       let x = event.screenX,
         y = event.screenY;
       if (scene.leftClickPressed) {
+        let selectedNodePositions = getSelectedNodes();
         scene.dragging = true;
         if (event.shiftKey) {
           lastHoveredLayerIndex = ""; // to be able to lasso inside layer
@@ -116,16 +117,12 @@ const clickUp = (event) => {
       }
       if (lasso !== "") {
         for (let i = 0; i < nodeObjects.length; i++) {
-          if (nodeObjects[i].getOpacity() == 0.5) {
+          if (nodeObjects[i].getOpacity() == 0.5) { // means is inside lasso event
             nodeObjects[i].setOpacity(1);
-            if (!exists(selectedNodePositions, i)) {
-              selectedNodePositions.push(i);
-              // nodeObjects[i].isSelected = true; // TODO replace the above
-              if (selectedNodeColorFlag)
-                nodeObjects[i].setColor(selectedDefaultColor);
-            }
+            nodeObjects[i].isSelected = true;
           }
         }
+        repaintNodes();
         decideNodeLabelFlags();
         updateSelectedNodesRShiny();
       }

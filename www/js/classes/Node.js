@@ -105,9 +105,11 @@ class Node {
         this.sphere.material.opacity = value;
     }
 
-    setColor(hexColor, clusterMode = false) {
+    setColor(hexColor, importMode = false, clusterMode = false) {
         this.sphere.material.color = new THREE.Color(hexColor);
         this.color = hexColor;
+        if (importMode)
+            this.importedColor = hexColor;
         if (clusterMode)
             this.clusterColor = hexColor;
     }

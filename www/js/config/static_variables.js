@@ -33,11 +33,9 @@ let nodeIntervalTimeout = "",
     showAllNodeLabelsFlag = false,
     showSelectedNodeLabelsFlag = true,
     nodeColorPrioritySource = "default", // or "cluster"
-    nodeColorVector = [],
     nodeGroups = new Map(),
     hovered_nodes = [], // if allowing more than one hovered nodes at a time
     last_hovered_node_index = "",
-    selectedNodePositions = [],
     nodeLayerNames = [], // keeping this for performance
     nodeNames = []; // to init upload network nodes
 
