@@ -68,7 +68,7 @@ const clickDrag = (event) => {
           lastHoveredLayerIndex = ""; // to be able to lasso inside layer
           lassoSelectNodes(event.layerX - xBoundMax, yBoundMax - event.layerY);
         } else if (scene.axisPressed !== "" && selectedNodePositions.length > 0)
-          translateNodes(event);
+          translateNodesWithHeldKey(event);
         else if (scene.axisPressed !== "")
           rotateLayersWithHeldKey(event);
         else if (lastHoveredLayerIndex === "" && last_hovered_node_index === "")

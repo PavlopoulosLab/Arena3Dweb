@@ -1,3 +1,18 @@
+// Object Initialization =====
+const createNodeDescriptionDiv = () => {
+  let descrDiv = document.getElementById("descrDiv"),
+      btn = document.createElement("button");
+  btn.id = "closeButton";
+  btn.innerHTML = "X";
+  btn.onclick = function() {
+      descrDiv.style.display = "none";
+  };
+  let p = document.createElement('p');
+  p.className = "descrDiv_paragraph";
+  descrDiv.appendChild(btn);
+  descrDiv.appendChild(p);
+};
+
 const createNodeObjects = () => {
   let nodeColor; // sphere
   for (let i = 0; i < nodeLayerNames.length; i++) {
@@ -17,8 +32,8 @@ const scrambleNodes = (yMin = yBoundMin, yMax = yBoundMax, // TODO remove parame
     }
 };
 
-// Called from mouse move event
-// @return bool
+
+// Event Listeners =====
 const checkHoverOverNode = (event) => {
   setRaycaster(event);
   let node_spheres = nodeObjects.map(({ sphere }) => sphere);
@@ -53,7 +68,27 @@ const checkHoverOverNode = (event) => {
   return hover_flag;
 }
 
-// with ray caster
+// logic behind node label show/hide
+const decideNodeLabelFlags = () => {
+  let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
+      node_layer = "";
+  for (let i = 0; i < nodeObjects.length; i++) {
+    node_layer = layerGroups[nodeGroups[nodeLayerNames[i]]];
+    if (hidelayerCheckboxes[node_layer].checked){ //1. if node's layer not hidden 
+      nodeLabelFlags[i] = false;
+    } else if (showAllNodeLabelsFlag){ //2. if showing all node labels
+      nodeLabelFlags[i] = true;
+    } else if (layers[node_layer].showNodeLabels) { //3. if showing layer node labels
+      nodeLabelFlags[i] = true;
+    } else if (showSelectedNodeLabelsFlag && exists(selectedNodePositions, i)){ //4. if showing selected node labels, and node is selected
+      nodeLabelFlags[i] = true;
+    } else if (exists(hovered_nodes, i)){ //5. if hovering over node(s)
+      nodeLabelFlags[i] = true;
+    } else nodeLabelFlags[i] = false; //6. if none of the above apply, don't show label
+  }
+  return true;
+}  
+
 const checkNodeInteraction = (event) => {
   setRaycaster(event);
   let node_spheres = nodeObjects.map(({ sphere }) => sphere);
@@ -103,7 +138,54 @@ const lassoSelectNodes = (x, y) => {
   }
 }
 
-const translateNodes = (e) => {
+// on node searchbar key-press
+const selectSearchedNodes = (event) => {
+  if (scene.exists()) {
+    let key = window.event.keyCode;
+    // If the user has pressed enter
+    if (key === 13) {
+      event.preventDefault(); //bypassing newline enter
+      startLoader(true);
+      let searchString = document.getElementById("nodeSearchBar").value.replace(/\n/g, ""),
+          tempIndexes, i, j,
+          nodeNames = nodeObjects.map(({ name }) => name);
+      searchString = searchString.split(",");
+      for (i = 0; i < searchString.length; i++) {
+        tempIndexes = getCaseInsensitiveIndices(nodeNames, searchString[i].trim()) //case insensitive function
+        if (tempIndexes.length > 0){
+          for (j = 0; j < tempIndexes.length; j++) {
+            if (!exists(selectedNodePositions, tempIndexes[j])) {
+              selectedNodePositions.push(tempIndexes[j]);
+              if (selectedNodeColorFlag)
+                nodeObjects[tempIndexes[j]].setColor(selectedDefaultColor);
+            }
+          }
+        }
+      }
+      decideNodeLabelFlags();
+      updateSelectedNodesRShiny();
+      finishLoader(true);
+    }
+  }
+}
+
+const unselectAllNodes = () => {
+  selectedNodePositions = [],
+  selected_edges = [];
+  decideNodeColors();
+  decideNodeLabelFlags();
+};
+
+const decideNodeColors = () => { // TODO add isSelected condition, rename to repaintNodes
+  for (let i = 0; i < nodeObjects.length; i++) {
+    if (nodeObjects[i].getCluster() != "" && nodeColorPrioritySource == "cluster")
+      nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()], clusterMode = true);
+    else
+      nodeObjects[i].setColor(nodeObjects[i].getColor());
+  }
+};
+
+const translateNodesWithHeldKey = (e) => {
   let step, i;
     
   if (e.screenX - e.screenY >=  mousePreviousX - mousePreviousY) step = 20;
@@ -121,27 +203,8 @@ const translateNodes = (e) => {
   updateVRNodesRShiny();
 }
 
-// logic behind node label show/hide
-const decideNodeLabelFlags = () => {
-  let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
-      node_layer = "";
-  for (let i = 0; i < nodeObjects.length; i++) {
-    node_layer = layerGroups[nodeGroups[nodeLayerNames[i]]];
-    if (hidelayerCheckboxes[node_layer].checked){ //1. if node's layer not hidden 
-      nodeLabelFlags[i] = false;
-    } else if (showAllNodeLabelsFlag){ //2. if showing all node labels
-      nodeLabelFlags[i] = true;
-    } else if (layers[node_layer].showNodeLabels) { //3. if showing layer node labels
-      nodeLabelFlags[i] = true;
-    } else if (showSelectedNodeLabelsFlag && exists(selectedNodePositions, i)){ //4. if showing selected node labels, and node is selected
-      nodeLabelFlags[i] = true;
-    } else if (exists(hovered_nodes, i)){ //5. if hovering over node(s)
-      nodeLabelFlags[i] = true;
-    } else nodeLabelFlags[i] = false; //6. if none of the above apply, don't show label
-  }
-  return true;
-}      
 
+// Handlers =====
 const setNodeAttributes = (nodeAttributes) => {
   let pos;
   for (let i = 0; i < nodeObjects.length; i++) { // TODO change nodeAttributes to dataframe and iterate that length
@@ -161,7 +224,7 @@ const setNodeAttributes = (nodeAttributes) => {
   updateVRNodesRShiny();
 }
 
-const nodeSelector = (message) => { // T | F
+const selectAllNodes = (message) => { // T | F
   if (message) {
     selectedNodePositions = []; // reseting, else multiple entries -> double transformations
     for (let i=0; i < nodeObjects.length; i++){
@@ -184,7 +247,14 @@ const nodeSelector = (message) => { // T | F
   decideNodeLabelFlags();
 }
 
-const nodeSelectedColorPriority = (message) => {
+const setNodeColorPriority = (colorPriority) => {
+  nodeColorPrioritySource = colorPriority;
+  decideNodeColors();
+  updateNodesRShiny();
+  updateVRNodesRShiny();
+};
+
+const setNodeSelectedColorPriority = (message) => {
   selectedNodeColorFlag = message;
   for (let i = 0; i < selectedNodePositions.length; i++){
     if (selectedNodeColorFlag)
@@ -195,6 +265,12 @@ const nodeSelectedColorPriority = (message) => {
   }
 }
 
+const chooseNodeClusterColorPriority = (T) => {
+  let radioButtonDiv = document.getElementById("nodeColorPriorityRadio");
+  radioButtonDiv.children[1].children[1].click(); // choosing Clustering color priority
+};
+
+// Canvas Controls =====
 const spreadNodes = () => {
   if (selectedNodePositions.length == 0)
     alert("Please select at least one node.");
@@ -260,76 +336,3 @@ const scaleNodes = () => {
     updateNodesRShiny();
   }
 }
-
-// on node searchbar key-press
-const selectSearchedNodes = (event) => {
-  if (scene.exists()) {
-    let key = window.event.keyCode;
-    // If the user has pressed enter
-    if (key === 13) {
-      event.preventDefault(); //bypassing newline enter
-      startLoader(true);
-      let searchString = document.getElementById("searchBar").value.replace(/\n/g, ""),
-          tempIndexes, i, j,
-          nodeNames = nodeObjects.map(({ name }) => name);
-      searchString = searchString.split(",");
-      for (i = 0; i < searchString.length; i++) {
-        tempIndexes = getCaseInsensitiveIndices(nodeNames, searchString[i].trim()) //case insensitive function
-        if (tempIndexes.length > 0){
-          for (j = 0; j < tempIndexes.length; j++) {
-            if (!exists(selectedNodePositions, tempIndexes[j])) {
-              selectedNodePositions.push(tempIndexes[j]);
-              if (selectedNodeColorFlag)
-                nodeObjects[tempIndexes[j]].setColor(selectedDefaultColor);
-            }
-          }
-        }
-      }
-      decideNodeLabelFlags();
-      updateSelectedNodesRShiny();
-      finishLoader(true);
-    }
-  }
-}
-
-const createNodeDescriptionDiv = () => {
-    let descrDiv = document.getElementById("descrDiv"),
-        btn = document.createElement("button");
-    btn.id = "closeButton";
-    btn.innerHTML = "X";
-    btn.onclick = function() {
-        descrDiv.style.display = "none";
-    };
-    let p = document.createElement('p');
-    p.className = "descrDiv_paragraph";
-    descrDiv.appendChild(btn);
-    descrDiv.appendChild(p);
-};
-
-const unselectAllNodes = () => {
-  selectedNodePositions = [],
-  selected_edges = [];
-  decideNodeColors();
-  decideNodeLabelFlags();
-};
-
-const nodeColorPriority = (colorPriority) => {
-  nodeColorPrioritySource = colorPriority;
-  decideNodeColors();
-  updateNodesRShiny();
-  updateVRNodesRShiny();
-};
-
-const chooseClusteringColorPriority = (T) => {
-  let radioButtonDiv = document.getElementById("nodeColorPriorityRadio");
-  radioButtonDiv.children[1].children[1].click(); // choosing Clustering color priority
-};
-
-const decideNodeColors = () => { // TODO add isSelected condition, rename to repaintNodes
-  for (let i = 0; i < nodeObjects.length; i++) {
-    if (nodeObjects[i].getCluster() != "" && nodeColorPrioritySource == "cluster")
-      nodeObjects[i].setColor(nodeColorVector[nodeObjects[i].getCluster()], clusterMode = true);
-    else
-      nodeObjects[i].setColor(nodeObjects[i].getColor());
-  }
-};

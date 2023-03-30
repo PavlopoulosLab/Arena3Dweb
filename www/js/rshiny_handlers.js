@@ -68,11 +68,11 @@ Shiny.addCustomMessageHandler("handler_showLayerCoords", showLayerCoords);
 Shiny.addCustomMessageHandler("handler_floorOpacity", setFloorOpacity);
 Shiny.addCustomMessageHandler("handler_showWireFrames", showWireFrames);
 Shiny.addCustomMessageHandler("handler_selectAllLayers", selectAllLayers);
-Shiny.addCustomMessageHandler("handler_layerColorPriority", layerColorPriority);
+Shiny.addCustomMessageHandler("handler_setLayerColorPriority", setLayerColorPriority);
 // Nodes ====================
-Shiny.addCustomMessageHandler("handler_nodeSelector", nodeSelector);
-Shiny.addCustomMessageHandler("handler_nodeColorPriority", nodeColorPriority);
-Shiny.addCustomMessageHandler("handler_nodeSelectedColorPriority", nodeSelectedColorPriority);
+Shiny.addCustomMessageHandler("handler_selectAllNodes", selectAllNodes);
+Shiny.addCustomMessageHandler("handler_setNodeColorPriority", setNodeColorPriority);
+Shiny.addCustomMessageHandler("handler_setNodeSelectedColorPriority", setNodeSelectedColorPriority);
 // Edges ====================
 Shiny.addCustomMessageHandler("handler_directionArrowSize", setDirectionArrowSize);
 Shiny.addCustomMessageHandler("handler_intraDirectionArrowSize", setIntraDirectionArrowSize);
@@ -94,6 +94,6 @@ Shiny.addCustomMessageHandler("handler_resizeNodeLabels", resizeNodeLabels);
 Shiny.addCustomMessageHandler("handler_layout", assignYZ);
 Shiny.addCustomMessageHandler("handler_setPerLayerFlag", setPerLayerFlag);
 Shiny.addCustomMessageHandler("handler_setLocalFlag", setLocalFlag);
-Shiny.addCustomMessageHandler("handler_chooseClusteringColorPriority", chooseClusteringColorPriority);
+Shiny.addCustomMessageHandler("handler_chooseNodeClusterColorPriority", chooseNodeClusterColorPriority);
 Shiny.addCustomMessageHandler("handler_topologyScale", topologyScale);
 Shiny.addCustomMessageHandler("handler_predefined_layer_layout", applyPredefinedLayout);

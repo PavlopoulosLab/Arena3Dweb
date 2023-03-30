@@ -86,7 +86,7 @@ const updateNodesRShiny = () => {
     }
   });
   Shiny.setInputValue("js_nodes", JSON.stringify(js_nodes));
-}
+};
 
 const updateVRNodesRShiny = () => {
   let js_nodes_world = [];
@@ -100,7 +100,7 @@ const updateVRNodesRShiny = () => {
       nodeObjects[i].getColor()
     ]);
   }
-  
+
   js_nodes_world = js_nodes_world.map(node => {
     return {
       name: node[0],
@@ -112,15 +112,16 @@ const updateVRNodesRShiny = () => {
     }
   });
   Shiny.setInputValue("js_nodes_world", JSON.stringify(js_nodes_world));
-}
+};
 
+// from JS, because need to get positions from js_selectedNodePositions
 const updateNodeNamesRShiny = () => {
   Shiny.setInputValue("js_node_names", nodeLayerNames);
-}
+};
 
 const updateSelectedNodesRShiny = () => {
   Shiny.setInputValue("js_selectedNodePositions", selectedNodePositions);
-}
+};
 
 // Edges
 const updateEdgesRShiny = () => {

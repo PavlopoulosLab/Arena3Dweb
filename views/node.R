@@ -1,6 +1,6 @@
 generateNodeDiv <- function() {
   tags$div(
-    checkboxInput("nodeSelector", "Select/Deselect all Nodes",
+    checkboxInput("selectAllNodes", "Select / Deselect all Nodes",
                   value = F, width = NULL),
     radioButtons("showNodeLabelsRadio", "Show Labels:",
       inline = T,
@@ -16,7 +16,7 @@ generateNodeDiv <- function() {
       choiceValues = list("default", "cluster")
     ),
     checkboxInput("nodeSelectedColorPriority", "Highlight Selected Nodes", T),
-    textAreaInput("searchBar", "Search Nodes:", value = "",
+    textAreaInput("nodeSearchBar", "Search Nodes:", value = "",
                   width = "100%", height = "100%", cols = 100, rows = 4,
                   placeholder = "Insert comma separated Node names and then hit the Enter button",
                   resize = "vertical"),

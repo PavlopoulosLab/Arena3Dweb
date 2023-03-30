@@ -45,7 +45,7 @@ applyClustering <- function(networkGraph) {
   }
   colnames(assignedClusters) <- c("Annotations", "Nodes")
   renderClusteringDF(assignedClusters)
-  callJSHandler("handler_chooseClusteringColorPriority", T)
+  callJSHandler("handler_chooseNodeClusterColorPriority", T)
   return(assignedClusters)
 }
 

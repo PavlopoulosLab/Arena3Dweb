@@ -189,7 +189,7 @@ const showWireFrames = (wireframeFlag) => {
     layers[i].toggleWireframe(wireframeFlag);
 };
 
-const layerColorPriority = (colorPriority) => {
+const setLayerColorPriority = (colorPriority) => {
   layerColorPrioritySource = colorPriority;
   repaintLayers();
   updateLayersRShiny();

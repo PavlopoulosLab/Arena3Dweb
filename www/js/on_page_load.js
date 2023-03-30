@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.onresize = resetScreen;
     // release mouse buttons on network div exit
     document.getElementsByClassName("container-fluid")[0].children[0].addEventListener("mouseleave", clickUp);
-    let searchBar = document.getElementById("searchBar");
-    searchBar.onkeydown = selectSearchedNodes;
+    let nodeSearchBar = document.getElementById("nodeSearchBar");
+    nodeSearchBar.onkeydown = selectSearchedNodes;
 }, false);
 
 const initializeCanvasDiv = () => {
