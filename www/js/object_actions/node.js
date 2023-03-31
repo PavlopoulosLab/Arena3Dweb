@@ -283,37 +283,21 @@ const setNodeAttributes = (nodeAttributes) => {
 };
 
 // Canvas Controls =====
-const spreadNodes = () => {
+const spreadNodes = (multiplier) => { // 1.1 or 0.9
   let selectedNodePositions = getSelectedNodes();
   if (selectedNodePositions.length > 0) {
     for (let i = 0; i < selectedNodePositions.length; i++) {
       nodeObjects[selectedNodePositions[i]].setPosition("y",
-        nodeObjects[selectedNodePositions[i]].getPosition("y") * 1.1);
+        nodeObjects[selectedNodePositions[i]].getPosition("y") * multiplier);
       nodeObjects[selectedNodePositions[i]].setPosition("z",
-        nodeObjects[selectedNodePositions[i]].getPosition("z") * 1.1);
+        nodeObjects[selectedNodePositions[i]].getPosition("z") * multiplier);
     }
     updateNodesRShiny();
     updateVRNodesRShiny();
     redrawEdges();
   } else
     alert("Please select at least one node.");
-}
-
-const congregateNodes = () => {
-  let selectedNodePositions = getSelectedNodes();
-  if (selectedNodePositions.length > 0) {
-    for (let i = 0; i < selectedNodePositions.length; i++) {
-      nodeObjects[selectedNodePositions[i]].setPosition("y",
-        nodeObjects[selectedNodePositions[i]].getPosition("y") * 0.9);
-      nodeObjects[selectedNodePositions[i]].setPosition("z",
-        nodeObjects[selectedNodePositions[i]].getPosition("z") * 0.9);
-    }
-    updateNodesRShiny();
-    updateVRNodesRShiny();
-    redrawEdges();
-  } else
-    alert("Please select at least one node.");
-}
+};
 
 const moveNodes = (direction, axis) => {
   let selectedNodePositions = getSelectedNodes();
@@ -321,7 +305,7 @@ const moveNodes = (direction, axis) => {
     nodeIntervalTimeout = setInterval(function() {
       let value = document.getElementsByClassName("canvasSlider")[4].value;
       value = direction * value;
-      for (let i = 0; i < selectedNodePositions.length; i++){
+      for (let i = 0; i < selectedNodePositions.length; i++) {
         if (axis == "X")
           nodeObjects[selectedNodePositions[i]].translateX(value);
         else if (axis == "Y")
@@ -335,7 +319,7 @@ const moveNodes = (direction, axis) => {
     }, 70);
   } else
     alert("Please select at least one node.");
-}
+};
 
 const scaleNodes = () => {
   let selectedNodePositions = getSelectedNodes(),
