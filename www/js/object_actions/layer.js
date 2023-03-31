@@ -259,7 +259,7 @@ const scaleLayers = () => {
     for (let i = 0; i < selected_layers.length; i++) {
       moveFactor = parseFloat(scalingValue) / layers[selected_layers[i]].getScale();
       childrenArray = layers[selected_layers[i]].plane.children;
-      for (let j = 0; j < childrenArray.length; j++) { // TODO probably replace dpuble for loop with node.getLayer.getScale()
+      for (let j = 0; j < childrenArray.length; j++) {
         if (childrenArray[j].type === "Mesh") { // only nodes, edges are "Line"
           childrenArray[j].position.y *= moveFactor;
           childrenArray[j].position.z *= moveFactor;

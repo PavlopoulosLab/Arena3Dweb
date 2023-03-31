@@ -67,7 +67,7 @@ const toDegrees = (radians) => {
   return(radians * (180 / Math.PI))
 };
 
-const changeColor = (item, color) => { // TODO probably remove after nodes and edges are made into classes
+const changeColor = (item, color) => { // TODO probably remove after edge class
   if (item.type) {
     if (item.type === 'Line' || item.type === 'Mesh') {
       item.material.color = color;

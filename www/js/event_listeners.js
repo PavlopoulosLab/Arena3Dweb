@@ -192,7 +192,7 @@ const replaceContextMenuOverNode = (evt) => {
       option.text = "Select Downstream Path";
       optionsList.appendChild(option);
 
-      if (nodeObjects[i].url != "") { // TODO check if working properly
+      if (nodeObjects[i].url != "") {
         option = document.createElement("option");
         option.value = nodeObjects[i].url;
         option.text = "Link"; //option 3
