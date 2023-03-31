@@ -139,7 +139,7 @@ const updateEdgeChannelArrays = (channelName, edgePair) => {
   }
 };
 
-const updateChannelArrays = (channelArray) => { // TODO continue from here
+const updateChannelArrays = (channelArray) => {
   if (channelArray) {
     channels = getUniqueValues(channelArray);
     

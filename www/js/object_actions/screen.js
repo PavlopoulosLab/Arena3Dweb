@@ -93,7 +93,7 @@ const redrawLayerLabels = (mode) => {
       layerArray = getSelectedLayers();
   }
   
-  for (let i = 0; i < layerArray.length; i++) { // TODO replace for loop with map (objects)
+  for (let i = 0; i < layerArray.length; i++) {
     position = mode == "selected" ? layerArray[i] : i;
     if (!hidelayerCheckboxes[position].checked) { // if node's layer not hidden, counting elements
       layerX = layer_spheres[position].getWorldPosition(new THREE.Vector3()).x,
