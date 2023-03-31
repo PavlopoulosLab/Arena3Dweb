@@ -4,7 +4,7 @@ const sceneZoom = (event) => {
     scene.zoom(event.deltaY);
     updateScenePanRShiny();
     updateVRLayerLabelsRShiny();
-    updateNodesRShiny(); // TODO only for VR
+    updateVRNodesRShiny();
   }
 };
 
@@ -22,7 +22,7 @@ const keyPressed = (event) => {
       scene.translatePanWithArrow(code);
       updateScenePanRShiny();
       updateVRLayerLabelsRShiny();
-      updateNodesRShiny(); // TODO only for VR
+      updateVRNodesRShiny();
     }
   }
 };
@@ -63,12 +63,13 @@ const clickDrag = (event) => {
       let x = event.screenX,
         y = event.screenY;
       if (scene.leftClickPressed) {
+        let selectedNodePositions = getSelectedNodes();
         scene.dragging = true;
         if (event.shiftKey) {
           lastHoveredLayerIndex = ""; // to be able to lasso inside layer
           lassoSelectNodes(event.layerX - xBoundMax, yBoundMax - event.layerY);
         } else if (scene.axisPressed !== "" && selectedNodePositions.length > 0)
-          translateNodes(event);
+          translateNodesWithHeldKey(event);
         else if (scene.axisPressed !== "")
           rotateLayersWithHeldKey(event);
         else if (lastHoveredLayerIndex === "" && last_hovered_node_index === "")
@@ -82,10 +83,9 @@ const clickDrag = (event) => {
       mousePreviousY = y;
     } 
     
-    if (!scene.leftClickPressed && !scene.middleClickPressed) {
-      node_hover_flag = checkHoverOverNode(event);
-      checkHoverOverLayer(event, node_hover_flag);
-    }
+    if (!scene.leftClickPressed && !scene.middleClickPressed)
+      if (!checkHoverOverNode(event))
+        checkHoverOverLayer(event);
   }
 };
 
@@ -94,7 +94,7 @@ const sceneDragPan = (x, y) => {
   scene.translatePanWithMouse(x, y);
   updateScenePanRShiny();
   updateVRLayerLabelsRShiny();
-  updateNodesRShiny(); // TODO only for VR
+  updateVRNodesRShiny();
 };
 
 // middle-click drag on scene
@@ -102,7 +102,7 @@ const sceneOrbit = (x, y) => {
   scene.orbitSphereWithMouse(x, y);    
   updateSceneSphereRShiny();
   updateVRLayerLabelsRShiny();
-  updateNodesRShiny(); // TODO only for VR
+  updateVRNodesRShiny();
 };
 
 const clickUp = (event) => {
@@ -115,14 +115,11 @@ const clickUp = (event) => {
         optionsList = "";
       }
       if (lasso !== "") {
-        for (let i = 0; i < nodes.length; i++) {
-          if (nodes[i].material.opacity == 0.5) {
-            nodes[i].material.opacity = 1;
-            if (!exists(selectedNodePositions, i)){
-              selectedNodePositions.push(i);
-              if (selectedNodeColorFlag)
-                nodes[i].material.color = new THREE.Color(selectedDefaultColor);
-            }
+        for (let i = 0; i < nodeObjects.length; i++) {
+          if (nodeObjects[i].getOpacity() == 0.5) { // means is inside lasso event
+            nodeObjects[i].setOpacity(1);
+            nodeObjects[i].isSelected = true;
+            repaintNode(i);
           }
         }
         decideNodeLabelFlags();
@@ -138,28 +135,20 @@ const clickUp = (event) => {
   }
 };
 
-// const mouseOut = (event) => { // breaks lasso while hovering over labels
-//   if (scene.exists()) {
-//     scene.dragging = false;
-//     scene.leftClickPressed = false;
-//     scene.middleClickPressed = false;
-//   }
-// };
-
 // double click event (left mouse), select node -> select layer -> unselect all nodes
 const dblClick = (event) => {
   if (scene.exists()) {
-      if (!checkNodeInteraction(event)) { //priority 1, select node
-        if (lastHoveredLayerIndex !== "") { //priority 2, select layer
-          performDoubleClickLayerSelection();
-        } else { //priority 3, unselect all nodes
-          unselectAllNodes();
-          unselectAllEdges();
-          
-          redrawEdges();
-          updateSelectedNodesRShiny();
-        }
+    // Priorities:
+    if (!performDoubleClickNodeSelection(event)) { // 1. select node
+      if (lastHoveredLayerIndex !== "") { // 2. select layer
+        performDoubleClickLayerSelection();
+      } else { // 3. unselect all nodes
+        unselectAllNodes();
+        unselectAllEdges();
+        
+        redrawEdges();
       }
+    }
   }
 };
 
@@ -170,9 +159,9 @@ const replaceContextMenuOverNode = (evt) => {
     optionsList = "";
   }
   let pos = "";
-  for (let i = 0; i < nodes.length; i++) {
-    let nodeX = xBoundMax + nodes[i].getWorldPosition(new THREE.Vector3()).x;
-    let nodeY = yBoundMax - nodes[i].getWorldPosition(new THREE.Vector3()).y;
+  for (let i = 0; i < nodeObjects.length; i++) {
+    let nodeX = xBoundMax + nodeObjects[i].getWorldPosition("x");
+    let nodeY = yBoundMax - nodeObjects[i].getWorldPosition("y");
     if (Math.pow(nodeX - evt.layerX, 2) + Math.pow(nodeY - evt.layerY, 2) <= Math.pow((SPHERE_RADIUS + 1), 2)) {
       evt.preventDefault();
       //creating list and appending to 3d-graph div
@@ -202,24 +191,21 @@ const replaceContextMenuOverNode = (evt) => {
       option.value = i; //option 3
       option.text = "Select Downstream Path";
       optionsList.appendChild(option);
-      if (node_attributes !== ""){
-        pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
-        if (pos > -1){
-          if (node_attributes.Url !== undefined && node_attributes.Url[pos] !== "" && node_attributes.Url[pos] != " " && node_attributes.Url[pos] != null){
-            option = document.createElement("option");
-            option.value = node_attributes.Url[pos];
-            option.text = "Link"; //option 3
-            optionsList.appendChild(option);
-          }
-          if (node_attributes.Description !== undefined && node_attributes.Description[pos] !== "" && node_attributes.Description[pos] != " " && node_attributes.Description[pos] != null){
-            option = document.createElement("option");
-            option.value = node_attributes.Description[pos];
-            //option.name = i;
-            option.text = "Description"; //option 4
-            optionsList.appendChild(option);
-          }
-        }
+
+      if (nodeObjects[i].url != "") { // TODO check if working properly
+        option = document.createElement("option");
+        option.value = nodeObjects[i].url;
+        option.text = "Link"; //option 3
+        optionsList.appendChild(option);
       }
+
+      if (nodeObjects[i].descr != "") {
+        option = document.createElement("option");
+        option.value = nodeObjects[i].descr;
+        option.text = "Description"; //option 4
+        optionsList.appendChild(option);
+      }
+
       document.getElementById("labelDiv").appendChild(optionsList);
       break;
     }

@@ -5,14 +5,13 @@ const initializeGlobals = (RGlobalsList) => {
   MAX_CHANNELS = RGlobalsList.MAX_CHANNELS;
   CHANNEL_COLORS_LIGHT = RGlobalsList.CHANNEL_COLORS_LIGHT;
   CHANNEL_COLORS_DARK = RGlobalsList.CHANNEL_COLORS_DARK;
-}
+};
 
 const startLoader = (m) => {
   let canvas_div = document.getElementById("3d-graph"),
-      loader = document.getElementById("loader");
+    loader = document.getElementById("loader");
   canvas_div.style.opacity = 0.5;
   loader.style.display = "inline-block";
-  return true;
 };
 
 const finishLoader = (m) => {
@@ -20,14 +19,12 @@ const finishLoader = (m) => {
       loader = document.getElementById("loader");
   canvas_div.style.opacity = 1;
   loader.style.display = "none";
-  return true;
 };
 
 const changeFPS = (message) => {
   fps = Number(message);
   if (isNaN(fps))
     fps = 30;
-  return true;
 };
 
 const browseUrl = url => {
@@ -58,7 +55,7 @@ Shiny.addCustomMessageHandler("handler_browseUrl", browseUrl);
 // Files ====================
 Shiny.addCustomMessageHandler("handler_uploadNetwork", uploadNetwork);
 Shiny.addCustomMessageHandler("handler_importNetwork", importNetwork);
-Shiny.addCustomMessageHandler("handler_nodeAttributes", nodeAttributes);
+Shiny.addCustomMessageHandler("handler_setNodeAttributes", setNodeAttributes);
 Shiny.addCustomMessageHandler("handler_edgeAttributes", edgeAttributes);
 // Scene ====================
 Shiny.addCustomMessageHandler("handler_toggleSceneCoords", toggleSceneCoords);
@@ -68,10 +65,12 @@ Shiny.addCustomMessageHandler("handler_showLayerCoords", showLayerCoords);
 Shiny.addCustomMessageHandler("handler_floorOpacity", setFloorOpacity);
 Shiny.addCustomMessageHandler("handler_showWireFrames", showWireFrames);
 Shiny.addCustomMessageHandler("handler_selectAllLayers", selectAllLayers);
-Shiny.addCustomMessageHandler("handler_layerColorPriority", layerColorPriority);
+Shiny.addCustomMessageHandler("handler_setLayerColorPriority", setLayerColorPriority);
 // Nodes ====================
-Shiny.addCustomMessageHandler("handler_nodeSelector", nodeSelector);
-Shiny.addCustomMessageHandler("handler_nodeSelectedColorPriority", nodeSelectedColorPriority);
+Shiny.addCustomMessageHandler("handler_selectAllNodes", selectAllNodes);
+Shiny.addCustomMessageHandler("handler_setNodeColorPriority", setNodeColorPriority);
+Shiny.addCustomMessageHandler("handler_setNodeSelectedColorPriority", setNodeSelectedColorPriority);
+Shiny.addCustomMessageHandler("handler_clickNodeColorPriority", clickNodeColorPriority);
 // Edges ====================
 Shiny.addCustomMessageHandler("handler_directionArrowSize", setDirectionArrowSize);
 Shiny.addCustomMessageHandler("handler_intraDirectionArrowSize", setIntraDirectionArrowSize);
@@ -87,9 +86,8 @@ Shiny.addCustomMessageHandler("handler_interChannelCurvature", interToggleChanne
 // Labels ====================
 Shiny.addCustomMessageHandler("handler_showLayerLabels", showLayerLabels);
 Shiny.addCustomMessageHandler("handler_resizeLayerLabels", resizeLayerLabels);
-Shiny.addCustomMessageHandler("handler_showNodeLabels", showAllNodeLabels);
-Shiny.addCustomMessageHandler("handler_showSelectedNodeLabels", showSelectedNodeLabels);
-Shiny.addCustomMessageHandler("handler_resizeLabels", resizeLabels);
+Shiny.addCustomMessageHandler("handler_showNodeLabels", showNodeLabels);
+Shiny.addCustomMessageHandler("handler_resizeNodeLabels", resizeNodeLabels);
 // Layouts and Topology ====================
 Shiny.addCustomMessageHandler("handler_layout", assignYZ);
 Shiny.addCustomMessageHandler("handler_setPerLayerFlag", setPerLayerFlag);

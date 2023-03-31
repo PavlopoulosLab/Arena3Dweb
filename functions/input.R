@@ -519,15 +519,24 @@ handleInputNodeAttributeFileUpload <- function() {
   tryCatch({
     renderModal("<h2>Please wait.</h2><br /><p>Uploading node attributes.</p>")
     nodeFile <- input$node_attributes_file$datapath
-    nodeAttributes <- read.delim(nodeFile)
-    nodeAttributes$Node <- paste(trimws(nodeAttributes$Node), trimws(nodeAttributes$Layer), sep="_") #concatenation node & group name
-    if (!identical(nodeAttributes$Color, NULL)) nodeAttributes$Color <- trimws(nodeAttributes$Color)
-    if (!identical(nodeAttributes$Size, NULL)) nodeAttributes$Size <- trimws(nodeAttributes$Size)
-    if (!identical(nodeAttributes$Url, NULL)) nodeAttributes$Url <- trimws(nodeAttributes$Url)
-    if (!identical(nodeAttributes$Description, NULL)) nodeAttributes$Description <- trimws(nodeAttributes$Description)
-    if (!is.null(nodeFile)){
-      callJSHandler("handler_nodeAttributes", nodeAttributes)
-      updateSelectInput(session, "navBar", selected = "Main View")
+    if (!is.null(nodeFile)) {
+      nodeAttributes <- read.delim(nodeFile)
+      if (existMandatoryNodeAttributeColumns(nodeAttributes)) {
+        nodeAttributes$NodeLayer <- paste(trimws(nodeAttributes$Node),
+                                          trimws(nodeAttributes$Layer), sep = "_")
+        if (!is.null(nodeAttributes$Color))
+          nodeAttributes$Color <- trimws(nodeAttributes$Color)
+        if (!is.null(nodeAttributes$Size))
+          nodeAttributes$Size <- trimws(nodeAttributes$Size)
+        if (!is.null(nodeAttributes$Url))
+          nodeAttributes$Url <- trimws(nodeAttributes$Url)
+        if (!is.null(nodeAttributes$Description))
+          nodeAttributes$Description <- trimws(nodeAttributes$Description)
+        
+        callJSHandler("handler_setNodeAttributes", toJSON(nodeAttributes))
+        callJSHandler("handler_clickNodeColorPriority", "default")
+        updateSelectInput(session, "navBar", selected = "Main View")
+      }
     }
   }, error = function(e) {
     print(paste0("Error during input node attributes file upload:  ", e))
@@ -535,6 +544,16 @@ handleInputNodeAttributeFileUpload <- function() {
   }, finally = {
     removeModal()
   })
+}
+
+existMandatoryNodeAttributeColumns <- function(nodeAttributes) {
+  exist <- T
+  if (is.null(nodeAttributes$Node) || is.null(nodeAttributes$Layer)) {
+    exist <- F
+    renderWarning("Your node attribute file must contain at least two columns:\n
+                  Node and Layer")
+  }
+  return(exist)
 }
 
 # Upload EDGE attributes ####
@@ -569,7 +588,7 @@ convertSessionToJSON <- function() {
   js_scene_pan <- fromJSON(input$js_scene_pan)
   js_scene_sphere <- fromJSON(input$js_scene_sphere)
   js_layers <- fromJSON(input$js_layers)
-  js_nodes <- as.data.frame(fromJSON(input$js_nodes))
+  js_nodes <- fromJSON(input$js_nodes)
   js_edge_pairs <- as.data.frame(fromJSON(input$js_edge_pairs))
   js_label_color <- input$js_label_color
   
@@ -577,15 +596,6 @@ convertSessionToJSON <- function() {
   edgeByWeight_flag <- input$edgeWidthByWeight
   
   scene <- c(js_scene_pan, js_scene_sphere)
-  
-  # Nodes
-  nodes_df <- data.frame()
-  for (i in 1:nrow(js_nodes)){
-    nodes_df <- rbind(nodes_df, c(js_nodes[i, 1], js_nodes[i, 2], js_nodes[i, 3], js_nodes[i, 4],
-                                  js_nodes[i, 5], js_nodes[i, 6], js_nodes[i, 7],
-                                  trimws(js_nodes[i, 8]), trimws(js_nodes[i, 9])))
-  }
-  colnames(nodes_df) <- c("name", "layer", "position_x", "position_y", "position_z", "scale", "color", "url", "descr")
   
   # Edges
   edges_df <- data.frame()
@@ -598,9 +608,8 @@ convertSessionToJSON <- function() {
   colnames(edges_df) <- c("src", "trg", "opacity", "color", "channel")
   
   exportData <- list(
-    scene = scene,
-    layers = js_layers, nodes = nodes_df, edges = edges_df,
-    universalLabelColor = js_label_color,
+    scene = scene, layers = js_layers, nodes = js_nodes,
+    edges = edges_df, universalLabelColor = js_label_color,
     direction = direction_flag, edgeOpacityByWeight = edgeByWeight_flag
   )
   exportData <- toJSON(exportData, auto_unbox = T)

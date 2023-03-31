@@ -44,7 +44,7 @@ const selectCheckedLayer = (checkbox) => {
 };
 
 const repaintLayers = () => { 
-  for (i = 0; i < layers.length; i++) {
+  for (let i = 0; i < layers.length; i++) {
     if (layers[i].isSelected)
       layers[i].setColor(SELECTED_LAYER_DEFAULT_COLOR);
     else {
@@ -86,11 +86,11 @@ const initialSpreadLayers = (direction = 1) => {
 };
 
 // Event Listeners =====
-const checkHoverOverLayer = (event, node_hover_flag) => {
+const checkHoverOverLayer = (event) => {
   setRaycaster(event);
   let layer_planes = layers.map(({ plane }) => plane);
   let intersects = RAYCASTER.intersectObjects(layer_planes);
-  if (intersects.length > 0 & !node_hover_flag) {
+  if (intersects.length > 0) {
     if (lastHoveredLayerIndex !== "") {
       repaintLayers();
       hoveredLayerPaintedFlag = true;
@@ -138,7 +138,7 @@ const rotateLayersWithHeldKey = (event) => {
   }
 
   updateLayersRShiny();
-  updateNodesRShiny(); // VR node world positions update
+  updateVRNodesRShiny();
 };
 
 const getSelectedLayers = () => {
@@ -189,7 +189,7 @@ const showWireFrames = (wireframeFlag) => {
     layers[i].toggleWireframe(wireframeFlag);
 };
 
-const layerColorPriority = (colorPriority) => {
+const setLayerColorPriority = (colorPriority) => {
   layerColorPrioritySource = colorPriority;
   repaintLayers();
   updateLayersRShiny();
@@ -211,7 +211,7 @@ const rotateSelectedLayers = (direction, axis) => {
           layers[selected_layers[i]].rotateZ(value);
       }
       updateLayersRShiny();
-      updateNodesRShiny(); // VR node world positions update
+      updateVRNodesRShiny();
     }, 70);
   } else
     alert("Please select at least one layer.");
@@ -222,7 +222,7 @@ const spreadLayers = (direction) => {
 
   updateLayersRShiny();
   updateVRLayerLabelsRShiny();
-  updateNodesRShiny(); // VR node world positions update
+  updateVRNodesRShiny();
 };
 
 const moveLayers = (direction, axis) => {
@@ -241,7 +241,7 @@ const moveLayers = (direction, axis) => {
       }
       updateLayersRShiny();
       updateVRLayerLabelsRShiny();
-      updateNodesRShiny(); // VR node world positions update
+      updateVRNodesRShiny();
     }, 70);
   } else
     alert("Please select at least one layer.");
@@ -271,6 +271,7 @@ const scaleLayers = () => {
     redrawEdges();
     updateLayersRShiny();
     updateNodesRShiny();
+    updateVRNodesRShiny();
   } else
     alert("Please select at least one layer.");
 };

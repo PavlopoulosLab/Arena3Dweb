@@ -419,8 +419,8 @@ const attachCanvasControls = () => { //adding control buttons above the canvas l
   cavnasButtons[18].onmousemove = cavnasButtons[18].onmouseup = mouseUpClear;
   cavnasButtons[19].addEventListener("mousedown", function() { moveLayers(1, "Z") });
   cavnasButtons[19].onmousemove = cavnasButtons[19].onmouseup = mouseUpClear;
-  cavnasButtons[20].onclick = spreadNodes;
-  cavnasButtons[21].onclick = congregateNodes;
+  cavnasButtons[20].addEventListener("click", function() { spreadNodes(1.1) });
+  cavnasButtons[21].addEventListener("click", function() { spreadNodes(0.9) });
   cavnasButtons[22].addEventListener("mousedown", function() { moveNodes(-1, "X") });
   cavnasButtons[22].onmousemove = cavnasButtons[22].onmouseup = mouseUpClear;
   cavnasButtons[23].addEventListener("mousedown", function() { moveNodes(1, "X") });
@@ -463,14 +463,18 @@ const sliderSceneRotate = () => {
   td.innerHTML = "Angle: ".concat(cavnasSlider.value).concat("&#730;");
 }
 
-const recenterNetwork = () => {
+const recenterNetwork = async () => {
   if (scene.exists()) {
     scene.recenter();
+    await delay_ms(100);
     updateScenePanRShiny();
     updateVRLayerLabelsRShiny();
-    updateNodesRShiny(); // TODO only VR
+    updateVRNodesRShiny();
   }
 }
+
+// needed to correctly recenter network for VR
+const delay_ms = ms => new Promise(res => setTimeout(res, ms));
 
 const sliderLayerRotate = () => {
   let cavnasSlider = document.getElementsByClassName("canvasSlider")[1],

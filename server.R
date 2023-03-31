@@ -126,7 +126,7 @@ server <- function(input, output, session) {
   }, ignoreInit = T)
   
   observeEvent(input$layerColorPriorityRadio, {
-    callJSHandler("handler_layerColorPriority", input$layerColorPriorityRadio)
+    callJSHandler("handler_setLayerColorPriority", input$layerColorPriorityRadio)
   }, ignoreInit = T)
   
   observeEvent(input$layerOpacity, {
@@ -134,24 +134,24 @@ server <- function(input, output, session) {
   }, ignoreInit = T)
   
   # NODES ####
-  observeEvent(input$showAllNodeLabels, {
-    callJSHandler("handler_showNodeLabels", input$showAllNodeLabels)
+  observeEvent(input$showNodeLabelsRadio, {
+    callJSHandler("handler_showNodeLabels", input$showNodeLabelsRadio)
   }, ignoreInit = T)
   
-  observeEvent(input$showSelectedNodeLabels, {
-    callJSHandler("handler_showSelectedNodeLabels", input$showSelectedNodeLabels)
+  observeEvent(input$resizeNodeLabels, {
+    callJSHandler("handler_resizeNodeLabels", input$resizeNodeLabels)
   }, ignoreInit = T)
   
-  observeEvent(input$resizeLabels, {
-    callJSHandler("handler_resizeLabels", input$resizeLabels)
+  observeEvent(input$selectAllNodes, {
+    callJSHandler("handler_selectAllNodes", input$selectAllNodes)
   }, ignoreInit = T)
-  
-  observeEvent(input$nodeSelector, {
-    callJSHandler("handler_nodeSelector", input$nodeSelector)
+
+  observeEvent(input$nodeColorPriorityRadio, {
+    callJSHandler("handler_setNodeColorPriority", input$nodeColorPriorityRadio)
   }, ignoreInit = T)
   
   observeEvent(input$nodeSelectedColorPriority, {
-    callJSHandler("handler_nodeSelectedColorPriority", input$nodeSelectedColorPriority)
+    callJSHandler("handler_setNodeSelectedColorPriority", input$nodeSelectedColorPriority)
   }, ignoreInit = T)
   
   # EDGES ####

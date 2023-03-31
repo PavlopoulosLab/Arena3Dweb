@@ -157,7 +157,7 @@ class Scene {
         scene.rotateZ(value);
       updateSceneSphereRShiny();
       updateVRLayerLabelsRShiny();
-      updateNodesRShiny();
+      updateVRNodesRShiny();
     }, 70);
   }
 

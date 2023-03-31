@@ -71,9 +71,9 @@ class Layer {
 
   createSphere() {
     let geometry = new THREE.SphereGeometry();
-    let material = new THREE.MeshBasicMaterial(
-      {color: "white", transparent: true, opacity: 0}
-    );
+    let material = new THREE.MeshBasicMaterial({
+      color: "white", transparent: true, opacity: 0
+    });
     let sphere = new THREE.Mesh(geometry, material);
     return(sphere);
   }
@@ -92,6 +92,10 @@ class Layer {
   
   initScale(value) {
     this.plane.geometry.scale(1, Number(value), Number(value));
+  }
+
+  addNode(sphere) {
+    this.plane.add(sphere);
   }
 
   // toggle functions
@@ -180,11 +184,10 @@ class Layer {
   getColor() {
     let color = LAYER_DEFAULT_COLOR;
     if (this.isSelected) {
-      if (layerColorPrioritySource == "default") {
+      if (layerColorPrioritySource == "default")
         color = this.importedColor;
-      } else if (layerColorPrioritySource == "picker") {
+      else if (layerColorPrioritySource == "picker")
         color = document.getElementById("floor_color").value;
-      }
     } else 
       color = this.color;
     return(color);

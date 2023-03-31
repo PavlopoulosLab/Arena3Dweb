@@ -22,6 +22,7 @@ const updateSceneSphereRShiny = () => {
 const updateLayersRShiny = () => {
   let js_layers = [];
 
+  renderLayerLabelsFlag = true;
   for (let i = 0; i < layers.length; i++) {
     js_layers.push(
       [layers[i].getName(), layers[i].getPosition("x"), layers[i].getPosition("y"), layers[i].getPosition("z"),
@@ -59,50 +60,71 @@ const updateSelectedLayersRShiny = () => {
 
 // Nodes
 const updateNodesRShiny = () => {
-  let js_nodes = [],
-    js_nodes_world = [], // VR
-    target = new THREE.Vector3(), // VR
-    temp_js_nodes = [],
-    color = "";
-  for (let i = 0; i < nodes.length; i++){
-    let url = descr = " ";
-    if (node_attributes !== ""){
-      pos = node_attributes.Node.indexOf(nodeLayerNames[i]);
-      if (pos > -1){
-        if (node_attributes.Color !== undefined && node_attributes.Color[pos] !== "" && node_attributes.Color[pos] != " " && node_attributes.Color[pos] !== null) //if node exists in node attributes file
-          color = node_attributes.Color[pos];
-        else color = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length];
-        if (node_attributes.Url !== undefined && node_attributes.Url[pos] !== "" && node_attributes.Url[pos] != " " && node_attributes.Url[pos] !== null)
-          url = node_attributes.Url[pos];
-        if (node_attributes.Description !== undefined && node_attributes.Description[pos] !== "" && node_attributes.Description[pos] != " " && node_attributes.Description[pos] !== null)
-          descr = node_attributes.Description[pos];
-      } else color = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]])%nodeColorVector.length];
-    }  else if (nodes[i].userData.cluster) nodes[i].material.color = new THREE.Color(nodeColorVector[nodes[i].userData.cluster]);
-    else color = nodeColorVector[(layerGroups[nodeGroups[nodeLayerNames[i]]]) % nodeColorVector.length];
+  let js_nodes = [];
 
-    if (node_cluster_colors.length !== 0) color = node_cluster_colors[i];
-    
-    temp_js_nodes = [nodeNames[i], nodeGroups[nodeLayerNames[i]], nodes[i].position.x, nodes[i].position.y, nodes[i].position.z,
-      nodes[i].scale.x, color, url, descr];
-    js_nodes.push(temp_js_nodes);
-    
-    // VR
-    temp_js_nodes = [nodeNames[i], nodeGroups[nodeLayerNames[i]],
-      nodes[i].getWorldPosition(target).x, nodes[i].getWorldPosition(target).y, nodes[i].getWorldPosition(target).z,
-      nodes[i].scale.x, color];
-    js_nodes_world.push(temp_js_nodes);
+  renderNodeLabelsFlag = true;
+  for (let i = 0; i < nodeObjects.length; i++) {    
+    js_nodes.push([
+      nodeObjects[i].getName(), nodeObjects[i].getLayer(),
+      nodeObjects[i].getPosition("x"),
+      nodeObjects[i].getPosition("y"),
+      nodeObjects[i].getPosition("z"),
+      nodeObjects[i].getScale(), nodeObjects[i].getColor(),
+      nodeObjects[i].url, nodeObjects[i].descr
+    ]);
   }
-  Shiny.setInputValue("js_nodes", JSON.stringify(js_nodes));
-  Shiny.setInputValue("js_nodes_world", JSON.stringify(js_nodes_world)); // VR
-}
 
+  js_nodes = js_nodes.map(node => {
+    return {
+      name: node[0],
+      layer: node[1],
+      position_x: node[2],
+      position_y: node[3],
+      position_z: node[4],
+      scale: node[5],
+      color: node[6],
+      url: node[7],
+      descr: node[8],
+    }
+  });
+  Shiny.setInputValue("js_nodes", JSON.stringify(js_nodes));
+};
+
+const updateVRNodesRShiny = () => {
+  let js_nodes_world = [];
+  
+  renderNodeLabelsFlag = true;
+  for (let i = 0; i < nodeObjects.length; i++) {
+    js_nodes_world.push([
+      nodeObjects[i].getName(), nodeObjects[i].getLayer(),
+      nodeObjects[i].getWorldPosition("x"),
+      nodeObjects[i].getWorldPosition("y"),
+      nodeObjects[i].getWorldPosition("z"),
+      nodeObjects[i].getColor()
+    ]);
+  }
+
+  js_nodes_world = js_nodes_world.map(node => {
+    return {
+      name: node[0],
+      layer: node[1],
+      worldPosition_x: node[2],
+      worldPosition_y: node[3],
+      worldPosition_z: node[4],
+      color: node[5]
+    }
+  });
+  Shiny.setInputValue("js_nodes_world", JSON.stringify(js_nodes_world));
+};
+
+// from JS, because need to get positions from js_selectedNodePositions
 const updateNodeNamesRShiny = () => {
   Shiny.setInputValue("js_node_names", nodeLayerNames);
-}
+};
 
 const updateSelectedNodesRShiny = () => {
-  Shiny.setInputValue("js_selectedNodePositions", selectedNodePositions);
-}
+  Shiny.setInputValue("js_selectedNodePositions", getSelectedNodes());
+};
 
 // Edges
 const updateEdgesRShiny = () => {
@@ -179,20 +201,21 @@ const updateVRLayerLabelsRShiny = () => {
   target = new THREE.Vector3(),
   layer_planes = layers.map(({ plane }) => plane);
 
-for (let i = 0; i < layers.length; i++) {
-  js_vr_layer_labels.push(
-    [layers[i].getName(), layer_planes[i].getWorldPosition(target).x,
-    layer_planes[i].getWorldPosition(target).y, layer_planes[i].getWorldPosition(target).z]
-  );
-}
-
-js_vr_layer_labels = js_vr_layer_labels.map(layer => {
-  return {
-    name: layer[0],
-    worldPosition_x: layer[1],
-    worldPosition_y: layer[2],
-    worldPosition_z: layer[3]
+  renderLayerLabelsFlag = true;
+  for (let i = 0; i < layers.length; i++) {
+    js_vr_layer_labels.push(
+      [layers[i].getName(), layer_planes[i].getWorldPosition(target).x,
+      layer_planes[i].getWorldPosition(target).y, layer_planes[i].getWorldPosition(target).z]
+    );
   }
-});
-Shiny.setInputValue("js_vr_layer_labels", JSON.stringify(js_vr_layer_labels));
+
+  js_vr_layer_labels = js_vr_layer_labels.map(layer => {
+    return {
+      name: layer[0],
+      worldPosition_x: layer[1],
+      worldPosition_y: layer[2],
+      worldPosition_z: layer[3]
+    }
+  });
+  Shiny.setInputValue("js_vr_layer_labels", JSON.stringify(js_vr_layer_labels));
 };

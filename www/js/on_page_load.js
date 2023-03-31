@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.onresize = resetScreen;
     // release mouse buttons on network div exit
     document.getElementsByClassName("container-fluid")[0].children[0].addEventListener("mouseleave", clickUp);
-    let searchBar = document.getElementById("searchBar");
-    searchBar.onkeydown = selectSearchedNodes;
+    let nodeSearchBar = document.getElementById("nodeSearchBar");
+    nodeSearchBar.onkeydown = selectSearchedNodes;
 }, false);
 
 const initializeCanvasDiv = () => {
@@ -49,7 +49,6 @@ const addCanvasEventListeners = () => {
     canvas.addEventListener('mousedown', clickDown);
     canvas.addEventListener('mousemove', clickDrag);
     canvas.addEventListener('mouseup', clickUp);
-    //canvas.addEventListener("mouseout", mouseOut); // breaks lasso while hovering over labels
     canvas.addEventListener('dblclick', dblClick);
     canvas.addEventListener('contextmenu', replaceContextMenuOverNode); //implementing right click toolbox over nodes
 };

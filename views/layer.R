@@ -15,7 +15,7 @@ generateLayerDiv <- function() {
       inline = T,
       choiceNames = list("Default / Imported", "Theme / Colorpicker"),
       choiceValues = list("default", "picker")
-    ),        
+    ),
     tags$div(id = "floorColorPicker", class = "colorPicker"),
     actionButton("hideButton4", icon("angle-up"), class = "hideButton")
   )

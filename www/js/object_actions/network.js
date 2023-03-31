@@ -26,8 +26,9 @@ const resetValues = () => {
   // labels
   document.getElementById("labelDiv").innerHTML = "";
   layer_label_divs = []; //divs
+  renderLayerLabelsFlag = false;
   node_labels = [];
-  nodeLabelFlags = [];
+  renderNodeLabelsFlag = false;
 
   // layers
   layers = [];
@@ -35,16 +36,11 @@ const resetValues = () => {
   lastHoveredLayerIndex = "";
 
   // nodes
-  nodes = []; //canvas objects
+  nodeObjects = [];
   nodeNames = [];
   nodeLayerNames = [];
   nodeGroups = new Map();
-  hovered_nodes = [];
   last_hovered_node_index = "";
-  selectedNodePositions = [];
-  nodeColorVector = COLOR_VECTOR_DARK.concat(COLOR_VECTOR_271);
-  node_cluster_colors = [];
-  node_attributes = "";
 
   // edges
   edges = []; //canvas objects
@@ -78,8 +74,8 @@ const resetValues = () => {
 const initializeScene = () => {
   scene.tiltDefault();
   scene.setScale(0.9);
-  applyTheme('#000000', '#777777', '#ffffff', '#ffffff',
-    COLOR_VECTOR_DARK, CHANNEL_COLORS_LIGHT);
+  applyTheme('#000000', '#777777', '#ffffff',
+     CHANNEL_COLORS_LIGHT, '#ffffff', fromInit = true);
 };
 
 const initializeLayers = (network) => {
@@ -167,7 +163,6 @@ const executePostNetworkSetup = () => {
   drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
 
   createEdgeObjects();
-  nodeLabelFlags = new Array(nodeLayerNames.length).fill(false);
   createLabels();
 
   attachLayerCheckboxes();
@@ -184,6 +179,7 @@ const executePostNetworkSetup = () => {
   updateVRLayerLabelsRShiny();
   updateLayerNamesRShiny();
   updateNodesRShiny();
+  updateVRNodesRShiny();
   updateNodeNamesRShiny();
   updateSelectedNodesRShiny();
   updateEdgesRShiny();
@@ -277,37 +273,24 @@ const initializeEdgesFromJSON = (jsonEdges) => {
 
 const initializeNodesFromJSON = (jsonNodes, jsonScrambleFlag) => {
   let nodeLayerName = "",
-    nodeColor, sphere;
+    nodeColor;
+  nodeNames = undefined; // releasing ram
 
-  node_attributes = {
-    "Node": [],
-    "Size": [],
-    "Color": [],
-    "Url": [],
-    "Description": [],
-  };
-  
   for (let i = 0; i < jsonNodes.name.length; i++) {
-    nodeNames.push(jsonNodes.name[i]);
     currentLayer = jsonNodes.layer[i];
     nodeLayerName = jsonNodes.name[i].concat("_").concat(currentLayer);
     nodeLayerNames.push(nodeLayerName); //name + group
     nodeGroups[nodeLayerName] = jsonNodes.layer[i];
-
-    node_attributes.Node.push(nodeLayerName);
-    node_attributes.Size.push(Number(jsonNodes.scale[i]));
-    node_attributes.Color.push(jsonNodes.color[i]);
-    node_attributes.Url.push(jsonNodes.url[i]);
-    node_attributes.Description.push(jsonNodes.descr[i]);
     
     nodeColor = jsonNodes.color[i];
-    sphere = createNodeObject(nodeColor);
-    layers[layerGroups[nodeGroups[nodeLayerName]]].plane.add(sphere);
-
-    sphere.position.x = Number(jsonNodes.position_x[i]);
-    sphere.position.y = Number(jsonNodes.position_y[i]);
-    sphere.position.z = Number(jsonNodes.position_z[i]);
-    sphere.scale.x = sphere.scale.y = sphere.scale.z = Number(jsonNodes.scale[i]);
+    nodeObjects.push(new Node({id: i, name: jsonNodes.name[i],
+      layer: nodeGroups[nodeLayerNames[i]], nodeLayerName: nodeLayerNames[i],
+      position_x: Number(jsonNodes.position_x[i]),
+      position_y: Number(jsonNodes.position_y[i]),
+      position_z: Number(jsonNodes.position_z[i]),
+      scale: Number(jsonNodes.scale[i]), color: nodeColor,
+      url: jsonNodes.url[i], descr: jsonNodes.descr[i]}));
+    layers[layerGroups[nodeGroups[nodeLayerName]]].addNode(nodeObjects[i].sphere);
   }
 
   if (jsonScrambleFlag) {

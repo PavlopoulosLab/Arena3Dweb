@@ -3,13 +3,15 @@
 //@param node (integer): node whose neighbors are requested
 //@return int array of neighbor IDs
 const interLayerNeighbors = (node) => {
-  let i, edge_split, index1, index2, neighbors = [];
-  for (i = 0; i < edgePairs.length; i++){
+  let edge_split, index1, index2, neighbors = [];
+  for (let i = 0; i < edgePairs.length; i++) {
     edge_split = edgePairs[i].split("---");
     index1 = nodeLayerNames.indexOf(edge_split[0]);
     index2 = nodeLayerNames.indexOf(edge_split[1]);
-    if (node == index1) neighbors.push(index2);
-    else if (node == index2) neighbors.push(index1);
+    if (node == index1)
+      neighbors.push(index2);
+    else if (node == index2)
+      neighbors.push(index1);
   }
   return neighbors;
 }
@@ -20,8 +22,8 @@ const interLayerNeighbors = (node) => {
 //@param node2 (integer): second node
 //@return: String of inter-layer edge pair (as found in the edgePairs array) or null if not found
 const getInterLayerEdge = (node1, node2) => {
-  let i, edge_split, index1, index2;
-  for (i = 0; i < edgePairs.length; i++){
+  let edge_split, index1, index2;
+  for (let i = 0; i < edgePairs.length; i++) {
     edge_split = edgePairs[i].split("---");
     index1 = nodeLayerNames.indexOf(edge_split[0]);
     index2 = nodeLayerNames.indexOf(edge_split[1]);
@@ -37,13 +39,14 @@ const getInterLayerEdge = (node1, node2) => {
 //@param previousNode (integer): previous node, to figure which edge to paint
 //@return void
 const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
-  let neighbors, i, toCheckLayer, interLayerEdge, pos;
+  let neighbors, toCheckLayer, interLayerEdge, pos;
   if (!exists(downstreamCheckedNodes, currentNode)){
     downstreamCheckedNodes.push(currentNode);
     //selecting and painting node
-    if (!exists(selectedNodePositions, currentNode)){
-      selectedNodePositions.push(currentNode);
-      if (selectedNodeColorFlag) nodes[currentNode].material.color = new THREE.Color( selectedDefaultColor );
+    if (!nodeObjects[currentNode].isSelected) {
+      nodeObjects[currentNode].isSelected = true;
+      if (selectedNodeColorFlag)
+        nodeObjects[currentNode].setColor(selectedDefaultColor);
     }
     //selecting and painting edge
     if (currentNode != previousNode){ //skipping first node call check wiuth itself
@@ -59,7 +62,7 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
     }
     //find node inter-layer neighbors and continue recursively
     neighbors = interLayerNeighbors(currentNode);
-    for (i = 0; i < neighbors.length; i++){
+    for (let i = 0; i < neighbors.length; i++) {
       toCheckLayer = nodeGroups[nodeLayerNames[neighbors[i]]];
       if (!exists(layerPath, toCheckLayer)){
         layerPath.push(toCheckLayer);
@@ -72,7 +75,7 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
 }
 
 const executeCommand = (item) => {
-  new_color = new THREE.Color( selectedDefaultColor );
+  new_color = new THREE.Color( selectedDefaultColor ); // TODO remove after edges replaced with Classes
   if (item.options[item.selectedIndex].text == "Select Neighbors"){ //select neighbors
     let pos = -1;
     for (let i = 0; i < edgePairs.length; i++){ //random x,y,z
@@ -80,9 +83,10 @@ const executeCommand = (item) => {
       index1 = nodeLayerNames.indexOf(edge_split[0]);
       index2 = nodeLayerNames.indexOf(edge_split[1]);
       if (index1 == item.value) {
-        if (!exists(selectedNodePositions, index2)) {
-          selectedNodePositions.push(index2);
-          if (selectedNodeColorFlag) changeColor(nodes[index2], new_color);
+        if (!nodeObjects[index2].isSelected) {
+          nodeObjects[index2].isSelected = true;
+          if (selectedNodeColorFlag)
+            nodeObjects[index2].setColor(selectedDefaultColor);
         }
         if (!exists(selected_edges, i)) {
           selected_edges.push(i);
@@ -94,9 +98,10 @@ const executeCommand = (item) => {
             }
         }
       } else if (index2 == item.value) {
-        if (!exists(selectedNodePositions, index1)){
-          selectedNodePositions.push(index1);
-          if (selectedNodeColorFlag) changeColor(nodes[index1], new_color);
+        if (!nodeObjects[index1].isSelected){
+          nodeObjects[index1].isSelected = true;
+          if (selectedNodeColorFlag)
+            nodeObjects[index1].setColor(selectedDefaultColor);
         }
         if (!exists(selected_edges, i)){
           selected_edges.push(i);
@@ -117,7 +122,7 @@ const executeCommand = (item) => {
         flag = false,
         currentNode = item.value,
         startingLayer = nodeGroups[nodeLayerNames[currentNode]];
-    startLoader(true);
+    startLoader();
     while (!flag){
       let pos = -1;
       for (let i = 0; i < edgePairs.length; i++){
@@ -127,9 +132,10 @@ const executeCommand = (item) => {
         if (index1 == currentNode && nodeGroups[nodeLayerNames[index2]] != startingLayer && nodeGroups[nodeLayerNames[index2]] != nodeGroups[nodeLayerNames[index1]] && !(exists(tempSelectedNodes, index2))){ //path must not contain other nodes in starting layer or its own layer
           tempSelectedNodes.push(index2);
           // code from Select neighbors above
-          if (!exists(selectedNodePositions, index2)){
-            selectedNodePositions.push(index2);
-            if (selectedNodeColorFlag) changeColor(nodes[index2], new_color);  
+          if (!nodeObjects[index2].isSelected) {
+            nodeObjects[index2].isSelected = true;
+            if (selectedNodeColorFlag)
+              nodeObjects[index2].setColor(selectedDefaultColor); 
           }
           if (!exists(selected_edges, i)){
             selected_edges.push(i);
@@ -143,9 +149,10 @@ const executeCommand = (item) => {
         } else if (index2 == currentNode && nodeGroups[nodeLayerNames[index1]] != startingLayer && nodeGroups[nodeLayerNames[index2]] != nodeGroups[nodeLayerNames[index1]] && !(exists(tempSelectedNodes, index1))){
           tempSelectedNodes.push(index1);
           // code from Select neighbors above
-          if (!exists(selectedNodePositions, index1)){
-            selectedNodePositions.push(index1);
-            if (selectedNodeColorFlag) changeColor(nodes[index1], new_color);
+          if (!nodeObjects[index1].isSelected){
+            nodeObjects[index1].isSelected = true;
+            if (selectedNodeColorFlag)
+              nodeObjects[index1].setColor(selectedDefaultColor);
           }
           if (!exists(selected_edges, i)){
             selected_edges.push(i);
@@ -166,18 +173,18 @@ const executeCommand = (item) => {
     }
     decideNodeLabelFlags();
     updateSelectedNodesRShiny();
-    finishLoader(true);
+    finishLoader();
   } else if (item.options[item.selectedIndex].text == "Select Downstream Path"){
     let currentNode = item.value, //int
         layerPath = [nodeGroups[nodeLayerNames[currentNode]]]; //array of 1 element at start
-    startLoader(true);
+    startLoader();
     ///////////////////////////////
     recursiveDownstreamHighlight(layerPath, currentNode, currentNode);
     downstreamCheckedNodes = []; //resetting global variable
     ////////////////////////
     decideNodeLabelFlags();
     updateSelectedNodesRShiny();
-    finishLoader(true);
+    finishLoader();
   } else if (item.options[item.selectedIndex].text == "Link") window.open(item.value);
   else if (item.options[item.selectedIndex].text == "Description"){
     let descrDiv = document.getElementById("descrDiv"),

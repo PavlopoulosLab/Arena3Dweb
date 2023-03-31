@@ -1,6 +1,7 @@
 const createLabels = () => {
   //nodes
-  for (let i = 0; i < nodes.length; i++){
+  let nodeNames = nodeObjects.map(({ name }) => name);
+  for (let i = 0; i < nodeObjects.length; i++){
     let div = document.createElement('div');
     div.textContent = nodeNames[i];
     div.setAttribute('class', 'labels');
@@ -12,7 +13,7 @@ const createLabels = () => {
     node_labels[i].style.color = globalLabelColor;
   }
   //layers
-  for (i = 0; i < layers.length; i++) {
+  for (let i = 0; i < layers.length; i++) {
     let div = document.createElement('div'),
       name = layers[i].getName();
     div.textContent = name;
@@ -73,24 +74,26 @@ const hideAllLayerLabels = () => {
 };
 
 const resizeLayerLabels = (size) => { // [1, 20]
-  for (i = 0; i < layers.length; i++)
+  for (let i = 0; i < layers.length; i++)
     layer_label_divs[i].style.fontSize = size.toString().concat("px");
 };
 
-const showAllNodeLabels = (flag) => { // true or false
-  showAllNodeLabelsFlag = flag;
-  decideNodeLabelFlags();
-}
-
-const showSelectedNodeLabels = (flag) => { // true or false
-  showSelectedNodeLabelsFlag = flag;
-  decideNodeLabelFlags();
-}
-
-const resizeLabels = (message) => {
-  let size = message; //message = [1, 20]
-  for (let i = 0; i < nodes.length; i++){
-    node_labels[i].style.fontSize = size.toString().concat("px");
+const showNodeLabels = (mode) => {
+  if (mode == "all") {
+    showAllNodeLabelsFlag = true;
+    showSelectedNodeLabelsFlag = false;
+  } else if (mode == "selected") {
+    showAllNodeLabelsFlag = false;
+    showSelectedNodeLabelsFlag = true;
+  } else if (mode == "none") {
+    showAllNodeLabelsFlag = false;
+    showSelectedNodeLabelsFlag = false;
   }
-  return true;
+  decideNodeLabelFlags();
+};
+
+const resizeNodeLabels = (message) => {
+  let size = message; //message = [1, 20]
+  for (let i = 0; i < nodeObjects.length; i++)
+    node_labels[i].style.fontSize = size.toString().concat("px");
 }

@@ -17,16 +17,16 @@ const attachThemeButtons = () => {
   grayThemeButton.innerHTML = "Gray";
 
   lightThemeButton.addEventListener("click", () => {
-    applyTheme('#ffffff', '#8aa185', '#5c5c5c', '#000000',
-    COLOR_VECTOR_LIGHT, CHANNEL_COLORS_DARK)
+    applyTheme('#ffffff', '#8aa185', '#5c5c5c',
+    CHANNEL_COLORS_DARK, '#000000')
   });
   darkThemeButton.addEventListener("click", () => {
-    applyTheme('#000000', '#777777', '#ffffff', '#ffffff',
-    COLOR_VECTOR_DARK, CHANNEL_COLORS_LIGHT)
+    applyTheme('#000000', '#777777', '#ffffff',
+    CHANNEL_COLORS_LIGHT, '#ffffff')
   });
   grayThemeButton.addEventListener("click", () => {
-    applyTheme('#999999', '#1d4991', '#6e2a5a', '#ffffff',
-    COLOR_VECTOR_GRAY, CHANNEL_COLORS_LIGHT)
+    applyTheme('#999999', '#1d4991', '#6e2a5a',
+    CHANNEL_COLORS_LIGHT, '#ffffff')
   });
 
   themeDiv.appendChild(lightThemeButton);
@@ -34,23 +34,29 @@ const attachThemeButtons = () => {
   themeDiv.appendChild(grayThemeButton);
 };
 
-const applyTheme = (bgColor, floorColor, edgeColor, labelColor, theme_colors, channel_colors_theme) =>{
-  if (scene.exists()) {
-    nodeColorVector = theme_colors.concat(COLOR_VECTOR_271);
-    getChannelColorsFromPalette(channel_colors_theme);
-    setRendererColor(bgColor);
-    updateScenePanRShiny();
-    document.getElementById("floor_color").value = floorColor;
-    repaintLayersFromPicker();
-    attachChannelEditList();
-    updateLayersRShiny();
-    edgeDefaultColor = edgeColor; // global for inter-layer edges
-    setEdgeColor();
-    updateEdgesRShiny();
-    globalLabelColor = labelColor;
-    setLabelColor();
-    updateLabelColorRShiny();
-    updateNodesRShiny();
-    redrawEdges();
-  }
+const applyTheme = (bgColor, floorColor,
+  edgeColor, channel_colors_theme, labelColor,
+  fromInit = false) => {
+    if (scene.exists()) {
+      setRendererColor(bgColor);
+      document.getElementById("floor_color").value = floorColor;
+      edgeDefaultColor = edgeColor; // global for inter-layer edges
+      getChannelColorsFromPalette(channel_colors_theme);
+      globalLabelColor = labelColor;
+
+      if (!fromInit) {
+        repaintLayersFromPicker();
+        attachChannelEditList();
+        setEdgeColor();
+        redrawEdges();
+        setLabelColor();
+    
+        updateScenePanRShiny();
+        updateLayersRShiny();
+        updateNodesRShiny();
+        updateVRNodesRShiny();
+        updateEdgesRShiny();
+        updateLabelColorRShiny();
+      }
+    }
 };
