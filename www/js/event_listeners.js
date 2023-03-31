@@ -119,9 +119,9 @@ const clickUp = (event) => {
           if (nodeObjects[i].getOpacity() == 0.5) { // means is inside lasso event
             nodeObjects[i].setOpacity(1);
             nodeObjects[i].isSelected = true;
+            repaintNode(i);
           }
         }
-        repaintNodes();
         decideNodeLabelFlags();
         updateSelectedNodesRShiny();
       }
@@ -138,17 +138,18 @@ const clickUp = (event) => {
 // double click event (left mouse), select node -> select layer -> unselect all nodes
 const dblClick = (event) => {
   if (scene.exists()) {
-      if (!checkNodeInteraction(event)) { //priority 1, select node
-        if (lastHoveredLayerIndex !== "") { //priority 2, select layer
-          performDoubleClickLayerSelection();
-        } else { //priority 3, unselect all nodes
-          unselectAllNodes();
-          unselectAllEdges();
-          
-          redrawEdges();
-          updateSelectedNodesRShiny();
-        }
+    // Priorities:
+    if (!performDoubleClickNodeSelection(event)) { // 1. select node
+      if (lastHoveredLayerIndex !== "") { // 2. select layer
+        performDoubleClickLayerSelection();
+      } else { // 3. unselect all nodes
+        unselectAllNodes();
+        unselectAllEdges();
+        
+        redrawEdges();
+        updateSelectedNodesRShiny();
       }
+    }
   }
 };
 

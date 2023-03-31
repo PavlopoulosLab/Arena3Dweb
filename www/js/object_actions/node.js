@@ -74,6 +74,7 @@ const decideNodeLabelFlags = () => {
   renderNodeLabelsFlag = true;
   for (let i = 0; i < nodeObjects.length; i++) {
     node_layer = layerGroups[nodeGroups[nodeLayerNames[i]]];
+    // Priorities list:
     if (hidelayerCheckboxes[node_layer].checked) { // 1. if node's layer not hidden 
       nodeObjects[i].showLabel = false;
     } else if (showAllNodeLabelsFlag) { // 2. if showing all node labels
@@ -87,95 +88,118 @@ const decideNodeLabelFlags = () => {
     } else
       nodeObjects[i].showLabel= false; // 6. if none of the above apply, don't show label
   }
-}  
+};
 
-const checkNodeInteraction = (event) => {
+const performDoubleClickNodeSelection = (event) => {
+  let intersects, nodeSelected = false,
+    node_spheres = nodeObjects.map(({ sphere }) => sphere);
+
   setRaycaster(event);
-  let node_spheres = nodeObjects.map(({ sphere }) => sphere);
-  let intersects = RAYCASTER.intersectObjects(node_spheres);
-  let node_selection = false;
+  
+  intersects = RAYCASTER.intersectObjects(node_spheres);
   if (intersects.length > 0) {
-    node_selection = true;
+    nodeSelected = true;
+
     let ind = findIndexByUuid(node_spheres, intersects[0].object.uuid);
-    if (nodeObjects[ind].isSelected) {
-      nodeObjects[ind].isSelected = false;
-      if (selectedNodeColorFlag)
-        nodeObjects[ind].setColor(nodeObjects[ind].getColor());
-    } else {
-      nodeObjects[ind].isSelected = true;
-      if (selectedNodeColorFlag)
-        nodeObjects[ind].setColor(selectedDefaultColor);
-    }
+    nodeObjects[ind].isSelected = !nodeObjects[ind].isSelected;
+    
+    repaintNode(ind);
+    decideNodeLabelFlags();
+    updateSelectedNodesRShiny();
   }
 
-  decideNodeLabelFlags();
-  updateSelectedNodesRShiny();
-  return node_selection;
-}
+  return(nodeSelected)
+};
+
+const repaintNode = (i) => {
+  if (selectedNodeColorFlag && nodeObjects[i].isSelected)
+    nodeObjects[i].setColor(selectedDefaultColor);
+  else if (nodeObjects[i].getCluster() != "" && nodeColorPrioritySource == "cluster")
+    nodeObjects[i].setColor(
+      COLOR_VECTOR_280[nodeObjects[i].getCluster()], 
+      importMode = false, clusterMode = true
+    );
+  else
+    nodeObjects[i].setColor(nodeObjects[i].getColor());
+};
 
 // shift + drag left click
 const lassoSelectNodes = (x, y) => {
-  //create lasso rectangle graphics
-  scene.remove(lasso);
-  let points = [];
-	points.push( new THREE.Vector3(shiftX, shiftY, 0), new THREE.Vector3(x, shiftY, 0), new THREE.Vector3(x, y, 0), new THREE.Vector3(shiftX, y, 0), new THREE.Vector3(shiftX, shiftY, 0) );
-	let geometry = new THREE.BufferGeometry().setFromPoints( points );
-	let material = new THREE.LineBasicMaterial( { color: "#eef1b6" } );
-	lasso = new THREE.Line( geometry, material );
-	scene.add(lasso);
-  //check node interaction
-  let minX = Math.min(shiftX, x);
-  let maxX = Math.max(shiftX, x);
-  let minY = Math.min(shiftY, y);
-  let maxY = Math.max(shiftY, y);
+  let nodeX, nodeY,
+    minX = Math.min(shiftX, x),
+    maxX = Math.max(shiftX, x),
+    minY = Math.min(shiftY, y),
+    maxY = Math.max(shiftY, y);
+
+  createLassoGeometry(x, y);
+  
   for (let i = 0; i < nodeObjects.length; i++) {
-    let nodeX = nodeObjects[i].getWorldPosition("x");
-    let nodeY = nodeObjects[i].getWorldPosition("y");
+    nodeX = nodeObjects[i].getWorldPosition("x");
+    nodeY = nodeObjects[i].getWorldPosition("y");
     if (nodeX < maxX && nodeX > minX && nodeY < maxY && nodeY > minY)
       nodeObjects[i].setOpacity(0.5);
     else
       nodeObjects[i].setOpacity(1);
   }
-}
+};
+
+const createLassoGeometry = (x, y) => {
+  let geometry, material, points = [];
+
+  scene.remove(lasso);
+	points.push(
+    new THREE.Vector3(shiftX, shiftY, 0),
+    new THREE.Vector3(x, shiftY, 0),
+    new THREE.Vector3(x, y, 0),
+    new THREE.Vector3(shiftX, y, 0),
+    new THREE.Vector3(shiftX, shiftY, 0)
+  );
+	geometry = new THREE.BufferGeometry().setFromPoints(points);
+	material = new THREE.LineBasicMaterial({ color: "#eef1b6" });
+	lasso = new THREE.Line(geometry, material);
+	scene.add(lasso);
+};
 
 // on node searchbar key-press
 const selectSearchedNodes = (event) => {
   if (scene.exists()) {
     let key = window.event.keyCode;
-    // If the user has pressed enter
-    if (key === 13) {
-      event.preventDefault(); //bypassing newline enter
-      startLoader(true);
+    
+    if (key === 13) { // Enter button
+      event.preventDefault(); // bypassing newline enter
+      startLoader();
+
       let searchString = document.getElementById("nodeSearchBar").value.replace(/\n/g, ""),
-          tempIndexes, i, j,
-          nodeNames = nodeObjects.map(({ name }) => name);
+        tempIndexes, i, j,
+        nodeNames = nodeObjects.map(({ name }) => name);
+
       searchString = searchString.split(",");
       for (i = 0; i < searchString.length; i++) {
-        tempIndexes = getCaseInsensitiveIndices(nodeNames, searchString[i].trim()) //case insensitive function
-        if (tempIndexes.length > 0){
+        tempIndexes = getCaseInsensitiveIndices(nodeNames, searchString[i].trim()) // case insensitive function
+        if (tempIndexes.length > 0) {
           for (j = 0; j < tempIndexes.length; j++) {
             if (!nodeObjects[tempIndexes[j]].isSelected) {
               nodeObjects[tempIndexes[j]].isSelected = true;
-              if (selectedNodeColorFlag)
-                nodeObjects[tempIndexes[j]].setColor(selectedDefaultColor);
+              repaintNode(tempIndexes[j]);
             }
           }
         }
       }
       decideNodeLabelFlags();
       updateSelectedNodesRShiny();
-      finishLoader(true);
+      finishLoader();
     }
   }
-}
+};
 
 const unselectAllNodes = () => {
-  for (let i = 0; i < nodeObjects.length; i++)
+  for (let i = 0; i < nodeObjects.length; i++) {
     nodeObjects[i].isSelected = false;
-
-  selected_edges = [];
-  repaintNodes();
+    repaintNode(i);
+  }
+  
   decideNodeLabelFlags();
+  selected_edges = [];
 };
 
 const getSelectedNodes = () => {
@@ -189,49 +213,23 @@ const getSelectedNodes = () => {
   return(selectedNodePositions)
 };
 
-const getVisibleNodeLabels = () => {
-  let visibleNodeLabelPositions = nodeObjects.map(function(node) {
-    if (node.showLabel)
-      return(node.id)
-  });
-  visibleNodeLabelPositions = visibleNodeLabelPositions.filter(function(id) {
-    return(id !== undefined)
-  });
-  return(visibleNodeLabelPositions)
-};
+const translateNodesWithHeldKey = (event) => {
+  let i,
+    selectedNodePositions = getSelectedNodes(),
+    step = event.screenX - event.screenY >=  mousePreviousX - mousePreviousY ? 20 : -20;
 
-const repaintNodes = () => {
-  for (let i = 0; i < nodeObjects.length; i++) {
-    if (selectedNodeColorFlag && nodeObjects[i].isSelected)
-      nodeObjects[i].setColor(selectedDefaultColor);
-    else if (nodeObjects[i].getCluster() != "" && nodeColorPrioritySource == "cluster")
-      nodeObjects[i].setColor(COLOR_VECTOR_280[nodeObjects[i].getCluster()], importMode = false, clusterMode = true);
-    else
-      nodeObjects[i].setColor(nodeObjects[i].getColor());
-  }
-};
-
-const translateNodesWithHeldKey = (e) => {
-  let step, i,
-    selectedNodePositions = getSelectedNodes();
-    
-  if (e.screenX - e.screenY >=  mousePreviousX - mousePreviousY)
-    step = 20;
-  else
-    step =-20;
-   
-  if (scene.axisPressed=="z") {
+  if (scene.axisPressed == "z") {
     for (i = 0; i < selectedNodePositions.length; i++)
       nodeObjects[selectedNodePositions[i]].translateZ(step);
-  } else if (scene.axisPressed=="c") {
+  } else if (scene.axisPressed == "c") {
     for (i = 0; i < selectedNodePositions.length; i++)
       nodeObjects[selectedNodePositions[i]].translateY(step);
   }
+
   redrawEdges();
   updateNodesRShiny();
   updateVRNodesRShiny();
-}
-
+};
 
 // Handlers =====
 const setNodeAttributes = (nodeAttributes) => {
@@ -254,12 +252,13 @@ const setNodeAttributes = (nodeAttributes) => {
 }
 
 const selectAllNodes = (selectedFlag) => { // T | F
-  for (let i = 0; i < nodeObjects.length; i++)
+  for (let i = 0; i < nodeObjects.length; i++) {
     nodeObjects[i].isSelected = selectedFlag;
-
-  updateSelectedNodesRShiny();
-  repaintNodes();
+    repaintNode(i);
+  }
+    
   decideNodeLabelFlags();
+  updateSelectedNodesRShiny();
 };
 
 const setNodeColorPriority = (colorPriority) => {
@@ -268,6 +267,11 @@ const setNodeColorPriority = (colorPriority) => {
   repaintNodes();
   updateNodesRShiny();
   updateVRNodesRShiny();
+};
+
+const repaintNodes = () => {
+  for (let i = 0; i < nodeObjects.length; i++)
+    repaintNode(i);
 };
 
 const setNodeSelectedColorPriority = (message) => {

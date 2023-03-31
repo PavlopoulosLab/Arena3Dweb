@@ -1,10 +1,10 @@
 const exists = (array, element) => {
-  return(array.some(l => l == element));
-}
+  return(array.some(l => l == element))
+};
 
 const getUniqueValues = (array) => {
-  return([...new Set(array)]);
-}
+  return([...new Set(array)])
+};
 
 const getCaseInsensitiveIndices = (array, element) => {
   let indexes = [];
@@ -12,8 +12,8 @@ const getCaseInsensitiveIndices = (array, element) => {
   for (let i = 0; i < array.length; i++)
     if (array[i].toLowerCase() === element)
       indexes.push(i);
-  return(indexes);
-}
+  return(indexes)
+};
 
 const findIndices = (array, element) => {
   let indices = [];
@@ -25,8 +25,8 @@ const findIndices = (array, element) => {
   if (indices.length === 0)
     return(-1);
   else
-    return(indices);
-}
+    return(indices)
+};
 
 // @param array (object): object Array
 // @param uuid (string): unique object id
@@ -35,8 +35,8 @@ const findIndexByUuid = (array, uuid) => {
   const index = array.findIndex(object => {
     return object.uuid === uuid;
   });
-  return(index);
-}
+  return(index)
+};
 
 const mapper = (inArr, min, max) => {
   let outArr = [],
@@ -47,25 +47,25 @@ const mapper = (inArr, min, max) => {
       outArr.push((Number(inArr[i]) - inArr_min) * (max - min) / (inArr_max - inArr_min) + min);
     else outArr.push(0.3);
   }
-  return(outArr);
-}
+  return(outArr)
+};
 
 //random float between two values
 const getRandomArbitrary = (min, max) => {
-  return Math.random() * (max - min) + min;
-}
+  return(Math.random() * (max - min) + min)
+};
 
 const checkIfAttributeColorExist = (attributes, pos) => { // TODO remove after edge_attributes removed
-  return pos > -1 && attributes.Color !== undefined && attributes.Color[pos] !== "" && attributes.Color[pos] != " " && attributes.Color[pos] != null;
-}
+  return(pos > -1 && attributes.Color !== undefined && attributes.Color[pos] !== "" && attributes.Color[pos] != " " && attributes.Color[pos] != null)
+};
 
 const toRadians = (angle) => {
-	return angle * (Math.PI / 180);
-}
+	return(angle * (Math.PI / 180))
+};
 
 const toDegrees = (radians) => {
-  return radians * (180 / Math.PI);
-}
+  return(radians * (180 / Math.PI))
+};
 
 const changeColor = (item, color) => { // TODO probably remove after nodes and edges are made into classes
   if (item.type) {
@@ -79,7 +79,7 @@ const changeColor = (item, color) => { // TODO probably remove after nodes and e
         });
     }
   }
-}
+};
 
 const assign2Children = (parent, color, getColorsFromMap) => {
   if (parent.children && parent.children.length > 0) {
@@ -94,4 +94,4 @@ const assign2Children = (parent, color, getColorsFromMap) => {
   } else {
     parent.material.color = new THREE.Color(color);
   }
-}
+};

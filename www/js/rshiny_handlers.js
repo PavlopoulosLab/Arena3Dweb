@@ -5,14 +5,13 @@ const initializeGlobals = (RGlobalsList) => {
   MAX_CHANNELS = RGlobalsList.MAX_CHANNELS;
   CHANNEL_COLORS_LIGHT = RGlobalsList.CHANNEL_COLORS_LIGHT;
   CHANNEL_COLORS_DARK = RGlobalsList.CHANNEL_COLORS_DARK;
-}
+};
 
 const startLoader = (m) => {
   let canvas_div = document.getElementById("3d-graph"),
-      loader = document.getElementById("loader");
+    loader = document.getElementById("loader");
   canvas_div.style.opacity = 0.5;
   loader.style.display = "inline-block";
-  return true;
 };
 
 const finishLoader = (m) => {
@@ -20,14 +19,12 @@ const finishLoader = (m) => {
       loader = document.getElementById("loader");
   canvas_div.style.opacity = 1;
   loader.style.display = "none";
-  return true;
 };
 
 const changeFPS = (message) => {
   fps = Number(message);
   if (isNaN(fps))
     fps = 30;
-  return true;
 };
 
 const browseUrl = url => {

@@ -122,7 +122,7 @@ const executeCommand = (item) => {
         flag = false,
         currentNode = item.value,
         startingLayer = nodeGroups[nodeLayerNames[currentNode]];
-    startLoader(true);
+    startLoader();
     while (!flag){
       let pos = -1;
       for (let i = 0; i < edgePairs.length; i++){
@@ -173,18 +173,18 @@ const executeCommand = (item) => {
     }
     decideNodeLabelFlags();
     updateSelectedNodesRShiny();
-    finishLoader(true);
+    finishLoader();
   } else if (item.options[item.selectedIndex].text == "Select Downstream Path"){
     let currentNode = item.value, //int
         layerPath = [nodeGroups[nodeLayerNames[currentNode]]]; //array of 1 element at start
-    startLoader(true);
+    startLoader();
     ///////////////////////////////
     recursiveDownstreamHighlight(layerPath, currentNode, currentNode);
     downstreamCheckedNodes = []; //resetting global variable
     ////////////////////////
     decideNodeLabelFlags();
     updateSelectedNodesRShiny();
-    finishLoader(true);
+    finishLoader();
   } else if (item.options[item.selectedIndex].text == "Link") window.open(item.value);
   else if (item.options[item.selectedIndex].text == "Description"){
     let descrDiv = document.getElementById("descrDiv"),
