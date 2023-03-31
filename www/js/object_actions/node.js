@@ -265,22 +265,22 @@ const clickNodeColorPriority = (mode) => {
 
 const setNodeAttributes = (nodeAttributes) => {
   let pos;
-  for (let i = 0; i < nodeObjects.length; i++) { // TODO change nodeAttributes to dataframe and iterate that length
-    pos = nodeAttributes.Node.indexOf(nodeLayerNames[i]);
-    if (pos > -1) { // if node exists in attributes file
-      if (nodeAttributes.Color !== undefined && nodeAttributes.Color[pos] !== null && nodeAttributes.Color[pos].trim() !== "")
-        nodeObjects[i].setColor(nodeAttributes.Color[pos], importMode = true, clusterMode = false);
-      if (nodeAttributes.Size !== undefined && nodeAttributes.Size[pos] !== null && nodeAttributes.Size[pos].trim() !== "")
-        nodeObjects[i].setScale(Number(nodeAttributes.Size[pos]));
-      if (nodeAttributes.Url !== undefined && nodeAttributes.Url[pos] !== null && nodeAttributes.Url[pos].trim() !== "")
-        nodeObjects[i].url = nodeAttributes.Url[pos];
-      if (nodeAttributes.Description !== undefined && nodeAttributes.Description[pos] !== null && nodeAttributes.Description[pos].trim() !== "")
-        nodeObjects[i].descr = nodeAttributes.Description[pos];
+  for (let i = 0; i < nodeAttributes.length; i++) {
+    pos = nodeLayerNames.indexOf(nodeAttributes[i].NodeLayer);
+    if (pos > -1) { // if node exists in network
+      if (nodeAttributes[i].Color !== undefined && nodeAttributes[i].Color.trim() !== "")
+        nodeObjects[pos].setColor(nodeAttributes[i].Color, importMode = true, clusterMode = false);
+      if (nodeAttributes[i].Size !== undefined && nodeAttributes[i].Size.trim() !== "")
+        nodeObjects[pos].setScale(Number(nodeAttributes[i].Size));
+      if (nodeAttributes[i].Url !== undefined && nodeAttributes[i].Url.trim() !== "")
+        nodeObjects[pos].url = nodeAttributes[i].Url;
+      if (nodeAttributes[i].Description !== undefined && nodeAttributes[i].Description.trim() !== "")
+        nodeObjects[pos].descr = nodeAttributes[i].Description;
     }
   }
   updateNodesRShiny();
   updateVRNodesRShiny();
-}
+};
 
 // Canvas Controls =====
 const spreadNodes = () => {
