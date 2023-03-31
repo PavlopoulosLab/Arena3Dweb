@@ -90,6 +90,35 @@ const decideNodeLabelFlags = () => {
   }
 };
 
+const translateNodesWithHeldKey = (event) => {
+  let i,
+    selectedNodePositions = getSelectedNodes(),
+    step = event.screenX - event.screenY >=  mousePreviousX - mousePreviousY ? 20 : -20;
+
+  if (scene.axisPressed == "z") {
+    for (i = 0; i < selectedNodePositions.length; i++)
+      nodeObjects[selectedNodePositions[i]].translateZ(step);
+  } else if (scene.axisPressed == "c") {
+    for (i = 0; i < selectedNodePositions.length; i++)
+      nodeObjects[selectedNodePositions[i]].translateY(step);
+  }
+
+  redrawEdges();
+  updateNodesRShiny();
+  updateVRNodesRShiny();
+};
+
+const getSelectedNodes = () => {
+  let selectedNodePositions = nodeObjects.map(function(node) {
+    if (node.isSelected)
+      return(node.id)
+  });
+  selectedNodePositions = selectedNodePositions.filter(function(id) {
+    return(id !== undefined)
+  });
+  return(selectedNodePositions)
+};
+
 const performDoubleClickNodeSelection = (event) => {
   let intersects, nodeSelected = false,
     node_spheres = nodeObjects.map(({ sphere }) => sphere);
@@ -193,64 +222,11 @@ const selectSearchedNodes = (event) => {
 };
 
 const unselectAllNodes = () => {
-  for (let i = 0; i < nodeObjects.length; i++) {
-    nodeObjects[i].isSelected = false;
-    repaintNode(i);
-  }
-  
-  decideNodeLabelFlags();
+  selectAllNodes(false);
   selected_edges = [];
 };
 
-const getSelectedNodes = () => {
-  let selectedNodePositions = nodeObjects.map(function(node) {
-    if (node.isSelected)
-      return(node.id)
-  });
-  selectedNodePositions = selectedNodePositions.filter(function(id) {
-    return(id !== undefined)
-  });
-  return(selectedNodePositions)
-};
-
-const translateNodesWithHeldKey = (event) => {
-  let i,
-    selectedNodePositions = getSelectedNodes(),
-    step = event.screenX - event.screenY >=  mousePreviousX - mousePreviousY ? 20 : -20;
-
-  if (scene.axisPressed == "z") {
-    for (i = 0; i < selectedNodePositions.length; i++)
-      nodeObjects[selectedNodePositions[i]].translateZ(step);
-  } else if (scene.axisPressed == "c") {
-    for (i = 0; i < selectedNodePositions.length; i++)
-      nodeObjects[selectedNodePositions[i]].translateY(step);
-  }
-
-  redrawEdges();
-  updateNodesRShiny();
-  updateVRNodesRShiny();
-};
-
 // Handlers =====
-const setNodeAttributes = (nodeAttributes) => {
-  let pos;
-  for (let i = 0; i < nodeObjects.length; i++) { // TODO change nodeAttributes to dataframe and iterate that length
-    pos = nodeAttributes.Node.indexOf(nodeLayerNames[i]);
-    if (pos > -1) { // if node exists in attributes file
-      if (nodeAttributes.Color !== undefined && nodeAttributes.Color[pos] !== null && nodeAttributes.Color[pos].trim() !== "")
-        nodeObjects[i].setColor(nodeAttributes.Color[pos], importMode = true, clusterMode = false);
-      if (nodeAttributes.Size !== undefined && nodeAttributes.Size[pos] !== null && nodeAttributes.Size[pos].trim() !== "")
-        nodeObjects[i].setScale(Number(nodeAttributes.Size[pos]));
-      if (nodeAttributes.Url !== undefined && nodeAttributes.Url[pos] !== null && nodeAttributes.Url[pos].trim() !== "")
-        nodeObjects[i].url = nodeAttributes.Url[pos];
-      if (nodeAttributes.Description !== undefined && nodeAttributes.Description[pos] !== null && nodeAttributes.Description[pos].trim() !== "")
-        nodeObjects[i].descr = nodeAttributes.Description[pos];
-    }
-  }
-  updateNodesRShiny();
-  updateVRNodesRShiny();
-}
-
 const selectAllNodes = (selectedFlag) => { // T | F
   for (let i = 0; i < nodeObjects.length; i++) {
     nodeObjects[i].isSelected = selectedFlag;
@@ -274,18 +250,37 @@ const repaintNodes = () => {
     repaintNode(i);
 };
 
-const setNodeSelectedColorPriority = (message) => {
-  selectedNodeColorFlag = message;
+const setNodeSelectedColorPriority = (colorPriority) => {
+  selectedNodeColorFlag = colorPriority;
   repaintNodes();
-}
+};
 
-const chooseNodeColorPriority = (mode) => {
+const clickNodeColorPriority = (mode) => {
   let radioButtonDiv = document.getElementById("nodeColorPriorityRadio");
   if (mode == "default")
     radioButtonDiv.children[1].children[0].click();
   else if (mode == "cluster")
     radioButtonDiv.children[1].children[1].click();
 };
+
+const setNodeAttributes = (nodeAttributes) => {
+  let pos;
+  for (let i = 0; i < nodeObjects.length; i++) { // TODO change nodeAttributes to dataframe and iterate that length
+    pos = nodeAttributes.Node.indexOf(nodeLayerNames[i]);
+    if (pos > -1) { // if node exists in attributes file
+      if (nodeAttributes.Color !== undefined && nodeAttributes.Color[pos] !== null && nodeAttributes.Color[pos].trim() !== "")
+        nodeObjects[i].setColor(nodeAttributes.Color[pos], importMode = true, clusterMode = false);
+      if (nodeAttributes.Size !== undefined && nodeAttributes.Size[pos] !== null && nodeAttributes.Size[pos].trim() !== "")
+        nodeObjects[i].setScale(Number(nodeAttributes.Size[pos]));
+      if (nodeAttributes.Url !== undefined && nodeAttributes.Url[pos] !== null && nodeAttributes.Url[pos].trim() !== "")
+        nodeObjects[i].url = nodeAttributes.Url[pos];
+      if (nodeAttributes.Description !== undefined && nodeAttributes.Description[pos] !== null && nodeAttributes.Description[pos].trim() !== "")
+        nodeObjects[i].descr = nodeAttributes.Description[pos];
+    }
+  }
+  updateNodesRShiny();
+  updateVRNodesRShiny();
+}
 
 // Canvas Controls =====
 const spreadNodes = () => {

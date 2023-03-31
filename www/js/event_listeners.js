@@ -147,7 +147,6 @@ const dblClick = (event) => {
         unselectAllEdges();
         
         redrawEdges();
-        updateSelectedNodesRShiny();
       }
     }
   }

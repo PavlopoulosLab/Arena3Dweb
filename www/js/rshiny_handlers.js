@@ -70,7 +70,7 @@ Shiny.addCustomMessageHandler("handler_setLayerColorPriority", setLayerColorPrio
 Shiny.addCustomMessageHandler("handler_selectAllNodes", selectAllNodes);
 Shiny.addCustomMessageHandler("handler_setNodeColorPriority", setNodeColorPriority);
 Shiny.addCustomMessageHandler("handler_setNodeSelectedColorPriority", setNodeSelectedColorPriority);
-Shiny.addCustomMessageHandler("handler_chooseNodeColorPriority", chooseNodeColorPriority);
+Shiny.addCustomMessageHandler("handler_clickNodeColorPriority", clickNodeColorPriority);
 // Edges ====================
 Shiny.addCustomMessageHandler("handler_directionArrowSize", setDirectionArrowSize);
 Shiny.addCustomMessageHandler("handler_intraDirectionArrowSize", setIntraDirectionArrowSize);
