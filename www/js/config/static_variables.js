@@ -1,5 +1,5 @@
 // class objects
-let scene, layers = []; // TODO add rest of the class objects here
+let scene, layers = [], nodeObjects = [], edgeObjects = [];
 
 // screen
 let xBoundMin, xBoundMax, yBoundMin, yBoundMax, zBoundMin, zBoundMax,
@@ -13,8 +13,9 @@ let perLayerLayoutFLag = undefined,
 let globalLabelColor = "#ffffff",
     nodeLabelDefaultSize = "12px",
     layer_label_divs = [],
+    renderLayerLabelsFlag = false,
     node_labels = [], //divs to be overlaid above canvas
-    nodeLabelFlags = []; // TODO add to Node class as this.showLabel()
+    renderNodeLabelsFlag = false;
 
 // layers
 let layerGroups = new Map(),
@@ -27,22 +28,16 @@ let layerGroups = new Map(),
     layerColorPrioritySource = "default"; // or "picker"
 
 // nodes
-let showAllNodeLabelsFlag = false,
-    showSelectedNodeLabelsFlag = true,
-    nodeIntervalTimeout = "",
-    nodeAttributesPriority = true,
+let nodeIntervalTimeout = "",
     selectedNodeColorFlag = true,
     selectedDefaultColor = "#A3FF00",
-    nodes = [], //canvas objects
-    nodeNames = [],
-    nodeLayerNames = [],
+    showAllNodeLabelsFlag = false,
+    showSelectedNodeLabelsFlag = true,
+    nodeColorPrioritySource = "default", // or "cluster"
     nodeGroups = new Map(),
-    hovered_nodes = [], // if allowing more than one hovered nodes at a time
-    nodeColorVector = [],
     last_hovered_node_index = "",
-    node_cluster_colors = [],
-    node_attributes = "",
-    selectedNodePositions = [];
+    nodeLayerNames = [], // keeping this for performance
+    nodeNames = []; // to init upload network nodes
 
 // edges
 let selectedEdgeColorFlag = true,

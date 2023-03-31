@@ -11,7 +11,7 @@ handleVRCall <- function() {
 
 # void function that creates the user-specific VR ply file
 # and moves it to the api folder
-producePLY <- function(id){
+producePLY <- function(id) { # TODO refactor after edges
   filename <- paste0('tmp/', id, '.ply')
   con <- file(filename)
   open(con, "w")
@@ -19,7 +19,7 @@ producePLY <- function(id){
 format ascii 1.0
 element vertex "), file = con)
   # number of nodes
-  js_nodes <- as.data.frame(fromJSON(input$js_nodes_world))
+  js_nodes <- fromJSON(input$js_nodes_world)
   cat(sprintf("%d", nrow(js_nodes)), file = con)
   cat(sprintf("\nproperty float x
 property float y
@@ -39,18 +39,22 @@ property uint8 blue
 end_header\n"), file = con)
   
   # node parsing
-  js_nodes$V3 <- as.numeric(js_nodes$V3)/VR_DOWNSCALE_FACTOR
-  js_nodes$V4 <- as.numeric(js_nodes$V4)/VR_DOWNSCALE_FACTOR
-  js_nodes$V5 <- as.numeric(js_nodes$V5)/VR_DOWNSCALE_FACTOR - 5
-  # js_nodes$V6 <- as.numeric(js_nodes$V6) # scale
+  js_nodes$worldPosition_x <-
+    js_nodes$worldPosition_x / VR_DOWNSCALE_FACTOR
+  js_nodes$worldPosition_y <- 
+    js_nodes$worldPosition_y / VR_DOWNSCALE_FACTOR
+  js_nodes$worldPosition_z <- 
+    js_nodes$worldPosition_z / VR_DOWNSCALE_FACTOR - 5
   
   for (i in 1:nrow(js_nodes)){
-    rgbColor <- col2rgb(js_nodes[i, 7]) # 7th col is node color
+    rgbColor <- col2rgb(js_nodes$color[i])
     cat(sprintf("%f %f %f %s %s %s\n",
-                js_nodes[i, 3], js_nodes[i, 4], js_nodes[i, 5],
-                rgbColor[1], rgbColor[2], rgbColor[3]), file = con) # r,g,b
+                js_nodes$worldPosition_x[i], js_nodes$worldPosition_y[i],
+                js_nodes$worldPosition_z[i], rgbColor[1], rgbColor[2],
+                rgbColor[3]), file = con) # r,g,b
   }
-  nodeNames <- paste0(js_nodes[,1], "_", js_nodes[,2])
+  nodeNames <- paste0(js_nodes$name, "_", js_nodes$layer)
+  
   # edge parsing
   for (i in 1:nrow(js_edge_pairs)){
     rgbColor <- col2rgb(js_edge_pairs[i, 3]) # 3rd col is edge color

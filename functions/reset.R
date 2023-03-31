@@ -11,11 +11,10 @@ reset_UI_values <- function() {
   reset("layerColorPriorityRadio")
   reset("layerOpacity")
   # nodes
-  reset("showAllNodeLabels")
-  reset("showSelectedNodeLabels")
-  reset("resizeLabels")
+  reset("showNodeLabelsRadio")
+  reset("resizeNodeLabels")
   reset("nodeSelectedColorPriority")
-  reset("nodeSelector")
+  reset("selectAllNodes")
   # edges
   reset("edgeSelectedColorPriority")
   reset("edgeFileColorPriority")

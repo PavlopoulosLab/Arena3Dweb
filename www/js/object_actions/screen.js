@@ -50,9 +50,12 @@ const animate = () => { // TODO optimize performance
     requestAnimationFrame(animate); // pauses when the user navigates to another browser tab
   }, 1000 / fps);
 
-  renderLayerLabels();
-  renderNodeLabels(); // TODO add/check flag conditions
+  if (renderLayerLabelsFlag)
+    renderLayerLabels();
+  if (renderNodeLabelsFlag)
+    renderNodeLabels();
   
+  // TODO global flag
   // draw inter-layer edges only when necessary for performance improvement
   if (scene.dragging || interLayerEdgesRenderPauseFlag) {
     drawInterLayerEdges(false);
@@ -75,11 +78,12 @@ const renderLayerLabels = () => {
         redrawLayerLabels("selected");
     }
   }
+  renderLayerLabelsFlag = false;
 }
 
 const redrawLayerLabels = (mode) => {
   let  layerArray, layerX, layerY, labelX, labelY,
-    i, position, hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
+    position, hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
     layer_spheres = layers.map(({ sphere }) => sphere);
   switch (mode) {
     case "all":
@@ -89,7 +93,7 @@ const redrawLayerLabels = (mode) => {
       layerArray = getSelectedLayers();
   }
   
-  for (i = 0; i < layerArray.length; i++) { // TODO replace for loop with map (objects)
+  for (let i = 0; i < layerArray.length; i++) { // TODO replace for loop with map (objects)
     position = mode == "selected" ? layerArray[i] : i;
     if (!hidelayerCheckboxes[position].checked) { // if node's layer not hidden, counting elements
       layerX = layer_spheres[position].getWorldPosition(new THREE.Vector3()).x,
@@ -115,10 +119,11 @@ const renderNodeLabels = () => { // TODO add/check flag conditions
       nodeY = "",
       labelX = "",
       labelY = "";
-  for (let i = 0; i < nodeLabelFlags.length; i++){
-    if (nodeLabelFlags[i]){ // ONLY CHECK THIS 
-      nodeX = nodes[i].getWorldPosition(new THREE.Vector3()).x,
-      nodeY = nodes[i].getWorldPosition(new THREE.Vector3()).y;
+
+  for (let i = 0; i < nodeObjects.length; i++) {
+    if (nodeObjects[i].showLabel) { 
+      nodeX = nodeObjects[i].getWorldPosition("x");
+      nodeY = nodeObjects[i].getWorldPosition("y");
       labelX = xBoundMax + nodeX + 7;
       labelY = yBoundMax - nodeY - 10;
       node_labels[i].style.left = labelX.toString().concat("px");
@@ -126,15 +131,20 @@ const renderNodeLabels = () => { // TODO add/check flag conditions
       //check if overlapping with canvas div to set visibility
       let canvas_div = document.getElementById("3d-graph");
       if (labelX < 0 || labelY < 0  || labelY >= canvas_div.offsetHeight
-          || labelX > document.getElementsByTagName("canvas")[0].offsetWidth) node_labels[i].style.display = "none";
-      else node_labels[i].style.display = "inline-block";
-    } else node_labels[i].style.display = "none";
+          || labelX > document.getElementsByTagName("canvas")[0].offsetWidth)
+            node_labels[i].style.display = "none";
+      else
+        node_labels[i].style.display = "inline-block";
+    } else
+      node_labels[i].style.display = "none";
   }
+  renderNodeLabelsFlag = false;
 } 
 
 // runs constantly on animate
-const drawInterLayerEdges = (showFlag = false) => {
+const drawInterLayerEdges = (showFlag = false) => { // TODO global flag to not even enter
   let i;
+
   if (!showFlag && (scene.dragging || interLayerEdgesRenderPauseFlag)){
     for (i = 0; i < layer_edges_pairs.length; i++){
       scene.remove(layerEdges[i]);
@@ -162,7 +172,10 @@ const drawInterLayerEdges = (showFlag = false) => {
       if (!hidelayerCheckboxes[node_layer1].checked && !hidelayerCheckboxes[node_layer2].checked) {
         index1 = nodeLayerNames.indexOf(edge_split[0]);
         index2 = nodeLayerNames.indexOf(edge_split[1]);
-        points.push( nodes[index1].getWorldPosition(new THREE.Vector3()), nodes[index2].getWorldPosition(new THREE.Vector3()) );
+        points.push(
+          nodeObjects[index1].getWorldPosition(),
+          nodeObjects[index2].getWorldPosition()
+        );
     		let geometry = new THREE.BufferGeometry().setFromPoints( points );
         let material = "";
 
