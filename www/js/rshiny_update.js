@@ -22,6 +22,7 @@ const updateSceneSphereRShiny = () => {
 const updateLayersRShiny = () => {
   let js_layers = [];
 
+  renderLayerLabelsFlag = true;
   for (let i = 0; i < layers.length; i++) {
     js_layers.push(
       [layers[i].getName(), layers[i].getPosition("x"), layers[i].getPosition("y"), layers[i].getPosition("z"),
@@ -60,7 +61,8 @@ const updateSelectedLayersRShiny = () => {
 // Nodes
 const updateNodesRShiny = () => {
   let js_nodes = [];
-    
+
+  renderNodeLabelsFlag = true;
   for (let i = 0; i < nodeObjects.length; i++) {    
     js_nodes.push([
       nodeObjects[i].getName(), nodeObjects[i].getLayer(),
@@ -90,7 +92,8 @@ const updateNodesRShiny = () => {
 
 const updateVRNodesRShiny = () => {
   let js_nodes_world = [];
-    
+  
+  renderNodeLabelsFlag = true;
   for (let i = 0; i < nodeObjects.length; i++) {
     js_nodes_world.push([
       nodeObjects[i].getName(), nodeObjects[i].getLayer(),
@@ -198,6 +201,7 @@ const updateVRLayerLabelsRShiny = () => {
   target = new THREE.Vector3(),
   layer_planes = layers.map(({ plane }) => plane);
 
+  renderLayerLabelsFlag = true;
   for (let i = 0; i < layers.length; i++) {
     js_vr_layer_labels.push(
       [layers[i].getName(), layer_planes[i].getWorldPosition(target).x,

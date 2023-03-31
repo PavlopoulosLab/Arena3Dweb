@@ -71,7 +71,8 @@ class DragControls extends THREE.EventDispatcher {
 			if ( _selected && lastHoveredLayerIndex !== "" && scene.leftClickPressed) {
 			  if (findIndexByUuid(layer_planes, _selected.uuid) != -1){ //vag update
 			    if ( _raycaster.ray.intersectPlane( _plane, _intersection ) ) {
-
+					renderLayerLabelsFlag = true;
+					renderNodeLabelsFlag = true;
 					_selected.position.copy( _intersection.sub( _offset ).applyMatrix4( _inverseMatrix ) );
 
 				}

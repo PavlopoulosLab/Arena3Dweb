@@ -14,6 +14,7 @@ class Node {
         this.url = url;
         this.descr = descr;
         this.isSelected = false;
+        this.showLabel= false;
         this.cluster = "";
 
         this.createSphere(color);

@@ -26,8 +26,9 @@ const resetValues = () => {
   // labels
   document.getElementById("labelDiv").innerHTML = "";
   layer_label_divs = []; //divs
+  renderLayerLabelsFlag = false;
   node_labels = [];
-  nodeLabelFlags = [];
+  renderNodeLabelsFlag = false;
 
   // layers
   layers = [];
@@ -162,7 +163,6 @@ const executePostNetworkSetup = () => {
   drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
 
   createEdgeObjects();
-  nodeLabelFlags = new Array(nodeLayerNames.length).fill(false);
   createLabels();
 
   attachLayerCheckboxes();

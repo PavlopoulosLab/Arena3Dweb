@@ -50,9 +50,12 @@ const animate = () => { // TODO optimize performance
     requestAnimationFrame(animate); // pauses when the user navigates to another browser tab
   }, 1000 / fps);
 
-  renderLayerLabels();
-  renderNodeLabels(); // TODO add/check flag conditions
+  if (renderLayerLabelsFlag)
+    renderLayerLabels();
+  if (renderNodeLabelsFlag)
+    renderNodeLabels();
   
+  // TODO global flag
   // draw inter-layer edges only when necessary for performance improvement
   if (scene.dragging || interLayerEdgesRenderPauseFlag) {
     drawInterLayerEdges(false);
@@ -75,6 +78,7 @@ const renderLayerLabels = () => {
         redrawLayerLabels("selected");
     }
   }
+  renderLayerLabelsFlag = false;
 }
 
 const redrawLayerLabels = (mode) => {
@@ -115,8 +119,9 @@ const renderNodeLabels = () => { // TODO add/check flag conditions
       nodeY = "",
       labelX = "",
       labelY = "";
-  for (let i = 0; i < nodeLabelFlags.length; i++){
-    if (nodeLabelFlags[i]){ // ONLY CHECK THIS 
+
+  for (let i = 0; i < nodeObjects.length; i++) {
+    if (nodeObjects[i].showLabel) { 
       nodeX = nodeObjects[i].getWorldPosition("x");
       nodeY = nodeObjects[i].getWorldPosition("y");
       labelX = xBoundMax + nodeX + 7;
@@ -126,15 +131,20 @@ const renderNodeLabels = () => { // TODO add/check flag conditions
       //check if overlapping with canvas div to set visibility
       let canvas_div = document.getElementById("3d-graph");
       if (labelX < 0 || labelY < 0  || labelY >= canvas_div.offsetHeight
-          || labelX > document.getElementsByTagName("canvas")[0].offsetWidth) node_labels[i].style.display = "none";
-      else node_labels[i].style.display = "inline-block";
-    } else node_labels[i].style.display = "none";
+          || labelX > document.getElementsByTagName("canvas")[0].offsetWidth)
+            node_labels[i].style.display = "none";
+      else
+        node_labels[i].style.display = "inline-block";
+    } else
+      node_labels[i].style.display = "none";
   }
+  renderNodeLabelsFlag = false;
 } 
 
 // runs constantly on animate
-const drawInterLayerEdges = (showFlag = false) => {
+const drawInterLayerEdges = (showFlag = false) => { // TODO global flag to not even enter
   let i;
+
   if (!showFlag && (scene.dragging || interLayerEdgesRenderPauseFlag)){
     for (i = 0; i < layer_edges_pairs.length; i++){
       scene.remove(layerEdges[i]);

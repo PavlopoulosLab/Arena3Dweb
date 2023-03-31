@@ -70,19 +70,22 @@ const checkHoverOverNode = (event) => {
 const decideNodeLabelFlags = () => {
   let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox"),
     node_layer = "";
+
+  renderNodeLabelsFlag = true;
   for (let i = 0; i < nodeObjects.length; i++) {
     node_layer = layerGroups[nodeGroups[nodeLayerNames[i]]];
-    if (hidelayerCheckboxes[node_layer].checked) { //1. if node's layer not hidden 
-      nodeLabelFlags[i] = false;
-    } else if (showAllNodeLabelsFlag) { //2. if showing all node labels
-      nodeLabelFlags[i] = true;
-    } else if (layers[node_layer].showNodeLabels) { //3. if showing layer node labels
-      nodeLabelFlags[i] = true;
-    } else if (showSelectedNodeLabelsFlag && nodeObjects[i].isSelected) { //4. if showing selected node labels, and node is selected
-      nodeLabelFlags[i] = true;
-    } else if (i === last_hovered_node_index) { //5. if hovering over node
-      nodeLabelFlags[i] = true;
-    } else nodeLabelFlags[i] = false; //6. if none of the above apply, don't show label
+    if (hidelayerCheckboxes[node_layer].checked) { // 1. if node's layer not hidden 
+      nodeObjects[i].showLabel = false;
+    } else if (showAllNodeLabelsFlag) { // 2. if showing all node labels
+      nodeObjects[i].showLabel= true;
+    } else if (layers[node_layer].showNodeLabels) { // 3. if showing layer node labels
+      nodeObjects[i].showLabel= true;
+    } else if (showSelectedNodeLabelsFlag && nodeObjects[i].isSelected) { // 4. if showing selected node labels, and node is selected
+      nodeObjects[i].showLabel= true;
+    } else if (i === last_hovered_node_index) { // 5. if hovering over node
+      nodeObjects[i].showLabel= true;
+    } else
+      nodeObjects[i].showLabel= false; // 6. if none of the above apply, don't show label
   }
 }  
 
@@ -184,6 +187,17 @@ const getSelectedNodes = () => {
     return(id !== undefined)
   });
   return(selectedNodePositions)
+};
+
+const getVisibleNodeLabels = () => {
+  let visibleNodeLabelPositions = nodeObjects.map(function(node) {
+    if (node.showLabel)
+      return(node.id)
+  });
+  visibleNodeLabelPositions = visibleNodeLabelPositions.filter(function(id) {
+    return(id !== undefined)
+  });
+  return(visibleNodeLabelPositions)
 };
 
 const repaintNodes = () => {

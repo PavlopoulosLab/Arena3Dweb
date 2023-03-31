@@ -13,8 +13,9 @@ let perLayerLayoutFLag = undefined,
 let globalLabelColor = "#ffffff",
     nodeLabelDefaultSize = "12px",
     layer_label_divs = [],
+    renderLayerLabelsFlag = false,
     node_labels = [], //divs to be overlaid above canvas
-    nodeLabelFlags = []; // TODO add to Node class as this.showLabel()
+    renderNodeLabelsFlag = false;
 
 // layers
 let layerGroups = new Map(),
