@@ -557,7 +557,7 @@ existMandatoryNodeAttributeColumns <- function(nodeAttributes) {
 }
 
 # Upload EDGE attributes ####
-handleInputEdgeAttributeFileUpload <- function() {
+handleInputEdgeAttributeFileUpload <- function() { # TODO update last
   tryCatch({
     renderModal("<h2>Please wait.</h2><br /><p>Uploading edge attributes.</p>")
     edgeFile <- input$edge_attributes_file$datapath
@@ -572,7 +572,7 @@ handleInputEdgeAttributeFileUpload <- function() {
       edgeAttributes$Channel <- trimws(edgeAttributes$Channel)
     }
     if (!is.null(edgeFile)){
-      callJSHandler("handler_edgeAttributes", edgeAttributes)
+      callJSHandler("handler_setEdgeAttributes", edgeAttributes)
       updateSelectInput(session, "navBar", selected = "Main View")
     }
   }, error = function(e) {

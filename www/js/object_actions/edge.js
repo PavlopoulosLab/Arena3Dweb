@@ -484,7 +484,7 @@ const assignColor = (checkChannels, i, channels, tag, color, edgeNoChannel) => {
       }
 }
 
-const edgeAttributes = (message) => {
+const setEdgeAttributes = (message) => {
   edge_attributes = message;
   let pos1arr = -1,
     pos2arr = -1,
@@ -520,7 +520,6 @@ const edgeAttributes = (message) => {
     }
   }
   updateEdgesRShiny();
-  return true;
 }
 
 const setLayerEdgeOpacity = (message) => {
