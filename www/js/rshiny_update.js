@@ -1,5 +1,6 @@
 // Scene
 const updateScenePanRShiny = () => {
+  renderInterLayerEdgesFlag = true;
   let js_scene_pan = {
     "position_x": scene.getPosition("x"),
     "position_y": scene.getPosition("y"),
@@ -10,6 +11,7 @@ const updateScenePanRShiny = () => {
 };
 
 const updateSceneSphereRShiny = () => {
+  renderInterLayerEdgesFlag = true;
   let js_scene_sphere = {
     "rotation_x": scene.getRotation("x"),
     "rotation_y": scene.getRotation("y"),
@@ -22,6 +24,7 @@ const updateSceneSphereRShiny = () => {
 const updateLayersRShiny = () => {
   let js_layers = [];
 
+  renderInterLayerEdgesFlag = true;
   renderLayerLabelsFlag = true;
   for (let i = 0; i < layers.length; i++) {
     js_layers.push(
@@ -62,6 +65,7 @@ const updateSelectedLayersRShiny = () => {
 const updateNodesRShiny = () => {
   let js_nodes = [];
 
+  renderInterLayerEdgesFlag = true;
   renderNodeLabelsFlag = true;
   for (let i = 0; i < nodeObjects.length; i++) {    
     js_nodes.push([
@@ -133,6 +137,7 @@ const updateEdgesRShiny = () => {
     pos1 = (pos2 = pos3 = -1);
     temp_channel = '';
   j = 0;
+
   for (let i = 0; i < edgePairs.length; i++) {
     // color
     if (edge_attributes !== "") {

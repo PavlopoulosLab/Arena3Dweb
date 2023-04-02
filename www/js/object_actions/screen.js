@@ -56,14 +56,16 @@ const animate = () => { // TODO optimize performance
     renderNodeLabels();
   
   // TODO global flag
+  // redrawInterLayerEdges_new();
+
   // draw inter-layer edges only when necessary for performance improvement
-  // if (scene.dragging || interLayerEdgesRenderPauseFlag) {
-  //   redrawInterLayerEdges(false);
-  // } else if (edgeWidthByWeight || interLayerEdgeOpacity > 0) {
-  //   redrawInterLayerEdges(true);
-  //   draw_inter_edges_flag = true;
-  // } else if (draw_inter_edges_flag)
-  //   redrawInterLayerEdges(false);
+  if (scene.dragging || interLayerEdgesRenderPauseFlag) {
+    redrawInterLayerEdges(false);
+  } else if (edgeWidthByWeight || interLayerEdgeOpacity > 0) {
+    redrawInterLayerEdges(true);
+    draw_inter_edges_flag = true;
+  } else if (draw_inter_edges_flag)
+    redrawInterLayerEdges(false);
 
 	renderer.render(scene.THREE_Object, camera);
 }

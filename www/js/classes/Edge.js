@@ -3,6 +3,10 @@ class Edge {
         colors = ["#FFFFFF"], weights = [], channels = [],
         interLayer = false}) {
             this.THREE_Object = "";
+            this.sourceNodeIndex = "";
+            this.targetNodeIndex = "";
+            this.sourceLayerIndex = "";
+            this.targetLayerIndex = "";
 
             this.id = id;
             this.source = source;
@@ -18,28 +22,46 @@ class Edge {
             this.createGeometry();
         }
 
-    createGeometry() {
+    createGeometry() { // TODO Group object for channels
+        let points = [], geometry, material;
+
+        this.sourceNodeIndex = nodeLayerNames.indexOf(this.source);
+        this.targetNodeIndex = nodeLayerNames.indexOf(this.target);
+        this.sourceLayerIndex = layerGroups[nodeGroups[nodeLayerNames[this.sourceNodeIndex]]];
+        this.targetLayerIndex = layerGroups[nodeGroups[nodeLayerNames[this.targetNodeIndex]]];
+        
         if (this.interLayer)
-            this.THREE_Object = "" // TODO
+            points.push(nodeObjects[this.sourceNodeIndex].getWorldPosition(),
+                nodeObjects[this.targetNodeIndex].getWorldPosition());
         else
-            this.createIntraLayerEdge()
-    }
-
-    createIntraLayerEdge() { // TODO multi-channel
-        let index1, index2, layerId,
-            points = [], geometry, material, line;
-        index1 = nodeLayerNames.indexOf(this.source);
-        index2 = nodeLayerNames.indexOf(this.target);
-        layerId = layerGroups[nodeGroups[nodeLayerNames[index1]]];
-
-        points.push(nodeObjects[index1].getPosition(), nodeObjects[index2].getPosition());
+            points.push(nodeObjects[this.sourceNodeIndex].getPosition(),
+                nodeObjects[this.targetNodeIndex].getPosition());
         geometry = new THREE.BufferGeometry().setFromPoints(points);
         material = new THREE.LineBasicMaterial({
             color: this.colors[0], alphaTest: 0.05, transparent: true, opacity: this.weights[0]
         });
-        line = new THREE.Line(geometry, material);
-        
-        layers[layerId].addEdge(line);
+        this.THREE_Object = new THREE.Line(geometry, material);
+
+        if (this.interLayer)
+            scene.add(this.THREE_Object);
+        else
+            layers[this.sourceLayerIndex].addEdge(this.THREE_Object);
+    }
+
+    redraw() {
+        let points = [], geometry, material;
+        scene.remove(this.THREE_Object);
+
+        points.push(nodeObjects[this.sourceNodeIndex].getWorldPosition(),
+            nodeObjects[this.targetNodeIndex].getWorldPosition());
+
+        geometry = new THREE.BufferGeometry().setFromPoints(points);
+        material = new THREE.LineBasicMaterial({
+            color: this.colors[0], alphaTest: 0.05, transparent: true, opacity: this.weights[0]
+        });
+        this.THREE_Object = new THREE.Line(geometry, material);
+
+        scene.add(this.THREE_Object);
     }
 
     toggleArrow() {

@@ -92,8 +92,24 @@ const decideEdgeLayerType = (i) => {
   return(interLayer)
 };
 
+const redrawInterLayerEdges_new = () => {
+  console.log("redrawInterLayerEdges_new");
+  for (let i = 0; i < edgeObjects.length; i++) {
+    if (edgeObjects[i].interLayer)
+      edgeObjects[i].redraw();
+  }
+};
 
-
+const getInterLayerEdges = () => { // TODO remove if never used
+  let interLayerEdges = edgeObjects.map(function(edge) {
+    if (edge.interLayer)
+      return(edge.id)
+  });
+  interLayerEdges = interLayerEdges.filter(function(id) {
+    return(id !== undefined)
+  });
+  return(interLayerEdges)
+};
 
 // t is a random percentage that has been set after tries
 // t is a factor between 0-1
@@ -231,77 +247,92 @@ const redrawInterLayerEdges = (showFlag = false) => { // TODO global flag to not
   let i;
 
   if (!showFlag && (scene.dragging || interLayerEdgesRenderPauseFlag)){
-    for (i = 0; i < layer_edges_pairs.length; i++){
-      scene.remove(layerEdges[i]);
-    }
+    // for (i = 0; i < layer_edges_pairs.length; i++){
+    //   scene.remove(layerEdges[i]);
+    // }
+    removeInterLayerEdges();
   } else if (!showFlag && !(edgeWidthByWeight && interLayerEdgeOpacity > 0)){ //this optimizes execution for many connections by making them disappear
-    for (i = 0; i < layer_edges_pairs.length; i++){
-      scene.remove(layerEdges[i]);
-    }
+    removeInterLayerEdges();
     draw_inter_edges_flag = false;
   } else {
-    let index1, index2, color,
-      points, node_layer1, node_layer2,
-      geometry, material, arrowHelper, ver_line, curve_group,
-      hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
-    for (i = 0; i < layer_edges_pairs.length; i++){
-      scene.remove(layerEdges[i]);
-      // Keep default color
-      if (layer_edges_pairs_channels && layer_edges_pairs_channels[i] &&  layer_edges_pairs_channels[i].length === 1) {  
-        color = channelColors[layer_edges_pairs_channels[i][0]];
+    if (renderInterLayerEdgesFlag) {
+      redrawInterLayerEdges_new();
+      if (waitEdgeRenderFlag) { // locked flags
+        waitEdgeRenderFlag = false;
       } else {
-        color = EDGE_DEFAULT_COLOR;
+        renderInterLayerEdgesFlag = false;
+        waitEdgeRenderFlag = true;
       }
-      points = [];
-      node_layer1 = layerGroups[nodeGroups[edgePairs_source[layer_edges_pairs[i]]]];
-      node_layer2 = layerGroups[nodeGroups[edgePairs_target[layer_edges_pairs[i]]]];
-      if (!hidelayerCheckboxes[node_layer1].checked && !hidelayerCheckboxes[node_layer2].checked) {
-        index1 = nodeLayerNames.indexOf(edgePairs_source[layer_edges_pairs[i]]);
-        index2 = nodeLayerNames.indexOf(edgePairs_target[layer_edges_pairs[i]]);
-        points.push(
-          nodeObjects[index1].getWorldPosition(),
-          nodeObjects[index2].getWorldPosition()
-        );
-    		geometry = new THREE.BufferGeometry().setFromPoints( points );
-        material = "";
-
-        // set color to selectedDefault if the edge is selected
-    		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag)
-          color = selectedDefaultColor;
-        else if (edge_attributes !== "" && edgeAttributesPriority) 
-          color = edge_attributes.Color[layer_edges_pairs[i]];
-    		  
-        if (edgeWidthByWeight)
-          material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[layer_edges_pairs[i]] });
-        else
-          material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: interLayerEdgeOpacity });
-        
-        arrowHelper = createArrow(points, color,null, true);
-        ver_line = new THREE.Line(geometry, material);
-
-        // if the edge is multi channel create the multiple channels
-        if (layer_edges_pairs_channels[i]) {
-          curve_group = new THREE.Group();
-          curve_group = createChannels(points[0], points[1], interChannelCurvature, ver_line, i, true);
-          scene.add(curve_group);
-          layerEdges[i] = curve_group;
-        } else {
-          //directed
-          if (isDirectionEnabled) {
-            const group = new THREE.Group();
-            group.add( ver_line );
-            group.add( arrowHelper );
-            scene.add(group);
-            layerEdges[i] = group;
-          } else {
-            scene.add(ver_line);
-            layerEdges[i] = ver_line;
-          }
-        }
-      }
+      
     }
+    // let index1, index2, color,
+    //   points, node_layer1, node_layer2,
+    //   geometry, material, arrowHelper, ver_line, curve_group,
+    //   hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
+    // for (i = 0; i < layer_edges_pairs.length; i++){
+    //   scene.remove(layerEdges[i]);
+    //   // Keep default color
+    //   if (layer_edges_pairs_channels && layer_edges_pairs_channels[i] &&  layer_edges_pairs_channels[i].length === 1) {  
+    //     color = channelColors[layer_edges_pairs_channels[i][0]];
+    //   } else {
+    //     color = EDGE_DEFAULT_COLOR;
+    //   }
+    //   points = [];
+    //   node_layer1 = layerGroups[nodeGroups[edgePairs_source[layer_edges_pairs[i]]]];
+    //   node_layer2 = layerGroups[nodeGroups[edgePairs_target[layer_edges_pairs[i]]]];
+    //   if (!hidelayerCheckboxes[node_layer1].checked && !hidelayerCheckboxes[node_layer2].checked) {
+    //     index1 = nodeLayerNames.indexOf(edgePairs_source[layer_edges_pairs[i]]);
+    //     index2 = nodeLayerNames.indexOf(edgePairs_target[layer_edges_pairs[i]]);
+    //     points.push(
+    //       nodeObjects[index1].getWorldPosition(),
+    //       nodeObjects[index2].getWorldPosition()
+    //     );
+    // 		geometry = new THREE.BufferGeometry().setFromPoints( points );
+    //     material = "";
+
+    //     // set color to selectedDefault if the edge is selected
+    // 		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag)
+    //       color = selectedDefaultColor;
+    //     else if (edge_attributes !== "" && edgeAttributesPriority) 
+    //       color = edge_attributes.Color[layer_edges_pairs[i]];
+    		  
+    //     if (edgeWidthByWeight)
+    //       material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[layer_edges_pairs[i]] });
+    //     else
+    //       material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: interLayerEdgeOpacity });
+        
+    //     arrowHelper = createArrow(points, color,null, true);
+    //     ver_line = new THREE.Line(geometry, material);
+
+    //     // if the edge is multi channel create the multiple channels
+    //     if (layer_edges_pairs_channels[i]) {
+    //       curve_group = new THREE.Group();
+    //       curve_group = createChannels(points[0], points[1], interChannelCurvature, ver_line, i, true);
+    //       scene.add(curve_group);
+    //       layerEdges[i] = curve_group;
+    //     } else {
+    //       //directed
+    //       if (isDirectionEnabled) {
+    //         const group = new THREE.Group();
+    //         group.add( ver_line );
+    //         group.add( arrowHelper );
+    //         scene.add(group);
+    //         layerEdges[i] = group;
+    //       } else {
+    //         scene.add(ver_line);
+    //         layerEdges[i] = ver_line;
+    //       }
+    //     }
+    //   }
+    // }
   }
 }
+
+const removeInterLayerEdges = () => {
+  for (let i = 0; i < edgeObjects.length; i++)
+    if (edgeObjects[i].interLayer)
+      scene.remove(edgeObjects[i].THREE_Object);
+};
 
 const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
   let index1 = 0, index2 = 0, color = "", pos1 = -1, pos2 = -1,
@@ -745,6 +776,7 @@ const toggleInterLayerEdgesRendering = () => {
   let interLayerEdgesRenderPauseButton = document.getElementById('interLayerEdgesRenderPauseButton');
   if (interLayerEdgesRenderPauseFlag) {
     interLayerEdgesRenderPauseFlag = false;
+    renderInterLayerEdgesFlag = true;
     interLayerEdgesRenderPauseButton.innerText = "Stop:Render Inter-Layer Edges";
   } else {
     interLayerEdgesRenderPauseFlag = true;

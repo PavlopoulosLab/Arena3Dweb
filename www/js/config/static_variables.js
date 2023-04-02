@@ -66,7 +66,9 @@ let selectedEdgeColorFlag = true,
     channelColors = {},
     channelVisibility = {},
     edgeChannels = [], // TODO decide keep/remove
-    layer_edges_pairs_channels = [];  // TODO same as above
+    layer_edges_pairs_channels = [], // TODO same as above
+    renderInterLayerEdgesFlag = false,
+    waitEdgeRenderFlag = true;
 
 // others
 let interLayerEdgesRenderPauseFlag = false,
