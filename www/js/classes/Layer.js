@@ -102,6 +102,10 @@ class Layer {
     this.plane.add(line);
   }
 
+  removeEdge(line) {
+    this.plane.remove(line);
+  }
+
   // toggle functions
   toggleSelection() {
     this.isSelected = !this.isSelected;
