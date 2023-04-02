@@ -92,6 +92,9 @@ const decideEdgeLayerType = (i) => {
   return(interLayer)
 };
 
+
+
+
 // t is a random percentage that has been set after tries
 // t is a factor between 0-1
 const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {

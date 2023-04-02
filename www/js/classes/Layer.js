@@ -98,6 +98,10 @@ class Layer {
     this.plane.add(sphere);
   }
 
+  addEdge(line) {
+    this.plane.add(line);
+  }
+
   // toggle functions
   toggleSelection() {
     this.isSelected = !this.isSelected;
