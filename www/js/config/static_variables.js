@@ -65,7 +65,7 @@ let selectedEdgeColorFlag = true,
     selectedChannels = [], // selected ones from Layout tab
     channelColors = {},
     channelVisibility = {},
-    edge_channels = [], // TODO decide keep/remove
+    edgeChannels = [], // TODO decide keep/remove
     layer_edges_pairs_channels = [];  // TODO same as above
 
 // others

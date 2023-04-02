@@ -1,23 +1,24 @@
 class Edge {
     constructor({id = 0, source = "", target = "",
-        color = "#FFFFFF", weight = "", channel = "", interLayer = false}) {
+        colors = ["#FFFFFF"], weights = [], channels = [],
+        interLayer = false}) {
             this.THREE_Object = "";
 
             this.id = id;
             this.source = source;
             this.target = target;
-            this.color = color;
-            this.importedColor = color;
-            this.weight = weight; // TODO opacity?
-            this.channel = channel; // TODO check if [] works better
+            this.colors = colors;
+            this.importedColors = colors;
+            this.weights = weights; // TODO opacity?
+            this.channels = channels;
             this.interLayer = interLayer;
 
-            this.isSelected = false;
+            this.isSelected = false; // TODO per channel?
         
-            this.createLine(color);
+            this.createGeometry();
         }
 
-    createLine(edgeColor) {
+    createGeometry() {
         if (this.interLayer)
             this.THREE_Object = "" // TODO
     }
