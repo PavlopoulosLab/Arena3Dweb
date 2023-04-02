@@ -29,7 +29,7 @@ property uint8 green
 property uint8 blue
 element edge "), file = con)
   # number of edges
-  js_edge_pairs <- as.data.frame(fromJSON(input$js_edge_pairs))
+  js_edge_pairs <- fromJSON(input$js_edge_pairs)
   cat(sprintf("%d", nrow(js_edge_pairs)), file = con)
   cat(sprintf("\nproperty int vertex1
 property int vertex2
@@ -57,10 +57,9 @@ end_header\n"), file = con)
   
   # edge parsing
   for (i in 1:nrow(js_edge_pairs)){
-    rgbColor <- col2rgb(js_edge_pairs[i, 3]) # 3rd col is edge color
-    edge <- strsplit(js_edge_pairs[i, 1], "---")[[1]]
-    nodeIndex1 <- match(edge[1], nodeNames) - 1 # starting from index 0
-    nodeIndex2 <- match(edge[2], nodeNames) - 1
+    rgbColor <- col2rgb(js_edge_pairs$color[i])
+    nodeIndex1 <- match(js_edge_pairs$src[i], nodeNames) - 1 # starting from index 0
+    nodeIndex2 <- match(js_edge_pairs$trg[i], nodeNames) - 1
     cat(sprintf("%s %s %s %s %s\n",
                 nodeIndex1, nodeIndex2, # from,to
                 rgbColor[1], rgbColor[2], rgbColor[3]), file = con) # r,g,b

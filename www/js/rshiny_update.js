@@ -134,6 +134,7 @@ const updateEdgesRShiny = () => {
     temp_channel = '';
   j = 0;
   for (let i = 0; i < edgePairs.length; i++) {
+    // color
     if (edge_attributes !== "") {
       pos1 = edge_attributes.SourceNode.indexOf(edgePairs[i]);
       pos2 = edge_attributes.TargetNode.indexOf(edgePairs[i]);
@@ -151,21 +152,32 @@ const updateEdgesRShiny = () => {
       }
       else color = edgeDefaultColor;
     } else color = edgeDefaultColor;
+    // color end
+    
     if (edge_channels && edge_channels[i] && edge_channels[i].length > 0) {
       edge_channels[i].forEach((channel) => {
-        temp_js_edge_pairs = [edgePairs[i], edgeValues[j], channelColors[channel], channel];
+        temp_js_edge_pairs = [edgePairs_source[i], edgePairs_target[i], edgeValues[j], channelColors[channel], channel];
         js_edge_pairs.push(temp_js_edge_pairs);
         j++;
       });
 
     } else {
-      temp_js_edge_pairs = [edgePairs[i], edgeValues[j], color, ""];
+      temp_js_edge_pairs = [edgePairs_source[i], edgePairs_target[i], edgeValues[j], color, ""];
       js_edge_pairs.push(temp_js_edge_pairs);
       j++;
     }
   }
+  
+  js_edge_pairs = js_edge_pairs.map(edge => {
+    return {
+      src: edge[0],
+      trg: edge[1],
+      opacity: edge[2],
+      color: edge[3],
+      channel: edge[4]
+    }
+  });
   Shiny.setInputValue("js_edge_pairs", JSON.stringify(js_edge_pairs));
-  // Shiny.setInputValue("js_edgePairs", JSON.stringify(js_edgePairs));
 }
 
 const updateDirectionCheckboxRShiny = (name, value) => {

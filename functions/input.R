@@ -589,27 +589,17 @@ convertSessionToJSON <- function() {
   js_scene_sphere <- fromJSON(input$js_scene_sphere)
   js_layers <- fromJSON(input$js_layers)
   js_nodes <- fromJSON(input$js_nodes)
-  js_edge_pairs <- as.data.frame(fromJSON(input$js_edge_pairs))
+  js_edge_pairs <- fromJSON(input$js_edge_pairs)
   js_label_color <- input$js_label_color
-  
+  saveRDS(js_edge_pairs, "js_edge_pairs.RDS")
   direction_flag <- input$edgeDirectionToggle
   edgeByWeight_flag <- input$edgeWidthByWeight
   
   scene <- c(js_scene_pan, js_scene_sphere)
   
-  # Edges
-  edges_df <- data.frame()
-  for (i in 1:nrow(js_edge_pairs)){
-    line_split <- strsplit(as.character(js_edge_pairs[i, 1]), "---")
-    node1 <- trimws(line_split[[1]][1])
-    node2 <- trimws(line_split[[1]][2])
-    edges_df <- rbind(edges_df, c(node1,node2, js_edge_pairs[i, 2], js_edge_pairs[i, 3], js_edge_pairs[i, 4] ))
-  }
-  colnames(edges_df) <- c("src", "trg", "opacity", "color", "channel")
-  
   exportData <- list(
     scene = scene, layers = js_layers, nodes = js_nodes,
-    edges = edges_df, universalLabelColor = js_label_color,
+    edges = js_edge_pairs, universalLabelColor = js_label_color,
     direction = direction_flag, edgeOpacityByWeight = edgeByWeight_flag
   )
   exportData <- toJSON(exportData, auto_unbox = T)
