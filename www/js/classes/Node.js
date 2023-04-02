@@ -13,6 +13,7 @@ class Node {
         this.clusterColor = color;
         this.url = url;
         this.descr = descr;
+        
         this.isSelected = false;
         this.showLabel= false;
         this.cluster = "";

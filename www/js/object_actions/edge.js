@@ -1,20 +1,27 @@
+// Initialization ======
 const createEdgeObjects = () => {
-  let index1 = 0, index2 = 0, color = "";
-  for (let i = 0; i < edgePairs.length; i++){ //random x,y,z
+  let color, index1, index2,
+    points, edge_split, geometry, material,
+    arrowHelper, ver_line, curve_group;
+
+  for (let i = 0; i < edgePairs.length; i++) {
+
+
     color = edgeDefaultColor;
-    if (edge_channels && edge_channels[i] && edge_channels[i].length === 1) {
+    if (edge_channels && edge_channels[i] && edge_channels[i].length === 1)
       color = channelColors[edge_channels[i][0]];
-    } else {
+    else
       color = edgeDefaultColor;
-    }
-    let points = [];
-    let edge_split = edgePairs[i].split("---");
+    
+    points = [];
+    edge_split = edgePairs[i].split("---");
     index1 = nodeLayerNames.indexOf(edge_split[0]);
     index2 = nodeLayerNames.indexOf(edge_split[1]);
+
     if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]){ //check if edge inside same Layer
       points.push( nodeObjects[index1].getPosition(), nodeObjects[index2].getPosition() );
-  		let geometry = new THREE.BufferGeometry().setFromPoints( points );
-  		let material = "";
+  		geometry = new THREE.BufferGeometry().setFromPoints( points );
+  		material = "";
   		if (edge_attributes !== "" && edgeAttributesPriority){
   		  pos1 = edge_attributes.SourceNode.indexOf(edge_split[0]);
         pos2 = edge_attributes.TargetNode.indexOf(edge_split[1]);
@@ -27,10 +34,10 @@ const createEdgeObjects = () => {
 
   		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[i] } );
       else material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: layerEdgeOpacity });
-      let arrowHelper = createArrow(points, color,null, false);
-      let ver_line = new THREE.Line(geometry, material);
+      arrowHelper = createArrow(points, color,null, false);
+      ver_line = new THREE.Line(geometry, material);
       if (edge_channels[i]) {
-        let curve_group = new THREE.Group();
+        curve_group = new THREE.Group();
         curve_group = createChannels(points[0], points[1], channelCurvature, ver_line, i, false);
         layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(curve_group);
         edges.push(curve_group);
