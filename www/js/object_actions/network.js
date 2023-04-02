@@ -46,6 +46,8 @@ const resetValues = () => {
   edges = []; //canvas objects
   layerEdges = []; //canvas objects
   edgePairs = [];
+  edgePairs_source = [];
+  edgePairs_target = [];
   layer_edges_pairs = []; //canvas objects
   edgeValues = [];
   selected_edges = [];
@@ -99,7 +101,7 @@ const areObjectsWithinLimit = (object, limit, objectName) => {
 }
 
 const initializeNodeAndEdgeArrays = (network) => {
-  let sourceNodeLayerName, targetNodeLayerName, edgePair;
+  let sourceNodeLayerName, targetNodeLayerName;
 
   for (let i = 0; i < network.SourceNode.length; i++) {
     sourceNodeLayerName = network.SourceNode_Layer[i];
@@ -108,12 +110,7 @@ const initializeNodeAndEdgeArrays = (network) => {
     updateNodeArrays(sourceNodeLayerName, network.SourceNode[i], network.SourceLayer[i]);
     updateNodeArrays(targetNodeLayerName, network.TargetNode[i], network.TargetLayer[i]);
 
-    edgePair = sourceNodeLayerName.concat("---").concat(targetNodeLayerName);
-    if (network.Channel)
-      updateEdgeChannelArrays(network.Channel[i], edgePair);
-    else
-      edgePairs.push(edgePair);
-
+    createEdgePairs(network.Channel, i, sourceNodeLayerName, targetNodeLayerName);
     edgeValues.push(network.Weight[i]);
   }
 
@@ -128,15 +125,30 @@ const updateNodeArrays = (nodeLayerName, nodeName, layerName) => {
   }
 };
 
-const updateEdgeChannelArrays = (channelName, edgePair) => {
-  let position;
-  if (edgePairs.includes(edgePair) ) {
-    position = edgePairs.indexOf(edgePair);
-    edge_channels[position].push(channelName);
-  } else {
+const createEdgePairs = (networkChannel, i, sourceNodeLayerName, targetNodeLayerName) => {
+  let edgePair = sourceNodeLayerName.concat("---").concat(targetNodeLayerName);
+  if (networkChannel)
+    updateEdgeChannelArrays(networkChannel[i], edgePair,
+      sourceNodeLayerName, targetNodeLayerName);
+  else {
     edgePairs.push(edgePair);
-    edge_channels.push([channelName]);
+    edgePairs_source.push(sourceNodeLayerName);
+    edgePairs_target.push(targetNodeLayerName);
   }
+};
+
+const updateEdgeChannelArrays = (channelName, edgePair,
+  sourceNodeLayerName, targetNodeLayerName) => {
+    let position;
+    if (edgePairs.includes(edgePair) ) {
+      position = edgePairs.indexOf(edgePair);
+      edge_channels[position].push(channelName);
+    } else {
+      edgePairs.push(edgePair);
+      edgePairs_source.push(sourceNodeLayerName);
+      edgePairs_target.push(targetNodeLayerName);
+      edge_channels.push([channelName]);
+    }
 };
 
 const updateChannelArrays = (channelArray) => {
@@ -243,8 +255,6 @@ const initializeLayersFromJSON = (jsonLayers) => {
 };
 
 const initializeEdgesFromJSON = (jsonEdges) => {
-  let edgePair;
-
   edge_attributes = {
     "SourceNode": [],
     "TargetNode": [],
@@ -254,12 +264,7 @@ const initializeEdgesFromJSON = (jsonEdges) => {
     edge_attributes.Channel = [];
 
   for (let i = 0; i < jsonEdges.src.length; i++) {
-    edgePair = jsonEdges.src[i].concat("---").concat(jsonEdges.trg[i]);
-    if (jsonEdges.channel)
-      updateEdgeChannelArrays(jsonEdges.channel[i], edgePair);
-    else
-      edgePairs.push(edgePair);
-
+    createEdgePairs(jsonEdges.channel, i, jsonEdges.src[i], jsonEdges.trg[i]);      
     edgeValues.push(Number(jsonEdges.opacity[i]));
 
     edge_attributes.SourceNode.push(jsonEdges.src[i]);

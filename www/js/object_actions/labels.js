@@ -28,12 +28,15 @@ const createLabels = () => {
 
 const setLabelColor = () =>{
   let i;
-  for (i=0; i<layer_label_divs.length; i++) layer_label_divs[i].style.color = globalLabelColor;
-  for (i=0; i<node_labels.length; i++) node_labels[i].style.color = globalLabelColor;
-}
+  for (i = 0; i < layer_label_divs.length; i++)
+    layer_label_divs[i].style.color = globalLabelColor;
+  for (i = 0; i < node_labels.length; i++)
+    node_labels[i].style.color = globalLabelColor;
+};
 
 const setLabelColorVariable = (label_color) => {
   globalLabelColor = label_color;
+  setLabelColor();
 };
 
 const showLayerLabels = (mode) => {

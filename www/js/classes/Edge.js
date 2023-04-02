@@ -1,6 +1,6 @@
 class Edge {
     constructor({id = 0, source = "", target = "",
-        color = "#FFFFFF", channel = ""}) {
+        color = "#FFFFFF", weight = "", channel = "", interLayer = false}) {
             this.THREE_Object = "";
 
             this.id = id;
@@ -8,10 +8,12 @@ class Edge {
             this.target = target;
             this.color = color;
             this.importedColor = color;
+            this.weight = weight; // TODO opacity?
             this.channel = channel; // TODO check if [] works better
+            this.interLayer = interLayer;
 
             this.isSelected = false;
-            
+        
             this.createLine(color);
         }
 

@@ -165,6 +165,7 @@ const updateEdgesRShiny = () => {
     }
   }
   Shiny.setInputValue("js_edge_pairs", JSON.stringify(js_edge_pairs));
+  // Shiny.setInputValue("js_edgePairs", JSON.stringify(js_edgePairs));
 }
 
 const updateDirectionCheckboxRShiny = (name, value) => {

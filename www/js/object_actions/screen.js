@@ -155,8 +155,10 @@ const drawInterLayerEdges = (showFlag = false) => { // TODO global flag to not e
     }
     draw_inter_edges_flag = false;
   } else {
-    let index1 = 0, index2 = 0, color = "";
-    let hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
+    let index1, index2, color,
+      points, node_layer1, node_layer2,
+      geometry, material, arrowHelper, ver_line, curve_group,
+      hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
     for (i = 0; i < layer_edges_pairs.length; i++){
       scene.remove(layerEdges[i]);
       // Keep default color
@@ -165,19 +167,18 @@ const drawInterLayerEdges = (showFlag = false) => { // TODO global flag to not e
       } else {
         color = edgeDefaultColor;
       }
-      let points = [];
-      let edge_split = edgePairs[layer_edges_pairs[i]].split("---");
-      let node_layer1 = layerGroups[nodeGroups[edge_split[0]]];
-      let node_layer2 = layerGroups[nodeGroups[edge_split[1]]];
+      points = [];
+      node_layer1 = layerGroups[nodeGroups[edgePairs_source[layer_edges_pairs[i]]]];
+      node_layer2 = layerGroups[nodeGroups[edgePairs_target[layer_edges_pairs[i]]]];
       if (!hidelayerCheckboxes[node_layer1].checked && !hidelayerCheckboxes[node_layer2].checked) {
-        index1 = nodeLayerNames.indexOf(edge_split[0]);
-        index2 = nodeLayerNames.indexOf(edge_split[1]);
+        index1 = nodeLayerNames.indexOf(edgePairs_source[layer_edges_pairs[i]]);
+        index2 = nodeLayerNames.indexOf(edgePairs_target[layer_edges_pairs[i]]);
         points.push(
           nodeObjects[index1].getWorldPosition(),
           nodeObjects[index2].getWorldPosition()
         );
-    		let geometry = new THREE.BufferGeometry().setFromPoints( points );
-        let material = "";
+    		geometry = new THREE.BufferGeometry().setFromPoints( points );
+        material = "";
 
         // set color to selectedDefault if the edge is selected
     		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag)
@@ -190,12 +191,12 @@ const drawInterLayerEdges = (showFlag = false) => { // TODO global flag to not e
         else
           material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: interLayerEdgeOpacity });
         
-        let arrowHelper = createArrow(points, color,null, true);
-        let ver_line = new THREE.Line(geometry, material);
+        arrowHelper = createArrow(points, color,null, true);
+        ver_line = new THREE.Line(geometry, material);
 
         // if the edge is multi channel create the multiple channels
         if (layer_edges_pairs_channels[i]) {
-          let curve_group = new THREE.Group();
+          curve_group = new THREE.Group();
           curve_group = createChannels(points[0], points[1], interChannelCurvature, ver_line, i, true);
           scene.add(curve_group);
           layerEdges[i] = curve_group;

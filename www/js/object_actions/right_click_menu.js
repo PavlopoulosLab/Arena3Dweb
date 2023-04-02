@@ -3,17 +3,16 @@
 //@param node (integer): node whose neighbors are requested
 //@return int array of neighbor IDs
 const interLayerNeighbors = (node) => {
-  let edge_split, index1, index2, neighbors = [];
+  let index1, index2, neighbors = [];
   for (let i = 0; i < edgePairs.length; i++) {
-    edge_split = edgePairs[i].split("---");
-    index1 = nodeLayerNames.indexOf(edge_split[0]);
-    index2 = nodeLayerNames.indexOf(edge_split[1]);
+    index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
+    index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
     if (node == index1)
       neighbors.push(index2);
     else if (node == index2)
       neighbors.push(index1);
   }
-  return neighbors;
+  return(neighbors)
 }
 
 //This function returns the inter-layer edge connecting two nodes if exists, else null
@@ -22,12 +21,12 @@ const interLayerNeighbors = (node) => {
 //@param node2 (integer): second node
 //@return: String of inter-layer edge pair (as found in the edgePairs array) or null if not found
 const getInterLayerEdge = (node1, node2) => {
-  let edge_split, index1, index2;
+  let index1, index2;
   for (let i = 0; i < edgePairs.length; i++) {
-    edge_split = edgePairs[i].split("---");
-    index1 = nodeLayerNames.indexOf(edge_split[0]);
-    index2 = nodeLayerNames.indexOf(edge_split[1]);
-    if ((node1 == index1 && node2 == index2) || (node1 == index2 && node2 == index1)) return edgePairs[i];
+    index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
+    index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
+    if ((node1 == index1 && node2 == index2) || (node1 == index2 && node2 == index1))
+      return edgePairs[i];
   }
   return null;
 }
@@ -53,10 +52,11 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
       interLayerEdge = getInterLayerEdge(currentNode, previousNode);
       if (interLayerEdge !== null){
         pos = edgePairs.indexOf(interLayerEdge); //integer position of edge name in all-edges array
-        if (!exists(selected_edges, pos)){
+        if (!exists(selected_edges, pos)) {
           selected_edges.push(pos);
           pos = layer_edges_pairs.indexOf(pos); //integer position needed for line object to be painted correctly
-          if (selectedNodeColorFlag) changeColor(layerEdges[pos], selectedDefaultColor);
+          if (selectedNodeColorFlag)
+            changeColor(layerEdges[pos], selectedDefaultColor);
         }
       }
     }
@@ -79,9 +79,8 @@ const executeCommand = (item) => {
   if (item.options[item.selectedIndex].text == "Select Neighbors"){ //select neighbors
     let pos = -1;
     for (let i = 0; i < edgePairs.length; i++){ //random x,y,z
-      let edge_split = edgePairs[i].split("---");
-      index1 = nodeLayerNames.indexOf(edge_split[0]);
-      index2 = nodeLayerNames.indexOf(edge_split[1]);
+      index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
+      index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
       if (index1 == item.value) {
         if (!nodeObjects[index2].isSelected) {
           nodeObjects[index2].isSelected = true;
@@ -126,9 +125,8 @@ const executeCommand = (item) => {
     while (!flag){
       let pos = -1;
       for (let i = 0; i < edgePairs.length; i++){
-        let edge_split = edgePairs[i].split("---");
-        index1 = nodeLayerNames.indexOf(edge_split[0]);
-        index2 = nodeLayerNames.indexOf(edge_split[1]);
+        index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
+        index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
         if (index1 == currentNode && nodeGroups[nodeLayerNames[index2]] != startingLayer && nodeGroups[nodeLayerNames[index2]] != nodeGroups[nodeLayerNames[index1]] && !(exists(tempSelectedNodes, index2))){ //path must not contain other nodes in starting layer or its own layer
           tempSelectedNodes.push(index2);
           // code from Select neighbors above

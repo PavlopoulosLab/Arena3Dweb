@@ -1,7 +1,7 @@
 // Initialization ======
 const createEdgeObjects = () => {
   let color, index1, index2,
-    points, edge_split, geometry, material,
+    points, geometry, material,
     arrowHelper, ver_line, curve_group;
 
   for (let i = 0; i < edgePairs.length; i++) {
@@ -14,17 +14,15 @@ const createEdgeObjects = () => {
       color = edgeDefaultColor;
     
     points = [];
-    edge_split = edgePairs[i].split("---");
-    index1 = nodeLayerNames.indexOf(edge_split[0]);
-    index2 = nodeLayerNames.indexOf(edge_split[1]);
-
-    if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]){ //check if edge inside same Layer
+    index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
+    index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
+    if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]) { //check if edge inside same Layer
       points.push( nodeObjects[index1].getPosition(), nodeObjects[index2].getPosition() );
   		geometry = new THREE.BufferGeometry().setFromPoints( points );
   		material = "";
   		if (edge_attributes !== "" && edgeAttributesPriority){
-  		  pos1 = edge_attributes.SourceNode.indexOf(edge_split[0]);
-        pos2 = edge_attributes.TargetNode.indexOf(edge_split[1]);
+  		  pos1 = edge_attributes.SourceNode.indexOf(edgePairs_source[i]);
+        pos2 = edge_attributes.TargetNode.indexOf(edgePairs_target[i]);
         if (checkIfAttributeColorExist(edge_attributes, pos1)){ //if node not currently selected and exists in node attributes file and color is assigned
           color = edge_attributes.Color[pos1]; //edge is intra-layer
         } else if (checkIfAttributeColorExist(edge_attributes, pos2)){ 
@@ -63,7 +61,7 @@ const createEdgeObjects = () => {
 
 const redrawEdges = () => {
   let index1 = 0, index2 = 0, color = "", pos = -1, pos1 = -1, pos2 = -1,
-    edge_split, points, geometry, material, arrowHelper, ver_line, curve_group, group;
+    points, geometry, material, arrowHelper, ver_line, curve_group, group;
 
   for (let i = 0; i < edgePairs.length; i++) {
     if (edge_channels && edge_channels[i] && edge_channels[i].length === 1)
@@ -71,9 +69,8 @@ const redrawEdges = () => {
     else
       color = edgeDefaultColor;
 
-    edge_split = edgePairs[i].split("---");
-    index1 = nodeLayerNames.indexOf(edge_split[0]);
-    index2 = nodeLayerNames.indexOf(edge_split[1]);
+    index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
+    index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
     if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]){ 
       points = [];
       layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.remove(edges[i]);
@@ -83,8 +80,8 @@ const redrawEdges = () => {
       if (exists(selected_edges, i) && selectedEdgeColorFlag)
         color = selectedDefaultColor;
       else if (edge_attributes !== "" && edgeAttributesPriority) {
-  	    pos1 = edge_attributes.SourceNode.indexOf(edge_split[0]);
-        pos2 = edge_attributes.TargetNode.indexOf(edge_split[1]);
+  	    pos1 = edge_attributes.SourceNode.indexOf(edgePairs_source[i]);
+        pos2 = edge_attributes.TargetNode.indexOf(edgePairs_target[i]);
 
         if (checkIfAttributeColorExist(edge_attributes, pos1)) //if node not currently selected and exists in node attributes file and color is assigned
           color = edge_attributes.Color[pos1]; //edge is intra-layer
