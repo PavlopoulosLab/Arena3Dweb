@@ -43,6 +43,8 @@ const resetValues = () => {
   last_hovered_node_index = "";
 
   // edges
+  edgeObjects = [];
+  edgeAttributesPriority = true;
   edges = []; //canvas objects
   layerEdges = []; //canvas objects
   edgePairs = [];

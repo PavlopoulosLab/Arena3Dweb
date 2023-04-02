@@ -150,8 +150,8 @@ const updateEdgesRShiny = () => {
         }
         color = edge_attributes.Color[pos2];
       }
-      else color = edgeDefaultColor;
-    } else color = edgeDefaultColor;
+      else color = EDGE_DEFAULT_COLOR;
+    } else color = EDGE_DEFAULT_COLOR;
     // color end
     
     if (edge_channels && edge_channels[i] && edge_channels[i].length > 0) {

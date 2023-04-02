@@ -40,7 +40,7 @@ const applyTheme = (bgColor, floorColor,
     if (scene.exists()) {
       setRendererColor(bgColor);
       document.getElementById("floor_color").value = floorColor;
-      edgeDefaultColor = edgeColor; // global for inter-layer edges
+      EDGE_DEFAULT_COLOR = edgeColor; // global for inter-layer edges
       getChannelColorsFromPalette(channel_colors_theme);
       globalLabelColor = labelColor;
 
@@ -48,7 +48,7 @@ const applyTheme = (bgColor, floorColor,
         repaintLayersFromPicker();
         attachChannelEditList();
         setEdgeColor();
-        redrawEdges();
+        redrawIntraLayerEdges();
         setLabelColor();
     
         updateScenePanRShiny();

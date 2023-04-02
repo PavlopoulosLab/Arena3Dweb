@@ -3,8 +3,9 @@ const initializeGlobals = (RGlobalsList) => {
   MAX_LAYERS = RGlobalsList.MAX_LAYERS;
   MAX_EDGES = RGlobalsList.MAX_EDGES;
   MAX_CHANNELS = RGlobalsList.MAX_CHANNELS;
-  CHANNEL_COLORS_LIGHT = RGlobalsList.CHANNEL_COLORS_LIGHT;
+  EDGE_DEFAULT_COLOR = RGlobalsList.EDGE_DEFAULT_COLOR;
   CHANNEL_COLORS_DARK = RGlobalsList.CHANNEL_COLORS_DARK;
+  CHANNEL_COLORS_LIGHT = RGlobalsList.CHANNEL_COLORS_LIGHT;
 };
 
 const startLoader = (m) => {

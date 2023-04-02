@@ -41,7 +41,6 @@ let nodeIntervalTimeout = "",
 
 // edges
 let selectedEdgeColorFlag = true,
-    edgeDefaultColor = "#CFCFCF",
     edgeAttributesPriority = true,
     isDirectionEnabled = false,
     directionArrowSize = 0.03,
@@ -52,22 +51,22 @@ let selectedEdgeColorFlag = true,
     interChannelCurvature = 0.05,
     channelCurvature = 0.05,
     draw_inter_edges_flag = true,
-    edges = [], //canvas objects
-    layerEdges = [], //canvas objects
+    edges = [], //canvas objects, TODO remove
+    layerEdges = [], //canvas objects, TODO remove
     edgePairs = [], // TODO probably release after objects are created
     edgePairs_source = [], // TODO probably release after objects are created
     edgePairs_target = [], // TODO probably release after objects are created
     layer_edges_pairs = [], //canvas objects
-    edgeValues = [],
-    selected_edges = [],
-    edge_attributes = "",
+    edgeValues = [], // TODO remove
+    selected_edges = [], // TODO remove
+    edge_attributes = "", // TODO remove
     // channels
-    channels = [],
+    channels = [], // TODO remove
     selectedChannels = [], // selected ones from Layout tab
     channelColors = {},
     channelVisibility = {},
-    edge_channels = [],
-    layer_edges_pairs_channels = [];
+    edge_channels = [], // TODO decide keep/remove
+    layer_edges_pairs_channels = [];  // TODO same as above
 
 // others
 let interLayerEdgesRenderPauseFlag = false,

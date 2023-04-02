@@ -103,7 +103,7 @@ const translateNodesWithHeldKey = (event) => {
       nodeObjects[selectedNodePositions[i]].translateY(step);
   }
 
-  redrawEdges();
+  redrawIntraLayerEdges();
   updateNodesRShiny();
   updateVRNodesRShiny();
 };
@@ -294,7 +294,7 @@ const spreadNodes = (multiplier) => { // 1.1 or 0.9
     }
     updateNodesRShiny();
     updateVRNodesRShiny();
-    redrawEdges();
+    redrawIntraLayerEdges();
   } else
     alert("Please select at least one node.");
 };
@@ -313,7 +313,7 @@ const moveNodes = (direction, axis) => {
         else if (axis == "Z")
           nodeObjects[selectedNodePositions[i]].translateZ(value);
       }
-      redrawEdges();
+      redrawIntraLayerEdges();
       updateNodesRShiny();
       updateVRNodesRShiny();
     }, 70);

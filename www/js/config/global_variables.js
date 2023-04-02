@@ -59,5 +59,6 @@ const SPHERE_RADIUS = 8,
 let MAX_LAYERS = "",
     MAX_EDGES = "",
     MAX_CHANNELS = "",
+    EDGE_DEFAULT_COLOR = "",
     CHANNEL_COLORS_LIGHT = [],
     CHANNEL_COLORS_DARK = [];

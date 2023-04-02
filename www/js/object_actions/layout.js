@@ -86,7 +86,7 @@ const assignYZ = (nodeCoords) => {
   
   updateNodesRShiny();
   updateVRNodesRShiny();
-  redrawEdges();
+  redrawIntraLayerEdges();
 }
 
 const setPerLayerFlag = (numFlag) => { // from -1: to length of Layers

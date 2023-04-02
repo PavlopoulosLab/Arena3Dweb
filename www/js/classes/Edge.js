@@ -18,7 +18,8 @@ class Edge {
         }
 
     createLine(edgeColor) {
-        this.THREE_Object = "" // TODO
+        if (this.interLayer)
+            this.THREE_Object = "" // TODO
     }
 
     toggleArrow() {

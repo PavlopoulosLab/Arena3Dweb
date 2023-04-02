@@ -268,7 +268,7 @@ const scaleLayers = () => {
       layers[selected_layers[i]].setScale(scalingValue);
     }
 
-    redrawEdges();
+    redrawIntraLayerEdges();
     updateLayersRShiny();
     updateNodesRShiny();
     updateVRNodesRShiny();

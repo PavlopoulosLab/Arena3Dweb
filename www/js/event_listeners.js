@@ -146,7 +146,7 @@ const dblClick = (event) => {
         unselectAllNodes();
         unselectAllEdges();
         
-        redrawEdges();
+        redrawIntraLayerEdges();
       }
     }
   }
