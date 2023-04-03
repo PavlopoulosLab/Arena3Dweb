@@ -73,14 +73,14 @@ Shiny.addCustomMessageHandler("handler_setNodeColorPriority", setNodeColorPriori
 Shiny.addCustomMessageHandler("handler_setNodeSelectedColorPriority", setNodeSelectedColorPriority);
 Shiny.addCustomMessageHandler("handler_clickNodeColorPriority", clickNodeColorPriority);
 // Edges ====================
-Shiny.addCustomMessageHandler("handler_directionArrowSize", setDirectionArrowSize);
-Shiny.addCustomMessageHandler("handler_intraDirectionArrowSize", setIntraDirectionArrowSize);
-Shiny.addCustomMessageHandler("handler_layerEdgeOpacity", setLayerEdgeOpacity);
-Shiny.addCustomMessageHandler("handler_interLayerEdgeOpacity", setInterLayerEdgeOpacity);
+Shiny.addCustomMessageHandler("handler_toggleDirection", toggleDirection);
+Shiny.addCustomMessageHandler("handler_setIntraDirectionArrowSize", setIntraDirectionArrowSize);
+Shiny.addCustomMessageHandler("handler_setInterDirectionArrowSize", setInterDirectionArrowSize);
 Shiny.addCustomMessageHandler("handler_edgeWidthByWeight", redrawEdgeWidthByWeight);
+Shiny.addCustomMessageHandler("handler_setIntraLayerEdgeOpacity", setIntraLayerEdgeOpacity);
+Shiny.addCustomMessageHandler("handler_setInterLayerEdgeOpacity", setInterLayerEdgeOpacity);
 Shiny.addCustomMessageHandler("handler_edgeSelectedColorPriority", edgeSelectedColorPriority);
 Shiny.addCustomMessageHandler("handler_edgeFileColorPriority", edgeFileColorPriority);
-Shiny.addCustomMessageHandler("handler_toggleDirection", toggleDirection);
 // Channels ====================
 Shiny.addCustomMessageHandler("handler_channelCurvature", toggleChannelCurvature);
 Shiny.addCustomMessageHandler("handler_interChannelCurvature", interToggleChannelCurvature);

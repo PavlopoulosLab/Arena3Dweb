@@ -43,6 +43,12 @@ const resetValues = () => {
   last_hovered_node_index = "";
 
   // edges
+  interLayerEdgeOpacity = 0.4,
+  intraLayerEdgeOpacity = 1,
+  interDirectionArrowSize = 0.03,
+  intraDirectionArrowSize = 0.08,
+  interChannelCurvature = 0.05,
+  intraChannelCurvature = 0.05,
   edgeObjects = [];
   edgeAttributesPriority = true;
   edges = []; //canvas objects

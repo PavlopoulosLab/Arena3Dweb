@@ -171,24 +171,24 @@ server <- function(input, output, session) {
     handleEdgeDirectionCheckbox()
   }, ignoreInit = T)
   
-  observeEvent(input$directionArrowSize, {
-    callJSHandler("handler_directionArrowSize", input$directionArrowSize)
+  observeEvent(input$interDirectionArrowSize, {
+    callJSHandler("handler_setInterDirectionArrowSize", input$interDirectionArrowSize)
   }, ignoreInit = T)
   
   observeEvent(input$intraDirectionArrowSize, {
-    callJSHandler("handler_intraDirectionArrowSize", input$intraDirectionArrowSize)
+    callJSHandler("handler_setIntraDirectionArrowSize", input$intraDirectionArrowSize)
   }, ignoreInit = T)
   
-  observeEvent(input$layerEdgeOpacity, {
-    callJSHandler("handler_layerEdgeOpacity", input$layerEdgeOpacity)
+  observeEvent(input$intraLayerEdgeOpacity, {
+    callJSHandler("handler_setIntraLayerEdgeOpacity", input$intraLayerEdgeOpacity)
   }, ignoreInit = T)
   
   observeEvent(input$interLayerEdgeOpacity, {
-    callJSHandler("handler_interLayerEdgeOpacity", input$interLayerEdgeOpacity)
+    callJSHandler("handler_setInterLayerEdgeOpacity", input$interLayerEdgeOpacity)
   }, ignoreInit = T)
   
-  observeEvent(input$channelCurvature, {
-    callJSHandler("handler_channelCurvature", input$channelCurvature)
+  observeEvent(input$intraChannelCurvature, {
+    callJSHandler("handler_channelCurvature", input$intraChannelCurvature)
   }, ignoreInit = T)
   
   observeEvent(input$interChannelCurvature, {

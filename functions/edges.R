@@ -1,10 +1,10 @@
 handleEdgeWidthByWeightCheckbox <- function() {
   tryCatch({
     if (input$edgeWidthByWeight){
-      shinyjs::hide("layerEdgeOpacity")
+      shinyjs::hide("intraLayerEdgeOpacity")
       shinyjs::hide("interLayerEdgeOpacity")
     } else {
-      shinyjs::show("layerEdgeOpacity")
+      shinyjs::show("intraLayerEdgeOpacity")
       shinyjs::show("interLayerEdgeOpacity")
     }
     callJSHandler("handler_edgeWidthByWeight", input$edgeWidthByWeight)
@@ -18,10 +18,10 @@ handleEdgeDirectionCheckbox <- function() {
   tryCatch({
     if (input$edgeDirectionToggle){
       shinyjs::show("intraDirectionArrowSize")
-      shinyjs::show("directionArrowSize")
+      shinyjs::show("interDirectionArrowSize")
     } else {
       shinyjs::hide("intraDirectionArrowSize")
-      shinyjs::hide("directionArrowSize")
+      shinyjs::hide("interDirectionArrowSize")
     }
     callJSHandler("handler_toggleDirection", input$edgeDirectionToggle) 
   }, error = function(e) {

@@ -24,12 +24,12 @@ const createEdgeObjects = () => {
   // 		if (edgeWidthByWeight)
   //       material = new THREE.LineBasicMaterial( { color: edgeColor, alphaTest: 0.05, transparent: true, opacity: edgeValues[i] } );
   //     else
-  //       material = new THREE.LineBasicMaterial({ color: edgeColor, alphaTest: 0.05, transparent: true, opacity: layerEdgeOpacity });
+  //       material = new THREE.LineBasicMaterial({ color: edgeColor, alphaTest: 0.05, transparent: true, opacity: intraLayerEdgeOpacity });
   //     ver_line = new THREE.Line(geometry, material);
 
   //     if (edgeChannels[i]) {
   //       curve_group = new THREE.Group();
-  //       curve_group = createChannels(points[0], points[1], channelCurvature, ver_line, i, false);
+  //       curve_group = createChannels(points[0], points[1], intraChannelCurvature, ver_line, i, false);
   //       layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(curve_group);
   //       edges.push(curve_group);
   //     } else {
@@ -157,7 +157,7 @@ const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
 }
 
 const createCurve = (p1, p2, lgth, color, isLayerEdges, group, tag) => {
-  curve_opacity = isLayerEdges ? interLayerEdgeOpacity : layerEdgeOpacity;
+  curve_opacity = isLayerEdges ? interLayerEdgeOpacity : intraLayerEdgeOpacity;
   let p3 = p1.clone();
   let p4 = p2.clone();
   let curve;
@@ -193,35 +193,7 @@ const createCurve = (p1, p2, lgth, color, isLayerEdges, group, tag) => {
   return group;
 }
 
-const createArrow = (points, color, extra_point, isInterLayer) => {
-  let headLengthPerArrowLength;
-  if (color === EDGE_DEFAULT_COLOR) {
-    color = EDGE_DEFAULT_COLOR;
-  }
-  let direction = points[1].clone().sub(points[0]);
-  let length = direction.length();
 
-  if (extra_point) {
-    temp_dir = points[1].clone().sub(extra_point);
-    length = temp_dir.length();
-  }
-  if (isInterLayer) headLengthPerArrowLength = directionArrowSize;
-  else  headLengthPerArrowLength = intraDirectionArrowSize;
-
-  //in order to keep line's opacity we create only the cone from the arrow
-  //we create the arrow in order to have the correct direction and then change its length size in order to be almost the size of the headLength 
-  let headLenth = headLengthPerArrowLength * length;
-  length = 1.05 * headLenth;
-  let origin = calcPointOnLine(points[1], points[0], headLengthPerArrowLength);
-  return new THREE.ArrowHelper(direction.normalize(), origin, length, color, headLenth);
-}
-
-const calcPointOnLine = (point1, point2, length) => {
-  let x = (1 - length) * point1.x + length * point2.x;
-  let y = (1 - length) * point1.y + length * point2.y;
-  let z = (1 - length) * point1.z + length * point2.z;
-  return new THREE.Vector3( x, y, z );
-}
 
 // runs constantly on animate
 const redrawInterLayerEdges = (showFlag = false) => { // TODO global flag to not even enter
@@ -334,11 +306,20 @@ const getInterLayerEdges = () => { // TODO remove if never used
   return(interLayerEdges)
 };
 
+const redrawAllEdges = () => {
+  console.log("redrawAllEdges");
+  for (let i = 0; i < edgeObjects.length; i++)
+    edgeObjects[i].redrawEdge();
+}
+
 const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
+  console.log("redrawIntraLayerEdges");
   for (let i = 0; i < edgeObjects.length; i++) {
     if (!edgeObjects[i].interLayer)
       edgeObjects[i].redrawEdge();
   }
+
+  
 
   // let index1 = 0, index2 = 0, color = "", pos1 = -1, pos2 = -1,
   //   points, geometry, material, arrowHelper, ver_line, curve_group, group;
@@ -370,12 +351,12 @@ const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
   //     }
       
   // 		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[i]}  );
-  // 		else material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: layerEdgeOpacity}  );
+  // 		else material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: intraLayerEdgeOpacity}  );
       
   //     ver_line = new THREE.Line(geometry, material);
   //     if (edgeChannels[i]) {
   //       curve_group = new THREE.Group();
-  //       curve_group = createChannels(points[0], points[1], channelCurvature, ver_line, i, false);
+  //       curve_group = createChannels(points[0], points[1], intraChannelCurvature, ver_line, i, false);
   //       layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(curve_group);
   //       edges[i] = curve_group;
   //     } else {
@@ -671,33 +652,41 @@ const setEdgeAttributes = (message) => {
   updateEdgesRShiny();
 }
 
-const setLayerEdgeOpacity = (message) => {
-  layerEdgeOpacity = message;
-  redrawIntraLayerEdges(); //because not on animate
-  return true;
-}
+const redrawEdgeWidthByWeight = (message) => { // true or false
+  edgeWidthByWeight = message;
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
+};
 
-const setDirectionArrowSize = (message) => {
-  directionArrowSize = message;
-  redrawIntraLayerEdges(); //because not on animate
-  return true;
-}
-
-const setIntraDirectionArrowSize = (message) => {
-  intraDirectionArrowSize = message;
-  redrawIntraLayerEdges(); //because not on animate
-  return true;
-}
+const setIntraLayerEdgeOpacity = (message) => {
+  intraLayerEdgeOpacity = message;
+  for (let i = 0; i < edgeObjects.length; i++)
+    if (!edgeObjects[i].interLayer)
+      edgeObjects[i].setOpacity(intraLayerEdgeOpacity);
+};
 
 const setInterLayerEdgeOpacity = (message) => {
   interLayerEdgeOpacity = message;
-  return true;
-}
+  for (let i = 0; i < edgeObjects.length; i++)
+    if (edgeObjects[i].interLayer)
+      edgeObjects[i].setOpacity(interLayerEdgeOpacity);
+};
 
-const redrawEdgeWidthByWeight = (message) => {
-  edgeWidthByWeight = message; //message = true or false
+const toggleDirection = (message) => {
+  isDirectionEnabled = message;
+  redrawAllEdges();
+  // redrawIntraLayerEdges(); // TODO remove
+};
+
+const setIntraDirectionArrowSize = (message) => {
+  intraDirectionArrowSize = message;
   redrawIntraLayerEdges();
-}
+};
+
+const setInterDirectionArrowSize = (message) => {
+  interDirectionArrowSize = message;
+  renderInterLayerEdgesFlag = true;
+};
 
 const edgeFileColorPriority = (message) => {
   edgeAttributesPriority = message; //message = true or false
@@ -759,14 +748,11 @@ const edgeSelectedColorPriority = (message) => {
   return true;
 }
 
-const toggleDirection = (message) => {
-  isDirectionEnabled = message;
-  redrawIntraLayerEdges();
-};
+
 
 // Channels ====================
 const toggleChannelCurvature = (message) => {
-  channelCurvature = message;
+  intraChannelCurvature = message;
   redrawIntraLayerEdges();
   return true;
 }
