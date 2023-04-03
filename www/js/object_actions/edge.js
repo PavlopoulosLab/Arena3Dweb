@@ -9,7 +9,7 @@ const createEdgeObjects = () => {
     if (edgeChannels[i])
       channels = edgeChannels[i];
     interLayer = decideEdgeLayerType(i);
-      
+    
     edgeObjects.push(new Edge({id: i, source: edgePairs_source[i], target: edgePairs_target[i],
       colors: edgeColors, weights: edgeValues[i], channels: channels, interLayer: interLayer}));
     
@@ -57,7 +57,8 @@ const createEdgeObjects = () => {
 }
 
 const decideEdgeColors = (i) => {
-  let edgeColors;
+  let edgeColors, index;
+
   if (edgeChannels && edgeChannels[i]) {
     edgeColors = [];
     for (let j = 0; j < edgeChannels[i].length; j++)
@@ -66,10 +67,9 @@ const decideEdgeColors = (i) => {
     edgeColors = [EDGE_DEFAULT_COLOR];
 
   if (edge_attributes !== "") { // TODO for multi-channels
-    pos1 = edge_attributes.SourceNode.indexOf(edgePairs_source[i]);
-    pos2 = edge_attributes.TargetNode.indexOf(edgePairs_target[i]);
-    if (pos1 == pos2 && checkIfAttributeColorExist(edge_attributes, pos1)) // same edge
-      edgeColors = [edge_attributes.Color[pos1]];
+    index = edge_attributes.EdgePair.indexOf(edgePairs[i]);
+    if (checkIfAttributeColorExist(edge_attributes, index))
+      edgeColors = [edge_attributes.Color[index]];
   }
 
   return(edgeColors)
@@ -652,6 +652,7 @@ const setEdgeAttributes = (message) => {
   updateEdgesRShiny();
 }
 
+// Handlers ======
 const redrawEdgeWidthByWeight = (message) => { // true or false
   edgeWidthByWeight = message;
   renderInterLayerEdgesFlag = true;
@@ -675,7 +676,6 @@ const setInterLayerEdgeOpacity = (message) => {
 const toggleDirection = (message) => {
   isDirectionEnabled = message;
   redrawAllEdges();
-  // redrawIntraLayerEdges(); // TODO remove
 };
 
 const setIntraDirectionArrowSize = (message) => {

@@ -20,8 +20,6 @@ class Edge {
             this.isSelected = false; // TODO per channel?
         
             this.createGeometry();
-            
-
         }
 
     createGeometry() { // TODO Group object for channels

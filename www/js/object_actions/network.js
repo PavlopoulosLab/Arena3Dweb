@@ -269,6 +269,7 @@ const initializeEdgesFromJSON = (jsonEdges) => {
   edge_attributes = {
     "SourceNode": [],
     "TargetNode": [],
+    "EdgePair": [],
     "Color": []
   };
   if (jsonEdges.channel)
@@ -280,6 +281,7 @@ const initializeEdgesFromJSON = (jsonEdges) => {
 
     edge_attributes.SourceNode.push(jsonEdges.src[i]);
     edge_attributes.TargetNode.push(jsonEdges.trg[i]);
+    edge_attributes.EdgePair.push(jsonEdges.src[i].concat("---").concat(jsonEdges.trg[i]));
     edge_attributes.Color.push(jsonEdges.color[i]);
     if (jsonEdges.channel)
       edge_attributes.Channel.push(jsonEdges.channel[i]);
