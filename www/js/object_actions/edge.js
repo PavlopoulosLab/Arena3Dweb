@@ -92,113 +92,9 @@ const decideEdgeLayerType = (i) => {
   return(interLayer)
 };
 
-// t is a random percentage that has been set after tries
-// t is a factor between 0-1
-const createChannels = (p1, p2, t, ver_line, group_pos, isLayerEdges) => {
-  let arrowHelper;
-  temp_channels = [];
-  if (isLayerEdges)
-    temp_channels = layer_edges_pairs_channels[group_pos];
-  else
-    temp_channels = edgeChannels[group_pos];
-  
-  
-  let curve_group = new THREE.Group();
-  if (temp_channels.length === 1) {
-    ver_line.userData.tag = temp_channels[0];
-    ver_line.visible = channelVisibility[ver_line.userData.tag];
-    color = getChannelColor(group_pos, ver_line.userData.tag, isLayerEdges);
-    !color && (color = channelColors[ver_line.userData.tag]);
-    ver_line.material.color = new THREE.Color(color);
-    curve_group.add(ver_line);
-    if (isDirectionEnabled) {
-      arrowHelper = createArrow([p1, p2], color,null, isLayerEdges);
-      arrowHelper.userData.tag = temp_channels[0];
-      arrowHelper.visible = channelVisibility[ver_line.userData.tag]
-      curve_group.add(arrowHelper)
-    }
-  } else if (temp_channels.length > 1) {
-    let ver_line_const = p1.distanceTo(p2) * t;
-    let lgth = ver_line_const;
-    let curve;
-    let color;
-    let loopTotal = Math.trunc((temp_channels.length) / 2);
-    for (let i = 0; i < loopTotal; i++) {
-      lgth = ver_line_const * (loopTotal - i) / loopTotal;
-
-      color = getChannelColor(group_pos, temp_channels[i], isLayerEdges);
-      !color && (color = channelColors[temp_channels[i]]);
-      curve_group = createCurve(p1, p2, lgth, color, isLayerEdges, curve_group, temp_channels[i]);
-    }
-    for (let i = 0; i < loopTotal; i++) {
-      lgth = ver_line_const * (loopTotal - i) / loopTotal;
-      color = getChannelColor(group_pos, temp_channels[loopTotal + i], isLayerEdges);
-      !color && (color = channelColors[temp_channels[loopTotal + i]]);
-      curve_group = createCurve(p1, p2, -1 * lgth, color, isLayerEdges,curve_group, temp_channels[loopTotal + i]);
-    }
-
-    //if numofcurves is even then no verline
-    if (temp_channels.length % 2 == 1) {
-      ver_line.userData.tag = temp_channels[temp_channels.length - 1];
-      ver_line.visible = channelVisibility[ver_line.userData.tag];
-      color = getChannelColor(group_pos, ver_line.userData.tag, isLayerEdges);
-      !color && (color = channelColors[ver_line.userData.tag]);
-      ver_line.material.color = new THREE.Color(color);
-      curve_group.add(ver_line);
-      if (isDirectionEnabled) {
-        arrowHelper = createArrow([p1, p2], color,null, isLayerEdges);
-        arrowHelper.userData.tag = temp_channels[temp_channels.length - 1];
-        arrowHelper.visible = channelVisibility[ver_line.userData.tag]
-        curve_group.add(arrowHelper)
-    }
-    }
-  }
-  return curve_group;
-}
-
-const createCurve = (p1, p2, lgth, color, isLayerEdges, group, tag) => {
-  curve_opacity = isLayerEdges ? interLayerEdgeOpacity : intraLayerEdgeOpacity;
-  let p3 = p1.clone();
-  let p4 = p2.clone();
-  let curve;
-  const points = 50;
-
-  p3.addScalar(lgth);
-  p4.addScalar(lgth);
-  
-  if (!isLayerEdges) curve = new THREE.CubicBezierCurve3(transformPoint(p1), transformPoint(p3), transformPoint(p4), transformPoint(p2))
-  else curve = new THREE.CubicBezierCurve3(p1,p3,p4,p2)
- 
-
-  let curve_points = curve.getPoints(points);
-  let curve_geometry = new THREE.BufferGeometry().setFromPoints(curve_points);
-  let curve_material;
-  // TODO check what i corresponds to
-  //if (edgeWidthByWeight) curve_material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[i] } );
-  //else 
-  curve_material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05,  transparent: true, opacity: curve_opacity});
-  
-  my_curve = new THREE.Line( curve_geometry, curve_material)
-  my_curve.userData.tag = tag;
-  my_curve.visible = channelVisibility[my_curve.userData.tag];
-  group.add(my_curve)
-
-  if (isDirectionEnabled) {
-    arrowHelper = createArrow([curve_points[points - 4], curve_points[points - 2]], color, curve_points[points / 2], isLayerEdges);
-    arrowHelper.userData.tag = tag;
-    arrowHelper.visible = channelVisibility[my_curve.userData.tag]
-    group.add(arrowHelper)
-  }
-  // Create the final object to add to the scene
-  return group;
-}
-
-
-
 // runs constantly on animate
 const redrawInterLayerEdges = (showFlag = false) => { // TODO global flag to not even enter
-  let i;
-
+  // let i;
   if (!showFlag && (scene.dragging || interLayerEdgesRenderPauseFlag)){
     // for (i = 0; i < layer_edges_pairs.length; i++){
     //   scene.remove(layerEdges[i]);
@@ -210,7 +106,7 @@ const redrawInterLayerEdges = (showFlag = false) => { // TODO global flag to not
   } else {
     if (renderInterLayerEdgesFlag) {
       redrawInterLayerEdges_new();
-      if (waitEdgeRenderFlag) { // locked flags
+      if (waitEdgeRenderFlag) { // locked flags for best edge redrawing
         waitEdgeRenderFlag = false;
       } else {
         renderInterLayerEdgesFlag = false;
@@ -566,40 +462,6 @@ const getChannelColorsFromPalette = (palette) => {
   for (let i = 0; i < channels.length; i++)
     channelColors[channels[i]] = palette[i];
 };
-
-const getChannelColor = (i, c, isLayerEdges) => {
-  let color, pos = -1;
-  if (isLayerEdges) {
-    pos = edges.indexOf(layer_edges_pairs[i]);
-    j = pos;
-  } else j = i;
-  if (exists(selected_edges, j) && selectedEdgeColorFlag) {
-    return selectedDefaultColor;
-  }
-  else if (edge_attributes !== "" && edgeAttributesPriority) {
-    pos1arr = findIndices(edge_attributes.SourceNode, edgePairs[j]);
-    pos2arr = findIndices(edge_attributes.TargetNode, edgePairs[j]);
-    pos1arr != -1 && pos1arr.forEach(pos1 => {
-      if (checkIfAttributeColorExist(edge_attributes, pos1)){//if node not currently selected and exists in node attributes file and color is assigned
-        if (edge_attributes.Channel[pos1] === c) {
-          color = edge_attributes.Color[pos1]; //edge is intra-layer
-        }
-      }
-    });
-    pos2arr != -1 && pos2arr.forEach(pos2 => {
-      if (checkIfAttributeColorExist(edge_attributes, pos2)) {
-        if (edge_attributes.Channel[pos2] === c) {
-          color = edge_attributes.Color[pos2];
-        }
-      }
-    });
-  }
-
-  if (color && edge_attributes && edge_attributes.Channel) {
-    return color;
-  }
-  return undefined;
-}
 
 // TODO rename to assignEdgeColor
 const assignColor = (checkChannels, i, channels, tag, color, edgeNoChannel) => {
