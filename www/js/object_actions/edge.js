@@ -1,8 +1,6 @@
 // Initialization ======
 const createEdgeObjects = () => {
   let edgeColors, channels = [], interLayer;
-    // points, geometry, material,
-    // arrowHelper, ver_line, curve_group;
 
   for (let i = 0; i < edgePairs.length; i++) {
     edgeColors = decideEdgeColors(i);
@@ -12,47 +10,6 @@ const createEdgeObjects = () => {
     
     edgeObjects.push(new Edge({id: i, source: edgePairs_source[i], target: edgePairs_target[i],
       colors: edgeColors, weights: edgeValues[i], channels: channels, interLayer: interLayer}));
-    
-  //   index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
-  //   index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
-  //   if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]) { //check if edge inside same Layer
-  //     points = [];
-  //     points.push( nodeObjects[index1].getPosition(), nodeObjects[index2].getPosition() );
-  // 		geometry = new THREE.BufferGeometry().setFromPoints( points );
-  // 		material = "";
-  		
-  // 		if (edgeWidthByWeight)
-  //       material = new THREE.LineBasicMaterial( { color: edgeColor, alphaTest: 0.05, transparent: true, opacity: edgeValues[i] } );
-  //     else
-  //       material = new THREE.LineBasicMaterial({ color: edgeColor, alphaTest: 0.05, transparent: true, opacity: intraLayerEdgeOpacity });
-  //     ver_line = new THREE.Line(geometry, material);
-
-  //     if (edgeChannels[i]) {
-  //       curve_group = new THREE.Group();
-  //       curve_group = createChannels(points[0], points[1], intraChannelCurvature, ver_line, i, false);
-  //       layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(curve_group);
-  //       edges.push(curve_group);
-  //     } else {
-  //       layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(ver_line);
-  //       edges.push(ver_line);
-  //       //directed
-  //       if (isDirectionEnabled) {
-  //         arrowHelper = createArrow(points, edgeColor, null, false);
-  //         const group = new THREE.Group();
-  //         group.add( ver_line);
-  //         group.add( arrowHelper );
-  //         layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(group);
-  //         edges[i] = group;
-  //       }
-  //     }
-  //   } else { // identify between-layer edges
-  //     edgeObjects.push(new Edge({id: i, source: edgePairs_source[i], target: edgePairs_target[i],
-  //       color: edgeColor, weight: edgeValues[i], interLayer: true}));
-
-  //     edges.push(i); //pushing this to keep count of edges for redraw // TODO remove
-  //     layer_edges_pairs.push(i);
-  //     edgeChannels &&  layer_edges_pairs_channels.push(edgeChannels[i]); 
-  //   }
   }
 }
 
@@ -214,62 +171,9 @@ const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
     if (!edgeObjects[i].interLayer)
       edgeObjects[i].redrawEdge();
   }
-  // let index1 = 0, index2 = 0, color = "", pos1 = -1, pos2 = -1,
-  //   points, geometry, material, arrowHelper, ver_line, curve_group, group;
-
-  // for (let i = 0; i < edgePairs.length; i++) {
-  //   if (edgeChannels && edgeChannels[i] && edgeChannels[i].length === 1)
-  //     color = channelColors[edgeChannels[i][0]];
-  //   else
-  //     color = EDGE_DEFAULT_COLOR;
-
-  //   index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
-  //   index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
-  //   if (nodeGroups[nodeLayerNames[index1]] == nodeGroups[nodeLayerNames[index2]]){ 
-  //     points = [];
-  //     layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.remove(edges[i]);
-  // 		points.push(nodeObjects[index1].getPosition(), nodeObjects[index2].getPosition());
-  // 		geometry = new THREE.BufferGeometry().setFromPoints( points );
-  //     material = "";
-  //     if (exists(selected_edges, i) && selectedEdgeColorFlag)
-  //       color = selectedDefaultColor;
-  //     else if (edge_attributes !== "" && edgeAttributesPriority) {
-  // 	    pos1 = edge_attributes.SourceNode.indexOf(edgePairs_source[i]);
-  //       pos2 = edge_attributes.TargetNode.indexOf(edgePairs_target[i]);
-
-  //       if (checkIfAttributeColorExist(edge_attributes, pos1)) //if node not currently selected and exists in node attributes file and color is assigned
-  //         color = edge_attributes.Color[pos1]; //edge is intra-layer
-  //       else if (checkIfAttributeColorExist(edge_attributes, pos2)) 
-  //         color = edge_attributes.Color[pos2];
-  //     }
-      
-  // 		if (edgeWidthByWeight) material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[i]}  );
-  // 		else material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: intraLayerEdgeOpacity}  );
-      
-  //     ver_line = new THREE.Line(geometry, material);
-  //     if (edgeChannels[i]) {
-  //       curve_group = new THREE.Group();
-  //       curve_group = createChannels(points[0], points[1], intraChannelCurvature, ver_line, i, false);
-  //       layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(curve_group);
-  //       edges[i] = curve_group;
-  //     } else {
-  //       layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(ver_line);
-  //       edges[i] = ver_line;
-
-  //       if (isDirectionEnabled) { // TODO test if works outside else block above
-  //         arrowHelper = createArrow(points, color, null, false);
-  //         group = new THREE.Group();
-  //         group.add( ver_line);
-  //         group.add( arrowHelper );
-  //         layers[layerGroups[nodeGroups[nodeLayerNames[index1]]]].plane.add(group);
-  //         edges[i] = group;
-  //       }
-  //     }
-  //   }
-  // }
 }
 
-const setEdgeColor = () =>{
+const setEdgeColor = () => { // TODO rename to repaintEdges
   let i;
   // inter-layer edges automatically change from EDGE_DEFAULT_COLOR
   for (i=0; i<edges.length; i++) {
@@ -296,33 +200,33 @@ const setEdgeColor = () =>{
 
 // Channels ====================
 const changeChannelColor = (el) => {
-  channel_name = el.id.substring(5);
+  let channel_name = el.id.substring(5);
   channelColors[channel_name] = el.value;
   redrawIntraLayerEdges();
   updateEdgesRShiny();
   return true;
 }
 
-const toggleChannelVisibility = (el) => {
-  channel_name = el.id.substring(8);
-  total_edges = edges.concat(layerEdges);
-  toggleChildrenWithTag(channel_name, total_edges, el.checked);
-  redrawIntraLayerEdges();
-  return true;
-}
+const toggleChannelVisibility = (checkbox) => {
+  let channelName = checkbox.value;
+  toggleChildrenWithTag(channelName, checkbox.checked);
+};
 
-const toggleChildrenWithTag = (tag, array, new_value) => {
-  array.forEach(item => {
-    if (item.children && item.children.length > 0) {
-      for (let i = 0, l = item.children.length; i < l; i++) {
-        if (item.children[i].userData && item.children[i].userData.tag && item.children[i].userData.tag === tag) {
-          item.children[i].visible = !new_value;
-          channelVisibility[tag] = !new_value;
-        }
+const toggleChildrenWithTag = (channelName, checked) => {
+  let currentEdge;
+  for (let i = 0; i < edgeObjects.length; i++) {
+    currentEdge = edgeObjects[i].THREE_Object;
+    for (let j = 0; j < currentEdge.children.length; j++) {
+      if (currentEdge.children[j].userData.tag === channelName) {
+          currentEdge.children[j].visible = !checked;
+          if (isDirectionEnabled)
+            currentEdge.children[j + 1].visible = !checked; // toggle the arrow
+          channelVisibility[channelName] = !checked;
+          break; // only one channel allowed per edge
       }
     }
-  });
-}
+  }
+};
 
 const toggleChannelLayoutMenu = (el) => {
   icon = document.getElementById('buttonChannelLayout');
@@ -427,6 +331,7 @@ const attachChannelEditList = () => {
       checkbox.name = "checkbox".concat(channel);
       checkbox.className = "checkbox_check channel_checkbox";
       checkbox.id = "checkbox".concat(channel);
+      checkbox.value = channel;
       checkbox.setAttribute('onclick', "toggleChannelVisibility(this)");
 
       label2 = document.createElement('label');
