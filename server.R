@@ -188,11 +188,11 @@ server <- function(input, output, session) {
   }, ignoreInit = T)
   
   observeEvent(input$intraChannelCurvature, {
-    callJSHandler("handler_channelCurvature", input$intraChannelCurvature)
+    callJSHandler("handler_toggleIntraChannelCurvature", input$intraChannelCurvature)
   }, ignoreInit = T)
   
   observeEvent(input$interChannelCurvature, {
-    callJSHandler("handler_interChannelCurvature", input$interChannelCurvature)
+    callJSHandler("handler_toggleInterChannelCurvature", input$interChannelCurvature)
   }, ignoreInit = T)
   
   # FPS ####

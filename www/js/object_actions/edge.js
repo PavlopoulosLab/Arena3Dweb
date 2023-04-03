@@ -600,20 +600,17 @@ const edgeSelectedColorPriority = (message) => {
   return true;
 }
 
-
-
 // Channels ====================
-const toggleChannelCurvature = (message) => {
+const toggleIntraChannelCurvature = (message) => {
   intraChannelCurvature = message;
   redrawIntraLayerEdges();
   return true;
 }
 
-const interToggleChannelCurvature = (message) => {
+const toggleInterChannelCurvature = (message) => {
   interChannelCurvature = message;
-  redrawIntraLayerEdges();
-  return true;
-}
+  renderInterLayerEdgesFlag = true;
+};
 
 const toggleInterLayerEdgesRendering = () => {
   let interLayerEdgesRenderPauseButton = document.getElementById('interLayerEdgesRenderPauseButton');

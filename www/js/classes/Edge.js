@@ -42,17 +42,16 @@ class Edge {
             color: this.colors[0], alphaTest: 0.05, transparent: true, opacity: opacity // TODO different colors for channels
         });
 
-        this.THREE_Object = new THREE.Line(geometry, material);
-
+        
         // channel
         if (this.channels.length > 0)
             this.createChannels(points); // direction currently included
         else { // if no channel
-        if (isDirectionEnabled)
-            this.toggleArrow(points, this.colors[0]);
+            this.THREE_Object = new THREE.Line(geometry, material);
+            if (isDirectionEnabled)
+                this.toggleArrow(points, this.colors[0]);
         }
         
-
         if (this.interLayer)
             scene.add(this.THREE_Object);
         else
@@ -90,71 +89,25 @@ class Edge {
     // channel creation
     createChannels(points) {
         let THREE_curveGroup = new THREE.Group(),
-            // arrowHelper, // TODO rename THREE_arrowHelper?
-            // channelArray = edgeChannels[this.id],
-            ver_line_const, lgth, pushForce = 0, direction = 1,
+            verticalPushConstant, verticalPush, pushForce = 0, pushForceFlag = false, direction = 1,
             curveFactor = this.interLayer ? interChannelCurvature : intraChannelCurvature;
 
-        ver_line_const = points[0].distanceTo(points[1]) * curveFactor;
-        if (this.channels.length % 2 == 0)
-            pushForce = -1
+        verticalPushConstant = points[0].distanceTo(points[1]) * curveFactor;
+        if (this.channels.length % 2 == 0) // skip straight line
+            pushForce = 1;
+
         for (let i = 0; i < this.channels.length; i++) {
-            direction = i % 2 == 0 ? 1 : -1;
-                
-            lgth = ver_line_const + 30 * (pushForce + i) * direction;
-            THREE_curveGroup = this.createCurve(points[0], points[1], lgth, this.colors[i],
-                THREE_curveGroup, this.channels[i], this.weights[i]);
+            direction = -1 * direction; // flipping direction
+        
+            if (pushForceFlag)
+                pushForce = pushForce + 1;
+            pushForceFlag = !pushForceFlag; // flipping flag to increase pushForce next round
+            verticalPush = direction * (verticalPushConstant * pushForce);
+            
+            THREE_curveGroup = this.createCurve(THREE_curveGroup, points[0], points[1],
+                verticalPush, this.colors[i], this.channels[i], this.weights[i]);
         }
         
-        // if (channelArray.length === 1) {
-        //     this.THREE_Object.userData.tag = channelArray[0];
-        //     this.THREE_Object.visible = channelVisibility[this.THREE_Object.userData.tag];
-        //     let color = this.getChannelColor(this.THREE_Object.userData.tag);
-        //     !color && (color = channelColors[this.THREE_Object.userData.tag]);
-        //     this.THREE_Object.material.color = new THREE.Color(color);
-        //     THREE_curveGroup.add(this.THREE_Object);
-        //     if (isDirectionEnabled) {
-        //         arrowHelper = this.createArrow([points[0], points[1]], color);
-        //         arrowHelper.userData.tag = channelArray[0];
-        //         arrowHelper.visible = channelVisibility[this.THREE_Object.userData.tag]
-        //         THREE_curveGroup.add(arrowHelper)
-        //     }
-        // } else if (channelArray.length > 1) {
-        //     let ver_line_const = points[0].distanceTo(points[1]) * curveFactor;
-        //     let lgth = ver_line_const;
-        //     let color;
-        //     let loopTotal = Math.trunc((channelArray.length) / 2);
-        //     for (let i = 0; i < loopTotal; i++) {
-        //         lgth = ver_line_const * (loopTotal - i) / loopTotal;
-
-        //         color = this.getChannelColor(channelArray[i]);
-        //         !color && (color = channelColors[channelArray[i]]);
-        //         THREE_curveGroup = this.createCurve(points[0], points[1], lgth, color, THREE_curveGroup, channelArray[i]);
-        //     }
-        //     for (let i = 0; i < loopTotal; i++) {
-        //         lgth = ver_line_const * (loopTotal - i) / loopTotal;
-        //         color = this.getChannelColor(channelArray[loopTotal + i]);
-        //         !color && (color = channelColors[channelArray[loopTotal + i]]);
-        //         THREE_curveGroup = this.createCurve(points[0], points[1], -1 * lgth, color,THREE_curveGroup, channelArray[loopTotal + i]);
-        //     }
-
-        //     //if numofcurves is even then no verline
-        //     if (channelArray.length % 2 == 1) {
-        //         this.THREE_Object.userData.tag = channelArray[channelArray.length - 1];
-        //         this.THREE_Object.visible = channelVisibility[this.THREE_Object.userData.tag];
-        //         color = this.getChannelColor(this.THREE_Object.userData.tag);
-        //         !color && (color = channelColors[this.THREE_Object.userData.tag]);
-        //         this.THREE_Object.material.color = new THREE.Color(color);
-        //         THREE_curveGroup.add(this.THREE_Object);
-        //         if (isDirectionEnabled) {
-        //             arrowHelper = this.createArrow([points[0], points[1]], color);
-        //             arrowHelper.userData.tag = channelArray[channelArray.length - 1];
-        //             arrowHelper.visible = channelVisibility[this.THREE_Object.userData.tag]
-        //             THREE_curveGroup.add(arrowHelper)
-        //         }
-        //     }
-        // }
-
         this.THREE_Object = THREE_curveGroup;
     }
   
@@ -187,15 +140,14 @@ class Edge {
         return undefined;
     }
 
-    createCurve(p1, p2, lgth, color, group, tag, weight) {
-        
+    createCurve(curveGroup, p1, p2, verticalPush, color, tag, weight) {
         let p3 = p1.clone();
         let p4 = p2.clone();
-        let curve, my_curve, arrowHelper;
-        const points = 50;
+        let curve, my_curve;
+        let points = 50;
 
-        p3.addScalar(lgth);
-        p4.addScalar(lgth);
+        p3.addScalar(verticalPush);
+        p4.addScalar(verticalPush);
 
         if (!this.interLayer)
             curve = new THREE.CubicBezierCurve3(p1, this.transformMiddlePointOnLayer(p3),
@@ -204,6 +156,7 @@ class Edge {
             curve = new THREE.CubicBezierCurve3(p1, p3, p4, p2)
 
         let curve_points = curve.getPoints(points);
+        
         let curve_geometry = new THREE.BufferGeometry().setFromPoints(curve_points);
         let curve_material;
         
@@ -213,26 +166,31 @@ class Edge {
             let curve_opacity = this.interLayer ? interLayerEdgeOpacity : intraLayerEdgeOpacity;
             curve_material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05,  transparent: true, opacity: curve_opacity});
         }
-            
-
+        
         my_curve = new THREE.Line( curve_geometry, curve_material)
         my_curve.userData.tag = tag;
         my_curve.visible = channelVisibility[my_curve.userData.tag];
-        group.add(my_curve)
+        curveGroup.add(my_curve)
 
-        if (isDirectionEnabled) {
-            arrowHelper = this.createArrow([curve_points[points - 4], curve_points[points - 2]], color, curve_points[points / 2]);
-            arrowHelper.userData.tag = tag;
-            arrowHelper.visible = channelVisibility[my_curve.userData.tag]
-            group.add(arrowHelper)
-        }
-        return group;
+        if (isDirectionEnabled)
+            curveGroup = this.toggleCurvedArrow(curveGroup, curve_points, points, color, tag) // TODO fix arrow directions
+            
+        return curveGroup;
     }
 
     // This functions
     transformMiddlePointOnLayer(point) {
         point.x = 0;
         return(point)
+    }
+
+    toggleCurvedArrow(curveGroup, curve_points, points, color, tag) {
+        let arrowHelper = this.createArrow([curve_points[points - 20], curve_points[points]],
+            color);
+        arrowHelper.userData.tag = tag;
+        arrowHelper.visible = channelVisibility[tag];
+        curveGroup.add(arrowHelper);
+        return(curveGroup)
     }
 
     toggleArrow(points, edgeColor) { // TODO multi channel
@@ -245,27 +203,23 @@ class Edge {
     }
 
     // direction creation
-    createArrow(points, edgeColor, extra_point = null) {
-        let origin, length, headLength,
-            headLengthPerArrowLength = intraDirectionArrowSize,
-            direction = points[1].clone().sub(points[0]);
-         
+    createArrow(points, edgeColor) { // TODO check and optimize 
+        let direction, origin, headLength, headWidth;
+            
+        direction = points[1].clone().sub(points[0]);
+        
+        headLength = intraDirectionArrowSize;
         if (this.interLayer)
-            headLengthPerArrowLength = interDirectionArrowSize;
-        origin = this.calcPointOnLine(points[1], points[0], headLengthPerArrowLength);
+            headLength = interDirectionArrowSize;
+        origin = this.calcPointOnLine(points[1], points[0], headLength);
 
-        length  = direction.length();
-        if (extra_point) // TODO check if works properly with curve channels
-            length = points[1].clone().sub(extra_point).length();
-        // we create the arrow in order to have the correct direction 
-        // and then change its length size in order to be almost the size of the headLength
-        headLength = headLengthPerArrowLength * length;
-        length = 1.05 * headLength;
-        // in order to keep line's opacity we create only the cone from the arrow
-        return(new THREE.ArrowHelper(direction.normalize(), origin, length, edgeColor, headLength))
+        headLength = headLength * 500;
+        headWidth = headLength / 4;
+        
+        return(new THREE.ArrowHelper(direction.normalize(), origin, 1, edgeColor, headLength, headWidth))
     }
       
-    calcPointOnLine(point1, point2, length) {
+    calcPointOnLine(point1, point2, length) { // TODO check and optimize 
         let x = (1 - length) * point1.x + length * point2.x;
         let y = (1 - length) * point1.y + length * point2.y;
         let z = (1 - length) * point1.z + length * point2.z;
