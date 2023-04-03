@@ -214,9 +214,6 @@ const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
     if (!edgeObjects[i].interLayer)
       edgeObjects[i].redrawEdge();
   }
-
-  
-
   // let index1 = 0, index2 = 0, color = "", pos1 = -1, pos2 = -1,
   //   points, geometry, material, arrowHelper, ver_line, curve_group, group;
 
@@ -270,13 +267,6 @@ const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
   //     }
   //   }
   // }
-}
-
-const transformPoint = (point) => {
-  temp = point.x
-  point.x = 0
-  point.z = temp
-  return point
 }
 
 const setEdgeColor = () =>{

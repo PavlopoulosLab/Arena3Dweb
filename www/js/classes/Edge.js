@@ -188,7 +188,7 @@ class Edge {
     }
 
     createCurve(p1, p2, lgth, color, group, tag, weight) {
-        let curve_opacity = this.interLayer ? interLayerEdgeOpacity : intraLayerEdgeOpacity;
+        
         let p3 = p1.clone();
         let p4 = p2.clone();
         let curve, my_curve, arrowHelper;
@@ -198,7 +198,8 @@ class Edge {
         p4.addScalar(lgth);
 
         if (!this.interLayer)
-            curve = new THREE.CubicBezierCurve3(transformPoint(p1), transformPoint(p3), transformPoint(p4), transformPoint(p2))
+            curve = new THREE.CubicBezierCurve3(p1, this.transformMiddlePointOnLayer(p3),
+            this.transformMiddlePointOnLayer(p4), p2)
         else
             curve = new THREE.CubicBezierCurve3(p1, p3, p4, p2)
 
@@ -208,8 +209,11 @@ class Edge {
         
         if (edgeWidthByWeight)
             curve_material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: weight } );
-        else 
+        else {
+            let curve_opacity = this.interLayer ? interLayerEdgeOpacity : intraLayerEdgeOpacity;
             curve_material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05,  transparent: true, opacity: curve_opacity});
+        }
+            
 
         my_curve = new THREE.Line( curve_geometry, curve_material)
         my_curve.userData.tag = tag;
@@ -223,6 +227,12 @@ class Edge {
             group.add(arrowHelper)
         }
         return group;
+    }
+
+    // This functions
+    transformMiddlePointOnLayer(point) {
+        point.x = 0;
+        return(point)
     }
 
     toggleArrow(points, edgeColor) { // TODO multi channel
