@@ -46,10 +46,12 @@ class Edge {
 
         // channel
         if (this.channels.length > 0)
-            this.createChannels(points[0], points[1]);
-
+            this.createChannels(points); // direction currently included
+        else { // if no channel
         if (isDirectionEnabled)
-            this.toggleArrow(points, this.colors[0]); // TODO different colors for channels
+            this.toggleArrow(points, this.colors[0]);
+        }
+        
 
         if (this.interLayer)
             scene.add(this.THREE_Object);
@@ -85,89 +87,67 @@ class Edge {
         return(opacity)
     }
 
-    redrawEdge() {
-        if (this.interLayer)
-            scene.remove(this.THREE_Object);
-        else
-            layers[this.sourceLayerIndex].removeEdge(this.THREE_Object);
-
-        this.drawEdge();
-    }
-
-    // t is a random percentage that has been set after tries
-    // t is a factor between 0-1
-    createChannels(p1, p2) {
-        console.log("createChannels")
+    // channel creation
+    createChannels(points) {
+        let arrowHelper, // TODO rename THREE_arrowHelper?
+            channelArray = edgeChannels[this.id],
+            THREE_curveGroup = new THREE.Group(),
+            curveFactor = this.interLayer ? interChannelCurvature : intraChannelCurvature;
         
-        let arrowHelper,
-            temp_channels = [],
-            curve_group = new THREE.Group(),
-            t = this.interLayer ? interChannelCurvature : intraChannelCurvature;
-        
-        let group_pos = this.id;
-        // if (isLayerEdges)
-        //     temp_channels = layer_edges_pairs_channels[group_pos];
-        // else
-        temp_channels = edgeChannels[group_pos];
-
-        if (temp_channels.length === 1) {
-            this.THREE_Object.userData.tag = temp_channels[0];
+        if (channelArray.length === 1) {
+            this.THREE_Object.userData.tag = channelArray[0];
             this.THREE_Object.visible = channelVisibility[this.THREE_Object.userData.tag];
-            let color = this.getChannelColor(group_pos, this.THREE_Object.userData.tag);
+            let color = this.getChannelColor(this.THREE_Object.userData.tag);
             !color && (color = channelColors[this.THREE_Object.userData.tag]);
             this.THREE_Object.material.color = new THREE.Color(color);
-            curve_group.add(this.THREE_Object);
+            THREE_curveGroup.add(this.THREE_Object);
             if (isDirectionEnabled) {
-                arrowHelper = this.createArrow([p1, p2], color);
-                arrowHelper.userData.tag = temp_channels[0];
+                arrowHelper = this.createArrow([points[0], points[1]], color);
+                arrowHelper.userData.tag = channelArray[0];
                 arrowHelper.visible = channelVisibility[this.THREE_Object.userData.tag]
-                curve_group.add(arrowHelper)
+                THREE_curveGroup.add(arrowHelper)
             }
-        } else if (temp_channels.length > 1) {
-            let ver_line_const = p1.distanceTo(p2) * t;
+        } else if (channelArray.length > 1) {
+            let ver_line_const = points[0].distanceTo(points[1]) * curveFactor;
             let lgth = ver_line_const;
             let color;
-            let loopTotal = Math.trunc((temp_channels.length) / 2);
+            let loopTotal = Math.trunc((channelArray.length) / 2);
             for (let i = 0; i < loopTotal; i++) {
                 lgth = ver_line_const * (loopTotal - i) / loopTotal;
 
-                color = this.getChannelColor(group_pos, temp_channels[i]);
-                !color && (color = channelColors[temp_channels[i]]);
-                curve_group = this.createCurve(p1, p2, lgth, color, curve_group, temp_channels[i]);
+                color = this.getChannelColor(channelArray[i]);
+                !color && (color = channelColors[channelArray[i]]);
+                THREE_curveGroup = this.createCurve(points[0], points[1], lgth, color, THREE_curveGroup, channelArray[i]);
             }
             for (let i = 0; i < loopTotal; i++) {
                 lgth = ver_line_const * (loopTotal - i) / loopTotal;
-                color = this.getChannelColor(group_pos, temp_channels[loopTotal + i]);
-                !color && (color = channelColors[temp_channels[loopTotal + i]]);
-                curve_group = this.createCurve(p1, p2, -1 * lgth, color,curve_group, temp_channels[loopTotal + i]);
+                color = this.getChannelColor(channelArray[loopTotal + i]);
+                !color && (color = channelColors[channelArray[loopTotal + i]]);
+                THREE_curveGroup = this.createCurve(points[0], points[1], -1 * lgth, color,THREE_curveGroup, channelArray[loopTotal + i]);
             }
 
             //if numofcurves is even then no verline
-            if (temp_channels.length % 2 == 1) {
-                this.THREE_Object.userData.tag = temp_channels[temp_channels.length - 1];
+            if (channelArray.length % 2 == 1) {
+                this.THREE_Object.userData.tag = channelArray[channelArray.length - 1];
                 this.THREE_Object.visible = channelVisibility[this.THREE_Object.userData.tag];
-                color = this.getChannelColor(group_pos, this.THREE_Object.userData.tag);
+                color = this.getChannelColor(this.THREE_Object.userData.tag);
                 !color && (color = channelColors[this.THREE_Object.userData.tag]);
                 this.THREE_Object.material.color = new THREE.Color(color);
-                curve_group.add(this.THREE_Object);
+                THREE_curveGroup.add(this.THREE_Object);
                 if (isDirectionEnabled) {
-                    arrowHelper = this.createArrow([p1, p2], color);
-                    arrowHelper.userData.tag = temp_channels[temp_channels.length - 1];
+                    arrowHelper = this.createArrow([points[0], points[1]], color);
+                    arrowHelper.userData.tag = channelArray[channelArray.length - 1];
                     arrowHelper.visible = channelVisibility[this.THREE_Object.userData.tag]
-                    curve_group.add(arrowHelper)
+                    THREE_curveGroup.add(arrowHelper)
                 }
             }
         }
-        this.THREE_Object = curve_group;
+
+        this.THREE_Object = THREE_curveGroup;
     }
   
-    getChannelColor(i, c) {
-        let color, pos = -1, pos1arr, pos2arr;
-        // if (isLayerEdges) {
-        //     pos = edges.indexOf(layer_edges_pairs[i]);
-        //     j = pos;
-        // } else
-        //     j = i;
+    getChannelColor(c) {
+        let color, pos1arr, pos2arr;
         let j = this.id;
         
         if (exists(selected_edges, j) && selectedEdgeColorFlag) {
@@ -243,6 +223,7 @@ class Edge {
         this.THREE_Object = THREE_Group;
     }
 
+    // direction creation
     createArrow(points, edgeColor, extra_point = null) {
         let origin, length, headLength,
             headLengthPerArrowLength = intraDirectionArrowSize,
@@ -270,6 +251,17 @@ class Edge {
         return(new THREE.Vector3(x, y, z))
     }
 
+    // On animate ======
+    redrawEdge() {
+        if (this.interLayer)
+            scene.remove(this.THREE_Object);
+        else
+            layers[this.sourceLayerIndex].removeEdge(this.THREE_Object);
+
+        this.drawEdge();
+    }
+
+    // R UI controls ======
     setOpacity(value) {
         if (this.THREE_Object.children.length > 0)
             this.THREE_Object.children[0].material.opacity = value;
