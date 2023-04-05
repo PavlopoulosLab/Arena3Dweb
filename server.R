@@ -160,7 +160,7 @@ server <- function(input, output, session) {
   }, ignoreInit = T)
   
   observeEvent(input$edgeFileColorPriority, {
-    callJSHandler("handler_edgeFileColorPriority", input$edgeFileColorPriority)
+    callJSHandler("handler_setEdgeFileColorPriority", input$edgeFileColorPriority)
   }, ignoreInit = T)
   
   observeEvent(input$edgeWidthByWeight, {

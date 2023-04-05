@@ -257,7 +257,7 @@ const attachChannelEditList = () => {
       container.appendChild(subcontainer);
       subcontainer = '';
     });
-  if (edgeAttributesPriority)
+  if (edgeFileColorPriority)
     document.getElementById('channelColorPicker').style.display = 'none';
   else
     document.getElementById('channelColorPicker').style.display = 'block';
@@ -281,41 +281,25 @@ const assignColor = (checkChannels, i, channels, tag, color, edgeNoChannel) => {
       }
 }
 
-const setEdgeAttributes = (message) => {
-  edge_attributes = message;
-  let pos1arr = -1,
-    pos2arr = -1,
-    pos3 = -1;
-  for (let i = 0; i < edges.length; i++){
-    if (edgeAttributesPriority) {
-
-      pos1arr = findIndices(edge_attributes.SourceNode, edgePairs[i]);
-      pos2arr = findIndices(edge_attributes.TargetNode, edgePairs[i]);
-      pos1arr != -1 && pos1arr.forEach(pos1 => {
-        if (checkIfAttributeColorExist(edge_attributes, pos1)) {//if node not currently selected and exists in node attributes file and color is assigned
-          if (typeof (edges[i]) == "number") { //edge is inter-layer
-            pos3 = layer_edges_pairs.indexOf(i);
-            if (edge_attributes && edge_attributes.Channel) {
-              assignColor(layer_edges_pairs_channels, pos3, layerEdges[pos3].children, edge_attributes.Channel[pos1], edge_attributes.Color[pos1], layerEdges[pos3]);
-            } else {
-              assignColor(layer_edges_pairs_channels, pos3, layerEdges[pos3].children, [], edge_attributes.Color[pos1], layerEdges[pos3]);
-            }
-            }
-          else {
-            assignColor(edgeChannels, i, edges[i].children, edge_attributes.Channel[pos1], edge_attributes.Color[pos1], edges[i]);
-          }
-        }
-      });
-      pos2arr != -1 && pos2arr.forEach(pos2 => {
-      if (checkIfAttributeColorExist(edge_attributes, pos2)) { 
-        if (typeof(edges[i]) == "number"){ //edge is inter-layer
-          pos3 = layer_edges_pairs.indexOf(i);
-          layerEdges[pos3].material.color = new THREE.Color( edge_attributes.Color[pos2] );
-        } else edges[i].material.color = new THREE.Color( edge_attributes.Color[pos2] );
+const setEdgeAttributes = (edgeAttributes) => {
+  let pos, pos2;
+  document.getElementById("edgeFileColorPriority").checked = true;
+  edgeFileColorPriority = true;
+  for (let i = 0; i < edgeAttributes.length; i++) {
+    pos = edgePairs.indexOf(edgeAttributes[i].EdgePair);
+    if (edgeAttributes[i].Channel) {
+      for (let j = 0; j < edgeObjects[pos].channels.length; j++) {
+        pos2 = edgeObjects[pos].channels.indexOf(edgeAttributes[i].Channel);
+        edgeObjects[pos].importedColors[pos2] = edgeAttributes[i].Color;
       }
-      });
-    }
+    } else
+      edgeObjects[pos].importedColors[0] = edgeAttributes[i].Color;
+
+    edgeObjects[pos].repaint();
   }
+  
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
   updateEdgesRShiny();
 }
 
@@ -355,14 +339,13 @@ const setInterDirectionArrowSize = (message) => {
   renderInterLayerEdgesFlag = true;
 };
 
-const edgeFileColorPriority = (message) => {
-  edgeAttributesPriority = message; //message = true or false
-  if (edgeAttributesPriority)
+const setEdgeFileColorPriority = (message) => {
+  edgeFileColorPriority = message; //message = true or false
+  if (edgeFileColorPriority)
     document.getElementById('channelColorPicker').style.display = 'none';
   else
     document.getElementById('channelColorPicker').style.display = 'block';
   redrawIntraLayerEdges();
-  return true;
 }
 
 const setEdgeSelectedColorPriority = (message) => { // true / false

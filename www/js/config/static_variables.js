@@ -40,7 +40,7 @@ let nodeIntervalTimeout = "",
 
 // edges
 let selectedEdgeColorFlag = true,
-    edgeAttributesPriority = true,
+    edgeFileColorPriority = true,
     isDirectionEnabled = false,
     edgeWidthByWeight = true,
     interLayerEdgeOpacity = 0.4,

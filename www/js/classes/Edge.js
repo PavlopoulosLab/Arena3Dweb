@@ -32,26 +32,12 @@ class Edge {
     }
 
     drawEdge() {
-        let points = [], geometry, color, opacity, material;
-
-        points = this.decidePoints();
-        geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-        color = this.decideColor();
-        opacity = this.decideOpacity();
-        material = new THREE.LineBasicMaterial({
-            color: color, alphaTest: 0.05, transparent: true, opacity: opacity // TODO different colors for channels
-        });
-
+        let points = this.decidePoints();
         
-        // channel
-        if (this.channels.length > 0)
+        if (this.channels.length === 0) // if no channel
+            this.createEdge(points);
+        else // channel
             this.createChannels(points); // direction currently included
-        else { // if no channel
-            this.THREE_Object = new THREE.Line(geometry, material);
-            if (isDirectionEnabled)
-                this.toggleArrow(points, color);
-        }
         
         if (this.interLayer)
             scene.add(this.THREE_Object);
@@ -72,10 +58,28 @@ class Edge {
         return(points)
     }
 
+    createEdge(points) {
+        let geometry, color, opacity, material;
+
+        geometry = new THREE.BufferGeometry().setFromPoints(points);
+        color = this.decideColor();
+        opacity = this.decideOpacity();
+        material = new THREE.LineBasicMaterial({
+            color: color, alphaTest: 0.05, transparent: true, opacity: opacity
+        });
+
+        this.THREE_Object = new THREE.Line(geometry, material);
+
+        if (isDirectionEnabled)
+            this.toggleArrow(points, color);
+}
+
     decideColor() { // TODO channels here?
         let color = EDGE_DEFAULT_COLOR;
         if (this.isSelected && selectedEdgeColorFlag)
             color = SELECTED_DEFAULT_COLOR;
+        else if (edgeFileColorPriority)
+            color = this.importedColors[0];
         return(color)
     }
 

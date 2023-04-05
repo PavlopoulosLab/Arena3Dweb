@@ -50,14 +50,13 @@ const resetValues = () => {
   interChannelCurvature = 0.05,
   intraChannelCurvature = 0.05,
   edgeObjects = [];
-  edgeAttributesPriority = true;
+  edgeFileColorPriority = true;
   layerEdges = []; //canvas objects
   edgePairs = [];
   edgePairs_source = [];
   edgePairs_target = [];
   layer_edges_pairs = []; //canvas objects
   edgeValues = [];
-  selected_edges = [];
   edge_attributes = "";
   isDirectionEnabled = false;
   updateToggleCurvatureComponentsRShiny(false);

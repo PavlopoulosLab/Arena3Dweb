@@ -561,19 +561,23 @@ handleInputEdgeAttributeFileUpload <- function() { # TODO update last
   tryCatch({
     renderModal("<h2>Please wait.</h2><br /><p>Uploading edge attributes.</p>")
     edgeFile <- input$edge_attributes_file$datapath
-    edgeAttributes <- read.delim(edgeFile)
-    edgeAttributes$SourceNode <- paste(trimws(edgeAttributes$SourceNode), trimws(edgeAttributes$SourceLayer), sep="_") # concatenation node1_Group1---node2_Group2
-    edgeAttributes$TargetNode <- paste(trimws(edgeAttributes$TargetNode), trimws(edgeAttributes$TargetLayer), sep="_")
-    temp <- edgeAttributes$SourceNode
-    edgeAttributes$SourceNode <- paste(edgeAttributes$SourceNode, edgeAttributes$TargetNode, sep="---")
-    edgeAttributes$TargetNode <- paste(edgeAttributes$TargetNode, temp, sep="---") # both ways, undirected
-    edgeAttributes$Color <- trimws(edgeAttributes$Color)
-    if ("Channel" %in% colnames(edgeAttributes)) {
-      edgeAttributes$Channel <- trimws(edgeAttributes$Channel)
-    }
-    if (!is.null(edgeFile)){
-      callJSHandler("handler_setEdgeAttributes", edgeAttributes)
-      updateSelectInput(session, "navBar", selected = "Main View")
+    if (!is.null(edgeFile)) {
+      edgeAttributes <- read.delim(edgeFile)
+      if (existMandatoryEdgeAttributeColumns(edgeAttributes)) {
+        edgeAttributes$EdgePair <- paste(
+          paste(trimws(edgeAttributes$SourceNode), trimws(edgeAttributes$SourceLayer), sep = "_"),
+          paste(trimws(edgeAttributes$TargetNode), trimws(edgeAttributes$TargetLayer), sep = "_"),
+          sep = "---"
+        )
+        edgeAttributes$Color <- trimws(edgeAttributes$Color)
+        if ("Channel" %in% colnames(edgeAttributes)) {
+          edgeAttributes$Channel <- trimws(edgeAttributes$Channel)
+          edgeAttributes <- edgeAttributes[, c("EdgePair", "Color", "Channel")]
+        } else
+          edgeAttributes <- edgeAttributes[, c("EdgePair", "Color")]
+        callJSHandler("handler_setEdgeAttributes", toJSON(edgeAttributes))
+        updateSelectInput(session, "navBar", selected = "Main View")
+      }
     }
   }, error = function(e) {
     print(paste0("Error during input edge attributes file upload:  ", e))
@@ -581,6 +585,19 @@ handleInputEdgeAttributeFileUpload <- function() { # TODO update last
   }, finally = {
     removeModal()
   })
+}
+
+existMandatoryEdgeAttributeColumns <- function(edgeAttributes) {
+  exist <- T
+  if (is.null(edgeAttributes$SourceNode) || is.null(edgeAttributes$SourceLayer) ||
+      is.null(edgeAttributes$TargetNode) || is.null(edgeAttributes$TargetLayer) ||
+      is.null(edgeAttributes$Color)) {
+    exist <- F
+    renderWarning("Your edge attribute file must contain at least these five columns:\n
+                  SourceNode, SourceLayer, TargetNode and TargetLayer,
+                  and optionally a Channel name.")
+  }
+  return(exist)
 }
 
 # Save Session ####
