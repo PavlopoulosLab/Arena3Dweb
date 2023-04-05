@@ -113,6 +113,7 @@ class Layer {
 
   toggleVisibility(flag) {
     this.plane.visible = flag;
+    this.isVisible = flag;
   }
 
   toggleCoords(layerCoordsSwitch) {

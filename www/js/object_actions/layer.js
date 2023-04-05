@@ -61,6 +61,9 @@ const hideLayers = () => {
   let hideLayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
   for (let i = 0; i < hideLayerCheckboxes.length; i++)
     layers[i].toggleVisibility(!hideLayerCheckboxes[i].checked);
+
+  renderInterLayerEdgesFlag = true;
+  renderLayerLabelsFlag = true;
   decideNodeLabelFlags();
 };
 

@@ -50,7 +50,7 @@ const decideEdgeLayerType = (i) => {
 };
 
 // runs constantly on animate
-const redrawInterLayerEdges = (showFlag = false) => { // TODO global flag to not even enter
+const redrawInterLayerEdges_onAnimate = (showFlag = false) => { // TODO global flag to not even enter
   // let i;
   if (!showFlag && (scene.dragging || interLayerEdgesRenderPauseFlag)){
     // for (i = 0; i < layer_edges_pairs.length; i++){
@@ -62,7 +62,7 @@ const redrawInterLayerEdges = (showFlag = false) => { // TODO global flag to not
     draw_inter_edges_flag = false;
   } else {
     if (renderInterLayerEdgesFlag) {
-      redrawInterLayerEdges_new();
+      redrawInterLayerEdges();
       if (waitEdgeRenderFlag) { // locked flags for best edge redrawing
         waitEdgeRenderFlag = false;
       } else {
@@ -140,8 +140,8 @@ const removeInterLayerEdges = () => {
       scene.remove(edgeObjects[i].THREE_Object);
 };
 
-const redrawInterLayerEdges_new = () => {
-  console.log("redrawInterLayerEdges_new");
+const redrawInterLayerEdges = () => {
+  console.log("redrawInterLayerEdges");
   for (let i = 0; i < edgeObjects.length; i++) {
     if (edgeObjects[i].interLayer)
       edgeObjects[i].redrawEdge();

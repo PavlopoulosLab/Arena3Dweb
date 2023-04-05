@@ -233,8 +233,14 @@ class Edge {
         else
             layers[this.sourceLayerIndex].removeEdge(this.THREE_Object);
 
-        this.drawEdge();
+        if (this.interLayer && this.areLayersNotHidden())
+            this.drawEdge();
     }
+
+    areLayersNotHidden = () => {
+        return(layers[this.sourceLayerIndex].isVisible &&
+            layers[this.targetLayerIndex].isVisible)
+    };
 
     // R UI controls ======
     setOpacity(value) {
