@@ -12,6 +12,7 @@ const SPHERE_RADIUS = 8,
     PLANE_HEIGHTSEGMENTS = 8, 
     LAYER_DEFAULT_COLOR = "#777777",
     SELECTED_LAYER_DEFAULT_COLOR = "#f7f43e",
+    SELECTED_DEFAULT_COLOR = "#A3FF00",
     COLOR_VECTOR_280 = [
         "#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#999999",
         "#a65628", "#f781bf", "#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",

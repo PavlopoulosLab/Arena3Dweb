@@ -156,7 +156,7 @@ server <- function(input, output, session) {
   
   # EDGES ####
   observeEvent(input$edgeSelectedColorPriority, {
-    callJSHandler("handler_edgeSelectedColorPriority", input$edgeSelectedColorPriority)
+    callJSHandler("handler_setEdgeSelectedColorPriority", input$edgeSelectedColorPriority)
   }, ignoreInit = T)
   
   observeEvent(input$edgeFileColorPriority, {

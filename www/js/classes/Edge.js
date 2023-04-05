@@ -1,6 +1,6 @@
 class Edge {
     constructor({id = 0, source = "", target = "",
-        colors = ["#FFFFFF"], weights = [], channels = [],
+        colors = [EDGE_DEFAULT_COLOR], weights = [], channels = [],
         interLayer = false}) {
             this.THREE_Object = "";
             this.sourceNodeIndex = "";
@@ -13,11 +13,11 @@ class Edge {
             this.target = target;
             this.colors = colors;
             this.importedColors = colors;
-            this.weights = weights; // TODO opacity?
+            this.weights = weights;
             this.channels = channels;
             this.interLayer = interLayer;
 
-            this.isSelected = false; // TODO per channel?
+            this.isSelected = false;
         
             this.createGeometry();
         }
@@ -32,14 +32,15 @@ class Edge {
     }
 
     drawEdge() {
-        let points = [], geometry, opacity, material;
+        let points = [], geometry, color, opacity, material;
 
         points = this.decidePoints();
         geometry = new THREE.BufferGeometry().setFromPoints(points);
 
+        color = this.decideColor();
         opacity = this.decideOpacity();
         material = new THREE.LineBasicMaterial({
-            color: this.colors[0], alphaTest: 0.05, transparent: true, opacity: opacity // TODO different colors for channels
+            color: color, alphaTest: 0.05, transparent: true, opacity: opacity // TODO different colors for channels
         });
 
         
@@ -49,7 +50,7 @@ class Edge {
         else { // if no channel
             this.THREE_Object = new THREE.Line(geometry, material);
             if (isDirectionEnabled)
-                this.toggleArrow(points, this.colors[0]);
+                this.toggleArrow(points, color);
         }
         
         if (this.interLayer)
@@ -71,11 +72,18 @@ class Edge {
         return(points)
     }
 
+    decideColor() { // TODO channels here?
+        let color = EDGE_DEFAULT_COLOR;
+        if (this.isSelected && selectedEdgeColorFlag)
+            color = SELECTED_DEFAULT_COLOR;
+        return(color)
+    }
+
     decideOpacity() {
         let opacity;
 
         if (edgeWidthByWeight)
-            opacity = this.weights[0]; // TODO per channel
+            opacity = this.weights[0];
         else {
             if (this.interLayer)
                 opacity = interLayerEdgeOpacity;
@@ -109,35 +117,6 @@ class Edge {
         }
         
         this.THREE_Object = THREE_curveGroup;
-    }
-  
-    getChannelColor(c) {
-        let color, pos1arr, pos2arr;
-        let j = this.id;
-        
-        if (exists(selected_edges, j) && selectedEdgeColorFlag) {
-            return selectedDefaultColor;
-        } else if (edge_attributes !== "" && edgeAttributesPriority) {
-            pos1arr = findIndices(edge_attributes.SourceNode, edgePairs[j]);
-            pos2arr = findIndices(edge_attributes.TargetNode, edgePairs[j]);
-            pos1arr != -1 && pos1arr.forEach(pos1 => {
-            if (checkIfAttributeColorExist(edge_attributes, pos1)) {//if node not currently selected and exists in node attributes file and color is assigned
-                if (edge_attributes.Channel[pos1] === c)
-                    color = edge_attributes.Color[pos1]; //edge is intra-layer
-            }
-            });
-            pos2arr != -1 && pos2arr.forEach(pos2 => {
-                if (checkIfAttributeColorExist(edge_attributes, pos2)) {
-                    if (edge_attributes.Channel[pos2] === c)
-                    color = edge_attributes.Color[pos2];
-                }
-            });
-        }
-
-        if (color && edge_attributes && edge_attributes.Channel)
-            return color;
-        
-        return undefined;
     }
 
     createCurve(curveGroup, p1, p2, verticalPush, color, tag, weight) {
@@ -233,14 +212,32 @@ class Edge {
         else
             layers[this.sourceLayerIndex].removeEdge(this.THREE_Object);
 
-        if (this.interLayer && this.areLayersNotHidden())
-            this.drawEdge();
+        if ((!this.interLayer) ||
+            (this.interLayer && this.areLayersNotHidden()))
+                this.drawEdge();
     }
 
     areLayersNotHidden = () => {
         return(layers[this.sourceLayerIndex].isVisible &&
             layers[this.targetLayerIndex].isVisible)
     };
+
+    repaint = () => {
+        if (selectedEdgeColorFlag && this.isSelected)
+            this.colors = this.colors.map(function() { return SELECTED_DEFAULT_COLOR; });
+        else
+            this.colors = this.importedColors; // TODO differnet channel colors
+    }
+
+    select = () => {
+        this.isSelected = true;
+        this.repaint();
+    }
+    
+    deselect = () => {
+        this.isSelected = false;
+        this.repaint();
+    }
 
     // R UI controls ======
     setOpacity(value) {

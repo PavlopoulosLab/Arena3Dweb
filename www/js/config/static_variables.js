@@ -30,7 +30,6 @@ let layerGroups = new Map(),
 // nodes
 let nodeIntervalTimeout = "",
     selectedNodeColorFlag = true,
-    selectedDefaultColor = "#A3FF00",
     showAllNodeLabelsFlag = false,
     showSelectedNodeLabelsFlag = true,
     nodeColorPrioritySource = "default", // or "cluster"
@@ -58,7 +57,6 @@ let selectedEdgeColorFlag = true,
     edgePairs_target = [], // TODO probably release after objects are created
     layer_edges_pairs = [], //canvas objects
     edgeValues = [], // TODO remove
-    selected_edges = [], // TODO remove
     edge_attributes = "", // TODO remove
     // channels
     channels = [], // TODO remove

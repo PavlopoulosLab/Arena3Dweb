@@ -51,11 +51,7 @@ const decideEdgeLayerType = (i) => {
 
 // runs constantly on animate
 const redrawInterLayerEdges_onAnimate = (showFlag = false) => { // TODO global flag to not even enter
-  // let i;
   if (!showFlag && (scene.dragging || interLayerEdgesRenderPauseFlag)){
-    // for (i = 0; i < layer_edges_pairs.length; i++){
-    //   scene.remove(layerEdges[i]);
-    // }
     removeInterLayerEdges();
   } else if (!showFlag && !(edgeWidthByWeight && interLayerEdgeOpacity > 0)){ //this optimizes execution for many connections by making them disappear
     removeInterLayerEdges();
@@ -69,68 +65,7 @@ const redrawInterLayerEdges_onAnimate = (showFlag = false) => { // TODO global f
         renderInterLayerEdgesFlag = false;
         waitEdgeRenderFlag = true;
       }
-      
     }
-    // let index1, index2, color,
-    //   points, node_layer1, node_layer2,
-    //   geometry, material, arrowHelper, ver_line, curve_group,
-    //   hidelayerCheckboxes = document.getElementsByClassName("hideLayer_checkbox");
-    // for (i = 0; i < layer_edges_pairs.length; i++){
-    //   scene.remove(layerEdges[i]);
-    //   // Keep default color
-    //   if (layer_edges_pairs_channels && layer_edges_pairs_channels[i] &&  layer_edges_pairs_channels[i].length === 1) {  
-    //     color = channelColors[layer_edges_pairs_channels[i][0]];
-    //   } else {
-    //     color = EDGE_DEFAULT_COLOR;
-    //   }
-    //   points = [];
-    //   node_layer1 = layerGroups[nodeGroups[edgePairs_source[layer_edges_pairs[i]]]];
-    //   node_layer2 = layerGroups[nodeGroups[edgePairs_target[layer_edges_pairs[i]]]];
-    //   if (!hidelayerCheckboxes[node_layer1].checked && !hidelayerCheckboxes[node_layer2].checked) {
-    //     index1 = nodeLayerNames.indexOf(edgePairs_source[layer_edges_pairs[i]]);
-    //     index2 = nodeLayerNames.indexOf(edgePairs_target[layer_edges_pairs[i]]);
-    //     points.push(
-    //       nodeObjects[index1].getWorldPosition(),
-    //       nodeObjects[index2].getWorldPosition()
-    //     );
-    // 		geometry = new THREE.BufferGeometry().setFromPoints( points );
-    //     material = "";
-
-    //     // set color to selectedDefault if the edge is selected
-    // 		if (exists(selected_edges, layer_edges_pairs[i]) && selectedEdgeColorFlag)
-    //       color = selectedDefaultColor;
-    //     else if (edge_attributes !== "" && edgeAttributesPriority) 
-    //       color = edge_attributes.Color[layer_edges_pairs[i]];
-    		  
-    //     if (edgeWidthByWeight)
-    //       material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: edgeValues[layer_edges_pairs[i]] });
-    //     else
-    //       material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: interLayerEdgeOpacity });
-        
-    //     arrowHelper = createArrow(points, color,null, true);
-    //     ver_line = new THREE.Line(geometry, material);
-
-    //     // if the edge is multi channel create the multiple channels
-    //     if (layer_edges_pairs_channels[i]) {
-    //       curve_group = new THREE.Group();
-    //       curve_group = createChannels(points[0], points[1], interChannelCurvature, ver_line, i, true);
-    //       scene.add(curve_group);
-    //       layerEdges[i] = curve_group;
-    //     } else {
-    //       //directed
-    //       if (isDirectionEnabled) {
-    //         const group = new THREE.Group();
-    //         group.add( ver_line );
-    //         group.add( arrowHelper );
-    //         scene.add(group);
-    //         layerEdges[i] = group;
-    //       } else {
-    //         scene.add(ver_line);
-    //         layerEdges[i] = ver_line;
-    //       }
-    //     }
-    //   }
-    // }
   }
 }
 
@@ -170,31 +105,6 @@ const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
   for (let i = 0; i < edgeObjects.length; i++) {
     if (!edgeObjects[i].interLayer)
       edgeObjects[i].redrawEdge();
-  }
-}
-
-const setEdgeColor = () => { // TODO rename to repaintEdges
-  let i;
-  // inter-layer edges automatically change from EDGE_DEFAULT_COLOR
-  for (i=0; i<edges.length; i++) {
-    // intra-layer edges
-    if (typeof (edges[i]) === 'object') {
-      if (edges[i].children && edges[i].children.length > 0) {
-        edges[i].children.forEach(child => {
-          if (child.material && child.material.color) {
-              if (exists(selected_edges, i) && selectedEdgeColorFlag) child.material.color = new THREE.Color(selectedDefaultColor);
-              else if (child.userData && child.userData.tag) child.material.color = new THREE.Color(channelColors[child.userData.tag]);
-              else child.material.color = new THREE.Color(EDGE_DEFAULT_COLOR);
-            } else {
-              if (child.userData && child.userData.tag) child.setColor(channelColors[child.userData.tag])
-              else child.setColor(EDGE_DEFAULT_COLOR)
-            }
-        });
-      } else {
-        if (exists(selected_edges, i) && selectedEdgeColorFlag) edges[i].material.color = new THREE.Color(selectedDefaultColor);
-        else edges[i].material.color = new THREE.Color(EDGE_DEFAULT_COLOR);
-      } 
-    } 
   }
 }
 
@@ -447,62 +357,21 @@ const setInterDirectionArrowSize = (message) => {
 
 const edgeFileColorPriority = (message) => {
   edgeAttributesPriority = message; //message = true or false
-  if (edgeAttributesPriority) document.getElementById('channelColorPicker').style.display = 'none';
-  else document.getElementById('channelColorPicker').style.display = 'block';
+  if (edgeAttributesPriority)
+    document.getElementById('channelColorPicker').style.display = 'none';
+  else
+    document.getElementById('channelColorPicker').style.display = 'block';
   redrawIntraLayerEdges();
   return true;
 }
 
-const edgeSelectedColorPriority = (message) => {
+const setEdgeSelectedColorPriority = (message) => { // true / false
   selectedEdgeColorFlag = message;
-  let pos1 = pos2 = pos3 = "";
-  for (let i=0; i<selected_edges.length; i++){
-    if (selectedEdgeColorFlag){
-      if (typeof (edges[selected_edges[i]]) == "number") {
-        pos3 = layer_edges_pairs.indexOf(selected_edges[i]);
-        assign2Children(layerEdges[pos3], selectedDefaultColor);
-      } else {
-        assign2Children(edges[selected_edges[i]], selectedDefaultColor);
-      }
-    }else if (edge_attributes !== "" && edgeAttributesPriority){ //check if color is overidden by user
-      pos1 = edge_attributes.SourceNode.indexOf(edgePairs[selected_edges[i]]);
-      pos2 = edge_attributes.TargetNode.indexOf(edgePairs[selected_edges[i]]);
-      if(checkIfAttributeColorExist(edge_attributes, pos1)){//if node not currently selected and exists in node attributes file and color is assigned
-        if (typeof (edges[selected_edges[i]]) == "number") { //edge is inter-layer
-          pos3 = layer_edges_pairs.indexOf(i);
-           assign2Children(layerEdges[pos3], edge_attributes.Color[pos1]);
-        }
-        else {
-          assign2Children(edges[selected_edges[i]], edge_attributes.Color[pos1]);//edge is intra layer
-        }
-        }
-      else if(checkIfAttributeColorExist(edge_attributes, pos2)){
-        if (typeof (edges[selected_edges[i]]) == "number") { //edge is inter-layer
-          pos3 = layer_edges_pairs.indexOf(i);
-            assign2Children(layerEdges[pos3], edge_attributes.Color[pos2]);
-        } else {
-            assign2Children(edges[selected_edges[i]], edge_attributes.Color[pos2]);
-        }
-      }
-      else{
-        if (typeof (edges[selected_edges[i]]) == "number") {
-          pos3 = layer_edges_pairs.indexOf(i);
-          assign2Children(layerEdges[pos3], EDGE_DEFAULT_COLOR, true);
-        } else {
-          assign2Children( edges[selected_edges[i]], EDGE_DEFAULT_COLOR,  true);
-        }   
-      }
-    } else{
-      if (typeof (edges[selected_edges[i]]) == "number") {
-        pos3 = layer_edges_pairs.indexOf(i);
-        assign2Children(layerEdges[pos3], EDGE_DEFAULT_COLOR, true);
-      } else {
-        assign2Children( edges[selected_edges[i]], EDGE_DEFAULT_COLOR, true);
+  for (let i = 0; i < edgeObjects.length; i++)
+    edgeObjects[i].repaint();
 
-      }
-    } 
-  }
-  return true;
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
 }
 
 // Channels ====================
@@ -530,38 +399,9 @@ const toggleInterLayerEdgesRendering = () => {
 }
 
 const unselectAllEdges = () => {
-  let pos1 = pos2 = pos3 = -1;
-  for (let i = 0; i < edges.length; i++) {
-    if (edge_attributes !== "" && edgeAttributesPriority){ //check if color is overidden by user
-      pos1 = edge_attributes.SourceNode.indexOf(edgePairs[i]);
-      pos2 = edge_attributes.TargetNode.indexOf(edgePairs[i]);
-      //if node not currently selected and exists in node attributes file and color is assigned
-      if (pos1 > -1 && edge_attributes.Color !== undefined &&
-        edge_attributes.Color[pos1] !== "" && edge_attributes.Color[pos1] != " ") {
-          if (typeof (edges[i]) == "number") { //edge is inter-layer
-            pos3 = layer_edges_pairs.indexOf(i);
-            changeColor(layerEdges[pos3], edge_attributes.Color[pos3]);
-          } else
-            changeColor(edges[i], edge_attributes.Color[pos3]);
-      } else if (pos2 > -1 && edge_attributes.Color !== undefined &&
-        edge_attributes.Color[pos2] !== "" && edge_attributes.Color[pos2] != " ") { 
-          if (typeof(edges[i]) == "number"){ //edge is inter-layer
-            pos3 = layer_edges_pairs.indexOf(i);
-            changeColor(layerEdges[pos3], edge_attributes.Color[pos2]);
-          } else
-            changeColor(edges[i], edge_attributes.Color[pos2]);
-      } else {
-        if (typeof(edges[i]) == "number") {
-          pos3 = layer_edges_pairs.indexOf(i);
-          changeColor(layerEdges[pos3], EDGE_DEFAULT_COLOR);
-        } else changeColor(edges[i], EDGE_DEFAULT_COLOR);
-      }
-    } else {
-      if (typeof (edges[i]) == "number") {
-        pos3 = layer_edges_pairs.indexOf(i);
-        changeColor(layerEdges[pos3], EDGE_DEFAULT_COLOR);
-      } else
-        changeColor(edges[i], EDGE_DEFAULT_COLOR);
-    } 
-  }
+  for (let i = 0; i < edgeObjects.length; i++)
+    edgeObjects[i].deselect();
+
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
 };

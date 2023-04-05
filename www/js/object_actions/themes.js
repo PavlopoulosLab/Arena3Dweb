@@ -47,7 +47,6 @@ const applyTheme = (bgColor, floorColor,
       if (!fromInit) {
         repaintLayersFromPicker();
         attachChannelEditList();
-        setEdgeColor();
         redrawIntraLayerEdges();
         setLabelColor();
     

@@ -79,7 +79,7 @@ Shiny.addCustomMessageHandler("handler_setInterDirectionArrowSize", setInterDire
 Shiny.addCustomMessageHandler("handler_edgeWidthByWeight", redrawEdgeWidthByWeight);
 Shiny.addCustomMessageHandler("handler_setIntraLayerEdgeOpacity", setIntraLayerEdgeOpacity);
 Shiny.addCustomMessageHandler("handler_setInterLayerEdgeOpacity", setInterLayerEdgeOpacity);
-Shiny.addCustomMessageHandler("handler_edgeSelectedColorPriority", edgeSelectedColorPriority);
+Shiny.addCustomMessageHandler("handler_setEdgeSelectedColorPriority", setEdgeSelectedColorPriority);
 Shiny.addCustomMessageHandler("handler_edgeFileColorPriority", edgeFileColorPriority);
 // Channels ====================
 Shiny.addCustomMessageHandler("handler_toggleIntraChannelCurvature", toggleIntraChannelCurvature);

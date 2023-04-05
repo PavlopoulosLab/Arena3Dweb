@@ -591,7 +591,6 @@ convertSessionToJSON <- function() {
   js_nodes <- fromJSON(input$js_nodes)
   js_edge_pairs <- fromJSON(input$js_edge_pairs)
   js_label_color <- input$js_label_color
-  saveRDS(js_edge_pairs, "js_edge_pairs.RDS")
   direction_flag <- input$edgeDirectionToggle
   edgeByWeight_flag <- input$edgeWidthByWeight
   

@@ -63,20 +63,6 @@ const toDegrees = (radians) => {
   return(radians * (180 / Math.PI))
 };
 
-const changeColor = (item, color) => { // TODO probably remove after edge class
-  if (item.type) {
-    if (item.type === 'Line' || item.type === 'Mesh') {
-      item.material.color = color;
-    } else if (item.type === 'Group') {
-       item.children.forEach(child => {
-          if (child.material) {
-            child.material.color = color;
-          }
-        });
-    }
-  }
-};
-
 const assign2Children = (parent, color, getColorsFromMap) => {
   if (parent.children && parent.children.length > 0) {
     parent.children.forEach(child => {

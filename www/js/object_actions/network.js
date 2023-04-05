@@ -51,7 +51,6 @@ const resetValues = () => {
   intraChannelCurvature = 0.05,
   edgeObjects = [];
   edgeAttributesPriority = true;
-  edges = []; //canvas objects
   layerEdges = []; //canvas objects
   edgePairs = [];
   edgePairs_source = [];

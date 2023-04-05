@@ -142,7 +142,7 @@ const performDoubleClickNodeSelection = (event) => {
 
 const repaintNode = (i) => {
   if (selectedNodeColorFlag && nodeObjects[i].isSelected)
-    nodeObjects[i].setColor(selectedDefaultColor);
+    nodeObjects[i].setColor(SELECTED_DEFAULT_COLOR);
   else if (nodeObjects[i].getCluster() != "" && nodeColorPrioritySource == "cluster")
     nodeObjects[i].setColor(
       COLOR_VECTOR_280[nodeObjects[i].getCluster()], 
@@ -223,7 +223,6 @@ const selectSearchedNodes = (event) => {
 
 const unselectAllNodes = () => {
   selectAllNodes(false);
-  selected_edges = [];
 };
 
 // Handlers =====
