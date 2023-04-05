@@ -57,7 +57,6 @@ let selectedEdgeColorFlag = true,
     edgePairs_target = [], // TODO probably release after objects are created
     layer_edges_pairs = [], //canvas objects
     edgeValues = [], // TODO remove
-    edge_attributes = "", // TODO remove
     // channels
     channels = [], // TODO remove
     selectedChannels = [], // selected ones from Layout tab

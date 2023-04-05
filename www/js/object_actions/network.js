@@ -57,7 +57,6 @@ const resetValues = () => {
   edgePairs_target = [];
   layer_edges_pairs = []; //canvas objects
   edgeValues = [];
-  edge_attributes = "";
   isDirectionEnabled = false;
   updateToggleCurvatureComponentsRShiny(false);
   // channels
@@ -264,25 +263,9 @@ const initializeLayersFromJSON = (jsonLayers) => {
 };
 
 const initializeEdgesFromJSON = (jsonEdges) => {
-  edge_attributes = {
-    "SourceNode": [],
-    "TargetNode": [],
-    "EdgePair": [],
-    "Color": []
-  };
-  if (jsonEdges.channel)
-    edge_attributes.Channel = [];
-
   for (let i = 0; i < jsonEdges.src.length; i++) {
     createEdgePairs(jsonEdges.channel, i, jsonEdges.src[i], jsonEdges.trg[i],
       Number(jsonEdges.opacity[i]));
-
-    edge_attributes.SourceNode.push(jsonEdges.src[i]);
-    edge_attributes.TargetNode.push(jsonEdges.trg[i]);
-    edge_attributes.EdgePair.push(jsonEdges.src[i].concat("---").concat(jsonEdges.trg[i]));
-    edge_attributes.Color.push(jsonEdges.color[i]);
-    if (jsonEdges.channel)
-      edge_attributes.Channel.push(jsonEdges.channel[i]);
   }
   updateChannelArrays(jsonEdges.channel);
 };

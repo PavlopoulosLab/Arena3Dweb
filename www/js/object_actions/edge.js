@@ -22,13 +22,7 @@ const decideEdgeColors = (i) => {
       edgeColors.push(channelColors[edgeChannels[i][j]]);
   } else
     edgeColors = [EDGE_DEFAULT_COLOR];
-
-  if (edge_attributes !== "") { // TODO for multi-channels
-    index = edge_attributes.EdgePair.indexOf(edgePairs[i]);
-    if (checkIfAttributeColorExist(edge_attributes, index))
-      edgeColors = [edge_attributes.Color[index]];
-  }
-
+    
   return(edgeColors)
 };
 
