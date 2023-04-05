@@ -56,7 +56,7 @@ const applyTheme = (bgColor, floorColor,
         updateLayersRShiny();
         updateNodesRShiny();
         updateVRNodesRShiny();
-        updateEdgesRShiny();
+        updateEdgeColorsRShiny();
         updateLabelColorRShiny();
       }
     }

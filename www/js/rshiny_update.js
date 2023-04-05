@@ -131,46 +131,18 @@ const updateSelectedNodesRShiny = () => {
 };
 
 // Edges
-const updateEdgesRShiny = () => {
-  let js_edge_pairs = [],
-    temp_js_edge_pairs = [],
-    pos1 = (pos2 = pos3 = -1);
-    temp_channel = '';
-  j = 0;
+const updateEdgesRShiny = () => { // only called during network init once
+  updateEdgeColorsRShiny();
+  let js_edge_pairs = [];
 
-  for (let i = 0; i < edgePairs.length; i++) {
-    // color
-    if (edge_attributes !== "") {
-      pos1 = edge_attributes.SourceNode.indexOf(edgePairs[i]);
-      pos2 = edge_attributes.TargetNode.indexOf(edgePairs[i]);
-      if (pos1 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos1] !== "" && edge_attributes.Color[pos1] != " " && edge_attributes.Color[pos1] !== null) {
-        if (edge_attributes.Channel && edge_attributes.Channel[pos1]) {
-          temp_channel = edge_attributes.Channel[pos1];
-        }
-        color = edge_attributes.Color[pos1];
-      }
-      else if (pos2 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos2] !== "" && edge_attributes.Color[pos2] != " " && edge_attributes.Color[pos2] !== null) {
-         if (edge_attributes.Channel && edge_attributes.Channel[pos2]) {
-          temp_channel = edge_attributes.Channel[pos2];
-        }
-        color = edge_attributes.Color[pos2];
-      }
-      else color = EDGE_DEFAULT_COLOR;
-    } else color = EDGE_DEFAULT_COLOR;
-    // color end
-    
-    if (edgeChannels && edgeChannels[i] && edgeChannels[i].length > 0) {
-      edgeChannels[i].forEach((channel) => {
-        temp_js_edge_pairs = [edgePairs_source[i], edgePairs_target[i], edgeValues[j], channelColors[channel], channel];
-        js_edge_pairs.push(temp_js_edge_pairs);
-        j++;
-      });
-
-    } else {
-      temp_js_edge_pairs = [edgePairs_source[i], edgePairs_target[i], edgeValues[j], color, ""];
-      js_edge_pairs.push(temp_js_edge_pairs);
-      j++;
-    }
+  for (let i = 0; i < edgeObjects.length; i++) {
+    if (edgeObjects[i].channels.length > 0) {
+      for (let j = 0; j < edgeObjects[i].channels.length; j++)
+        js_edge_pairs.push([edgeObjects[i].source, edgeObjects[i].target,
+          edgeObjects[i].weights[j], edgeObjects[i].channels[j]]);
+    } else
+      js_edge_pairs.push([edgeObjects[i].source, edgeObjects[i].target,
+        edgeObjects[i].weights[0], ""]);
   }
   
   js_edge_pairs = js_edge_pairs.map(edge => {
@@ -178,11 +150,27 @@ const updateEdgesRShiny = () => {
       src: edge[0],
       trg: edge[1],
       opacity: edge[2],
-      color: edge[3],
-      channel: edge[4]
+      channel: edge[3]
     }
   });
   Shiny.setInputValue("js_edge_pairs", JSON.stringify(js_edge_pairs));
+}
+
+const updateEdgeColorsRShiny = () => {
+  let js_edge_colors = [];
+
+  for (let i = 0; i < edgeObjects.length; i++) {
+    if (edgeObjects[i].channels.length > 0) {
+      for (let j = 0; j < edgeObjects[i].channels.length; j++) // TODO decide which color to export
+        js_edge_colors.push([edgeObjects[i].importedColors[j]]);
+    } else
+      js_edge_colors.push([edgeObjects[i].importedColors[0]]);
+  }
+  
+  js_edge_colors = js_edge_colors.map(edge => {
+    return { color: edge[0] }
+  });
+  Shiny.setInputValue("js_edge_colors", JSON.stringify(js_edge_colors));
 }
 
 const updateDirectionCheckboxRShiny = (name, value) => {

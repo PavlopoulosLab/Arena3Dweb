@@ -113,7 +113,7 @@ const changeChannelColor = (el) => {
   let channel_name = el.id.substring(5);
   channelColors[channel_name] = el.value;
   redrawIntraLayerEdges();
-  updateEdgesRShiny();
+  updateEdgeColorsRShiny();
   return true;
 }
 
@@ -287,20 +287,22 @@ const setEdgeAttributes = (edgeAttributes) => {
   edgeFileColorPriority = true;
   for (let i = 0; i < edgeAttributes.length; i++) {
     pos = edgePairs.indexOf(edgeAttributes[i].EdgePair);
-    if (edgeAttributes[i].Channel) {
-      for (let j = 0; j < edgeObjects[pos].channels.length; j++) {
-        pos2 = edgeObjects[pos].channels.indexOf(edgeAttributes[i].Channel);
-        edgeObjects[pos].importedColors[pos2] = edgeAttributes[i].Color;
-      }
-    } else
-      edgeObjects[pos].importedColors[0] = edgeAttributes[i].Color;
-
-    edgeObjects[pos].repaint();
-  }
+    if (pos != -1) {
+      if (edgeAttributes[i].Channel) {
+        for (let j = 0; j < edgeObjects[pos].channels.length; j++) {
+          pos2 = edgeObjects[pos].channels.indexOf(edgeAttributes[i].Channel);
+          edgeObjects[pos].importedColors[pos2] = edgeAttributes[i].Color;
+        }
+      } else
+        edgeObjects[pos].importedColors[0] = edgeAttributes[i].Color;
   
+      edgeObjects[pos].repaint();
+    }
+  }
+
   renderInterLayerEdgesFlag = true;
   redrawIntraLayerEdges();
-  updateEdgesRShiny();
+  updateEdgeColorsRShiny();
 }
 
 // Handlers ======

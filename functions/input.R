@@ -607,15 +607,17 @@ convertSessionToJSON <- function() {
   js_layers <- fromJSON(input$js_layers)
   js_nodes <- fromJSON(input$js_nodes)
   js_edge_pairs <- fromJSON(input$js_edge_pairs)
+  js_edge_colors <- fromJSON(input$js_edge_colors)
   js_label_color <- input$js_label_color
   direction_flag <- input$edgeDirectionToggle
   edgeByWeight_flag <- input$edgeWidthByWeight
   
   scene <- c(js_scene_pan, js_scene_sphere)
+  edges <- as.data.frame(c(js_edge_pairs, js_edge_colors))
   
   exportData <- list(
     scene = scene, layers = js_layers, nodes = js_nodes,
-    edges = js_edge_pairs, universalLabelColor = js_label_color,
+    edges = edges, universalLabelColor = js_label_color,
     direction = direction_flag, edgeOpacityByWeight = edgeByWeight_flag
   )
   exportData <- toJSON(exportData, auto_unbox = T)

@@ -165,7 +165,7 @@ generateHelpDiv <- function() {
     been uploaded, links and descriptions can be accessed by right-mouse clicking on the corresponding nodes.<br />
     <span class="numbering"> 4.</span> The <i> Upload EDGE attributes </i> option allows the user to upload annotation
     data regarding the edges. Necessary columns: SourceNode, SourceLayer, TargetNode, TargetLayer and Color (in hex
-    code).<br />
+    code). Optional column: Channel<br />
     <span class="numbering"> 5.</span> The <i> Save Session </i> button allows the user to save the current view
     in JSON format (The format is described at the <i>API</i> tab). The network can be restored by importing the
     relative saved object (see
@@ -219,7 +219,7 @@ Sn	Group7	#ffd8e8
 Tn	Group7		4		
 </pre><br />
            
-           <p>Example of the Arena3D<sup>web</sup> <i>Upload EDGE attributes</i> file format.</p>
+           <p>Example of the Arena3D<sup>web</sup> <i>Upload EDGE attributes</i> file format. Optional column: Channel</p>
            <pre>SourceNode	SourceLayer	TargetNode	TargetLayer	Color
          An	        Group1	        Cn	        Group1	        #4EFBE9
          Bn	        Group1	        Fn	        Group2	        #D64EFB
