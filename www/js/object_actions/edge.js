@@ -1,4 +1,9 @@
 // Initialization ======
+const assignChannelColorsFromPalette = (palette = CHANNEL_COLORS_LIGHT) => {
+  for (let i = 0; i < channels.length; i++)
+    channelColors[channels[i]] = palette[i];
+};
+
 const createEdgeObjects = () => {
   let edgeColors, channels = [], interLayer;
 
@@ -104,19 +109,6 @@ const createLayoutChannelContainer = () => {
   return(channelContainer)
 };
 
-const toggleChannelLayoutMenu = () => {
-  let icon = document.getElementById('buttonChannelLayout'),
-    select = document.getElementById('channelsLayout');
-
-  if (icon.classList.contains('close')) {
-    icon.classList.remove("close");
-    select.classList.remove('display-none');
-  } else {
-    icon.classList.add("close");
-    select.classList.add('display-none');
-  }
-};
-
 const attachChannelEditList = () => {
   let checkbox = "",
     label = "",
@@ -130,6 +122,7 @@ const attachChannelEditList = () => {
     title.textContent = 'Channels';
     container.innerHTML = ''; // clear
     container.appendChild(title);
+
     channels.forEach(channel => {
       subcontainer = document.createElement("div");
       subcontainer.className = "channel_subcontainer";
@@ -171,27 +164,6 @@ const attachChannelEditList = () => {
     toggleChannelColorPicker();
 }
 
-const changeChannelColor = (el) => { // TODO channels colors from palette
-  console.log("vagfafa")
-  let channel_name = el.id.substring(5);
-  channelColors[channel_name] = el.value;
-  redrawIntraLayerEdges();
-  updateEdgeColorsRShiny();
-  return true;
-}
-
-const toggleChannelVisibility = (checkbox) => {
-  let channelName = checkbox.value;
-  toggleChildrenWithTag(channelName, checkbox.checked);
-};
-
-const toggleChannelColorPicker = () => {
-  if (edgeFileColorPriority)
-    document.getElementById('channelColorPicker').style.display = 'none';
-  else
-    document.getElementById('channelColorPicker').style.display = 'block';
-};
-
 // On animate ======
 const renderInterLayerEdges = () => {
   if (existsConditionToRemoveInterEdges()) {
@@ -232,65 +204,68 @@ const redrawInterLayerEdges = () => {
 };
 
 // Event Listeners ======
+const toggleChannelLayoutMenu = () => {
+  let icon = document.getElementById('buttonChannelLayout'),
+    select = document.getElementById('channelsLayout');
 
-
-
-
-const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
-  for (let i = 0; i < edgeObjects.length; i++) {
-    if (!edgeObjects[i].interLayer)
-      edgeObjects[i].redrawEdge();
-  }
-}
-
-// Channels ====================
-
-
-const toggleChildrenWithTag = (channelName, checked) => {
-  let currentEdge;
-  for (let i = 0; i < edgeObjects.length; i++) {
-    currentEdge = edgeObjects[i].THREE_Object;
-    for (let j = 0; j < currentEdge.children.length; j++) {
-      if (currentEdge.children[j].userData.tag === channelName) {
-          currentEdge.children[j].visible = !checked;
-          if (isDirectionEnabled)
-            currentEdge.children[j + 1].visible = !checked; // toggle the arrow
-          channelVisibility[channelName] = !checked;
-          break; // only one channel allowed per edge
-      }
-    }
+  if (icon.classList.contains('close')) {
+    icon.classList.remove("close");
+    select.classList.remove('display-none');
+  } else {
+    icon.classList.add("close");
+    select.classList.add('display-none');
   }
 };
 
-const getChannelColorsFromPalette = (palette) => {
-  for (let i = 0; i < channels.length; i++)
-    channelColors[channels[i]] = palette[i];
-};
-
-const setEdgeAttributes = (edgeAttributes) => {
-  let pos, pos2;
-
-  document.getElementById("edgeFileColorPriority").checked = true;
-  edgeFileColorPriority = true;
-  for (let i = 0; i < edgeAttributes.length; i++) {
-    pos = edgePairs.indexOf(edgeAttributes[i].EdgePair);
-    if (pos != -1) {
-      if (edgeAttributes[i].Channel) {
-        for (let j = 0; j < edgeObjects[pos].channels.length; j++) {
-          pos2 = edgeObjects[pos].channels.indexOf(edgeAttributes[i].Channel);
-          edgeObjects[pos].importedColors[pos2] = edgeAttributes[i].Color;
-        }
-      } else
-        edgeObjects[pos].importedColors[0] = edgeAttributes[i].Color;
-  
-      edgeObjects[pos].repaint();
-    }
-  }
-
-  renderInterLayerEdgesFlag = true;
+// TODO channels colors from palette
+const changeChannelColor = (el) => {
+  console.log("vagfafa")
+  let channel_name = el.id.substring(5);
+  channelColors[channel_name] = el.value;
   redrawIntraLayerEdges();
   updateEdgeColorsRShiny();
 }
+
+const redrawIntraLayerEdges = () => {
+  for (let i = 0; i < edgeObjects.length; i++)
+    if (!edgeObjects[i].interLayer)
+      edgeObjects[i].redrawEdge();
+};
+
+// TODO refactor
+const toggleChannelVisibility = (checkbox) => {
+  let channelName = checkbox.value,
+    checked = checkbox.checked,
+    currentEdge;
+
+    for (let i = 0; i < edgeObjects.length; i++) {
+      currentEdge = edgeObjects[i].THREE_Object;
+      for (let j = 0; j < currentEdge.children.length; j++) {
+        if (currentEdge.children[j].userData.tag === channelName) {
+            currentEdge.children[j].visible = !checked;
+            if (isDirectionEnabled)
+              currentEdge.children[j + 1].visible = !checked; // toggle the arrow
+            channelVisibility[channelName] = !checked;
+            break; // only one channel allowed per edge
+        }
+      }
+    }
+}
+
+const toggleChannelColorPicker = () => {
+  if (edgeFileColorPriority)
+    document.getElementById('channelColorPicker').style.display = 'none';
+  else
+    document.getElementById('channelColorPicker').style.display = 'block';
+};
+
+const unselectAllEdges = () => {
+  for (let i = 0; i < edgeObjects.length; i++)
+    edgeObjects[i].deselect();
+
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
+};
 
 // Handlers ======
 const redrawEdgeWidthByWeight = (message) => { // true or false
@@ -344,34 +319,50 @@ const setEdgeSelectedColorPriority = (message) => { // true / false
   redrawIntraLayerEdges();
 }
 
-// Channels ====================
 const toggleIntraChannelCurvature = (message) => {
   intraChannelCurvature = message;
   redrawIntraLayerEdges();
-  return true;
-}
+};
 
 const toggleInterChannelCurvature = (message) => {
   interChannelCurvature = message;
   renderInterLayerEdgesFlag = true;
 };
 
-const toggleInterLayerEdgesRendering = () => {
-  let interLayerEdgesRenderPauseButton = document.getElementById('interLayerEdgesRenderPauseButton');
-  if (interLayerEdgesRenderPauseFlag) {
-    interLayerEdgesRenderPauseFlag = false;
-    renderInterLayerEdgesFlag = true;
-    interLayerEdgesRenderPauseButton.innerText = "Stop:Render Inter-Layer Edges";
-  } else {
-    interLayerEdgesRenderPauseFlag = true;
-    interLayerEdgesRenderPauseButton.innerText = "Render Inter-Layer Edges";
-  }
-}
+const setEdgeAttributes = (edgeAttributes) => {
+  let pos, pos2;
 
-const unselectAllEdges = () => {
-  for (let i = 0; i < edgeObjects.length; i++)
-    edgeObjects[i].deselect();
+  document.getElementById("edgeFileColorPriority").checked = true;
+  edgeFileColorPriority = true;
+  for (let i = 0; i < edgeAttributes.length; i++) {
+    pos = edgePairs.indexOf(edgeAttributes[i].EdgePair);
+    if (pos != -1) {
+      if (edgeAttributes[i].Channel) {
+        for (let j = 0; j < edgeObjects[pos].channels.length; j++) {
+          pos2 = edgeObjects[pos].channels.indexOf(edgeAttributes[i].Channel);
+          edgeObjects[pos].importedColors[pos2] = edgeAttributes[i].Color;
+        }
+      } else
+        edgeObjects[pos].importedColors[0] = edgeAttributes[i].Color;
+  
+      edgeObjects[pos].repaint();
+    }
+  }
 
   renderInterLayerEdgesFlag = true;
   redrawIntraLayerEdges();
+  updateEdgeColorsRShiny();
+}
+
+// Canvas Controls ======
+const toggleInterLayerEdgesRendering = () => {
+  let interLayerEdgesRenderPauseButton = document.getElementById('interLayerEdgesRenderPauseButton');
+
+  interLayerEdgesRenderPauseFlag = !interLayerEdgesRenderPauseFlag;
+  if (interLayerEdgesRenderPauseFlag) {
+    interLayerEdgesRenderPauseButton.innerText = "Render Inter-Layer Edges";
+  } else {
+    interLayerEdgesRenderPauseButton.innerText = "Stop:Render Inter-Layer Edges";
+    renderInterLayerEdgesFlag = true;
+  }
 };

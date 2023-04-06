@@ -166,7 +166,7 @@ const updateChannelArrays = (channelArray) => {
     for (let i = 0; i < channels.length; i++)
       channelVisibility[channels[i]] = true;
 
-    getChannelColorsFromPalette(CHANNEL_COLORS_LIGHT);
+    assignChannelColorsFromPalette();
 
     selectedChannels = channels.slice(); // copy by value, and not by reference
     Shiny.setInputValue("js_selectedChannels", selectedChannels); // R monitors selected Channels

@@ -41,7 +41,7 @@ const applyTheme = (bgColor, floorColor,
       setRendererColor(bgColor);
       document.getElementById("floor_color").value = floorColor;
       EDGE_DEFAULT_COLOR = edgeColor; // global for inter-layer edges
-      getChannelColorsFromPalette(channel_colors_theme);
+      assignChannelColorsFromPalette(channel_colors_theme);
       globalLabelColor = labelColor;
 
       if (!fromInit) {
