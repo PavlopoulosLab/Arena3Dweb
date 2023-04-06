@@ -47,8 +47,6 @@ const applyTheme = (bgColor, floorColor,
       if (!fromInit) {
         repaintLayersFromPicker();
         attachChannelEditList(); // for new channel colors
-        document.getElementById("edgeFileColorPriority").checked = false;
-        edgeFileColorPriority = false;
         redrawIntraLayerEdges();
         setLabelColor();
     

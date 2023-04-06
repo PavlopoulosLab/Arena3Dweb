@@ -75,26 +75,26 @@ class Edge {
             this.toggleArrow(points, color);
 }
 
-    decideColor() { // TODO channels here?
+    decideColor(i = 0, forExport = false) {
         let color = EDGE_DEFAULT_COLOR;
-        if (this.isSelected && selectedEdgeColorFlag)
+
+        if (!forExport && this.isSelected && selectedEdgeColorFlag)
             color = SELECTED_DEFAULT_COLOR;
         else if (edgeFileColorPriority)
-            color = this.importedColors[0];
+            color = this.importedColors[i];
+        else if (this.channels.length > 0) 
+            color = channelColors[this.channels[i]];
+
         return(color)
     }
 
-    decideOpacity() {
+    decideOpacity(i = 0) {
         let opacity;
 
         if (edgeWidthByWeight)
-            opacity = this.weights[0];
-        else {
-            if (this.interLayer)
-                opacity = interLayerEdgeOpacity;
-            else
-                opacity = intraLayerEdgeOpacity;
-        }
+            opacity = this.weights[i];
+        else 
+            opacity = this.interLayer ? interLayerEdgeOpacity : intraLayerEdgeOpacity;
 
         return(opacity)
     }
@@ -103,7 +103,8 @@ class Edge {
     createChannels(points) {
         let THREE_curveGroup = new THREE.Group(),
             verticalPushConstant, verticalPush, pushForce = 0, pushForceFlag = false, direction = 1,
-            opacity, curveFactor = this.interLayer ? interChannelCurvature : intraChannelCurvature;
+            curveFactor = this.interLayer ? interChannelCurvature : intraChannelCurvature,
+            color, opacity;
 
         verticalPushConstant = points[0].distanceTo(points[1]) * curveFactor;
         if (this.channels.length % 2 == 0) // skip straight line
@@ -117,13 +118,11 @@ class Edge {
             pushForceFlag = !pushForceFlag; // flipping flag to increase pushForce next round
             verticalPush = direction * (verticalPushConstant * pushForce);
             
-            if (edgeWidthByWeight)
-                opacity = this.weights[i];
-            else
-                opacity = this.interLayer ? interLayerEdgeOpacity : intraLayerEdgeOpacity;
+            color = this.decideColor(i);
+            opacity = this.decideOpacity(i);
 
             THREE_curveGroup = this.createCurve(THREE_curveGroup, points[0], points[1],
-                verticalPush, this.colors[i], this.channels[i], opacity);
+                verticalPush, color, this.channels[i], opacity);
         }
         
         this.THREE_Object = THREE_curveGroup;

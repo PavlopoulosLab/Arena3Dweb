@@ -128,7 +128,7 @@ const attachChannelEditList = () => {
       colorPicker = document.createElement('input');
       colorPicker.type = "color";
       colorPicker.className = "colorPicker channel_colorPicker";
-      colorPicker.name = "color".concat(channels[i]);
+      colorPicker.name = channels[i];
       colorPicker.id = "color".concat(channels[i]);
       colorPicker.value = channelColors[channels[i]];
       colorPicker.setAttribute('onchange', "changeChannelColor(this)");
@@ -210,11 +210,11 @@ const toggleChannelLayoutMenu = () => {
   }
 };
 
-// TODO channels colors from palette
-const changeChannelColor = (el) => {
-  console.log("vagfafa")
-  let channel_name = el.id.substring(5);
-  channelColors[channel_name] = el.value;
+const changeChannelColor = (pickerElement) => {
+  let channel_name = pickerElement.name;
+  channelColors[channel_name] = pickerElement.value;
+
+  renderInterLayerEdgesFlag = true;
   redrawIntraLayerEdges();
   updateEdgeColorsRShiny();
 }
@@ -250,6 +250,8 @@ const toggleChannelColorPicker = () => {
     document.getElementById('channelColorPicker').style.display = 'none';
   else
     document.getElementById('channelColorPicker').style.display = 'block';
+
+  updateEdgeColorsRShiny();
 };
 
 const unselectAllEdges = () => {
@@ -297,10 +299,12 @@ const setInterDirectionArrowSize = (message) => {
   renderInterLayerEdgesFlag = true;
 };
 
-const setEdgeFileColorPriority = (message) => {
-  edgeFileColorPriority = message; //message = true or false
-  toggleChannelColorPicker();
+const setEdgeFileColorPriority = (message) => { // true or false
+  edgeFileColorPriority = message;
+
+  renderInterLayerEdgesFlag = true;
   redrawIntraLayerEdges();
+  toggleChannelColorPicker();
 }
 
 const setEdgeSelectedColorPriority = (message) => { // true / false
