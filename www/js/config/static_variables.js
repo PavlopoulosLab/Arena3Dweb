@@ -39,7 +39,9 @@ let nodeIntervalTimeout = "",
     nodeNames = []; // to init upload network nodes
 
 // edges
-let selectedEdgeColorFlag = true,
+let renderInterLayerEdgesFlag = false,
+    waitEdgeRenderFlag = true,
+    selectedEdgeColorFlag = true,
     edgeFileColorPriority = true,
     isDirectionEnabled = false,
     edgeWidthByWeight = true,
@@ -50,19 +52,16 @@ let selectedEdgeColorFlag = true,
     interChannelCurvature = 0.05,
     intraChannelCurvature = 0.05,
     draw_inter_edges_flag = true,
-    edgeValues = [], // to init upload/import edge weights
+    edgePairs = [], // keeping for faster recursive node/edge selections
     edgePairs_source = [], // to init upload/import edge source nodeLayer names
     edgePairs_target = [], // to init upload/import edge target nodeLayer names
-    edgePairs = [], // keeping for faster recursive node/edge selections
+    edgeValues = [], // to init upload/import edge weights
     // channels
-    channels = [], // TODO remove
+    channels = [],
     selectedChannels = [], // selected ones from Layout tab
     channelColors = {},
     channelVisibility = {},
-    edgeChannels = [], // TODO decide keep/remove
-    layer_edges_pairs_channels = [], // TODO same as above
-    renderInterLayerEdgesFlag = false,
-    waitEdgeRenderFlag = true;
+    edgeChannels = []; // to init upload/import edge channels
 
 // others
 let interLayerEdgesRenderPauseFlag = false,

@@ -13,9 +13,8 @@ const createEdgeObjects = () => {
   }
 
   // releasing ram
-  edgeValues = undefined; 
-  edgePairs_source = undefined;
-  edgePairs_target = undefined;
+  edgeValues = edgePairs_source = edgePairs_target = 
+    edgeChannels = undefined;
 }
 
 const decideEdgeColors = (i) => {
@@ -266,19 +265,6 @@ const getChannelColorsFromPalette = (palette) => {
   for (let i = 0; i < channels.length; i++)
     channelColors[channels[i]] = palette[i];
 };
-
-// TODO rename to assignEdgeColor
-const assignColor = (checkChannels, i, channels, tag, color, edgeNoChannel) => {
-  if (checkChannels && checkChannels[i]) { //if this is a file with channels
-       channels.forEach(channel => {
-          if (channel.userData.tag === tag) {
-            channel.material.color = new THREE.Color(color);
-          }
-        });
-      } else { //if this is not a file with channels
-        edgeNoChannel.material.color = new THREE.Color(color);
-      }
-}
 
 const setEdgeAttributes = (edgeAttributes) => {
   let pos, pos2;
