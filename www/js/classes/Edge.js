@@ -71,7 +71,7 @@ class Edge {
 
         this.THREE_Object = new THREE.Line(geometry, material);
 
-        if (isDirectionEnabled)
+        if (isDirectionEnabled && (opacity !== 0))
             this.toggleArrow(points, color);
 }
 
@@ -103,7 +103,7 @@ class Edge {
     createChannels(points) {
         let THREE_curveGroup = new THREE.Group(),
             verticalPushConstant, verticalPush, pushForce = 0, pushForceFlag = false, direction = 1,
-            curveFactor = this.interLayer ? interChannelCurvature : intraChannelCurvature;
+            opacity, curveFactor = this.interLayer ? interChannelCurvature : intraChannelCurvature;
 
         verticalPushConstant = points[0].distanceTo(points[1]) * curveFactor;
         if (this.channels.length % 2 == 0) // skip straight line
@@ -117,14 +117,19 @@ class Edge {
             pushForceFlag = !pushForceFlag; // flipping flag to increase pushForce next round
             verticalPush = direction * (verticalPushConstant * pushForce);
             
+            if (edgeWidthByWeight)
+                opacity = this.weights[i];
+            else
+                opacity = this.interLayer ? interLayerEdgeOpacity : intraLayerEdgeOpacity;
+
             THREE_curveGroup = this.createCurve(THREE_curveGroup, points[0], points[1],
-                verticalPush, this.colors[i], this.channels[i], this.weights[i]);
+                verticalPush, this.colors[i], this.channels[i], opacity);
         }
         
         this.THREE_Object = THREE_curveGroup;
     }
 
-    createCurve(curveGroup, p1, p2, verticalPush, color, tag, weight) {
+    createCurve(curveGroup, p1, p2, verticalPush, color, tag, opacity) {
         let p3 = p1.clone();
         let p4 = p2.clone();
         let curve, my_curve;
@@ -142,21 +147,14 @@ class Edge {
         let curve_points = curve.getPoints(points);
         
         let curve_geometry = new THREE.BufferGeometry().setFromPoints(curve_points);
-        let curve_material;
+        let curve_material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: opacity });
         
-        if (edgeWidthByWeight)
-            curve_material = new THREE.LineBasicMaterial( { color: color, alphaTest: 0.05, transparent: true, opacity: weight } );
-        else {
-            let curve_opacity = this.interLayer ? interLayerEdgeOpacity : intraLayerEdgeOpacity;
-            curve_material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05,  transparent: true, opacity: curve_opacity});
-        }
-        
-        my_curve = new THREE.Line( curve_geometry, curve_material)
+        my_curve = new THREE.Line(curve_geometry, curve_material)
         my_curve.userData.tag = tag;
         my_curve.visible = channelVisibility[my_curve.userData.tag];
         curveGroup.add(my_curve)
 
-        if (isDirectionEnabled)
+        if (isDirectionEnabled && (opacity !== 0))
             curveGroup = this.toggleCurvedArrow(curveGroup, curve_points, points, color, tag) // TODO fix arrow directions
             
         return curveGroup;
@@ -242,13 +240,5 @@ class Edge {
     deselect = () => {
         this.isSelected = false;
         this.repaint();
-    }
-
-    // R UI controls ======
-    setOpacity(value) {
-        if (this.THREE_Object.children.length > 0)
-            this.THREE_Object.children[0].material.opacity = value;
-        else
-            this.THREE_Object.material.opacity = value;
     }
 }

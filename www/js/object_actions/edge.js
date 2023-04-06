@@ -41,6 +41,7 @@ const decideEdgeLayerType = (i) => {
   return(interLayer)
 };
 
+// Components attached during initialization
 const attachChannelLayoutList = () => {
   let container = document.getElementById('channelColorLayoutDiv'),
     titleContainer, channelContainer;
@@ -124,7 +125,6 @@ const attachChannelEditList = () => {
     subcontainer = "",
     title = "",
     container = document.getElementById('channelColorPicker');
-    br = document.createElement('br');
 
     title = document.createElement("h4");
     title.textContent = 'Channels';
@@ -163,16 +163,30 @@ const attachChannelEditList = () => {
       subcontainer.appendChild(colorPicker);
       subcontainer.appendChild(checkbox);
       subcontainer.appendChild(label2);
-      // subcontainer.appendChild(br);
 
       container.appendChild(subcontainer);
       subcontainer = '';
     });
+
   if (edgeFileColorPriority)
     document.getElementById('channelColorPicker').style.display = 'none';
   else
     document.getElementById('channelColorPicker').style.display = 'block';
 }
+
+const changeChannelColor = (el) => { // TODO channels colors from palette
+  console.log("vagfafa")
+  let channel_name = el.id.substring(5);
+  channelColors[channel_name] = el.value;
+  redrawIntraLayerEdges();
+  updateEdgeColorsRShiny();
+  return true;
+}
+
+const toggleChannelVisibility = (checkbox) => {
+  let channelName = checkbox.value;
+  toggleChildrenWithTag(channelName, checkbox.checked);
+};
 
 // On animate ======
 const renderInterLayerEdges = () => {
@@ -226,19 +240,7 @@ const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
 }
 
 // Channels ====================
-const changeChannelColor = (el) => { // TODO channels colors from palette
-  console.log("vagfafa")
-  let channel_name = el.id.substring(5);
-  channelColors[channel_name] = el.value;
-  redrawIntraLayerEdges();
-  updateEdgeColorsRShiny();
-  return true;
-}
 
-const toggleChannelVisibility = (checkbox) => {
-  let channelName = checkbox.value;
-  toggleChildrenWithTag(channelName, checkbox.checked);
-};
 
 const toggleChildrenWithTag = (channelName, checked) => {
   let currentEdge;
@@ -295,17 +297,11 @@ const redrawEdgeWidthByWeight = (message) => { // true or false
 
 const setIntraLayerEdgeOpacity = (message) => {
   intraLayerEdgeOpacity = message;
-  for (let i = 0; i < edgeObjects.length; i++)
-    if (!edgeObjects[i].interLayer)
-      edgeObjects[i].setOpacity(intraLayerEdgeOpacity);
+  redrawIntraLayerEdges();
 };
 
 const setInterLayerEdgeOpacity = (message) => {
   interLayerEdgeOpacity = message;
-  for (let i = 0; i < edgeObjects.length; i++)
-    if (edgeObjects[i].interLayer)
-      edgeObjects[i].setOpacity(interLayerEdgeOpacity);
-
   renderInterLayerEdgesFlag = true;
 };
 
