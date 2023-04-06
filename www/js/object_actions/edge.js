@@ -58,7 +58,6 @@ const existsConditionToRemoveInterEdges = () => {
 };
 
 const removeInterLayerEdges = () => {
-  console.log("removeInterLayerEdges")
   for (let i = 0; i < edgeObjects.length; i++)
     if (edgeObjects[i].interLayer)
       scene.remove(edgeObjects[i].THREE_Object);
@@ -67,15 +66,13 @@ const removeInterLayerEdges = () => {
 };
 
 const redrawInterLayerEdges = () => {
-  console.log("redrawInterLayerEdges");
-  for (let i = 0; i < edgeObjects.length; i++) {
+  for (let i = 0; i < edgeObjects.length; i++)
     if (edgeObjects[i].interLayer)
       edgeObjects[i].redrawEdge();
-  }
 
   interEdgesRemoved = false;
-
-  if (waitEdgeRenderFlag) { // locked flags for best edge redrawing
+  // locked flags for best edge redrawing below
+  if (waitEdgeRenderFlag) {
     waitEdgeRenderFlag = false;
   } else {
     renderInterLayerEdgesFlag = false;
@@ -83,17 +80,12 @@ const redrawInterLayerEdges = () => {
   }
 };
 
+// Event Listeners ======
 
+// TODO continue from here
 
-
-const redrawAllEdges = () => {
-  console.log("redrawAllEdges");
-  for (let i = 0; i < edgeObjects.length; i++)
-    edgeObjects[i].redrawEdge();
-}
 
 const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
-  console.log("redrawIntraLayerEdges");
   for (let i = 0; i < edgeObjects.length; i++) {
     if (!edgeObjects[i].interLayer)
       edgeObjects[i].redrawEdge();
@@ -312,6 +304,11 @@ const toggleDirection = (message) => {
   isDirectionEnabled = message;
   redrawAllEdges();
 };
+
+const redrawAllEdges = () => {
+  for (let i = 0; i < edgeObjects.length; i++)
+    edgeObjects[i].redrawEdge();
+}
 
 const setIntraDirectionArrowSize = (message) => {
   intraDirectionArrowSize = message;
