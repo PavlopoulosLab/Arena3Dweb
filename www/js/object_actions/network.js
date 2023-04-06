@@ -141,8 +141,7 @@ const createEdgePairs = (networkChannel, i, sourceNodeLayerName, targetNodeLayer
       edgePairs_source.push(sourceNodeLayerName);
       edgePairs_target.push(targetNodeLayerName);
       edgeValues.push([networkWeight]);
-      if (color !== "")
-        edgeColors.push([color]);
+      edgeColors.push([color]);
     }
 };
 

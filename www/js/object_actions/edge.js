@@ -22,7 +22,7 @@ const createEdgeObjects = () => {
     edgeChannels = edgeColors = undefined;
 };
 
-const decideEdgeColors = (i) => { // TODO test
+const decideEdgeColors = (i) => {
   let tempEdgeColors = [EDGE_DEFAULT_COLOR];
 
   if (edgeChannels && edgeChannels[i]) {
