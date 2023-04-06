@@ -110,59 +110,52 @@ const createLayoutChannelContainer = () => {
 };
 
 const attachChannelEditList = () => {
-  let checkbox = "",
-    label = "",
-    label2 = "",
-    colorPicker = "",
-    subcontainer = "",
-    title = "",
-    container = document.getElementById('channelColorPicker');
+  let container = document.getElementById('channelColorPicker'),
+    title = document.createElement("h4"),
+    row, label, colorPicker, checkbox, hideLabel;
 
-    title = document.createElement("h4");
-    title.textContent = 'Channels';
     container.innerHTML = ''; // clear
+    title.textContent = 'Channels';
     container.appendChild(title);
-
-    channels.forEach(channel => {
-      subcontainer = document.createElement("div");
-      subcontainer.className = "channel_subcontainer";
+    for (let i = 0; i < channels.length; i++) {
+      row = document.createElement("div");
+      row.className = "channel_subcontainer";
 
       label = document.createElement('h5');
       label.className = "channelLabel";
-      label.textContent = channel.concat(":");
+      label.textContent = channels[i].concat(":");
 
       colorPicker = document.createElement('input');
       colorPicker.type = "color";
       colorPicker.className = "colorPicker channel_colorPicker";
-      colorPicker.name = "color".concat(channel);
-      colorPicker.id = "color".concat(channel);
-      colorPicker.value = channelColors[channel];
+      colorPicker.name = "color".concat(channels[i]);
+      colorPicker.id = "color".concat(channels[i]);
+      colorPicker.value = channelColors[channels[i]];
       colorPicker.setAttribute('onchange', "changeChannelColor(this)");
       
 
       checkbox = document.createElement('input'); 
       checkbox.type = "checkbox";
-      checkbox.name = "checkbox".concat(channel);
+      checkbox.name = "checkbox".concat(channels[i]);
       checkbox.className = "checkbox_check channel_checkbox";
-      checkbox.id = "checkbox".concat(channel);
-      checkbox.value = channel;
+      checkbox.id = "checkbox".concat(channels[i]);
+      checkbox.value = channels[i];
       checkbox.setAttribute('onclick', "toggleChannelVisibility(this)");
 
-      label2 = document.createElement('label');
-      label2.className = "channelCheckboxLabel";
-      label2.textContent = "Hide";
+      hideLabel = document.createElement('label');
+      hideLabel.className = "channelCheckboxLabel";
+      hideLabel.textContent = "Hide";
     
-      subcontainer.appendChild(label);
-      subcontainer.appendChild(colorPicker);
-      subcontainer.appendChild(checkbox);
-      subcontainer.appendChild(label2);
+      row.appendChild(label);
+      row.appendChild(colorPicker);
+      row.appendChild(checkbox);
+      row.appendChild(hideLabel);
 
-      container.appendChild(subcontainer);
-      subcontainer = '';
-    });
-
+      container.appendChild(row);
+    }
+    
     toggleChannelColorPicker();
-}
+};
 
 // On animate ======
 const renderInterLayerEdges = () => {
