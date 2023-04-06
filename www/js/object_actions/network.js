@@ -58,6 +58,7 @@ const resetValues = () => {
   edgePairs_source = [];
   edgePairs_target = [];
   edgeValues = [];
+  edgeColors = [];
   isDirectionEnabled = false;
   updateToggleCurvatureComponentsRShiny(false);
   // channels
@@ -130,32 +131,36 @@ const updateNodeArrays = (nodeLayerName, nodeName, layerName) => {
 };
 
 const createEdgePairs = (networkChannel, i, sourceNodeLayerName, targetNodeLayerName,
-  networkWeight) => {
+  networkWeight, color = "") => {
     let edgePair = sourceNodeLayerName.concat("---").concat(targetNodeLayerName);
     if (networkChannel)
       updateEdgeChannelArrays(networkChannel[i], edgePair,
-        sourceNodeLayerName, targetNodeLayerName, networkWeight);
+        sourceNodeLayerName, targetNodeLayerName, networkWeight, color);
     else {
       edgePairs.push(edgePair);
       edgePairs_source.push(sourceNodeLayerName);
       edgePairs_target.push(targetNodeLayerName);
       edgeValues.push([networkWeight]);
+      if (color !== "")
+        edgeColors.push([color]);
     }
 };
 
 const updateEdgeChannelArrays = (channelName, edgePair,
-  sourceNodeLayerName, targetNodeLayerName, networkWeight) => {
+  sourceNodeLayerName, targetNodeLayerName, networkWeight, color) => {
     let position;
     if (edgePairs.includes(edgePair) ) {
       position = edgePairs.indexOf(edgePair);
       edgeChannels[position].push(channelName);
       edgeValues[position].push(networkWeight);
+      edgeColors[position].push(color);
     } else {
       edgePairs.push(edgePair);
       edgePairs_source.push(sourceNodeLayerName);
       edgePairs_target.push(targetNodeLayerName);
       edgeChannels.push([channelName]);
       edgeValues.push([networkWeight]);
+      edgeColors.push([color]);
     }
 };
 
@@ -265,7 +270,7 @@ const initializeLayersFromJSON = (jsonLayers) => {
 const initializeEdgesFromJSON = (jsonEdges) => {
   for (let i = 0; i < jsonEdges.src.length; i++) {
     createEdgePairs(jsonEdges.channel, i, jsonEdges.src[i], jsonEdges.trg[i],
-      Number(jsonEdges.opacity[i]));
+      Number(jsonEdges.opacity[i]), jsonEdges.color[i]);
   }
   updateChannelArrays(jsonEdges.channel);
 };

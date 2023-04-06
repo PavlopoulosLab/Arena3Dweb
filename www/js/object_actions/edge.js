@@ -5,34 +5,38 @@ const assignChannelColorsFromPalette = (palette = CHANNEL_COLORS_LIGHT) => {
 };
 
 const createEdgeObjects = () => {
-  let edgeColors, channels = [], interLayer;
+  let tempEdgeColors, channels = [], interLayer;
 
   for (let i = 0; i < edgePairs.length; i++) {
-    edgeColors = decideEdgeColors(i);
+    tempEdgeColors = decideEdgeColors(i);
     if (edgeChannels[i])
       channels = edgeChannels[i];
     interLayer = decideEdgeLayerType(i);
     
     edgeObjects.push(new Edge({id: i, source: edgePairs_source[i], target: edgePairs_target[i],
-      colors: edgeColors, weights: edgeValues[i], channels: channels, interLayer: interLayer}));
+      colors: tempEdgeColors, weights: edgeValues[i], channels: channels, interLayer: interLayer}));
   }
 
   // releasing ram
   edgeValues = edgePairs_source = edgePairs_target = 
-    edgeChannels = undefined;
+    edgeChannels = edgeColors = undefined;
 };
 
-const decideEdgeColors = (i) => {
-  let edgeColors;
+const decideEdgeColors = (i) => { // TODO test
+  let tempEdgeColors = [EDGE_DEFAULT_COLOR];
 
   if (edgeChannels && edgeChannels[i]) {
-    edgeColors = [];
-    for (let j = 0; j < edgeChannels[i].length; j++)
-      edgeColors.push(channelColors[edgeChannels[i][j]]);
-  } else
-    edgeColors = [EDGE_DEFAULT_COLOR];
+      tempEdgeColors = [];
+    for (let j = 0; j < edgeChannels[i].length; j++) {
+      if (edgeColors[i][j] !== "")
+        tempEdgeColors.push(edgeColors[i][j]);
+      else
+        tempEdgeColors.push(channelColors[edgeChannels[i][j]]);
+    }
+  } else if (edgeColors[i] !== "")
+    tempEdgeColors = edgeColors[i];
     
-  return(edgeColors)
+  return(tempEdgeColors)
 };
 
 const decideEdgeLayerType = (i) => {

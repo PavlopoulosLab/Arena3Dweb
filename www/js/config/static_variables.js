@@ -56,6 +56,7 @@ let renderInterLayerEdgesFlag = false,
     edgePairs_source = [], // to init upload/import edge source nodeLayer names
     edgePairs_target = [], // to init upload/import edge target nodeLayer names
     edgeValues = [], // to init upload/import edge weights
+    edgeColors = [], // to init upload/import edge weights
     // channels
     channels = [],
     selectedChannels = [], // selected ones from Layout tab
