@@ -11,6 +11,7 @@ class Edge {
             this.id = id;
             this.source = source;
             this.target = target;
+            this.name = this.source.concat("---").concat(this.target);
             this.colors = colors;
             this.importedColors = colors;
             this.weights = weights;

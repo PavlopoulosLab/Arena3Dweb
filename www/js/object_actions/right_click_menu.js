@@ -4,9 +4,9 @@
 //@return int array of neighbor IDs
 const interLayerNeighbors = (node) => {
   let index1, index2, neighbors = [];
-  for (let i = 0; i < edgePairs.length; i++) {
-    index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
-    index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
+  for (let i = 0; i < edgeObjects.length; i++) {
+    index1 = nodeLayerNames.indexOf(edgeObjects[i].source);
+    index2 = nodeLayerNames.indexOf(edgeObjects[i].target);
     if (node == index1)
       neighbors.push(index2);
     else if (node == index2)
@@ -15,18 +15,14 @@ const interLayerNeighbors = (node) => {
   return(neighbors)
 }
 
-//This function returns the inter-layer edge connecting two nodes if exists, else null
-//iterates global variable edgePairs (String Array, separating node couples by ---)
-//@param node1 (integer): first node
-//@param node2 (integer): second node
-//@return: String of inter-layer edge pair (as found in the edgePairs array) or null if not found
+// This function returns the inter-layer edge connecting two nodes if exists, else null
 const getInterLayerEdge = (node1, node2) => {
   let index1, index2;
-  for (let i = 0; i < edgePairs.length; i++) {
-    index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
-    index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
+  for (let i = 0; i < edgeObjects.length; i++) {
+    index1 = nodeLayerNames.indexOf(edgeObjects[i].source);
+    index2 = nodeLayerNames.indexOf(edgeObjects[i].target);
     if ((node1 == index1 && node2 == index2) || (node1 == index2 && node2 == index1))
-      return edgePairs[i];
+      return edgeObjects[i].name;
   }
   return null;
 }
@@ -39,6 +35,7 @@ const getInterLayerEdge = (node1, node2) => {
 //@return void
 const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
   let neighbors, toCheckLayer, interLayerEdge, pos;
+  
   if (!exists(downstreamCheckedNodes, currentNode)){
     downstreamCheckedNodes.push(currentNode);
     //selecting and painting node
@@ -71,9 +68,9 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
 
 const executeCommand = (item) => {
   if (item.options[item.selectedIndex].text == "Select Neighbors"){ //select neighbors
-    for (let i = 0; i < edgePairs.length; i++){ //random x,y,z
-      index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
-      index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
+    for (let i = 0; i < edgeObjects.length; i++){ //random x,y,z
+      index1 = nodeLayerNames.indexOf(edgeObjects[i].source);
+      index2 = nodeLayerNames.indexOf(edgeObjects[i].target);
       if (index1 == item.value) {
         if (!nodeObjects[index2].isSelected) {
           nodeObjects[index2].isSelected = true;
@@ -102,9 +99,9 @@ const executeCommand = (item) => {
         startingLayer = nodeGroups[nodeLayerNames[currentNode]];
     startLoader();
     while (!flag) {
-      for (let i = 0; i < edgePairs.length; i++){
-        index1 = nodeLayerNames.indexOf(edgePairs_source[i]);
-        index2 = nodeLayerNames.indexOf(edgePairs_target[i]);
+      for (let i = 0; i < edgeObjects.length; i++){
+        index1 = nodeLayerNames.indexOf(edgeObjects[i].source);
+        index2 = nodeLayerNames.indexOf(edgeObjects[i].target);
         if (index1 == currentNode && nodeGroups[nodeLayerNames[index2]] != startingLayer && nodeGroups[nodeLayerNames[index2]] != nodeGroups[nodeLayerNames[index1]] && !(exists(tempSelectedNodes, index2))){ //path must not contain other nodes in starting layer or its own layer
           tempSelectedNodes.push(index2);
           // code from Select neighbors above

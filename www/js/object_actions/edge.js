@@ -11,10 +11,15 @@ const createEdgeObjects = () => {
     edgeObjects.push(new Edge({id: i, source: edgePairs_source[i], target: edgePairs_target[i],
       colors: edgeColors, weights: edgeValues[i], channels: channels, interLayer: interLayer}));
   }
+
+  // releasing ram
+  edgeValues = undefined; 
+  edgePairs_source = undefined;
+  edgePairs_target = undefined;
 }
 
 const decideEdgeColors = (i) => {
-  let edgeColors, index;
+  let edgeColors;
 
   if (edgeChannels && edgeChannels[i]) {
     edgeColors = [];
@@ -277,6 +282,7 @@ const assignColor = (checkChannels, i, channels, tag, color, edgeNoChannel) => {
 
 const setEdgeAttributes = (edgeAttributes) => {
   let pos, pos2;
+
   document.getElementById("edgeFileColorPriority").checked = true;
   edgeFileColorPriority = true;
   for (let i = 0; i < edgeAttributes.length; i++) {

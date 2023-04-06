@@ -50,13 +50,10 @@ let selectedEdgeColorFlag = true,
     interChannelCurvature = 0.05,
     intraChannelCurvature = 0.05,
     draw_inter_edges_flag = true,
-    edges = [], //canvas objects, TODO remove
-    layerEdges = [], //canvas objects, TODO remove
-    edgePairs = [], // TODO probably release after objects are created
-    edgePairs_source = [], // TODO probably release after objects are created
-    edgePairs_target = [], // TODO probably release after objects are created
-    layer_edges_pairs = [], //canvas objects
-    edgeValues = [], // TODO remove
+    edgeValues = [], // to init upload/import edge weights
+    edgePairs_source = [], // to init upload/import edge source nodeLayer names
+    edgePairs_target = [], // to init upload/import edge target nodeLayer names
+    edgePairs = [], // keeping for faster recursive node/edge selections
     // channels
     channels = [], // TODO remove
     selectedChannels = [], // selected ones from Layout tab
