@@ -207,9 +207,9 @@ const executePostNetworkSetup = () => {
 }
 
 const toggleChannelUIComponents = () => {
-  if (channels.length > 0) {    
-    attachChannelEditList();
+  if (channels.length > 0) {
     attachChannelLayoutList();
+    attachChannelEditList();
     updateToggleCurvatureComponentsRShiny(true);
   } else
     updateToggleCurvatureComponentsRShiny(false);

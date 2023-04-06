@@ -41,158 +41,85 @@ const decideEdgeLayerType = (i) => {
   return(interLayer)
 };
 
-// On animate ======
-const renderInterLayerEdges = () => {
-  if (existsConditionToRemoveInterEdges()) {
-    if (!interEdgesRemoved)
-      removeInterLayerEdges();
-  } else {
-    if (renderInterLayerEdgesFlag)
-      redrawInterLayerEdges();
-  }
-};
-
-const existsConditionToRemoveInterEdges = () => {
-  return(scene.dragging || interLayerEdgesRenderPauseFlag ||
-    (!edgeWidthByWeight && interLayerEdgeOpacity === 0))
-};
-
-const removeInterLayerEdges = () => {
-  for (let i = 0; i < edgeObjects.length; i++)
-    if (edgeObjects[i].interLayer)
-      scene.remove(edgeObjects[i].THREE_Object);
-
-  interEdgesRemoved = true;
-};
-
-const redrawInterLayerEdges = () => {
-  for (let i = 0; i < edgeObjects.length; i++)
-    if (edgeObjects[i].interLayer)
-      edgeObjects[i].redrawEdge();
-
-  interEdgesRemoved = false;
-  // locked flags for best edge redrawing below
-  if (waitEdgeRenderFlag) {
-    waitEdgeRenderFlag = false;
-  } else {
-    renderInterLayerEdgesFlag = false;
-    waitEdgeRenderFlag = true;
-  }
-};
-
-// Event Listeners ======
-
-// TODO continue from here
-
-
-const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
-  for (let i = 0; i < edgeObjects.length; i++) {
-    if (!edgeObjects[i].interLayer)
-      edgeObjects[i].redrawEdge();
-  }
-}
-
-// Channels ====================
-const changeChannelColor = (el) => {
-  let channel_name = el.id.substring(5);
-  channelColors[channel_name] = el.value;
-  redrawIntraLayerEdges();
-  updateEdgeColorsRShiny();
-  return true;
-}
-
-const toggleChannelVisibility = (checkbox) => {
-  let channelName = checkbox.value;
-  toggleChildrenWithTag(channelName, checkbox.checked);
-};
-
-const toggleChildrenWithTag = (channelName, checked) => {
-  let currentEdge;
-  for (let i = 0; i < edgeObjects.length; i++) {
-    currentEdge = edgeObjects[i].THREE_Object;
-    for (let j = 0; j < currentEdge.children.length; j++) {
-      if (currentEdge.children[j].userData.tag === channelName) {
-          currentEdge.children[j].visible = !checked;
-          if (isDirectionEnabled)
-            currentEdge.children[j + 1].visible = !checked; // toggle the arrow
-          channelVisibility[channelName] = !checked;
-          break; // only one channel allowed per edge
-      }
-    }
-  }
-};
-
-const toggleChannelLayoutMenu = (el) => {
-  icon = document.getElementById('buttonChannelLayout');
-  select = document.getElementById('channelsLayout');
-  if (icon.classList.contains('close')) {
-    icon.classList.remove("close");
-    select.classList.remove('display-none');
-  } else {
-      icon.classList.add("close");
-    select.classList.add('display-none');
-  }
-  
-  return true;
-}
-
 const attachChannelLayoutList = () => {
-  let
-    checkbox = '',
-    label = document.createElement("label"),
-    p = '',
-    container = document.getElementById('channelColorLayoutDiv'),
-    channelContainer  = document.createElement('div'),
-    icon = document.createElement('i'),
-    subcontainer = document.createElement('div');
-    item = document.createElement('div');
-  
+  let container = document.getElementById('channelColorLayoutDiv'),
+    titleContainer, channelContainer;
+    
   container.innerHTML = ''; // clear
+  titleContainer = createLayoutTitleContainer();
+  channelContainer = createLayoutChannelContainer();
+  container.appendChild(titleContainer);
+  container.appendChild(channelContainer);
+};
+
+const createLayoutTitleContainer = () => {
+  let titleContainer = document.createElement('div'),
+    label = document.createElement("label"),
+    item = document.createElement('div'),
+    icon = document.createElement('i');
+
+  titleContainer.setAttribute('class', 'channelLayoutsub');
+  label.textContent = 'Select Channels for Layouts';
+  label.setAttribute("for", "channelsLayout");
+  item.appendChild(label);
   icon.setAttribute('class', 'fas fa-angle-up buttonChannelLayout close');
   icon.setAttribute('id', 'buttonChannelLayout');
   icon.setAttribute('onclick', "toggleChannelLayoutMenu(this)");
-  label.textContent = 'Select Channels for Layouts';
-  label.setAttribute("for", "channelsLayout");
+  titleContainer.appendChild(item);
+  titleContainer.appendChild(icon);
+
+  return(titleContainer)
+};
+
+const createLayoutChannelContainer = () => {
+  let channelContainer = document.createElement('div'),
+    row, checkbox, p;
 
   channelContainer.setAttribute("name", "channelsLayout");
   channelContainer.setAttribute("id", "channelsLayout");
   channelContainer.setAttribute("class", "channelsLayout display-none");
-
-  channels.forEach(channel => {
+  for (let i = 0; i < channels.length; i++) {
     row = document.createElement('div');
 
     checkbox = document.createElement('input');
     checkbox.type = "checkbox";
-    checkbox.name = channel;
+    checkbox.name = channels[i];
     checkbox.className = "checkbox_check channel_checkbox";
-    checkbox.id = "checkbox_layout".concat(channel);
+    checkbox.id = "checkbox_layout".concat(channels[i]);
     checkbox.checked = true;
     checkbox.setAttribute('onclick', "updateSelectedChannelsRShiny(this)");
 
     p = document.createElement("p");
     p.className = "channel_layout_name";
-    p.textContent = channel;
+    p.textContent = channels[i];
 
     row.appendChild(checkbox);
     row.appendChild(p);
 
     channelContainer.appendChild(row);
     row = '';
-  });
-  item.appendChild(label);
-  subcontainer.appendChild(item);
-  subcontainer.appendChild(icon);
-  subcontainer.setAttribute('class', 'channelLayoutsub');
-  container.appendChild(subcontainer);
-  container.appendChild(channelContainer);
+  }
 
-}
+  return(channelContainer)
+};
+
+const toggleChannelLayoutMenu = () => {
+  let icon = document.getElementById('buttonChannelLayout'),
+    select = document.getElementById('channelsLayout');
+
+  if (icon.classList.contains('close')) {
+    icon.classList.remove("close");
+    select.classList.remove('display-none');
+  } else {
+    icon.classList.add("close");
+    select.classList.add('display-none');
+  }
+};
 
 const attachChannelEditList = () => {
   let checkbox = "",
     label = "",
     label2 = "",
-    br = "",
     colorPicker = "",
     subcontainer = "",
     title = "",
@@ -246,6 +173,88 @@ const attachChannelEditList = () => {
   else
     document.getElementById('channelColorPicker').style.display = 'block';
 }
+
+// On animate ======
+const renderInterLayerEdges = () => {
+  if (existsConditionToRemoveInterEdges()) {
+    if (!interEdgesRemoved)
+      removeInterLayerEdges();
+  } else {
+    if (renderInterLayerEdgesFlag)
+      redrawInterLayerEdges();
+  }
+};
+
+const existsConditionToRemoveInterEdges = () => {
+  return(scene.dragging || interLayerEdgesRenderPauseFlag ||
+    (!edgeWidthByWeight && interLayerEdgeOpacity === 0))
+};
+
+const removeInterLayerEdges = () => {
+  for (let i = 0; i < edgeObjects.length; i++)
+    if (edgeObjects[i].interLayer)
+      scene.remove(edgeObjects[i].THREE_Object);
+
+  interEdgesRemoved = true;
+};
+
+const redrawInterLayerEdges = () => {
+  for (let i = 0; i < edgeObjects.length; i++)
+    if (edgeObjects[i].interLayer)
+      edgeObjects[i].redrawEdge();
+
+  interEdgesRemoved = false;
+  // locked flags for best edge redrawing below
+  if (waitEdgeRenderFlag) {
+    waitEdgeRenderFlag = false;
+  } else {
+    renderInterLayerEdgesFlag = false;
+    waitEdgeRenderFlag = true;
+  }
+};
+
+// Event Listeners ======
+
+
+
+
+const redrawIntraLayerEdges = () => { // TODO just change this.THREE_Object
+  for (let i = 0; i < edgeObjects.length; i++) {
+    if (!edgeObjects[i].interLayer)
+      edgeObjects[i].redrawEdge();
+  }
+}
+
+// Channels ====================
+const changeChannelColor = (el) => { // TODO channels colors from palette
+  console.log("vagfafa")
+  let channel_name = el.id.substring(5);
+  channelColors[channel_name] = el.value;
+  redrawIntraLayerEdges();
+  updateEdgeColorsRShiny();
+  return true;
+}
+
+const toggleChannelVisibility = (checkbox) => {
+  let channelName = checkbox.value;
+  toggleChildrenWithTag(channelName, checkbox.checked);
+};
+
+const toggleChildrenWithTag = (channelName, checked) => {
+  let currentEdge;
+  for (let i = 0; i < edgeObjects.length; i++) {
+    currentEdge = edgeObjects[i].THREE_Object;
+    for (let j = 0; j < currentEdge.children.length; j++) {
+      if (currentEdge.children[j].userData.tag === channelName) {
+          currentEdge.children[j].visible = !checked;
+          if (isDirectionEnabled)
+            currentEdge.children[j + 1].visible = !checked; // toggle the arrow
+          channelVisibility[channelName] = !checked;
+          break; // only one channel allowed per edge
+      }
+    }
+  }
+};
 
 const getChannelColorsFromPalette = (palette) => {
   for (let i = 0; i < channels.length; i++)

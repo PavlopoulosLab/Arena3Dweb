@@ -154,7 +154,7 @@ const updateEdgesRShiny = () => { // only called during network init once
     }
   });
   Shiny.setInputValue("js_edge_pairs", JSON.stringify(js_edge_pairs));
-}
+};
 
 const updateEdgeColorsRShiny = () => {
   let js_edge_colors = [];
@@ -171,36 +171,37 @@ const updateEdgeColorsRShiny = () => {
     return { color: edge[0] }
   });
   Shiny.setInputValue("js_edge_colors", JSON.stringify(js_edge_colors));
-}
-
-const updateDirectionCheckboxRShiny = (name, value) => {
-  Shiny.setInputValue('js_direction_checkbox_flag', [name, !value])
-  Shiny.setInputValue('js_direction_checkbox_flag', [name, value])
-}
-
-const updateEdgeByWeightCheckboxRShiny = (name, value) => {
-  Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, !value])
-  Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, value])
-}
-
-const updateToggleCurvatureComponentsRShiny = (message) => {
-  Shiny.setInputValue("js_channel_curvature_flag", message);
 };
 
 const updateSelectedChannelsRShiny = (element) => {
-  const index = selectedChannels.indexOf(element.name);
+  let index = selectedChannels.indexOf(element.name);
+
   if (index > -1)
     selectedChannels.splice(index, 1);
   else
     selectedChannels.push(element.name);
 
-  Shiny.setInputValue("js_selectedChannels", selectedChannels); // R monitors selected Channels
+  Shiny.setInputValue("js_selectedChannels", selectedChannels);
+};
+
+const updateDirectionCheckboxRShiny = (name, value) => {
+  Shiny.setInputValue('js_direction_checkbox_flag', [name, !value]) // trigger
+  Shiny.setInputValue('js_direction_checkbox_flag', [name, value])
+};
+
+const updateEdgeByWeightCheckboxRShiny = (name, value) => {
+  Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, !value]) // trigger
+  Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, value])
+};
+
+const updateToggleCurvatureComponentsRShiny = (message) => {
+  Shiny.setInputValue("js_channel_curvature_flag", message);
 };
 
 // Labels
 const updateLabelColorRShiny = () => {
   Shiny.setInputValue("js_label_color", globalLabelColor);
-}
+};
 
 const updateVRLayerLabelsRShiny = () => {
   let js_vr_layer_labels = [],
