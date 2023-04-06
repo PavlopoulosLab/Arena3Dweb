@@ -41,6 +41,7 @@ let nodeIntervalTimeout = "",
 // edges
 let renderInterLayerEdgesFlag = false,
     waitEdgeRenderFlag = true,
+    interEdgesRemoved = false,
     selectedEdgeColorFlag = true,
     edgeFileColorPriority = true,
     isDirectionEnabled = false,
@@ -51,7 +52,6 @@ let renderInterLayerEdgesFlag = false,
     intraDirectionArrowSize = 0.08,
     interChannelCurvature = 0.05,
     intraChannelCurvature = 0.05,
-    draw_inter_edges_flag = true,
     edgePairs = [], // keeping for faster recursive node/edge selections
     edgePairs_source = [], // to init upload/import edge source nodeLayer names
     edgePairs_target = [], // to init upload/import edge target nodeLayer names

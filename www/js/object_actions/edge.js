@@ -15,7 +15,7 @@ const createEdgeObjects = () => {
   // releasing ram
   edgeValues = edgePairs_source = edgePairs_target = 
     edgeChannels = undefined;
-}
+};
 
 const decideEdgeColors = (i) => {
   let edgeColors;
@@ -30,12 +30,6 @@ const decideEdgeColors = (i) => {
   return(edgeColors)
 };
 
-const checkIfAttributeColorExist = (attributes, pos) => { // TODO remove after edge_attributes removed
-  return(pos > -1 && attributes.Color !== undefined && 
-    attributes.Color[pos] !== "" && attributes.Color[pos] != " " && 
-    attributes.Color[pos] != null)
-};
-
 const decideEdgeLayerType = (i) => {
   let index1, index2, interLayer = false;
 
@@ -47,30 +41,29 @@ const decideEdgeLayerType = (i) => {
   return(interLayer)
 };
 
-// runs constantly on animate
-const redrawInterLayerEdges_onAnimate = (showFlag = false) => { // TODO global flag to not even enter
-  if (!showFlag && (scene.dragging || interLayerEdgesRenderPauseFlag)){
-    removeInterLayerEdges();
-  } else if (!showFlag && !(edgeWidthByWeight && interLayerEdgeOpacity > 0)){ //this optimizes execution for many connections by making them disappear
-    removeInterLayerEdges();
-    draw_inter_edges_flag = false;
+// On animate ======
+const renderInterLayerEdges = () => {
+  if (existsConditionToRemoveInterEdges()) {
+    if (!interEdgesRemoved)
+      removeInterLayerEdges();
   } else {
-    if (renderInterLayerEdgesFlag) {
+    if (renderInterLayerEdgesFlag)
       redrawInterLayerEdges();
-      if (waitEdgeRenderFlag) { // locked flags for best edge redrawing
-        waitEdgeRenderFlag = false;
-      } else {
-        renderInterLayerEdgesFlag = false;
-        waitEdgeRenderFlag = true;
-      }
-    }
   }
-}
+};
+
+const existsConditionToRemoveInterEdges = () => {
+  return(scene.dragging || interLayerEdgesRenderPauseFlag ||
+    (!edgeWidthByWeight && interLayerEdgeOpacity === 0))
+};
 
 const removeInterLayerEdges = () => {
+  console.log("removeInterLayerEdges")
   for (let i = 0; i < edgeObjects.length; i++)
     if (edgeObjects[i].interLayer)
       scene.remove(edgeObjects[i].THREE_Object);
+
+  interEdgesRemoved = true;
 };
 
 const redrawInterLayerEdges = () => {
@@ -79,18 +72,19 @@ const redrawInterLayerEdges = () => {
     if (edgeObjects[i].interLayer)
       edgeObjects[i].redrawEdge();
   }
+
+  interEdgesRemoved = false;
+
+  if (waitEdgeRenderFlag) { // locked flags for best edge redrawing
+    waitEdgeRenderFlag = false;
+  } else {
+    renderInterLayerEdgesFlag = false;
+    waitEdgeRenderFlag = true;
+  }
 };
 
-const getInterLayerEdges = () => { // TODO remove if never used
-  let interLayerEdges = edgeObjects.map(function(edge) {
-    if (edge.interLayer)
-      return(edge.id)
-  });
-  interLayerEdges = interLayerEdges.filter(function(id) {
-    return(id !== undefined)
-  });
-  return(interLayerEdges)
-};
+
+
 
 const redrawAllEdges = () => {
   console.log("redrawAllEdges");
@@ -310,6 +304,8 @@ const setInterLayerEdgeOpacity = (message) => {
   for (let i = 0; i < edgeObjects.length; i++)
     if (edgeObjects[i].interLayer)
       edgeObjects[i].setOpacity(interLayerEdgeOpacity);
+
+  renderInterLayerEdgesFlag = true;
 };
 
 const toggleDirection = (message) => {

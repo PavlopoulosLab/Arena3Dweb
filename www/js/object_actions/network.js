@@ -44,6 +44,9 @@ const resetValues = () => {
 
   // edges
   edgeObjects = [];
+  renderInterLayerEdgesFlag = false;
+  waitEdgeRenderFlag = true;
+  interEdgesRemoved = false;
   interLayerEdgeOpacity = 0.4;
   intraLayerEdgeOpacity = 1;
   interDirectionArrowSize = 0.03;

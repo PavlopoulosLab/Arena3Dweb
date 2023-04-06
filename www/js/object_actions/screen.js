@@ -45,27 +45,14 @@ const setRaycaster = (event) => {
 }
 
 // 3D graphics render animation ====================
-const animate = () => { // TODO optimize performance
+const animate = () => {
   setTimeout(function() { // limiting FPS
     requestAnimationFrame(animate); // pauses when the user navigates to another browser tab
   }, 1000 / fps);
 
-  if (renderLayerLabelsFlag)
-    renderLayerLabels();
-  if (renderNodeLabelsFlag)
-    renderNodeLabels();
+  renderInterLayerEdges();
+  renderLayerLabels();
+  renderNodeLabels();
   
-  // TODO global flag
-  // redrawInterLayerEdges();
-
-  // draw inter-layer edges only when necessary for performance improvement
-  if (scene.dragging || interLayerEdgesRenderPauseFlag) {
-    redrawInterLayerEdges_onAnimate(false);
-  } else if (edgeWidthByWeight || interLayerEdgeOpacity > 0) {
-    redrawInterLayerEdges_onAnimate(true);
-    draw_inter_edges_flag = true;
-  } else if (draw_inter_edges_flag)
-    redrawInterLayerEdges_onAnimate(false);
-
 	renderer.render(scene.THREE_Object, camera);
 }

@@ -103,16 +103,18 @@ const resizeNodeLabels = (message) => {
 
 // on animate ======
 const renderLayerLabels = () => {
-  if (showAllLayerLabelsFlag)
-    redrawLayerLabels("all");
-  else {
-    if (showSelectedLayerLabelsFlag) {
-      let selected_layers = getSelectedLayers();
-      if (selected_layers.length > 0)
-        redrawLayerLabels("selected");
+  if (renderLayerLabelsFlag) {
+    if (showAllLayerLabelsFlag)
+      redrawLayerLabels("all");
+    else {
+      if (showSelectedLayerLabelsFlag) {
+        let selected_layers = getSelectedLayers();
+        if (selected_layers.length > 0)
+          redrawLayerLabels("selected");
+      }
     }
+    renderLayerLabelsFlag = false;
   }
-  renderLayerLabelsFlag = false;
 }
 
 const redrawLayerLabels = (mode) => {
@@ -149,7 +151,8 @@ const redrawLayerLabels = (mode) => {
 }
 
 const renderNodeLabels = () => {
-  let nodeX = "",
+  if (renderNodeLabelsFlag) {
+    let nodeX = "",
       nodeY = "",
       labelX = "",
       labelY = "";
@@ -172,5 +175,7 @@ const renderNodeLabels = () => {
     } else
       node_labels[i].style.display = "none";
   }
+  
   renderNodeLabelsFlag = false;
+  }
 }

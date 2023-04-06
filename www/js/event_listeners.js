@@ -1,7 +1,8 @@
 // on mouse wheel scroll
-const sceneZoom = (event) => {
+const sceneZoom = async (event) => {
   if (scene.exists()) {
     scene.zoom(event.deltaY);
+    await delay_ms(100);
     updateScenePanRShiny();
     updateVRLayerLabelsRShiny();
     updateVRNodesRShiny();

@@ -77,3 +77,6 @@ const assign2Children = (parent, color, getColorsFromMap) => {
     parent.material.color = new THREE.Color(color);
   }
 };
+
+// needed to correctly recenter network for VR
+const delay_ms = ms => new Promise(res => setTimeout(res, ms));
