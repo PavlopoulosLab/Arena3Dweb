@@ -16,7 +16,7 @@ generateEdgeDiv <- function() {
     sliderInput("interChannelCurvature", "Inter-Layer Channel Curvature:",
                 min = 0.01, max = 0.1, value = 0.05, step = 0.01),
     checkboxInput("edgeSelectedColorPriority", "Highlight Selected Edges in Color", T),
-    checkboxInput("edgeFileColorPriority", "Priority on Edge Color From File", T),
+    checkboxInput("edgeFileColorPriority", "Priority on Edge Color From File", F),
     tags$div(id = "channelColorPicker", class = "channelColorPicker"),
     actionButton("hideButton6", icon("angle-up"), class = "hideButton")
   )

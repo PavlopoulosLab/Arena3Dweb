@@ -168,10 +168,7 @@ const attachChannelEditList = () => {
       subcontainer = '';
     });
 
-  if (edgeFileColorPriority)
-    document.getElementById('channelColorPicker').style.display = 'none';
-  else
-    document.getElementById('channelColorPicker').style.display = 'block';
+    toggleChannelColorPicker();
 }
 
 const changeChannelColor = (el) => { // TODO channels colors from palette
@@ -186,6 +183,13 @@ const changeChannelColor = (el) => { // TODO channels colors from palette
 const toggleChannelVisibility = (checkbox) => {
   let channelName = checkbox.value;
   toggleChildrenWithTag(channelName, checkbox.checked);
+};
+
+const toggleChannelColorPicker = () => {
+  if (edgeFileColorPriority)
+    document.getElementById('channelColorPicker').style.display = 'none';
+  else
+    document.getElementById('channelColorPicker').style.display = 'block';
 };
 
 // On animate ======
@@ -327,10 +331,7 @@ const setInterDirectionArrowSize = (message) => {
 
 const setEdgeFileColorPriority = (message) => {
   edgeFileColorPriority = message; //message = true or false
-  if (edgeFileColorPriority)
-    document.getElementById('channelColorPicker').style.display = 'none';
-  else
-    document.getElementById('channelColorPicker').style.display = 'block';
+  toggleChannelColorPicker();
   redrawIntraLayerEdges();
 }
 

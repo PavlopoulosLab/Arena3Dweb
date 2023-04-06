@@ -184,14 +184,11 @@ const updateSelectedChannelsRShiny = (element) => {
   Shiny.setInputValue("js_selectedChannels", selectedChannels);
 };
 
-const updateDirectionCheckboxRShiny = (name, value) => {
-  Shiny.setInputValue('js_direction_checkbox_flag', [name, !value]) // trigger
-  Shiny.setInputValue('js_direction_checkbox_flag', [name, value])
-};
-
-const updateEdgeByWeightCheckboxRShiny = (name, value) => {
-  Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, !value]) // trigger
-  Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, value])
+// cannot trigger R event in network init without this function
+const updateCheckboxRShiny = (js_var_name, name, value) => {
+  // js_var_name: js_direction_checkbox_flag | js_edgeByWeight_checkbox_flag | js_edgeFileColorPriority_checkbox_flag
+  Shiny.setInputValue(js_var_name, [name, !value]) // trigger
+  Shiny.setInputValue(js_var_name, [name, value])
 };
 
 const updateToggleCurvatureComponentsRShiny = (message) => {

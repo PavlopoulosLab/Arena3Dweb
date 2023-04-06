@@ -53,7 +53,7 @@ const resetValues = () => {
   intraDirectionArrowSize = 0.08;
   interChannelCurvature = 0.05;
   intraChannelCurvature = 0.05;
-  edgeFileColorPriority = true;
+  edgeFileColorPriority = false;
   edgePairs = [];
   edgePairs_source = [];
   edgePairs_target = [];
@@ -304,9 +304,11 @@ const setJSONExtras = (jsonNetwork) => {
   setLabelColorVariable(jsonNetwork.universalLabelColor);  
 
   isDirectionEnabled = jsonNetwork.direction;
-  toggleDirection(isDirectionEnabled);
-  updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
+  updateCheckboxRShiny("js_direction_checkbox_flag", "edgeDirectionToggle", isDirectionEnabled);
 
   edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
-  updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
+  updateCheckboxRShiny("js_edgeByWeight_checkbox_flag", "edgeWidthByWeight", edgeWidthByWeight);
+
+  edgeFileColorPriority = true;
+  updateCheckboxRShiny("js_edgeFileColorPriority_checkbox_flag", "edgeFileColorPriority", edgeFileColorPriority);
 };

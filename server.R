@@ -44,6 +44,11 @@ server <- function(input, output, session) {
                               input$js_edgeByWeight_checkbox_flag[2])
   }, ignoreInit = T)
 
+  observeEvent(input$js_edgeFileColorPriority_checkbox_flag, {
+    updateCheckboxInputFromJS(input$js_edgeFileColorPriority_checkbox_flag[1],
+                              input$js_edgeFileColorPriority_checkbox_flag[2])
+  }, ignoreInit = T)
+
   observeEvent(input$js_channel_curvature_flag, {
     toggleCurvatureInputsFromJS()
   }, ignoreInit = T)
