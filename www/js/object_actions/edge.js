@@ -218,9 +218,13 @@ const changeChannelColor = (pickerElement) => {
   let channelName = pickerElement.name;
   channelColors[channelName] = pickerElement.value;
 
-  renderInterLayerEdgesFlag = true;
-  redrawIntraLayerEdges();
+  redrawAllEdges();
   updateEdgeColorsRShiny();
+};
+
+const redrawAllEdges = () => {
+  for (let i = 0; i < edgeObjects.length; i++)
+    edgeObjects[i].redrawEdge();
 };
 
 const redrawIntraLayerEdges = () => {
@@ -262,15 +266,28 @@ const unselectAllEdges = () => {
   for (let i = 0; i < edgeObjects.length; i++)
     edgeObjects[i].deselect();
 
-  renderInterLayerEdgesFlag = true;
-  redrawIntraLayerEdges();
+  redrawAllEdges();
 };
 
 // Handlers ======
-const redrawEdgeWidthByWeight = (message) => { // true or false
-  edgeWidthByWeight = message;
-  renderInterLayerEdgesFlag = true;
+const toggleDirection = (message) => { // true or false
+  isDirectionEnabled = message;
+  redrawAllEdges();
+};
+
+const setIntraDirectionArrowSize = (message) => {
+  intraDirectionArrowSize = message;
   redrawIntraLayerEdges();
+};
+
+const setInterDirectionArrowSize = (message) => {
+  interDirectionArrowSize = message;
+  renderInterLayerEdgesFlag = true;
+};
+
+const setEdgeWidthByWeight = (message) => { // true or false
+  edgeWidthByWeight = message;
+  redrawAllEdges();
 };
 
 const setIntraLayerEdgeOpacity = (message) => {
@@ -283,42 +300,16 @@ const setInterLayerEdgeOpacity = (message) => {
   renderInterLayerEdgesFlag = true;
 };
 
-const toggleDirection = (message) => {
-  isDirectionEnabled = message;
+const setEdgeSelectedColorPriority = (message) => { // true or false
+  selectedEdgeColorFlag = message;
   redrawAllEdges();
-};
-
-const redrawAllEdges = () => {
-  for (let i = 0; i < edgeObjects.length; i++)
-    edgeObjects[i].redrawEdge();
-}
-
-const setIntraDirectionArrowSize = (message) => {
-  intraDirectionArrowSize = message;
-  redrawIntraLayerEdges();
-};
-
-const setInterDirectionArrowSize = (message) => {
-  interDirectionArrowSize = message;
-  renderInterLayerEdgesFlag = true;
 };
 
 const setEdgeFileColorPriority = (message) => { // true or false
   edgeFileColorPriority = message;
-
-  renderInterLayerEdgesFlag = true;
-  redrawIntraLayerEdges();
+  redrawAllEdges();
   toggleChannelColorPicker();
-}
-
-const setEdgeSelectedColorPriority = (message) => { // true / false
-  selectedEdgeColorFlag = message;
-  for (let i = 0; i < edgeObjects.length; i++)
-    edgeObjects[i].repaint();
-
-  renderInterLayerEdgesFlag = true;
-  redrawIntraLayerEdges();
-}
+};
 
 const toggleIntraChannelCurvature = (message) => {
   intraChannelCurvature = message;
@@ -331,10 +322,22 @@ const toggleInterChannelCurvature = (message) => {
 };
 
 const setEdgeAttributes = (edgeAttributes) => {
+  let checkbox;
+
+  setEdgeColorFromAttributes(edgeAttributes);
+
+  checkbox = document.getElementById("edgeFileColorPriority");
+  if (!checkbox.checked)
+    checkbox.click(); // contains redrawAllEdges() on event click
+  else 
+    redrawAllEdges();
+  
+  updateEdgeColorsRShiny();
+};
+
+const setEdgeColorFromAttributes = (edgeAttributes) => {
   let pos, pos2;
 
-  document.getElementById("edgeFileColorPriority").checked = true;
-  edgeFileColorPriority = true;
   for (let i = 0; i < edgeAttributes.length; i++) {
     pos = edgePairs.indexOf(edgeAttributes[i].EdgePair);
     if (pos != -1) {
@@ -342,18 +345,15 @@ const setEdgeAttributes = (edgeAttributes) => {
         for (let j = 0; j < edgeObjects[pos].channels.length; j++) {
           pos2 = edgeObjects[pos].channels.indexOf(edgeAttributes[i].Channel);
           edgeObjects[pos].importedColors[pos2] = edgeAttributes[i].Color;
+          edgeObjects[pos].colors[pos2] = edgeAttributes[i].Color;
         }
-      } else
+      } else {
         edgeObjects[pos].importedColors[0] = edgeAttributes[i].Color;
-  
-      edgeObjects[pos].repaint();
+        edgeObjects[pos].colors[pos2] = edgeAttributes[i].Color;
+      }
     }
   }
-
-  renderInterLayerEdgesFlag = true;
-  redrawIntraLayerEdges();
-  updateEdgeColorsRShiny();
-}
+};
 
 // Canvas Controls ======
 const toggleInterLayerEdgesRendering = () => {

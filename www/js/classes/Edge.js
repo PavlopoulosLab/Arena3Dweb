@@ -73,17 +73,17 @@ class Edge {
 
         if (isDirectionEnabled && (opacity !== 0))
             this.toggleArrow(points, color);
-}
+    }
 
     decideColor(i = 0, forExport = false) {
         let color = EDGE_DEFAULT_COLOR;
 
         if (!forExport && this.isSelected && selectedEdgeColorFlag)
             color = SELECTED_DEFAULT_COLOR;
+        else if (this.channels.length > 0 && !edgeFileColorPriority)
+            color = channelColors[this.channels[i]];
         else if (edgeFileColorPriority)
             color = this.importedColors[i];
-        else if (this.channels.length > 0) 
-            color = channelColors[this.channels[i]];
 
         return(color)
     }
@@ -224,20 +224,11 @@ class Edge {
             layers[this.targetLayerIndex].isVisible)
     };
 
-    repaint = () => {
-        if (selectedEdgeColorFlag && this.isSelected)
-            this.colors = this.colors.map(function() { return SELECTED_DEFAULT_COLOR; });
-        else
-            this.colors = this.importedColors; // TODO differnet channel colors
-    }
-
     select = () => {
         this.isSelected = true;
-        this.repaint();
     }
     
     deselect = () => {
         this.isSelected = false;
-        this.repaint();
     }
 }

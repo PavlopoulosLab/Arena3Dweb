@@ -76,7 +76,7 @@ Shiny.addCustomMessageHandler("handler_clickNodeColorPriority", clickNodeColorPr
 Shiny.addCustomMessageHandler("handler_toggleDirection", toggleDirection);
 Shiny.addCustomMessageHandler("handler_setIntraDirectionArrowSize", setIntraDirectionArrowSize);
 Shiny.addCustomMessageHandler("handler_setInterDirectionArrowSize", setInterDirectionArrowSize);
-Shiny.addCustomMessageHandler("handler_edgeWidthByWeight", redrawEdgeWidthByWeight);
+Shiny.addCustomMessageHandler("handler_setEdgeWidthByWeight", setEdgeWidthByWeight);
 Shiny.addCustomMessageHandler("handler_setIntraLayerEdgeOpacity", setIntraLayerEdgeOpacity);
 Shiny.addCustomMessageHandler("handler_setInterLayerEdgeOpacity", setInterLayerEdgeOpacity);
 Shiny.addCustomMessageHandler("handler_setEdgeSelectedColorPriority", setEdgeSelectedColorPriority);
