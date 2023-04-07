@@ -25,10 +25,14 @@ const resetValues = () => {
 
   // labels
   document.getElementById("labelDiv").innerHTML = "";
-  layer_label_divs = []; //divs
+  layerLabelsDivs = []; //divs
   renderLayerLabelsFlag = false;
-  node_labels = [];
+  nodeLabelsDivs = [];
   renderNodeLabelsFlag = false;
+  showAllLayerLabelsFlag = true;
+  showSelectedLayerLabelsFlag = false;
+  showAllNodeLabelsFlag = false;
+  showSelectedNodeLabelsFlag = true;
 
   // layers
   layers = [];

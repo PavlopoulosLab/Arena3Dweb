@@ -11,11 +11,14 @@ let perLayerLayoutFLag = undefined,
 
 // labels
 let globalLabelColor = "#ffffff",
-    nodeLabelDefaultSize = "12px",
-    layer_label_divs = [],
+    layerLabelsDivs = [],
     renderLayerLabelsFlag = false,
-    node_labels = [], //divs to be overlaid above canvas
-    renderNodeLabelsFlag = false;
+    showAllLayerLabelsFlag = true,
+    showSelectedLayerLabelsFlag = false,
+    nodeLabelsDivs = [],
+    renderNodeLabelsFlag = false,
+    showAllNodeLabelsFlag = false,
+    showSelectedNodeLabelsFlag = true;
 
 // layers
 let layerGroups = new Map(),
@@ -23,15 +26,11 @@ let layerGroups = new Map(),
     hoveredLayerPaintedFlag = false,
     layerDragControls = "",
     layerIntervalTimeout = "",
-    showAllLayerLabelsFlag = true,
-    showSelectedLayerLabelsFlag = false,
     layerColorPrioritySource = "default"; // or "picker"
 
 // nodes
 let nodeIntervalTimeout = "",
     selectedNodeColorFlag = true,
-    showAllNodeLabelsFlag = false,
-    showSelectedNodeLabelsFlag = true,
     nodeColorPrioritySource = "default", // or "cluster"
     nodeGroups = new Map(),
     last_hovered_node_index = "",

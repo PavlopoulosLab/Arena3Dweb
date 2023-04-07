@@ -36,7 +36,7 @@ const browseUrl = url => {
 const toggleSceneCoords = (sceneCoordsSwitch) => { // true or false
   if (scene.exists())
     scene.toggleCoords(sceneCoordsSwitch);
-}
+};
 
 const autoRotateScene = (autoRotateFlag) => {
   if (scene.exists()) {
@@ -44,7 +44,7 @@ const autoRotateScene = (autoRotateFlag) => {
     if (!scene.autoRotate)
       clearInterval(scene.intervalTimeout);
   }
-}
+};
 
 //RSHINY HANDLERS----------------------------
 // General ====================

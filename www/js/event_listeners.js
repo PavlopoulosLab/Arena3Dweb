@@ -2,6 +2,7 @@
 const sceneZoom = async (event) => {
   if (scene.exists()) {
     scene.zoom(event.deltaY);
+    
     await delay_ms(100);
     updateScenePanRShiny();
     updateVRLayerLabelsRShiny();
@@ -91,16 +92,20 @@ const clickDrag = (event) => {
 };
 
 // left-click drag on scene
-const sceneDragPan = (x, y) => {
+const sceneDragPan = async (x, y) => {
   scene.translatePanWithMouse(x, y);
+
+  await delay_ms(100);
   updateScenePanRShiny();
   updateVRLayerLabelsRShiny();
   updateVRNodesRShiny();
 };
 
 // middle-click drag on scene
-const sceneOrbit = (x, y) => {
-  scene.orbitSphereWithMouse(x, y);    
+const sceneOrbit = async (x, y) => {
+  scene.orbitSphereWithMouse(x, y);
+
+  await delay_ms(100);
   updateSceneSphereRShiny();
   updateVRLayerLabelsRShiny();
   updateVRNodesRShiny();

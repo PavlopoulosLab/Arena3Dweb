@@ -5,7 +5,8 @@ const RAYCASTER = new THREE.Raycaster(),
     RAYDIR = new THREE.Vector3();
 
 // graphics
-const SPHERE_RADIUS = 8,
+const NODE_LABEL_DEFAULT_SIZE = "12px",
+    SPHERE_RADIUS = 8,
     SPHERE_WIDTHSEGMENTS = 8,
     SPHERE_HEIGHTSEGMENTS = 8,
     PLANE_WIDTHSEGMENTS = 8,
