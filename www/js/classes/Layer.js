@@ -98,6 +98,14 @@ class Layer {
     this.plane.add(sphere);
   }
 
+  addEdge(line) {
+    this.plane.add(line);
+  }
+
+  removeEdge(line) {
+    this.plane.remove(line);
+  }
+
   // toggle functions
   toggleSelection() {
     this.isSelected = !this.isSelected;
@@ -105,6 +113,7 @@ class Layer {
 
   toggleVisibility(flag) {
     this.plane.visible = flag;
+    this.isVisible = flag;
   }
 
   toggleCoords(layerCoordsSwitch) {

@@ -40,22 +40,21 @@ const applyTheme = (bgColor, floorColor,
     if (scene.exists()) {
       setRendererColor(bgColor);
       document.getElementById("floor_color").value = floorColor;
-      edgeDefaultColor = edgeColor; // global for inter-layer edges
-      getChannelColorsFromPalette(channel_colors_theme);
+      EDGE_DEFAULT_COLOR = edgeColor; // global for inter-layer edges
+      assignChannelColorsFromPalette(channel_colors_theme);
       globalLabelColor = labelColor;
 
       if (!fromInit) {
         repaintLayersFromPicker();
-        attachChannelEditList();
-        setEdgeColor();
-        redrawEdges();
+        attachChannelEditList(); // for new channel colors
+        redrawIntraLayerEdges();
         setLabelColor();
     
         updateScenePanRShiny();
         updateLayersRShiny();
         updateNodesRShiny();
         updateVRNodesRShiny();
-        updateEdgesRShiny();
+        updateEdgeColorsRShiny();
         updateLabelColorRShiny();
       }
     }

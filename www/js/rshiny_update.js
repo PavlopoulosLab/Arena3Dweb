@@ -1,5 +1,6 @@
 // Scene
 const updateScenePanRShiny = () => {
+  renderInterLayerEdgesFlag = true;
   let js_scene_pan = {
     "position_x": scene.getPosition("x"),
     "position_y": scene.getPosition("y"),
@@ -10,6 +11,7 @@ const updateScenePanRShiny = () => {
 };
 
 const updateSceneSphereRShiny = () => {
+  renderInterLayerEdgesFlag = true;
   let js_scene_sphere = {
     "rotation_x": scene.getRotation("x"),
     "rotation_y": scene.getRotation("y"),
@@ -22,6 +24,7 @@ const updateSceneSphereRShiny = () => {
 const updateLayersRShiny = () => {
   let js_layers = [];
 
+  renderInterLayerEdgesFlag = true;
   renderLayerLabelsFlag = true;
   for (let i = 0; i < layers.length; i++) {
     js_layers.push(
@@ -62,6 +65,7 @@ const updateSelectedLayersRShiny = () => {
 const updateNodesRShiny = () => {
   let js_nodes = [];
 
+  renderInterLayerEdgesFlag = true;
   renderNodeLabelsFlag = true;
   for (let i = 0; i < nodeObjects.length; i++) {    
     js_nodes.push([
@@ -127,74 +131,74 @@ const updateSelectedNodesRShiny = () => {
 };
 
 // Edges
-const updateEdgesRShiny = () => {
-  let js_edge_pairs = [],
-    temp_js_edge_pairs = [],
-    pos1 = (pos2 = pos3 = -1);
-    temp_channel = '';
-  j = 0;
-  for (let i = 0; i < edgePairs.length; i++) {
-    if (edge_attributes !== "") {
-      pos1 = edge_attributes.SourceNode.indexOf(edgePairs[i]);
-      pos2 = edge_attributes.TargetNode.indexOf(edgePairs[i]);
-      if (pos1 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos1] !== "" && edge_attributes.Color[pos1] != " " && edge_attributes.Color[pos1] !== null) {
-        if (edge_attributes.Channel && edge_attributes.Channel[pos1]) {
-          temp_channel = edge_attributes.Channel[pos1];
-        }
-        color = edge_attributes.Color[pos1];
-      }
-      else if (pos2 > -1 && edge_attributes.Color !== undefined && edge_attributes.Color[pos2] !== "" && edge_attributes.Color[pos2] != " " && edge_attributes.Color[pos2] !== null) {
-         if (edge_attributes.Channel && edge_attributes.Channel[pos2]) {
-          temp_channel = edge_attributes.Channel[pos2];
-        }
-        color = edge_attributes.Color[pos2];
-      }
-      else color = edgeDefaultColor;
-    } else color = edgeDefaultColor;
-    if (edge_channels && edge_channels[i] && edge_channels[i].length > 0) {
-      edge_channels[i].forEach((channel) => {
-        temp_js_edge_pairs = [edgePairs[i], edgeValues[j], channelColors[channel], channel];
-        js_edge_pairs.push(temp_js_edge_pairs);
-        j++;
-      });
+const updateEdgesRShiny = () => { // only called during network init once
+  updateEdgeColorsRShiny();
+  let js_edge_pairs = [];
 
-    } else {
-      temp_js_edge_pairs = [edgePairs[i], edgeValues[j], color, ""];
-      js_edge_pairs.push(temp_js_edge_pairs);
-      j++;
-    }
+  for (let i = 0; i < edgeObjects.length; i++) {
+    if (edgeObjects[i].channels.length > 0) {
+      for (let j = 0; j < edgeObjects[i].channels.length; j++)
+        js_edge_pairs.push([edgeObjects[i].source, edgeObjects[i].target,
+          edgeObjects[i].weights[j], edgeObjects[i].channels[j]]);
+    } else
+      js_edge_pairs.push([edgeObjects[i].source, edgeObjects[i].target,
+        edgeObjects[i].weights[0], ""]);
   }
+  
+  js_edge_pairs = js_edge_pairs.map(edge => {
+    return {
+      src: edge[0],
+      trg: edge[1],
+      opacity: edge[2],
+      channel: edge[3]
+    }
+  });
   Shiny.setInputValue("js_edge_pairs", JSON.stringify(js_edge_pairs));
-}
+};
 
-const updateDirectionCheckboxRShiny = (name, value) => {
-  Shiny.setInputValue('js_direction_checkbox_flag', [name, !value])
-  Shiny.setInputValue('js_direction_checkbox_flag', [name, value])
-}
+const updateEdgeColorsRShiny = () => {
+  let js_edge_colors = [];
 
-const updateEdgeByWeightCheckboxRShiny = (name, value) => {
-  Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, !value])
-  Shiny.setInputValue('js_edgeByWeight_checkbox_flag', [name, value])
-}
-
-const updateToggleCurvatureComponentsRShiny = (message) => {
-  Shiny.setInputValue("js_channel_curvature_flag", message);
+  for (let i = 0; i < edgeObjects.length; i++) {
+    if (edgeObjects[i].channels.length > 0) {
+      for (let j = 0; j < edgeObjects[i].channels.length; j++) // TODO decide which color to export
+        js_edge_colors.push([edgeObjects[i].decideColor(j, true)]); // forExport: true
+    } else
+      js_edge_colors.push([edgeObjects[i].decideColor(0, true)]); // forExport: true
+  }
+  
+  js_edge_colors = js_edge_colors.map(edge => {
+    return { color: edge[0] }
+  });
+  Shiny.setInputValue("js_edge_colors", JSON.stringify(js_edge_colors));
 };
 
 const updateSelectedChannelsRShiny = (element) => {
-  const index = selectedChannels.indexOf(element.name);
+  let index = selectedChannels.indexOf(element.name);
+
   if (index > -1)
     selectedChannels.splice(index, 1);
   else
     selectedChannels.push(element.name);
 
-  Shiny.setInputValue("js_selectedChannels", selectedChannels); // R monitors selected Channels
+  Shiny.setInputValue("js_selectedChannels", selectedChannels);
+};
+
+// cannot trigger R event in network init without this function
+const updateCheckboxRShiny = (js_var_name, name, value) => {
+  // js_var_name: js_direction_checkbox_flag | js_edgeByWeight_checkbox_flag | js_edgeFileColorPriority_checkbox_flag
+  Shiny.setInputValue(js_var_name, [name, !value]) // trigger
+  Shiny.setInputValue(js_var_name, [name, value])
+};
+
+const updateToggleCurvatureComponentsRShiny = (message) => {
+  Shiny.setInputValue("js_channel_curvature_flag", message);
 };
 
 // Labels
 const updateLabelColorRShiny = () => {
   Shiny.setInputValue("js_label_color", globalLabelColor);
-}
+};
 
 const updateVRLayerLabelsRShiny = () => {
   let js_vr_layer_labels = [],

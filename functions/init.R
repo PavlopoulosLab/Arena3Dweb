@@ -7,7 +7,8 @@ initializeServerApp <- function() {
 initializeJSVariables <- function() {
   callJSHandler("handler_initializeGlobals",
                 list(MAX_EDGES = MAX_EDGES, MAX_CHANNELS = MAX_CHANNELS,
-                     MAX_LAYERS = MAX_LAYERS, CHANNEL_COLORS_DARK = CHANNEL_COLORS_DARK,
+                     MAX_LAYERS = MAX_LAYERS, EDGE_DEFAULT_COLOR = EDGE_DEFAULT_COLOR,
+                     CHANNEL_COLORS_DARK = CHANNEL_COLORS_DARK,
                      CHANNEL_COLORS_LIGHT = CHANNEL_COLORS_LIGHT))
 }
 

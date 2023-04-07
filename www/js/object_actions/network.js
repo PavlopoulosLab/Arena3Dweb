@@ -43,13 +43,22 @@ const resetValues = () => {
   last_hovered_node_index = "";
 
   // edges
-  edges = []; //canvas objects
-  layerEdges = []; //canvas objects
+  edgeObjects = [];
+  renderInterLayerEdgesFlag = false;
+  waitEdgeRenderFlag = true;
+  interEdgesRemoved = false;
+  interLayerEdgeOpacity = 0.4;
+  intraLayerEdgeOpacity = 1;
+  interDirectionArrowSize = 5;
+  intraDirectionArrowSize = 5;
+  interChannelCurvature = 5;
+  intraChannelCurvature = 15;
+  edgeFileColorPriority = false;
   edgePairs = [];
-  layer_edges_pairs = []; //canvas objects
+  edgePairs_source = [];
+  edgePairs_target = [];
   edgeValues = [];
-  selected_edges = [];
-  edge_attributes = "";
+  edgeColors = [];
   isDirectionEnabled = false;
   updateToggleCurvatureComponentsRShiny(false);
   // channels
@@ -61,8 +70,7 @@ const resetValues = () => {
   selectedChannels = [];
   channelColors = {};
   channelVisibility = {};
-  edge_channels = [];
-  layer_edges_pairs_channels = [];
+  edgeChannels = [];
 
   // others
   shiftX = "";
@@ -99,7 +107,7 @@ const areObjectsWithinLimit = (object, limit, objectName) => {
 }
 
 const initializeNodeAndEdgeArrays = (network) => {
-  let sourceNodeLayerName, targetNodeLayerName, edgePair;
+  let sourceNodeLayerName, targetNodeLayerName;
 
   for (let i = 0; i < network.SourceNode.length; i++) {
     sourceNodeLayerName = network.SourceNode_Layer[i];
@@ -108,13 +116,7 @@ const initializeNodeAndEdgeArrays = (network) => {
     updateNodeArrays(sourceNodeLayerName, network.SourceNode[i], network.SourceLayer[i]);
     updateNodeArrays(targetNodeLayerName, network.TargetNode[i], network.TargetLayer[i]);
 
-    edgePair = sourceNodeLayerName.concat("---").concat(targetNodeLayerName);
-    if (network.Channel)
-      updateEdgeChannelArrays(network.Channel[i], edgePair);
-    else
-      edgePairs.push(edgePair);
-
-    edgeValues.push(network.Weight[i]);
+    createEdgePairs(network.Channel, i, sourceNodeLayerName, targetNodeLayerName, network.Weight[i]);
   }
 
   updateChannelArrays(network.Channel);
@@ -128,15 +130,37 @@ const updateNodeArrays = (nodeLayerName, nodeName, layerName) => {
   }
 };
 
-const updateEdgeChannelArrays = (channelName, edgePair) => {
-  let position;
-  if (edgePairs.includes(edgePair) ) {
-    position = edgePairs.indexOf(edgePair);
-    edge_channels[position].push(channelName);
-  } else {
-    edgePairs.push(edgePair);
-    edge_channels.push([channelName]);
-  }
+const createEdgePairs = (networkChannel, i, sourceNodeLayerName, targetNodeLayerName,
+  networkWeight, color = "") => {
+    let edgePair = sourceNodeLayerName.concat("---").concat(targetNodeLayerName);
+    if (networkChannel)
+      updateEdgeChannelArrays(networkChannel[i], edgePair,
+        sourceNodeLayerName, targetNodeLayerName, networkWeight, color);
+    else {
+      edgePairs.push(edgePair);
+      edgePairs_source.push(sourceNodeLayerName);
+      edgePairs_target.push(targetNodeLayerName);
+      edgeValues.push([networkWeight]);
+      edgeColors.push([color]);
+    }
+};
+
+const updateEdgeChannelArrays = (channelName, edgePair,
+  sourceNodeLayerName, targetNodeLayerName, networkWeight, color) => {
+    let position;
+    if (edgePairs.includes(edgePair) ) {
+      position = edgePairs.indexOf(edgePair);
+      edgeChannels[position].push(channelName);
+      edgeValues[position].push(networkWeight);
+      edgeColors[position].push(color);
+    } else {
+      edgePairs.push(edgePair);
+      edgePairs_source.push(sourceNodeLayerName);
+      edgePairs_target.push(targetNodeLayerName);
+      edgeChannels.push([channelName]);
+      edgeValues.push([networkWeight]);
+      edgeColors.push([color]);
+    }
 };
 
 const updateChannelArrays = (channelArray) => {
@@ -146,7 +170,7 @@ const updateChannelArrays = (channelArray) => {
     for (let i = 0; i < channels.length; i++)
       channelVisibility[channels[i]] = true;
 
-    getChannelColorsFromPalette(CHANNEL_COLORS_LIGHT);
+    assignChannelColorsFromPalette();
 
     selectedChannels = channels.slice(); // copy by value, and not by reference
     Shiny.setInputValue("js_selectedChannels", selectedChannels); // R monitors selected Channels
@@ -187,9 +211,9 @@ const executePostNetworkSetup = () => {
 }
 
 const toggleChannelUIComponents = () => {
-  if (channels.length > 0) {    
-    attachChannelEditList();
+  if (channels.length > 0) {
     attachChannelLayoutList();
+    attachChannelEditList();
     updateToggleCurvatureComponentsRShiny(true);
   } else
     updateToggleCurvatureComponentsRShiny(false);
@@ -243,30 +267,9 @@ const initializeLayersFromJSON = (jsonLayers) => {
 };
 
 const initializeEdgesFromJSON = (jsonEdges) => {
-  let edgePair;
-
-  edge_attributes = {
-    "SourceNode": [],
-    "TargetNode": [],
-    "Color": []
-  };
-  if (jsonEdges.channel)
-    edge_attributes.Channel = [];
-
   for (let i = 0; i < jsonEdges.src.length; i++) {
-    edgePair = jsonEdges.src[i].concat("---").concat(jsonEdges.trg[i]);
-    if (jsonEdges.channel)
-      updateEdgeChannelArrays(jsonEdges.channel[i], edgePair);
-    else
-      edgePairs.push(edgePair);
-
-    edgeValues.push(Number(jsonEdges.opacity[i]));
-
-    edge_attributes.SourceNode.push(jsonEdges.src[i]);
-    edge_attributes.TargetNode.push(jsonEdges.trg[i]);
-    edge_attributes.Color.push(jsonEdges.color[i]);
-    if (jsonEdges.channel)
-      edge_attributes.Channel.push(jsonEdges.channel[i]);
+    createEdgePairs(jsonEdges.channel, i, jsonEdges.src[i], jsonEdges.trg[i],
+      Number(jsonEdges.opacity[i]), jsonEdges.color[i]);
   }
   updateChannelArrays(jsonEdges.channel);
 };
@@ -305,9 +308,11 @@ const setJSONExtras = (jsonNetwork) => {
   setLabelColorVariable(jsonNetwork.universalLabelColor);  
 
   isDirectionEnabled = jsonNetwork.direction;
-  toggleDirection(isDirectionEnabled);
-  updateDirectionCheckboxRShiny('edgeDirectionToggle', isDirectionEnabled);
+  updateCheckboxRShiny("js_direction_checkbox_flag", "edgeDirectionToggle", isDirectionEnabled);
 
   edgeWidthByWeight = jsonNetwork.edgeOpacityByWeight;
-  updateEdgeByWeightCheckboxRShiny('edgeWidthByWeight', edgeWidthByWeight);
+  updateCheckboxRShiny("js_edgeByWeight_checkbox_flag", "edgeWidthByWeight", edgeWidthByWeight);
+
+  edgeFileColorPriority = true;
+  updateCheckboxRShiny("js_edgeFileColorPriority_checkbox_flag", "edgeFileColorPriority", edgeFileColorPriority);
 };

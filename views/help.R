@@ -165,7 +165,7 @@ generateHelpDiv <- function() {
     been uploaded, links and descriptions can be accessed by right-mouse clicking on the corresponding nodes.<br />
     <span class="numbering"> 4.</span> The <i> Upload EDGE attributes </i> option allows the user to upload annotation
     data regarding the edges. Necessary columns: SourceNode, SourceLayer, TargetNode, TargetLayer and Color (in hex
-    code).<br />
+    code). Optional column: Channel<br />
     <span class="numbering"> 5.</span> The <i> Save Session </i> button allows the user to save the current view
     in JSON format (The format is described at the <i>API</i> tab). The network can be restored by importing the
     relative saved object (see
@@ -204,22 +204,22 @@ Kn	        Group4	        Tn	        Group7	        10      1
     from Node and Layer ones. Users do not need to mention every node, just the ones of interest.</p>
   <pre>Node	Layer	Color	Size	Url	Description
 An	Group1	#6b6a4c	1		This is a node\'s description.
-         Bn	Group1	#ccccff	2		
-         Cn	Group1	#254284	3		
-         En	Group2		4	https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full	Click the Link of this node to read our review on biological networks.
-         Fn	Group2	#7fe5f0	5	http://norma.pavlopouloslab.info/	Click the Link of this node to access our network annotation tool, NORMA.
-         Gn	Group2		1		
-         In	Group3		2		
-         Dn	Group1	#ffb3b3		http://nap.pavlopouloslab.info/	
-         Hn	Group2		3		
-         Kn	Group4	#e0f2f2			
-         Qn	Group6	#ff0067			
-         Rn	Group6				
-         Sn	Group7	#ffd8e8			
-         Tn	Group7		4		
-         </pre><br />
+Bn	Group1	#ccccff	2		
+Cn	Group1	#254284	3		
+En	Group2		4	https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full	Click the Link of this node to read our review on biological networks.
+Fn	Group2	#7fe5f0	5	http://norma.pavlopouloslab.info/	Click the Link of this node to access our network annotation tool, NORMA.
+Gn	Group2		1		
+In	Group3		2		
+Dn	Group1	#ffb3b3		http://nap.pavlopouloslab.info/	
+Hn	Group2		3		
+Kn	Group4	#e0f2f2			
+Qn	Group6	#ff0067			
+Rn	Group6				
+Sn	Group7	#ffd8e8			
+Tn	Group7		4		
+</pre><br />
            
-           <p>Example of the Arena3D<sup>web</sup> <i>Upload EDGE attributes</i> file format.</p>
+           <p>Example of the Arena3D<sup>web</sup> <i>Upload EDGE attributes</i> file format. Optional column: Channel</p>
            <pre>SourceNode	SourceLayer	TargetNode	TargetLayer	Color
          An	        Group1	        Cn	        Group1	        #4EFBE9
          Bn	        Group1	        Fn	        Group2	        #D64EFB
