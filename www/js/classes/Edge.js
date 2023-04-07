@@ -116,14 +116,14 @@ class Edge {
         headLength = intraDirectionArrowSize;
         if (this.interLayer)
             headLength = interDirectionArrowSize;
-        origin = this.calcPointOnLine(points[1], points[0], headLength);
+        origin = points[1];
 
-        headLength = headLength * 500;
+        headLength = headLength * 10;
         headWidth = headLength / 4;
         
         return(new THREE.ArrowHelper(direction.normalize(), origin, 1, edgeColor, headLength, headWidth))
     }
-
+    
     // Channels ======
     createChannels(points) {
         let THREE_curveGroup = new THREE.Group(),
@@ -131,7 +131,7 @@ class Edge {
             curveFactor = this.interLayer ? interChannelCurvature : intraChannelCurvature,
             color, opacity;
 
-        verticalPushConstant = points[0].distanceTo(points[1]) * curveFactor;
+        verticalPushConstant = points[0].distanceTo(points[1]) * curveFactor / 400;
         if (this.channels.length % 2 == 0) // skip straight line
             pushForce = 1;
 
@@ -197,13 +197,6 @@ class Edge {
         arrowHelper.visible = channelVisibility[tag];
         curveGroup.add(arrowHelper);
         return(curveGroup)
-    }
-
-    calcPointOnLine(point1, point2, length) { // TODO check and optimize 
-        let x = (1 - length) * point1.x + length * point2.x;
-        let y = (1 - length) * point1.y + length * point2.y;
-        let z = (1 - length) * point1.z + length * point2.z;
-        return(new THREE.Vector3(x, y, z))
     }
 
     // On animate ======

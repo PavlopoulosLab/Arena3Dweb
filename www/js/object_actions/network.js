@@ -49,10 +49,10 @@ const resetValues = () => {
   interEdgesRemoved = false;
   interLayerEdgeOpacity = 0.4;
   intraLayerEdgeOpacity = 1;
-  interDirectionArrowSize = 0.03;
-  intraDirectionArrowSize = 0.08;
-  interChannelCurvature = 0.05;
-  intraChannelCurvature = 0.05;
+  interDirectionArrowSize = 5;
+  intraDirectionArrowSize = 5;
+  interChannelCurvature = 5;
+  intraChannelCurvature = 15;
   edgeFileColorPriority = false;
   edgePairs = [];
   edgePairs_source = [];
