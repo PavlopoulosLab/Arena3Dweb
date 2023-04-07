@@ -215,13 +215,13 @@ const toggleChannelLayoutMenu = () => {
 };
 
 const changeChannelColor = (pickerElement) => {
-  let channel_name = pickerElement.name;
-  channelColors[channel_name] = pickerElement.value;
+  let channelName = pickerElement.name;
+  channelColors[channelName] = pickerElement.value;
 
   renderInterLayerEdgesFlag = true;
   redrawIntraLayerEdges();
   updateEdgeColorsRShiny();
-}
+};
 
 const redrawIntraLayerEdges = () => {
   for (let i = 0; i < edgeObjects.length; i++)
@@ -229,7 +229,6 @@ const redrawIntraLayerEdges = () => {
       edgeObjects[i].redrawEdge();
 };
 
-// TODO refactor
 const toggleChannelVisibility = (checkbox) => {
   let channelName = checkbox.value,
     checked = checkbox.checked,
@@ -241,16 +240,17 @@ const toggleChannelVisibility = (checkbox) => {
         if (currentEdge.children[j].userData.tag === channelName) {
             currentEdge.children[j].visible = !checked;
             if (isDirectionEnabled)
-              currentEdge.children[j + 1].visible = !checked; // toggle the arrow
+              currentEdge.children[j + 1].visible = !checked; // also toggle the arrow
+
             channelVisibility[channelName] = !checked;
             break; // only one channel allowed per edge
         }
       }
     }
-}
+};
 
 const toggleChannelColorPicker = () => {
-  if (edgeFileColorPriority)
+  if (edgeFileColorPriority || channels.length === 0)
     document.getElementById('channelColorPicker').style.display = 'none';
   else
     document.getElementById('channelColorPicker').style.display = 'block';
