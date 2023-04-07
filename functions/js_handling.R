@@ -11,10 +11,10 @@ updateCheckboxInputFromJS <- function(checkboxName, checkboxValue) {
 toggleCurvatureInputsFromJS <- function() {
   tryCatch({
     if (input$js_channel_curvature_flag) {
-      shinyjs::show("channelCurvature")
+      shinyjs::show("intraChannelCurvature")
       shinyjs::show("interChannelCurvature")
     } else {
-      shinyjs::hide("channelCurvature")
+      shinyjs::hide("intraChannelCurvature")
       shinyjs::hide("interChannelCurvature")
     }
   }, error = function(e) {

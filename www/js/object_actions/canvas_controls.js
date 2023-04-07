@@ -473,9 +473,6 @@ const recenterNetwork = async () => {
   }
 }
 
-// needed to correctly recenter network for VR
-const delay_ms = ms => new Promise(res => setTimeout(res, ms));
-
 const sliderLayerRotate = () => {
   let cavnasSlider = document.getElementsByClassName("canvasSlider")[1],
     td = document.getElementById("sliderValue2");

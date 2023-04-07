@@ -557,23 +557,27 @@ existMandatoryNodeAttributeColumns <- function(nodeAttributes) {
 }
 
 # Upload EDGE attributes ####
-handleInputEdgeAttributeFileUpload <- function() {
+handleInputEdgeAttributeFileUpload <- function() { # TODO update last
   tryCatch({
     renderModal("<h2>Please wait.</h2><br /><p>Uploading edge attributes.</p>")
     edgeFile <- input$edge_attributes_file$datapath
-    edgeAttributes <- read.delim(edgeFile)
-    edgeAttributes$SourceNode <- paste(trimws(edgeAttributes$SourceNode), trimws(edgeAttributes$SourceLayer), sep="_") # concatenation node1_Group1---node2_Group2
-    edgeAttributes$TargetNode <- paste(trimws(edgeAttributes$TargetNode), trimws(edgeAttributes$TargetLayer), sep="_")
-    temp <- edgeAttributes$SourceNode
-    edgeAttributes$SourceNode <- paste(edgeAttributes$SourceNode, edgeAttributes$TargetNode, sep="---")
-    edgeAttributes$TargetNode <- paste(edgeAttributes$TargetNode, temp, sep="---") # both ways, undirected
-    edgeAttributes$Color <- trimws(edgeAttributes$Color)
-    if ("Channel" %in% colnames(edgeAttributes)) {
-      edgeAttributes$Channel <- trimws(edgeAttributes$Channel)
-    }
-    if (!is.null(edgeFile)){
-      callJSHandler("handler_edgeAttributes", edgeAttributes)
-      updateSelectInput(session, "navBar", selected = "Main View")
+    if (!is.null(edgeFile)) {
+      edgeAttributes <- read.delim(edgeFile)
+      if (existMandatoryEdgeAttributeColumns(edgeAttributes)) {
+        edgeAttributes$EdgePair <- paste(
+          paste(trimws(edgeAttributes$SourceNode), trimws(edgeAttributes$SourceLayer), sep = "_"),
+          paste(trimws(edgeAttributes$TargetNode), trimws(edgeAttributes$TargetLayer), sep = "_"),
+          sep = "---"
+        )
+        edgeAttributes$Color <- trimws(edgeAttributes$Color)
+        if ("Channel" %in% colnames(edgeAttributes)) {
+          edgeAttributes$Channel <- trimws(edgeAttributes$Channel)
+          edgeAttributes <- edgeAttributes[, c("EdgePair", "Color", "Channel")]
+        } else
+          edgeAttributes <- edgeAttributes[, c("EdgePair", "Color")]
+        callJSHandler("handler_setEdgeAttributes", toJSON(edgeAttributes))
+        updateSelectInput(session, "navBar", selected = "Main View")
+      }
     }
   }, error = function(e) {
     print(paste0("Error during input edge attributes file upload:  ", e))
@@ -583,33 +587,37 @@ handleInputEdgeAttributeFileUpload <- function() {
   })
 }
 
+existMandatoryEdgeAttributeColumns <- function(edgeAttributes) {
+  exist <- T
+  if (is.null(edgeAttributes$SourceNode) || is.null(edgeAttributes$SourceLayer) ||
+      is.null(edgeAttributes$TargetNode) || is.null(edgeAttributes$TargetLayer) ||
+      is.null(edgeAttributes$Color)) {
+    exist <- F
+    renderWarning("Your edge attribute file must contain at least these five columns:\n
+                  SourceNode, SourceLayer, TargetNode and TargetLayer,
+                  and optionally a Channel name.")
+  }
+  return(exist)
+}
+
 # Save Session ####
 convertSessionToJSON <- function() {
   js_scene_pan <- fromJSON(input$js_scene_pan)
   js_scene_sphere <- fromJSON(input$js_scene_sphere)
   js_layers <- fromJSON(input$js_layers)
   js_nodes <- fromJSON(input$js_nodes)
-  js_edge_pairs <- as.data.frame(fromJSON(input$js_edge_pairs))
+  js_edge_pairs <- fromJSON(input$js_edge_pairs)
+  js_edge_colors <- fromJSON(input$js_edge_colors)
   js_label_color <- input$js_label_color
-  
   direction_flag <- input$edgeDirectionToggle
   edgeByWeight_flag <- input$edgeWidthByWeight
   
   scene <- c(js_scene_pan, js_scene_sphere)
-  
-  # Edges
-  edges_df <- data.frame()
-  for (i in 1:nrow(js_edge_pairs)){
-    line_split <- strsplit(as.character(js_edge_pairs[i, 1]), "---")
-    node1 <- trimws(line_split[[1]][1])
-    node2 <- trimws(line_split[[1]][2])
-    edges_df <- rbind(edges_df, c(node1,node2, js_edge_pairs[i, 2], js_edge_pairs[i, 3], js_edge_pairs[i, 4] ))
-  }
-  colnames(edges_df) <- c("src", "trg", "opacity", "color", "channel")
+  edges <- as.data.frame(c(js_edge_pairs, js_edge_colors))
   
   exportData <- list(
     scene = scene, layers = js_layers, nodes = js_nodes,
-    edges = edges_df, universalLabelColor = js_label_color,
+    edges = edges, universalLabelColor = js_label_color,
     direction = direction_flag, edgeOpacityByWeight = edgeByWeight_flag
   )
   exportData <- toJSON(exportData, auto_unbox = T)

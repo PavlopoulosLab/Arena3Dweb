@@ -17,7 +17,8 @@ isClusteringEnabled <- function() {
     isEnabled <- T
     if (input$localLayoutAlgorithmChoice == "-") {
       isEnabled <- F
-      renderWarning("You need to select a local layout algorithm for the clusters.")
+      renderWarning("You need to select a local layout algorithm for the clusters.
+        Executing layout without clustering.")
     }
   }
   return(isEnabled)

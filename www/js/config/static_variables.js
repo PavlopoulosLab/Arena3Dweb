@@ -30,7 +30,6 @@ let layerGroups = new Map(),
 // nodes
 let nodeIntervalTimeout = "",
     selectedNodeColorFlag = true,
-    selectedDefaultColor = "#A3FF00",
     showAllNodeLabelsFlag = false,
     showSelectedNodeLabelsFlag = true,
     nodeColorPrioritySource = "default", // or "cluster"
@@ -40,32 +39,30 @@ let nodeIntervalTimeout = "",
     nodeNames = []; // to init upload network nodes
 
 // edges
-let selectedEdgeColorFlag = true,
-    edgeDefaultColor = "#CFCFCF",
-    edgeAttributesPriority = true,
+let renderInterLayerEdgesFlag = false,
+    waitEdgeRenderFlag = true,
+    interEdgesRemoved = false,
+    selectedEdgeColorFlag = true,
+    edgeFileColorPriority = false,
     isDirectionEnabled = false,
-    directionArrowSize = 0.03,
-    intraDirectionArrowSize = 0.08,
     edgeWidthByWeight = true,
     interLayerEdgeOpacity = 0.4,
-    layerEdgeOpacity = 1,
-    interChannelCurvature = 0.05,
-    channelCurvature = 0.05,
-    draw_inter_edges_flag = true,
-    edges = [], //canvas objects
-    layerEdges = [], //canvas objects
-    edgePairs = [],
-    layer_edges_pairs = [], //canvas objects
-    edgeValues = [],
-    selected_edges = [],
-    edge_attributes = "",
+    intraLayerEdgeOpacity = 1,
+    interDirectionArrowSize = 5,
+    intraDirectionArrowSize = 5,
+    interChannelCurvature = 5,
+    intraChannelCurvature = 15,
+    edgePairs = [], // keeping for faster recursive node/edge selections
+    edgePairs_source = [], // to init upload/import edge source nodeLayer names
+    edgePairs_target = [], // to init upload/import edge target nodeLayer names
+    edgeValues = [], // to init upload/import edge weights
+    edgeColors = [], // to init upload/import edge weights
     // channels
     channels = [],
     selectedChannels = [], // selected ones from Layout tab
     channelColors = {},
     channelVisibility = {},
-    edge_channels = [],
-    layer_edges_pairs_channels = [];
+    edgeChannels = []; // to init upload/import edge channels
 
 // others
 let interLayerEdgesRenderPauseFlag = false,
