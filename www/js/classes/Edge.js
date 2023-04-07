@@ -20,25 +20,24 @@ class Edge {
 
             this.isSelected = false;
         
-            this.createGeometry();
+            this.initIndexVariables();
+            this.drawEdge();
         }
 
-    createGeometry() { // TODO Group object for channels
+    initIndexVariables() {
         this.sourceNodeIndex = nodeLayerNames.indexOf(this.source);
         this.targetNodeIndex = nodeLayerNames.indexOf(this.target);
         this.sourceLayerIndex = layerGroups[nodeGroups[nodeLayerNames[this.sourceNodeIndex]]];
         this.targetLayerIndex = layerGroups[nodeGroups[nodeLayerNames[this.targetNodeIndex]]];
-        
-        this.drawEdge();        
     }
 
     drawEdge() {
         let points = this.decidePoints();
         
-        if (this.channels.length === 0) // if no channel
+        if (this.channels.length === 0)
             this.createEdge(points);
-        else // channel
-            this.createChannels(points); // direction currently included
+        else
+            this.createChannels(points);
         
         if (this.interLayer)
             scene.add(this.THREE_Object);
@@ -72,7 +71,7 @@ class Edge {
         this.THREE_Object = new THREE.Line(geometry, material);
 
         if (isDirectionEnabled && (opacity !== 0))
-            this.toggleArrow(points, color);
+            this.createArrow(points, color);
     }
 
     decideColor(i = 0, forExport = false) {
@@ -99,7 +98,33 @@ class Edge {
         return(opacity)
     }
 
-    // channel creation
+    createArrow(points, arrowColor) {
+        let THREE_arrowHelper, THREE_Group;
+        THREE_arrowHelper = this.createArrowHelper(points, arrowColor);
+        THREE_Group = new THREE.Group();
+        THREE_Group.add(this.THREE_Object);
+        THREE_Group.add(THREE_arrowHelper);
+        this.THREE_Object = THREE_Group;
+    }
+
+    // direction creation
+    createArrowHelper(points, edgeColor) { // TODO check and optimize 
+        let direction, origin, headLength, headWidth;
+            
+        direction = points[1].clone().sub(points[0]);
+        
+        headLength = intraDirectionArrowSize;
+        if (this.interLayer)
+            headLength = interDirectionArrowSize;
+        origin = this.calcPointOnLine(points[1], points[0], headLength);
+
+        headLength = headLength * 500;
+        headWidth = headLength / 4;
+        
+        return(new THREE.ArrowHelper(direction.normalize(), origin, 1, edgeColor, headLength, headWidth))
+    }
+
+    // Channels ======
     createChannels(points) {
         let THREE_curveGroup = new THREE.Group(),
             verticalPushConstant, verticalPush, pushForce = 0, pushForceFlag = false, direction = 1,
@@ -154,19 +179,19 @@ class Edge {
         curveGroup.add(my_curve)
 
         if (isDirectionEnabled && (opacity !== 0))
-            curveGroup = this.toggleCurvedArrow(curveGroup, curve_points, points, color, tag) // TODO fix arrow directions
+            curveGroup = this.createCurvedArrow(curveGroup, curve_points, points, color, tag) // TODO fix arrow directions
             
         return curveGroup;
     }
 
-    // This functions
+    // This function helps place arrow lines onto the layer instead of through it
     transformMiddlePointOnLayer(point) {
         point.x = 0;
         return(point)
     }
 
-    toggleCurvedArrow(curveGroup, curve_points, points, color, tag) {
-        let arrowHelper = this.createArrow([curve_points[points - 20], curve_points[points]],
+    createCurvedArrow(curveGroup, curve_points, points, color, tag) {
+        let arrowHelper = this.createArrowHelper([curve_points[points - 20], curve_points[points]],
             color);
         arrowHelper.userData.tag = tag;
         arrowHelper.visible = channelVisibility[tag];
@@ -174,32 +199,6 @@ class Edge {
         return(curveGroup)
     }
 
-    toggleArrow(points, edgeColor) { // TODO multi channel
-        let THREE_arrowHelper, THREE_Group;
-        THREE_arrowHelper = this.createArrow(points, edgeColor);
-        THREE_Group = new THREE.Group();
-        THREE_Group.add(this.THREE_Object);
-        THREE_Group.add(THREE_arrowHelper);
-        this.THREE_Object = THREE_Group;
-    }
-
-    // direction creation
-    createArrow(points, edgeColor) { // TODO check and optimize 
-        let direction, origin, headLength, headWidth;
-            
-        direction = points[1].clone().sub(points[0]);
-        
-        headLength = intraDirectionArrowSize;
-        if (this.interLayer)
-            headLength = interDirectionArrowSize;
-        origin = this.calcPointOnLine(points[1], points[0], headLength);
-
-        headLength = headLength * 500;
-        headWidth = headLength / 4;
-        
-        return(new THREE.ArrowHelper(direction.normalize(), origin, 1, edgeColor, headLength, headWidth))
-    }
-      
     calcPointOnLine(point1, point2, length) { // TODO check and optimize 
         let x = (1 - length) * point1.x + length * point2.x;
         let y = (1 - length) * point1.y + length * point2.y;
@@ -219,16 +218,16 @@ class Edge {
                 this.drawEdge();
     }
 
-    areLayersNotHidden = () => {
+    areLayersNotHidden() {
         return(layers[this.sourceLayerIndex].isVisible &&
             layers[this.targetLayerIndex].isVisible)
-    };
+    }
 
-    select = () => {
+    select() {
         this.isSelected = true;
     }
     
-    deselect = () => {
+    deselect() {
         this.isSelected = false;
     }
 }
