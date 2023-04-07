@@ -107,21 +107,16 @@ class Edge {
         this.THREE_Object = THREE_Group;
     }
 
-    // direction creation
-    createArrowHelper(points, edgeColor) { // TODO check and optimize 
-        let direction, origin, headLength, headWidth;
+    createArrowHelper(points, edgeColor) {
+        let direction = points[1].clone().sub(points[0]),
+            origin = points[1],
+            length = 1, headLength, headWidth;
             
-        direction = points[1].clone().sub(points[0]);
-        
-        headLength = intraDirectionArrowSize;
-        if (this.interLayer)
-            headLength = interDirectionArrowSize;
-        origin = points[1];
-
-        headLength = headLength * 10;
+        headLength = this.interLayer ? interDirectionArrowSize : intraDirectionArrowSize;
+        headLength = headLength * 6;
         headWidth = headLength / 4;
         
-        return(new THREE.ArrowHelper(direction.normalize(), origin, 1, edgeColor, headLength, headWidth))
+        return(new THREE.ArrowHelper(direction.normalize(), origin, length, edgeColor, headLength, headWidth))
     }
     
     // Channels ======
@@ -141,8 +136,8 @@ class Edge {
             if (pushForceFlag)
                 pushForce = pushForce + 1;
             pushForceFlag = !pushForceFlag; // flipping flag to increase pushForce next round
-            verticalPush = direction * (verticalPushConstant * pushForce);
             
+            verticalPush = direction * (verticalPushConstant * pushForce);
             color = this.decideColor(i);
             opacity = this.decideOpacity(i);
 
@@ -153,11 +148,10 @@ class Edge {
         this.THREE_Object = THREE_curveGroup;
     }
 
-    createCurve(curveGroup, p1, p2, verticalPush, color, tag, opacity) {
-        let p3 = p1.clone();
-        let p4 = p2.clone();
-        let curve, my_curve;
-        let points = 50;
+    createCurve(curveGroup, p1, p2, verticalPush, color, channelName, opacity) {
+        let p3 = p1.clone(), p4 = p2.clone(),
+            curve, curvePoints, points = 50,
+            curveLine, curveGeometry, curveMaterial;
 
         p3.addScalar(verticalPush);
         p4.addScalar(verticalPush);
@@ -168,18 +162,16 @@ class Edge {
         else
             curve = new THREE.CubicBezierCurve3(p1, p3, p4, p2)
 
-        let curve_points = curve.getPoints(points);
-        
-        let curve_geometry = new THREE.BufferGeometry().setFromPoints(curve_points);
-        let curve_material = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: opacity });
-        
-        my_curve = new THREE.Line(curve_geometry, curve_material)
-        my_curve.userData.tag = tag;
-        my_curve.visible = channelVisibility[my_curve.userData.tag];
-        curveGroup.add(my_curve)
+        curvePoints = curve.getPoints(points);
+        curveGeometry = new THREE.BufferGeometry().setFromPoints(curvePoints);
+        curveMaterial = new THREE.LineBasicMaterial({ color: color, alphaTest: 0.05, transparent: true, opacity: opacity });
+        curveLine = new THREE.Line(curveGeometry, curveMaterial)
+        curveLine.userData.tag = channelName;
+        curveLine.visible = channelVisibility[channelName];
+        curveGroup.add(curveLine);
 
         if (isDirectionEnabled && (opacity !== 0))
-            curveGroup = this.createCurvedArrow(curveGroup, curve_points, points, color, tag) // TODO fix arrow directions
+            curveGroup = this.createCurvedArrow(curveGroup, curvePoints, points, color, channelName)
             
         return curveGroup;
     }
@@ -190,11 +182,13 @@ class Edge {
         return(point)
     }
 
-    createCurvedArrow(curveGroup, curve_points, points, color, tag) {
-        let arrowHelper = this.createArrowHelper([curve_points[points - 20], curve_points[points]],
-            color);
-        arrowHelper.userData.tag = tag;
-        arrowHelper.visible = channelVisibility[tag];
+    createCurvedArrow(curveGroup, curvePoints, points, color, channelName) {
+        let arrowHelper = this.createArrowHelper(
+            [curvePoints[points - 4], curvePoints[points - 1]],
+            color
+        );
+        arrowHelper.userData.tag = channelName;
+        arrowHelper.visible = channelVisibility[channelName];
         curveGroup.add(arrowHelper);
         return(curveGroup)
     }
