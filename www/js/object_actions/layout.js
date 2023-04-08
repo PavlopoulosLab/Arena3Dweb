@@ -30,10 +30,12 @@ const executeLayout = (nodeCoords) => {
   if (isLocalLayoutChosen())
     [target_y_min, target_y_max, target_z_min, target_z_max] = getMinAndMaxTargetCoordValues(nodeCoords);
 
-  // assignYZ
+  // assignXYZ
   for (let i = 0; i < nodeCoords.name.length; i++) {
     nodeName = nodeCoords.name[i];
     
+    nodeObjects[nodeLayerNames.indexOf(nodeName)].setPosition("x", 0);
+
     if (y_max - y_min != 0)
       nodeObjects[nodeLayerNames.indexOf(nodeName)].setPosition("y", 
         ((y_arr[i] - y_min) * (target_y_max - target_y_min) /
