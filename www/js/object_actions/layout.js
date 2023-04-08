@@ -6,12 +6,12 @@ const setLocalFlag = (flag) => { // flag always true here
   localLayoutFlag = flag;
 };
 
-const assignYZ = (nodeCoords) => {
+const executeLayout = (nodeCoords) => {
   // x always 0, assign on floor every time
   let y_arr = [], z_arr = [],
     y_min, y_max, z_min, z_max, minWidth,
     target_y_min, target_y_max, target_z_min, target_z_max,
-    node_name;
+    nodeName;
 
   for (let i = 0; i < nodeCoords.name.length; i++) {
     y_arr.push(Number(nodeCoords.y[i]));
@@ -30,39 +30,32 @@ const assignYZ = (nodeCoords) => {
   if (isLocalLayoutChosen())
     [target_y_min, target_y_max, target_z_min, target_z_max] = getMinAndMaxTargetCoordValues(nodeCoords);
 
+  // assignYZ
   for (let i = 0; i < nodeCoords.name.length; i++) {
-    node_name = nodeCoords.name[i];
-    if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
-      if (y_max - y_min != 0)
-        nodeObjects[nodeLayerNames.indexOf(node_name)].setPosition("y", 
-          ((y_arr[i] - y_min) * (target_y_max - target_y_min) /
-            (y_max - y_min) + target_y_min) * layers[layerGroups[nodeGroups[node_name]]].getScale()); // mapping * layer stretch scale
-      else
-        nodeObjects[nodeLayerNames.indexOf(node_name)].setPosition("y", 0);
-      if (z_max - z_min != 0)
-        nodeObjects[nodeLayerNames.indexOf(node_name)].setPosition("z",
-          ((z_arr[i] - z_min) * (target_z_max - target_z_min) / 
-            (z_max - z_min) + target_z_min) * layers[layerGroups[nodeGroups[node_name]]].getScale()); // mapping
-      else
-        nodeObjects[nodeLayerNames.indexOf(node_name)].setPosition("z", 0);
-    }
+    nodeName = nodeCoords.name[i];
+    
+    if (y_max - y_min != 0)
+      nodeObjects[nodeLayerNames.indexOf(nodeName)].setPosition("y", 
+        ((y_arr[i] - y_min) * (target_y_max - target_y_min) /
+          (y_max - y_min) + target_y_min) * layers[layerGroups[nodeGroups[nodeName]]].getScale());
+    else
+      nodeObjects[nodeLayerNames.indexOf(nodeName)].setPosition("y", 0);
+
+    if (z_max - z_min != 0)
+      nodeObjects[nodeLayerNames.indexOf(nodeName)].setPosition("z",
+        ((z_arr[i] - z_min) * (target_z_max - target_z_min) / 
+          (z_max - z_min) + target_z_min) * layers[layerGroups[nodeGroups[nodeName]]].getScale());
+    else
+      nodeObjects[nodeLayerNames.indexOf(nodeName)].setPosition("z", 0);
   }
   
-  // Clustering
-  if (nodeCoords.group != null) {
-    for (let i = 0; i < nodeCoords.name.length; i++){
-      node_name = nodeCoords.name[i].trim();
-      if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
-        nodeObjects[nodeLayerNames.indexOf(node_name)].setColor(COLOR_VECTOR_280[nodeCoords.group[i]]);
-        nodeObjects[nodeLayerNames.indexOf(node_name)].setCluster(nodeCoords.group[i]);
-      }
-    }
-  }
-  
+  if (isClusteringChosen(nodeCoords))
+    setClustersAndColors(nodeCoords);
+
   updateNodesRShiny();
   updateVRNodesRShiny();
   redrawIntraLayerEdges();
-}
+};
 
 const getMinAndMaxInputCoordValues = (y_arr, z_arr) => {
   let y_min = Math.min.apply(Math, y_arr),
@@ -95,7 +88,7 @@ const isLocalLayoutChosen = () => {
 };
 
 const getMinAndMaxTargetCoordValues = (nodeCoords) => {
-  // all nodes in same layer always at this point ( = assignYZ executed per Layer, here)
+  // all nodes in same layer always at this point ( = executeLayout executed per Layer, here)
   let layerIndex = layerGroups[nodeGroups[nodeCoords.name[0]]],
     scale = layers[layerIndex].getScale(),
     y_coord, z_coord;
@@ -123,6 +116,17 @@ const getMinAndMaxTargetCoordValues = (nodeCoords) => {
   localLayoutFlag = false;
 
   return([target_y_min, target_y_max, target_z_min, target_z_max])
+};
+
+const isClusteringChosen = (nodeCoords) => {
+  return(nodeCoords.group != null)
+};
+
+const setClustersAndColors = (nodeCoords) => {
+  for (let i = 0; i < nodeCoords.name.length; i++) {
+    nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[i])].setColor(COLOR_VECTOR_280[nodeCoords.group[i]]);
+    nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[i])].setCluster(nodeCoords.group[i]);
+  }
 };
 
 const topologyScale = (nodeScale) => {
