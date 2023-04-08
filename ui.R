@@ -39,7 +39,7 @@ ui <- fluidPage(
   tags$head(tags$script(src = "js/general.js")),
   tags$head(tags$script(src = "js/event_listeners.js")),
   tags$head(tags$script(src = "js/on_page_load.js")),
-  theme = shinytheme("darkly"),
+  theme = shinythemes::shinytheme("darkly"),
   navbarPage(
     title = "", id = "navBar", selected = "Home", windowTitle = "Arena3Dweb",
     tabPanel(title = "Home", generateHomeDiv()),
@@ -54,7 +54,7 @@ ui <- fluidPage(
     tabPanel(title = "FPS", generateFPSDiv()),
     tabPanel(title = "Help", generateHelpDiv()),
   ),
-  tags$div(id = "navDiv"),
+  tags$div(id = "navControlButtonsDiv"),
   tags$div(id = "info", "Waiting for Network to be uploaded."),
   tags$div(id = "logo"),
   tags$div(id = "themeDiv"),

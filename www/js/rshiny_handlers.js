@@ -36,7 +36,7 @@ const browseUrl = url => {
 const toggleSceneCoords = (sceneCoordsSwitch) => { // true or false
   if (scene.exists())
     scene.toggleCoords(sceneCoordsSwitch);
-}
+};
 
 const autoRotateScene = (autoRotateFlag) => {
   if (scene.exists()) {
@@ -44,7 +44,7 @@ const autoRotateScene = (autoRotateFlag) => {
     if (!scene.autoRotate)
       clearInterval(scene.intervalTimeout);
   }
-}
+};
 
 //RSHINY HANDLERS----------------------------
 // General ====================
@@ -90,8 +90,8 @@ Shiny.addCustomMessageHandler("handler_resizeLayerLabels", resizeLayerLabels);
 Shiny.addCustomMessageHandler("handler_showNodeLabels", showNodeLabels);
 Shiny.addCustomMessageHandler("handler_resizeNodeLabels", resizeNodeLabels);
 // Layouts and Topology ====================
-Shiny.addCustomMessageHandler("handler_layout", assignYZ);
+Shiny.addCustomMessageHandler("handler_executeLayout", executeLayout);
 Shiny.addCustomMessageHandler("handler_setPerLayerFlag", setPerLayerFlag);
 Shiny.addCustomMessageHandler("handler_setLocalFlag", setLocalFlag);
-Shiny.addCustomMessageHandler("handler_topologyScale", topologyScale);
-Shiny.addCustomMessageHandler("handler_predefined_layer_layout", applyPredefinedLayout);
+Shiny.addCustomMessageHandler("handler_scaleTopology", scaleTopology);
+Shiny.addCustomMessageHandler("handler_applyPredefinedLayout", applyPredefinedLayout);

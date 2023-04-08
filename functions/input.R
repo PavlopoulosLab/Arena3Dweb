@@ -160,7 +160,7 @@ handleLoadSession <- function() {
 }
 
 loadNetworkFromJSONFilepath <- function(filePath) {
-  jsonNetwork <- fromJSON(filePath)
+  jsonNetwork <- jsonlite::fromJSON(filePath)
   if (isJSONValid(jsonNetwork)) {
     reset_UI_values()
     jsonNetwork <- parseUploadedJSON(jsonNetwork)
@@ -533,7 +533,7 @@ handleInputNodeAttributeFileUpload <- function() {
         if (!is.null(nodeAttributes$Description))
           nodeAttributes$Description <- trimws(nodeAttributes$Description)
         
-        callJSHandler("handler_setNodeAttributes", toJSON(nodeAttributes))
+        callJSHandler("handler_setNodeAttributes", jsonlite::toJSON(nodeAttributes))
         callJSHandler("handler_clickNodeColorPriority", "default")
         updateSelectInput(session, "navBar", selected = "Main View")
       }
@@ -557,7 +557,7 @@ existMandatoryNodeAttributeColumns <- function(nodeAttributes) {
 }
 
 # Upload EDGE attributes ####
-handleInputEdgeAttributeFileUpload <- function() { # TODO update last
+handleInputEdgeAttributeFileUpload <- function() {
   tryCatch({
     renderModal("<h2>Please wait.</h2><br /><p>Uploading edge attributes.</p>")
     edgeFile <- input$edge_attributes_file$datapath
@@ -575,7 +575,7 @@ handleInputEdgeAttributeFileUpload <- function() { # TODO update last
           edgeAttributes <- edgeAttributes[, c("EdgePair", "Color", "Channel")]
         } else
           edgeAttributes <- edgeAttributes[, c("EdgePair", "Color")]
-        callJSHandler("handler_setEdgeAttributes", toJSON(edgeAttributes))
+        callJSHandler("handler_setEdgeAttributes", jsonlite::toJSON(edgeAttributes))
         updateSelectInput(session, "navBar", selected = "Main View")
       }
     }
@@ -602,12 +602,12 @@ existMandatoryEdgeAttributeColumns <- function(edgeAttributes) {
 
 # Save Session ####
 convertSessionToJSON <- function() {
-  js_scene_pan <- fromJSON(input$js_scene_pan)
-  js_scene_sphere <- fromJSON(input$js_scene_sphere)
-  js_layers <- fromJSON(input$js_layers)
-  js_nodes <- fromJSON(input$js_nodes)
-  js_edge_pairs <- fromJSON(input$js_edge_pairs)
-  js_edge_colors <- fromJSON(input$js_edge_colors)
+  js_scene_pan <- jsonlite::fromJSON(input$js_scene_pan)
+  js_scene_sphere <- jsonlite::fromJSON(input$js_scene_sphere)
+  js_layers <- jsonlite::fromJSON(input$js_layers)
+  js_nodes <- jsonlite::fromJSON(input$js_nodes)
+  js_edge_pairs <- jsonlite::fromJSON(input$js_edge_pairs)
+  js_edge_colors <- jsonlite::fromJSON(input$js_edge_colors)
   js_label_color <- input$js_label_color
   direction_flag <- input$edgeDirectionToggle
   edgeByWeight_flag <- input$edgeWidthByWeight
@@ -620,7 +620,7 @@ convertSessionToJSON <- function() {
     edges = edges, universalLabelColor = js_label_color,
     direction = direction_flag, edgeOpacityByWeight = edgeByWeight_flag
   )
-  exportData <- toJSON(exportData, auto_unbox = T)
+  exportData <- jsonlite::toJSON(exportData, auto_unbox = T)
   return(exportData)
 }
 

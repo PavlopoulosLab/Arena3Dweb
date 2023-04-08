@@ -3,7 +3,7 @@ generateLayoutsDiv <- function() {
     radioButtons("subgraphChoice", "Select Subgraph to Apply Calculations:",
                  c("Per Layer" = "perLayer", "All Selected Layers" = "allLayers",
                    "Local Layout for Selected Nodes Per Layer" = "nodesPerLayers")),
-    checkboxInput("selectAll", "Select/Deselect All Layers", value = F),
+    checkboxInput("selectAllLayersCheckbox", "Select/Deselect All Layers", value = F),
     tags$div(id = "checkboxdiv", class = "checkboxdiv"),
     tags$div(id = "channelColorLayoutDiv", class = "channelColorLayoutDiv"),
     selectInput("layoutAlgorithmChoice", "Apply Layout Algorithm on Selected Layers:",

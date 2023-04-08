@@ -23,7 +23,7 @@ const updateSceneSphereRShiny = () => {
 // Layers
 const updateLayersRShiny = () => {
   let js_layers = [];
-
+  
   renderInterLayerEdgesFlag = true;
   renderLayerLabelsFlag = true;
   for (let i = 0; i < layers.length; i++) {
@@ -161,7 +161,7 @@ const updateEdgeColorsRShiny = () => {
 
   for (let i = 0; i < edgeObjects.length; i++) {
     if (edgeObjects[i].channels.length > 0) {
-      for (let j = 0; j < edgeObjects[i].channels.length; j++) // TODO decide which color to export
+      for (let j = 0; j < edgeObjects[i].channels.length; j++)
         js_edge_colors.push([edgeObjects[i].decideColor(j, true)]); // forExport: true
     } else
       js_edge_colors.push([edgeObjects[i].decideColor(0, true)]); // forExport: true
@@ -203,13 +203,13 @@ const updateLabelColorRShiny = () => {
 const updateVRLayerLabelsRShiny = () => {
   let js_vr_layer_labels = [],
   target = new THREE.Vector3(),
-  layer_planes = layers.map(({ plane }) => plane);
+  layerPlanes = layers.map(({ plane }) => plane);
 
   renderLayerLabelsFlag = true;
   for (let i = 0; i < layers.length; i++) {
     js_vr_layer_labels.push(
-      [layers[i].getName(), layer_planes[i].getWorldPosition(target).x,
-      layer_planes[i].getWorldPosition(target).y, layer_planes[i].getWorldPosition(target).z]
+      [layers[i].getName(), layerPlanes[i].getWorldPosition(target).x,
+      layerPlanes[i].getWorldPosition(target).y, layerPlanes[i].getWorldPosition(target).z]
     );
   }
 

@@ -547,7 +547,7 @@ input[type="checkbox"] {
 	margin-bottom: 10px
 }
 
-#navDiv {
+#navControlButtonsDiv {
   position: fixed;
   z-index: 1;
   margin-top: 60px;
@@ -839,7 +839,7 @@ input[type="checkbox"] {
     margin-top: 50px;
   }
 
-  #navDiv {
+  #navControlButtonsDiv {
     margin-top: 120px;
   }
 
@@ -859,7 +859,7 @@ input[type="checkbox"] {
     margin-top: 350px;
   }
 
-  #navDiv {
+  #navControlButtonsDiv {
     margin-top: 420px;
   }
 

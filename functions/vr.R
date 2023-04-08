@@ -11,7 +11,7 @@ handleVRCall <- function() {
 
 # void function that creates the user-specific VR ply file
 # and moves it to the api folder
-producePLY <- function(id) { # TODO refactor after edges
+producePLY <- function(id) {
   filename <- paste0('tmp/', id, '.ply')
   con <- file(filename)
   open(con, "w")
@@ -19,7 +19,7 @@ producePLY <- function(id) { # TODO refactor after edges
 format ascii 1.0
 element vertex "), file = con)
   # number of nodes
-  js_nodes <- fromJSON(input$js_nodes_world)
+  js_nodes <- jsonlite::fromJSON(input$js_nodes_world)
   cat(sprintf("%d", nrow(js_nodes)), file = con)
   cat(sprintf("\nproperty float x
 property float y
@@ -29,8 +29,10 @@ property uint8 green
 property uint8 blue
 element edge "), file = con)
   # number of edges
-  js_edge_pairs <- fromJSON(input$js_edge_pairs)
-  cat(sprintf("%d", nrow(js_edge_pairs)), file = con)
+  js_edge_pairs <- jsonlite::fromJSON(input$js_edge_pairs)
+  js_edge_colors <- jsonlite::fromJSON(input$js_edge_colors)
+  edges <- as.data.frame(c(js_edge_pairs, js_edge_colors))
+  cat(sprintf("%d", nrow(edges)), file = con)
   cat(sprintf("\nproperty int vertex1
 property int vertex2
 property uint8 red
@@ -56,10 +58,10 @@ end_header\n"), file = con)
   nodeNames <- paste0(js_nodes$name, "_", js_nodes$layer)
   
   # edge parsing
-  for (i in 1:nrow(js_edge_pairs)){
-    rgbColor <- col2rgb(js_edge_pairs$color[i])
-    nodeIndex1 <- match(js_edge_pairs$src[i], nodeNames) - 1 # starting from index 0
-    nodeIndex2 <- match(js_edge_pairs$trg[i], nodeNames) - 1
+  for (i in 1:nrow(edges)){
+    rgbColor <- col2rgb(edges$color[i])
+    nodeIndex1 <- match(edges$src[i], nodeNames) - 1 # starting from index 0
+    nodeIndex2 <- match(edges$trg[i], nodeNames) - 1
     cat(sprintf("%s %s %s %s %s\n",
                 nodeIndex1, nodeIndex2, # from,to
                 rgbColor[1], rgbColor[2], rgbColor[3]), file = con) # r,g,b
@@ -70,7 +72,7 @@ end_header\n"), file = con)
 # void function that creates the user-specific VR html file
 # and moves it to the api folder
 produceHTML <- function(id) {
-  js_layers <- fromJSON(input$js_vr_layer_labels)
+  js_layers <- jsonlite::fromJSON(input$js_vr_layer_labels)
   js_layers$worldPosition_x <- as.numeric(js_layers$worldPosition_x) / VR_DOWNSCALE_FACTOR # pos x
   js_layers$worldPosition_y <- as.numeric(js_layers$worldPosition_y) / VR_DOWNSCALE_FACTOR + 1.5 # pos y
   js_layers$worldPosition_z <- as.numeric(js_layers$worldPosition_z) / VR_DOWNSCALE_FACTOR - 5 # pos z

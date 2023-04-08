@@ -39,6 +39,8 @@ const attachLayerCheckBox = (c_id, c_value, c_class, c_func, l_class, l_title) =
 
 const selectCheckedLayer = (checkbox) => {
   layers[checkbox.value].isSelected = checkbox.checked;
+
+  renderLayerLabelsFlag = true;
   repaintLayers();
   updateSelectedLayersRShiny();
 };
@@ -91,8 +93,8 @@ const initialSpreadLayers = (direction = 1) => {
 // Event Listeners =====
 const checkHoverOverLayer = (event) => {
   setRaycaster(event);
-  let layer_planes = layers.map(({ plane }) => plane);
-  let intersects = RAYCASTER.intersectObjects(layer_planes);
+  let layerPlanes = layers.map(({ plane }) => plane);
+  let intersects = RAYCASTER.intersectObjects(layerPlanes);
   if (intersects.length > 0) {
     if (lastHoveredLayerIndex !== "") {
       repaintLayers();
@@ -100,7 +102,7 @@ const checkHoverOverLayer = (event) => {
       lastHoveredLayerIndex = "";
     }
     intersects[0].object.material.color.set( 0xff0000 );
-    lastHoveredLayerIndex = findIndexByUuid(layer_planes, intersects[0].object.uuid);
+    lastHoveredLayerIndex = findIndexByUuid(layerPlanes, intersects[0].object.uuid);
   } else {
     if (hoveredLayerPaintedFlag) {
       repaintLayers(); // remove red color from last hovered
@@ -173,6 +175,8 @@ const selectAllLayers = (flag) => {
     layerCheckboxes[i].checked = flag;
     layers[i].isSelected = flag;
   }
+
+  renderLayerLabelsFlag = true;
   repaintLayers();
   updateSelectedLayersRShiny();
 };

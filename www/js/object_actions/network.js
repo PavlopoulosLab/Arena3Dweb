@@ -25,10 +25,14 @@ const resetValues = () => {
 
   // labels
   document.getElementById("labelDiv").innerHTML = "";
-  layer_label_divs = []; //divs
+  layerLabelsDivs = []; //divs
   renderLayerLabelsFlag = false;
-  node_labels = [];
+  nodeLabelsDivs = [];
   renderNodeLabelsFlag = false;
+  showAllLayerLabelsFlag = true;
+  showSelectedLayerLabelsFlag = false;
+  showAllNodeLabelsFlag = false;
+  showSelectedNodeLabelsFlag = true;
 
   // layers
   layers = [];
@@ -183,8 +187,8 @@ const initializeNodes = () => {
 };
 
 const executePostNetworkSetup = () => {
-  let layer_planes = layers.map(({ plane }) => plane);
-  drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
+  let layerPlanes = layers.map(({ plane }) => plane);
+  drag_controls = new DragControls(layerPlanes, camera, renderer.domElement);
 
   createEdgeObjects();
   createLabels();
@@ -228,7 +232,7 @@ const importNetwork = (jsonNetwork) => {
     initializeEdgesFromJSON(jsonNetwork.edges);
     if (areObjectsWithinLimit(edgeValues, MAX_EDGES, "edges") && 
       areObjectsWithinLimit(channels, MAX_CHANNELS, "channels")) {
-        initializeNodesFromJSON(jsonNetwork.nodes, jsonNetwork.scramble_nodes); // TODO check if needed before edges after Classes done
+        initializeNodesFromJSON(jsonNetwork.nodes, jsonNetwork.scramble_nodes);
         
         executePostNetworkSetup();
 
