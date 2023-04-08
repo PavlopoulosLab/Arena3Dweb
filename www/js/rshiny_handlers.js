@@ -93,5 +93,5 @@ Shiny.addCustomMessageHandler("handler_resizeNodeLabels", resizeNodeLabels);
 Shiny.addCustomMessageHandler("handler_executeLayout", executeLayout);
 Shiny.addCustomMessageHandler("handler_setPerLayerFlag", setPerLayerFlag);
 Shiny.addCustomMessageHandler("handler_setLocalFlag", setLocalFlag);
-Shiny.addCustomMessageHandler("handler_topologyScale", topologyScale);
-Shiny.addCustomMessageHandler("handler_predefined_layer_layout", applyPredefinedLayout);
+Shiny.addCustomMessageHandler("handler_scaleTopology", scaleTopology);
+Shiny.addCustomMessageHandler("handler_applyPredefinedLayout", applyPredefinedLayout);

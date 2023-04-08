@@ -101,7 +101,7 @@ server <- function(input, output, session) {
   }, ignoreInit = T)
   
   observeEvent(input$predefined_layout, {
-    callJSHandler("handler_predefined_layer_layout", input$predefined_layout)
+    callJSHandler("handler_applyPredefinedLayout", input$predefined_layout)
   }, ignoreInit = T)
   
   # ~VR ####

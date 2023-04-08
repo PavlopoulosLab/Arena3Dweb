@@ -88,7 +88,7 @@ scaleTopology <- function(networkGraph) {
     nodeScale$scale <- mapper(nodeScale$scale,
                               TARGET_NODE_SCALE_MIN, TARGET_NODE_SCALE_MAX,
                               defaultValue = 1)
-    callJSHandler("handler_topologyScale", nodeScale)
+    callJSHandler("handler_scaleTopology", nodeScale)
   }
 }
 

@@ -129,7 +129,7 @@ const setClustersAndColors = (nodeCoords) => {
   }
 };
 
-const topologyScale = (nodeScale) => {
+const scaleTopology = (nodeScale) => {
   let nodeName;
 
   for (let i = 0; i < nodeScale.nodeName.length; i++) {
@@ -141,88 +141,116 @@ const topologyScale = (nodeScale) => {
 };
 
 const applyPredefinedLayout = (message) => {
-  let numLayers = layers.length;
-  if (numLayers <= 1)  alert("You need at least 2 layers for the layouts");
-  else {
-    if (message) {
-      let layer_planes = layers.map(({ plane }) => plane);
-      // init position in order to position layers more easily
-      scene.tiltDefault();
-      layer_size = layer_planes[0].geometry.parameters.height;
-      for (let i = 0; i < numLayers; i++) {
-        layer_planes[i].position.set(0, 0, 0)
-        layer_planes[i].quaternion.copy(camera.quaternion);
-        if (layer_size < layer_planes[i].geometry.parameters.height) // TODO probably remove this
-          layer_size = layer_planes[i].geometry.parameters.height
+  if (existEnoughLayers()) {
+    resetSceneAndLayerPositions();
+
+    if (message == "parallel") {
+      initialSpreadLayers(1);
+    } else if  (message == "zigZag") {
+      for (let i = 1; i < layers.length; i += 2)
+        layers[i].translateY(500);
+      
+      initialSpreadLayers(1); 
+    } else if (message == "starLike") {
+      applyStarLayout();
+    } else if (message == "cube")
+      applyCubeLayout();
+    
+
+    updateLayersRShiny();
+    updateVRLayerLabelsRShiny();
+    updateVRNodesRShiny();
+  }
+};
+
+const existEnoughLayers = () => {
+  return(layers.length > 1)
+};
+
+const resetSceneAndLayerPositions = () => {
+  let layerPlanes = layers.map(({ plane }) => plane);
+  
+  scene.tiltDefault();
+
+  for (let i = 0; i < layers.length; i++) {
+    layerPlanes[i].position.set(0, 0, 0);
+    layerPlanes[i].quaternion.copy(camera.quaternion);
+  }
+};
+
+const applyStarLayout = () => {
+  let layerPlanes = layers.map(({ plane }) => plane),
+    degree =  360 / layers.length;
+
+  for (let i = 0; i < layers.length; i++) {
+    layerPlanes[i].rotateZ(THREE.Math.degToRad(degree * i));
+    layerPlanes[i].translateY(-layerPlanes[i].geometry.parameters.height / 2 - 100);
+  }
+};
+
+const applyCubeLayout = () => {
+  let layerPlanes = layers.map(({ plane }) => plane),
+    layerSize = getLargestLayerSize(layerPlanes),
+    layersPerCube = 6,
+    cubes = Math.ceil(layers.length / layersPerCube),
+    distance = cubes * (Number(layerSize) + 400),
+    cubeSideCode, max_i, x;
+
+  for (let j = 0; j < cubes; j++) {
+    cubeSideCode = 0;
+    max_i = j * layersPerCube + layersPerCube;
+    if (max_i > layers.length)
+      max_i = layers.length;
+    
+    // Each cube
+    for (let i = j * layersPerCube; i < max_i; i++) {
+      if (cubes > 1) {
+        x = decideLayerStartingPositionX(j, cubes, distance);
+        layerPlanes[i].position.set(x, 0, 0);
       }
-      switch (message) {
-        case "zigZag":
-          for (let i = 1; i < numLayers; i += 2) {
-            layers[i].translateY(500);
-          }
-          initialSpreadLayers(1);
-          updateLayersRShiny();
-          updateVRLayerLabelsRShiny();
-          updateVRNodesRShiny();
-          break;
-        case "parallel":
-          initialSpreadLayers(1);
-          updateLayersRShiny();
-          updateVRLayerLabelsRShiny();
-          updateVRNodesRShiny();
-          break;
-        case "cube":
-          let cube_size = 6;
-          let groups = Math.ceil(numLayers / cube_size);
-          if (numLayers == 6) groups = 1;
-          let distance = groups * (Number(layer_size) + 400);
-          for (let j = 0; j < groups; j++) {
-            if (j * cube_size + cube_size > numLayers) length = numLayers;
-            else length = j * cube_size + cube_size;
-            k = 0;
-            for (let i = j * cube_size; i < length; i++) {
-              //position each group
-              if (groups > 1) {
-                let x;
-                if ((groups % 2)) {
-                  if(j == Math.floor(groups / 2)) x = 0
-                  else if (j < Math.floor(groups / 2))  x = -distance/groups
-                  else  x =  distance/groups
-                } else {
-                  if (j < Math.floor(groups / 2))  x = -distance/groups
-                  else x = distance/groups
-                }
-                layer_planes[i].position.set(x , 0, 0);
-              }
-              if (!(k % 2))
-                layer_planes[i].rotateZ(THREE.Math.degToRad(90));
-              if (k >= 4)
-                layer_planes[i].rotateY(THREE.Math.degToRad(90));
-              // move
-              if (k == 0 || k == 1 || k == 5)
-                layer_planes[i].translateX(layer_planes[i].geometry.parameters.height/2 + 100);
-              else
-                layer_planes[i].translateX(-layer_planes[i].geometry.parameters.height/2 - 100);
-              k++;
-            }
-          }
-          updateLayersRShiny();
-          updateVRLayerLabelsRShiny();
-          updateVRNodesRShiny();
-          break;
-        case "starLike":
-          degree =  360 / numLayers ;
-          for (let i = 0; i < numLayers; i++){
-            layer_planes[i].rotateZ(THREE.Math.degToRad(degree * i));
-            layer_planes[i].translateY(-layer_planes[i].geometry.parameters.height/2 - 100);
-          }
-          updateLayersRShiny();
-          updateVRLayerLabelsRShiny();
-          updateVRNodesRShiny();
-          break;
-        default:
-          break;
-      }
+
+      if (!(cubeSideCode % 2))
+        layerPlanes[i].rotateZ(THREE.Math.degToRad(90));
+
+      if (cubeSideCode >= 4)
+        layerPlanes[i].rotateY(THREE.Math.degToRad(90));
+
+      if (cubeSideCode == 0 || cubeSideCode == 1 || cubeSideCode == 5)
+        layerPlanes[i].translateX(layerPlanes[i].geometry.parameters.height / 2 + 100);
+      else
+        layerPlanes[i].translateX(-layerPlanes[i].geometry.parameters.height / 2 - 100);
+
+      cubeSideCode++;
     }
   }
-}
+};
+
+const getLargestLayerSize = (layerPlanes) => {
+  let layerSize = layerPlanes[0].geometry.parameters.height;
+
+  for (let i = 1; i < layers.length; i++)
+    if (layerPlanes[i].geometry.parameters.height > layerSize)
+      layerSize = layerPlanes[i].geometry.parameters.height;
+  
+  return(layerSize)
+};
+
+const decideLayerStartingPositionX = (j, cubes, distance) => {
+  let x;
+  
+  if (cubes % 2) {
+    if (j == Math.floor(cubes / 2))
+      x = 0;
+    else if (j < Math.floor(cubes / 2))
+      x = -distance / cubes;
+    else
+      x = distance / cubes;
+  } else {
+    if (j < Math.floor(cubes / 2))
+      x = -distance / cubes;
+    else
+      x = distance / cubes;
+  }
+
+  return(x)
+};

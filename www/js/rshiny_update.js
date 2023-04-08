@@ -203,13 +203,13 @@ const updateLabelColorRShiny = () => {
 const updateVRLayerLabelsRShiny = () => {
   let js_vr_layer_labels = [],
   target = new THREE.Vector3(),
-  layer_planes = layers.map(({ plane }) => plane);
+  layerPlanes = layers.map(({ plane }) => plane);
 
   renderLayerLabelsFlag = true;
   for (let i = 0; i < layers.length; i++) {
     js_vr_layer_labels.push(
-      [layers[i].getName(), layer_planes[i].getWorldPosition(target).x,
-      layer_planes[i].getWorldPosition(target).y, layer_planes[i].getWorldPosition(target).z]
+      [layers[i].getName(), layerPlanes[i].getWorldPosition(target).x,
+      layerPlanes[i].getWorldPosition(target).y, layerPlanes[i].getWorldPosition(target).z]
     );
   }
 

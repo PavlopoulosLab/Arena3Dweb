@@ -187,8 +187,8 @@ const initializeNodes = () => {
 };
 
 const executePostNetworkSetup = () => {
-  let layer_planes = layers.map(({ plane }) => plane);
-  drag_controls = new DragControls(layer_planes, camera, renderer.domElement);
+  let layerPlanes = layers.map(({ plane }) => plane);
+  drag_controls = new DragControls(layerPlanes, camera, renderer.domElement);
 
   createEdgeObjects();
   createLabels();
