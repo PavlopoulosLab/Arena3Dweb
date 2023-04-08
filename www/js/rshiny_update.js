@@ -161,7 +161,7 @@ const updateEdgeColorsRShiny = () => {
 
   for (let i = 0; i < edgeObjects.length; i++) {
     if (edgeObjects[i].channels.length > 0) {
-      for (let j = 0; j < edgeObjects[i].channels.length; j++) // TODO decide which color to export
+      for (let j = 0; j < edgeObjects[i].channels.length; j++)
         js_edge_colors.push([edgeObjects[i].decideColor(j, true)]); // forExport: true
     } else
       js_edge_colors.push([edgeObjects[i].decideColor(0, true)]); // forExport: true

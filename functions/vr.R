@@ -11,7 +11,7 @@ handleVRCall <- function() {
 
 # void function that creates the user-specific VR ply file
 # and moves it to the api folder
-producePLY <- function(id) { # TODO refactor after edges
+producePLY <- function(id) {
   filename <- paste0('tmp/', id, '.ply')
   con <- file(filename)
   open(con, "w")

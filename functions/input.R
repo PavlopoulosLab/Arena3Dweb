@@ -557,7 +557,7 @@ existMandatoryNodeAttributeColumns <- function(nodeAttributes) {
 }
 
 # Upload EDGE attributes ####
-handleInputEdgeAttributeFileUpload <- function() { # TODO update last
+handleInputEdgeAttributeFileUpload <- function() {
   tryCatch({
     renderModal("<h2>Please wait.</h2><br /><p>Uploading edge attributes.</p>")
     edgeFile <- input$edge_attributes_file$datapath

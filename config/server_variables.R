@@ -20,7 +20,7 @@ HIDE_BUTTONS <- paste0("hideButton", c(1:8))
 FLOOR_DEFAULT_COLOR <- "#777777"
 FLOOR_DEFAULT_WIDTH <- "1000"
 # Themes ####
-NODE_COLORS <- c(brewer.pal(12, 'Set3'), brewer.pal(6, 'Set3')) # 18 Layers # TODO same with JS
+NODE_COLORS <- c(brewer.pal(12, 'Set3'), brewer.pal(6, 'Set3')) # 18 Layers
 EDGE_DEFAULT_COLOR = "#CFCFCF"
 CHANNEL_COLORS_LIGHT <- brewer.pal(MAX_CHANNELS, 'Set3')
 CHANNEL_COLORS_DARK <- brewer.pal(MAX_CHANNELS, 'Set1')

@@ -232,7 +232,7 @@ const importNetwork = (jsonNetwork) => {
     initializeEdgesFromJSON(jsonNetwork.edges);
     if (areObjectsWithinLimit(edgeValues, MAX_EDGES, "edges") && 
       areObjectsWithinLimit(channels, MAX_CHANNELS, "channels")) {
-        initializeNodesFromJSON(jsonNetwork.nodes, jsonNetwork.scramble_nodes); // TODO check if needed before edges after Classes done
+        initializeNodesFromJSON(jsonNetwork.nodes, jsonNetwork.scramble_nodes);
         
         executePostNetworkSetup();
 
