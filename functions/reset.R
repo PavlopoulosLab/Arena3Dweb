@@ -3,7 +3,6 @@ reset_UI_values <- function() {
   # scene
   reset("toggleSceneCoords")
   reset("autoRotateScene")
-  reset("predefined_layout")
   # layers
   reset("showLayerLabelsRadio")
   reset("showLayerCoords")

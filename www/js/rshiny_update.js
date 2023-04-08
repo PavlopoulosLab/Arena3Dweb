@@ -23,7 +23,7 @@ const updateSceneSphereRShiny = () => {
 // Layers
 const updateLayersRShiny = () => {
   let js_layers = [];
-
+  
   renderInterLayerEdgesFlag = true;
   renderLayerLabelsFlag = true;
   for (let i = 0; i < layers.length; i++) {

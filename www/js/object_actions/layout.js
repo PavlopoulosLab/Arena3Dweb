@@ -158,7 +158,7 @@ const applyPredefinedLayout = (message) => {
     } else if (message == "cube")
       applyCubeLayout();
     
-
+    updateSceneSphereRShiny();
     updateLayersRShiny();
     updateVRLayerLabelsRShiny();
     updateVRNodesRShiny();
