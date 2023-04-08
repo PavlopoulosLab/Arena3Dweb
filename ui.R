@@ -54,7 +54,7 @@ ui <- fluidPage(
     tabPanel(title = "FPS", generateFPSDiv()),
     tabPanel(title = "Help", generateHelpDiv()),
   ),
-  tags$div(id = "navDiv"),
+  tags$div(id = "navControlButtonsDiv"),
   tags$div(id = "info", "Waiting for Network to be uploaded."),
   tags$div(id = "logo"),
   tags$div(id = "themeDiv"),
