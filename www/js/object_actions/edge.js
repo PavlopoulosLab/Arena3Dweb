@@ -28,13 +28,13 @@ const decideEdgeColors = (i) => {
   if (edgeChannels && edgeChannels[i]) {
       tempEdgeColors = [];
     for (let j = 0; j < edgeChannels[i].length; j++) {
-      if (edgeColors[i][j] !== "")
+      if (edgeColors[i][j] !== [""])
         tempEdgeColors.push(edgeColors[i][j]);
       else
         tempEdgeColors.push(channelColors[edgeChannels[i][j]]);
     }
-  } else if (edgeColors[i] !== "")
-    tempEdgeColors = edgeColors[i];
+  } else if (edgeColors[i][0] !== "")
+    tempEdgeColors[0] = edgeColors[i][0];
     
   return(tempEdgeColors)
 };
@@ -362,6 +362,8 @@ const setEdgeColorFromAttributes = (edgeAttributes) => {
       }
     }
   }
+
+  updateEdgeColorsRShiny();
 };
 
 // Canvas Controls ======

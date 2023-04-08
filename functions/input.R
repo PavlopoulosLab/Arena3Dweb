@@ -533,7 +533,7 @@ handleInputNodeAttributeFileUpload <- function() {
         if (!is.null(nodeAttributes$Description))
           nodeAttributes$Description <- trimws(nodeAttributes$Description)
         
-        callJSHandler("handler_setNodeAttributes", toJSON(nodeAttributes))
+        callJSHandler("handler_setNodeAttributes", jsonlite::toJSON(nodeAttributes))
         callJSHandler("handler_clickNodeColorPriority", "default")
         updateSelectInput(session, "navBar", selected = "Main View")
       }
@@ -575,7 +575,7 @@ handleInputEdgeAttributeFileUpload <- function() {
           edgeAttributes <- edgeAttributes[, c("EdgePair", "Color", "Channel")]
         } else
           edgeAttributes <- edgeAttributes[, c("EdgePair", "Color")]
-        callJSHandler("handler_setEdgeAttributes", toJSON(edgeAttributes))
+        callJSHandler("handler_setEdgeAttributes", jsonlite::toJSON(edgeAttributes))
         updateSelectInput(session, "navBar", selected = "Main View")
       }
     }
@@ -620,7 +620,7 @@ convertSessionToJSON <- function() {
     edges = edges, universalLabelColor = js_label_color,
     direction = direction_flag, edgeOpacityByWeight = edgeByWeight_flag
   )
-  exportData <- toJSON(exportData, auto_unbox = T)
+  exportData <- jsonlite::toJSON(exportData, auto_unbox = T)
   return(exportData)
 }
 
