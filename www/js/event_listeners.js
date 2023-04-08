@@ -22,6 +22,7 @@ const keyPressed = (event) => {
       scene.axisPressed = 'c';
     else if (code == 37 || code == 38 || code == 39 || code == 40) {
       scene.translatePanWithArrow(code);
+
       updateScenePanRShiny();
       updateVRLayerLabelsRShiny();
       updateVRNodesRShiny();
@@ -30,9 +31,8 @@ const keyPressed = (event) => {
 };
 
 const axisRelease = () => {
-  if (scene.exists()) {
+  if (scene.exists())
     scene.axisPressed = "";
-  }
 };
 
 // mouse keys press event
@@ -59,13 +59,16 @@ const clickDown = (event) => {
 // while mouse button held, drag event
 const clickDrag = (event) => {
   if (scene.exists()) {
-    let distance = Math.sqrt(Math.pow(mousePreviousX-event.screenX, 2) + Math.pow(mousePreviousY-event.screenY, 2));
+    let distance = Math.sqrt(
+      Math.pow(mousePreviousX - event.screenX, 2) + Math.pow(mousePreviousY - event.screenY, 2)
+    );
 
     if (distance > 10) {
-      let x = event.screenX,
-        y = event.screenY;
+      let x = event.screenX, y = event.screenY;
+
       if (scene.leftClickPressed) {
         let selectedNodePositions = getSelectedNodes();
+
         scene.dragging = true;
         if (event.shiftKey) {
           lastHoveredLayerIndex = ""; // to be able to lasso inside layer
@@ -81,9 +84,10 @@ const clickDrag = (event) => {
         event.preventDefault();
         sceneOrbit(x, y);
       }
+
       mousePreviousX = x;
       mousePreviousY = y;
-    } 
+    }
     
     if (!scene.leftClickPressed && !scene.middleClickPressed)
       if (!checkHoverOverNode(event))
@@ -131,13 +135,13 @@ const clickUp = (event) => {
         decideNodeLabelFlags();
         updateSelectedNodesRShiny();
       }
+
       shiftX = "";
       shiftY = "";
       scene.remove(lasso);
       lasso = "";
-    } else if (event.button == 1) {
+    } else if (event.button == 1)
       scene.middleClickPressed = false;
-    }
   }
 };
 
@@ -159,18 +163,22 @@ const dblClick = (event) => {
 };
 
 // right mouse click on node
-const replaceContextMenuOverNode = (evt) => { 
-  if (optionsList !== ""){
+const replaceContextMenuOverNode = (event) => {
+  if (optionsList !== "") {
     document.getElementById("labelDiv").removeChild(optionsList);
     optionsList = "";
   }
-  let pos = "";
+  
   for (let i = 0; i < nodeObjects.length; i++) {
-    let nodeX = xBoundMax + nodeObjects[i].getWorldPosition("x");
-    let nodeY = yBoundMax - nodeObjects[i].getWorldPosition("y");
-    if (Math.pow(nodeX - evt.layerX, 2) + Math.pow(nodeY - evt.layerY, 2) <= Math.pow((SPHERE_RADIUS + 1), 2)) {
-      evt.preventDefault();
-      //creating list and appending to 3d-graph div
+    let nodeX = xBoundMax + nodeObjects[i].getWorldPosition("x"),
+      nodeY = yBoundMax - nodeObjects[i].getWorldPosition("y");
+
+    if (rightClickedOnNode(nodeX, nodeY, event)) {
+      let option;
+
+      event.preventDefault();
+
+      // creating list and appending to 3d-graph div
       optionsList = document.createElement("select");
       optionsList.setAttribute('class', 'optionsBox');
       optionsList.setAttribute('id', 'mySelect');
@@ -178,42 +186,54 @@ const replaceContextMenuOverNode = (evt) => {
       optionsList.style.left = nodeX.toString().concat("px");
       optionsList.style.top = nodeY.toString().concat("px");
       optionsList.style.display = "inline-block";
-      //Neighbors
-      let option = document.createElement("option");
-      option.value = ""; //option 0
+      
+      // Do nothing
+      option = document.createElement("option");
+      option.value = "";
       option.text = "-";
       optionsList.appendChild(option);
+
+      // Neighbors
       option = document.createElement("option");
-      option.value = i; //option 1
+      option.value = i;
       option.text = "Select Neighbors";
       optionsList.appendChild(option);
-      //MultiLayer Path
+      
+      // MultiLayer Path
       option = document.createElement("option");
-      option.value = i; //option 2
+      option.value = i;
       option.text = "Select MultiLayer Path";
       optionsList.appendChild(option);
-      //Downstream Path
+      
+      // Downstream Path
       option = document.createElement("option");
-      option.value = i; //option 3
+      option.value = i;
       option.text = "Select Downstream Path";
       optionsList.appendChild(option);
 
+      // Link
       if (nodeObjects[i].url != "") {
         option = document.createElement("option");
         option.value = nodeObjects[i].url;
-        option.text = "Link"; //option 3
+        option.text = "Link";
         optionsList.appendChild(option);
       }
 
+      // Description
       if (nodeObjects[i].descr != "") {
         option = document.createElement("option");
         option.value = nodeObjects[i].descr;
-        option.text = "Description"; //option 4
+        option.text = "Description";
         optionsList.appendChild(option);
       }
 
       document.getElementById("labelDiv").appendChild(optionsList);
+
       break;
     }
   }
+};
+
+const rightClickedOnNode = (nodeX, nodeY, event) => {
+  return(Math.pow(nodeX - event.layerX, 2) + Math.pow(nodeY - event.layerY, 2) <= Math.pow((SPHERE_RADIUS + 1), 2))
 };

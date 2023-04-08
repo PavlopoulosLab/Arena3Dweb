@@ -42,7 +42,7 @@ const initializeCanvasDiv = () => {
 
 const addCanvasEventListeners = () => {
     let canvas = document.getElementsByTagName("canvas")[0];
-    canvas.tabIndex = 1; //default value = -1, giving focus on canvas so it can register keydown events
+    canvas.tabIndex = 1; // default value = -1, giving focus on canvas so it can register keydown events
     canvas.addEventListener("wheel", sceneZoom);
     canvas.addEventListener("keydown", keyPressed);
     canvas.addEventListener("keyup", axisRelease);
@@ -50,7 +50,7 @@ const addCanvasEventListeners = () => {
     canvas.addEventListener('mousemove', clickDrag);
     canvas.addEventListener('mouseup', clickUp);
     canvas.addEventListener('dblclick', dblClick);
-    canvas.addEventListener('contextmenu', replaceContextMenuOverNode); //implementing right click toolbox over nodes
+    canvas.addEventListener('contextmenu', replaceContextMenuOverNode); // implementing right click toolbox over nodes
 };
 
 const initializeColorPickers = () => {
