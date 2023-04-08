@@ -19,7 +19,7 @@ producePLY <- function(id) {
 format ascii 1.0
 element vertex "), file = con)
   # number of nodes
-  js_nodes <- fromJSON(input$js_nodes_world)
+  js_nodes <- jsonlite::fromJSON(input$js_nodes_world)
   cat(sprintf("%d", nrow(js_nodes)), file = con)
   cat(sprintf("\nproperty float x
 property float y
@@ -29,7 +29,7 @@ property uint8 green
 property uint8 blue
 element edge "), file = con)
   # number of edges
-  js_edge_pairs <- fromJSON(input$js_edge_pairs)
+  js_edge_pairs <- jsonlite::fromJSON(input$js_edge_pairs)
   cat(sprintf("%d", nrow(js_edge_pairs)), file = con)
   cat(sprintf("\nproperty int vertex1
 property int vertex2
@@ -70,7 +70,7 @@ end_header\n"), file = con)
 # void function that creates the user-specific VR html file
 # and moves it to the api folder
 produceHTML <- function(id) {
-  js_layers <- fromJSON(input$js_vr_layer_labels)
+  js_layers <- jsonlite::fromJSON(input$js_vr_layer_labels)
   js_layers$worldPosition_x <- as.numeric(js_layers$worldPosition_x) / VR_DOWNSCALE_FACTOR # pos x
   js_layers$worldPosition_y <- as.numeric(js_layers$worldPosition_y) / VR_DOWNSCALE_FACTOR + 1.5 # pos y
   js_layers$worldPosition_z <- as.numeric(js_layers$worldPosition_z) / VR_DOWNSCALE_FACTOR - 5 # pos z

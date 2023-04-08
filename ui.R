@@ -39,7 +39,7 @@ ui <- fluidPage(
   tags$head(tags$script(src = "js/general.js")),
   tags$head(tags$script(src = "js/event_listeners.js")),
   tags$head(tags$script(src = "js/on_page_load.js")),
-  theme = shinytheme("darkly"),
+  theme = shinythemes::shinytheme("darkly"),
   navbarPage(
     title = "", id = "navBar", selected = "Home", windowTitle = "Arena3Dweb",
     tabPanel(title = "Home", generateHomeDiv()),

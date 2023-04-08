@@ -131,6 +131,8 @@ const renderLayerLabels = () => {
     else {
       if (showSelectedLayerLabelsFlag) {
         let selected_layers = getSelectedLayers();
+
+        removeAllLayerLabels();
         if (selected_layers.length > 0)
           redrawLayerLabels("selected");
       }
@@ -138,6 +140,11 @@ const renderLayerLabels = () => {
 
     renderLayerLabelsFlag = false;
   }
+};
+
+const removeAllLayerLabels = () => {
+  for (let i = 0; i < layers.length; i++)
+    layerLabelsDivs[i].style.display = "none";
 };
 
 const redrawLayerLabels = (mode) => {

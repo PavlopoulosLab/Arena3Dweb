@@ -34,7 +34,7 @@ reset_UI_values <- function() {
   reset("interChannelCurvature")
   shinyjs::hide("interChannelCurvature") 
   # layouts
-  reset("selectAll")
+  reset("selectAllLayersCheckbox")
   reset("topologyScaleMetricChoice")
   reset("layoutAlgorithmChoice")
   reset("clusteringAlgorithmChoice")

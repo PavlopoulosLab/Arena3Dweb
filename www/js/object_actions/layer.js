@@ -39,6 +39,8 @@ const attachLayerCheckBox = (c_id, c_value, c_class, c_func, l_class, l_title) =
 
 const selectCheckedLayer = (checkbox) => {
   layers[checkbox.value].isSelected = checkbox.checked;
+
+  renderLayerLabelsFlag = true;
   repaintLayers();
   updateSelectedLayersRShiny();
 };
@@ -173,6 +175,8 @@ const selectAllLayers = (flag) => {
     layerCheckboxes[i].checked = flag;
     layers[i].isSelected = flag;
   }
+
+  renderLayerLabelsFlag = true;
   repaintLayers();
   updateSelectedLayersRShiny();
 };

@@ -160,7 +160,7 @@ handleLoadSession <- function() {
 }
 
 loadNetworkFromJSONFilepath <- function(filePath) {
-  jsonNetwork <- fromJSON(filePath)
+  jsonNetwork <- jsonlite::fromJSON(filePath)
   if (isJSONValid(jsonNetwork)) {
     reset_UI_values()
     jsonNetwork <- parseUploadedJSON(jsonNetwork)
@@ -602,12 +602,12 @@ existMandatoryEdgeAttributeColumns <- function(edgeAttributes) {
 
 # Save Session ####
 convertSessionToJSON <- function() {
-  js_scene_pan <- fromJSON(input$js_scene_pan)
-  js_scene_sphere <- fromJSON(input$js_scene_sphere)
-  js_layers <- fromJSON(input$js_layers)
-  js_nodes <- fromJSON(input$js_nodes)
-  js_edge_pairs <- fromJSON(input$js_edge_pairs)
-  js_edge_colors <- fromJSON(input$js_edge_colors)
+  js_scene_pan <- jsonlite::fromJSON(input$js_scene_pan)
+  js_scene_sphere <- jsonlite::fromJSON(input$js_scene_sphere)
+  js_layers <- jsonlite::fromJSON(input$js_layers)
+  js_nodes <- jsonlite::fromJSON(input$js_nodes)
+  js_edge_pairs <- jsonlite::fromJSON(input$js_edge_pairs)
+  js_edge_colors <- jsonlite::fromJSON(input$js_edge_colors)
   js_label_color <- input$js_label_color
   direction_flag <- input$edgeDirectionToggle
   edgeByWeight_flag <- input$edgeWidthByWeight
