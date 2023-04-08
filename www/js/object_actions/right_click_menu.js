@@ -9,11 +9,12 @@ const executeCommand = (item) => {
       executeSelectMultiLayerPathCommand(item);
     } else if (selectedOption == "Select Downstream Path") {
       executeSelectDownstreamPathCommand(item);
-    } else if (selectedOption == "Link") // Link
+    } else if (selectedOption == "Link") {
       window.open(item.value);
-    else if (selectedOption == "Description") { // Description
+    } else if (selectedOption == "Description") {
       let descrDiv = document.getElementById("descrDiv"),
-          p = descrDiv.getElementsByTagName('p')[0];
+        p = descrDiv.getElementsByTagName('p')[0];
+
       p.innerHTML = item.value;
       descrDiv.style.display = "inline-block";
     }
@@ -25,25 +26,22 @@ const executeCommand = (item) => {
 
     finishLoader();
   }
-}
+};
 
 const executeSelectNeightborsCommand = (item) => {
-  for (let i = 0; i < edgeObjects.length; i++){ //random x,y,z
+  let index1, index2;
+
+  for (let i = 0; i < edgeObjects.length; i++) {
     index1 = nodeLayerNames.indexOf(edgeObjects[i].source);
     index2 = nodeLayerNames.indexOf(edgeObjects[i].target);
+
     if (index1 == item.value) {
-      if (!nodeObjects[index2].isSelected) {
-        nodeObjects[index2].isSelected = true;
-        if (selectedNodeColorFlag)
-          nodeObjects[index2].setColor(SELECTED_DEFAULT_COLOR);
-      }
+      nodeObjects[index2].isSelected = true;
+      repaintNode(index2);
       edgeObjects[i].select();
     } else if (index2 == item.value) {
-      if (!nodeObjects[index1].isSelected){
-        nodeObjects[index1].isSelected = true;
-        if (selectedNodeColorFlag)
-          nodeObjects[index1].setColor(SELECTED_DEFAULT_COLOR);
-      }
+      nodeObjects[index1].isSelected = true;
+      repaintNode(index1);
       edgeObjects[i].select();
     }
   }
@@ -65,8 +63,7 @@ const executeSelectMultiLayerPathCommand = (item) => {
         // code from Select neighbors above
         if (!nodeObjects[index2].isSelected) {
           nodeObjects[index2].isSelected = true;
-          if (selectedNodeColorFlag)
-            nodeObjects[index2].setColor(SELECTED_DEFAULT_COLOR); 
+          repaintNode(index2);
         }
         edgeObjects[i].select();
         //until here
@@ -75,8 +72,7 @@ const executeSelectMultiLayerPathCommand = (item) => {
         // code from Select neighbors above
         if (!nodeObjects[index1].isSelected){
           nodeObjects[index1].isSelected = true;
-          if (selectedNodeColorFlag)
-            nodeObjects[index1].setColor(SELECTED_DEFAULT_COLOR);
+          repaintNode(index1);
         }
         edgeObjects[i].select(); //until here
       }
@@ -113,8 +109,7 @@ const recursiveDownstreamHighlight = (layerPath, currentNode, previousNode) => {
     //selecting and painting node
     if (!nodeObjects[currentNode].isSelected) {
       nodeObjects[currentNode].isSelected = true;
-      if (selectedNodeColorFlag)
-        nodeObjects[currentNode].setColor(SELECTED_DEFAULT_COLOR);
+      repaintNode(currentNode);
     }
     //selecting and painting edge
     if (currentNode != previousNode){ // skipping first node call check with itself
