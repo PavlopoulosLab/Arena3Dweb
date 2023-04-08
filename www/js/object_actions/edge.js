@@ -218,13 +218,9 @@ const changeChannelColor = (pickerElement) => {
   let channelName = pickerElement.name;
   channelColors[channelName] = pickerElement.value;
 
-  redrawAllEdges();
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
   updateEdgeColorsRShiny();
-};
-
-const redrawAllEdges = () => {
-  for (let i = 0; i < edgeObjects.length; i++)
-    edgeObjects[i].redrawEdge();
 };
 
 const redrawIntraLayerEdges = () => {
@@ -266,28 +262,35 @@ const unselectAllEdges = () => {
   for (let i = 0; i < edgeObjects.length; i++)
     edgeObjects[i].deselect();
 
-  redrawAllEdges();
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
 };
 
 // Handlers ======
 const toggleDirection = (message) => { // true or false
   isDirectionEnabled = message;
-  redrawAllEdges();
+
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
 };
 
 const setIntraDirectionArrowSize = (message) => {
   intraDirectionArrowSize = message;
+
   redrawIntraLayerEdges();
 };
 
 const setInterDirectionArrowSize = (message) => {
   interDirectionArrowSize = message;
+
   renderInterLayerEdgesFlag = true;
 };
 
 const setEdgeWidthByWeight = (message) => { // true or false
   edgeWidthByWeight = message;
-  redrawAllEdges();
+
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
 };
 
 const setIntraLayerEdgeOpacity = (message) => {
@@ -302,12 +305,16 @@ const setInterLayerEdgeOpacity = (message) => {
 
 const setEdgeSelectedColorPriority = (message) => { // true or false
   selectedEdgeColorFlag = message;
-  redrawAllEdges();
+
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
 };
 
 const setEdgeFileColorPriority = (message) => { // true or false
   edgeFileColorPriority = message;
-  redrawAllEdges();
+  
+  renderInterLayerEdgesFlag = true;
+  redrawIntraLayerEdges();
   toggleChannelColorPicker();
 };
 
@@ -328,9 +335,11 @@ const setEdgeAttributes = (edgeAttributes) => {
 
   checkbox = document.getElementById("edgeFileColorPriority");
   if (!checkbox.checked)
-    checkbox.click(); // contains redrawAllEdges() on event click
-  else 
-    redrawAllEdges();
+    checkbox.click(); // contains draw events on event click
+  else {
+    renderInterLayerEdgesFlag = true;
+    redrawIntraLayerEdges();
+  }
   
   updateEdgeColorsRShiny();
 };

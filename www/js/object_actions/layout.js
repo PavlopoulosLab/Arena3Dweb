@@ -1,61 +1,36 @@
-const assignYZ = (nodeCoords) => {
-  let y_arr = [], //x always 0, assign on floor every time
-      z_arr = [],
-      node_name = "",
-      y_coord = z_coord = 0,
-      layerIndex = "",
-      i;
+const setPerLayerFlag = (numFlag) => { // from -1: to length of Layers
+  perLayerLayoutFLag = numFlag;
+};
 
-  for (i = 0; i < nodeCoords.name.length; i++){
+const setLocalFlag = (flag) => { // flag always true here
+  localLayoutFlag = flag;
+};
+
+const assignYZ = (nodeCoords) => {
+  // x always 0, assign on floor every time
+  let y_arr = [], z_arr = [],
+    y_min, y_max, z_min, z_max, minWidth,
+    target_y_min, target_y_max, target_z_min, target_z_max,
+    node_name;
+
+  for (let i = 0; i < nodeCoords.name.length; i++) {
     y_arr.push(Number(nodeCoords.y[i]));
     z_arr.push(Number(nodeCoords.z[i]));
   }
 
-  let y_min = Math.min.apply(Math, y_arr),
-    y_max = Math.max.apply(Math, y_arr),
-    z_min = Math.min.apply(Math, z_arr),
-    z_max = Math.max.apply(Math, z_arr),
-    minWidth,
-    target_y_min, target_y_max,
-    target_z_min, target_z_max,
-    layerWidths = layers.map(({ geometry_parameters_width }) => geometry_parameters_width);
+  [y_min, y_max, z_min, z_max] = getMinAndMaxInputCoordValues(y_arr, z_arr);
+  minWidth = getMinLayerWidth();
 
-  minWidth = Math.min(...layerWidths); 
-
-  if (perLayerLayoutFLag !== undefined) {
-    minWidth = layers.find(x => x.name === perLayerLayoutFLag).geometry_parameters_width;
-    perLayerLayoutFLag = undefined;
-  }
+  if (isPerLayerOrLocalLayoutChosen())
+    minWidth = getPerLayerMinWidth();
 
   target_y_min = target_z_min = -minWidth / 2;
   target_y_max = target_z_max = minWidth / 2;
 
-  if (localLayoutFlag) { // if local layout, change target mins and maxes and then unset flag
-    layerIndex = layerGroups[nodeGroups[nodeCoords.name[0]]];
-    target_y_min = target_y_max =
-      nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[0])].getPosition("y") / layers[layerIndex].getScale();
-    target_z_min = target_z_max =
-      nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[0])].getPosition("z") / layers[layerIndex].getScale();
+  if (isLocalLayoutChosen())
+    [target_y_min, target_y_max, target_z_min, target_z_max] = getMinAndMaxTargetCoordValues(nodeCoords);
 
-    for (i = 1; i < nodeCoords.name.length; i++) {
-      node_name = nodeCoords.name[i];
-      if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
-        y_coord = nodeObjects[nodeLayerNames.indexOf(node_name)].getPosition("y") / layers[layerIndex].getScale();
-        z_coord = nodeObjects[nodeLayerNames.indexOf(node_name)].getPosition("z") / layers[layerIndex].getScale();
-        if (y_coord < target_y_min)
-          target_y_min = y_coord;
-        if (y_coord > target_y_max)
-          target_y_max = y_coord;
-        if (z_coord < target_z_min)
-          target_z_min = z_coord;
-        if (z_coord > target_z_max)
-          target_z_max = z_coord;
-      }
-    }
-    localLayoutFlag = false;
-  }
-
-  for (i = 0; i < nodeCoords.name.length; i++) {
+  for (let i = 0; i < nodeCoords.name.length; i++) {
     node_name = nodeCoords.name[i];
     if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
       if (y_max - y_min != 0)
@@ -75,7 +50,7 @@ const assignYZ = (nodeCoords) => {
   
   // Clustering
   if (nodeCoords.group != null) {
-    for (i = 0; i < nodeCoords.name.length; i++){
+    for (let i = 0; i < nodeCoords.name.length; i++){
       node_name = nodeCoords.name[i].trim();
       if (nodeObjects[nodeLayerNames.indexOf(node_name)]) {
         nodeObjects[nodeLayerNames.indexOf(node_name)].setColor(COLOR_VECTOR_280[nodeCoords.group[i]]);
@@ -89,20 +64,75 @@ const assignYZ = (nodeCoords) => {
   redrawIntraLayerEdges();
 }
 
-const setPerLayerFlag = (numFlag) => { // from -1: to length of Layers
-  perLayerLayoutFLag = numFlag;
-}
+const getMinAndMaxInputCoordValues = (y_arr, z_arr) => {
+  let y_min = Math.min.apply(Math, y_arr),
+    y_max = Math.max.apply(Math, y_arr),
+    z_min = Math.min.apply(Math, z_arr),
+    z_max = Math.max.apply(Math, z_arr);
+    
+    return([y_min, y_max, z_min, z_max])
+};
 
-const setLocalFlag = (flag) => { // flag always true here
-  localLayoutFlag = flag;
-}
+const getMinLayerWidth = () => {
+  let layerWidths = layers.map(({ geometry_parameters_width }) => geometry_parameters_width),
+    minWidth = Math.min(...layerWidths);
+
+  return(minWidth);
+};
+
+const isPerLayerOrLocalLayoutChosen = () => {
+  return(perLayerLayoutFLag !== undefined)
+};
+
+const getPerLayerMinWidth = () => {
+  let minWidth = layers.find(x => x.name === perLayerLayoutFLag).geometry_parameters_width;
+  perLayerLayoutFLag = undefined;
+  return(minWidth)
+};
+
+const isLocalLayoutChosen = () => {
+  return(localLayoutFlag);
+};
+
+const getMinAndMaxTargetCoordValues = (nodeCoords) => {
+  // all nodes in same layer always at this point ( = assignYZ executed per Layer, here)
+  let layerIndex = layerGroups[nodeGroups[nodeCoords.name[0]]],
+    scale = layers[layerIndex].getScale(),
+    y_coord, z_coord;
+
+  // init with element 0
+  target_y_min = target_y_max =
+    nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[0])].getPosition("y") / scale;
+  target_z_min = target_z_max =
+    nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[0])].getPosition("z") / scale;
+
+  for (let i = 1; i < nodeCoords.name.length; i++) {
+    y_coord = nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[i])].getPosition("y") / scale;
+    z_coord = nodeObjects[nodeLayerNames.indexOf(nodeCoords.name[i])].getPosition("z") / scale;
+
+    if (y_coord < target_y_min)
+      target_y_min = y_coord;
+    if (y_coord > target_y_max)
+      target_y_max = y_coord;
+    if (z_coord < target_z_min)
+      target_z_min = z_coord;
+    if (z_coord > target_z_max)
+      target_z_max = z_coord;
+  }
+  
+  localLayoutFlag = false;
+
+  return([target_y_min, target_y_max, target_z_min, target_z_max])
+};
 
 const topologyScale = (nodeScale) => {
   let nodeName;
+
   for (let i = 0; i < nodeScale.nodeName.length; i++) {
     nodeName = nodeScale.nodeName[i];
     nodeObjects[nodeLayerNames.indexOf(nodeName)].setScale(nodeScale.scale[i]);
   }
+
   updateNodesRShiny();
 };
 

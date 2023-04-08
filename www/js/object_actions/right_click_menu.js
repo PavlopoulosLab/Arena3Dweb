@@ -87,7 +87,8 @@ const executeCommand = (item) => {
         edgeObjects[i].select();
       }
     }
-    redrawAllEdges();
+    renderInterLayerEdgesFlag = true;
+    redrawIntraLayerEdges();
     decideNodeLabelFlags();
     updateSelectedNodesRShiny();
   } else if (item.options[item.selectedIndex].text == "Select MultiLayer Path"){
@@ -132,7 +133,8 @@ const executeCommand = (item) => {
     }
     decideNodeLabelFlags();
     updateSelectedNodesRShiny();
-    redrawAllEdges();
+    renderInterLayerEdgesFlag = true;
+    redrawIntraLayerEdges();
     finishLoader();
   } else if (item.options[item.selectedIndex].text == "Select Downstream Path"){
     let currentNode = item.value, //int
@@ -144,7 +146,8 @@ const executeCommand = (item) => {
     ////////////////////////
     decideNodeLabelFlags();
     updateSelectedNodesRShiny();
-    redrawAllEdges();
+    renderInterLayerEdgesFlag = true;
+    redrawIntraLayerEdges();
     finishLoader();
   } else if (item.options[item.selectedIndex].text == "Link") // Link
     window.open(item.value);
