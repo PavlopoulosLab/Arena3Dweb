@@ -1,19 +1,34 @@
-.modal-dialog {
-  text-align: center;
-}
-
-.modal-body {
-  background-color: seagreen;
-}
-
-.sweet-alert p {
-	display: inline-block !important;
-}
-
-body {
+/*** TAGS ***/
+body, div, h2, h3, a {
   font-family: Arial;
   margin: 0;
   padding: 0;
+}
+
+p {
+  display: inline-block;
+  width: 100%;
+  word-break: break-word;
+  font-family: Arial;
+  line-height: 1.6;
+  font-size: medium;
+}
+
+pre {
+  font-family: Courier;
+  border: 1px solid white;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: scroll;
+}
+  
+h5 {
+  font-size: 18px;
+}
+
+ul li {
+  font-size: medium;
+  word-break: break-word;
 }
 
 a {
@@ -24,55 +39,6 @@ label, span {
   font-size: 14px;
 }
 
-footer {
-  font-family: Arial;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #2b4e99;
-  text-align: center;
-  font-size: 18px;
-  margin-left: -8px;
-  color: white;
-}
-
-p {
-  display: inline-block;
-  width: 100%;
-  word-break: break-word;
-  font-family: Arial;
-  line-height: 1.6;
-}
-
-.last_p {
-  margin-bottom: 350px;
-}
-
-.main_tabcontent {
-  padding: 1%;
-  width: 100%;
-  height: 100%;
-  float: left;
-  word-break: break-word;
-  background-color: black;
-  color: white;
-  margin-top: -4px;
-  text-align: justify;
-}
-
-#logo1 {
-  background-image: url(./images/logo.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 200px;
-  height: 48px;
-  position: relative;
-  z-index: 1;
-  float: left;
-  margin-top: 25px;
-  margin-right: 10px;
-}
-  
 canvas {
   display: block;
   position: relative;
@@ -83,7 +49,6 @@ table {
   border: 1px solid lightgray;
   overflow-y: scroll;
   max-height: 65vh;
-  /* -> 50% window height*/
   display: block;
   margin-top: 10px;
   table-layout: fixed;
@@ -92,14 +57,6 @@ table {
 
 td {
   border: 1px solid lightgray;
-}
-
-h5 {
-  font-size: 18px;
-}
-
-ul li {
-  word-break: break-word;
 }
 
 input[type="range"] {
@@ -113,7 +70,6 @@ input[type="range"]::-webkit-slider-runnable-track {
   -webkit-appearance: none;
   height: 15px;
   background-color: #817d82;
-  /*margin: -3px;*/
 }
 
 input[type="range"].sliderRed::-webkit-slider-runnable-track {
@@ -141,25 +97,25 @@ input[type="checkbox"] {
   margin-right: 2px;
 }
 
-.navbar-static-top {
-  position: fixed !important;
+footer {
+  font-family: Arial;
+  position: fixed;
+  bottom: 0;
   width: 100%;
+  background-color: #2b4e99;
+  text-align: center;
+  font-size: 18px;
+  margin-left: -8px;
+  color: white;
 }
 
-.border_tr {
-  border-top: 10px solid lightgray;
-}
-
-.container-fluid {
+/*** GENERAL SHINY ***/
+.container-fluid, .col-sm-12 {
   padding: 0;
 }
 
 .row {
   margin: 0;
-}
-
-.col-sm-12 {
-  padding: 0;
 }
 
 .navbar {
@@ -168,8 +124,38 @@ input[type="checkbox"] {
   z-index: 3;
 }
 
-/* .tab-content:nth-child(1) = navBar */
-.tab-content:nth-child(1) > .tab-pane {
+.navbar-static-top {
+  position: fixed !important;
+  width: 100%;
+}
+
+.navbar-header {
+  display: none;
+}
+
+.tab {
+  overflow: hidden;
+  background-color: #f1f1f1;
+  position: relative;
+  width: 100%;
+  display: inline-block;
+}
+
+.tabcontent {
+  display: none;
+  padding: 1%;
+  width: 100%;
+  height: 100%;
+  float: left;
+  word-break: break-word;
+  background-color: black;
+  color: white;
+  margin-top: -4px;
+  text-align: justify;
+  overflow:scroll;
+}
+
+.tab-content:nth-child(1) > .tab-pane { /* .tab-content:nth-child(1) = navBar */
   padding: 10px;
   position: fixed;
   margin-left: 250px;
@@ -182,51 +168,91 @@ input[type="checkbox"] {
   max-height: 70vh;
 }
 
-.tab-content:nth-child(1) > .tab-pane:nth-child(1),
+.tab-content:nth-child(1) > .tab-pane:nth-child(1), /* Welcome, Main View and Help border remove */
 .tab-content:nth-child(1) > .tab-pane:nth-child(2),
 .tab-content:nth-child(1) > .tab-pane:nth-child(11) {
-  /*Main View and Help border remove*/
   border: 0;
   padding: 0;
 }
 
-.labels {
-  position: absolute;
-  text-align: center;
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+.tab button.active {
+  background-color: #ccc;
+}
+
+.shiny-input-container,
+.btn,
+.form-control {
+  font-size: 12px;
+}
+
+.hideButton {
+  display: block;
+  float: right;
+}
+
+/*** HOME ***/
+#logo1 {
+  background-image: url(./images/logo.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 200px;
+  height: 48px;
+  position: relative;
   z-index: 1;
-  display: inline-block;
-  font-weight: bold;
-  white-space: nowrap;
+  float: left;
+  margin-top: 25px;
+  margin-right: 10px;
 }
 
-.layer-labels {
-  position: absolute;
-  text-align: center;
-  z-index: 1;
-  display: inline-block;
-  font-size: 20px;
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-.displayCanvasControls {
-  margin-top: 18px;
-  margin-left: 10px;
-  color: black;
-  text-align: center;
-}
-
-.optionsBox {
-  width: 150px;
-  position: absolute;
-  text-align: center;
-  z-index: 2;
+#homeDiv,
+#helpDiv {
+  position: fixed;
   display: inline-block;
   color: black;
-  background-color: aliceblue;
-  font-size: 16px;
+  font-size: 12px;
+  background-color: black;
+  border: 4px solid #2b4e99;
+  width: 100%;
+  height: 95%;
+  margin-top: -10px;
+  margin-left: -250px;
 }
 
+/*** MAIN VIEW ***/
+.main_tabcontent {
+  padding: 1%;
+  width: 100%;
+  height: 100%;
+  float: left;
+  word-break: break-word;
+  background-color: black;
+  color: white;
+  margin-top: -4px;
+  text-align: justify;
+}
+
+/*** LAYOUTS ***/
+.runButton {
+  margin-left: calc(100% - 56px);
+  margin-bottom: 16px;
+}
+
+/*** LAYER ACTIONS ***/
 .checkboxdiv {
   width: 100%;
   max-width: 500px;
@@ -249,18 +275,160 @@ input[type="checkbox"] {
   width: 5%;
 }
 
-.shiny-input-container,
-.btn,
-.form-control {
+/*** EDGE ACTIONS ***/
+.channel_subcontainer {
+  margin: -16px -8px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 4px;
+}
+
+.channel_subcontainer .channel_colorPicker {
+  margin: 16px;
+  margin-left: 8px;
+}
+
+.channel_subcontainer .channelLabel,
+.channel_subcontainer .channel_checkbox {
+  margin: 16px 8px;
+}
+
+.channel_subcontainer .channelCheckboxLabel {
+  margin: 8px 4px;
+}
+
+.channel_subcontainer .channelColorPicker h4 {
+  margin-bottom: 20px;
+}
+
+.channelLayoutsub {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.channelLayoutsub label {
+  margin: 0;
+}
+
+.channelLayoutsub .channel-tooltip {
+  margin-left: 12px;
+}
+
+.channelColorLayoutDiv {
+  margin: 16px 0;
+}
+
+.buttonChannelLayout {
+  font-size: 24px;
+}
+
+.buttonChannelLayout.close {
+  transform: rotate(180deg);
+}
+
+.display-none {
+  display: none;
+}
+
+.channelsLayout div {
+  display: flex;
+  align-items: center;
+}
+
+.channelsLayout p {
+  margin: 0;
+  margin-left: 12px;
+}
+
+.channelsLayout input[type="checkbox"] {
+  margin: 0;
+}
+
+/*** VIEW DATA ***/
+.networkDataTab {
+	width: 70vw;
+}
+
+[id$="_dataView"] {
+	background-color: lavender;
+	padding: 5px;
+	margin-bottom: 10px
+}
+
+/*** HELP PAGES ***/
+.last_p {
+  margin-bottom: 100px;
+}
+
+.numbering {
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.indent {
+  margin-left: 20px;
+}
+
+/*** LABELS ***/
+#labelDiv {
+  position: fixed;
+  z-index: 1;
+  display: inline-block;
   font-size: 12px;
 }
 
-.descrDiv_paragraph {
+.labels {
+  position: absolute;
+  text-align: center;
+  z-index: 1;
+  display: inline-block;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.layer-labels {
+  position: absolute;
+  text-align: center;
+  z-index: 1;
+  display: inline-block;
+  font-size: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/*** CANVAS CONTROLS ***/
+#navControlButtonsDiv {
+  position: fixed;
+  z-index: 1;
+  margin-top: 60px;
+}
+
+#info {
+  width: 241px;
+  position: fixed;
+  text-align: left;
+  z-index: 3;
+  display: inline-block;
   color: white;
-  padding: 15px;
-  text-align: justify;
-  text-indent: 15px;
-  margin-top: 10px;
+  font-size: 12px;
+  margin-top: 140px;
+  margin-left: 10px;
+  background-color: black;
+  padding: 1px;
+}
+
+.displayCanvasControls {
+  margin-top: 18px;
+  margin-left: 10px;
+  color: black;
+  text-align: center;
+}
+
+.border_tr {
+  border-top: 10px solid lightgray;
 }
 
 .labelDrop {
@@ -269,6 +437,21 @@ input[type="checkbox"] {
 
 .raiseSlider {
   margin-top: -30px;
+}
+
+.red {
+  font-weight: bold;
+  color: #FB3D2A;
+}
+
+.green {
+  font-weight: bold;
+  color: #46FB2A;
+}
+
+.blue {
+  font-weight: bold;
+  color: #2AC2FB;
 }
 
 .image_minusX {
@@ -527,253 +710,13 @@ input[type="checkbox"] {
   background-image: url(images/canvas_control/collapseNodes_active.png);
 }
 
-.hideButton {
-  display: block;
-  float: right;
-}
-
-.navbar-header {
-  display: none;
-}
-
-
-.networkDataTab {
-	width: 70vw;
-}
-
-[id$="_dataView"] {
-	background-color: lavender;
-	padding: 5px;
-	margin-bottom: 10px
-}
-
-#navControlButtonsDiv {
-  position: fixed;
-  z-index: 1;
-  margin-top: 60px;
-}
-
-#info {
-  width: 241px;
-  position: fixed;
-  text-align: left;
-  z-index: 3;
-  display: inline-block;
-  color: white;
-  font-size: 12px;
-  margin-top: 140px;
-  margin-left: 10px;
-  background-color: black;
-  padding: 1px;
-}
-
-.red {
-  font-weight: bold;
-  color: #FB3D2A;
-}
-
-.green {
-  font-weight: bold;
-  color: #46FB2A;
-}
-
-.blue {
-  font-weight: bold;
-  color: #2AC2FB;
-}
-
-#labelDiv {
-  position: fixed;
-  z-index: 1;
-  display: inline-block;
-  font-size: 12px;
-}
-
-#helpDiv,
-#homeDiv {
-  position: fixed;
-  display: inline-block;
-  color: black;
-  font-size: 12px;
-  background-color: black;
-  border: 4px solid #2b4e99;
-  width: 100%;
-  height: 95%;
-  margin-top: -10px;
-  margin-left: -250px;
-}
-
-#descrDiv {
-  position: relative;
-  display: none;
-  float: right;
-  z-index: 3;
-  background-color: black;
-  height: 35vh;
-  width: 15%;
-  min-width: 200px;
-  border: 4px solid #faf5e3;
-  overflow-y: scroll;
-  margin-right: -200px;
-  margin-top: 160px;
-}
-
-#closeButton {
-  position: absolute;
-  right: 0;
-  float: right;
-  background-color: red;
-  border: 1px solid gray;
-  border-radius: 5px;
-}
-
-#closeButton:hover {
-  background-color: #ff756b;
-  border: 1px solid white;
-}
-
-#closeButton:active {
-  background-color: #ab150a;
-}
-
-#expandButton,
-#expandNodesButton {
-  float: left;
-  width: 80px;
-}
-
-#collapseButton,
-#collapseNodesButton {
-  float: right;
-  width: 80px;
-}
-
 #nodeScaleSlider,
 #layerScaleSlider {
   width: 150%;
   margin-left: -50%;
 }
 
-#image_td {
-  background-image: url(images/canvas_control/coordsColors_transparent.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 90px;
-  height: 90px;
-}
-
-#logo {
-  background-image: url(images/logo.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 200px;
-  height: 48px;
-  position: relative;
-  z-index: 1;
-  float: right;
-  margin-top: 70px;
-  margin-right: 10px;
-}
-
-#loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid #3498db;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  /* Safari */
-  animation: spin 2s linear infinite;
-  margin-top: 20%;
-  margin-left: 45%;
-  position: fixed;
-  z-index: 1;
-  display: none;
-}
-
-#helpObject,
-#homeObject {
-  width: 100%;
-  height: 100%;
-}
-
-.channel_subcontainer {
-  margin: -16px -8px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 4px;
-}
-
-.channel_subcontainer .channel_colorPicker {
-  margin: 16px;
-  margin-left: 8px;
-}
-
-.channel_subcontainer .channelLabel,
-.channel_subcontainer .channel_checkbox {
-  margin: 16px 8px;
-}
-
-.channel_subcontainer .channelCheckboxLabel {
-  margin: 8px 4px;
-}
-
-.channel_subcontainer .channelColorPicker h4 {
-  margin-bottom: 20px;
-}
-
-.channelLayoutsub {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.channelLayoutsub label {
-  margin: 0;
-}
-
-.channelLayoutsub .channel-tooltip {
-  margin-left: 12px;
-}
-
-.channelColorLayoutDiv {
-  margin: 16px 0;
-}
-
-.buttonChannelLayout {
-  font-size: 24px;
-}
-
-.buttonChannelLayout.close {
-  transform: rotate(180deg);
-}
-
-.display-none {
-  display: none;
-}
-
-.channelsLayout div {
-  display: flex;
-  align-items: center;
-}
-
-.channelsLayout p {
-  margin: 0;
-  margin-left: 12px;
-}
-
-.channelsLayout input[type="checkbox"] {
-  margin: 0;
-}
-
-
-.runButton {
-  margin-left: calc(100% - 56px);
-  margin-bottom: 16px;
-}
-
-/* Themes */
+/*** THEMES ***/
 #themeDiv {
   position: fixed;
   right: 10px;
@@ -806,11 +749,104 @@ input[type="checkbox"] {
   background-color: #bababa;
 }
 
-#datatables_buttons_info {
-	color: black
+/*** MODALS ***/
+.modal-dialog {
+  text-align: center;
 }
 
-/* Safari */
+.modal-body {
+  background-color: seagreen;
+}
+
+.sweet-alert p {
+	display: inline-block !important;
+}
+
+/*** COMMAND BOX ***/
+.optionsBox {
+  width: 150px;
+  position: absolute;
+  text-align: center;
+  z-index: 2;
+  display: inline-block;
+  color: black;
+  background-color: aliceblue;
+  font-size: 16px;
+}
+
+/*** NODE DESCRIPTION ***/
+#descrDiv {
+  position: relative;
+  display: none;
+  float: right;
+  z-index: 3;
+  background-color: black;
+  height: 35vh;
+  width: 15%;
+  min-width: 200px;
+  border: 4px solid #faf5e3;
+  overflow-y: scroll;
+  margin-right: -200px;
+  margin-top: 160px;
+}
+
+.descrDiv_paragraph {
+  color: white;
+  padding: 15px;
+  text-align: justify;
+  text-indent: 15px;
+  margin-top: 10px;
+}
+
+#closeButton {
+  position: absolute;
+  right: 0;
+  float: right;
+  background-color: red;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+#closeButton:hover {
+  background-color: #ff756b;
+  border: 1px solid white;
+}
+
+#closeButton:active {
+  background-color: #ab150a;
+}
+
+/*** OTHER UI ELEMENTS ***/
+#logo {
+  background-image: url(images/logo.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 200px;
+  height: 48px;
+  position: relative;
+  z-index: 1;
+  float: right;
+  margin-top: 70px;
+  margin-right: 10px;
+}
+
+#loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  /* Safari */
+  animation: spin 2s linear infinite;
+  margin-top: 20%;
+  margin-left: 45%;
+  position: fixed;
+  z-index: 1;
+  display: none;
+}
+
+/*** SAFARI ***/
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
@@ -831,12 +867,15 @@ input[type="checkbox"] {
   }
 }
 
-@media only screen and (max-width: 1029px) {
-
-  #helpDiv,
-  #homeDiv {
-    height: 600px;
-    margin-top: 50px;
+/*** @MEDIA ***/
+@media only screen and (max-width: 1179px) {
+  /* .tab-content:nth-child(1) = navBar */
+  .tab-content:nth-child(1) > .tab-pane {
+    margin-top: 130px;
+  }
+  
+  #helpDiv, #homeDiv {
+    margin-top: -10px;
   }
 
   #navControlButtonsDiv {
@@ -848,30 +887,27 @@ input[type="checkbox"] {
   }
 }
 
-@media only screen and (max-width: 768px) {
-  .tab-pane {
+@media only screen and (max-width: 767px) {
+  /* .tab-content:nth-child(1) = navBar */
+  .tab-content:nth-child(1) > .tab-pane {
     margin-top: 15px;
   }
-
+  
   #helpDiv,
   #homeDiv {
-    height: 600px;
-    margin-top: 350px;
-  }
-
-  #navControlButtonsDiv {
-    margin-top: 420px;
-  }
-
-  #info {
-    margin-top: 500px;
-  }
-
-  #themeDiv {
-    margin-top: 440px;
+    margin-top: 450px;
   }
   
-  #descrDiv {
-    margin-top: 470px;
+  #navControlButtonsDiv {
+    margin-top: 460px;
+  }
+  
+  #themeDiv {
+    margin-top: 480px;
+  }
+  
+  #info {
+    margin-top: 540px;
+    margin-bottom: 100px;
   }
 }
