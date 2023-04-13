@@ -23,6 +23,18 @@ renderNetworkDF <- function(formattedNetwork) {
                        hiddenColumns = hiddenColumns, filter = "top")
 }
 
+renderSelectedEdgesDF <- function(selectedEdgesDF) {
+  showTab(inputId = "dataViewPanel", target = "Selected Edges")
+  updateTabsetPanel(session, "dataViewPanel", selected = "Selected Edges")
+  
+  hiddenColumns <- c()
+  if (selectedEdgesDF$Channel[1] == "")
+    hiddenColumns <- c(4)
+  renderShinyDataTable("selectedEdges_dataView", selectedEdgesDF,
+                        fileName = "selectedEdgeData",
+                        hiddenColumns = hiddenColumns, filter = "top")
+}
+
 renderClusteringDF <- function(clusteringData) {
   showTab(inputId = "dataViewPanel", target = "Clustering Data")
   updateTabsetPanel(session, "dataViewPanel", selected = "Clustering Data")

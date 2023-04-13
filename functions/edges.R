@@ -29,3 +29,12 @@ handleEdgeDirectionCheckbox <- function() {
     renderError("Error on Direction interface.")
   })
 }
+
+updateSelectedEdgesView <- function (selectedEdgesDF) {
+  if (length(selectedEdgesDF) > 0) {
+    renderSelectedEdgesDF(selectedEdgesDF)
+  } else {
+    renderShinyDataTable("selectedEdges_dataView", data.frame())
+    hideTab(inputId = "dataViewPanel", target = "Selected Edges")
+  }
+}

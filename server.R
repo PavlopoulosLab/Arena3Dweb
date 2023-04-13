@@ -200,6 +200,10 @@ server <- function(input, output, session) {
     callJSHandler("handler_toggleInterChannelCurvature", input$interChannelCurvature)
   }, ignoreInit = T)
   
+  observeEvent(input$js_selectedEdges, {
+    updateSelectedEdgesView(jsonlite::fromJSON(input$js_selectedEdges))
+  }, ignoreInit = T)
+
   # FPS ####
   observeEvent(input$fps, {
     callJSHandler("handler_fps", input$fps)

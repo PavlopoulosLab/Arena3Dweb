@@ -157,6 +157,7 @@ const dblClick = (event) => {
         unselectAllEdges();
         
         redrawIntraLayerEdges();
+        updateSelectedEdgesRShiny();
       }
     }
   }
