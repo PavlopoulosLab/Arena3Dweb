@@ -5,7 +5,7 @@ Arena3D<sup>web</sup> is a fully interactive and dependency-free web application
 
 The online version supports networks of up to 10000 edges. Here, you can download the app and run it locally. The edge limit can be bypassed when running the application locally, by adjusting the **MAX_EDGES** variable value in the **config/global_variables.R** file.
 
-To get started, downloadable example files can be found in the **www/data folder**.
+To get started, downloadable example files can be found in the **www/data folder**. TSV files correspond to the "Upload Network" format, while JSON files correspond to the "Load Session" format.
 
 # Installation
 
