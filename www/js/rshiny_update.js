@@ -173,6 +173,49 @@ const updateEdgeColorsRShiny = () => {
   Shiny.setInputValue("js_edge_colors", JSON.stringify(js_edge_colors));
 };
 
+const updateSelectedEdgesRShiny = () => {
+  let js_selectedEdges = [],
+    layerNames = layers.map(({ name }) => name),
+    nodeNames = nodeObjects.map(({ name }) => name);
+
+  for (let i = 0; i < edgeObjects.length; i++) {
+    if (edgeObjects[i].isSelected) {
+      if (edgeObjects[i].channels.length > 0) {
+        for (let j = 0; j < edgeObjects[i].channels.length; j++)
+          js_selectedEdges.push([
+            nodeNames[edgeObjects[i].sourceNodeIndex],
+            layerNames[edgeObjects[i].sourceLayerIndex],
+            nodeNames[edgeObjects[i].targetNodeIndex],
+            layerNames[edgeObjects[i].targetLayerIndex],
+            edgeObjects[i].channels[j],
+            edgeObjects[i].weights[j]
+          ]);
+      } else
+        js_selectedEdges.push([
+          nodeNames[edgeObjects[i].sourceNodeIndex],
+          layerNames[edgeObjects[i].sourceLayerIndex],
+          nodeNames[edgeObjects[i].targetNodeIndex],
+          layerNames[edgeObjects[i].targetLayerIndex],
+          "",
+          edgeObjects[i].weights[0]
+        ]);
+    }
+  }
+  
+  js_selectedEdges = js_selectedEdges.map(edge => {
+    return {
+      SourceNode: edge[0],
+      SourceLayer: edge[1],
+      TargetNode: edge[2],
+      TargetLayer: edge[3],
+      Channel: edge[4],
+      Weight: edge[5]
+    }
+  });
+
+  Shiny.setInputValue("js_selectedEdges", JSON.stringify(js_selectedEdges));
+};
+
 const updateSelectedChannelsRShiny = (element) => {
   let index = selectedChannels.indexOf(element.name);
 

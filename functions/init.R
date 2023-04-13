@@ -26,7 +26,7 @@ attachDownloadHandler <- function() {
 }
 
 hideDataMetricTabs <- function() {
-  lapply(c("Network Data", "Clustering Data", TOPOLOGY_METRICS),
+  lapply(c("Network Data", "Selected Edges", "Clustering Data", TOPOLOGY_METRICS),
          function(metricName) {
            hideTab(inputId = "dataViewPanel", target = metricName)
          }

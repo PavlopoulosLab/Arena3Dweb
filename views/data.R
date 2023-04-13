@@ -8,6 +8,10 @@ generateDataDiv <- function() {
         DT::dataTableOutput(outputId = "network_dataView")
       ),
       tabPanel(
+        "Selected Edges",
+        DT::dataTableOutput(outputId = "selectedEdges_dataView")
+      ),
+      tabPanel(
         "Clustering Data",
         DT::dataTableOutput(outputId = "clustering_dataView")
       ),

@@ -23,7 +23,8 @@ const executeCommand = (item) => {
     redrawIntraLayerEdges();
     decideNodeLabelFlags();
     updateSelectedNodesRShiny();
-
+    updateSelectedEdgesRShiny();
+    
     finishLoader();
   }
 };
