@@ -15,9 +15,13 @@ To get started, downloadable example files can be found in the **www/data folder
 
 # Cite
 
-1. Latest publication (bioRxiv): "**Arena3D<sup>web</sup>: Interactive 3D visualization of multilayered networks supporting multiple directional information channels, clustering analysis and application integration**" https://www.biorxiv.org/content/10.1101/2022.10.01.510435v2.abstract
-Kokoli, M., Karatzas, E., Baltoumas, F.A., Schneider, R., Pafilis, E., Paragkamian, S., Doncheva, N.T., Jensen, L.J. and Pavlopoulos, G., 2022. Arena3Dweb: Interactive 3D _visualization_ of multilayered networks supporting multiple directional information channels, clustering analysis and application integration. _bioRxiv_.
-https://doi.org/10.1101/2022.10.01.510435
+1. NAR Genomics and Bioinformatics: "**Arena3D<sup>web</sup>: interactive 3D visualization of multilayered networks supporting multiple directional information channels, clustering analysis and application integration**"\
+https://academic.oup.com/nargab/article/5/2/lqad053/7185857
+Kokoli, M., Karatzas, E., Baltoumas, F.A., Schneider, R., Pafilis, E., Paragkamian, S., Doncheva, N.T., Jensen, L.J. and Pavlopoulos, G.A., 2022.\
+Arena3D<sup>web</sup>: Interactive 3D visualization of multilayered networks supporting multiple directional information channels, clustering analysis and application integration. NAR Genomics and Bioinformatics, 5(2), p.lqad053.
+https://doi.org/10.1093/nargab/lqad053
 
-2. Nucleic Acids Research article "**Arena3D<sup>web</sup>: interactive 3D visualization of multilayered networks**" https://academic.oup.com/nar/article/49/W1/W36/6246395
-Karatzas, E., Baltoumas, F.A., Panayiotou, N.A., Schneider, R. and Pavlopoulos, G.A., 2021. Arena3Dweb: Interactive 3D visualization of multilayered networks. _Nucleic Acids Research_, _49_(W1), pp.W36-W45. https://doi.org/10.1093/nar/gkab278
+2. Nucleic Acids Research "**Arena3D<sup>web</sup>: interactive 3D visualization of multilayered networks**" https://academic.oup.com/nar/article/49/W1/W36/6246395
+Karatzas, E., Baltoumas, F.A., Panayiotou, N.A., Schneider, R. and Pavlopoulos, G.A., 2021.\
+Arena3Dweb: Interactive 3D visualization of multilayered networks. Nucleic Acids Research, 49(W1), pp.W36-W45.\
+https://doi.org/10.1093/nar/gkab278

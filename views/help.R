@@ -861,29 +861,34 @@ Tn	Group7		4
   <br />
 
   <h2> Related Software </h2>
-  &#8226; <a href="http://norma.pavlopouloslab.info/" target="_blank">NORMA: The NetwORk Makeup Artist</a><br />
-  &#8226; <a href="http://nap.pavlopouloslab.info/" target="_blank">NAP(v2.0): The Network Analysis Profiler</a><br />
-
+  <p>
+    &#8226; <a href="http://norma.pavlopouloslab.info/" target="_blank">NORMA: The NetwORk Makeup Artist</a><br />
+    &#8226; <a href="http://nap.pavlopouloslab.info/" target="_blank">NAP(v2.0): The Network Analysis Profiler</a><br />
+  </p>
+  <br />
+  
   <h2> Related Literature </h2>
-  &#8226; <a href="https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full" target="_blank">A Guide to
+  <p>
+    &#8226; <a href="https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full" target="_blank">A Guide to
     Conquer the Biological Network Era Using Graph Theory</a><br />
+  </p>
 
   <br />
   <h2> Cite Arena3D<sup>web</sup> </h2>
   <p class="last_p">
-    Kokoli, M., Karatzas, E., Baltoumas, F.A., Schneider, R., Pafilis, E., Paragkamian, S., Doncheva, N.T., Jensen, L.J.
-    and Pavlopoulos, G., 2022.
-    <a href="https://www.biorxiv.org/content/10.1101/2022.10.01.510435v2.abstract" target="_blank">
-      Arena3D<sup>web</sup>: Interactive 3D visualization of multilayered networks
+    1. Kokoli, M., Karatzas, E., Baltoumas, F.A., Schneider, R., Pafilis, E., Paragkamian, S., Doncheva, N.T., Jensen, L.J.
+    and Pavlopoulos, G., 2022. <br />
+    <a href="https://academic.oup.com/nargab/article/5/2/lqad053/7185857?login=false" target="_blank">
+      Arena3D<sup>web</sup>: interactive 3D visualization of multilayered networks
       supporting multiple directional information channels, clustering analysis and application integration</a>,
-    bioRxiv.
-    <a href="https://doi.org/10.1101/2022.10.01.510435" target="_blank">https://doi.org/10.1101/2022.10.01.510435</a>
+    NAR Genomics and Bioinformatics, 5(2), p.lqad053. <br />
+    <a href="https://doi.org/10.1093/nargab/lqad053" target="_blank">https://doi.org/10.1093/nargab/lqad053</a>
     <br /><br />
 
-    Karatzas, E., Baltoumas, F.A., Panayiotou, N.A., Schneider, R. and Pavlopoulos, G.A., 2021.
+    2. Karatzas, E., Baltoumas, F.A., Panayiotou, N.A., Schneider, R. and Pavlopoulos, G.A., 2021. <br />
     <a href="https://academic.oup.com/nar/advance-article/doi/10.1093/nar/gkab278/6246395?fbclid=IwAR0BBBUZ1FWFkkGZA-mz8nGeTS6ewcosuW9IGl-s6o3lKItse70fL9ecGqM"
       target="_blank"> Arena3D<sup>web</sup>: Interactive 3D visualization of multilayered networks</a>, Nucleic Acids
-    Research, 49(W1), pp.W36-W45.
+    Research, 49(W1), pp.W36-W45. <br />
     <a href="https://doi.org/10.1093/nar/gkab278" target="_blank">https://doi.org/10.1093/nar/gkab278</a>
 
     <br /><br /><br /><br />
