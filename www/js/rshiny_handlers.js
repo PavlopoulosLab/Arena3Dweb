@@ -69,6 +69,7 @@ Shiny.addCustomMessageHandler("handler_selectAllLayers", selectAllLayers);
 Shiny.addCustomMessageHandler("handler_setLayerColorPriority", setLayerColorPriority);
 // Nodes ====================
 Shiny.addCustomMessageHandler("handler_selectAllNodes", selectAllNodes);
+Shiny.addCustomMessageHandler("handler_setNodeShape", setNodeShape);
 Shiny.addCustomMessageHandler("handler_setNodeColorPriority", setNodeColorPriority);
 Shiny.addCustomMessageHandler("handler_setNodeSelectedColorPriority", setNodeSelectedColorPriority);
 Shiny.addCustomMessageHandler("handler_clickNodeColorPriority", clickNodeColorPriority);

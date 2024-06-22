@@ -10,6 +10,12 @@ generateNodeDiv <- function() {
     ),
     sliderInput("resizeNodeLabels", "Resize Labels:",
                 min = 5, max = 15, value = 12, step = 1),
+    radioButtons("nodeGeometryRadio", "Node Geometry:",
+      inline = T,
+      choiceNames = list("Sphere", "Box", "Diamond", "Cone"),
+      choiceValues = list("sphere", "box", "diamond", "cone"),
+      selected = "sphere"
+    ),
     radioButtons("nodeColorPriorityRadio", "Color Priority:",
       inline = T,
       choiceNames = list("Default / Imported", "Clustering"),

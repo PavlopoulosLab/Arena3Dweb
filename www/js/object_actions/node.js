@@ -236,6 +236,12 @@ const selectAllNodes = (selectedFlag) => { // T | F
   updateSelectedNodesRShiny();
 };
 
+const setNodeShape = (shape) => {
+  for (let i = 0; i < nodeObjects.length; i++) {
+    nodeObjects[i].setGeometry(shape)
+  }
+};
+
 const setNodeColorPriority = (colorPriority) => {
   nodeColorPrioritySource = colorPriority;
   
