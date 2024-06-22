@@ -107,6 +107,29 @@ class Node {
         this.sphere.material.opacity = value;
     }
 
+    setGeometry(type) {
+        let geometry;
+        switch(type) {
+            case "sphere":
+                geometry = new THREE.SphereGeometry(SPHERE_RADIUS, SPHERE_WIDTHSEGMENTS, SPHERE_HEIGHTSEGMENTS);
+                break;
+            case "box":
+                geometry = new THREE.BoxGeometry(BOX_SIZE, BOX_SIZE, BOX_SIZE);
+                break;
+            case "diamond":
+                geometry = new THREE.OctahedronGeometry(DIAMOND_RADIUS, 0);
+                break;
+            case "cone":
+                geometry = new THREE.ConeGeometry(CONE_RADIUS, CONE_HEIGHT, CONE_RADIUS);
+                break;
+            default:
+                console.error(`Unknown geometry type: ${type}`);
+                return;
+        }
+        this.sphere.geometry.dispose();
+        this.sphere.geometry = geometry;
+    }
+
     setColor(hexColor, importMode = false, clusterMode = false) {
         this.sphere.material.color = new THREE.Color(hexColor);
         this.color = hexColor;

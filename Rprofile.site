@@ -1,0 +1,8 @@
+local({
+options(shiny.port = 3838, shiny.host = "0.0.0.0")
+})
+
+local({r <- getOption("repos")
+       r["CRAN"] <- "https://cran.r-project.org"
+       options(repos=r)
+})
