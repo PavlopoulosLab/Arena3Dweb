@@ -12,7 +12,7 @@ COPY Rprofile.site /usr/lib/R/etc/
 RUN R -e 'install.packages(c("shiny","shinyjs","shinythemes","igraph","RColorBrewer","jsonlite","tidyr"))'
 
 # copy the Arena3Dweb directory to the VM 
-COPY ../Arena3Dweb/ /root/Arena3DWeb/
+COPY ./Arena3Dweb/ /root/Arena3DWeb/
 
 RUN R -e 'install.packages(c("DT", "fst"))'
 
