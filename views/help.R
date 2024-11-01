@@ -876,20 +876,19 @@ Tn	Group7		4
   <br />
   <h2> Cite Arena3D<sup>web</sup> </h2>
   <p class="last_p">
-    1. Kokoli, M., Karatzas, E., Baltoumas, F.A., Schneider, R., Pafilis, E., Paragkamian, S., Doncheva, N.T., Jensen, L.J.
+   - Kokoli, M., Karatzas, E., Baltoumas, F.A., Schneider, R., Pafilis, E., Paragkamian, S., Doncheva, N.T., Jensen, L.J.
     and Pavlopoulos, G., 2022. <br />
-    <a href="https://academic.oup.com/nargab/article/5/2/lqad053/7185857?login=false" target="_blank">
       Arena3D<sup>web</sup>: interactive 3D visualization of multilayered networks
-      supporting multiple directional information channels, clustering analysis and application integration</a>,
+      supporting multiple directional information channels, clustering analysis and application integration,<br>
     NAR Genomics and Bioinformatics, 5(2), p.lqad053. <br />
-    <a href="https://doi.org/10.1093/nargab/lqad053" target="_blank">https://doi.org/10.1093/nargab/lqad053</a>
-    <br /><br />
-
-    2. Karatzas, E., Baltoumas, F.A., Panayiotou, N.A., Schneider, R. and Pavlopoulos, G.A., 2021. <br />
-    <a href="https://academic.oup.com/nar/advance-article/doi/10.1093/nar/gkab278/6246395?fbclid=IwAR0BBBUZ1FWFkkGZA-mz8nGeTS6ewcosuW9IGl-s6o3lKItse70fL9ecGqM"
-      target="_blank"> Arena3D<sup>web</sup>: Interactive 3D visualization of multilayered networks</a>, Nucleic Acids
+   <b>doi:</b> <a href="https://doi.org/10.1093/nargab/lqad053" target="_blank">https://doi.org/10.1093/nargab/lqad053</a>; <b>PubMed:</b> <a href="https://pubmed.ncbi.nlm.nih.gov/37260509/" target="_blank">37260509</a>
+   <br><br>
+   - Karatzas, E., Baltoumas, F.A., Panayiotou, N.A., Schneider, R. and Pavlopoulos, G.A., 2021. <br />
+   Arena3D<sup>web</sup>: Interactive 3D visualization of multilayered networks,<br>
+   Nucleic Acids
     Research, 49(W1), pp.W36-W45. <br />
-    <a href="https://doi.org/10.1093/nar/gkab278" target="_blank">https://doi.org/10.1093/nar/gkab278</a>
+    <b>doi:</b> <a href="https://doi.org/10.1093/nar/gkab278" target="_blank">https://doi.org/10.1093/nar/gkab278</a>; <b>PubMed:</b> <a href="https://pubmed.ncbi.nlm.nih.gov/33885790/" target="_blank">33885790</a>
+
 
     <br /><br /><br /><br />
   </p>

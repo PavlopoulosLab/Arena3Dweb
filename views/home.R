@@ -5,10 +5,14 @@ generateHomeDiv <- function() {
     HTML('
       <div id="logo1"></div>
       
-      <div id="MainView_tab" class="main_tabcontent">
-        <p class="last_p">
-          <img src="./images/help/mainview2.png" alt="Main View"
+      <div id="MainView_tab row" class="main_tabcontent">
+      <div class="col-md-4">
+      <img src="./images/help/mainview2.png" alt="Main View"
             style="float:left;width:600px;height:522px;margin:5px;margin-right:20px;">
+      </div>
+      <div class="col-md-8">
+        <p class="last_p">
+          
           
           Arena3D<sup>web</sup> is the first, fully interactive and dependency-free, web application which allows the
           visualization of multi-layered graphs in 3D space. With Arena3D<sup>web</sup>, users can integrate multiple networks
@@ -31,7 +35,23 @@ generateHomeDiv <- function() {
           &#8594; Get started by uploading your networks'),
           actionLink("link_to_fileInput", "here."),
           HTML('
+          </p>
+          <p class="last_p">
+    Please ackwnoledge the use of Arena3D<sup>web</sup> by citing the following publications:<br><br>
+    - Kokoli, M., Karatzas, E., Baltoumas, F.A., Schneider, R., Pafilis, E., Paragkamian, S., Doncheva, N.T., Jensen, L.J.
+    and Pavlopoulos, G., 2022. <br />
+      Arena3D<sup>web</sup>: interactive 3D visualization of multilayered networks
+      supporting multiple directional information channels, clustering analysis and application integration,<br>
+    NAR Genomics and Bioinformatics, 5(2), p.lqad053. <br />
+   <b>doi:</b> <a href="https://doi.org/10.1093/nargab/lqad053" target="_blank">https://doi.org/10.1093/nargab/lqad053</a>; <b>PubMed:</b> <a href="https://pubmed.ncbi.nlm.nih.gov/37260509/" target="_blank">37260509</a>
+   <br><br>
+   - Karatzas, E., Baltoumas, F.A., Panayiotou, N.A., Schneider, R. and Pavlopoulos, G.A., 2021. <br />
+   Arena3D<sup>web</sup>: Interactive 3D visualization of multilayered networks,<br>
+   Nucleic Acids
+    Research, 49(W1), pp.W36-W45. <br />
+    <b>doi:</b> <a href="https://doi.org/10.1093/nar/gkab278" target="_blank">https://doi.org/10.1093/nar/gkab278</a>; <b>PubMed:</b> <a href="https://pubmed.ncbi.nlm.nih.gov/33885790/" target="_blank">33885790</a>
         </p>
+        </div>
       </div>
       '),
     generateFooter()
