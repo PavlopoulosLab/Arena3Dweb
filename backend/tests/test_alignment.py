@@ -38,7 +38,7 @@ def _net():
                 "scaled_weight": 1.0,
                 "channel": None,
             }
-            for a, b in pairs
+            for a, b in sorted(pairs)
         ]
     return nodes, edges
 
