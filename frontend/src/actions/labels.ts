@@ -65,6 +65,7 @@ export function createLabels(): void {
     div.style.display = 'inline-block'
     layerLabelsDivs.push(div)
   }
+  labelStyles = {}
   ctx.renderLayerLabelsFlag = true
 }
 
@@ -73,6 +74,7 @@ export function setLabelColor(color = ctx.labelColor): void {
   ctx.labelColor = color
   for (const div of layerLabelsDivs) div.style.color = color
   for (const div of nodeLabelsDivs) div.style.color = color
+  restyleNodeLabels()
 }
 
 // Handlers (v2 Shiny handlers) =====
@@ -100,6 +102,7 @@ export function resizeLayerLabels(size: number): void {
 }
 
 export function resizeNodeLabels(size: number): void {
+  labelStyles['*'] = { ...labelStyles['*'], size }
   for (const div of nodeLabelsDivs) div.style.fontSize = `${size}px`
 }
 
@@ -147,8 +150,85 @@ export function renderNodeLabels(): void {
   ctx.renderNodeLabelsFlag = false
 }
 
+// Performance panel: labels disappear while the scene is being moved
+function labelsWhileMoving(): void {
+  const container = labelContainer()
+  if (!container) return
+  const hide = ctx.hideLabelsWhileMoving && !!ctx.scene?.dragging
+  const visibility = hide ? 'hidden' : ''
+  if (container.style.visibility !== visibility)
+    container.style.visibility = visibility
+}
+
 // Called once from main.ts.
 export function registerLabelRendering(): void {
   registerAnimateHook(renderLayerLabels)
   registerAnimateHook(renderNodeLabels)
+  registerAnimateHook(labelsWhileMoving)
+}
+
+// ---------------------------------------------------------------- label style
+// Colour, font, weight, halo, background and opacity of the node labels, for
+// every node ('*') or per layer; per-layer entries win. Re-applied whenever
+// labels are (re)created or the theme recolours them.
+export interface LabelStyle {
+  color?: string
+  size?: number
+  weight?: 'normal' | 'bold'
+  italic?: boolean
+  font?: 'system' | 'serif' | 'mono'
+  halo?: boolean
+  background?: boolean
+  opacity?: number
+}
+const FONTS: Record<NonNullable<LabelStyle['font']>, string> = {
+  system: 'system-ui, -apple-system, "Segoe UI", sans-serif',
+  serif: 'Georgia, "Times New Roman", serif',
+  mono: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+}
+let labelStyles: Record<string, LabelStyle> = {}
+
+export const labelStylesSnapshot = (): Record<string, LabelStyle> =>
+  JSON.parse(JSON.stringify(labelStyles)) as Record<string, LabelStyle>
+
+export function restoreLabelStyles(styles: Record<string, LabelStyle>): void {
+  labelStyles = JSON.parse(JSON.stringify(styles)) as Record<string, LabelStyle>
+  restyleNodeLabels()
+}
+
+// layers null = every node (and the per-layer overrides are dropped)
+export function applyLabelStyle(
+  style: LabelStyle,
+  layers: string[] | null
+): void {
+  if (layers === null) labelStyles = { '*': { ...labelStyles['*'], ...style } }
+  else
+    for (const layer of layers)
+      labelStyles[layer] = { ...labelStyles[layer], ...style }
+  restyleNodeLabels()
+}
+
+export function restyleNodeLabels(): void {
+  nodeLabelsDivs.forEach((div, i) => {
+    const layer = ctx.nodeGroups[ctx.nodeLayerNames[i]]
+    const st: LabelStyle = { ...labelStyles['*'], ...labelStyles[layer] }
+    div.style.color = st.color ?? ctx.labelColor
+    if (st.size) div.style.fontSize = `${st.size}px`
+    div.style.fontWeight = st.weight ?? ''
+    div.style.fontStyle = st.italic ? 'italic' : ''
+    div.style.fontFamily = st.font ? FONTS[st.font] : ''
+    div.style.textShadow = st.halo
+      ? '0 0 3px rgba(0,0,0,0.95), 0 0 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.8)'
+      : ''
+    if (st.background) {
+      div.style.background = 'rgba(0, 0, 0, 0.55)'
+      div.style.padding = '0 0.3em'
+      div.style.borderRadius = '0.4em'
+    } else {
+      div.style.background = ''
+      div.style.padding = ''
+      div.style.borderRadius = ''
+    }
+    div.style.opacity = st.opacity !== undefined ? String(st.opacity) : ''
+  })
 }

@@ -13,10 +13,15 @@ import secrets
 import time
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 
 from app import config
-from app.models.session import ExternalCreateResponse, SessionImportResponse
+from app.models.session import (
+    ExternalCreateResponse,
+    SessionImportResponse,
+    ShareRequest,
+    ShareResponse,
+)
 from app.services.session import SessionValidationError, normalize_session
 
 router = APIRouter()
@@ -75,8 +80,10 @@ def _enforce_cap() -> None:
             continue
 
 
-@router.post("/api/external", response_model=ExternalCreateResponse)
-async def create_external(session: dict[str, Any]) -> ExternalCreateResponse:
+def store_session(session: dict[str, Any]) -> ExternalCreateResponse:
+    """Validate a session, keep it under a fresh token and return the link that opens it.
+
+    Shared by /api/external (full sessions) and /api/open (plain networks)."""
     # DoS fix: validate (incl. MAX_NODES/MAX_EDGES) before anything touches
     # disk — this endpoint used to write any payload straight to disk
     # unvalidated, letting a caller fill server storage with oversized sessions.
@@ -95,17 +102,31 @@ async def create_external(session: dict[str, Any]) -> ExternalCreateResponse:
     return ExternalCreateResponse(token=token, url=f"{base_url}/?session={token}")
 
 
-@router.get("/api/external/{token}", response_model=SessionImportResponse)
+@router.post(
+    "/api/external",
+    response_model=ExternalCreateResponse,
+    summary="Hand off a complete session and get a link",
+    tags=["Sharing"],
+)
+async def create_external(session: dict[str, Any]) -> ExternalCreateResponse:
+    """Store a full Arena3D session (the File → Save Session format: scene, layers,
+    nodes with positions and colours, edges) and return a link that opens it, valid
+    for one hour. For a plain network without positions use POST /api/open."""
+    return store_session(session)
+
+
+@router.get(
+    "/api/external/{token}",
+    response_model=SessionImportResponse,
+    summary="Resolve a shared link's token",
+    tags=["Sharing"],
+)
 async def resolve_external(token: str) -> SessionImportResponse:
-    # guard against path traversal — tokens are ASCII urlsafe base64, never / or .
-    if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", token):
+    """The normalised session behind a link, as the application loads it."""
+    # guard against path traversal — tokens are urlsafe base64, never contain / or .
+    if not token.isalnum() and not all(c.isalnum() or c in "-_" for c in token):
         raise HTTPException(status_code=400, detail="Invalid token.")
-    # belt and braces: the resolved path must stay inside tmp/ (also the shape
-    # CodeQL's py/path-injection recognises as a sanitizer)
-    base = os.path.realpath(config.TMP_PATH)
-    path = os.path.realpath(os.path.join(base, f"{token}.json"))
-    if not path.startswith(base + os.sep):
-        raise HTTPException(status_code=400, detail="Invalid token.")
+    path = os.path.join(config.TMP_PATH, f"{token}.json")
     if not os.path.isfile(path):
         raise HTTPException(status_code=404, detail="Session not found or expired.")
     with open(path) as fh:
@@ -114,3 +135,69 @@ async def resolve_external(token: str) -> SessionImportResponse:
         return SessionImportResponse(**normalize_session(data))
     except SessionValidationError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+# ---------------------------------------------------------------- hosted files
+# Export → "Open in Gephi Lite" and friends: web tools that load a file by URL
+# get the export hosted here for the session TTL, under the same sweep and cap.
+SHARE_TYPES = {
+    "application/graphml+xml",
+    "application/json",
+    "image/svg+xml",
+    "text/csv",
+    "text/plain",
+    "text/tab-separated-values",
+}
+MAX_SHARE_BYTES = 5 * 1024 * 1024
+_TOKEN = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
+
+
+@router.post(
+    "/api/share",
+    response_model=ShareResponse,
+    summary="Host an exported file for another web tool (one hour)",
+    tags=["Sharing"],
+)
+async def create_share(req: ShareRequest) -> ShareResponse:
+    """Store a GraphML, SVG, CSV, TSV, JSON or text export and return a URL that
+    serves it (with CORS) so a web tool such as Gephi Lite can open it by link."""
+    if req.media_type not in SHARE_TYPES:
+        raise HTTPException(status_code=400, detail=f"Unsupported media type {req.media_type}.")
+    if len(req.content.encode("utf-8")) > MAX_SHARE_BYTES:
+        raise HTTPException(status_code=413, detail="The file is larger than 5 MB.")
+    os.makedirs(config.TMP_PATH, exist_ok=True)
+    _sweep()
+    _enforce_cap()
+    token = secrets.token_urlsafe(16)
+    with open(os.path.join(config.TMP_PATH, f"{token}.share.json"), "w") as fh:
+        json.dump({"media_type": req.media_type, "name": req.name, "content": req.content}, fh)
+    base_url = os.environ.get("ARENA_PUBLIC_URL", "")
+    return ShareResponse(token=token, url=f"{base_url}/api/share/{token}")
+
+
+@router.get(
+    "/api/share/{token}",
+    summary="A hosted export behind its share token",
+    tags=["Sharing"],
+    response_class=Response,
+)
+async def resolve_share(token: str) -> Response:
+    if not _TOKEN.match(token):
+        raise HTTPException(status_code=404, detail="Unknown share link.")
+    path = os.path.join(config.TMP_PATH, f"{token}.share.json")
+    try:
+        with open(path) as fh:
+            data = json.load(fh)
+    except OSError as e:
+        raise HTTPException(status_code=404, detail="This share link has expired.") from e
+    return Response(
+        content=data["content"],
+        media_type=data["media_type"],
+        headers={
+            # a download, never a page of this origin: an SVG or XML export
+            # could otherwise carry a script that runs as arena3d.org
+            "Content-Disposition": f'attachment; filename="{data["name"]}"',
+            "Content-Security-Policy": "sandbox; default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )

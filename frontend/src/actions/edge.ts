@@ -37,8 +37,10 @@ export function redrawInterLayerEdges(): void {
 export function renderInterLayerEdges(): void {
   if (existsConditionToRemoveInterEdges()) {
     if (!ctx.interEdgesRemoved) removeInterLayerEdges()
-  } else if (ctx.renderInterLayerEdgesFlag) {
-    redrawInterLayerEdges()
+  } else {
+    // removed edges come back once the condition clears (a drag ended)
+    if (ctx.interEdgesRemoved) ctx.renderInterLayerEdgesFlag = true
+    if (ctx.renderInterLayerEdgesFlag) redrawInterLayerEdges()
   }
 }
 
@@ -50,6 +52,7 @@ export function renderInterLayerEdges(): void {
 function existsConditionToRemoveInterEdges(): boolean {
   return (
     ctx.interLayerEdgesRenderPauseFlag ||
+    (ctx.pauseInterWhileMoving && !!ctx.scene?.dragging) ||
     (!ctx.edgeOpacityByWeight && ctx.interLayerEdgeOpacity === 0)
   )
 }
@@ -165,16 +168,6 @@ export function setIntraChannelCurvature(curvature: number): void {
 
 export function setInterChannelCurvature(curvature: number): void {
   ctx.interChannelCurvature = curvature
-  ctx.renderInterLayerEdgesFlag = true
-}
-
-export function setIntraEdgeBundling(strength: number): void {
-  ctx.intraEdgeBundling = strength
-  redrawIntraLayerEdges()
-}
-
-export function setInterEdgeBundling(strength: number): void {
-  ctx.interEdgeBundling = strength
   ctx.renderInterLayerEdgesFlag = true
 }
 

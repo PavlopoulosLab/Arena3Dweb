@@ -20,12 +20,14 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTabs">
+          <!-- Grouped by task: look at it, load it, lay it out, edit it, analyse it. -->
           <ul class="navbar-nav" role="tablist">
             <li class="nav-item" role="presentation">
               <button
                 class="nav-link active"
                 data-bs-toggle="tab"
                 data-bs-target="#panel-home"
+                data-menu="home"
                 type="button"
                 role="tab"
               >
@@ -36,18 +38,8 @@
               <button
                 class="nav-link"
                 data-bs-toggle="tab"
-                data-bs-target="#panel-main-view"
-                type="button"
-                role="tab"
-              >
-                Main View
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
                 data-bs-target="#panel-file"
+                data-menu="file"
                 type="button"
                 role="tab"
               >
@@ -58,77 +50,202 @@
               <button
                 class="nav-link"
                 data-bs-toggle="tab"
+                data-bs-target="#panel-databases"
+                data-menu="databases"
+                type="button"
+                role="tab"
+              >
+                Databases
+              </button>
+            </li>
+            <li class="nav-item dropdown" role="presentation">
+              <button
+                class="nav-link dropdown-toggle"
+                id="menu-view"
+                data-menu="view"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                View
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="menu-view">
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-main-view"
+                    type="button"
+                    role="tab"
+                  >
+                    3D View
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-scene"
+                    type="button"
+                    role="tab"
+                  >
+                    Scene &amp; Camera
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-fps"
+                    type="button"
+                    role="tab"
+                  >
+                    Performance
+                  </button>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#panel-find"
+                data-menu="find"
+                type="button"
+                role="tab"
+              >
+                Find
+              </button>
+            </li>
+            <li class="nav-item" role="presentation" data-multilayer-only>
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#panel-layer-selection"
+                data-menu="layers"
+                type="button"
+                role="tab"
+              >
+                Layer selection
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
                 data-bs-target="#panel-layouts"
+                data-menu="layout"
                 type="button"
                 role="tab"
               >
-                Layer Selection &amp; Layouts
+                Layout
               </button>
+            </li>
+            <li class="nav-item dropdown" role="presentation">
+              <button
+                class="nav-link dropdown-toggle"
+                id="menu-edit"
+                data-menu="edit"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Edit
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="menu-edit">
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-node"
+                    type="button"
+                    role="tab"
+                  >
+                    Nodes
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-edge"
+                    type="button"
+                    role="tab"
+                  >
+                    Edges
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-layer"
+                    data-multilayer-only
+                    type="button"
+                    role="tab"
+                  >
+                    Layers
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-style"
+                    type="button"
+                    role="tab"
+                  >
+                    Style
+                  </button>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown" role="presentation">
+              <button
+                class="nav-link dropdown-toggle"
+                id="menu-analyze"
+                data-menu="analyze"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Analyze
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="menu-analyze">
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-analyze"
+                    type="button"
+                    role="tab"
+                  >
+                    Analysis
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-data"
+                    type="button"
+                    role="tab"
+                  >
+                    Data Tables
+                  </button>
+                </li>
+              </ul>
             </li>
             <li class="nav-item" role="presentation">
               <button
                 class="nav-link"
                 data-bs-toggle="tab"
-                data-bs-target="#panel-scene"
+                data-bs-target="#panel-export"
+                data-menu="export"
                 type="button"
                 role="tab"
               >
-                Scene Actions
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#panel-layer"
-                type="button"
-                role="tab"
-              >
-                Layer Actions
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#panel-node"
-                type="button"
-                role="tab"
-              >
-                Node Actions
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#panel-edge"
-                type="button"
-                role="tab"
-              >
-                Edge Actions
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#panel-data"
-                type="button"
-                role="tab"
-              >
-                View Data
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#panel-fps"
-                type="button"
-                role="tab"
-              >
-                FPS
+                Export
               </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -136,6 +253,7 @@
                 class="nav-link"
                 data-bs-toggle="tab"
                 data-bs-target="#panel-help"
+                data-menu="help"
                 type="button"
                 role="tab"
               >
@@ -143,7 +261,41 @@
               </button>
             </li>
           </ul>
-          <div class="ms-auto" role="group" aria-label="Undo and redo">
+          <div
+            class="ms-auto nav-mode btn-group btn-group-sm"
+            role="group"
+            aria-label="Network mode"
+            title="Layers as floors, or one graph"
+          >
+            <button
+              type="button"
+              class="btn btn-outline-secondary active"
+              id="modeMultilayer"
+              disabled
+            >
+              Multilayered
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              id="modeSingle"
+              disabled
+            >
+              Single network
+            </button>
+          </div>
+          <div class="nav-theme">
+            <select
+              id="themeSelect"
+              class="form-select form-select-sm"
+              aria-label="Scene theme"
+              title="Scene theme (load a network first)"
+              disabled
+            >
+              <option>Theme</option>
+            </select>
+          </div>
+          <div role="group" aria-label="Undo and redo">
             <button
               id="undoButton"
               type="button"
@@ -177,11 +329,21 @@
       <!-- Main View is intentionally empty: selecting it just reveals the canvas. -->
       <div class="tab-pane fade" id="panel-main-view" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-file" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-databases" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-find" role="tabpanel"></div>
+      <div
+        class="tab-pane fade"
+        id="panel-layer-selection"
+        role="tabpanel"
+      ></div>
+      <div class="tab-pane fade" id="panel-export" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-layouts" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-scene" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-layer" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-node" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-edge" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-style" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-analyze" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-data" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-fps" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-help" role="tabpanel"></div>
@@ -196,7 +358,7 @@
     ></button>
 
     <div id="navControlButtonsDiv"></div>
-    <div id="themeDiv"></div>
+    <div id="legend" class="d-none" aria-label="Legend"></div>
     <div id="info">
       No network loaded yet. Open the <b>File</b> tab to upload a network or
       load an example.

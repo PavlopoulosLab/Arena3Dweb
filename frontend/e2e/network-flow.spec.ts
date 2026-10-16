@@ -45,7 +45,9 @@ test('load example → layout → clustered layout → export', async ({ page })
   )
 
   // --- Upload: Load Example -----------------------------------------------
-  await page.getByRole('tab', { name: 'File' }).click()
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .click()
   await page.getByRole('button', { name: 'Load Example' }).click()
   await expect(page.locator('#file_status')).toContainText('Loaded network')
   const nodeCount = await page.evaluate(
@@ -63,7 +65,7 @@ test('load example → layout → clustered layout → export', async ({ page })
   // wait times out (and force-clicks land on drawer overlays, never toggling
   // the input). Firing the handler directly on the element sidesteps both.
   await page
-    .getByRole('tab', { name: 'Layer Selection & Layouts' })
+    .getByRole('tab', { name: 'Layout', includeHidden: true, exact: true })
     .dispatchEvent('click')
   await page.locator('#subgraph_allLayers').dispatchEvent('click')
   await page.locator('#selectAllLayersCheckbox').dispatchEvent('click')
@@ -112,51 +114,13 @@ test('load example → layout → clustered layout → export', async ({ page })
   )
 
   // --- Export session ------------------------------------------------------
-  await page.getByRole('tab', { name: 'File' }).dispatchEvent('click')
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .dispatchEvent('click')
   const downloadPromise = page.waitForEvent('download')
   await page
     .getByRole('button', { name: 'Save Session' })
     .dispatchEvent('click')
   const download = await downloadPromise
   expect(download.suggestedFilename()).toMatch(/\.json$/)
-})
-
-// The local layout lays out members inside each cluster (v2 cluster.R); the
-// global layout stays in charge of every scope, nodesPerLayers included.
-test('local layout choice reaches the clustered layout request', async ({
-  page,
-}) => {
-  await page.goto('/')
-  await page.waitForFunction(
-    () => '__arena' in (window as unknown as Record<string, unknown>)
-  )
-  await page.getByRole('tab', { name: 'File' }).click()
-  await page.getByRole('button', { name: 'Load Example' }).click()
-  await expect(page.locator('#file_status')).toContainText('Loaded network')
-
-  await page
-    .getByRole('tab', { name: 'Layer Selection & Layouts' })
-    .dispatchEvent('click')
-  // only offered once a clustering algorithm is picked
-  await expect(page.locator('#localLayoutAlgorithmChoice')).toBeHidden()
-  await page.locator('#selectAllLayersCheckbox').dispatchEvent('click')
-  await selectOption(page, '#layoutAlgorithmChoice', 'Fruchterman-Reingold')
-  await selectOption(page, '#clusteringAlgorithmChoice', 'Louvain')
-  await expect(page.locator('#localLayoutAlgorithmChoice')).toBeVisible()
-  await selectOption(page, '#localLayoutAlgorithmChoice', 'Circle')
-
-  for (const scope of ['perLayer', 'allLayers', 'nodesPerLayers']) {
-    await page.locator(`#subgraph_${scope}`).dispatchEvent('click')
-    const request = page.waitForRequest('**/api/layout')
-    await page.locator('#runLayout').dispatchEvent('click')
-    const body = (await request).postDataJSON() as {
-      algorithm: string
-      clustering: unknown
-    }
-    expect(body.algorithm).toBe('Fruchterman-Reingold')
-    expect(body.clustering).toEqual({
-      algorithm: 'Louvain',
-      local_layout: 'Circle',
-    })
-  }
 })

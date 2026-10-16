@@ -55,7 +55,9 @@ async function loadExample(page: import('@playwright/test').Page) {
   await page.waitForFunction(
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
-  await page.getByRole('tab', { name: 'File' }).click()
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .dispatchEvent('click')
   await page.getByRole('button', { name: 'Load Example' }).click()
   await expect(page.locator('#file_status')).toContainText('Loaded network')
   // Bloom off so pixel counts measure geometry, not glow. Driven on the input
@@ -66,7 +68,9 @@ async function loadExample(page: import('@playwright/test').Page) {
     box.checked = false
     box.dispatchEvent(new Event('change'))
   })
-  await page.getByRole('tab', { name: 'Edge Actions' }).click()
+  await page
+    .getByRole('tab', { name: 'Edges', includeHidden: true, exact: true })
+    .dispatchEvent('click')
 }
 
 test('weight-as-width thickens edges without touching nodes', async ({
@@ -116,7 +120,9 @@ test('channel curvature sliders appear only for multi-edge networks', async ({
   await expect(page.locator('#intraChannelCurvatureWrap')).toBeHidden()
   await expect(page.locator('#interChannelCurvatureWrap')).toBeHidden()
 
-  await page.getByRole('tab', { name: 'File' }).click()
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .dispatchEvent('click')
   await page.locator('#load_network_file').setInputFiles({
     name: 'channels.json',
     mimeType: 'application/json',
@@ -136,8 +142,15 @@ test('channel curvature sliders appear only for multi-edge networks', async ({
   })
   await expect(page.locator('#file_status')).toContainText('Session loaded')
 
-  await page.getByRole('tab', { name: 'Edge Actions' }).click()
+  await page
+    .getByRole('tab', { name: 'Edges', includeHidden: true, exact: true })
+    .dispatchEvent('click')
   await expect(page.locator('#intraChannelCurvatureWrap')).toBeVisible()
+  // one layer opens as a single network: nothing is inter-layer there
+  await expect(page.locator('body')).toHaveClass(/mode-single/)
+  await expect(page.locator('#interChannelCurvatureWrap')).toBeHidden()
+  await page.locator('#modeMultilayer').dispatchEvent('click')
+  await expect(page.locator('body')).not.toHaveClass(/mode-single/)
   await expect(page.locator('#interChannelCurvatureWrap')).toBeVisible()
 })
 
@@ -158,7 +171,9 @@ test('the radio reflects whichever flag combination a session carries', async ({
     [false, false, 'edgeWeight_neither'],
     [true, false, 'edgeWeight_opacity'],
   ] as const) {
-    await page.getByRole('tab', { name: 'File' }).click()
+    await page
+      .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+      .dispatchEvent('click')
     await page.locator('#load_network_file').setInputFiles({
       name: 'session.json',
       mimeType: 'application/json',
@@ -176,8 +191,12 @@ test('the radio reflects whichever flag combination a session carries', async ({
       ),
     })
     await expect(page.locator('#file_status')).toContainText('Session loaded')
+    // loading switches to the 3D view; let that tab switch finish first
+    await expect(page.locator('#panel-main-view')).toHaveClass(/show/)
 
-    await page.getByRole('tab', { name: 'Edge Actions' }).click()
+    await page
+      .getByRole('tab', { name: 'Edges', includeHidden: true, exact: true })
+      .dispatchEvent('click')
     await expect(page.locator(`#${expected}`)).toBeChecked()
     // The slider pair for a weight-driven property stays hidden.
     await expect(page.locator('#intraLayerEdgeOpacityWrap')).toBeVisible({
@@ -187,51 +206,4 @@ test('the radio reflects whichever flag combination a session carries', async ({
       visible: !byWidth,
     })
   }
-})
-
-// Bundling bends straight edges into curves. Read the built geometry through
-// the test hook: segment counts are exact where pixel counts would be noisy.
-test('bundling sliders curve edges and reset on network reload', async ({
-  page,
-}) => {
-  await loadExample(page)
-  const curved = () =>
-    page.evaluate(() => {
-      type Line = {
-        geometry?: { attributes: Record<string, { count: number }> }
-      }
-      const { ctx } = (
-        window as unknown as {
-          __arena: {
-            ctx: {
-              edgeObjects: { interLayer: boolean; THREE_Object: unknown }[]
-            }
-          }
-        }
-      ).__arena
-      const count = (inter: boolean) =>
-        ctx.edgeObjects.filter((e) => {
-          const line = e.THREE_Object as Line
-          return (
-            e.interLayer === inter &&
-            (line.geometry?.attributes.instanceStart.count ?? 0) > 1
-          )
-        }).length
-      return { intra: count(false), inter: count(true) }
-    })
-  expect(await curved()).toEqual({ intra: 0, inter: 0 })
-
-  for (const id of ['#intraEdgeBundling', '#interEdgeBundling']) {
-    await page.locator(id).fill('0.8')
-    await page.locator(id).dispatchEvent('input')
-  }
-  // inter-layer edges redraw on the next animate tick, not synchronously
-  await expect.poll(async () => (await curved()).inter).toBeGreaterThan(0)
-  expect((await curved()).intra).toBeGreaterThan(0)
-
-  // a fresh network resets ctx, and the sliders follow
-  await page.getByRole('tab', { name: 'File' }).click()
-  await page.getByRole('button', { name: 'Load Example' }).click()
-  await expect(page.locator('#intraEdgeBundling')).toHaveValue('0')
-  await expect(page.locator('#interEdgeBundling')).toHaveValue('0')
 })

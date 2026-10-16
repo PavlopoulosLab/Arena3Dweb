@@ -16,7 +16,24 @@ export default defineConfig({
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testIgnore: /mobile\.spec\.ts/,
+    },
+    // phones/tablets: touch, small viewports (e2e/mobile.spec.ts only)
+    {
+      name: 'phone',
+      use: { ...devices['Pixel 7'] },
+      testMatch: /mobile\.spec\.ts/,
+    },
+    {
+      name: 'tablet',
+      use: { ...devices['Galaxy Tab S4'] },
+      testMatch: /mobile\.spec\.ts/,
+    },
+  ],
   webServer: {
     command: 'npm run dev',
     url: 'http://localhost:5173',

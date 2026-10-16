@@ -1,0 +1,200 @@
+// NORMA-2.0 group layouts (Karatzas et al. 2022) — PLAN-ROADMAP Phase 26.
+//
+// Groups come from clusters, annotations, or the layers themselves:
+// - clusters / annotations: each selected layer is laid out with its groups
+//   kept apart (3D inside sphere/cube/cloud layers).
+// - layers: the whole multilayer network is laid out once in 3D with every
+//   layer as a group; each layer's floor then moves to its group's centre,
+//   turns to face outward (its angle), and its nodes are laid out within it
+//   (keeping depth inside 3D layer shapes). One undo step.
+
+import * as THREE from 'three'
+import {
+  api,
+  type LayoutPosition,
+  type LayoutRequest,
+  type UploadProgress,
+} from '../api/client'
+import { store } from '../store'
+import { ctx } from '../three'
+import { VOLUME_CONTAINERS } from '../three/Layer'
+import { history } from '../commands/base'
+import { ApplyLayoutCommand } from '../commands/scene'
+import { applyLayout } from './layout'
+import { LayerStateCommand, captureLayers, type LayerState } from './modes'
+import { redrawIntraLayerEdges } from './edge'
+import { focusOnNodes } from './search'
+
+export type GroupSource = 'clusters' | 'annotations' | 'layers'
+export type GroupStrategy = 'virtual' | 'gravity' | 'supernodes'
+
+export interface GroupLayoutOptions {
+  source: GroupSource
+  strategy: GroupStrategy
+  algorithm: string
+  local: string // layout name or 'keep'
+  force: number
+  scale: number
+  layers: string[] // layers to lay out (all when empty)
+  useWeights?: boolean
+  onProgress?: UploadProgress // sent / computing / applying, for a progress bar
+}
+
+export class GroupLayoutError extends Error {}
+
+// Node_Layer id -> groups, for the chosen source.
+export function groupsFor(
+  source: GroupSource,
+  layers: Set<string>
+): Record<string, string[]> {
+  const out: Record<string, string[]> = {}
+  ctx.nodeObjects.forEach((n, i) => {
+    if (!layers.has(n.layer)) return
+    const id = ctx.nodeLayerNames[i]
+    if (source === 'layers') out[id] = [n.layer]
+    else if (source === 'clusters')
+      out[id] = n.cluster ? [`Cluster ${n.cluster}`] : []
+    else out[id] = [...n.annotations]
+  })
+  return out
+}
+
+export async function runGroupLayout(o: GroupLayoutOptions): Promise<string> {
+  const net = store.get().network
+  if (!net) throw new GroupLayoutError('Load a network first.')
+  const layers = o.layers.length ? o.layers : net.layers
+  const chosen = new Set(layers)
+  const groups = groupsFor(o.source, chosen)
+  const grouped = Object.values(groups).filter((g) => g.length).length
+  if (o.source !== 'layers' && grouped === 0)
+    throw new GroupLayoutError(
+      o.source === 'clusters'
+        ? 'No clusters yet — run a layout with clustering first.'
+        : 'No annotations — upload a node attribute file with an Annotation column, or annotate from enrichment.'
+    )
+  if (o.source === 'layers' && layers.length < 2)
+    throw new GroupLayoutError(
+      'Arranging layers as groups needs at least two layers.'
+    )
+  const volume = layers.every((l) =>
+    VOLUME_CONTAINERS.includes(ctx.layers[ctx.layerGroups[l]].container)
+  )
+  const req: LayoutRequest = {
+    nodes: net.nodes,
+    edges: net.edges,
+    algorithm: o.algorithm,
+    scope: o.source === 'layers' ? 'allLayers' : 'perLayer',
+    selected_layers: layers,
+    dimensions: o.source === 'layers' || volume ? 3 : 2,
+    use_weights: o.useWeights ?? false,
+    group_strategy: o.strategy,
+    groups,
+    group_local: o.local,
+    group_force: o.force,
+    group_scale: o.scale,
+  }
+  if (o.source !== 'layers') {
+    await applyLayout(req, true, o.onProgress)
+    return `Groups laid out (${new Set(Object.values(groups).flat()).size} groups${volume ? ', in 3D' : ''}).`
+  }
+  const res = await api.layout(req)
+  placeLayersAsGroups(res.positions, layers)
+  focusOnNodes(ctx.nodeObjects.map((_, i) => i)) // the floors moved: fit them in view
+  return `${layers.length} layers placed and angled as groups.`
+}
+
+// ---------------------------------------------------------------- layers
+type Vec3 = THREE.Vector3
+
+// Layer placements from one 3D layout of the whole network. Exported for tests.
+export function layerPlacements(
+  raw: Record<string, number[]>,
+  layers: string[]
+): {
+  layer: string
+  position: Vec3
+  quaternion: THREE.Quaternion
+  nodes: Record<string, [number, number, number]>
+}[] {
+  const byLayer = new Map<string, [string, Vec3][]>()
+  for (const [id, p] of Object.entries(raw)) {
+    const layer = ctx.nodeGroups[id]
+    if (!layers.includes(layer)) continue
+    const list = byLayer.get(layer) ?? []
+    list.push([id, new THREE.Vector3(p[0], p[1], p[2] ?? 0)])
+    byLayer.set(layer, list)
+  }
+  const used = layers.filter((l) => byLayer.has(l))
+  const centroid = (pts: Vec3[]) =>
+    pts.reduce((a, p) => a.add(p), new THREE.Vector3()).divideScalar(pts.length)
+  const centers = new Map(
+    used.map((l) => [l, centroid(byLayer.get(l)!.map(([, p]) => p))])
+  )
+  const G = centroid([...centers.values()])
+  const width = (l: string) => {
+    const layer = ctx.layers[ctx.layerGroups[l]]
+    return layer.geometry_parameters_width * layer.getScale()
+  }
+  // spread layer centres so floors (their widths) clear each other
+  let s = 1
+  used.forEach((a, i) =>
+    used.slice(i + 1).forEach((b) => {
+      const d = centers.get(a)!.distanceTo(centers.get(b)!)
+      const need = 0.6 * (width(a) + width(b))
+      if (d > 1e-9) s = Math.max(s, need / d)
+    })
+  )
+  const xAxis = new THREE.Vector3(1, 0, 0) // a floor's normal is its local x
+  return used.map((layer) => {
+    const c = centers.get(layer)!
+    const out = c.clone().sub(G)
+    // angle: the floor faces away from the middle of the arrangement
+    const normal = out.length() > 1e-9 ? out.clone().normalize() : xAxis.clone()
+    const quaternion = new THREE.Quaternion().setFromUnitVectors(xAxis, normal)
+    const inverse = quaternion.clone().invert()
+    const local = byLayer.get(layer)!.map(([id, p]) => {
+      const d = p.clone().sub(c).applyQuaternion(inverse) // into the floor's frame
+      return [id, d] as const
+    })
+    const container = ctx.layers[ctx.layerGroups[layer]].container
+    const keepDepth = VOLUME_CONTAINERS.includes(container)
+    const reach = Math.max(
+      1e-9,
+      ...local.map(([, d]) => (keepDepth ? d.length() : Math.hypot(d.y, d.z)))
+    )
+    const k = ((width(layer) / 2) * 0.9) / reach // fill the floor / volume
+    const nodes: Record<string, [number, number, number]> = {}
+    for (const [id, d] of local)
+      nodes[id] = [d.y * k, d.z * k, keepDepth ? d.x * k : 0]
+    return { layer, position: out.multiplyScalar(s), quaternion, nodes }
+  })
+}
+
+function placeLayersAsGroups(
+  raw: Record<string, LayoutPosition>,
+  layers: string[]
+): void {
+  const placements = layerPlacements(raw, layers)
+  const before: LayerState[] = captureLayers()
+  const after: LayerState[] = captureLayers()
+  const positions: Record<string, LayoutPosition> = {}
+  for (const p of placements) {
+    const i = ctx.layerGroups[p.layer]
+    after[i] = { ...after[i], position: p.position, quaternion: p.quaternion }
+    Object.assign(positions, p.nodes)
+  }
+  const stack = new LayerStateCommand('Layers as groups', before, after)
+  const nodes = new ApplyLayoutCommand(positions)
+  history.execute({
+    description: 'Layers as groups (NORMA-2.0)',
+    execute: () => {
+      stack.execute()
+      nodes.execute()
+    },
+    undo: () => {
+      nodes.undo()
+      stack.undo()
+    },
+  })
+  redrawIntraLayerEdges()
+}

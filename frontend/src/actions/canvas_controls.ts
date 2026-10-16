@@ -6,7 +6,7 @@
 
 import * as THREE from 'three'
 import { bus } from '../bus'
-import { ctx } from '../three'
+import { clampScale, ctx } from '../three'
 import { registerAnimateHook } from './screen'
 import { history } from '../commands/base'
 import {
@@ -18,6 +18,7 @@ import { redrawIntraLayerEdges, unselectAllEdges } from './edge'
 import {
   checkHoverOverLayer,
   getSelectedLayers,
+  repaintLayers,
   performDoubleClickLayerSelection,
 } from './layer'
 import {
@@ -33,6 +34,8 @@ import {
   removeContextMenu,
   replaceContextMenuOverNode,
 } from './right_click_menu'
+import { lastPointerWasTouch, registerTouchControls } from './touch_controls'
+import { fitView } from './search'
 
 // v2 globals: lasso anchor (shift+click) and the lasso rectangle line.
 // Node indices the current lasso rectangle covers. Tracked explicitly so
@@ -51,7 +54,7 @@ type CanvasMouseEvent = MouseEvent & { layerX: number; layerY: number }
 let dragBefore: TransformSnapshot | null = null
 let transformDragged = false
 
-// Smooth wheel zoom: the wheel sets a target scale (same 0.2–2 bounds as
+// Smooth wheel zoom: the wheel sets a target scale (same bounds as
 // Scene.zoom) and easeZoomStep lerps toward it each frame. Users with
 // prefers-reduced-motion get the old instant zoom.
 let zoomTarget: number | null = null
@@ -89,7 +92,7 @@ export function sceneZoom(event: WheelEvent): void {
   }
   const current = zoomTarget ?? ctx.scene.getScale()
   const factor = event.deltaY < 0 ? 1.1 : 0.9
-  zoomTarget = Math.min(2, Math.max(0.2, current * factor))
+  zoomTarget = clampScale(current * factor)
 }
 
 export function easeZoomStep(): void {
@@ -191,7 +194,12 @@ export function clickDrag(event: CanvasMouseEvent): void {
         translateNodesWithHeldKey(event)
         transformDragged = true
       } else if (ctx.scene.axisPressed !== '') {
-        rotateLayersWithHeldKey(event)
+        if (ctx.networkMode === 'single') rotateSceneWithHeldKey(event)
+        else rotateLayersWithHeldKey(event)
+        transformDragged = true
+      } else if (ctx.networkMode === 'single') {
+        // one graph, no layers to drag: the left button turns it
+        ctx.scene.orbitSphereWithMouse(x, y)
         transformDragged = true
       } else if (
         ctx.lastHoveredLayerIndex === null &&
@@ -203,7 +211,8 @@ export function clickDrag(event: CanvasMouseEvent): void {
     } else if (ctx.scene.middleClickPressed) {
       ctx.scene.dragging = true
       event.preventDefault()
-      ctx.scene.orbitSphereWithMouse(x, y)
+      if (ctx.networkMode === 'single') ctx.scene.translatePanWithMouse(x, y)
+      else ctx.scene.orbitSphereWithMouse(x, y)
       transformDragged = true
     }
 
@@ -223,7 +232,15 @@ export function processPendingHover(): void {
   if (!pendingHover || !ctx.scene?.exists()) return
   const event = pendingHover
   pendingHover = null
-  if (!checkHoverOverNode(event)) checkHoverOverLayer(event)
+  if (checkHoverOverNode(event)) return
+  if (ctx.networkMode === 'single') {
+    // no floors to hover or drag in single-network mode
+    if (ctx.hoveredLayerPaintedFlag) {
+      repaintLayers()
+      ctx.hoveredLayerPaintedFlag = false
+    }
+    ctx.lastHoveredLayerIndex = null
+  } else checkHoverOverLayer(event)
 }
 
 export function clickUp(event: MouseEvent): void {
@@ -267,12 +284,18 @@ export function clickUp(event: MouseEvent): void {
 // double click: select node -> select layer -> unselect everything
 export function dblClick(event: CanvasMouseEvent): void {
   if (!ctx.scene?.exists()) return
+  // a browser's own double-tap dblclick: touch_controls already sent ours
+  if (event.isTrusted && lastPointerWasTouch()) return
   if (performDoubleClickNodeSelection(event)) return
   if (ctx.lastHoveredLayerIndex !== null) performDoubleClickLayerSelection()
   else {
+    // the background: clear the selection and bring the whole network back
+    // into the window (the way out of a deep zoom)
     unselectAllNodes()
     unselectAllEdges()
     redrawIntraLayerEdges()
+    resetZoomTarget() // a wheel zoom still easing would pull the view back
+    fitView()
   }
 }
 
@@ -311,6 +334,25 @@ export function rotateLayersWithHeldKey(event: {
     else if (ctx.scene!.axisPressed === 'c') ctx.layers[i].rotateY(rads)
   }
   ctx.renderInterLayerEdgesFlag = true
+}
+
+// Single-network mode: z/x/c + drag turns the whole network about that axis
+// (there are no layers to rotate).
+export function rotateSceneWithHeldKey(event: {
+  screenX: number
+  screenY: number
+}): void {
+  const rads =
+    event.screenX - event.screenY >= ctx.mousePreviousX - ctx.mousePreviousY
+      ? 0.05
+      : -0.05
+  const axis = ctx.scene!.axisPressed
+  if (axis === 'z') ctx.scene!.rotateZ(rads)
+  else if (axis === 'x') ctx.scene!.rotateX(rads)
+  else if (axis === 'c') ctx.scene!.rotateY(rads)
+  ctx.renderInterLayerEdgesFlag = true
+  ctx.renderLayerLabelsFlag = true
+  ctx.renderNodeLabelsFlag = true
 }
 
 // v2 node.js lassoSelectNodes — shift + left-drag rectangle select.
@@ -374,4 +416,5 @@ export function registerCanvasControls(): void {
     'contextmenu',
     replaceContextMenuOverNode as unknown as EventListener
   )
+  registerTouchControls(canvas) // phones/tablets: orbit, pinch, taps
 }

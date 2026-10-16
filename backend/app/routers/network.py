@@ -4,15 +4,23 @@ from fastapi import APIRouter, HTTPException, UploadFile
 
 from app import config
 from app.models.network import NetworkModel
-from app.services.parser import NetworkValidationError, parse_network_tsv
+from app.services.formats import parse_network_file
+from app.services.parser import NetworkValidationError
 
 router = APIRouter()
 
 
-@router.post("/api/network", response_model=NetworkModel)
+@router.post(
+    "/api/network",
+    summary="Parse an uploaded network file",
+    tags=["Networks"],
+    response_model=NetworkModel,
+)
 async def upload_network(file: UploadFile) -> NetworkModel:
     """Parse an uploaded network TSV — the 4-column Arena3D format, or a minimal
-    2-column edgelist (SourceNode, TargetNode) whose nodes all land in one default layer."""
+    2-column edgelist (SourceNode, TargetNode) whose nodes all land in one default layer.
+    GraphML (.graphml/.xml), GML, SIF and Cytoscape CX2 (.cx2/.cx) are recognised by
+    their file extension (services/formats.py)."""
     raw_bytes = await file.read()
     # DoS fix: reject oversized uploads before pandas parses the whole file
     # into memory — MAX_EDGES was only checked *after* the parse completed.
@@ -20,6 +28,6 @@ async def upload_network(file: UploadFile) -> NetworkModel:
         raise HTTPException(status_code=413, detail="File too large.")
     raw = raw_bytes.decode("utf-8", errors="replace")
     try:
-        return parse_network_tsv(raw)
+        return parse_network_file(raw, file.filename or "")
     except NetworkValidationError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e

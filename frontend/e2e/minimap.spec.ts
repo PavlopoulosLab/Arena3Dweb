@@ -13,7 +13,9 @@ test('minimap shows on load and redraws on rotation', async ({ page }) => {
   // Hidden until a network exists.
   await expect(page.locator('#minimap')).toBeHidden()
 
-  await page.getByRole('tab', { name: 'File' }).click()
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .click()
   await page.getByRole('button', { name: 'Load Example' }).click()
   await expect(page.locator('#file_status')).toContainText('Loaded network')
 
@@ -57,7 +59,13 @@ test('minimap shows on load and redraws on rotation', async ({ page }) => {
   // Toggle via the Scene panel hides it. dispatchEvent, not click()/uncheck():
   // the post-load WebGL render loop saturates the main thread on headless CI,
   // so Playwright's actionability wait times out — fire the handler directly.
-  await page.getByRole('tab', { name: 'Scene Actions' }).dispatchEvent('click')
+  await page
+    .getByRole('tab', {
+      name: 'Scene & Camera',
+      includeHidden: true,
+      exact: true,
+    })
+    .dispatchEvent('click')
   await page.locator('#toggleMinimap').dispatchEvent('click')
   await expect(minimap).toBeHidden()
 })

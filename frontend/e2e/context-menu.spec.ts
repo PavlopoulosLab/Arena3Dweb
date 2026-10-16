@@ -9,7 +9,9 @@ test('context menu survives canvas mouseleave', async ({ page }) => {
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
 
-  await page.getByRole('tab', { name: 'File' }).click()
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .click()
   await page.getByRole('button', { name: 'Load Example' }).click()
   await expect(page.locator('#file_status')).toContainText('Loaded network')
 

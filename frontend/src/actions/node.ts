@@ -5,9 +5,11 @@
 // scale sliders (canvas_controls.ts), attribute upload (POST /api/attributes).
 
 import type { NodeAttributeRow } from '../api/client'
+import { bus } from '../bus'
 import { store } from '../store'
 import { ctx, SELECTED_DEFAULT_COLOR } from '../three'
-import type { ColorPrioritySource, NodeGeometryType } from '../three'
+import type { ColorPrioritySource } from '../three'
+import { NODE_DETAIL } from '../three/constants'
 import {
   findIndexByUuid,
   getCaseInsensitiveIndices,
@@ -154,15 +156,17 @@ export function selectNodesByName(search: string): void {
   updateSelectedNodesStore()
 }
 
-let currentNodeShape: NodeGeometryType = 'sphere'
-
-export function getNodeShape(): NodeGeometryType {
-  return currentNodeShape
+// Performance panel: sphere segments (other shapes are already simple)
+const DETAIL: Record<'low' | 'medium' | 'high', [number, number]> = {
+  low: [6, 5],
+  medium: [8, 8],
+  high: [18, 12],
 }
-
-export function setNodeShape(shape: NodeGeometryType): void {
-  currentNodeShape = shape
-  for (const node of ctx.nodeObjects) node.setGeometry(shape)
+export function setNodeDetail(level: 'low' | 'medium' | 'high'): void {
+  ctx.nodeDetail = level
+  ;[NODE_DETAIL.width, NODE_DETAIL.height] = DETAIL[level]
+  for (const node of ctx.nodeObjects)
+    if (node.shape === 'sphere') node.setGeometry('sphere')
 }
 
 export function setNodeColorPriority(source: ColorPrioritySource): void {
@@ -187,6 +191,8 @@ export function applyNodeAttributes(rows: NodeAttributeRow[]): void {
     if (row.size !== null) node.setScale(row.size)
     if (row.url) node.url = row.url
     if (row.description) node.descr = row.description
+    if (row.annotations) node.annotations = [...row.annotations]
   }
+  bus.emit('groups:changed', { source: 'annotation' })
   setNodeColorPriority('default')
 }

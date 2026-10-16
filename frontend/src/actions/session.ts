@@ -8,6 +8,7 @@ import { Color } from 'three'
 import { api, type SessionData } from '../api/client'
 import { store } from '../store'
 import { ctx } from '../three'
+import { network3dSessionState } from './modes'
 
 // v2 collected scene/layers/nodes/edges through the Shiny bridge; here we read
 // the Three.js objects directly. Values are numbers (v2 stringified them via
@@ -17,6 +18,7 @@ export function collectSession(): SessionData {
     ? `#${ctx.renderer.getClearColor(new Color()).getHexString()}`
     : '#000000'
 
+  const layered = network3dSessionState()
   return {
     scene: {
       position_x: ctx.scene?.getPosition('x') ?? 0,
@@ -27,7 +29,7 @@ export function collectSession(): SessionData {
       rotation_y: ctx.scene?.getRotation('y') ?? 0,
       rotation_z: ctx.scene?.getRotation('z') ?? 0,
     },
-    layers: ctx.layers.map((l) => ({
+    layers: ctx.layers.map((l, i) => ({
       name: l.getName(),
       position_x: l.getPosition('x'),
       position_y: l.getPosition('y'),
@@ -38,9 +40,16 @@ export function collectSession(): SessionData {
       rotation_z: l.getRotation('z'),
       floor_current_color: l.getColor(),
       geometry_parameters_width: l.getWidth(),
+      floor_shape: l.floorShape,
+      floor_style: l.floorStyle,
+      container: l.container,
+      floor_visible: l.floorVisible,
+      container_color: l.containerColor,
+      container_opacity: l.containerOpacity,
+      ...(layered?.layers[i] ? { layered: layered.layers[i] } : {}),
       generate_coordinates: false,
     })),
-    nodes: ctx.nodeObjects.map((n) => ({
+    nodes: ctx.nodeObjects.map((n, i) => ({
       name: n.getName(),
       layer: n.getLayer(),
       position_x: n.getPosition('x'),
@@ -50,6 +59,11 @@ export function collectSession(): SessionData {
       color: n.getColor(),
       url: n.url,
       descr: n.descr,
+      annotations: n.annotations,
+      shape: n.shape,
+      ...(layered?.nodes[ctx.nodeLayerNames[i]]
+        ? { layered_position: layered.nodes[ctx.nodeLayerNames[i]] }
+        : {}),
     })),
     edges: collectEdges(),
     universalLabelColor: ctx.labelColor,
@@ -57,6 +71,8 @@ export function collectSession(): SessionData {
     edgeOpacityByWeight: ctx.edgeOpacityByWeight,
     edgeWidthByWeight: ctx.edgeWidthByWeight,
     scramble_nodes: false,
+    intraEdgeBundling: ctx.intraEdgeBundling,
+    interEdgeBundling: ctx.interEdgeBundling,
   }
 }
 
@@ -73,6 +89,7 @@ function collectEdges(): SessionData['edges'] {
           opacity: edge.weights[j],
           color: edge.decideColor(j, true),
           channel,
+          width_factor: edge.widthFactor,
         })
       })
     } else {
@@ -81,6 +98,7 @@ function collectEdges(): SessionData['edges'] {
         trg: edge.target,
         opacity: edge.weights[0],
         color: edge.decideColor(0, true),
+        width_factor: edge.widthFactor,
       })
     }
   }

@@ -1,17 +1,35 @@
 // Typed event bus — decouples UI panels from the Three.js scene.
 // Replaces the role of rshiny_handlers.js / rshiny_update.js.
 
+import type {
+  GraphStats,
+  LayerSimilarityResponse,
+  LayoutPosition,
+} from '../api/client'
+
 export interface BusEvents {
-  'network:loaded': { nodeCount: number; edgeCount: number }
+  'network:loaded': { nodeCount: number; edgeCount: number; session: boolean }
   'node:color-changed': { nodeId: string; color: string }
   'node:size-changed': { nodeId: string; size: number }
   'edge:color-changed': { edgeId: string; color: string }
-  'layout:applied': { positions: Record<string, [number, number]> }
+  'layout:applied': { positions: Record<string, LayoutPosition> }
   'clustering:applied': { clusters: Record<string, number> }
-  'topology:applied': { metric: string; scales: Record<string, number> }
+  'topology:applied': {
+    metric: string
+    scales: Record<string, number>
+    raw?: Record<string, number> // the metric's values (absent on undo)
+  }
+  'layers:similarity': LayerSimilarityResponse
+  'layers:selected': { names: string[] } // the ticked layers changed
+  'network:stats': GraphStats[]
   'layer:moved': { layerIndex: number }
   'theme:changed': { theme: string }
   'history:changed': { canUndo: boolean; canRedo: boolean }
+  'mode:changed': { mode: 'multilayer' | 'single' }
+  'groups:changed': { source: 'annotation' | 'cluster' | 'all' }
+  'workspace:changed': { active: number }
+  'legend:changed': { title: string | null }
+  'values:loaded': { columns: string[] }
 }
 
 type Handler<T> = (payload: T) => void
