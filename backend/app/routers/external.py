@@ -34,6 +34,16 @@ TTL_SECONDS = 60 * 60
 MAX_TOKENS = 1000
 
 
+def _tmp_path(token: str, suffix: str) -> str:
+    """Join a token-derived filename under TMP_PATH. Callers validate `token`
+    against a safe charset before this (no `/` or `.` possible either way), but
+    os.path.basename() strips any directory component outright — the
+    unambiguous sanitizer static analysis (e.g. CodeQL) looks for at a
+    filesystem sink fed by request input.
+    """
+    return os.path.join(config.TMP_PATH, os.path.basename(f"{token}{suffix}"))
+
+
 def _session_files() -> list[str]:
     if not os.path.isdir(config.TMP_PATH):
         return []
@@ -95,7 +105,7 @@ def store_session(session: dict[str, Any]) -> ExternalCreateResponse:
     _sweep()
     _enforce_cap()
     token = secrets.token_urlsafe(16)
-    with open(os.path.join(config.TMP_PATH, f"{token}.json"), "w") as fh:
+    with open(_tmp_path(token, ".json"), "w") as fh:
         json.dump(session, fh)
     # read per request so redeploys / tests can change it without a restart
     base_url = os.environ.get("ARENA_PUBLIC_URL", "")
@@ -126,7 +136,7 @@ async def resolve_external(token: str) -> SessionImportResponse:
     # guard against path traversal — tokens are urlsafe base64, never contain / or .
     if not token.isalnum() and not all(c.isalnum() or c in "-_" for c in token):
         raise HTTPException(status_code=400, detail="Invalid token.")
-    path = os.path.join(config.TMP_PATH, f"{token}.json")
+    path = _tmp_path(token, ".json")
     if not os.path.isfile(path):
         raise HTTPException(status_code=404, detail="Session not found or expired.")
     with open(path) as fh:
@@ -169,7 +179,7 @@ async def create_share(req: ShareRequest) -> ShareResponse:
     _sweep()
     _enforce_cap()
     token = secrets.token_urlsafe(16)
-    with open(os.path.join(config.TMP_PATH, f"{token}.share.json"), "w") as fh:
+    with open(_tmp_path(token, ".share.json"), "w") as fh:
         json.dump({"media_type": req.media_type, "name": req.name, "content": req.content}, fh)
     base_url = os.environ.get("ARENA_PUBLIC_URL", "")
     return ShareResponse(token=token, url=f"{base_url}/api/share/{token}")
@@ -184,7 +194,7 @@ async def create_share(req: ShareRequest) -> ShareResponse:
 async def resolve_share(token: str) -> Response:
     if not _TOKEN.match(token):
         raise HTTPException(status_code=404, detail="Unknown share link.")
-    path = os.path.join(config.TMP_PATH, f"{token}.share.json")
+    path = _tmp_path(token, ".share.json")
     try:
         with open(path) as fh:
             data = json.load(fh)

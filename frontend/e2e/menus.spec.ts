@@ -4,6 +4,11 @@ import { expect, test } from '@playwright/test'
 // clicks; the Analysis panel holds the moved analysis tools.
 
 test('grouped menus open their panels', async ({ page }) => {
+  // ~15 sequential menu/tab interactions plus a Databases-card sweep — already
+  // the suite's second-slowest test (see other e2e files' test.setTimeout for
+  // the same reason: CI's software-GL rendering routinely pushes heavy tests
+  // past the 90s default).
+  test.setTimeout(120_000)
   await page.goto('/')
   const open = async (menu: string, item: string, pane: string) => {
     await page.getByRole('button', { name: menu, exact: true }).click()
