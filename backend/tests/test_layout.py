@@ -357,6 +357,32 @@ def test_quadratic_layouts_are_capped(monkeypatch: pytest.MonkeyPatch) -> None:
     with pytest.raises(LayoutError, match="limited to 2 nodes"):
         compute_layout(_req(algorithm="Kamada-Kawai"))
     compute_layout(_req(algorithm="Fruchterman-Reingold"))  # linear ones still run
-    resp = client.post("/api/layout", json=_req(algorithm="Sugiyama").model_dump())
+
+    # HTTP path: /api/layout runs in a worker process (crash isolation), so a
+    # monkeypatched config value in this process doesn't reach it — exercise
+    # the real default cap with a genuinely oversized request instead.
+    big_nodes = [{"id": f"N{i}_L1", "label": f"N{i}", "layer": "L1"} for i in range(2001)]
+    big_edges = [
+        {
+            "src": f"N{i}_L1",
+            "trg": f"N{i + 1}_L1",
+            "source_node": f"N{i}",
+            "source_layer": "L1",
+            "target_node": f"N{i + 1}",
+            "target_layer": "L1",
+            "weight": 1.0,
+            "scaled_weight": 1.0,
+            "channel": None,
+        }
+        for i in range(2000)
+    ]
+    big_req = LayoutRequest(
+        nodes=big_nodes,
+        edges=big_edges,
+        algorithm="Sugiyama",
+        scope="perLayer",
+        selected_layers=["L1"],
+    )
+    resp = client.post("/api/layout", json=big_req.model_dump())
     assert resp.status_code == 400
     assert "Sugiyama is limited" in resp.json()["detail"]

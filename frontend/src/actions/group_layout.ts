@@ -42,6 +42,13 @@ export interface GroupLayoutOptions {
 
 export class GroupLayoutError extends Error {}
 
+// igraph's C core can abort() the whole server on 3D Kamada-Kawai for certain
+// weighted graphs (src/layout/align.c) — reachable here because a group's
+// real edges plus its synthetic clique-completing padding edges can land on
+// exactly that pattern. Mirrors backend services/group_layouts.py's own
+// guard. Remove once igraph fixes this upstream.
+export const UNSAFE_3D_LOCAL_LAYOUTS = ['Kamada-Kawai']
+
 // Node_Layer id -> groups, for the chosen source.
 export function groupsFor(
   source: GroupSource,
@@ -79,6 +86,11 @@ export async function runGroupLayout(o: GroupLayoutOptions): Promise<string> {
   const volume = layers.every((l) =>
     VOLUME_CONTAINERS.includes(ctx.layers[ctx.layerGroups[l]].container)
   )
+  if ((o.source === 'layers' || volume) && UNSAFE_3D_LOCAL_LAYOUTS.includes(o.local))
+    throw new GroupLayoutError(
+      `${o.local} is disabled for 3D group layouts (a known igraph bug can crash the ` +
+        'layout engine) — pick a different layout for groups inside sphere/cube containers.'
+    )
   const req: LayoutRequest = {
     nodes: net.nodes,
     edges: net.edges,

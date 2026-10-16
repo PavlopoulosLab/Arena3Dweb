@@ -136,7 +136,14 @@ test('sphere layers get 3D local layouts inside each group', async ({
   await page.locator('#runLayout').dispatchEvent('click')
   await expect(page.locator('#layouts_status')).toHaveText('Layout applied.')
   await page.locator('#groupStrategy').selectOption('supernodes')
-  await page.locator('#groupLocal').selectOption('Kamada-Kawai')
+  // Kamada-Kawai is disabled as a 3D group-local layout (igraph bug — see
+  // actions/group_layout.ts's UNSAFE_3D_LOCAL_LAYOUTS); sphere layers force
+  // 3D here, so it should be unselectable. Circle still proves the point (a
+  // genuine 3D placement inside each group's sphere).
+  await expect(
+    page.locator('#groupLocal option[value="Kamada-Kawai"]')
+  ).toBeDisabled()
+  await page.locator('#groupLocal').selectOption('Circle')
   await page.locator('#runGroupLayout').click()
   await expect(page.locator('#layouts_status')).toContainText('in 3D')
   expect((await read(page)).deep).toBeGreaterThan(100)

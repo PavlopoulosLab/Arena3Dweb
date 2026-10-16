@@ -27,6 +27,11 @@ MAX_LAYERS = 18
 # built-in limit; nginx's client_max_body_size only covers the prod Docker
 # image, not local/dev deployments).
 MAX_UPLOAD_BYTES = int(os.environ.get("ARENA_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
+# Crash isolation: igraph's C core can abort() the whole interpreter on certain
+# inputs (observed: 3D Kamada-Kawai on specific weighted graphs — an upstream
+# igraph defect, not catchable from Python). /api/layout and /api/clustering run
+# in a worker pool of this size so an abort() only kills that worker.
+LAYOUT_WORKERS = int(os.environ.get("ARENA_LAYOUT_WORKERS", "2"))
 
 # PPI database importers (services/databases.py). Overridable for mirrors/tests.
 STRING_API = os.environ.get("ARENA_STRING_API", "https://string-db.org/api")

@@ -29,9 +29,11 @@ import { ctx } from '../three'
 import { applyLayout } from '../actions/layout'
 import {
   runGroupLayout,
+  UNSAFE_3D_LOCAL_LAYOUTS,
   type GroupSource,
   type GroupStrategy,
 } from '../actions/group_layout'
+import { VOLUME_CONTAINERS } from '../three/Layer'
 import { startLoader, finishLoader } from '../actions/screen'
 import { selectionSummary } from './layer_selection'
 import { fitView } from '../actions/search'
@@ -789,14 +791,54 @@ export function initLayoutsPanel(): void {
   })
 }
 
+// Kamada-Kawai's 3D layout can crash the server (igraph bug — see
+// UNSAFE_3D_LOCAL_LAYOUTS); hide/disable it whenever this group layout would
+// run in 3D (grouping by layers, or every selected layer is a volume
+// container), mirroring runGroupLayout's own guard.
+function syncGroupLocalOptions(): void {
+  const source = document.getElementById('groupSource') as HTMLSelectElement
+  const local = document.getElementById('groupLocal') as HTMLSelectElement
+  const layers =
+    ctx.networkMode === 'single'
+      ? (store.get().network?.layers ?? [])
+      : store.get().selectedLayers
+  // store.selectedLayers can briefly name a layer that no longer exists right
+  // after a restructure (split/merge) rebuilds ctx with a new layer set —
+  // treat that as "not volume" rather than crash; the next resync corrects it.
+  const volume =
+    layers.length > 0 &&
+    layers.every((l) => {
+      const container = ctx.layers[ctx.layerGroups[l]]?.container
+      return container !== undefined && VOLUME_CONTAINERS.includes(container)
+    })
+  const forced3D = source.value === 'layers' || volume
+  for (const option of local.options) {
+    const unsafe = forced3D && UNSAFE_3D_LOCAL_LAYOUTS.includes(option.value)
+    option.hidden = unsafe
+    option.disabled = unsafe
+  }
+  if (forced3D && UNSAFE_3D_LOCAL_LAYOUTS.includes(local.value)) {
+    local.value = 'Circle'
+    local.dispatchEvent(new Event('change', { bubbles: true }))
+  }
+}
+
 // NORMA-2.0 group layouts (actions/group_layout.ts)
 function initGroupLayout(): void {
   const el = <T extends HTMLElement>(id: string) =>
     document.getElementById(id) as T
   const strategy = el<HTMLSelectElement>('groupStrategy')
+  const source = el<HTMLSelectElement>('groupSource')
   const local = el<HTMLSelectElement>('groupLocal')
   local.value = 'Circle'
   el<HTMLSelectElement>('groupAlgorithm').value = 'Fruchterman-Reingold'
+  source.addEventListener('change', syncGroupLocalOptions)
+  document
+    .getElementById('groupLayoutCard')
+    ?.addEventListener('toggle', syncGroupLocalOptions)
+  bus.on('history:changed', syncGroupLocalOptions) // layer container/selection changes
+  bus.on('network:loaded', syncGroupLocalOptions)
+  syncGroupLocalOptions()
   // super nodes always lay groups out locally
   const syncKeep = () => {
     const keep = local.querySelector<HTMLOptionElement>('option[value="keep"]')!

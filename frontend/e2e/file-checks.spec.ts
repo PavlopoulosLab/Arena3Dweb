@@ -65,7 +65,12 @@ test('pre-checks, readable server errors, progress bar', async ({ page }) => {
   await input.setInputFiles(
     file('big.tsv', 'SourceNode\tTargetNode\tWeight\n' + rows.join('\n') + '\n')
   )
-  await expect(page.locator('#file_status')).toContainText('Loaded network')
+  // 3000 nodes/edges means building the scene (software GL on CI) can run
+  // past the default 5s assertion timeout — see the project-wide note in
+  // playwright.config.ts about CI having no GPU.
+  await expect(page.locator('#file_status')).toContainText('Loaded network', {
+    timeout: 30_000,
+  })
   await expect(page.locator('#file_progress')).toBeHidden()
   expect(seen.some((t) => t.startsWith('Uploading'))).toBe(true)
   expect(seen.some((t) => t.startsWith('Building the scene'))).toBe(true)

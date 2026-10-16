@@ -1,3 +1,6 @@
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -13,6 +16,7 @@ from app.routers import network as network_router
 from app.routers import open as open_router
 from app.routers import session as session_router
 from app.routers import topology as topology_router
+from app.services import compute_pool
 
 DESCRIPTION = """Arena3D's server: parse, lay out and analyse multilayered networks, and open
 them in the application from other tools.
@@ -45,6 +49,16 @@ TAGS = [
     {"name": "Configuration", "description": "Server limits, defaults and health."},
 ]
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    compute_pool.start()
+    try:
+        yield
+    finally:
+        compute_pool.stop()
+
+
 # docs live under /api/ so the production proxy (nginx: location /api/) reaches them
 app = FastAPI(
     title="Arena3D API",
@@ -54,6 +68,7 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
+    lifespan=lifespan,
 )
 # Other web applications (e.g. NORMA in a browser) post networks here; nothing
 # uses cookies or credentials, so any origin may call the API.

@@ -8,6 +8,7 @@ weights). LayoutRequest.use_weights opts in via WEIGHTED_LAYOUTS.
 """
 
 import random
+from collections import Counter
 from collections.abc import Callable
 
 import igraph as ig
@@ -183,6 +184,10 @@ def _group_layouts(req: LayoutRequest, edges: list[EdgeModel]) -> dict[str, Posi
             else g.intra_layer_edges(edges, layers[0])
         )
         weighted = [(e.src, e.trg, e.scaled_weight if req.use_weights else 1.0) for e in scoped]
+        check_layout_size(req.algorithm, len(ids))
+        if req.group_local != "keep":
+            group_sizes = Counter(gid for n in ids for gid in groups_of.get(n, []))
+            check_layout_size(req.group_local, max(group_sizes.values(), default=0))
         try:
             pos = group_layout(
                 ids,

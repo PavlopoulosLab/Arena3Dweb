@@ -1,7 +1,6 @@
 """POST /api/layout — replaces functions/igraph/layout.R."""
 
 from fastapi import APIRouter, HTTPException
-from fastapi.concurrency import run_in_threadpool
 
 from app.models.layout import (
     ClusteringRequest,
@@ -12,6 +11,7 @@ from app.models.layout import (
 from app.services import graph as g
 from app.services.alignment import misalignment
 from app.services.clustering import ClusteringError
+from app.services.compute_pool import ComputeCrashed, run_isolated
 from app.services.layouts import LayoutError, compute_clusters, compute_layout
 
 router = APIRouter()
@@ -27,10 +27,12 @@ async def run_layout(req: LayoutRequest) -> LayoutResponse:
     """Positions per node (y, z in the layer plane, plus x for 3D layouts), optional
     clusters and the inter-layer misalignment."""
     try:
-        # off the event loop, so the service keeps answering while igraph works
-        positions, clusters = await run_in_threadpool(compute_layout, req)
+        # in a worker process: keeps answering even if igraph aborts the worker
+        positions, clusters = await run_isolated(compute_layout, req)
     except (LayoutError, ClusteringError) as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+    except ComputeCrashed as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
     score = None
     if req.dimensions == 2 and len(req.selected_layers) > 1:
         edges = g.filter_edges(req.edges, req.selected_channels)
@@ -49,7 +51,9 @@ async def run_clustering(req: ClusteringRequest) -> ClusteringResponse:
     graph, or shared across layers by node name (multiplex Leiden). The ids can
     then colour the nodes or serve as annotations."""
     try:
-        clusters = await run_in_threadpool(compute_clusters, req)
+        clusters = await run_isolated(compute_clusters, req)
     except (LayoutError, ClusteringError) as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+    except ComputeCrashed as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
     return ClusteringResponse(clusters=clusters, count=len(set(clusters.values())))

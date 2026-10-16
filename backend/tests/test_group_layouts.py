@@ -103,7 +103,7 @@ def test_node_in_two_groups_sits_between() -> None:
 def test_3d_group_layout_for_containers() -> None:
     ids, edges, groups_of, groups = _net()
     pos = group_layout(
-        ids, edges, groups_of, "supernodes", "Fruchterman-Reingold", local="Kamada-Kawai", dim=3
+        ids, edges, groups_of, "supernodes", "Fruchterman-Reingold", local="Circle", dim=3
     )
     assert all(len(p) == 3 for p in pos.values())
     assert _separation(pos, groups) > 1.8
@@ -115,6 +115,20 @@ def test_validation() -> None:
         group_layout(ids, edges, groups_of, "supernodes", "Fruchterman-Reingold", local="keep")
     with pytest.raises(GroupLayoutError):
         group_layout(ids, edges, groups_of, "virtual", "Sugiyama", dim=3)  # no 3D version
+
+
+def test_kamada_kawai_disabled_as_3d_local_layout() -> None:
+    # igraph bug (src/layout/align.c) can abort() the process for 3D Kamada-Kawai
+    # on certain weighted graphs — refused outright until igraph fixes it upstream.
+    ids, edges, groups_of, _ = _net()
+    with pytest.raises(GroupLayoutError, match="Kamada-Kawai is disabled"):
+        group_layout(
+            ids, edges, groups_of, "supernodes", "Fruchterman-Reingold", local="Kamada-Kawai", dim=3
+        )
+    # still fine in 2D
+    group_layout(
+        ids, edges, groups_of, "supernodes", "Fruchterman-Reingold", local="Kamada-Kawai", dim=2
+    )
 
 
 def test_endpoint_per_layer_and_across_layers() -> None:

@@ -36,6 +36,14 @@ CLIQUE_FULL_LIMIT = 400
 CLIQUE_SPARSE_DEGREE = 60
 SPACING = 1.0  # target nearest-neighbour distance (frontend rescales)
 STRATEGIES = ("virtual", "gravity", "supernodes")
+# igraph's C core can abort() the whole interpreter on 3D Kamada-Kawai for
+# certain weighted graphs — reachable here because a group's real edges plus
+# its synthetic clique-completing padding edges (below) can land on exactly
+# that pattern (confirmed: igraph 1.0.0, src/layout/align.c, "Assertion
+# failed: correction_saved"). /api/layout now runs in an isolated worker so
+# this no longer takes the server down, but the layout still can't complete —
+# refuse it up front instead of a 500. Remove once igraph fixes this upstream.
+UNSAFE_3D_LOCAL_LAYOUTS = {"Kamada-Kawai"}
 
 
 class GroupLayoutError(ValueError):
@@ -212,6 +220,11 @@ def group_layout(
         raise GroupLayoutError(f"Unknown group strategy: {strategy}")
     if local == "keep" and strategy == "supernodes":
         raise GroupLayoutError("Super nodes always lay groups out locally — pick a local layout.")
+    if dim == 3 and local in UNSAFE_3D_LOCAL_LAYOUTS:
+        raise GroupLayoutError(
+            f"{local} is disabled as a 3D group-local layout (a known igraph bug can "
+            "crash the layout engine on certain graphs) — pick a different local layout."
+        )
     rng = random.Random(seed)
     random.seed(seed)  # igraph's layouts draw from Python's random
     id_set = set(ids)
