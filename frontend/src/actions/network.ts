@@ -3,8 +3,11 @@
 // /api/session/import; the backend normalizes + fills defaults). Layer/edge
 // count limits are enforced server-side. Channel UI stays with Phase 13.
 
+import { FLOOR_STYLES } from '../three/Layer'
+import { NODE_SHAPES } from '../three/Node'
 import type {
   EdgeModel,
+  LayoutPosition,
   NetworkData,
   NodeModel,
   SessionData,
@@ -21,13 +24,17 @@ import {
   resetContext,
   Scene,
 } from '../three'
+import { DEFAULT_CONTAINER_OPACITY } from '../three/Layer'
 import { createLabels, setLabelColor } from './labels'
-import { initialSpreadLayers } from './layer'
+import type { NodeGeometryType } from '../three/Node'
+import { applyDefaultFloorVisibility, initialSpreadLayers } from './layer'
+import { resetNetworkMode, restoreNetwork3dState } from './modes'
 import { scrambleNodes } from './node'
 import { setRendererColor } from './screen'
 
 // v2 uploadNetwork(): one undoable step wrapping the full build.
 export function loadNetwork(data: NetworkData): void {
+  ctx.lastLoadSource = 'network'
   const maxChannels = store.get().config?.max_channels
   if (maxChannels !== undefined && data.channels.length > maxChannels)
     throw new Error(
@@ -41,6 +48,7 @@ export function buildNetwork(data: NetworkData): void {
   // prev-snapshot still points at the intact previous scene graph.
   const edgeDefaultColor = ctx.edgeDefaultColor
   resetContext()
+  resetNetworkMode()
   ctx.edgeDefaultColor = edgeDefaultColor
 
   const scene = new Scene()
@@ -65,6 +73,7 @@ function initializeLayers(names: string[]): void {
     ctx.scene!.addLayer(layer.plane)
   })
   initialSpreadLayers()
+  applyDefaultFloorVisibility()
 }
 
 function initializeChannels(channels: string[]): void {
@@ -134,6 +143,7 @@ function createEdgeObjects(edges: EdgeRow[]): void {
 
 // v2 importNetwork(): one undoable step wrapping the session build.
 export function loadSession(session: SessionData): void {
+  ctx.lastLoadSource = 'session'
   history.execute(new LoadNetworkCommand(() => buildFromSession(session)))
 }
 
@@ -141,6 +151,7 @@ export function loadSession(session: SessionData): void {
 export function buildFromSession(s: SessionData): void {
   const edgeDefaultColor = ctx.edgeDefaultColor
   resetContext()
+  resetNetworkMode()
   ctx.edgeDefaultColor = edgeDefaultColor
 
   // scene from JSON
@@ -169,6 +180,11 @@ export function buildFromSession(s: SessionData): void {
       rotation_z: Number(l.rotation_z),
       floor_current_color: l.floor_current_color,
       geometry_parameters_width: Number(l.geometry_parameters_width),
+      floor_shape: l.floor_shape === 'disk' ? 'disk' : 'square',
+      floor_style: FLOOR_STYLES.find((f) => f === l.floor_style) ?? 'solid',
+      container: (['floor', 'none', 'cube', 'sphere', 'cloud'] as const).find(
+        (c) => c === l.container
+      ),
     })
     ctx.layers.push(layer)
     ctx.scene!.addLayer(layer.plane)
@@ -176,6 +192,23 @@ export function buildFromSession(s: SessionData): void {
   // sessions without layer coordinates get the upload spread (backend flag)
   if (s.layers.length > 0 && s.layers.every((l) => l.generate_coordinates))
     initialSpreadLayers()
+  applyDefaultFloorVisibility()
+  s.layers.forEach((l, i) => {
+    if (typeof l.floor_visible === 'boolean')
+      ctx.layers[i].toggleFloor(l.floor_visible)
+    const color =
+      typeof l.container_color === 'string' &&
+      /^#[0-9a-fA-F]{6}$/.test(l.container_color)
+        ? l.container_color
+        : null
+    const opacity =
+      typeof l.container_opacity === 'number' ? l.container_opacity : NaN
+    if (color || Number.isFinite(opacity))
+      ctx.layers[i].setContainerStyle(
+        color,
+        Number.isFinite(opacity) ? opacity : DEFAULT_CONTAINER_OPACITY
+      )
+  })
 
   // channels from the edge rows
   const channels = [
@@ -201,9 +234,24 @@ export function buildFromSession(s: SessionData): void {
       url: n.url,
       descr: n.descr,
     })
+    node.annotations = n.annotations ?? []
+    if (n.shape && NODE_SHAPES.includes(n.shape as NodeGeometryType))
+      node.setGeometry(n.shape as NodeGeometryType)
     ctx.nodeObjects.push(node)
     ctx.layers[ctx.layerGroups[n.layer]].addNode(node.sphere)
   })
+  // saved in 3D-network mode: keep the layered state, so unticking the mode
+  // brings the layers back
+  if (s.layers.length > 0 && s.layers.every((l) => l.layered)) {
+    const nodes: Record<string, LayoutPosition> = {}
+    s.nodes.forEach((n) => {
+      if (n.layered_position) nodes[`${n.name}_${n.layer}`] = n.layered_position
+    })
+    restoreNetwork3dState(
+      s.layers.map((l) => l.layered!),
+      nodes
+    )
+  }
   if (s.scramble_nodes) {
     const minWidth = Math.min(
       ...ctx.layers.map((l) => l.geometry_parameters_width)
@@ -233,6 +281,16 @@ export function buildFromSession(s: SessionData): void {
     }
   })
   createEdgeObjects(rows)
+  // per-edge width (Style panel): rows were grouped per src---trg pair
+  const factor = new Map(
+    s.edges
+      .filter((e) => e.width_factor !== undefined)
+      .map((e) => [`${e.src}---${e.trg}`, Number(e.width_factor)])
+  )
+  for (const edge of ctx.edgeObjects) {
+    const f = factor.get(`${edge.source}---${edge.target}`)
+    if (f && Number.isFinite(f)) edge.widthFactor = f
+  }
   createLabels()
 
   // v2 setJSONExtras
@@ -240,6 +298,9 @@ export function buildFromSession(s: SessionData): void {
   ctx.isDirectionEnabled = Boolean(s.direction)
   ctx.edgeOpacityByWeight = Boolean(s.edgeOpacityByWeight)
   ctx.edgeWidthByWeight = Boolean(s.edgeWidthByWeight)
+  // bundled paths are computed on the first redraw (three/bundling.ts)
+  ctx.intraEdgeBundling = Number(s.intraEdgeBundling ?? 0)
+  ctx.interEdgeBundling = Number(s.interEdgeBundling ?? 0)
   ctx.edgeFileColorPriority = true
 
   store.update({

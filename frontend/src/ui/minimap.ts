@@ -100,8 +100,12 @@ function projectNodes(): (Pt | null)[] {
   })
 }
 
+let frame = 0
 function draw(): void {
   if (!enabled || !hasNetwork || !g || !canvas) return
+  // Performance panel: every Nth frame, or never
+  if (ctx.minimapEvery <= 0) return
+  if (ctx.minimapEvery > 1 && frame++ % ctx.minimapEvery !== 0) return
   const scene = ctx.scene
   if (!scene?.pan || ctx.nodeObjects.length === 0) return
 

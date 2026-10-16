@@ -17,6 +17,8 @@ import type { Layer } from './Layer'
 import type { Node } from './Node'
 import type { Edge } from './Edge'
 
+export type NetworkMode = 'multilayer' | 'single'
+
 export type ColorPrioritySource = 'default' | 'picker' | 'cluster'
 
 export interface RuntimeContext {
@@ -25,6 +27,12 @@ export interface RuntimeContext {
   renderer: THREE.WebGLRenderer | null
   camera: THREE.OrthographicCamera | null
   fps: number
+  // Performance panel (ui/fps.ts)
+  renderScale: number | null // pixel ratio, null = the device's (capped)
+  nodeDetail: 'low' | 'medium' | 'high'
+  hideLabelsWhileMoving: boolean
+  pauseInterWhileMoving: boolean
+  minimapEvery: number // draw the navigator every Nth frame; 0 = off
 
   // Screen bounds (v2 screen.js; yBoundMax = window.innerHeight / 2)
   xBoundMin: number
@@ -51,6 +59,7 @@ export interface RuntimeContext {
 
   // Edge render config (config-driven; defaults from v2 static_variables.js)
   edgeDefaultColor: string
+  containerDefaultColor: string // themes.ts: cube/sphere/cloud colour when a layer has none
   selectedEdgeColorFlag: boolean
   edgeFileColorPriority: boolean
   isDirectionEnabled: boolean
@@ -58,6 +67,9 @@ export interface RuntimeContext {
   // view over this pair (none / opacity / width / both).
   edgeOpacityByWeight: boolean
   edgeWidthByWeight: boolean
+  // Edge Actions weight filter: edges/channels with a scaled weight below it
+  // are not drawn (0 = show all)
+  edgeWeightThreshold: number
   interLayerEdgeOpacity: number
   intraLayerEdgeOpacity: number
   interLayerEdgeWidth: number
@@ -66,9 +78,13 @@ export interface RuntimeContext {
   intraDirectionArrowSize: number
   interChannelCurvature: number
   intraChannelCurvature: number
-  // Centroid bundling strength, 0 (straight) to 1 (tightest bundle)
-  interEdgeBundling: number
+  // 'single' treats the data as one graph: layers stacked, floors off, layer
+  // controls hidden (actions/modes.ts, ui/mode.ts)
+  networkMode: NetworkMode
+  lastLoadSource: 'network' | 'session' // what the last load came from
+  // edge bundling strength, 0 = straight edges (three/bundling.ts)
   intraEdgeBundling: number
+  interEdgeBundling: number
 
   // Color-priority sources
   layerColorPrioritySource: ColorPrioritySource
@@ -113,6 +129,11 @@ export const ctx: RuntimeContext = {
   renderer: null,
   camera: null,
   fps: 60,
+  renderScale: null,
+  nodeDetail: 'medium',
+  hideLabelsWhileMoving: false,
+  pauseInterWhileMoving: false,
+  minimapEvery: 1,
 
   xBoundMin: -winW / 2,
   xBoundMax: winW / 2,
@@ -135,11 +156,13 @@ export const ctx: RuntimeContext = {
   channelVisibility: {},
 
   edgeDefaultColor: '#000000',
+  containerDefaultColor: '#5b8def',
   selectedEdgeColorFlag: true,
   edgeFileColorPriority: false,
   isDirectionEnabled: false,
   edgeOpacityByWeight: true,
   edgeWidthByWeight: false,
+  edgeWeightThreshold: 0,
   interLayerEdgeOpacity: 0.4,
   intraLayerEdgeOpacity: 1,
   interLayerEdgeWidth: 1,
@@ -148,8 +171,10 @@ export const ctx: RuntimeContext = {
   intraDirectionArrowSize: 5,
   interChannelCurvature: 5,
   intraChannelCurvature: 15,
-  interEdgeBundling: 0,
+  networkMode: 'multilayer',
+  lastLoadSource: 'network',
   intraEdgeBundling: 0,
+  interEdgeBundling: 0,
 
   layerColorPrioritySource: 'default',
   nodeColorPrioritySource: 'default',
@@ -201,8 +226,9 @@ export function resetContext(): void {
   ctx.intraDirectionArrowSize = 5
   ctx.interChannelCurvature = 5
   ctx.intraChannelCurvature = 15
-  ctx.interEdgeBundling = 0
+  ctx.networkMode = 'multilayer'
   ctx.intraEdgeBundling = 0
+  ctx.interEdgeBundling = 0
   ctx.layerColorPrioritySource = 'default'
   ctx.nodeColorPrioritySource = 'default'
   ctx.lastHoveredNodeIndex = null

@@ -1,8 +1,7 @@
 import * as THREE from 'three'
 import {
   SPHERE_RADIUS,
-  SPHERE_WIDTHSEGMENTS,
-  SPHERE_HEIGHTSEGMENTS,
+  NODE_DETAIL,
   BOX_SIZE,
   DIAMOND_RADIUS,
   CONE_RADIUS,
@@ -12,7 +11,40 @@ import {
 import { ctx } from './runtime'
 
 export type Axis = 'x' | 'y' | 'z'
-export type NodeGeometryType = 'sphere' | 'box' | 'diamond' | 'cone'
+export type NodeGeometryType =
+  | 'sphere'
+  | 'box'
+  | 'diamond'
+  | 'cone'
+  | 'cylinder'
+  | 'tetrahedron'
+  | 'capsule'
+  | 'torus'
+  | 'icosahedron'
+  | 'dodecahedron'
+  | 'pyramid'
+  | 'disc'
+  | 'hexagon'
+  | 'ring'
+
+// every shape with its label, in menu order
+export const NODE_SHAPE_LABELS: Record<NodeGeometryType, string> = {
+  sphere: 'Sphere',
+  box: 'Cube',
+  diamond: 'Diamond',
+  cone: 'Cone',
+  cylinder: 'Cylinder',
+  tetrahedron: 'Tetrahedron',
+  capsule: 'Capsule',
+  torus: 'Torus',
+  icosahedron: 'Icosahedron',
+  dodecahedron: 'Dodecahedron',
+  pyramid: 'Pyramid',
+  disc: 'Disc',
+  hexagon: 'Hexagonal prism',
+  ring: 'Ring',
+}
+export const NODE_SHAPES = Object.keys(NODE_SHAPE_LABELS) as NodeGeometryType[]
 
 export interface NodeOptions {
   id?: number
@@ -44,6 +76,8 @@ export class Node {
   isSelected = false
   showLabel = false
   cluster = ''
+  annotations: string[] = [] // attribute-file / enrichment terms (pies, hulls)
+  shape: NodeGeometryType = 'sphere'
 
   constructor({
     id = 0,
@@ -76,8 +110,8 @@ export class Node {
   createSphere(nodeColor: string): void {
     const geometry = new THREE.SphereGeometry(
       SPHERE_RADIUS,
-      SPHERE_WIDTHSEGMENTS,
-      SPHERE_HEIGHTSEGMENTS
+      NODE_DETAIL.width,
+      NODE_DETAIL.height
     )
     const material = new THREE.MeshStandardMaterial({
       color: nodeColor,
@@ -168,8 +202,8 @@ export class Node {
       case 'sphere':
         geometry = new THREE.SphereGeometry(
           SPHERE_RADIUS,
-          SPHERE_WIDTHSEGMENTS,
-          SPHERE_HEIGHTSEGMENTS
+          NODE_DETAIL.width,
+          NODE_DETAIL.height
         )
         break
       case 'box':
@@ -181,12 +215,73 @@ export class Node {
       case 'cone':
         geometry = new THREE.ConeGeometry(CONE_RADIUS, CONE_HEIGHT, CONE_RADIUS)
         break
+      case 'cylinder':
+        geometry = new THREE.CylinderGeometry(
+          CONE_RADIUS,
+          CONE_RADIUS,
+          CONE_HEIGHT,
+          16
+        )
+        break
+      case 'tetrahedron':
+        geometry = new THREE.TetrahedronGeometry(DIAMOND_RADIUS, 0)
+        break
+      case 'capsule':
+        geometry = new THREE.CapsuleGeometry(
+          CONE_RADIUS * 0.75,
+          CONE_HEIGHT * 0.8,
+          4,
+          12
+        )
+        break
+      case 'torus':
+        geometry = new THREE.TorusGeometry(
+          SPHERE_RADIUS * 0.8,
+          SPHERE_RADIUS * 0.35,
+          10,
+          24
+        )
+        break
+      case 'icosahedron':
+        geometry = new THREE.IcosahedronGeometry(DIAMOND_RADIUS, 0)
+        break
+      case 'dodecahedron':
+        geometry = new THREE.DodecahedronGeometry(DIAMOND_RADIUS, 0)
+        break
+      case 'pyramid':
+        geometry = new THREE.ConeGeometry(CONE_RADIUS * 1.2, CONE_HEIGHT, 4)
+        break
+      case 'disc':
+        geometry = new THREE.CylinderGeometry(
+          SPHERE_RADIUS * 1.1,
+          SPHERE_RADIUS * 1.1,
+          2,
+          24
+        )
+        break
+      case 'hexagon':
+        geometry = new THREE.CylinderGeometry(
+          SPHERE_RADIUS,
+          SPHERE_RADIUS,
+          CONE_HEIGHT * 0.6,
+          6
+        )
+        break
+      case 'ring':
+        geometry = new THREE.TorusGeometry(
+          SPHERE_RADIUS * 0.9,
+          SPHERE_RADIUS * 0.18,
+          8,
+          28
+        )
+        break
       default:
         console.error(`Unknown geometry type: ${type as string}`)
         return
     }
     this.sphere.geometry.dispose()
     this.sphere.geometry = geometry
+    this.shape = type
   }
 
   setColor(hexColor: string, importMode = false, clusterMode = false): void {

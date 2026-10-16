@@ -93,9 +93,11 @@ def _validate(data: dict[str, Any]) -> None:
 def _handle_channels(edges: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
     """Drop channels entirely if any edge lacks one (ports handleJSONChannels)."""
     warnings: list[str] = []
-    has_channel = any("channel" in e for e in edges)
-    if has_channel and any(_empty(e.get("channel")) for e in edges):
+    named = [not _empty(e.get("channel")) for e in edges]
+    if any(named) and not all(named):
         warnings.append("At least one edge has no channel name. Removing channels completely.")
+    if not all(named):
+        # every edge empty (sessions saved without channels) is no warning
         for e in edges:
             e.pop("channel", None)
     return edges, warnings
@@ -111,6 +113,15 @@ def _dedup_edges(edges: list[dict[str, Any]]) -> list[dict[str, Any]]:
             seen.add(key)
             out.append(e)
     return out
+
+
+def _strength(value: Any) -> float:
+    """A 0-1 strength; anything missing or unreadable is 0 (off)."""
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return 0.0
+    return min(1.0, max(0.0, v)) if v == v else 0.0
 
 
 def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
@@ -152,6 +163,11 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
             n["color"] = config.NODE_COLORS[i % len(config.NODE_COLORS)]
         n["url"] = _default(n.get("url"), "")
         n["descr"] = _default(n.get("descr"), "")
+        # optional (Phase 6): list of annotation terms; anything else is dropped
+        terms = n.get("annotations")
+        n["annotations"] = (
+            [str(t) for t in terms if not _empty(t)][:12] if isinstance(terms, list) else []
+        )
 
     edges = [dict(e) for e in data["edges"]]
     edges, warnings = _handle_channels(edges)
@@ -172,5 +188,7 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
         # they keep rendering exactly as they did.
         "edgeWidthByWeight": _default(data.get("edgeWidthByWeight"), False),
         "scramble_nodes": scramble,
+        "intraEdgeBundling": _strength(data.get("intraEdgeBundling")),
+        "interEdgeBundling": _strength(data.get("interEdgeBundling")),
         "warnings": warnings,
     }

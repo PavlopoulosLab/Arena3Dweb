@@ -6,8 +6,8 @@ export const NODE_LABEL_DEFAULT_SIZE = '12px'
 
 // Node geometry
 export const SPHERE_RADIUS = 8
-export const SPHERE_WIDTHSEGMENTS = 8
-export const SPHERE_HEIGHTSEGMENTS = 8
+// sphere segments: mutable, the Performance panel's node detail sets them
+export const NODE_DETAIL = { width: 8, height: 8 }
 export const BOX_SIZE = 12
 export const DIAMOND_RADIUS = 10
 export const CONE_RADIUS = 8
@@ -25,10 +25,6 @@ export const EDGE_WIDTH_MAX = 6
 // LineMaterial has no alphaTest, so edges this faint are skipped at build time
 // rather than rasterised as invisible quads (v2 relied on alphaTest: 0.05).
 export const EDGE_MIN_VISIBLE_OPACITY = 0.05
-// Points per bundled (curved) edge. ponytail: rebuilt per redraw like channel
-// curves; inter-layer edges redraw every frame the scene moves, so drop this
-// if huge bundled networks stutter.
-export const EDGE_BUNDLE_SEGMENTS = 24
 
 // Render layer for the things that glow — node spheres, and nothing else.
 // postprocessing.ts renders the bloom source with the camera masked to this

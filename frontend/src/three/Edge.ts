@@ -3,13 +3,13 @@ import { Line2 } from 'three/addons/lines/Line2.js'
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js'
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js'
 import {
-  EDGE_BUNDLE_SEGMENTS,
   EDGE_MIN_VISIBLE_OPACITY,
   EDGE_WIDTH_MAX,
   EDGE_WIDTH_MIN,
   SELECTED_DEFAULT_COLOR,
 } from './constants'
 import { ctx, disposeObject3D, edgeResolution } from './runtime'
+import { bundledPoints } from './bundling'
 
 export interface EdgeOptions {
   id?: number
@@ -39,6 +39,12 @@ export class Edge {
   interLayer: boolean
 
   isSelected = false
+  widthFactor = 1 // per-edge width multiplier (Style panel)
+
+  // in single-network mode every edge follows the intra-layer settings
+  private get asInter(): boolean {
+    return this.interLayer && ctx.networkMode !== 'single'
+  }
 
   constructor({
     id = 0,
@@ -109,55 +115,16 @@ export class Edge {
       return
     }
 
-    const linePoints = this.bundlePoints(points)
+    // bundled edges follow their bundle's path (three/bundling.ts)
+    const path = bundledPoints(this) ?? points
     this.THREE_Object = this.createLine(
-      linePoints,
+      path,
       color,
       opacity,
       this.decideWidth()
     )
 
-    // last segment: on a bundled curve the arrow follows its final tangent
-    if (ctx.isDirectionEnabled) this.createArrow(linePoints.slice(-2), color)
-  }
-
-  // Centroid edge bundling: every edge of a group pulls its midpoint toward
-  // one shared hub, so the group converges into a bundle there. Intra-layer
-  // edges (layer-local coords, nodes on x=0) share the layer centre; inter-
-  // layer ones (world coords) share the midpoint between the two layer
-  // centres. Zero vector when bundling is off.
-  bundleOffset(points: THREE.Vector3[]): THREE.Vector3 {
-    const strength = this.interLayer
-      ? ctx.interEdgeBundling
-      : ctx.intraEdgeBundling
-    if (strength === 0) return new THREE.Vector3()
-    const hub = new THREE.Vector3()
-    if (this.interLayer)
-      ctx.layers[this.sourceLayerIndex].plane
-        .getWorldPosition(hub)
-        .lerp(
-          ctx.layers[this.targetLayerIndex].plane.getWorldPosition(
-            new THREE.Vector3()
-          ),
-          0.5
-        )
-    return hub
-      .sub(points[0].clone().lerp(points[1], 0.5))
-      .multiplyScalar(strength)
-  }
-
-  // Both Bezier controls on the same pulled-in midpoint: the curve passes
-  // 3/4 of the way to it, tighter than a quadratic's 1/2.
-  bundlePoints(points: THREE.Vector3[]): THREE.Vector3[] {
-    const offset = this.bundleOffset(points)
-    if (offset.lengthSq() === 0) return points
-    const control = points[0].clone().lerp(points[1], 0.5).add(offset)
-    return new THREE.CubicBezierCurve3(
-      points[0],
-      control,
-      control,
-      points[1]
-    ).getPoints(EDGE_BUNDLE_SEGMENTS)
+    if (ctx.isDirectionEnabled) this.createArrow(path.slice(-2), color)
   }
 
   // Thick lines: WebGL renders every line primitive at exactly 1px, so real
@@ -204,10 +171,12 @@ export class Edge {
   }
 
   decideOpacity(i = 0): number {
+    // below the weight filter -> 0, which the faintness skip leaves undrawn
+    if (this.weights[i] < ctx.edgeWeightThreshold) return 0
     let opacity: number
     if (ctx.edgeOpacityByWeight) opacity = this.weights[i]
     else
-      opacity = this.interLayer
+      opacity = this.asInter
         ? ctx.interLayerEdgeOpacity
         : ctx.intraLayerEdgeOpacity
     return opacity
@@ -217,11 +186,12 @@ export class Edge {
   // they map onto the width range rather than being used raw — a raw weight
   // near 0 would be a sub-pixel, invisible line.
   decideWidth(i = 0): number {
-    if (ctx.edgeWidthByWeight)
-      return (
-        EDGE_WIDTH_MIN + this.weights[i] * (EDGE_WIDTH_MAX - EDGE_WIDTH_MIN)
-      )
-    return this.interLayer ? ctx.interLayerEdgeWidth : ctx.intraLayerEdgeWidth
+    const base = ctx.edgeWidthByWeight
+      ? EDGE_WIDTH_MIN + this.weights[i] * (EDGE_WIDTH_MAX - EDGE_WIDTH_MIN)
+      : this.asInter
+        ? ctx.interLayerEdgeWidth
+        : ctx.intraLayerEdgeWidth
+    return base * this.widthFactor
   }
 
   createArrow(points: THREE.Vector3[], arrowColor: string): void {
@@ -239,7 +209,7 @@ export class Edge {
     const direction = points[1].clone().sub(points[0])
     const origin = points[1]
     const length = 1
-    let headLength = this.interLayer
+    let headLength = this.asInter
       ? ctx.interDirectionArrowSize
       : ctx.intraDirectionArrowSize
     headLength = headLength * 6
@@ -261,12 +231,13 @@ export class Edge {
     let pushForce = 0
     let pushForceFlag = false
     let direction = 1
-    const curveFactor = this.interLayer
+    const curveFactor = this.asInter
       ? ctx.interChannelCurvature
       : ctx.intraChannelCurvature
 
     const verticalPushConstant =
       (points[0].distanceTo(points[1]) * curveFactor) / 400
+    const path = bundledPoints(this)
     if (this.channels.length % 2 == 0) pushForce = 1 // skip straight line
 
     for (let i = 0; i < this.channels.length; i++) {
@@ -287,7 +258,8 @@ export class Edge {
         color,
         this.channels[i],
         opacity,
-        this.decideWidth(i)
+        this.decideWidth(i),
+        path
       )
     }
 
@@ -302,28 +274,40 @@ export class Edge {
     color: string,
     channelName: string,
     opacity: number,
-    width: number
+    width: number,
+    bundled: THREE.Vector3[] | null = null
   ): THREE.Group {
-    const p3 = p1.clone()
-    const p4 = p2.clone()
-    const points = 50
-
-    // channel fan-out rides on top of the bundle pull
-    const bundle = this.bundleOffset([p1, p2])
-    p3.addScalar(verticalPush).add(bundle)
-    p4.addScalar(verticalPush).add(bundle)
-
-    let curve: THREE.CubicBezierCurve3
-    if (!this.interLayer)
-      curve = new THREE.CubicBezierCurve3(
-        p1,
-        this.transformMiddlePointOnLayer(p3),
-        this.transformMiddlePointOnLayer(p4),
-        p2
+    let curvePoints: THREE.Vector3[]
+    if (bundled) {
+      // bundled: each channel runs alongside the bundle's path, pushed out
+      // most in the middle, as the plain curves are
+      const push = new THREE.Vector3(
+        this.interLayer ? verticalPush : 0,
+        verticalPush,
+        verticalPush
       )
-    else curve = new THREE.CubicBezierCurve3(p1, p3, p4, p2)
-
-    const curvePoints = curve.getPoints(points)
+      curvePoints = bundled.map((p, k) =>
+        p
+          .clone()
+          .addScaledVector(push, Math.sin((Math.PI * k) / (bundled.length - 1)))
+      )
+    } else {
+      const p3 = p1.clone()
+      const p4 = p2.clone()
+      p3.addScalar(verticalPush)
+      p4.addScalar(verticalPush)
+      let curve: THREE.CubicBezierCurve3
+      if (!this.interLayer)
+        curve = new THREE.CubicBezierCurve3(
+          p1,
+          this.transformMiddlePointOnLayer(p3),
+          this.transformMiddlePointOnLayer(p4),
+          p2
+        )
+      else curve = new THREE.CubicBezierCurve3(p1, p3, p4, p2)
+      curvePoints = curve.getPoints(50)
+    }
+    const points = curvePoints.length - 1
     // Same faintness skip as createEdge — leave the channel out of the group
     // entirely rather than rasterising an invisible one.
     if (opacity < EDGE_MIN_VISIBLE_OPACITY) return curveGroup

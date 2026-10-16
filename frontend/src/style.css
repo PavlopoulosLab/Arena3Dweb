@@ -45,6 +45,25 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* The app is a full-screen canvas; panels scroll on their own. Nothing may
+   widen or scroll the page itself — on phones a label placed off-screen
+   would otherwise widen the layout viewport and zoom the whole app out
+   (and throw node picking off, which measures against the window). */
+html,
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+#labelDiv {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+#labelDiv > .optionsBox {
+  pointer-events: auto; /* the node menu still takes clicks; labels don't */
+}
+
 /* Frosted navbar so the canvas glows through without hurting legibility. */
 #navBar {
   background-color: var(--arena-surface) !important;
@@ -223,7 +242,9 @@ body {
 /* Action panels open as a right-side drawer so the 3D scene stays visible;
    only Home and Help take the full view (they are reading, not operating on
    the scene). Main View's pane is display:none, so the canvas shows through. */
-#panelContent .tab-pane {
+/* Direct children only: the report tabs inside Data Tables are .tab-pane
+   elements too and must not become drawers of their own. */
+#panelContent > .tab-pane {
   position: fixed;
   top: 56px; /* navbar height */
   right: 0;
@@ -242,7 +263,7 @@ body {
 }
 
 /* Slide the drawer in when it becomes the active pane. */
-#panelContent .tab-pane.show {
+#panelContent > .tab-pane.show {
   animation: drawer-in 0.28s var(--arena-ease);
 }
 
@@ -309,14 +330,15 @@ body {
   padding: 1.6rem 2rem;
 }
 
-/* Wide data tables get a roomier drawer. */
-#panel-data {
-  width: min(680px, 96vw);
+/* Wide data tables get a roomier drawer (the selector outranks the
+   #panelContent .tab-pane width above, which a bare #panel-data did not). */
+#panelContent #panel-data {
+  width: min(760px, 96vw);
 }
 
 /* Inside a drawer the old responsive column wrappers would shrink content to a
    fraction of the (already narrow) drawer — let panel content use full width. */
-#panelContent .tab-pane:not(#panel-home):not(#panel-help) [class*='col-'] {
+#panelContent > .tab-pane:not(#panel-home):not(#panel-help) [class*='col-'] {
   flex: 0 0 100%;
   max-width: 100%;
   width: 100%;
@@ -365,6 +387,22 @@ body {
 
 .layer-row__opt .form-check-input {
   margin: 0;
+}
+
+/* Layer selection tab: the floor colour and the node count of each row */
+.layer-row__swatch {
+  flex: 0 0 auto;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.layer-row__count {
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  color: var(--arena-text-muted);
+  white-space: nowrap;
 }
 
 /* Main View has no panel content: keep it invisible so the canvas shows. */
@@ -434,44 +472,13 @@ body {
   color: #ffb454;
 }
 
-/* Theme bar (port of v2 #themeDiv/.themeButton): fixed top-right, one button
-   per THEMES preset, each previewing its own scene colors. */
-#themeDiv {
-  position: fixed;
-  top: 64px;
-  right: 10px;
-  z-index: 3;
-  display: flex;
-  gap: 4px;
+/* Scene theme picker in the top bar (actions/themes.ts), next to Undo/Redo. */
+.nav-theme {
+  margin-right: 0.5rem;
 }
 
-.themeButton {
-  width: 56px;
-  padding: 3px 0;
-  font-size: 12px;
-  font-weight: bold;
-  border: 1px solid var(--arena-border);
-  border-radius: 6px;
-  transition: border-color 0.15s ease;
-}
-
-.themeButton:hover {
-  border-color: var(--arena-accent);
-}
-
-#lightThemeButton {
-  color: #5c5c5c;
-  background-color: #ffffff;
-}
-
-#darkThemeButton {
-  color: #ffffff;
-  background-color: #000000;
-}
-
-#grayThemeButton {
-  color: #6e2a5a;
-  background-color: #bababa;
+.nav-theme .form-select {
+  min-width: 8.5rem;
 }
 
 #info {
@@ -667,111 +674,102 @@ body {
   background-color: rgba(var(--arena-accent-rgb), 0.22);
 }
 
-.image_expandLayers,
-.image_collapseLayers,
-.image_nodeExpand,
-.image_nodeCollapse {
+/* Navigation Controls icons (ui/nav_icons.ts): the v2 axis colours —
+   X red, Y green, Z blue — and yellow for spread/pull, as line icons. */
+.canvasControls {
+  text-align: center;
+  vertical-align: middle;
+}
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  transition:
+    transform 0.12s var(--arena-ease),
+    filter 0.12s var(--arena-ease);
+}
+.nav-icon-wide {
+  width: 44px;
+}
+.canvasControls:hover .nav-icon {
+  filter: brightness(1.35);
+}
+.canvasControls:active .nav-icon {
+  transform: scale(0.9);
+}
+.nav-axis-x {
+  color: #c21a1a;
+}
+.nav-axis-y {
+  color: #1fa30d;
+}
+.nav-axis-z {
+  color: #0099ff;
+}
+.nav-group {
   width: 50%;
   height: 45px;
+  color: #f2d600;
+}
+.nav-group .nav-sheet {
+  stroke: #c46ad1;
+  fill: #c46ad1;
+  fill-opacity: 0.35;
+  stroke-width: 1.5;
+}
+.nav-group .nav-dot {
+  fill: #a855c7;
+  stroke: #a855c7;
 }
 
 /* prettier-ignore */
-.image_minusX { background-image: url(/images/canvas_control/minusX.png); }
 /* prettier-ignore */
-.image_minusX:hover { background-image: url(/images/canvas_control/minusX_hover.png); }
 /* prettier-ignore */
-.image_minusX:active { background-image: url(/images/canvas_control/minusX_active.png); }
 /* prettier-ignore */
-.image_plusX { background-image: url(/images/canvas_control/plusX.png); }
 /* prettier-ignore */
-.image_plusX:hover { background-image: url(/images/canvas_control/plusX_hover.png); }
 /* prettier-ignore */
-.image_plusX:active { background-image: url(/images/canvas_control/plusX_active.png); }
 /* prettier-ignore */
-.image_minusY { background-image: url(/images/canvas_control/minusY.png); }
 /* prettier-ignore */
-.image_minusY:hover { background-image: url(/images/canvas_control/minusY_hover.png); }
 /* prettier-ignore */
-.image_minusY:active { background-image: url(/images/canvas_control/minusY_active.png); }
 /* prettier-ignore */
-.image_plusY { background-image: url(/images/canvas_control/plusY.png); }
 /* prettier-ignore */
-.image_plusY:hover { background-image: url(/images/canvas_control/plusY_hover.png); }
 /* prettier-ignore */
-.image_plusY:active { background-image: url(/images/canvas_control/plusY_active.png); }
 /* prettier-ignore */
-.image_minusZ { background-image: url(/images/canvas_control/minusZ.png); }
 /* prettier-ignore */
-.image_minusZ:hover { background-image: url(/images/canvas_control/minusZ_hover.png); }
 /* prettier-ignore */
-.image_minusZ:active { background-image: url(/images/canvas_control/minusZ_active.png); }
 /* prettier-ignore */
-.image_plusZ { background-image: url(/images/canvas_control/plusZ.png); }
 /* prettier-ignore */
-.image_plusZ:hover { background-image: url(/images/canvas_control/plusZ_hover.png); }
 /* prettier-ignore */
-.image_plusZ:active { background-image: url(/images/canvas_control/plusZ_active.png); }
 /* prettier-ignore */
-.image_minusX_T { background-image: url(/images/canvas_control/minusX_t.png); }
 /* prettier-ignore */
-.image_minusX_T:hover { background-image: url(/images/canvas_control/minusX_hover_t.png); }
 /* prettier-ignore */
-.image_minusX_T:active { background-image: url(/images/canvas_control/minusX_active_t.png); }
 /* prettier-ignore */
-.image_plusX_T { background-image: url(/images/canvas_control/plusX_t.png); }
 /* prettier-ignore */
-.image_plusX_T:hover { background-image: url(/images/canvas_control/plusX_hover_t.png); }
 /* prettier-ignore */
-.image_plusX_T:active { background-image: url(/images/canvas_control/plusX_active_t.png); }
 /* prettier-ignore */
-.image_minusY_T { background-image: url(/images/canvas_control/minusY_t.png); }
 /* prettier-ignore */
-.image_minusY_T:hover { background-image: url(/images/canvas_control/minusY_hover_t.png); }
 /* prettier-ignore */
-.image_minusY_T:active { background-image: url(/images/canvas_control/minusY_active_t.png); }
 /* prettier-ignore */
-.image_plusY_T { background-image: url(/images/canvas_control/plusY_t.png); }
 /* prettier-ignore */
-.image_plusY_T:hover { background-image: url(/images/canvas_control/plusY_hover_t.png); }
 /* prettier-ignore */
-.image_plusY_T:active { background-image: url(/images/canvas_control/plusY_active_t.png); }
 /* prettier-ignore */
-.image_minusZ_T { background-image: url(/images/canvas_control/minusZ_t.png); }
 /* prettier-ignore */
-.image_minusZ_T:hover { background-image: url(/images/canvas_control/minusZ_hover_t.png); }
 /* prettier-ignore */
-.image_minusZ_T:active { background-image: url(/images/canvas_control/minusZ_active_t.png); }
 /* prettier-ignore */
-.image_plusZ_T { background-image: url(/images/canvas_control/plusZ_t.png); }
 /* prettier-ignore */
-.image_plusZ_T:hover { background-image: url(/images/canvas_control/plusZ_hover_t.png); }
 /* prettier-ignore */
-.image_plusZ_T:active { background-image: url(/images/canvas_control/plusZ_active_t.png); }
 /* prettier-ignore */
-.image_expandLayers { background-image: url(/images/canvas_control/expandLayers.png); }
 /* prettier-ignore */
-.image_expandLayers:hover { background-image: url(/images/canvas_control/expandLayers_hover.png); }
 /* prettier-ignore */
-.image_expandLayers:active { background-image: url(/images/canvas_control/expandLayers_active.png); }
 /* prettier-ignore */
-.image_collapseLayers { background-image: url(/images/canvas_control/collapseLayers.png); }
 /* prettier-ignore */
-.image_collapseLayers:hover { background-image: url(/images/canvas_control/collapseLayers_hover.png); }
 /* prettier-ignore */
-.image_collapseLayers:active { background-image: url(/images/canvas_control/collapseLayers_active.png); }
 /* prettier-ignore */
-.image_nodeExpand { background-image: url(/images/canvas_control/expandNodes.png); }
 /* prettier-ignore */
-.image_nodeExpand:hover { background-image: url(/images/canvas_control/expandNodes_hover.png); }
 /* prettier-ignore */
-.image_nodeExpand:active { background-image: url(/images/canvas_control/expandNodes_active.png); }
 /* prettier-ignore */
-.image_nodeCollapse { background-image: url(/images/canvas_control/collapseNodes.png); }
 /* prettier-ignore */
-.image_nodeCollapse:hover { background-image: url(/images/canvas_control/collapseNodes_hover.png); }
 /* prettier-ignore */
-.image_nodeCollapse:active { background-image: url(/images/canvas_control/collapseNodes_active.png); }
-
 /* Loading spinner — slim centered ring (v2's 16px ring at margin hacks). */
 #loader {
   border: 4px solid rgba(255, 255, 255, 0.15);
@@ -1125,4 +1123,912 @@ footer a:hover {
   -webkit-backdrop-filter: blur(8px);
   cursor: crosshair;
   line-height: 0;
+}
+
+/* Degree distribution chart (View Data → Network Statistics): one hue,
+   recessive axis, text in muted ink rather than the series colour. */
+.degree-chart text {
+  font-size: 11px;
+  fill: var(--bs-secondary-color, #9aa4b2);
+}
+.degree-chart .deg-axis {
+  stroke: var(--bs-border-color, #4b5563);
+  stroke-width: 1;
+}
+.degree-chart .deg-bar {
+  fill: var(--bs-primary, #4f8fe6);
+}
+.degree-chart .deg-bar:hover {
+  fill: var(--bs-primary, #4f8fe6);
+  opacity: 0.8;
+}
+
+/* ------------------------------------------------------------------
+   Phones and small tablets (≤ 768px wide)
+   Panels become a bottom sheet over the lower part of the screen, so the
+   network stays visible above; overlays shrink or step aside.
+   ------------------------------------------------------------------ */
+@media (max-width: 768px) {
+  #panelContent > .tab-pane {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: min(62vh, calc(100vh - 56px));
+    border-left: 0;
+    border-top: 1px solid var(--arena-border);
+    border-radius: 16px 16px 0 0;
+    padding: 1rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  }
+  #panelContent > .tab-pane.show {
+    animation: sheet-up 0.24s var(--arena-ease);
+  }
+  #panelContent #panel-data {
+    width: 100%;
+  }
+  /* Home and Help stay full-screen reading panes */
+  #panelContent #panel-home,
+  #panelContent #panel-help {
+    top: 56px;
+    height: auto;
+    border-radius: 0;
+    border-top: 0;
+    padding: 1rem;
+  }
+  /* the drawer handle sits on the sheet's top edge, centred */
+  .panel-drawer-toggle {
+    top: auto;
+    bottom: min(62vh, calc(100vh - 56px));
+    right: calc(50% - 32px);
+    width: 64px;
+    height: 22px;
+    transform: none;
+    border: 1px solid var(--arena-border);
+    border-bottom: 0;
+    border-radius: var(--arena-radius-sm) var(--arena-radius-sm) 0 0;
+  }
+  .panel-drawer-toggle:not(.is-open) {
+    bottom: 8px;
+  }
+  /* overlays: the minimap and footer step aside, the nav table scrolls */
+  #minimap,
+  footer {
+    display: none !important;
+  }
+  #info {
+    max-height: 45vh;
+    overflow-y: auto;
+  }
+  /* the open ☰ menu scrolls by itself (the page never scrolls), so items of
+     an expanded group below the fold stay reachable */
+  #navbarTabs.show,
+  #navbarTabs.collapsing {
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  /* the menu collapses into ☰; its items get room to tap */
+  #navBar .dropdown-menu {
+    position: static;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Touch screens: controls at least ~44px tall, roomier checkboxes. */
+@media (pointer: coarse) {
+  #panelContent .btn,
+  #panelContent .form-select,
+  #panelContent .form-control,
+  #navBar .nav-link,
+  #navBar .dropdown-item {
+    min-height: 44px;
+  }
+  #panelContent .form-check-input {
+    width: 1.3em;
+    height: 1.3em;
+  }
+  #panelContent .form-range {
+    height: 2rem;
+  }
+}
+
+/* Layout panel (ui/layouts.ts): numbered sections, a Run bar that stays in
+   view, and the optional extras folded away. */
+.layout-panel .lp-section {
+  padding: 0.85rem 0.9rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius-sm);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.layout-panel .lp-title,
+.layout-panel .lp-more > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.layout-panel .lp-more > summary {
+  margin: 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.layout-panel .lp-more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.layout-panel .lp-more > summary::after {
+  content: '▾';
+  margin-left: auto;
+  color: var(--arena-text-muted);
+  transition: transform 0.15s var(--arena-ease);
+}
+
+.layout-panel .lp-more:not([open]) > summary::after {
+  transform: rotate(-90deg);
+}
+
+.layout-panel .lp-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #06101f;
+  background-color: var(--arena-accent);
+}
+
+.layout-panel .lp-step--opt {
+  color: var(--arena-accent);
+  background-color: transparent;
+  border: 1px solid var(--arena-accent);
+}
+
+.layout-panel .lp-hint {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--arena-text-muted);
+}
+
+.layout-panel .lp-choices .form-check {
+  margin-bottom: 0.3rem;
+}
+
+.layout-panel .lp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 0.75rem;
+  align-items: end;
+}
+
+/* stays at the bottom of the drawer while the sections scroll */
+.layout-panel .lp-runbar {
+  position: sticky;
+  bottom: -0.5rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius-sm);
+  /* opaque: the sections scroll underneath */
+  background-color: var(--bs-body-bg);
+  box-shadow: var(--arena-shadow);
+}
+
+.layout-panel .lp-runbar__msgs {
+  min-width: 0;
+  flex: 1;
+}
+
+.layout-panel .lp-runbar__msgs:empty {
+  display: none;
+}
+
+/* Home: the example picker is a form, not a link — no lift on hover */
+.home-action--example:hover {
+  transform: none;
+}
+
+/* Network mode (ui/mode.ts): in single-network mode the layer-only controls
+   step aside, and the Layout panel's step numbers with them. */
+body.mode-single [data-multilayer-only] {
+  display: none !important;
+}
+
+body:not(.mode-single) [data-single-only] {
+  display: none !important;
+}
+
+body.mode-single .layout-panel .lp-step {
+  display: none;
+}
+
+.nav-mode {
+  margin-right: 0.5rem;
+}
+
+.nav-mode .btn {
+  white-space: nowrap;
+}
+
+/* Legend (ui/legend.ts): the colour mapping last applied, bottom centre */
+#legend {
+  position: fixed;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  z-index: 2;
+  max-width: min(72vw, 960px);
+  padding: 0.35rem 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.8rem;
+  font-size: 12px;
+  color: var(--bs-body-color);
+  background-color: var(--arena-surface);
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius-sm);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+#legend.d-none {
+  display: none !important;
+}
+
+#legend .legend-title {
+  font-weight: 600;
+}
+
+#legend .legend-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#legend .legend-entry:hover {
+  color: var(--arena-accent);
+}
+
+#legend .legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+#legend .legend-count {
+  color: var(--arena-text-muted);
+}
+
+#legend .legend-gradient {
+  display: inline-block;
+  width: 160px;
+  height: 10px;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  #legend {
+    display: none !important;
+  }
+}
+
+/* Groups card (ui/groups.ts) */
+.groups-list {
+  max-height: 40vh;
+  overflow: auto;
+}
+
+.group-row {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr auto auto auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid var(--arena-border);
+  font-size: 0.85rem;
+}
+
+.group-row .group-color {
+  width: 1.4rem;
+  height: 1.4rem;
+  padding: 0;
+  border: 1px solid var(--arena-border);
+  border-radius: 3px;
+  background: none;
+}
+
+.group-row .group-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.group-row .group-count {
+  color: var(--arena-text-muted);
+}
+
+.group-row .group-hull {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  color: var(--arena-text-muted);
+}
+
+/* Help: tab-separated file examples as tables (ui/help.ts tsv()) */
+#helpDiv .help-tsv {
+  border-collapse: collapse;
+  margin: 0.3rem 0 1.1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.82rem;
+}
+
+#helpDiv .help-tsv-note {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--arena-text-muted);
+}
+
+#helpDiv .help-tsv th,
+#helpDiv .help-tsv td {
+  border: 1px solid var(--arena-border);
+  padding: 0.15rem 0.55rem;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+#helpDiv .help-tsv th {
+  background-color: rgba(255, 255, 255, 0.06);
+  font-weight: 600;
+}
+
+#helpDiv .help-tsv .help-empty {
+  color: var(--arena-text-muted);
+  font-style: italic;
+  font-size: 0.75rem;
+}
+
+#helpDiv .tabcontent ol {
+  padding-left: 1.3rem;
+}
+
+#helpDiv .tabcontent ol li {
+  margin-bottom: 0.3rem;
+}
+
+/* Databases panel (ui/databases.ts): NORMA-style source cards */
+.db-card {
+  --db: #8a8a86;
+  margin-bottom: 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--db) 45%, var(--arena-border));
+  border-left: 5px solid var(--db);
+  border-radius: 10px;
+  background-color: color-mix(in srgb, var(--db) 9%, transparent);
+}
+
+.db-card--string {
+  --db: #d64545;
+}
+.db-card--reactome {
+  --db: #4f7bdc;
+}
+.db-card--omnipath {
+  --db: #2aa198;
+}
+.db-card--ndex {
+  --db: #e2862f;
+}
+.db-card--intact {
+  --db: #3aa655;
+}
+.db-card--go {
+  --db: #9b59d0;
+}
+.db-card--compare {
+  --db: #8a8a86;
+}
+
+.db-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  list-style: none;
+  color: var(--db);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.db-card__head::-webkit-details-marker {
+  display: none;
+}
+
+.db-card__icon {
+  display: inline-flex;
+}
+
+.db-card__title {
+  flex: 1;
+  color: var(--arena-text);
+}
+
+.db-card__help {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--arena-border-strong);
+  background: var(--arena-surface);
+  color: var(--arena-text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.db-card__help:hover {
+  color: var(--arena-accent);
+  border-color: var(--arena-accent);
+}
+
+.db-card__chevron {
+  color: var(--arena-text-muted);
+  transition: transform 0.15s var(--arena-ease);
+}
+
+.db-card[open] .db-card__chevron {
+  transform: rotate(90deg);
+}
+
+.db-card__body {
+  padding: 0 0.8rem 0.8rem;
+}
+
+.db-hits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-height: 10rem;
+  overflow: auto;
+}
+
+.db-hit {
+  text-align: left;
+  font-size: 0.82rem;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--arena-text);
+}
+
+.db-hit:hover {
+  border-color: var(--arena-accent);
+}
+
+.db-hit--added {
+  border-color: var(--arena-accent);
+  background: rgba(var(--arena-accent-rgb), 0.12);
+}
+
+.db-hit__id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--arena-text-muted);
+}
+
+.db-hit__detail {
+  color: var(--arena-text-muted);
+  font-size: 0.75rem;
+}
+
+/* Help pages: interface screenshots (public/images/help/ui, refreshed with
+   `npm run help:shots`). Panel shots float beside the text on wide screens. */
+#helpDiv .help-shot {
+  display: block;
+  max-width: 100%;
+  border: 1px solid var(--arena-border);
+  border-radius: 10px;
+  box-shadow: var(--arena-shadow);
+  margin: 0.4rem 0 1.2rem;
+}
+
+#helpDiv .help-shot--panel {
+  float: right;
+  width: min(100%, 340px);
+  margin: 0 0 1rem 1.6rem;
+}
+
+#helpDiv .help-shot--small {
+  width: min(100%, 420px);
+}
+
+#helpDiv .tabcontent::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+@media (max-width: 767.98px) {
+  #helpDiv .help-shot--panel {
+    float: none;
+    width: 100%;
+    margin: 0.4rem 0 1.2rem;
+  }
+}
+
+/* Data Tables (ui/data.ts): a tab strip that scrolls sideways when the
+   reports outgrow the drawer, and reports drawn as tables — bordered cells,
+   a header that stays put while the rows scroll, numbers right-aligned in
+   tabular figures, a toolbar with the size, the CSV and the sort hint. */
+#panel-data .data-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 2px;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid var(--arena-border-strong);
+  scrollbar-width: thin;
+}
+
+#panel-data .data-tabs .nav-item {
+  flex: 0 0 auto;
+}
+
+#panel-data .data-tabs .nav-link {
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: var(--arena-radius-sm) var(--arena-radius-sm) 0 0;
+  color: var(--arena-text-muted);
+  padding: 0.42rem 0.8rem;
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+
+#panel-data .data-tabs .nav-link:hover {
+  color: var(--arena-text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+#panel-data .data-tabs .nav-link.active {
+  color: var(--arena-text);
+  background: var(--arena-elevated);
+  border-color: var(--arena-border-strong) var(--arena-border-strong)
+    var(--arena-elevated);
+  font-weight: 600;
+}
+
+.data-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  margin-bottom: 0.55rem;
+}
+
+.data-toolbar .data-meta {
+  font-size: 0.8rem;
+  color: var(--arena-text-muted);
+}
+
+.data-toolbar .data-hint {
+  font-size: 0.74rem;
+  color: var(--arena-text-muted);
+  margin-left: auto;
+}
+
+.data-table-wrap {
+  max-height: 68vh;
+  overflow: auto;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: var(--arena-radius-sm);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.data-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.82rem;
+  color: var(--arena-text);
+}
+
+.data-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--arena-surface-solid);
+  color: var(--arena-text);
+  border-bottom: 2px solid var(--arena-border-strong);
+  border-right: 1px solid var(--arena-border);
+  padding: 0.45rem 0.6rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.data-table tbody td {
+  border-bottom: 1px solid var(--arena-border);
+  border-right: 1px solid var(--arena-border);
+  padding: 0.32rem 0.6rem;
+  vertical-align: top;
+}
+
+.data-table th:last-child,
+.data-table td:last-child {
+  border-right: 0;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.data-table tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.data-table tbody tr:hover td {
+  background: rgba(var(--arena-accent-rgb), 0.12);
+}
+
+.data-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.data-table tbody td:first-child {
+  font-weight: 500;
+}
+
+/* UpSet plots under the comparison tables (actions/upset.ts) */
+.upset-plot {
+  overflow: auto;
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius-sm);
+  background: #fff;
+}
+
+.upset-plot svg {
+  display: block;
+}
+
+/* Section titles inside the Edit, File, Scene, Style and Analyze panels: a
+   thin rule above each, so the controls read as groups (ui/*.ts). */
+#panelContent .tab-pane h6:not(.lp-title) {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--arena-text-muted);
+  border-top: 1px solid var(--arena-border);
+  padding-top: 0.8rem;
+  margin: 1.1rem 0 0.65rem;
+}
+
+#panelContent .tab-pane [class*='col-'] > h6:not(.lp-title):first-child {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* Data Tables: sortable column titles (ui/data.ts) */
+.data-table th.data-sort {
+  cursor: pointer;
+  user-select: none;
+}
+
+.data-table th.data-sort:hover,
+.data-table th.data-sort:focus-visible {
+  color: var(--arena-accent);
+  outline: none;
+}
+
+.data-table th.data-sort--active {
+  color: var(--arena-accent);
+}
+
+.data-table .data-sort__ind {
+  margin-left: 0.3em;
+  font-size: 0.75em;
+  opacity: 0.55;
+}
+
+.data-table th.data-sort--active .data-sort__ind {
+  opacity: 1;
+}
+
+/* Top-bar menus: one hue each — the active or open menu is tinted with it,
+   so the entries read apart at a glance. */
+#navBar .nav-link[data-menu] {
+  --menu: var(--arena-accent);
+}
+
+#navBar .nav-link[data-menu='home'] {
+  --menu: #9aa0a6;
+}
+#navBar .nav-link[data-menu='view'] {
+  --menu: #5b8def;
+}
+#navBar .nav-link[data-menu='find'] {
+  --menu: #e2862f;
+}
+#navBar .nav-link[data-menu='file'] {
+  --menu: #3aa655;
+}
+#navBar .nav-link[data-menu='databases'] {
+  --menu: #d64545;
+}
+#navBar .nav-link[data-menu='layers'] {
+  --menu: #d4679a;
+}
+#navBar .nav-link[data-menu='layout'] {
+  --menu: #9b59d0;
+}
+#navBar .nav-link[data-menu='edit'] {
+  --menu: #2aa198;
+}
+#navBar .nav-link[data-menu='analyze'] {
+  --menu: #e0b422;
+}
+#navBar .nav-link[data-menu='export'] {
+  --menu: #4f9ddc;
+}
+#navBar .nav-link[data-menu='help'] {
+  --menu: #c48ce2;
+}
+
+#navBar .navbar-nav .nav-link[data-menu].active,
+#navBar .navbar-nav .show > .nav-link[data-menu] {
+  color: #fff;
+  background-color: color-mix(in srgb, var(--menu) 22%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--menu) 55%, transparent);
+}
+
+/* Performance panel (ui/fps.ts): the live stats readout */
+.perf-stats {
+  width: 100%;
+  font-size: 0.85rem;
+  border-collapse: collapse;
+}
+
+.perf-stats td {
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--arena-border);
+}
+
+.perf-stats td:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--arena-text);
+}
+
+/* Help: JSON examples (help.ts json()) and field tables */
+#helpDiv pre.help-json,
+#helpDiv pre.help-code {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+#helpDiv .help-json .j-k {
+  color: #8fb9ff;
+}
+
+#helpDiv .help-json .j-s {
+  color: #9ccc65;
+}
+
+#helpDiv .help-json .j-n {
+  color: #ffb86c;
+}
+
+#helpDiv .help-json .j-b {
+  color: #c48ce2;
+}
+
+#helpDiv .help-fields td:first-child {
+  white-space: nowrap;
+}
+
+#helpDiv .help-fields code {
+  font-size: 0.8rem;
+}
+
+/* One-layer prompt (ui/mode.ts): floor or single 3D network */
+.one-layer-prompt {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7;
+  width: min(440px, calc(100vw - 2rem));
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: 12px;
+  background-color: var(--arena-surface);
+  box-shadow: var(--arena-shadow);
+}
+
+.one-layer-prompt__text {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Loaded networks (ui/file.ts workspace card) */
+.workspace-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 8px;
+  margin-bottom: 0.3rem;
+}
+
+.workspace-row.is-active {
+  border-color: var(--arena-accent);
+  background: rgba(var(--arena-accent-rgb), 0.1);
+}
+
+.workspace-switch {
+  flex: 1;
+  text-align: left;
+  background: none;
+  border: 0;
+  color: var(--arena-text);
+  font-weight: 600;
+  padding: 0;
+}
+
+.workspace-switch:not(:disabled):hover {
+  color: var(--arena-accent);
+}
+
+.workspace-meta {
+  font-size: 0.78rem;
+  color: var(--arena-text-muted);
+  white-space: nowrap;
+}
+
+.workspace-remove {
+  background: none;
+  border: 0;
+  color: var(--arena-text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.workspace-remove:not(:disabled):hover {
+  color: #d64545;
 }

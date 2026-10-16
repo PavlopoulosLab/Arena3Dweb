@@ -12,14 +12,22 @@ import {
 } from '../commands/scene'
 import { isBloomEnabled, setBloomEnabled } from '../three/postprocessing'
 import { setMinimapVisible } from '../ui/minimap'
-import { applyPredefinedLayout, type PredefinedLayout } from '../actions/layout'
+import { setLegendShown } from '../ui/legend'
+import {
+  PREDEFINED_LAYOUTS,
+  applyPredefinedLayout,
+  type PredefinedLayout,
+} from '../actions/layout'
 
 const SCENE_HTML = `
 <div class="col-md-6 col-lg-4">
+  <h6>Axes &amp; rotation</h6>
   <div class="form-check mb-2">
     <input class="form-check-input" type="checkbox" id="toggleSceneCoords" checked />
     <label class="form-check-label" for="toggleSceneCoords">Show Scene Coord System</label>
   </div>
+  <label class="form-label small mb-0" for="sceneAxesOpacity">Scene axes opacity: <span id="sceneAxesOpacityValue">0.85</span></label>
+  <input type="range" class="form-range mb-3" id="sceneAxesOpacity" min="0.1" max="1" step="0.05" value="0.85" aria-label="Scene axes opacity" />
   <div class="form-check mb-2">
     <input class="form-check-input" type="checkbox" id="autoRotateScene" />
     <label class="form-check-label" for="autoRotateScene">Enable Scene Auto Rotate</label>
@@ -28,27 +36,27 @@ const SCENE_HTML = `
     <input class="form-check-input" type="checkbox" id="toggleBloom" />
     <label class="form-check-label" for="toggleBloom">Node Glow (dark backgrounds)</label>
   </div>
+  <h6>Overlays</h6>
   <div class="form-check mb-3">
     <input class="form-check-input" type="checkbox" id="toggleMinimap" checked />
     <label class="form-check-label" for="toggleMinimap">Show Navigator (2D)</label>
   </div>
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" id="toggleLegend" checked />
+    <label class="form-check-label" for="toggleLegend">Show Legend</label>
+  </div>
+  <div data-multilayer-only>
+  <h6>Layer arrangement</h6>
   <label class="form-label">Select Predefined Layout:</label>
+  ${PREDEFINED_LAYOUTS.map(
+    ([value, label]) => `
   <div class="form-check">
-    <input class="form-check-input" type="radio" name="predefined_layout" id="predef_parallel" value="parallel" checked />
-    <label class="form-check-label" for="predef_parallel">Parallel Coordinates</label>
+    <input class="form-check-input" type="radio" name="predefined_layout" id="predef_${value}" value="${value}" ${value === 'parallel' ? 'checked' : ''} />
+    <label class="form-check-label" for="predef_${value}">${label}</label>
+  </div>`
+  ).join('')}
   </div>
-  <div class="form-check">
-    <input class="form-check-input" type="radio" name="predefined_layout" id="predef_zigZag" value="zigZag" />
-    <label class="form-check-label" for="predef_zigZag">Zig Zag</label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="radio" name="predefined_layout" id="predef_starLike" value="starLike" />
-    <label class="form-check-label" for="predef_starLike">Star</label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="radio" name="predefined_layout" id="predef_cube" value="cube" />
-    <label class="form-check-label" for="predef_cube">Cube</label>
-  </div>
+  <h6>Background</h6>
   <div id="sceneColorPicker" class="colorPicker mt-3">
     <input type="color" id="scene_color" name="scene_color" value="#000000" />
     <label for="scene_color">Background Color</label>
@@ -65,6 +73,14 @@ export function initScenePanel(): void {
     .getElementById('toggleSceneCoords')
     ?.addEventListener('change', (e) => {
       ctx.scene?.toggleCoords((e.target as HTMLInputElement).checked)
+    })
+  document
+    .getElementById('sceneAxesOpacity')
+    ?.addEventListener('input', (e) => {
+      const v = Number((e.target as HTMLInputElement).value)
+      document.getElementById('sceneAxesOpacityValue')!.textContent =
+        v.toFixed(2)
+      ctx.scene?.setAxesOpacity(v)
     })
 
   // ponytail: v2 auto-rotate kept the canvas-button rotation interval alive;
@@ -88,6 +104,9 @@ export function initScenePanel(): void {
       setBloomEnabled((e.target as HTMLInputElement).checked)
     })
   }
+  document.getElementById('toggleLegend')?.addEventListener('change', (e) => {
+    setLegendShown((e.target as HTMLInputElement).checked)
+  })
 
   document.getElementById('toggleMinimap')?.addEventListener('change', (e) => {
     setMinimapVisible((e.target as HTMLInputElement).checked)

@@ -8,6 +8,10 @@ from app import config
 from app.models.network import EdgeModel, NodeModel
 
 Scope = Literal["perLayer", "allLayers", "nodesPerLayers"]
+# How the edges make a graph: parallel edges (channels) merged into one undirected
+# edge, kept as a directed graph (source → target), or kept as a multigraph in
+# which every channel is an edge of its own.
+GraphMode = Literal["undirected", "directed", "multi"]
 
 
 class TopologyRequest(BaseModel):
@@ -21,6 +25,10 @@ class TopologyRequest(BaseModel):
     selected_nodes: list[str] | None = None
     selected_channels: list[str] | None = None
     directed: bool = False  # v2 edgeDirectionToggle (affects betweenness)
+    graph: GraphMode = Field(
+        default="undirected",
+        description="undirected (parallel edges merged), directed, or multi (a channel = an edge)",
+    )
 
 
 class TopologyResponse(BaseModel):
@@ -28,3 +36,16 @@ class TopologyResponse(BaseModel):
     scales: dict[str, float]
     # Node_Layer id -> raw metric value (for the View Data table)
     raw: dict[str, float]
+
+
+class LayerSimilarityRequest(BaseModel):
+    nodes: list[NodeModel] = Field(max_length=config.MAX_NODES)
+    edges: list[EdgeModel] = Field(max_length=config.MAX_EDGES)
+    layers: list[str] = Field(min_length=1, max_length=config.MAX_LAYERS)
+
+
+class LayerSimilarityResponse(BaseModel):
+    layers: list[str]
+    # Jaccard overlap per layer pair, rows/columns in `layers` order
+    node_jaccard: list[list[float]]
+    edge_jaccard: list[list[float]]

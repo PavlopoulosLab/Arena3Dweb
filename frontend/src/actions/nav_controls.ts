@@ -9,7 +9,10 @@ import { ctx } from '../three'
 import { redrawIntraLayerEdges, toggleInterLayerEdgesRendering } from './edge'
 import { getSelectedLayers, initialSpreadLayers } from './layer'
 import { getSelectedNodes } from './node'
+import { fitView } from './search'
+import { resetZoomTarget } from './canvas_controls'
 import { history } from '../commands/base'
+import { GROUP_ICONS, axisIcon } from '../ui/nav_icons'
 import {
   captureTransforms,
   TransformCommand,
@@ -74,14 +77,13 @@ function rotateScene(direction: number, axis: Axis): void {
   })
 }
 
+// Fit the whole network into the window (pan and zoom), like a double-click
+// on the background; one undoable step.
 export function recenterNetwork(): void {
   if (ctx.scene?.exists()) {
-    const before = captureTransforms()
-    ctx.scene.recenter()
+    resetZoomTarget()
+    fitView()
     raiseMovedFlags()
-    history.execute(
-      new TransformCommand('Recenter network', before, captureTransforms())
-    )
   }
 }
 
@@ -202,7 +204,7 @@ function axisRowsHtml(
   t: '' | '_T'
 ): string {
   const btn = (name: string): string =>
-    `<td class="canvasControls image_${name}${t}" data-nav="${name}${t}"></td>`
+    `<td class="canvasControls" data-nav="${name}${t}" title="${t ? 'Move' : 'Rotate'} ${name.startsWith('plus') ? '+' : '−'}${name.slice(-1)}">${axisIcon(name, t === '_T')}</td>`
   return `
     <tr>
       <td colspan="2" class="labelDrop" id="${valueId}">${valueText}</td>
@@ -221,27 +223,31 @@ function axisRowsHtml(
 const INFO_HTML = `
   <ul id="navShortcuts">
     <li><span>Zoom</span><span><kbd>Wheel</kbd></span></li>
-    <li><span>Pan</span><span><kbd>Drag</kbd> / <kbd>&#8592;&#8593;&#8594;&#8595;</kbd></span></li>
-    <li><span>Orbit</span><span><kbd>Middle Drag</kbd></span></li>
-    <li><span>Drag Layer</span><span><kbd>Drag</kbd></span></li>
-    <li><span>Rotate Layer</span><span><kbd class='blue'>Z</kbd><kbd class='red'>X</kbd><kbd class='green'>C</kbd> + <kbd>Drag</kbd></span></li>
+    <li data-multilayer-only><span>Pan</span><span><kbd>Drag</kbd> / <kbd>&#8592;&#8593;&#8594;&#8595;</kbd></span></li>
+    <li data-multilayer-only><span>Orbit</span><span><kbd>Middle Drag</kbd></span></li>
+    <li data-single-only><span>Rotate Network</span><span><kbd>Drag</kbd></span></li>
+    <li data-single-only><span>Pan</span><span><kbd>Middle Drag</kbd> / <kbd>&#8592;&#8593;&#8594;&#8595;</kbd></span></li>
+    <li data-multilayer-only><span>Drag Layer</span><span><kbd>Drag</kbd></span></li>
+    <li data-multilayer-only><span>Rotate Layer</span><span><kbd class='blue'>Z</kbd><kbd class='red'>X</kbd><kbd class='green'>C</kbd> + <kbd>Drag</kbd></span></li>
+    <li data-single-only><span>Rotate about Axis</span><span><kbd class='blue'>Z</kbd><kbd class='red'>X</kbd><kbd class='green'>C</kbd> + <kbd>Drag</kbd></span></li>
     <li><span>Move Selected Nodes</span><span><kbd class='blue'>Z</kbd><kbd class='green'>C</kbd> + <kbd>Drag</kbd></span></li>
     <li><span>Select Node/Layer</span><span><kbd>Dbl Click</kbd></span></li>
     <li><span>Lasso Nodes</span><span><kbd>Shift</kbd> + <kbd>Drag</kbd></span></li>
-    <li><span>Unselect All</span><span><kbd>Dbl Click</kbd> Scene</span></li>
+    <li><span>Fit View, Unselect All</span><span><kbd>Dbl Click</kbd> Scene</span></li>
   </ul>
   <table id="canvasControls_table"><tbody>
     <tr><td colspan="4"><h5>Scene</h5></td></tr>
     <tr><td colspan="4" class="controlsSubLabel">Rotation Controls</td></tr>
     ${axisRowsHtml('sliderValue1', 'Angle: 5&#730;', 'sceneRotateSlider', { min: 1, max: 15, value: 5, step: 1 }, '')}
     <tr><td colspan="4"><button id="recenterButton">Recenter Network</button></td></tr>
+  </tbody><tbody data-multilayer-only>
     <tr class="border_tr"><td colspan="4"><h5>Layers</h5></td></tr>
     <tr><td colspan="4" class="controlsSubLabel">Rotation Controls</td></tr>
     ${axisRowsHtml('sliderValue2', 'Angle: 5&#730;', 'layerRotateSlider', { min: 1, max: 15, value: 5, step: 1 }, '')}
     <tr><td colspan="4" class="controlsSubLabel">Translation Controls</td></tr>
     <tr>
-      <td colspan="2" class="canvasControls image_expandLayers" data-nav="expandLayers"></td>
-      <td colspan="2" class="canvasControls image_collapseLayers" data-nav="collapseLayers"></td>
+      <td colspan="2" class="canvasControls nav-group" data-nav="expandLayers" title="Spread layers apart">${GROUP_ICONS.expandLayers}</td>
+      <td colspan="2" class="canvasControls nav-group" data-nav="collapseLayers" title="Pull layers together">${GROUP_ICONS.collapseLayers}</td>
     </tr>
     ${axisRowsHtml('sliderValue3', 'Step: 25', 'layerTranslateSlider', { min: 5, max: 50, value: 25, step: 5 }, '_T')}
     <tr>
@@ -251,11 +257,12 @@ const INFO_HTML = `
       </td>
       <td id="sliderValue4">x1</td>
     </tr>
+  </tbody><tbody>
     <tr class="border_tr"><td colspan="4"><h5>Nodes</h5></td></tr>
     <tr><td colspan="4" class="controlsSubLabel">Translation Controls</td></tr>
     <tr>
-      <td colspan="2" class="canvasControls image_nodeExpand" data-nav="expandNodes"></td>
-      <td colspan="2" class="canvasControls image_nodeCollapse" data-nav="collapseNodes"></td>
+      <td colspan="2" class="canvasControls nav-group" data-nav="expandNodes" title="Spread selected nodes apart">${GROUP_ICONS.expandNodes}</td>
+      <td colspan="2" class="canvasControls nav-group" data-nav="collapseNodes" title="Pull selected nodes together">${GROUP_ICONS.collapseNodes}</td>
     </tr>
     ${axisRowsHtml('sliderValue5', 'Step: 25', 'nodeTranslateSlider', { min: 5, max: 50, value: 25, step: 5 }, '_T')}
     <tr>
@@ -324,7 +331,7 @@ function attachNavControls(): void {
   if (!buttonsDiv || !info) return
 
   buttonsDiv.innerHTML = `
-    <button id="interLayerEdgesRenderPauseButton" class="displayCanvasControls nav-toggle-btn" type="button"></button>
+    <button id="interLayerEdgesRenderPauseButton" class="displayCanvasControls nav-toggle-btn" type="button" data-multilayer-only></button>
     <button id="displayCanvasControlsButton" class="displayCanvasControls nav-toggle-btn" type="button"></button>`
   document
     .getElementById('interLayerEdgesRenderPauseButton')!
@@ -340,9 +347,13 @@ function attachNavControls(): void {
     })
 
   info.innerHTML = INFO_HTML
-  info.style.display = 'inline-block'
+  // on phones the table would cover most of the scene: start it closed
+  const phone =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(max-width: 768px)').matches
+  info.style.display = phone ? 'none' : 'inline-block'
   setPauseButtonState(ctx.interLayerEdgesRenderPauseFlag)
-  setControlsToggleState(true)
+  setControlsToggleState(!phone)
 
   document
     .getElementById('recenterButton')!

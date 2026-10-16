@@ -27,12 +27,45 @@ MAX_LAYERS = 18
 # built-in limit; nginx's client_max_body_size only covers the prod Docker
 # image, not local/dev deployments).
 MAX_UPLOAD_BYTES = int(os.environ.get("ARENA_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
+# Crash isolation: igraph's C core can abort() the whole interpreter on certain
+# inputs (observed: 3D Kamada-Kawai on specific weighted graphs — an upstream
+# igraph defect, not catchable from Python). /api/layout and /api/clustering run
+# in a worker pool of this size so an abort() only kills that worker.
+LAYOUT_WORKERS = int(os.environ.get("ARENA_LAYOUT_WORKERS", "2"))
+
+# PPI database importers (services/databases.py). Overridable for mirrors/tests.
+STRING_API = os.environ.get("ARENA_STRING_API", "https://string-db.org/api")
+INTACT_PSICQUIC = os.environ.get(
+    "ARENA_INTACT_PSICQUIC",
+    "https://www.ebi.ac.uk/Tools/webservices/psicquic/intact/webservices/current/search",
+)
+OMNIPATH_API = os.environ.get("ARENA_OMNIPATH_API", "https://omnipathdb.org")
+NDEX_API = os.environ.get("ARENA_NDEX_API", "https://www.ndexbio.org")
+REACTOME_API = os.environ.get("ARENA_REACTOME_API", "https://reactome.org/ContentService")
+QUICKGO_API = os.environ.get("ARENA_QUICKGO_API", "https://www.ebi.ac.uk/QuickGO/services")
+MAX_GENES_PER_SET = 300  # genes per pathway / GO term layer (STRING query size)
+DB_TIMEOUT_SECONDS = float(os.environ.get("ARENA_DB_TIMEOUT_SECONDS", "60"))
+MAX_DB_IDENTIFIERS = 500
 
 # Topology scaling
 DEFAULT_MAP_VALUE = 0.3
 TARGET_NODE_SCALE_MIN = 0.5
 TARGET_NODE_SCALE_MAX = 2.5
-TOPOLOGY_METRICS = ["Degree", "Clustering Coefficient", "Betweenness Centrality"]
+TOPOLOGY_METRICS = [
+    "Degree",
+    "Clustering Coefficient",
+    "Betweenness Centrality",
+    # Phase 21 node metrics (per scope, like the three above)
+    "Closeness Centrality",
+    "Eigenvector Centrality",
+    "PageRank",
+    "Coreness (k-core)",
+    "Eccentricity",
+    # multilayer (services/multilayer.py): computed across the selected layers
+    "Multiplex Degree",
+    "Participation Coefficient",
+    "Multilayer PageRank",
+]
 
 # Layouts
 NO_EDGE_LAYOUTS = ["Circle", "Grid", "Random"]
@@ -78,3 +111,9 @@ VR_DOWNSCALE_FACTOR = 300
 
 # Ephemeral storage for external-API sessions + VR output (SPEC §5)
 TMP_PATH = "tmp/"
+
+# Kamada-Kawai, MDS, Graphopt and Sugiyama build n×n structures; the cap keeps one
+# request from exhausting the memory or the CPU of the whole service.
+MAX_QUADRATIC_NODES = int(os.environ.get("ARENA_MAX_QUADRATIC_NODES", "2000"))
+# the whole of a database import, every upstream call together
+DB_TOTAL_SECONDS = float(os.environ.get("ARENA_DB_TOTAL_SECONDS", "150"))

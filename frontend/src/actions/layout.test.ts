@@ -4,6 +4,7 @@ import { api } from '../api/client'
 import { history } from '../commands/base'
 import {
   normalizeLayoutPositions,
+  fitToContainers,
   applyLayout,
   applyTopology,
   applyPredefinedLayout,
@@ -45,10 +46,45 @@ describe('normalizeLayoutPositions', () => {
     expect(out['A::L1']).toEqual([0, 0])
   })
 
+  it('maps a 3D layout depth into the same range', () => {
+    const out = normalizeLayoutPositions({
+      'A::L1': [0, 0, -4],
+      'B::L1': [10, 10, 4],
+    })
+    expect(out['A::L1']).toEqual([-50, -50, -50])
+    expect(out['B::L1']).toEqual([50, 50, 50])
+  })
+
   it('multiplies by the node layer scale', () => {
     ctx.layers[0].setScale(2)
     const out = normalizeLayoutPositions({ 'A::L1': [0, 0], 'B::L1': [10, 10] })
     expect(out['B::L1']).toEqual([100, 100]) // 50 * scale 2
+  })
+})
+
+describe('fitToContainers', () => {
+  it('pulls nodes on a disk floor inside its rim, leaves squares alone', () => {
+    ctx.layers[0].setFloorShape('disk') // width 100 -> rim 46
+    const out = fitToContainers({
+      'A::L1': [50, 50],
+      'B::L1': [0, 10],
+      'C::L2': [150, 150],
+    })
+    expect(Math.hypot(...(out['A::L1'] as [number, number]))).toBeCloseTo(46)
+    expect(out['C::L2']).toEqual([150, 150])
+  })
+})
+
+describe('fitToContainers (3D)', () => {
+  it('keeps sphere nodes inside the radius and clamps cube nodes', () => {
+    ctx.layers[0].setContainer('sphere') // width 100 -> rim 46
+    ctx.layers[1].setContainer('cube') // width 400 -> rim 184
+    const out = fitToContainers({
+      'A::L1': [40, 40, 40],
+      'C::L2': [300, 0, -500],
+    })
+    expect(Math.hypot(...(out['A::L1'] as number[]))).toBeCloseTo(46)
+    expect(out['C::L2']).toEqual([184, 0, -184])
   })
 })
 

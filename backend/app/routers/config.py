@@ -9,8 +9,9 @@ from app import config
 router = APIRouter()
 
 
-@router.get("/api/config")
+@router.get("/api/config", summary="Server limits and defaults", tags=["Configuration"])
 async def get_config() -> dict[str, Any]:
+    """Edge, node, layer and channel limits, default colours and the available metrics."""
     return {
         "max_edges": config.MAX_EDGES,
         "max_channels": config.MAX_CHANNELS,

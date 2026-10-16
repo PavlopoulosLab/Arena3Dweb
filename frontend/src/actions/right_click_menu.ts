@@ -153,6 +153,8 @@ export function replaceContextMenuOverNode(event: {
   layerX: number
   layerY: number
   preventDefault: () => void
+  // a fingertip covers more than a cursor: touch passes a larger radius
+  hitRadius?: number
 }): void {
   removeContextMenu()
   const container =
@@ -164,7 +166,7 @@ export function replaceContextMenuOverNode(event: {
     const nodeY = ctx.yBoundMax - ctx.nodeObjects[i].getWorldPosition('y')
     if (
       (nodeX - event.layerX) ** 2 + (nodeY - event.layerY) ** 2 >
-      (SPHERE_RADIUS + 1) ** 2
+      (event.hitRadius ?? SPHERE_RADIUS + 1) ** 2
     )
       continue
 

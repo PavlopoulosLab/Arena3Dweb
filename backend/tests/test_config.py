@@ -17,7 +17,20 @@ def test_config_matches_v2_constants() -> None:
     assert body["channel_colors_dark"][0] == "#E41A1C"  # brewer Set1[1]
     assert body["node_colors"][0] == "#8DD3C7"  # brewer Set3[1]
     assert body["no_edge_layouts"] == ["Circle", "Grid", "Random"]
-    expected_metrics = ["Degree", "Clustering Coefficient", "Betweenness Centrality"]
+    # v2's three, Phase 21 node metrics, then the Phase 5 multilayer metrics
+    expected_metrics = [
+        "Degree",
+        "Clustering Coefficient",
+        "Betweenness Centrality",
+        "Closeness Centrality",
+        "Eigenvector Centrality",
+        "PageRank",
+        "Coreness (k-core)",
+        "Eccentricity",
+        "Multiplex Degree",
+        "Participation Coefficient",
+        "Multilayer PageRank",
+    ]
     assert body["topology_metrics"] == expected_metrics
 
 

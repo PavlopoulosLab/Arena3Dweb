@@ -2,7 +2,7 @@
 // Port of v2 www/js/object_actions/screen.js. Shiny sync calls dropped.
 
 import * as THREE from 'three'
-import { ctx, edgeResolution } from '../three'
+import { SCALE_MAX, ctx, edgeResolution } from '../three'
 import {
   onBackgroundColor,
   renderFrame,
@@ -15,13 +15,33 @@ const RAYCASTER = new THREE.Raycaster()
 const RAYVECTOR = new THREE.Vector3()
 const RAYDIR = new THREE.Vector3()
 
+// Phones/tablets (coarse pointer) render at most 1.5x: a 3x phone screen
+// would otherwise push four times the pixels for little visible gain.
+function maxPixelRatio(): number {
+  return typeof window.matchMedia === 'function' &&
+    window.matchMedia('(pointer: coarse)').matches
+    ? 1.5
+    : 2
+}
+
+// The device's ratio (capped at 2: full retina sharpness without the 3x+
+// fill-rate cost on mobile) unless the Performance panel set a render scale.
+function pixelRatio(): number {
+  return ctx.renderScale ?? Math.min(window.devicePixelRatio, maxPixelRatio())
+}
+
 export function setRenderer(): void {
   ctx.renderer = new THREE.WebGLRenderer({
     antialias: true,
     powerPreference: 'high-performance',
   })
-  // Cap DPR at 2: full retina sharpness, avoids 3x+ fill-rate cost on mobile.
-  ctx.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  ctx.renderer.setPixelRatio(pixelRatio())
+}
+
+// Performance panel: render at a fixed pixel ratio (null = the device's)
+export function applyRenderScale(scale: number | null): void {
+  ctx.renderScale = scale
+  resizeRenderer()
 }
 
 export function resetScreen(): void {
@@ -46,14 +66,15 @@ export function setWindowBounds(): void {
 }
 
 export function setCamera(): void {
-  // orthographic: left, right, top, bottom, near, far
+  // orthographic: left, right, top, bottom, near, far. The depth range grows
+  // with the zoom range: a stack zoomed in SCALE_MAX times is still inside.
   ctx.camera = new THREE.OrthographicCamera(
     ctx.xBoundMin,
     ctx.xBoundMax,
     ctx.yBoundMax,
     ctx.yBoundMin,
-    -4 * ctx.xBoundMax,
-    4 * ctx.xBoundMax
+    -4 * ctx.xBoundMax * SCALE_MAX,
+    4 * ctx.xBoundMax * SCALE_MAX
   )
   ctx.camera.position.set(0, 0, 100)
   ctx.camera.lookAt(0, 0, 0)
@@ -61,7 +82,7 @@ export function setCamera(): void {
 
 export function resizeRenderer(): void {
   // Re-read DPR too: the window may have moved between monitors.
-  ctx.renderer?.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  ctx.renderer?.setPixelRatio(pixelRatio())
   ctx.renderer?.setSize(2 * ctx.xBoundMax, 2 * ctx.yBoundMax)
   resizePostprocessing(2 * ctx.xBoundMax, 2 * ctx.yBoundMax)
 }
@@ -79,7 +100,9 @@ export function setRendererColor(hexColor: string): void {
 // then download as PNG.
 const EXPORT_LONG_EDGE = 4096 // safe max renderbuffer size on all GPUs
 
-export function exportSceneImage(): boolean {
+// `longEdge` > 4096 (print/poster sizes) is capped at what this GPU's
+// renderbuffers allow.
+export function exportSceneImage(longEdge = EXPORT_LONG_EDGE): boolean {
   if (!ctx.scene?.exists() || !ctx.renderer || !ctx.camera) return false
 
   ctx.scene.THREE_Object.updateMatrixWorld(true)
@@ -123,7 +146,14 @@ export function exportSceneImage(): boolean {
 
   const w = camera.right - camera.left
   const h = camera.top - camera.bottom
-  const scale = EXPORT_LONG_EDGE / Math.max(w, h)
+  const maxEdge = Math.min(
+    longEdge,
+    ctx.renderer.capabilities.maxTextureSize,
+    ctx.renderer
+      .getContext()
+      .getParameter(ctx.renderer.getContext().MAX_RENDERBUFFER_SIZE) as number
+  )
+  const scale = maxEdge / Math.max(w, h)
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
     preserveDrawingBuffer: true,
@@ -293,4 +323,43 @@ export function animate(now = 0): void {
   renderInterLayerEdges()
   for (const fn of animateHooks) fn()
   renderFrame()
+  // measured frame rate for the Performance panel
+  frames++
+  if (now - statStart >= 1000) {
+    measuredFps = (frames * 1000) / (now - statStart)
+    frames = 0
+    statStart = now
+  }
+}
+
+let frames = 0
+let statStart = 0
+let measuredFps = 0
+
+export interface PerfStats {
+  fps: number
+  calls: number
+  triangles: number
+  lines: number
+  geometries: number
+  textures: number
+  nodes: number
+  edges: number
+  pixelRatio: number
+}
+
+// What the renderer did in the last frame, for the Performance panel
+export function perfStats(): PerfStats {
+  const info = ctx.renderer?.info
+  return {
+    fps: measuredFps,
+    calls: info?.render.calls ?? 0,
+    triangles: info?.render.triangles ?? 0,
+    lines: info?.render.lines ?? 0,
+    geometries: info?.memory.geometries ?? 0,
+    textures: info?.memory.textures ?? 0,
+    nodes: ctx.nodeObjects.length,
+    edges: ctx.edgeObjects.length,
+    pixelRatio: ctx.renderer?.getPixelRatio() ?? 1,
+  }
 }

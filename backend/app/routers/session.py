@@ -18,7 +18,12 @@ from app.services.session import SessionValidationError, normalize_session
 router = APIRouter()
 
 
-@router.post("/api/session/import", response_model=SessionImportResponse)
+@router.post(
+    "/api/session/import",
+    summary="Normalise an uploaded session file",
+    tags=["Sessions"],
+    response_model=SessionImportResponse,
+)
 async def import_session(file: UploadFile) -> SessionImportResponse:
     raw_bytes = await file.read()
     # DoS fix: same upload-size cap as /api/network — see routers/attributes.py.
@@ -34,7 +39,7 @@ async def import_session(file: UploadFile) -> SessionImportResponse:
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 
-@router.post("/api/session/export")
+@router.post("/api/session/export", summary="Download a session as a file", tags=["Sessions"])
 async def export_session(session: dict[str, Any]) -> JSONResponse:
     return JSONResponse(
         content=session,

@@ -1,0 +1,133 @@
+// Layer selection panel (top bar → Layer selection): which layers the
+// Layout, Analyze and Export panels work on, with a Hide and a Labels switch
+// per layer. v2 (and Arena3D 3.0 until now) kept these checkboxes at the top
+// of the Layout panel (www/js/object_actions/layer.js attachLayerCheckboxes);
+// they are a step of their own now, so the Layout panel starts at the
+// algorithm. The panel is hidden in Single network mode (one graph).
+
+import { bus } from '../bus'
+import { ctx } from '../three'
+import { escapeHtml } from '../utils'
+import { layerSwatchColor } from '../actions/legend'
+import {
+  selectLayer,
+  selectAllLayers,
+  setLayerVisibility,
+  setLayerNodeLabels,
+} from '../actions/layer'
+
+const HTML = `
+<div class="col-md-8 col-lg-6 layout-panel" id="layerSelectionPanel">
+  <section class="lp-section">
+    <h6 class="lp-title">Layer selection</h6>
+    <div class="form-text mt-0 mb-2">
+      Tick the layers to work on: layouts, alignment, the analyses and the NORMA export run on the selected layers
+      (on every layer while none is ticked). <i>Hide</i> takes a layer and its inter-layer edges out of the view;
+      <i>Labels</i> shows the names of its nodes.
+    </div>
+    <div class="d-flex flex-wrap align-items-center gap-3 mb-2">
+      <div class="form-check mb-0">
+        <input class="form-check-input" type="checkbox" id="selectAllLayersCheckbox" />
+        <label class="form-check-label" for="selectAllLayersCheckbox">Select/Deselect All Layers</label>
+      </div>
+      <button id="invertLayerSelection" class="btn btn-outline-secondary btn-sm" title="Tick the unticked layers and untick the ticked ones">Invert</button>
+      <span id="layerSelectionCount" class="small text-secondary"></span>
+    </div>
+    <div id="checkboxdiv" class="checkboxdiv mb-2"></div>
+    <div id="layerSelectionEmpty" class="form-text">Load a network to list its layers.</div>
+  </section>
+</div>
+`
+
+/** "2 of 4 layers selected", or what happens while none is. */
+export function selectionSummary(): string {
+  const n = ctx.layers.length
+  const k = ctx.layers.filter((l) => l.isSelected).length
+  if (n === 0) return 'No network loaded.'
+  if (k === 0) return `No layer selected: all ${n} are used.`
+  return `${k} of ${n} layer${n === 1 ? '' : 's'} selected.`
+}
+
+function syncSummary(): void {
+  const count = document.getElementById('layerSelectionCount')
+  if (count) count.textContent = selectionSummary()
+  const all = document.getElementById(
+    'selectAllLayersCheckbox'
+  ) as HTMLInputElement | null
+  if (all)
+    all.checked = ctx.layers.length > 0 && ctx.layers.every((l) => l.isSelected)
+  const empty = document.getElementById('layerSelectionEmpty')
+  if (empty) empty.classList.toggle('d-none', ctx.layers.length > 0)
+}
+
+// v2 attachLayerCheckboxes: per layer a select checkbox (labelled with the
+// layer name, with the legend's colour for it) plus Hide and Labels checkboxes.
+// XSS fix: layer.name comes straight from an uploaded TSV/session file, so it
+// must go through escapeHtml() before landing in the innerHTML template below.
+export function buildLayerCheckboxes(): void {
+  const container = document.getElementById('checkboxdiv')
+  if (!container) return
+  container.innerHTML = ''
+  const nodesOf = new Map<string, number>()
+  for (const id of ctx.nodeLayerNames) {
+    const layer = ctx.nodeGroups[id]
+    nodesOf.set(layer, (nodesOf.get(layer) ?? 0) + 1)
+  }
+  ctx.layers.forEach((layer, i) => {
+    const row = document.createElement('div')
+    row.className = 'layer-row'
+    const color = layerSwatchColor(layer.name)
+    const nodes = nodesOf.get(layer.name) ?? 0
+    row.innerHTML = `
+      <input class="form-check-input layer_checkbox" type="checkbox" id="checkbox_${i}" ${layer.isSelected ? 'checked' : ''} />
+      <span class="layer-row__swatch" style="background:${color}" aria-hidden="true"></span>
+      <label class="form-check-label layer_label layer-row__name" for="checkbox_${i}">${escapeHtml(layer.name)}</label>
+      <span class="layer-row__count">${nodes} node${nodes === 1 ? '' : 's'}</span>
+      <label class="form-check-label layer-row__opt" for="checkbox2_${i}">
+        <input class="form-check-input hideLayer_checkbox" type="checkbox" id="checkbox2_${i}" ${layer.plane.visible ? '' : 'checked'} />Hide</label>
+      <label class="form-check-label layer-row__opt" for="checkbox3_${i}">
+        <input class="form-check-input showLayerNodes_checkbox" type="checkbox" id="checkbox3_${i}" />Labels</label>
+    `
+    const [sel, hide, labels] = row.querySelectorAll('input')
+    sel.addEventListener('change', () => selectLayer(i, sel.checked))
+    hide.addEventListener('change', () => setLayerVisibility(i, !hide.checked))
+    labels.addEventListener('change', () =>
+      setLayerNodeLabels(i, labels.checked)
+    )
+    container.appendChild(row)
+  })
+  syncSummary()
+}
+
+// The tick boxes follow the selection wherever it changes (a click on a
+// floor, undo, a session) without a rebuild.
+function syncTicks(): void {
+  ctx.layers.forEach((layer, i) => {
+    const box = document.getElementById(
+      `checkbox_${i}`
+    ) as HTMLInputElement | null
+    if (box) box.checked = layer.isSelected
+  })
+  syncSummary()
+}
+
+export function initLayerSelectionPanel(): void {
+  const pane = document.getElementById('panel-layer-selection')
+  if (!pane) return
+  pane.innerHTML = HTML
+  document
+    .getElementById('selectAllLayersCheckbox')
+    ?.addEventListener('change', (e) => {
+      selectAllLayers((e.target as HTMLInputElement).checked)
+      syncTicks()
+    })
+  document
+    .getElementById('invertLayerSelection')
+    ?.addEventListener('click', () => {
+      ctx.layers.forEach((layer, i) => selectLayer(i, !layer.isSelected))
+      syncTicks()
+    })
+  bus.on('network:loaded', buildLayerCheckboxes)
+  bus.on('layers:selected', syncTicks)
+  syncSummary()
+}

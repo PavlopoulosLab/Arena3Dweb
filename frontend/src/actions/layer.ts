@@ -5,6 +5,7 @@
 // rotate/move/scale intervals (canvas_controls.ts).
 
 import type { MeshBasicMaterial } from 'three'
+import { bus } from '../bus'
 import { store } from '../store'
 import { ctx, SELECTED_LAYER_DEFAULT_COLOR } from '../three'
 import { LAYER_DEFAULT_COLOR } from '../three/constants'
@@ -28,9 +29,9 @@ export function initialSpreadLayers(direction = 1): void {
 }
 
 function updateSelectedLayersStore(): void {
-  store.update({
-    selectedLayers: ctx.layers.filter((l) => l.isSelected).map((l) => l.name),
-  })
+  const names = ctx.layers.filter((l) => l.isSelected).map((l) => l.name)
+  store.update({ selectedLayers: names })
+  bus.emit('layers:selected', { names })
 }
 
 // @return selected layer indexes
@@ -138,12 +139,22 @@ export function showLayerCoords(show: boolean): void {
   for (const layer of ctx.layers) layer.toggleCoords(show)
 }
 
+export function setLayerAxesOpacity(opacity: number): void {
+  for (const layer of ctx.layers) layer.setAxesOpacity(opacity)
+}
+
 export function setFloorOpacity(opacity: number): void {
   for (const layer of ctx.layers) layer.setOpacity(opacity)
 }
 
-export function showWireFrames(flag: boolean): void {
-  for (const layer of ctx.layers) layer.toggleWireframe(flag)
+export function showFloors(flag: boolean): void {
+  for (const layer of ctx.layers) layer.toggleFloor(flag)
+}
+
+// A single-layer network (e.g. a 2-column edgelist) reads better without its
+// floor; multilayer networks keep them. Called after every network build.
+export function applyDefaultFloorVisibility(): void {
+  showFloors(ctx.layers.length !== 1)
 }
 
 export function setLayerColorPriority(source: ColorPrioritySource): void {
