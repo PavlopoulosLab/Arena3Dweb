@@ -86,7 +86,10 @@ export async function runGroupLayout(o: GroupLayoutOptions): Promise<string> {
   const volume = layers.every((l) =>
     VOLUME_CONTAINERS.includes(ctx.layers[ctx.layerGroups[l]].container)
   )
-  if ((o.source === 'layers' || volume) && UNSAFE_3D_LOCAL_LAYOUTS.includes(o.local))
+  if (
+    (o.source === 'layers' || volume) &&
+    UNSAFE_3D_LOCAL_LAYOUTS.includes(o.local)
+  )
     throw new GroupLayoutError(
       `${o.local} is disabled for 3D group layouts (a known igraph bug can crash the ` +
         'layout engine) — pick a different layout for groups inside sphere/cube containers.'
