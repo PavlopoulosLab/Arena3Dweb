@@ -2,7 +2,9 @@
 //
 // Groups come from clusters, annotations, or the layers themselves:
 // - clusters / annotations: each selected layer is laid out with its groups
-//   kept apart (3D inside sphere/cube/cloud layers).
+//   kept apart (3D inside sphere/cube/cloud layers). In Single network mode
+//   the layers are stacked into one space, so the whole network is laid out
+//   at once instead — a group spanning layers stays in one place.
 // - layers: the whole multilayer network is laid out once in 3D with every
 //   layer as a group; each layer's floor then moves to its group's centre,
 //   turns to face outward (its angle), and its nodes are laid out within it
@@ -48,6 +50,76 @@ export class GroupLayoutError extends Error {}
 // exactly that pattern. Mirrors backend services/group_layouts.py's own
 // guard. Remove once igraph fixes this upstream.
 export const UNSAFE_3D_LOCAL_LAYOUTS = ['Kamada-Kawai']
+// backend services/layouts.py LAYOUTS_3D / WEIGHTED_LAYOUTS, config NO_EDGE_LAYOUTS
+export const LAYOUTS_3D = [
+  'Fruchterman-Reingold',
+  'Kamada-Kawai',
+  'DrL',
+  'Random',
+  'Grid',
+  'Circle', // on a sphere in 3D
+]
+export const WEIGHTED_ALGORITHMS = [
+  'Fruchterman-Reingold',
+  'Kamada-Kawai',
+  'DrL',
+]
+const EDGE_BLIND_ALGORITHMS = ['Circle', 'Grid', 'Random']
+
+// Layers as groups always run in 3D; clusters and annotations do when every
+// chosen layer is a sphere/cube/cloud. A layer name that no longer exists
+// (right after a split/merge) counts as "not volume".
+export function groupLayoutRuns3D(
+  source: GroupSource,
+  layers: string[]
+): boolean {
+  if (source === 'layers') return true
+  return (
+    layers.length > 0 &&
+    layers.every((l) => {
+      const container = ctx.layers[ctx.layerGroups[l]]?.container
+      return container !== undefined && VOLUME_CONTAINERS.includes(container)
+    })
+  )
+}
+
+// Why the strategy cannot run this algorithm (backend group_layouts.py
+// check_combination), or null: group gravity acts only through edge weights,
+// virtual nodes pull only through edges, and a 3D group layout needs 3D
+// algorithms. The card hides these choices and shows the reason.
+export function groupAlgorithmProblem(
+  strategy: GroupStrategy,
+  algorithm: string,
+  three: boolean
+): string | null {
+  if (three && !LAYOUTS_3D.includes(algorithm))
+    return `${algorithm} has no 3D version, and this group layout runs in 3D.`
+  if (strategy === 'gravity' && !WEIGHTED_ALGORITHMS.includes(algorithm))
+    return `Group gravity works through edge weights, which ${algorithm} ignores.`
+  if (strategy === 'virtual' && EDGE_BLIND_ALGORITHMS.includes(algorithm))
+    return `${algorithm} places nodes without reading edges, so virtual nodes cannot pull the groups together.`
+  return null
+}
+
+// The same for "Layout inside each group".
+export function groupLocalProblem(
+  strategy: GroupStrategy,
+  local: string,
+  three: boolean
+): string | null {
+  if (local === 'keep')
+    return strategy === 'supernodes'
+      ? 'Super nodes always lay groups out locally.'
+      : null
+  if (three && !LAYOUTS_3D.includes(local))
+    return `${local} has no 3D version, and this group layout runs in 3D.`
+  if (three && UNSAFE_3D_LOCAL_LAYOUTS.includes(local))
+    return (
+      `${local} is disabled for 3D group layouts (a known igraph bug can crash the ` +
+      'layout engine) — pick a different layout for groups inside sphere/cube containers.'
+    )
+  return null
+}
 
 // Node_Layer id -> groups, for the chosen source.
 export function groupsFor(
@@ -76,31 +148,30 @@ export async function runGroupLayout(o: GroupLayoutOptions): Promise<string> {
   if (o.source !== 'layers' && grouped === 0)
     throw new GroupLayoutError(
       o.source === 'clusters'
-        ? 'No clusters yet — run a layout with clustering first.'
+        ? 'No clusters yet — find communities in the Clustering panel first.'
         : 'No annotations — upload a node attribute file with an Annotation column, or annotate from enrichment.'
     )
   if (o.source === 'layers' && layers.length < 2)
     throw new GroupLayoutError(
       'Arranging layers as groups needs at least two layers.'
     )
-  const volume = layers.every((l) =>
-    VOLUME_CONTAINERS.includes(ctx.layers[ctx.layerGroups[l]].container)
-  )
-  if (
-    (o.source === 'layers' || volume) &&
-    UNSAFE_3D_LOCAL_LAYOUTS.includes(o.local)
-  )
+  const single = ctx.networkMode === 'single'
+  if (o.source === 'layers' && single)
     throw new GroupLayoutError(
-      `${o.local} is disabled for 3D group layouts (a known igraph bug can crash the ` +
-        'layout engine) — pick a different layout for groups inside sphere/cube containers.'
+      'Single network mode has no floors to arrange — switch to Multilayered to place layers as groups.'
     )
+  const three = groupLayoutRuns3D(o.source, layers)
+  const problem =
+    groupAlgorithmProblem(o.strategy, o.algorithm, three) ??
+    groupLocalProblem(o.strategy, o.local, three)
+  if (problem) throw new GroupLayoutError(problem)
   const req: LayoutRequest = {
     nodes: net.nodes,
     edges: net.edges,
     algorithm: o.algorithm,
-    scope: o.source === 'layers' ? 'allLayers' : 'perLayer',
+    scope: o.source === 'layers' || single ? 'allLayers' : 'perLayer',
     selected_layers: layers,
-    dimensions: o.source === 'layers' || volume ? 3 : 2,
+    dimensions: three ? 3 : 2,
     use_weights: o.useWeights ?? false,
     group_strategy: o.strategy,
     groups,
@@ -109,8 +180,8 @@ export async function runGroupLayout(o: GroupLayoutOptions): Promise<string> {
     group_scale: o.scale,
   }
   if (o.source !== 'layers') {
-    await applyLayout(req, true, o.onProgress)
-    return `Groups laid out (${new Set(Object.values(groups).flat()).size} groups${volume ? ', in 3D' : ''}).`
+    await applyLayout(req, !single, o.onProgress) // one graph: fit it as one
+    return `Groups laid out (${new Set(Object.values(groups).flat()).size} groups${three ? ', in 3D' : ''}).`
   }
   const res = await api.layout(req)
   placeLayersAsGroups(res.positions, layers)

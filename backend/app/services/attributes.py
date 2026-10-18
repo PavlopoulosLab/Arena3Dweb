@@ -29,6 +29,22 @@ def _cell(row: pd.Series, column: str) -> str | None:
     return value or None
 
 
+LINE_TYPES = ("solid", "dashed", "dotted")
+
+
+def _number(row: pd.Series, column: str, low: float, high: float) -> float | None:
+    cell = _cell(row, column)
+    if cell is None:
+        return None
+    try:
+        value = float(cell)
+    except ValueError as e:
+        raise NetworkValidationError(f"Make sure all {column} values are numeric.") from e
+    if not low <= value <= high:
+        raise NetworkValidationError(f"{column} values must be between {low:g} and {high:g}.")
+    return value
+
+
 def _annotations(cell: str | None) -> list[str] | None:
     if cell is None:
         return None
@@ -57,6 +73,11 @@ def parse_node_attributes_tsv(text: str) -> list[NodeAttributeRow]:
                 url=_cell(row, "Url"),
                 description=_cell(row, "Description"),
                 annotations=_annotations(_cell(row, "Annotation")),
+                shape=(_cell(row, "Shape") or "").lower() or None,
+                opacity=_number(row, "Opacity", 0, 1),
+                label=_cell(row, "Label"),
+                label_color=_cell(row, "LabelColor"),
+                label_size=_number(row, "LabelSize", 1, 200),
             )
         )
     return rows
@@ -78,11 +99,18 @@ def parse_edge_attributes_tsv(text: str) -> list[EdgeAttributeRow]:
         color = _cell(row, "Color")
         if color is None:
             raise NetworkValidationError("Make sure all edge attribute rows have a Color.")
+        line_type = (_cell(row, "LineType") or "").lower() or None
+        if line_type is not None and line_type not in LINE_TYPES:
+            raise NetworkValidationError("LineType must be solid, dashed or dotted.")
         rows.append(
             EdgeAttributeRow(
                 edge_pair=f"{source}---{target}",
                 color=color,
                 channel=_cell(row, "Channel"),
+                width=_number(row, "Width", 0.05, 20),
+                opacity=_number(row, "Opacity", 0, 1),
+                line_type=line_type,
+                arrow_color=_cell(row, "ArrowColor"),
             )
         )
     return rows

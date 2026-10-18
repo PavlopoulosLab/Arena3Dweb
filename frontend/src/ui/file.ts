@@ -4,6 +4,7 @@ import { api, type UploadProgress } from '../api/client'
 import { escapeHtml } from '../utils'
 import { bus } from '../bus'
 import { renderCompareTable } from './data'
+import { askDeleteNetwork, renameNetwork } from './networks'
 import {
   activeSlot,
   compareSets,
@@ -11,9 +12,9 @@ import {
   listSlots,
   registerAnnotationSet,
   registerLoad,
-  removeSlot,
   snapshotActive,
   switchTo,
+  type SlotSource,
 } from '../actions/workspace'
 import {
   checkFileMeta,
@@ -88,6 +89,16 @@ export const EXAMPLES = [
   {
     file: 'prego.json',
     label: 'PREGO anaerobic ammonium oxidation, three channels',
+  },
+  // neural network architectures, one network layer per Arena3D layer
+  // (scripts/neural_network_examples.py writes them)
+  {
+    file: 'cnn_lenet.json',
+    label: 'Neural network: convolutional (LeNet-like), 7 layers',
+  },
+  {
+    file: 'transformer_tiny.json',
+    label: 'Neural network: transformer (LLM-like), 10 layers',
   },
   { file: 'edgelist_2columns.tsv', label: 'Minimal two-column edgelist' },
   // hive plots (Krzywinski et al. 2012): the layers become the axes, nodes
@@ -235,7 +246,10 @@ async function precheck(file: File, kind: FileKind): Promise<boolean> {
 }
 
 // @return false when the user cancels the "Import as" popup
-async function onUploadNetwork(file: File): Promise<boolean> {
+async function onUploadNetwork(
+  file: File,
+  source: SlotSource = 'file'
+): Promise<boolean> {
   if (!(await precheck(file, 'network'))) return true
   const mode = await askImportAs(file.name)
   if (!mode) return false
@@ -247,7 +261,7 @@ async function onUploadNetwork(file: File): Promise<boolean> {
       `Building the scene (${data.nodes.length} nodes, ${data.edges.length} edges)…`
     )
     await nextFrame()
-    status(await placeNetwork(data, mode, file.name))
+    status(await placeNetwork(data, mode, file.name, undefined, source))
     showTab('#panel-main-view') // reveal the scene; drawer toggle shows closed
   } catch (err) {
     status(err instanceof Error ? err.message : 'Network upload failed.', true)
@@ -259,7 +273,10 @@ async function onUploadNetwork(file: File): Promise<boolean> {
 }
 
 // @return false when the user cancels the "Import as" popup
-async function onLoadSession(file: File): Promise<boolean> {
+async function onLoadSession(
+  file: File,
+  source: SlotSource = 'session'
+): Promise<boolean> {
   if (!(await precheck(file, 'session'))) return true
   const view = await askSessionView(file.name)
   if (!view) return false
@@ -271,7 +288,7 @@ async function onLoadSession(file: File): Promise<boolean> {
     await nextFrame()
     snapshotActive()
     loadSession(session)
-    registerLoad(file.name)
+    registerLoad(file.name, source, session)
     await showSessionAs(view)
     const warnings = session.warnings ?? []
     status(
@@ -324,7 +341,9 @@ async function onLoadExample(): Promise<void> {
     const file = new File([await res.blob()], name, {
       type: json ? 'application/json' : 'text/tab-separated-values',
     })
-    const loaded = await (json ? onLoadSession(file) : onUploadNetwork(file))
+    const loaded = await (json
+      ? onLoadSession(file, 'example')
+      : onUploadNetwork(file, 'example'))
     // hive plot examples open as one, when shown multilayered
     if (
       loaded &&
@@ -465,7 +484,8 @@ export function initFilePanel(): void {
             ) => `<div class="workspace-row${s.id === active?.id ? ' is-active' : ''}">
           <button type="button" class="workspace-switch" data-id="${s.id}" ${s.id === active?.id ? 'disabled' : ''} title="Switch to this network">${escapeHtml(s.name)}</button>
           <span class="workspace-meta">${s.layers} layer${s.layers === 1 ? '' : 's'} · ${s.nodes} nodes · ${s.edges} edges${s.id === active?.id ? ' · active' : ''}</span>
-          <button type="button" class="workspace-remove" data-id="${s.id}" ${s.id === active?.id ? 'disabled' : ''} title="Remove from the list" aria-label="Remove ${escapeHtml(s.name)}">×</button>
+          <button type="button" class="workspace-rename" data-id="${s.id}" title="Rename" aria-label="Rename ${escapeHtml(s.name)}">✎</button>
+          <button type="button" class="workspace-remove" data-id="${s.id}" title="Delete this network and its annotation sets" aria-label="Delete ${escapeHtml(s.name)}">×</button>
         </div>`
           )
           .join('')
@@ -477,9 +497,22 @@ export function initFilePanel(): void {
       })
     )
     list
+      .querySelectorAll<HTMLButtonElement>('.workspace-rename')
+      .forEach((b) =>
+        b.addEventListener('click', () =>
+          renameNetwork(
+            b.parentElement!.querySelector('.workspace-switch')!,
+            Number(b.dataset.id)
+          )
+        )
+      )
+    list
       .querySelectorAll<HTMLButtonElement>('.workspace-remove')
       .forEach((b) =>
-        b.addEventListener('click', () => removeSlot(Number(b.dataset.id)))
+        b.addEventListener(
+          'click',
+          () => void askDeleteNetwork(Number(b.dataset.id))
+        )
       )
     const others = slots.filter((s) => s.id !== active?.id)
     compare.innerHTML = others

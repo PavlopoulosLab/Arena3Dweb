@@ -258,3 +258,35 @@ def test_export_fixture_round_trips_through_import(tmp_path) -> None:
         files={"file": ("net.json", json.dumps(data), "application/json")},
     )
     assert resp.status_code == 200
+
+
+def test_names_kept_when_given() -> None:
+    s = normalize_session(
+        {**_minimal(), "name": "  My PPI\n network ", "annotationSet": "KEGG pathways"}
+    )
+    assert s["name"] == "My PPI network"
+    assert s["annotationSet"] == "KEGG pathways"
+
+
+def test_names_absent_or_unreadable_are_none() -> None:
+    assert normalize_session(_minimal())["name"] is None
+    s = normalize_session({**_minimal(), "name": 42, "annotationSet": "   "})
+    assert s["name"] is None
+    assert s["annotationSet"] is None
+    assert len(normalize_session({**_minimal(), "name": "x" * 500})["name"]) == 200
+
+
+def test_names_survive_the_import_endpoint() -> None:
+    resp = client.post(
+        "/api/session/import",
+        files={
+            "file": (
+                "net.json",
+                json.dumps({**_minimal(), "name": "Renamed", "annotationSet": "Set A"}),
+                "application/json",
+            )
+        },
+    )
+    assert resp.status_code == 200
+    assert resp.json()["name"] == "Renamed"
+    assert resp.json()["annotationSet"] == "Set A"

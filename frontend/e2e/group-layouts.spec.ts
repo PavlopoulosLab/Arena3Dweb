@@ -49,6 +49,18 @@ const read = (page: Page) =>
     }
   })
 
+// the Clustering panel, then back to the Layout panel's Group Layout card
+async function findCommunities(page: Page) {
+  await tab(page, 'Clustering')
+  await page.locator('#clusterAlgorithm').selectOption('Louvain')
+  await page.locator('#runClustering').dispatchEvent('click')
+  await expect(page.locator('#cluster_status')).toContainText(
+    'nodes coloured by community',
+    { timeout: 60_000 }
+  )
+  await tab(page, 'Layout')
+}
+
 async function setup(page: Page) {
   await page.goto('/')
   await page.waitForFunction(
@@ -67,17 +79,13 @@ test('clusters as groups, then layers as groups (placed + angled)', async ({
   test.setTimeout(120_000)
   await setup(page)
   // no clusters yet -> clear message
+  await expect(page.locator('#groupNoClusters')).toBeVisible()
   await page.locator('#runGroupLayout').click()
   await expect(page.locator('#layouts_status')).toContainText('No clusters yet')
 
-  await page.locator('#selectAllLayersCheckbox').dispatchEvent('click')
-  await page
-    .locator('#layoutAlgorithmChoice')
-    .selectOption('Fruchterman-Reingold')
-  await page.locator('#clusteringAlgorithmChoice').selectOption('Louvain')
-  await page.locator('#runLayout').dispatchEvent('click')
-  await expect(page.locator('#layouts_status')).toHaveText('Layout applied.')
+  await findCommunities(page)
   expect((await read(page)).clusters).toBe(255)
+  await expect(page.locator('#groupNoClusters')).toBeHidden()
 
   for (const strategy of ['virtual', 'gravity', 'supernodes']) {
     await page.locator('#groupStrategy').selectOption(strategy)
@@ -126,15 +134,7 @@ test('sphere layers get 3D local layouts inside each group', async ({
   await expect(page.locator('#layer_status')).toContainText(
     'Layers set to sphere'
   )
-  await tab(page, 'Layout')
-  await page.locator('#selectAllLayersCheckbox').dispatchEvent('click')
-  await page
-    .locator('#layoutAlgorithmChoice')
-    .selectOption('Fruchterman-Reingold')
-  await page.locator('#clusteringAlgorithmChoice').selectOption('Louvain')
-  await page.locator('#layout3dCheckbox').uncheck() // clustering runs in 2D
-  await page.locator('#runLayout').dispatchEvent('click')
-  await expect(page.locator('#layouts_status')).toHaveText('Layout applied.')
+  await findCommunities(page)
   await page.locator('#groupStrategy').selectOption('supernodes')
   // Kamada-Kawai is disabled as a 3D group-local layout (igraph bug — see
   // actions/group_layout.ts's UNSAFE_3D_LOCAL_LAYOUTS); sphere layers force

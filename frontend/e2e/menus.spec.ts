@@ -22,9 +22,14 @@ test('grouped menus open their panels', async ({ page }) => {
     ['Find', '#panel-find'],
     ['Export', '#panel-export'],
     ['Layout', '#panel-layouts'],
+    ['Clustering', '#panel-clustering'],
   ] as const) {
     await page.getByRole('tab', { name: item, exact: true }).click()
     await expect(page.locator(pane)).toHaveClass(/show/)
+    if (item === 'Clustering')
+      await expect(
+        page.locator('#panel-clustering #runClustering')
+      ).toBeVisible()
     if (item === 'Database Importers') {
       // one card per source, all folded until clicked
       for (const key of [
@@ -54,6 +59,8 @@ test('grouped menus open their panels', async ({ page }) => {
   await open('View', 'Performance', '#panel-fps')
   await open('Edit', 'Nodes', '#panel-node')
   await open('Edit', 'Style', '#panel-style')
+  await open('Edit', 'Attributes', '#panel-attributes')
+  await expect(page.locator('#panel-attributes #attrNodeTable')).toBeVisible()
   await open('Analyze', 'Analysis', '#panel-analyze')
   await expect(page.locator('#panel-analyze #networkStats')).toBeVisible()
   await expect(page.locator('#panel-analyze #explore_card')).toBeVisible()

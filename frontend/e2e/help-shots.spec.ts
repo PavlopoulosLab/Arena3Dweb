@@ -93,6 +93,18 @@ async function panel(
   })
 }
 
+// Edit → Attributes: eight ticked rows listed alone, so the shot is short
+// and shows the bulk-edit line
+async function attributeRows(page: Page) {
+  const tick = (k: number) =>
+    page.locator(
+      `#attrNodeTable .attr-row[aria-rowindex="${k + 2}"] [data-f="tick"]`
+    )
+  await tick(0).check()
+  await tick(7).click({ modifiers: ['Shift'] })
+  await page.locator('#attrNodeSelectedOnly').check()
+}
+
 test('capture the interface screenshots for the Help pages', async ({
   page,
 }) => {
@@ -101,14 +113,26 @@ test('capture the interface screenshots for the Help pages', async ({
   await page.waitForFunction(
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
-  // Home: the example picker
+  // Home: the featured examples and the picker with every example
+  const examples = page.locator('.home-section', {
+    has: page.locator('.home-examples'),
+  })
+  await examples.scrollIntoViewIfNeeded()
   await page.waitForTimeout(600)
+  const box = await examples.boundingBox()
+  if (!box) throw new Error('the Home examples are not shown')
   await page.screenshot({
     path: `${OUT}/home.jpg`,
     type: 'jpeg',
     quality: 90,
-    clip: { x: 0, y: 0, width: 1440, height: 900 },
+    clip: {
+      x: box.x - 24,
+      y: box.y - 24,
+      width: box.width + 48,
+      height: box.height + 48,
+    },
   })
+  await page.locator('#panel-home').evaluate((el) => el.scrollTo(0, 0))
   // the top bar with a grouped menu open
   await page.getByRole('button', { name: 'Edit', exact: true }).click()
   await page.waitForTimeout(300)
@@ -180,6 +204,12 @@ test('capture the interface screenshots for the Help pages', async ({
   await panel(page, 'Nodes', '#panel-node', 'nodes')
   await panel(page, 'Edges', '#panel-edge', 'edges')
   await panel(page, 'Style', '#panel-style', 'style')
+  await panel(page, 'Attributes', '#panel-attributes', 'attributes', () =>
+    attributeRows(page)
+  )
+  // untick them again: the 3D view shot shows no selection
+  await page.locator('#attrNodeTickAll').uncheck()
+  await page.locator('#attrNodeSelectedOnly').uncheck()
 
   // the navigation controls box (#info) in full, then the 3D view at a
   // usual window size
@@ -198,4 +228,19 @@ test('capture the interface screenshots for the Help pages', async ({
   await panel(page, 'Analysis', '#panel-analyze', 'analyze')
   await panel(page, 'Data Tables', '#panel-data', 'data')
   await panel(page, 'Performance', '#panel-fps', 'performance')
+  // last, as it recolours the nodes: communities found, so the panel shows
+  // its summary
+  await panel(
+    page,
+    'Clustering',
+    '#panel-clustering',
+    'clustering',
+    async () => {
+      await page.locator('#runClustering').dispatchEvent('click')
+      await expect(page.locator('#cluster_status')).toContainText(
+        'nodes coloured by community',
+        { timeout: 60_000 }
+      )
+    }
+  )
 })

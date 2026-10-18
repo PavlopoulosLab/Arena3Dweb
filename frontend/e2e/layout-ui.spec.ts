@@ -87,30 +87,20 @@ test('incompatible options are disabled, not mixed; single mode shows the NORMA 
       ;(el as HTMLSelectElement).value = v
       el.dispatchEvent(new Event('change', { bubbles: true }))
     }, v)
-  // nothing chosen yet: every control usable except the local layout
-  await expect(page.locator('#clusteringAlgorithmChoice')).toBeEnabled()
+  // nothing chosen yet: every control usable except the local layout; no
+  // clustering algorithm here (the Clustering panel has them)
+  await expect(page.locator('#clusteringAlgorithmChoice')).toHaveCount(0)
   await expect(page.locator('#layout3dCheckbox')).toBeEnabled()
   await expect(page.locator('#localLayoutAlgorithmChoice')).toBeDisabled()
   await expect(page.locator('#layoutCompat')).toBeHidden()
-  // 3D on: no clustering
+  // 3D on: no alignment
   await click('#layout3dCheckbox')
-  await expect(page.locator('#clusteringAlgorithmChoice')).toBeDisabled()
-  await expect(page.locator('#layoutCompat')).toContainText('2D layout')
   await expect(page.locator('#alignmentMode')).toBeDisabled()
+  await expect(page.locator('#alignmentNote')).toContainText('2D layout')
   await click('#layout3dCheckbox')
-  await expect(page.locator('#clusteringAlgorithmChoice')).toBeEnabled()
-  // clustering on: no 3D, no weights, local layout usable
+  await expect(page.locator('#alignmentMode')).toBeEnabled()
   await select('#layoutAlgorithmChoice', 'Fruchterman-Reingold')
   await expect(page.locator('#useEdgeWeightsCheckbox')).toBeEnabled()
-  await select('#clusteringAlgorithmChoice', 'Louvain')
-  await expect(page.locator('#layout3dCheckbox')).toBeDisabled()
-  await expect(page.locator('#useEdgeWeightsCheckbox')).toBeDisabled()
-  await expect(page.locator('#localLayoutAlgorithmChoice')).toBeEnabled()
-  await expect(page.locator('#alignmentMode')).toBeDisabled()
-  await expect(page.locator('#alignmentNote')).toContainText('no clustering')
-  await select('#clusteringAlgorithmChoice', '-')
-  await expect(page.locator('#layout3dCheckbox')).toBeEnabled()
-  await expect(page.locator('#alignmentMode')).toBeEnabled()
   // a scope other than Per Layer locks alignment; weights only on the plain scopes
   await click('#subgraph_coupled')
   await expect(page.locator('#alignmentMode')).toBeDisabled()
@@ -129,7 +119,10 @@ test('incompatible options are disabled, not mixed; single mode shows the NORMA 
   await page.locator('#groupLayoutCard > summary').click()
   await expect(page.locator('#groupDraw')).toBeVisible()
   await expect(page.locator('#groupPies')).toBeVisible()
-  await expect(page.locator('#clusteringAlgorithmChoice')).toBeDisabled() // 3D is on
+  // no clusters yet: the card points to the Clustering panel
+  await expect(page.locator('#groupNoClusters')).toBeVisible()
+  await page.locator('#groupOpenClustering').click()
+  await expect(page.locator('#panel-clustering')).toHaveClass(/show/)
   await page.locator('#modeMultilayer').dispatchEvent('click')
   await expect(page.locator('body')).not.toHaveClass(/mode-single/)
   await expect(page.locator('#groupDraw')).toBeHidden()

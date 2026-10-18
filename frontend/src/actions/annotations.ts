@@ -357,6 +357,11 @@ function positionSignature(): string {
   return `${ctx.nodeObjects.length}|${x.toFixed(1)}|${y.toFixed(1)}|${z.toFixed(1)}|${q.toFixed(0)}`
 }
 
+// a change just made (a layout, an arrangement, undo): look on the next frame
+export function checkHullsSoon(): void {
+  frame = 19
+}
+
 registerAnimateHook(() => {
   if (hullSource === 'none') return
   if (++frame % 20 !== 0) return

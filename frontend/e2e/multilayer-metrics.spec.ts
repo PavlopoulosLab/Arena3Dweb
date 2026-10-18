@@ -44,12 +44,16 @@ test('multilayer metric colours nodes; layers compare in View Data', async ({
     .dispatchEvent('click')
   await page.locator('#selectAllLayersCheckbox').dispatchEvent('click')
 
-  // multiplex Leiden through the coupled scope
-  await page.locator('#subgraph_coupled').dispatchEvent('click')
-  await select(page, '#layoutAlgorithmChoice', 'Fruchterman-Reingold')
-  await select(page, '#clusteringAlgorithmChoice', 'Leiden')
-  await page.locator('#runLayout').dispatchEvent('click')
-  await expect(page.locator('#layouts_status')).toHaveText('Layout applied.')
+  // multiplex Leiden: the Clustering panel, shared across layers by node name
+  await page
+    .getByRole('tab', { name: 'Clustering', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  await select(page, '#clusterAlgorithm', 'Leiden')
+  await select(page, '#clusterScope', 'coupled')
+  await page.locator('#runClustering').dispatchEvent('click')
+  await expect(page.locator('#cluster_status')).toContainText(
+    'shared across layers'
+  )
   const sameClusterPerLabel = await page.evaluate(() => {
     const ctx = (window as unknown as { __arena: { ctx: Ctx } }).__arena.ctx
     const byLabel: Record<string, Set<string>> = {}

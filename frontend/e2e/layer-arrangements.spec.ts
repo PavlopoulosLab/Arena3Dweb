@@ -85,21 +85,19 @@ test('split by cluster, merge, lift by degree', async ({ page }) => {
     )
   const before = await layerNames()
 
-  // cluster the first layer
-  await page
-    .getByRole('tab', { name: 'Layout', includeHidden: true, exact: true })
-    .dispatchEvent('click')
+  // cluster the first layer (the Clustering panel, on the selected layer)
   await page.locator('#checkbox_0').dispatchEvent('click')
-  for (const [sel, v] of [
-    ['#layoutAlgorithmChoice', 'Fruchterman-Reingold'],
-    ['#clusteringAlgorithmChoice', 'Louvain'],
-  ])
-    await page.locator(sel).evaluate((el, value) => {
-      ;(el as HTMLSelectElement).value = value
-      el.dispatchEvent(new Event('change', { bubbles: true }))
-    }, v)
-  await page.locator('#runLayout').dispatchEvent('click')
-  await expect(page.locator('#layouts_status')).toHaveText('Layout applied.')
+  await page
+    .getByRole('tab', { name: 'Clustering', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  await page.locator('#clusterAlgorithm').evaluate((el) => {
+    ;(el as HTMLSelectElement).value = 'Louvain'
+    el.dispatchEvent(new Event('change', { bubbles: true }))
+  })
+  await page.locator('#runClustering').dispatchEvent('click')
+  await expect(page.locator('#cluster_status')).toContainText(
+    'nodes coloured by community'
+  )
 
   await page
     .getByRole('tab', { name: 'Layers', includeHidden: true, exact: true })

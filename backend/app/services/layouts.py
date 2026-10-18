@@ -99,7 +99,8 @@ def compute_layout(
     if req.clustering and req.clustering.local_layout not in LAYOUTS:
         raise LayoutError(f"Unknown local layout: {req.clustering.local_layout}")
 
-    if req.dimensions == 3:
+    # group layouts check their own 3D algorithms (group_layouts.check_combination)
+    if req.dimensions == 3 and req.group_strategy == "none":
         if req.algorithm not in LAYOUTS_3D:
             raise LayoutError(
                 f"{req.algorithm} has no 3D version — use one of {', '.join(LAYOUTS_3D)}"

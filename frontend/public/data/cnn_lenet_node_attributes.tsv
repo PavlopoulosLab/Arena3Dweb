@@ -1,0 +1,563 @@
+Node	Layer	Color	Size	Description
+pixel 1,1	Input	#3b4a5c	0.6	Input pixel (row 1, column 1) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 1,2	Input	#3b4a5c	0.6	Input pixel (row 1, column 2) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 1,3	Input	#3b4a5c	0.6	Input pixel (row 1, column 3) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 1,4	Input	#3b4a5c	0.6	Input pixel (row 1, column 4) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 1,5	Input	#3b4a5c	0.6	Input pixel (row 1, column 5) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 1,6	Input	#3b4a5c	0.6	Input pixel (row 1, column 6) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 1,7	Input	#3b4a5c	0.6	Input pixel (row 1, column 7) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 1,8	Input	#3b4a5c	0.6	Input pixel (row 1, column 8) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 1,9	Input	#3b4a5c	0.6	Input pixel (row 1, column 9) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 1,10	Input	#3b4a5c	0.6	Input pixel (row 1, column 10) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 2,1	Input	#3b4a5c	0.6	Input pixel (row 2, column 1) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 2,2	Input	#ffffff	1.2	Input pixel (row 2, column 2) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 2,3	Input	#ffffff	1.2	Input pixel (row 2, column 3) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 2,4	Input	#ffffff	1.2	Input pixel (row 2, column 4) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 2,5	Input	#ffffff	1.2	Input pixel (row 2, column 5) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 2,6	Input	#ffffff	1.2	Input pixel (row 2, column 6) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 2,7	Input	#ffffff	1.2	Input pixel (row 2, column 7) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 2,8	Input	#ffffff	1.2	Input pixel (row 2, column 8) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 2,9	Input	#ffffff	1.2	Input pixel (row 2, column 9) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 2,10	Input	#3b4a5c	0.6	Input pixel (row 2, column 10) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 3,1	Input	#3b4a5c	0.6	Input pixel (row 3, column 1) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 3,2	Input	#3b4a5c	0.6	Input pixel (row 3, column 2) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 3,3	Input	#3b4a5c	0.6	Input pixel (row 3, column 3) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 3,4	Input	#3b4a5c	0.6	Input pixel (row 3, column 4) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 3,5	Input	#3b4a5c	0.6	Input pixel (row 3, column 5) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 3,6	Input	#3b4a5c	0.6	Input pixel (row 3, column 6) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 3,7	Input	#3b4a5c	0.6	Input pixel (row 3, column 7) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 3,8	Input	#ffffff	1.2	Input pixel (row 3, column 8) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 3,9	Input	#ffffff	1.2	Input pixel (row 3, column 9) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 3,10	Input	#3b4a5c	0.6	Input pixel (row 3, column 10) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 4,1	Input	#3b4a5c	0.6	Input pixel (row 4, column 1) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 4,2	Input	#3b4a5c	0.6	Input pixel (row 4, column 2) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 4,3	Input	#3b4a5c	0.6	Input pixel (row 4, column 3) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 4,4	Input	#3b4a5c	0.6	Input pixel (row 4, column 4) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 4,5	Input	#3b4a5c	0.6	Input pixel (row 4, column 5) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 4,6	Input	#3b4a5c	0.6	Input pixel (row 4, column 6) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 4,7	Input	#ffffff	1.2	Input pixel (row 4, column 7) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 4,8	Input	#ffffff	1.2	Input pixel (row 4, column 8) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 4,9	Input	#3b4a5c	0.6	Input pixel (row 4, column 9) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 4,10	Input	#3b4a5c	0.6	Input pixel (row 4, column 10) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 5,1	Input	#3b4a5c	0.6	Input pixel (row 5, column 1) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 5,2	Input	#3b4a5c	0.6	Input pixel (row 5, column 2) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 5,3	Input	#3b4a5c	0.6	Input pixel (row 5, column 3) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 5,4	Input	#3b4a5c	0.6	Input pixel (row 5, column 4) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 5,5	Input	#3b4a5c	0.6	Input pixel (row 5, column 5) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 5,6	Input	#ffffff	1.2	Input pixel (row 5, column 6) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 5,7	Input	#ffffff	1.2	Input pixel (row 5, column 7) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 5,8	Input	#3b4a5c	0.6	Input pixel (row 5, column 8) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 5,9	Input	#3b4a5c	0.6	Input pixel (row 5, column 9) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 5,10	Input	#3b4a5c	0.6	Input pixel (row 5, column 10) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 6,1	Input	#3b4a5c	0.6	Input pixel (row 6, column 1) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 6,2	Input	#3b4a5c	0.6	Input pixel (row 6, column 2) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 6,3	Input	#3b4a5c	0.6	Input pixel (row 6, column 3) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 6,4	Input	#3b4a5c	0.6	Input pixel (row 6, column 4) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 6,5	Input	#ffffff	1.2	Input pixel (row 6, column 5) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 6,6	Input	#ffffff	1.2	Input pixel (row 6, column 6) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 6,7	Input	#3b4a5c	0.6	Input pixel (row 6, column 7) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 6,8	Input	#3b4a5c	0.6	Input pixel (row 6, column 8) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 6,9	Input	#3b4a5c	0.6	Input pixel (row 6, column 9) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 6,10	Input	#3b4a5c	0.6	Input pixel (row 6, column 10) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 7,1	Input	#3b4a5c	0.6	Input pixel (row 7, column 1) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 7,2	Input	#3b4a5c	0.6	Input pixel (row 7, column 2) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 7,3	Input	#3b4a5c	0.6	Input pixel (row 7, column 3) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 7,4	Input	#3b4a5c	0.6	Input pixel (row 7, column 4) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 7,5	Input	#ffffff	1.2	Input pixel (row 7, column 5) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 7,6	Input	#3b4a5c	0.6	Input pixel (row 7, column 6) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 7,7	Input	#3b4a5c	0.6	Input pixel (row 7, column 7) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 7,8	Input	#3b4a5c	0.6	Input pixel (row 7, column 8) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 7,9	Input	#3b4a5c	0.6	Input pixel (row 7, column 9) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 7,10	Input	#3b4a5c	0.6	Input pixel (row 7, column 10) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 8,1	Input	#3b4a5c	0.6	Input pixel (row 8, column 1) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 8,2	Input	#3b4a5c	0.6	Input pixel (row 8, column 2) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 8,3	Input	#3b4a5c	0.6	Input pixel (row 8, column 3) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 8,4	Input	#ffffff	1.2	Input pixel (row 8, column 4) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 8,5	Input	#ffffff	1.2	Input pixel (row 8, column 5) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 8,6	Input	#3b4a5c	0.6	Input pixel (row 8, column 6) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 8,7	Input	#3b4a5c	0.6	Input pixel (row 8, column 7) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 8,8	Input	#3b4a5c	0.6	Input pixel (row 8, column 8) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 8,9	Input	#3b4a5c	0.6	Input pixel (row 8, column 9) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 8,10	Input	#3b4a5c	0.6	Input pixel (row 8, column 10) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 9,1	Input	#3b4a5c	0.6	Input pixel (row 9, column 1) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 9,2	Input	#3b4a5c	0.6	Input pixel (row 9, column 2) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 9,3	Input	#3b4a5c	0.6	Input pixel (row 9, column 3) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 9,4	Input	#ffffff	1.2	Input pixel (row 9, column 4) of a 10×10 drawing of the digit 7; intensity 1.
+pixel 9,5	Input	#3b4a5c	0.6	Input pixel (row 9, column 5) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 9,6	Input	#3b4a5c	0.6	Input pixel (row 9, column 6) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 9,7	Input	#3b4a5c	0.6	Input pixel (row 9, column 7) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 9,8	Input	#3b4a5c	0.6	Input pixel (row 9, column 8) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 9,9	Input	#3b4a5c	0.6	Input pixel (row 9, column 9) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 9,10	Input	#3b4a5c	0.6	Input pixel (row 9, column 10) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 10,1	Input	#3b4a5c	0.6	Input pixel (row 10, column 1) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 10,2	Input	#3b4a5c	0.6	Input pixel (row 10, column 2) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 10,3	Input	#3b4a5c	0.6	Input pixel (row 10, column 3) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 10,4	Input	#3b4a5c	0.6	Input pixel (row 10, column 4) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 10,5	Input	#3b4a5c	0.6	Input pixel (row 10, column 5) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 10,6	Input	#3b4a5c	0.6	Input pixel (row 10, column 6) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 10,7	Input	#3b4a5c	0.6	Input pixel (row 10, column 7) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 10,8	Input	#3b4a5c	0.6	Input pixel (row 10, column 8) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 10,9	Input	#3b4a5c	0.6	Input pixel (row 10, column 9) of a 10×10 drawing of the digit 7; intensity 0.
+pixel 10,10	Input	#3b4a5c	0.6	Input pixel (row 10, column 10) of a 10×10 drawing of the digit 7; intensity 0.
+C1 map 1 · 1,1	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (1, 1): a 3×3 filter over input pixels 1–3 × 1–3; ReLU activation 0.
+C1 map 1 · 1,2	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (1, 2): a 3×3 filter over input pixels 1–3 × 2–4; ReLU activation 0.
+C1 map 1 · 1,3	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (1, 3): a 3×3 filter over input pixels 1–3 × 3–5; ReLU activation 0.
+C1 map 1 · 1,4	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (1, 4): a 3×3 filter over input pixels 1–3 × 4–6; ReLU activation 0.
+C1 map 1 · 1,5	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (1, 5): a 3×3 filter over input pixels 1–3 × 5–7; ReLU activation 0.
+C1 map 1 · 1,6	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (1, 6): a 3×3 filter over input pixels 1–3 × 6–8; ReLU activation 0.
+C1 map 1 · 1,7	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (1, 7): a 3×3 filter over input pixels 1–3 × 7–9; ReLU activation 0.
+C1 map 1 · 1,8	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (1, 8): a 3×3 filter over input pixels 1–3 × 8–10; ReLU activation 0.
+C1 map 1 · 2,1	Conv 1	#e41a1c	1.062	Conv 1, feature map 1 (horizontal edges), unit (2, 1): a 3×3 filter over input pixels 2–4 × 1–3; ReLU activation 3.
+C1 map 1 · 2,2	Conv 1	#e41a1c	1.3	Conv 1, feature map 1 (horizontal edges), unit (2, 2): a 3×3 filter over input pixels 2–4 × 2–4; ReLU activation 4.
+C1 map 1 · 2,3	Conv 1	#e41a1c	1.3	Conv 1, feature map 1 (horizontal edges), unit (2, 3): a 3×3 filter over input pixels 2–4 × 3–5; ReLU activation 4.
+C1 map 1 · 2,4	Conv 1	#e41a1c	1.3	Conv 1, feature map 1 (horizontal edges), unit (2, 4): a 3×3 filter over input pixels 2–4 × 4–6; ReLU activation 4.
+C1 map 1 · 2,5	Conv 1	#e41a1c	1.062	Conv 1, feature map 1 (horizontal edges), unit (2, 5): a 3×3 filter over input pixels 2–4 × 5–7; ReLU activation 3.
+C1 map 1 · 2,6	Conv 1	#e41a1c	0.587	Conv 1, feature map 1 (horizontal edges), unit (2, 6): a 3×3 filter over input pixels 2–4 × 6–8; ReLU activation 1.
+C1 map 1 · 2,7	Conv 1	#e41a1c	0.587	Conv 1, feature map 1 (horizontal edges), unit (2, 7): a 3×3 filter over input pixels 2–4 × 7–9; ReLU activation 1.
+C1 map 1 · 2,8	Conv 1	#e41a1c	0.825	Conv 1, feature map 1 (horizontal edges), unit (2, 8): a 3×3 filter over input pixels 2–4 × 8–10; ReLU activation 2.
+C1 map 1 · 3,1	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (3, 1): a 3×3 filter over input pixels 3–5 × 1–3; ReLU activation 0.
+C1 map 1 · 3,2	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (3, 2): a 3×3 filter over input pixels 3–5 × 2–4; ReLU activation 0.
+C1 map 1 · 3,3	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (3, 3): a 3×3 filter over input pixels 3–5 × 3–5; ReLU activation 0.
+C1 map 1 · 3,4	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (3, 4): a 3×3 filter over input pixels 3–5 × 4–6; ReLU activation 0.
+C1 map 1 · 3,5	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (3, 5): a 3×3 filter over input pixels 3–5 × 5–7; ReLU activation 0.
+C1 map 1 · 3,6	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (3, 6): a 3×3 filter over input pixels 3–5 × 6–8; ReLU activation 0.
+C1 map 1 · 3,7	Conv 1	#e41a1c	0.825	Conv 1, feature map 1 (horizontal edges), unit (3, 7): a 3×3 filter over input pixels 3–5 × 7–9; ReLU activation 2.
+C1 map 1 · 3,8	Conv 1	#e41a1c	1.062	Conv 1, feature map 1 (horizontal edges), unit (3, 8): a 3×3 filter over input pixels 3–5 × 8–10; ReLU activation 3.
+C1 map 1 · 4,1	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (4, 1): a 3×3 filter over input pixels 4–6 × 1–3; ReLU activation 0.
+C1 map 1 · 4,2	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (4, 2): a 3×3 filter over input pixels 4–6 × 2–4; ReLU activation 0.
+C1 map 1 · 4,3	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (4, 3): a 3×3 filter over input pixels 4–6 × 3–5; ReLU activation 0.
+C1 map 1 · 4,4	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (4, 4): a 3×3 filter over input pixels 4–6 × 4–6; ReLU activation 0.
+C1 map 1 · 4,5	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (4, 5): a 3×3 filter over input pixels 4–6 × 5–7; ReLU activation 0.
+C1 map 1 · 4,6	Conv 1	#e41a1c	0.825	Conv 1, feature map 1 (horizontal edges), unit (4, 6): a 3×3 filter over input pixels 4–6 × 6–8; ReLU activation 2.
+C1 map 1 · 4,7	Conv 1	#e41a1c	1.062	Conv 1, feature map 1 (horizontal edges), unit (4, 7): a 3×3 filter over input pixels 4–6 × 7–9; ReLU activation 3.
+C1 map 1 · 4,8	Conv 1	#e41a1c	0.587	Conv 1, feature map 1 (horizontal edges), unit (4, 8): a 3×3 filter over input pixels 4–6 × 8–10; ReLU activation 1.
+C1 map 1 · 5,1	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (5, 1): a 3×3 filter over input pixels 5–7 × 1–3; ReLU activation 0.
+C1 map 1 · 5,2	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (5, 2): a 3×3 filter over input pixels 5–7 × 2–4; ReLU activation 0.
+C1 map 1 · 5,3	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (5, 3): a 3×3 filter over input pixels 5–7 × 3–5; ReLU activation 0.
+C1 map 1 · 5,4	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (5, 4): a 3×3 filter over input pixels 5–7 × 4–6; ReLU activation 0.
+C1 map 1 · 5,5	Conv 1	#e41a1c	0.825	Conv 1, feature map 1 (horizontal edges), unit (5, 5): a 3×3 filter over input pixels 5–7 × 5–7; ReLU activation 2.
+C1 map 1 · 5,6	Conv 1	#e41a1c	1.062	Conv 1, feature map 1 (horizontal edges), unit (5, 6): a 3×3 filter over input pixels 5–7 × 6–8; ReLU activation 3.
+C1 map 1 · 5,7	Conv 1	#e41a1c	0.587	Conv 1, feature map 1 (horizontal edges), unit (5, 7): a 3×3 filter over input pixels 5–7 × 7–9; ReLU activation 1.
+C1 map 1 · 5,8	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (5, 8): a 3×3 filter over input pixels 5–7 × 8–10; ReLU activation 0.
+C1 map 1 · 6,1	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (6, 1): a 3×3 filter over input pixels 6–8 × 1–3; ReLU activation 0.
+C1 map 1 · 6,2	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (6, 2): a 3×3 filter over input pixels 6–8 × 2–4; ReLU activation 0.
+C1 map 1 · 6,3	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (6, 3): a 3×3 filter over input pixels 6–8 × 3–5; ReLU activation 0.
+C1 map 1 · 6,4	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (6, 4): a 3×3 filter over input pixels 6–8 × 4–6; ReLU activation 0.
+C1 map 1 · 6,5	Conv 1	#e41a1c	0.825	Conv 1, feature map 1 (horizontal edges), unit (6, 5): a 3×3 filter over input pixels 6–8 × 5–7; ReLU activation 2.
+C1 map 1 · 6,6	Conv 1	#e41a1c	0.587	Conv 1, feature map 1 (horizontal edges), unit (6, 6): a 3×3 filter over input pixels 6–8 × 6–8; ReLU activation 1.
+C1 map 1 · 6,7	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (6, 7): a 3×3 filter over input pixels 6–8 × 7–9; ReLU activation 0.
+C1 map 1 · 6,8	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (6, 8): a 3×3 filter over input pixels 6–8 × 8–10; ReLU activation 0.
+C1 map 1 · 7,1	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (7, 1): a 3×3 filter over input pixels 7–9 × 1–3; ReLU activation 0.
+C1 map 1 · 7,2	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (7, 2): a 3×3 filter over input pixels 7–9 × 2–4; ReLU activation 0.
+C1 map 1 · 7,3	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (7, 3): a 3×3 filter over input pixels 7–9 × 3–5; ReLU activation 0.
+C1 map 1 · 7,4	Conv 1	#e41a1c	0.587	Conv 1, feature map 1 (horizontal edges), unit (7, 4): a 3×3 filter over input pixels 7–9 × 4–6; ReLU activation 1.
+C1 map 1 · 7,5	Conv 1	#e41a1c	0.587	Conv 1, feature map 1 (horizontal edges), unit (7, 5): a 3×3 filter over input pixels 7–9 × 5–7; ReLU activation 1.
+C1 map 1 · 7,6	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (7, 6): a 3×3 filter over input pixels 7–9 × 6–8; ReLU activation 0.
+C1 map 1 · 7,7	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (7, 7): a 3×3 filter over input pixels 7–9 × 7–9; ReLU activation 0.
+C1 map 1 · 7,8	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (7, 8): a 3×3 filter over input pixels 7–9 × 8–10; ReLU activation 0.
+C1 map 1 · 8,1	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (8, 1): a 3×3 filter over input pixels 8–10 × 1–3; ReLU activation 0.
+C1 map 1 · 8,2	Conv 1	#e41a1c	0.587	Conv 1, feature map 1 (horizontal edges), unit (8, 2): a 3×3 filter over input pixels 8–10 × 2–4; ReLU activation 1.
+C1 map 1 · 8,3	Conv 1	#e41a1c	1.062	Conv 1, feature map 1 (horizontal edges), unit (8, 3): a 3×3 filter over input pixels 8–10 × 3–5; ReLU activation 3.
+C1 map 1 · 8,4	Conv 1	#e41a1c	1.062	Conv 1, feature map 1 (horizontal edges), unit (8, 4): a 3×3 filter over input pixels 8–10 × 4–6; ReLU activation 3.
+C1 map 1 · 8,5	Conv 1	#e41a1c	0.587	Conv 1, feature map 1 (horizontal edges), unit (8, 5): a 3×3 filter over input pixels 8–10 × 5–7; ReLU activation 1.
+C1 map 1 · 8,6	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (8, 6): a 3×3 filter over input pixels 8–10 × 6–8; ReLU activation 0.
+C1 map 1 · 8,7	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (8, 7): a 3×3 filter over input pixels 8–10 × 7–9; ReLU activation 0.
+C1 map 1 · 8,8	Conv 1	#e41a1c	0.35	Conv 1, feature map 1 (horizontal edges), unit (8, 8): a 3×3 filter over input pixels 8–10 × 8–10; ReLU activation 0.
+C1 map 2 · 1,1	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (1, 1): a 3×3 filter over input pixels 1–3 × 1–3; ReLU activation 0.
+C1 map 2 · 1,2	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (1, 2): a 3×3 filter over input pixels 1–3 × 2–4; ReLU activation 0.
+C1 map 2 · 1,3	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (1, 3): a 3×3 filter over input pixels 1–3 × 3–5; ReLU activation 0.
+C1 map 2 · 1,4	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (1, 4): a 3×3 filter over input pixels 1–3 × 4–6; ReLU activation 0.
+C1 map 2 · 1,5	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (1, 5): a 3×3 filter over input pixels 1–3 × 5–7; ReLU activation 0.
+C1 map 2 · 1,6	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (1, 6): a 3×3 filter over input pixels 1–3 × 6–8; ReLU activation 0.
+C1 map 2 · 1,7	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (1, 7): a 3×3 filter over input pixels 1–3 × 7–9; ReLU activation 0.
+C1 map 2 · 1,8	Conv 1	#377eb8	1.062	Conv 1, feature map 2 (vertical edges), unit (1, 8): a 3×3 filter over input pixels 1–3 × 8–10; ReLU activation 3.
+C1 map 2 · 2,1	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (2, 1): a 3×3 filter over input pixels 2–4 × 1–3; ReLU activation 0.
+C1 map 2 · 2,2	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (2, 2): a 3×3 filter over input pixels 2–4 × 2–4; ReLU activation 0.
+C1 map 2 · 2,3	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (2, 3): a 3×3 filter over input pixels 2–4 × 3–5; ReLU activation 0.
+C1 map 2 · 2,4	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (2, 4): a 3×3 filter over input pixels 2–4 × 4–6; ReLU activation 0.
+C1 map 2 · 2,5	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (2, 5): a 3×3 filter over input pixels 2–4 × 5–7; ReLU activation 0.
+C1 map 2 · 2,6	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (2, 6): a 3×3 filter over input pixels 2–4 × 6–8; ReLU activation 0.
+C1 map 2 · 2,7	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (2, 7): a 3×3 filter over input pixels 2–4 × 7–9; ReLU activation 0.
+C1 map 2 · 2,8	Conv 1	#377eb8	1.3	Conv 1, feature map 2 (vertical edges), unit (2, 8): a 3×3 filter over input pixels 2–4 × 8–10; ReLU activation 4.
+C1 map 2 · 3,1	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (3, 1): a 3×3 filter over input pixels 3–5 × 1–3; ReLU activation 0.
+C1 map 2 · 3,2	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (3, 2): a 3×3 filter over input pixels 3–5 × 2–4; ReLU activation 0.
+C1 map 2 · 3,3	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (3, 3): a 3×3 filter over input pixels 3–5 × 3–5; ReLU activation 0.
+C1 map 2 · 3,4	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (3, 4): a 3×3 filter over input pixels 3–5 × 4–6; ReLU activation 0.
+C1 map 2 · 3,5	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (3, 5): a 3×3 filter over input pixels 3–5 × 5–7; ReLU activation 0.
+C1 map 2 · 3,6	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (3, 6): a 3×3 filter over input pixels 3–5 × 6–8; ReLU activation 0.
+C1 map 2 · 3,7	Conv 1	#377eb8	0.825	Conv 1, feature map 2 (vertical edges), unit (3, 7): a 3×3 filter over input pixels 3–5 × 7–9; ReLU activation 2.
+C1 map 2 · 3,8	Conv 1	#377eb8	1.062	Conv 1, feature map 2 (vertical edges), unit (3, 8): a 3×3 filter over input pixels 3–5 × 8–10; ReLU activation 3.
+C1 map 2 · 4,1	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (4, 1): a 3×3 filter over input pixels 4–6 × 1–3; ReLU activation 0.
+C1 map 2 · 4,2	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (4, 2): a 3×3 filter over input pixels 4–6 × 2–4; ReLU activation 0.
+C1 map 2 · 4,3	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (4, 3): a 3×3 filter over input pixels 4–6 × 3–5; ReLU activation 0.
+C1 map 2 · 4,4	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (4, 4): a 3×3 filter over input pixels 4–6 × 4–6; ReLU activation 0.
+C1 map 2 · 4,5	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (4, 5): a 3×3 filter over input pixels 4–6 × 5–7; ReLU activation 0.
+C1 map 2 · 4,6	Conv 1	#377eb8	0.825	Conv 1, feature map 2 (vertical edges), unit (4, 6): a 3×3 filter over input pixels 4–6 × 6–8; ReLU activation 2.
+C1 map 2 · 4,7	Conv 1	#377eb8	1.062	Conv 1, feature map 2 (vertical edges), unit (4, 7): a 3×3 filter over input pixels 4–6 × 7–9; ReLU activation 3.
+C1 map 2 · 4,8	Conv 1	#377eb8	0.587	Conv 1, feature map 2 (vertical edges), unit (4, 8): a 3×3 filter over input pixels 4–6 × 8–10; ReLU activation 1.
+C1 map 2 · 5,1	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (5, 1): a 3×3 filter over input pixels 5–7 × 1–3; ReLU activation 0.
+C1 map 2 · 5,2	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (5, 2): a 3×3 filter over input pixels 5–7 × 2–4; ReLU activation 0.
+C1 map 2 · 5,3	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (5, 3): a 3×3 filter over input pixels 5–7 × 3–5; ReLU activation 0.
+C1 map 2 · 5,4	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (5, 4): a 3×3 filter over input pixels 5–7 × 4–6; ReLU activation 0.
+C1 map 2 · 5,5	Conv 1	#377eb8	0.825	Conv 1, feature map 2 (vertical edges), unit (5, 5): a 3×3 filter over input pixels 5–7 × 5–7; ReLU activation 2.
+C1 map 2 · 5,6	Conv 1	#377eb8	1.062	Conv 1, feature map 2 (vertical edges), unit (5, 6): a 3×3 filter over input pixels 5–7 × 6–8; ReLU activation 3.
+C1 map 2 · 5,7	Conv 1	#377eb8	0.587	Conv 1, feature map 2 (vertical edges), unit (5, 7): a 3×3 filter over input pixels 5–7 × 7–9; ReLU activation 1.
+C1 map 2 · 5,8	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (5, 8): a 3×3 filter over input pixels 5–7 × 8–10; ReLU activation 0.
+C1 map 2 · 6,1	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (6, 1): a 3×3 filter over input pixels 6–8 × 1–3; ReLU activation 0.
+C1 map 2 · 6,2	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (6, 2): a 3×3 filter over input pixels 6–8 × 2–4; ReLU activation 0.
+C1 map 2 · 6,3	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (6, 3): a 3×3 filter over input pixels 6–8 × 3–5; ReLU activation 0.
+C1 map 2 · 6,4	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (6, 4): a 3×3 filter over input pixels 6–8 × 4–6; ReLU activation 0.
+C1 map 2 · 6,5	Conv 1	#377eb8	1.3	Conv 1, feature map 2 (vertical edges), unit (6, 5): a 3×3 filter over input pixels 6–8 × 5–7; ReLU activation 4.
+C1 map 2 · 6,6	Conv 1	#377eb8	0.587	Conv 1, feature map 2 (vertical edges), unit (6, 6): a 3×3 filter over input pixels 6–8 × 6–8; ReLU activation 1.
+C1 map 2 · 6,7	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (6, 7): a 3×3 filter over input pixels 6–8 × 7–9; ReLU activation 0.
+C1 map 2 · 6,8	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (6, 8): a 3×3 filter over input pixels 6–8 × 8–10; ReLU activation 0.
+C1 map 2 · 7,1	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (7, 1): a 3×3 filter over input pixels 7–9 × 1–3; ReLU activation 0.
+C1 map 2 · 7,2	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (7, 2): a 3×3 filter over input pixels 7–9 × 2–4; ReLU activation 0.
+C1 map 2 · 7,3	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (7, 3): a 3×3 filter over input pixels 7–9 × 3–5; ReLU activation 0.
+C1 map 2 · 7,4	Conv 1	#377eb8	1.062	Conv 1, feature map 2 (vertical edges), unit (7, 4): a 3×3 filter over input pixels 7–9 × 4–6; ReLU activation 3.
+C1 map 2 · 7,5	Conv 1	#377eb8	1.062	Conv 1, feature map 2 (vertical edges), unit (7, 5): a 3×3 filter over input pixels 7–9 × 5–7; ReLU activation 3.
+C1 map 2 · 7,6	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (7, 6): a 3×3 filter over input pixels 7–9 × 6–8; ReLU activation 0.
+C1 map 2 · 7,7	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (7, 7): a 3×3 filter over input pixels 7–9 × 7–9; ReLU activation 0.
+C1 map 2 · 7,8	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (7, 8): a 3×3 filter over input pixels 7–9 × 8–10; ReLU activation 0.
+C1 map 2 · 8,1	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (8, 1): a 3×3 filter over input pixels 8–10 × 1–3; ReLU activation 0.
+C1 map 2 · 8,2	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (8, 2): a 3×3 filter over input pixels 8–10 × 2–4; ReLU activation 0.
+C1 map 2 · 8,3	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (8, 3): a 3×3 filter over input pixels 8–10 × 3–5; ReLU activation 0.
+C1 map 2 · 8,4	Conv 1	#377eb8	1.062	Conv 1, feature map 2 (vertical edges), unit (8, 4): a 3×3 filter over input pixels 8–10 × 4–6; ReLU activation 3.
+C1 map 2 · 8,5	Conv 1	#377eb8	0.587	Conv 1, feature map 2 (vertical edges), unit (8, 5): a 3×3 filter over input pixels 8–10 × 5–7; ReLU activation 1.
+C1 map 2 · 8,6	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (8, 6): a 3×3 filter over input pixels 8–10 × 6–8; ReLU activation 0.
+C1 map 2 · 8,7	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (8, 7): a 3×3 filter over input pixels 8–10 × 7–9; ReLU activation 0.
+C1 map 2 · 8,8	Conv 1	#377eb8	0.35	Conv 1, feature map 2 (vertical edges), unit (8, 8): a 3×3 filter over input pixels 8–10 × 8–10; ReLU activation 0.
+C1 map 3 · 1,1	Conv 1	#4daf4a	0.587	Conv 1, feature map 3 (diagonal edges ↘), unit (1, 1): a 3×3 filter over input pixels 1–3 × 1–3; ReLU activation 1.
+C1 map 3 · 1,2	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (1, 2): a 3×3 filter over input pixels 1–3 × 2–4; ReLU activation 0.
+C1 map 3 · 1,3	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (1, 3): a 3×3 filter over input pixels 1–3 × 3–5; ReLU activation 0.
+C1 map 3 · 1,4	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (1, 4): a 3×3 filter over input pixels 1–3 × 4–6; ReLU activation 0.
+C1 map 3 · 1,5	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (1, 5): a 3×3 filter over input pixels 1–3 × 5–7; ReLU activation 0.
+C1 map 3 · 1,6	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (1, 6): a 3×3 filter over input pixels 1–3 × 6–8; ReLU activation 0.
+C1 map 3 · 1,7	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (1, 7): a 3×3 filter over input pixels 1–3 × 7–9; ReLU activation 0.
+C1 map 3 · 1,8	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (1, 8): a 3×3 filter over input pixels 1–3 × 8–10; ReLU activation 0.
+C1 map 3 · 2,1	Conv 1	#4daf4a	1.062	Conv 1, feature map 3 (diagonal edges ↘), unit (2, 1): a 3×3 filter over input pixels 2–4 × 1–3; ReLU activation 3.
+C1 map 3 · 2,2	Conv 1	#4daf4a	1.062	Conv 1, feature map 3 (diagonal edges ↘), unit (2, 2): a 3×3 filter over input pixels 2–4 × 2–4; ReLU activation 3.
+C1 map 3 · 2,3	Conv 1	#4daf4a	1.062	Conv 1, feature map 3 (diagonal edges ↘), unit (2, 3): a 3×3 filter over input pixels 2–4 × 3–5; ReLU activation 3.
+C1 map 3 · 2,4	Conv 1	#4daf4a	1.062	Conv 1, feature map 3 (diagonal edges ↘), unit (2, 4): a 3×3 filter over input pixels 2–4 × 4–6; ReLU activation 3.
+C1 map 3 · 2,5	Conv 1	#4daf4a	1.062	Conv 1, feature map 3 (diagonal edges ↘), unit (2, 5): a 3×3 filter over input pixels 2–4 × 5–7; ReLU activation 3.
+C1 map 3 · 2,6	Conv 1	#4daf4a	1.062	Conv 1, feature map 3 (diagonal edges ↘), unit (2, 6): a 3×3 filter over input pixels 2–4 × 6–8; ReLU activation 3.
+C1 map 3 · 2,7	Conv 1	#4daf4a	0.587	Conv 1, feature map 3 (diagonal edges ↘), unit (2, 7): a 3×3 filter over input pixels 2–4 × 7–9; ReLU activation 1.
+C1 map 3 · 2,8	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (2, 8): a 3×3 filter over input pixels 2–4 × 8–10; ReLU activation 0.
+C1 map 3 · 3,1	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (3, 1): a 3×3 filter over input pixels 3–5 × 1–3; ReLU activation 0.
+C1 map 3 · 3,2	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (3, 2): a 3×3 filter over input pixels 3–5 × 2–4; ReLU activation 0.
+C1 map 3 · 3,3	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (3, 3): a 3×3 filter over input pixels 3–5 × 3–5; ReLU activation 0.
+C1 map 3 · 3,4	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (3, 4): a 3×3 filter over input pixels 3–5 × 4–6; ReLU activation 0.
+C1 map 3 · 3,5	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (3, 5): a 3×3 filter over input pixels 3–5 × 5–7; ReLU activation 0.
+C1 map 3 · 3,6	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (3, 6): a 3×3 filter over input pixels 3–5 × 6–8; ReLU activation 0.
+C1 map 3 · 3,7	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (3, 7): a 3×3 filter over input pixels 3–5 × 7–9; ReLU activation 0.
+C1 map 3 · 3,8	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (3, 8): a 3×3 filter over input pixels 3–5 × 8–10; ReLU activation 0.
+C1 map 3 · 4,1	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (4, 1): a 3×3 filter over input pixels 4–6 × 1–3; ReLU activation 0.
+C1 map 3 · 4,2	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (4, 2): a 3×3 filter over input pixels 4–6 × 2–4; ReLU activation 0.
+C1 map 3 · 4,3	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (4, 3): a 3×3 filter over input pixels 4–6 × 3–5; ReLU activation 0.
+C1 map 3 · 4,4	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (4, 4): a 3×3 filter over input pixels 4–6 × 4–6; ReLU activation 0.
+C1 map 3 · 4,5	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (4, 5): a 3×3 filter over input pixels 4–6 × 5–7; ReLU activation 0.
+C1 map 3 · 4,6	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (4, 6): a 3×3 filter over input pixels 4–6 × 6–8; ReLU activation 0.
+C1 map 3 · 4,7	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (4, 7): a 3×3 filter over input pixels 4–6 × 7–9; ReLU activation 0.
+C1 map 3 · 4,8	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (4, 8): a 3×3 filter over input pixels 4–6 × 8–10; ReLU activation 0.
+C1 map 3 · 5,1	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (5, 1): a 3×3 filter over input pixels 5–7 × 1–3; ReLU activation 0.
+C1 map 3 · 5,2	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (5, 2): a 3×3 filter over input pixels 5–7 × 2–4; ReLU activation 0.
+C1 map 3 · 5,3	Conv 1	#4daf4a	0.587	Conv 1, feature map 3 (diagonal edges ↘), unit (5, 3): a 3×3 filter over input pixels 5–7 × 3–5; ReLU activation 1.
+C1 map 3 · 5,4	Conv 1	#4daf4a	0.825	Conv 1, feature map 3 (diagonal edges ↘), unit (5, 4): a 3×3 filter over input pixels 5–7 × 4–6; ReLU activation 2.
+C1 map 3 · 5,5	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (5, 5): a 3×3 filter over input pixels 5–7 × 5–7; ReLU activation 0.
+C1 map 3 · 5,6	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (5, 6): a 3×3 filter over input pixels 5–7 × 6–8; ReLU activation 0.
+C1 map 3 · 5,7	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (5, 7): a 3×3 filter over input pixels 5–7 × 7–9; ReLU activation 0.
+C1 map 3 · 5,8	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (5, 8): a 3×3 filter over input pixels 5–7 × 8–10; ReLU activation 0.
+C1 map 3 · 6,1	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (6, 1): a 3×3 filter over input pixels 6–8 × 1–3; ReLU activation 0.
+C1 map 3 · 6,2	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (6, 2): a 3×3 filter over input pixels 6–8 × 2–4; ReLU activation 0.
+C1 map 3 · 6,3	Conv 1	#4daf4a	0.825	Conv 1, feature map 3 (diagonal edges ↘), unit (6, 3): a 3×3 filter over input pixels 6–8 × 3–5; ReLU activation 2.
+C1 map 3 · 6,4	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (6, 4): a 3×3 filter over input pixels 6–8 × 4–6; ReLU activation 0.
+C1 map 3 · 6,5	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (6, 5): a 3×3 filter over input pixels 6–8 × 5–7; ReLU activation 0.
+C1 map 3 · 6,6	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (6, 6): a 3×3 filter over input pixels 6–8 × 6–8; ReLU activation 0.
+C1 map 3 · 6,7	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (6, 7): a 3×3 filter over input pixels 6–8 × 7–9; ReLU activation 0.
+C1 map 3 · 6,8	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (6, 8): a 3×3 filter over input pixels 6–8 × 8–10; ReLU activation 0.
+C1 map 3 · 7,1	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (7, 1): a 3×3 filter over input pixels 7–9 × 1–3; ReLU activation 0.
+C1 map 3 · 7,2	Conv 1	#4daf4a	0.587	Conv 1, feature map 3 (diagonal edges ↘), unit (7, 2): a 3×3 filter over input pixels 7–9 × 2–4; ReLU activation 1.
+C1 map 3 · 7,3	Conv 1	#4daf4a	0.825	Conv 1, feature map 3 (diagonal edges ↘), unit (7, 3): a 3×3 filter over input pixels 7–9 × 3–5; ReLU activation 2.
+C1 map 3 · 7,4	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (7, 4): a 3×3 filter over input pixels 7–9 × 4–6; ReLU activation 0.
+C1 map 3 · 7,5	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (7, 5): a 3×3 filter over input pixels 7–9 × 5–7; ReLU activation 0.
+C1 map 3 · 7,6	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (7, 6): a 3×3 filter over input pixels 7–9 × 6–8; ReLU activation 0.
+C1 map 3 · 7,7	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (7, 7): a 3×3 filter over input pixels 7–9 × 7–9; ReLU activation 0.
+C1 map 3 · 7,8	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (7, 8): a 3×3 filter over input pixels 7–9 × 8–10; ReLU activation 0.
+C1 map 3 · 8,1	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (8, 1): a 3×3 filter over input pixels 8–10 × 1–3; ReLU activation 0.
+C1 map 3 · 8,2	Conv 1	#4daf4a	1.062	Conv 1, feature map 3 (diagonal edges ↘), unit (8, 2): a 3×3 filter over input pixels 8–10 × 2–4; ReLU activation 3.
+C1 map 3 · 8,3	Conv 1	#4daf4a	1.062	Conv 1, feature map 3 (diagonal edges ↘), unit (8, 3): a 3×3 filter over input pixels 8–10 × 3–5; ReLU activation 3.
+C1 map 3 · 8,4	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (8, 4): a 3×3 filter over input pixels 8–10 × 4–6; ReLU activation 0.
+C1 map 3 · 8,5	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (8, 5): a 3×3 filter over input pixels 8–10 × 5–7; ReLU activation 0.
+C1 map 3 · 8,6	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (8, 6): a 3×3 filter over input pixels 8–10 × 6–8; ReLU activation 0.
+C1 map 3 · 8,7	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (8, 7): a 3×3 filter over input pixels 8–10 × 7–9; ReLU activation 0.
+C1 map 3 · 8,8	Conv 1	#4daf4a	0.35	Conv 1, feature map 3 (diagonal edges ↘), unit (8, 8): a 3×3 filter over input pixels 8–10 × 8–10; ReLU activation 0.
+C1 map 4 · 1,1	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (1, 1): a 3×3 filter over input pixels 1–3 × 1–3; ReLU activation 0.
+C1 map 4 · 1,2	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (1, 2): a 3×3 filter over input pixels 1–3 × 2–4; ReLU activation 0.
+C1 map 4 · 1,3	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (1, 3): a 3×3 filter over input pixels 1–3 × 3–5; ReLU activation 0.
+C1 map 4 · 1,4	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (1, 4): a 3×3 filter over input pixels 1–3 × 4–6; ReLU activation 0.
+C1 map 4 · 1,5	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (1, 5): a 3×3 filter over input pixels 1–3 × 5–7; ReLU activation 0.
+C1 map 4 · 1,6	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (1, 6): a 3×3 filter over input pixels 1–3 × 6–8; ReLU activation 0.
+C1 map 4 · 1,7	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (1, 7): a 3×3 filter over input pixels 1–3 × 7–9; ReLU activation 0.
+C1 map 4 · 1,8	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (1, 8): a 3×3 filter over input pixels 1–3 × 8–10; ReLU activation 0.
+C1 map 4 · 2,1	Conv 1	#ff7f00	0.587	Conv 1, feature map 4 (diagonal edges ↗), unit (2, 1): a 3×3 filter over input pixels 2–4 × 1–3; ReLU activation 1.
+C1 map 4 · 2,2	Conv 1	#ff7f00	1.062	Conv 1, feature map 4 (diagonal edges ↗), unit (2, 2): a 3×3 filter over input pixels 2–4 × 2–4; ReLU activation 3.
+C1 map 4 · 2,3	Conv 1	#ff7f00	1.062	Conv 1, feature map 4 (diagonal edges ↗), unit (2, 3): a 3×3 filter over input pixels 2–4 × 3–5; ReLU activation 3.
+C1 map 4 · 2,4	Conv 1	#ff7f00	1.062	Conv 1, feature map 4 (diagonal edges ↗), unit (2, 4): a 3×3 filter over input pixels 2–4 × 4–6; ReLU activation 3.
+C1 map 4 · 2,5	Conv 1	#ff7f00	0.587	Conv 1, feature map 4 (diagonal edges ↗), unit (2, 5): a 3×3 filter over input pixels 2–4 × 5–7; ReLU activation 1.
+C1 map 4 · 2,6	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (2, 6): a 3×3 filter over input pixels 2–4 × 6–8; ReLU activation 0.
+C1 map 4 · 2,7	Conv 1	#ff7f00	0.587	Conv 1, feature map 4 (diagonal edges ↗), unit (2, 7): a 3×3 filter over input pixels 2–4 × 7–9; ReLU activation 1.
+C1 map 4 · 2,8	Conv 1	#ff7f00	1.3	Conv 1, feature map 4 (diagonal edges ↗), unit (2, 8): a 3×3 filter over input pixels 2–4 × 8–10; ReLU activation 4.
+C1 map 4 · 3,1	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (3, 1): a 3×3 filter over input pixels 3–5 × 1–3; ReLU activation 0.
+C1 map 4 · 3,2	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (3, 2): a 3×3 filter over input pixels 3–5 × 2–4; ReLU activation 0.
+C1 map 4 · 3,3	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (3, 3): a 3×3 filter over input pixels 3–5 × 3–5; ReLU activation 0.
+C1 map 4 · 3,4	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (3, 4): a 3×3 filter over input pixels 3–5 × 4–6; ReLU activation 0.
+C1 map 4 · 3,5	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (3, 5): a 3×3 filter over input pixels 3–5 × 5–7; ReLU activation 0.
+C1 map 4 · 3,6	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (3, 6): a 3×3 filter over input pixels 3–5 × 6–8; ReLU activation 0.
+C1 map 4 · 3,7	Conv 1	#ff7f00	0.825	Conv 1, feature map 4 (diagonal edges ↗), unit (3, 7): a 3×3 filter over input pixels 3–5 × 7–9; ReLU activation 2.
+C1 map 4 · 3,8	Conv 1	#ff7f00	1.3	Conv 1, feature map 4 (diagonal edges ↗), unit (3, 8): a 3×3 filter over input pixels 3–5 × 8–10; ReLU activation 4.
+C1 map 4 · 4,1	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (4, 1): a 3×3 filter over input pixels 4–6 × 1–3; ReLU activation 0.
+C1 map 4 · 4,2	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (4, 2): a 3×3 filter over input pixels 4–6 × 2–4; ReLU activation 0.
+C1 map 4 · 4,3	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (4, 3): a 3×3 filter over input pixels 4–6 × 3–5; ReLU activation 0.
+C1 map 4 · 4,4	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (4, 4): a 3×3 filter over input pixels 4–6 × 4–6; ReLU activation 0.
+C1 map 4 · 4,5	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (4, 5): a 3×3 filter over input pixels 4–6 × 5–7; ReLU activation 0.
+C1 map 4 · 4,6	Conv 1	#ff7f00	0.825	Conv 1, feature map 4 (diagonal edges ↗), unit (4, 6): a 3×3 filter over input pixels 4–6 × 6–8; ReLU activation 2.
+C1 map 4 · 4,7	Conv 1	#ff7f00	1.3	Conv 1, feature map 4 (diagonal edges ↗), unit (4, 7): a 3×3 filter over input pixels 4–6 × 7–9; ReLU activation 4.
+C1 map 4 · 4,8	Conv 1	#ff7f00	0.825	Conv 1, feature map 4 (diagonal edges ↗), unit (4, 8): a 3×3 filter over input pixels 4–6 × 8–10; ReLU activation 2.
+C1 map 4 · 5,1	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (5, 1): a 3×3 filter over input pixels 5–7 × 1–3; ReLU activation 0.
+C1 map 4 · 5,2	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (5, 2): a 3×3 filter over input pixels 5–7 × 2–4; ReLU activation 0.
+C1 map 4 · 5,3	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (5, 3): a 3×3 filter over input pixels 5–7 × 3–5; ReLU activation 0.
+C1 map 4 · 5,4	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (5, 4): a 3×3 filter over input pixels 5–7 × 4–6; ReLU activation 0.
+C1 map 4 · 5,5	Conv 1	#ff7f00	0.825	Conv 1, feature map 4 (diagonal edges ↗), unit (5, 5): a 3×3 filter over input pixels 5–7 × 5–7; ReLU activation 2.
+C1 map 4 · 5,6	Conv 1	#ff7f00	1.3	Conv 1, feature map 4 (diagonal edges ↗), unit (5, 6): a 3×3 filter over input pixels 5–7 × 6–8; ReLU activation 4.
+C1 map 4 · 5,7	Conv 1	#ff7f00	0.825	Conv 1, feature map 4 (diagonal edges ↗), unit (5, 7): a 3×3 filter over input pixels 5–7 × 7–9; ReLU activation 2.
+C1 map 4 · 5,8	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (5, 8): a 3×3 filter over input pixels 5–7 × 8–10; ReLU activation 0.
+C1 map 4 · 6,1	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (6, 1): a 3×3 filter over input pixels 6–8 × 1–3; ReLU activation 0.
+C1 map 4 · 6,2	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (6, 2): a 3×3 filter over input pixels 6–8 × 2–4; ReLU activation 0.
+C1 map 4 · 6,3	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (6, 3): a 3×3 filter over input pixels 6–8 × 3–5; ReLU activation 0.
+C1 map 4 · 6,4	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (6, 4): a 3×3 filter over input pixels 6–8 × 4–6; ReLU activation 0.
+C1 map 4 · 6,5	Conv 1	#ff7f00	1.3	Conv 1, feature map 4 (diagonal edges ↗), unit (6, 5): a 3×3 filter over input pixels 6–8 × 5–7; ReLU activation 4.
+C1 map 4 · 6,6	Conv 1	#ff7f00	0.825	Conv 1, feature map 4 (diagonal edges ↗), unit (6, 6): a 3×3 filter over input pixels 6–8 × 6–8; ReLU activation 2.
+C1 map 4 · 6,7	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (6, 7): a 3×3 filter over input pixels 6–8 × 7–9; ReLU activation 0.
+C1 map 4 · 6,8	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (6, 8): a 3×3 filter over input pixels 6–8 × 8–10; ReLU activation 0.
+C1 map 4 · 7,1	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (7, 1): a 3×3 filter over input pixels 7–9 × 1–3; ReLU activation 0.
+C1 map 4 · 7,2	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (7, 2): a 3×3 filter over input pixels 7–9 × 2–4; ReLU activation 0.
+C1 map 4 · 7,3	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (7, 3): a 3×3 filter over input pixels 7–9 × 3–5; ReLU activation 0.
+C1 map 4 · 7,4	Conv 1	#ff7f00	0.825	Conv 1, feature map 4 (diagonal edges ↗), unit (7, 4): a 3×3 filter over input pixels 7–9 × 4–6; ReLU activation 2.
+C1 map 4 · 7,5	Conv 1	#ff7f00	1.062	Conv 1, feature map 4 (diagonal edges ↗), unit (7, 5): a 3×3 filter over input pixels 7–9 × 5–7; ReLU activation 3.
+C1 map 4 · 7,6	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (7, 6): a 3×3 filter over input pixels 7–9 × 6–8; ReLU activation 0.
+C1 map 4 · 7,7	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (7, 7): a 3×3 filter over input pixels 7–9 × 7–9; ReLU activation 0.
+C1 map 4 · 7,8	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (7, 8): a 3×3 filter over input pixels 7–9 × 8–10; ReLU activation 0.
+C1 map 4 · 8,1	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (8, 1): a 3×3 filter over input pixels 8–10 × 1–3; ReLU activation 0.
+C1 map 4 · 8,2	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (8, 2): a 3×3 filter over input pixels 8–10 × 2–4; ReLU activation 0.
+C1 map 4 · 8,3	Conv 1	#ff7f00	0.587	Conv 1, feature map 4 (diagonal edges ↗), unit (8, 3): a 3×3 filter over input pixels 8–10 × 3–5; ReLU activation 1.
+C1 map 4 · 8,4	Conv 1	#ff7f00	1.3	Conv 1, feature map 4 (diagonal edges ↗), unit (8, 4): a 3×3 filter over input pixels 8–10 × 4–6; ReLU activation 4.
+C1 map 4 · 8,5	Conv 1	#ff7f00	0.825	Conv 1, feature map 4 (diagonal edges ↗), unit (8, 5): a 3×3 filter over input pixels 8–10 × 5–7; ReLU activation 2.
+C1 map 4 · 8,6	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (8, 6): a 3×3 filter over input pixels 8–10 × 6–8; ReLU activation 0.
+C1 map 4 · 8,7	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (8, 7): a 3×3 filter over input pixels 8–10 × 7–9; ReLU activation 0.
+C1 map 4 · 8,8	Conv 1	#ff7f00	0.35	Conv 1, feature map 4 (diagonal edges ↗), unit (8, 8): a 3×3 filter over input pixels 8–10 × 8–10; ReLU activation 0.
+P1 map 1 · 1,1	Max-pool 1	#e41a1c	1.3	Max-pool 1, map 1, unit (1, 1): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 1,2	Max-pool 1	#e41a1c	1.3	Max-pool 1, map 1, unit (1, 2): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 1,3	Max-pool 1	#e41a1c	1.062	Max-pool 1, map 1, unit (1, 3): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 1,4	Max-pool 1	#e41a1c	0.825	Max-pool 1, map 1, unit (1, 4): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 2,1	Max-pool 1	#e41a1c	0.35	Max-pool 1, map 1, unit (2, 1): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 2,2	Max-pool 1	#e41a1c	0.35	Max-pool 1, map 1, unit (2, 2): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 2,3	Max-pool 1	#e41a1c	0.825	Max-pool 1, map 1, unit (2, 3): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 2,4	Max-pool 1	#e41a1c	1.062	Max-pool 1, map 1, unit (2, 4): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 3,1	Max-pool 1	#e41a1c	0.35	Max-pool 1, map 1, unit (3, 1): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 3,2	Max-pool 1	#e41a1c	0.35	Max-pool 1, map 1, unit (3, 2): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 3,3	Max-pool 1	#e41a1c	1.062	Max-pool 1, map 1, unit (3, 3): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 3,4	Max-pool 1	#e41a1c	0.587	Max-pool 1, map 1, unit (3, 4): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 4,1	Max-pool 1	#e41a1c	0.587	Max-pool 1, map 1, unit (4, 1): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 4,2	Max-pool 1	#e41a1c	1.062	Max-pool 1, map 1, unit (4, 2): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 4,3	Max-pool 1	#e41a1c	0.587	Max-pool 1, map 1, unit (4, 3): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 1 · 4,4	Max-pool 1	#e41a1c	0.35	Max-pool 1, map 1, unit (4, 4): the largest of a 2×2 window of conv 1 map 1 (the strongest link is the one that wins).
+P1 map 2 · 1,1	Max-pool 1	#377eb8	0.35	Max-pool 1, map 2, unit (1, 1): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 1,2	Max-pool 1	#377eb8	0.35	Max-pool 1, map 2, unit (1, 2): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 1,3	Max-pool 1	#377eb8	0.35	Max-pool 1, map 2, unit (1, 3): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 1,4	Max-pool 1	#377eb8	1.3	Max-pool 1, map 2, unit (1, 4): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 2,1	Max-pool 1	#377eb8	0.35	Max-pool 1, map 2, unit (2, 1): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 2,2	Max-pool 1	#377eb8	0.35	Max-pool 1, map 2, unit (2, 2): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 2,3	Max-pool 1	#377eb8	0.825	Max-pool 1, map 2, unit (2, 3): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 2,4	Max-pool 1	#377eb8	1.062	Max-pool 1, map 2, unit (2, 4): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 3,1	Max-pool 1	#377eb8	0.35	Max-pool 1, map 2, unit (3, 1): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 3,2	Max-pool 1	#377eb8	0.35	Max-pool 1, map 2, unit (3, 2): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 3,3	Max-pool 1	#377eb8	1.3	Max-pool 1, map 2, unit (3, 3): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 3,4	Max-pool 1	#377eb8	0.587	Max-pool 1, map 2, unit (3, 4): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 4,1	Max-pool 1	#377eb8	0.35	Max-pool 1, map 2, unit (4, 1): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 4,2	Max-pool 1	#377eb8	1.062	Max-pool 1, map 2, unit (4, 2): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 4,3	Max-pool 1	#377eb8	1.062	Max-pool 1, map 2, unit (4, 3): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 2 · 4,4	Max-pool 1	#377eb8	0.35	Max-pool 1, map 2, unit (4, 4): the largest of a 2×2 window of conv 1 map 2 (the strongest link is the one that wins).
+P1 map 3 · 1,1	Max-pool 1	#4daf4a	1.062	Max-pool 1, map 3, unit (1, 1): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 1,2	Max-pool 1	#4daf4a	1.062	Max-pool 1, map 3, unit (1, 2): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 1,3	Max-pool 1	#4daf4a	1.062	Max-pool 1, map 3, unit (1, 3): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 1,4	Max-pool 1	#4daf4a	0.587	Max-pool 1, map 3, unit (1, 4): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 2,1	Max-pool 1	#4daf4a	0.35	Max-pool 1, map 3, unit (2, 1): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 2,2	Max-pool 1	#4daf4a	0.35	Max-pool 1, map 3, unit (2, 2): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 2,3	Max-pool 1	#4daf4a	0.35	Max-pool 1, map 3, unit (2, 3): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 2,4	Max-pool 1	#4daf4a	0.35	Max-pool 1, map 3, unit (2, 4): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 3,1	Max-pool 1	#4daf4a	0.35	Max-pool 1, map 3, unit (3, 1): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 3,2	Max-pool 1	#4daf4a	0.825	Max-pool 1, map 3, unit (3, 2): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 3,3	Max-pool 1	#4daf4a	0.35	Max-pool 1, map 3, unit (3, 3): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 3,4	Max-pool 1	#4daf4a	0.35	Max-pool 1, map 3, unit (3, 4): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 4,1	Max-pool 1	#4daf4a	1.062	Max-pool 1, map 3, unit (4, 1): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 4,2	Max-pool 1	#4daf4a	1.062	Max-pool 1, map 3, unit (4, 2): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 4,3	Max-pool 1	#4daf4a	0.35	Max-pool 1, map 3, unit (4, 3): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 3 · 4,4	Max-pool 1	#4daf4a	0.35	Max-pool 1, map 3, unit (4, 4): the largest of a 2×2 window of conv 1 map 3 (the strongest link is the one that wins).
+P1 map 4 · 1,1	Max-pool 1	#ff7f00	1.062	Max-pool 1, map 4, unit (1, 1): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 1,2	Max-pool 1	#ff7f00	1.062	Max-pool 1, map 4, unit (1, 2): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 1,3	Max-pool 1	#ff7f00	0.587	Max-pool 1, map 4, unit (1, 3): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 1,4	Max-pool 1	#ff7f00	1.3	Max-pool 1, map 4, unit (1, 4): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 2,1	Max-pool 1	#ff7f00	0.35	Max-pool 1, map 4, unit (2, 1): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 2,2	Max-pool 1	#ff7f00	0.35	Max-pool 1, map 4, unit (2, 2): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 2,3	Max-pool 1	#ff7f00	0.825	Max-pool 1, map 4, unit (2, 3): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 2,4	Max-pool 1	#ff7f00	1.3	Max-pool 1, map 4, unit (2, 4): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 3,1	Max-pool 1	#ff7f00	0.35	Max-pool 1, map 4, unit (3, 1): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 3,2	Max-pool 1	#ff7f00	0.35	Max-pool 1, map 4, unit (3, 2): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 3,3	Max-pool 1	#ff7f00	1.3	Max-pool 1, map 4, unit (3, 3): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 3,4	Max-pool 1	#ff7f00	0.825	Max-pool 1, map 4, unit (3, 4): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 4,1	Max-pool 1	#ff7f00	0.35	Max-pool 1, map 4, unit (4, 1): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 4,2	Max-pool 1	#ff7f00	1.3	Max-pool 1, map 4, unit (4, 2): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 4,3	Max-pool 1	#ff7f00	1.062	Max-pool 1, map 4, unit (4, 3): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+P1 map 4 · 4,4	Max-pool 1	#ff7f00	0.35	Max-pool 1, map 4, unit (4, 4): the largest of a 2×2 window of conv 1 map 4 (the strongest link is the one that wins).
+C2 map 1 · 1,1	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (1, 1): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 1,2	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (1, 2): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 1,3	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (1, 3): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 1,4	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (1, 4): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 2,1	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (2, 1): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 2,2	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (2, 2): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 2,3	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (2, 3): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 2,4	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (2, 4): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 3,1	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (3, 1): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 3,2	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (3, 2): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 3,3	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (3, 3): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 3,4	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (3, 4): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 4,1	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (4, 1): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 4,2	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (4, 2): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 4,3	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (4, 3): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 1 · 4,4	Conv 2	#8e4c6a	0.35	Conv 2, feature map 1, unit (4, 4): 3×3 filters (padding 1) over pool-1 maps 1 and 2; ReLU activation 0.00.
+C2 map 2 · 1,1	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (1, 1): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 1,2	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (1, 2): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 1,3	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (1, 3): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 1,4	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (1, 4): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 2,1	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (2, 1): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 2,2	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (2, 2): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 2,3	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (2, 3): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 2,4	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (2, 4): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 3,1	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (3, 1): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 3,2	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (3, 2): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 3,3	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (3, 3): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 3,4	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (3, 4): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 4,1	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (4, 1): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 2 · 4,2	Conv 2	#429681	0.667	Conv 2, feature map 2, unit (4, 2): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 3.49.
+C2 map 2 · 4,3	Conv 2	#429681	0.5	Conv 2, feature map 2, unit (4, 3): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 1.65.
+C2 map 2 · 4,4	Conv 2	#429681	0.35	Conv 2, feature map 2, unit (4, 4): 3×3 filters (padding 1) over pool-1 maps 2 and 3; ReLU activation 0.00.
+C2 map 3 · 1,1	Conv 2	#a69725	0.361	Conv 2, feature map 3, unit (1, 1): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 0.13.
+C2 map 3 · 1,2	Conv 2	#a69725	0.452	Conv 2, feature map 3, unit (1, 2): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 1.12.
+C2 map 3 · 1,3	Conv 2	#a69725	0.928	Conv 2, feature map 3, unit (1, 3): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 6.36.
+C2 map 3 · 1,4	Conv 2	#a69725	0.35	Conv 2, feature map 3, unit (1, 4): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 0.00.
+C2 map 3 · 2,1	Conv 2	#a69725	0.35	Conv 2, feature map 3, unit (2, 1): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 0.00.
+C2 map 3 · 2,2	Conv 2	#a69725	0.864	Conv 2, feature map 3, unit (2, 2): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 5.65.
+C2 map 3 · 2,3	Conv 2	#a69725	1.106	Conv 2, feature map 3, unit (2, 3): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 8.32.
+C2 map 3 · 2,4	Conv 2	#a69725	0.35	Conv 2, feature map 3, unit (2, 4): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 0.00.
+C2 map 3 · 3,1	Conv 2	#a69725	0.433	Conv 2, feature map 3, unit (3, 1): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 0.91.
+C2 map 3 · 3,2	Conv 2	#a69725	1.168	Conv 2, feature map 3, unit (3, 2): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 9.00.
+C2 map 3 · 3,3	Conv 2	#a69725	0.522	Conv 2, feature map 3, unit (3, 3): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 1.89.
+C2 map 3 · 3,4	Conv 2	#a69725	0.35	Conv 2, feature map 3, unit (3, 4): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 0.00.
+C2 map 3 · 4,1	Conv 2	#a69725	0.497	Conv 2, feature map 3, unit (4, 1): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 1.62.
+C2 map 3 · 4,2	Conv 2	#a69725	0.725	Conv 2, feature map 3, unit (4, 2): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 4.13.
+C2 map 3 · 4,3	Conv 2	#a69725	0.668	Conv 2, feature map 3, unit (4, 3): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 3.50.
+C2 map 3 · 4,4	Conv 2	#a69725	0.538	Conv 2, feature map 3, unit (4, 4): 3×3 filters (padding 1) over pool-1 maps 3 and 4; ReLU activation 2.07.
+C2 map 4 · 1,1	Conv 2	#f24c0e	0.839	Conv 2, feature map 4, unit (1, 1): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 5.38.
+C2 map 4 · 1,2	Conv 2	#f24c0e	1.3	Conv 2, feature map 4, unit (1, 2): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 10.45.
+C2 map 4 · 1,3	Conv 2	#f24c0e	1.048	Conv 2, feature map 4, unit (1, 3): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 7.68.
+C2 map 4 · 1,4	Conv 2	#f24c0e	0.741	Conv 2, feature map 4, unit (1, 4): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 4.30.
+C2 map 4 · 2,1	Conv 2	#f24c0e	0.35	Conv 2, feature map 4, unit (2, 1): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 0.00.
+C2 map 4 · 2,2	Conv 2	#f24c0e	0.442	Conv 2, feature map 4, unit (2, 2): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 1.02.
+C2 map 4 · 2,3	Conv 2	#f24c0e	0.35	Conv 2, feature map 4, unit (2, 3): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 0.00.
+C2 map 4 · 2,4	Conv 2	#f24c0e	1.194	Conv 2, feature map 4, unit (2, 4): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 9.28.
+C2 map 4 · 3,1	Conv 2	#f24c0e	0.522	Conv 2, feature map 4, unit (3, 1): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 1.89.
+C2 map 4 · 3,2	Conv 2	#f24c0e	0.35	Conv 2, feature map 4, unit (3, 2): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 0.00.
+C2 map 4 · 3,3	Conv 2	#f24c0e	0.654	Conv 2, feature map 4, unit (3, 3): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 3.34.
+C2 map 4 · 3,4	Conv 2	#f24c0e	1.013	Conv 2, feature map 4, unit (3, 4): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 7.29.
+C2 map 4 · 4,1	Conv 2	#f24c0e	0.47	Conv 2, feature map 4, unit (4, 1): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 1.32.
+C2 map 4 · 4,2	Conv 2	#f24c0e	0.523	Conv 2, feature map 4, unit (4, 2): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 1.90.
+C2 map 4 · 4,3	Conv 2	#f24c0e	0.743	Conv 2, feature map 4, unit (4, 3): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 4.32.
+C2 map 4 · 4,4	Conv 2	#f24c0e	0.35	Conv 2, feature map 4, unit (4, 4): 3×3 filters (padding 1) over pool-1 maps 4 and 1; ReLU activation 0.00.
+C2 map 5 · 1,1	Conv 2	#986433	0.35	Conv 2, feature map 5, unit (1, 1): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.00.
+C2 map 5 · 1,2	Conv 2	#986433	0.35	Conv 2, feature map 5, unit (1, 2): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.00.
+C2 map 5 · 1,3	Conv 2	#986433	0.35	Conv 2, feature map 5, unit (1, 3): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.00.
+C2 map 5 · 1,4	Conv 2	#986433	0.35	Conv 2, feature map 5, unit (1, 4): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.00.
+C2 map 5 · 2,1	Conv 2	#986433	0.83	Conv 2, feature map 5, unit (2, 1): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 5.28.
+C2 map 5 · 2,2	Conv 2	#986433	0.416	Conv 2, feature map 5, unit (2, 2): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.72.
+C2 map 5 · 2,3	Conv 2	#986433	0.547	Conv 2, feature map 5, unit (2, 3): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 2.16.
+C2 map 5 · 2,4	Conv 2	#986433	0.35	Conv 2, feature map 5, unit (2, 4): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.00.
+C2 map 5 · 3,1	Conv 2	#986433	0.35	Conv 2, feature map 5, unit (3, 1): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.00.
+C2 map 5 · 3,2	Conv 2	#986433	0.35	Conv 2, feature map 5, unit (3, 2): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.00.
+C2 map 5 · 3,3	Conv 2	#986433	0.474	Conv 2, feature map 5, unit (3, 3): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 1.36.
+C2 map 5 · 3,4	Conv 2	#986433	0.447	Conv 2, feature map 5, unit (3, 4): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 1.07.
+C2 map 5 · 4,1	Conv 2	#986433	0.35	Conv 2, feature map 5, unit (4, 1): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.00.
+C2 map 5 · 4,2	Conv 2	#986433	0.35	Conv 2, feature map 5, unit (4, 2): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.00.
+C2 map 5 · 4,3	Conv 2	#986433	0.35	Conv 2, feature map 5, unit (4, 3): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 0.00.
+C2 map 5 · 4,4	Conv 2	#986433	0.481	Conv 2, feature map 5, unit (4, 4): 3×3 filters (padding 1) over pool-1 maps 1 and 3; ReLU activation 1.44.
+C2 map 6 · 1,1	Conv 2	#9b7e5c	0.39	Conv 2, feature map 6, unit (1, 1): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.44.
+C2 map 6 · 1,2	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (1, 2): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+C2 map 6 · 1,3	Conv 2	#9b7e5c	0.355	Conv 2, feature map 6, unit (1, 3): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.06.
+C2 map 6 · 1,4	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (1, 4): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+C2 map 6 · 2,1	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (2, 1): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+C2 map 6 · 2,2	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (2, 2): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+C2 map 6 · 2,3	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (2, 3): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+C2 map 6 · 2,4	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (2, 4): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+C2 map 6 · 3,1	Conv 2	#9b7e5c	0.541	Conv 2, feature map 6, unit (3, 1): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 2.10.
+C2 map 6 · 3,2	Conv 2	#9b7e5c	0.426	Conv 2, feature map 6, unit (3, 2): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.84.
+C2 map 6 · 3,3	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (3, 3): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+C2 map 6 · 3,4	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (3, 4): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+C2 map 6 · 4,1	Conv 2	#9b7e5c	0.369	Conv 2, feature map 6, unit (4, 1): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.20.
+C2 map 6 · 4,2	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (4, 2): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+C2 map 6 · 4,3	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (4, 3): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+C2 map 6 · 4,4	Conv 2	#9b7e5c	0.35	Conv 2, feature map 6, unit (4, 4): 3×3 filters (padding 1) over pool-1 maps 2 and 4; ReLU activation 0.00.
+P2 map 1 · 1,1	Max-pool 2	#8e4c6a	0.35	Max-pool 2, map 1, unit (1, 1): the largest of a 2×2 window of conv 2 map 1. Flattened, the 24 units feed the dense layer.
+P2 map 1 · 1,2	Max-pool 2	#8e4c6a	0.35	Max-pool 2, map 1, unit (1, 2): the largest of a 2×2 window of conv 2 map 1. Flattened, the 24 units feed the dense layer.
+P2 map 1 · 2,1	Max-pool 2	#8e4c6a	0.35	Max-pool 2, map 1, unit (2, 1): the largest of a 2×2 window of conv 2 map 1. Flattened, the 24 units feed the dense layer.
+P2 map 1 · 2,2	Max-pool 2	#8e4c6a	0.35	Max-pool 2, map 1, unit (2, 2): the largest of a 2×2 window of conv 2 map 1. Flattened, the 24 units feed the dense layer.
+P2 map 2 · 1,1	Max-pool 2	#429681	0.35	Max-pool 2, map 2, unit (1, 1): the largest of a 2×2 window of conv 2 map 2. Flattened, the 24 units feed the dense layer.
+P2 map 2 · 1,2	Max-pool 2	#429681	0.35	Max-pool 2, map 2, unit (1, 2): the largest of a 2×2 window of conv 2 map 2. Flattened, the 24 units feed the dense layer.
+P2 map 2 · 2,1	Max-pool 2	#429681	0.667	Max-pool 2, map 2, unit (2, 1): the largest of a 2×2 window of conv 2 map 2. Flattened, the 24 units feed the dense layer.
+P2 map 2 · 2,2	Max-pool 2	#429681	0.5	Max-pool 2, map 2, unit (2, 2): the largest of a 2×2 window of conv 2 map 2. Flattened, the 24 units feed the dense layer.
+P2 map 3 · 1,1	Max-pool 2	#a69725	0.864	Max-pool 2, map 3, unit (1, 1): the largest of a 2×2 window of conv 2 map 3. Flattened, the 24 units feed the dense layer.
+P2 map 3 · 1,2	Max-pool 2	#a69725	1.106	Max-pool 2, map 3, unit (1, 2): the largest of a 2×2 window of conv 2 map 3. Flattened, the 24 units feed the dense layer.
+P2 map 3 · 2,1	Max-pool 2	#a69725	1.168	Max-pool 2, map 3, unit (2, 1): the largest of a 2×2 window of conv 2 map 3. Flattened, the 24 units feed the dense layer.
+P2 map 3 · 2,2	Max-pool 2	#a69725	0.668	Max-pool 2, map 3, unit (2, 2): the largest of a 2×2 window of conv 2 map 3. Flattened, the 24 units feed the dense layer.
+P2 map 4 · 1,1	Max-pool 2	#f24c0e	1.3	Max-pool 2, map 4, unit (1, 1): the largest of a 2×2 window of conv 2 map 4. Flattened, the 24 units feed the dense layer.
+P2 map 4 · 1,2	Max-pool 2	#f24c0e	1.194	Max-pool 2, map 4, unit (1, 2): the largest of a 2×2 window of conv 2 map 4. Flattened, the 24 units feed the dense layer.
+P2 map 4 · 2,1	Max-pool 2	#f24c0e	0.523	Max-pool 2, map 4, unit (2, 1): the largest of a 2×2 window of conv 2 map 4. Flattened, the 24 units feed the dense layer.
+P2 map 4 · 2,2	Max-pool 2	#f24c0e	1.013	Max-pool 2, map 4, unit (2, 2): the largest of a 2×2 window of conv 2 map 4. Flattened, the 24 units feed the dense layer.
+P2 map 5 · 1,1	Max-pool 2	#986433	0.83	Max-pool 2, map 5, unit (1, 1): the largest of a 2×2 window of conv 2 map 5. Flattened, the 24 units feed the dense layer.
+P2 map 5 · 1,2	Max-pool 2	#986433	0.547	Max-pool 2, map 5, unit (1, 2): the largest of a 2×2 window of conv 2 map 5. Flattened, the 24 units feed the dense layer.
+P2 map 5 · 2,1	Max-pool 2	#986433	0.35	Max-pool 2, map 5, unit (2, 1): the largest of a 2×2 window of conv 2 map 5. Flattened, the 24 units feed the dense layer.
+P2 map 5 · 2,2	Max-pool 2	#986433	0.481	Max-pool 2, map 5, unit (2, 2): the largest of a 2×2 window of conv 2 map 5. Flattened, the 24 units feed the dense layer.
+P2 map 6 · 1,1	Max-pool 2	#9b7e5c	0.39	Max-pool 2, map 6, unit (1, 1): the largest of a 2×2 window of conv 2 map 6. Flattened, the 24 units feed the dense layer.
+P2 map 6 · 1,2	Max-pool 2	#9b7e5c	0.355	Max-pool 2, map 6, unit (1, 2): the largest of a 2×2 window of conv 2 map 6. Flattened, the 24 units feed the dense layer.
+P2 map 6 · 2,1	Max-pool 2	#9b7e5c	0.541	Max-pool 2, map 6, unit (2, 1): the largest of a 2×2 window of conv 2 map 6. Flattened, the 24 units feed the dense layer.
+P2 map 6 · 2,2	Max-pool 2	#9b7e5c	0.35	Max-pool 2, map 6, unit (2, 2): the largest of a 2×2 window of conv 2 map 6. Flattened, the 24 units feed the dense layer.
+FC 1	Dense	#9ecae1	0.9	Dense (fully connected) unit 1: reads all 24 units of max-pool 2.
+FC 2	Dense	#9ecae1	0.9	Dense (fully connected) unit 2: reads all 24 units of max-pool 2.
+FC 3	Dense	#9ecae1	0.9	Dense (fully connected) unit 3: reads all 24 units of max-pool 2.
+FC 4	Dense	#9ecae1	0.9	Dense (fully connected) unit 4: reads all 24 units of max-pool 2.
+FC 5	Dense	#9ecae1	0.9	Dense (fully connected) unit 5: reads all 24 units of max-pool 2.
+FC 6	Dense	#9ecae1	0.9	Dense (fully connected) unit 6: reads all 24 units of max-pool 2.
+FC 7	Dense	#9ecae1	0.9	Dense (fully connected) unit 7: reads all 24 units of max-pool 2.
+FC 8	Dense	#9ecae1	0.9	Dense (fully connected) unit 8: reads all 24 units of max-pool 2.
+FC 9	Dense	#9ecae1	0.9	Dense (fully connected) unit 9: reads all 24 units of max-pool 2.
+FC 10	Dense	#9ecae1	0.9	Dense (fully connected) unit 10: reads all 24 units of max-pool 2.
+FC 11	Dense	#9ecae1	0.9	Dense (fully connected) unit 11: reads all 24 units of max-pool 2.
+FC 12	Dense	#9ecae1	0.9	Dense (fully connected) unit 12: reads all 24 units of max-pool 2.
+digit 0	Output	#fdd49e	1	Output class '0': a softmax over the ten digits (the weights are random, so this untrained network has no real answer).
+digit 1	Output	#fdd49e	1	Output class '1': a softmax over the ten digits (the weights are random, so this untrained network has no real answer).
+digit 2	Output	#fdd49e	1	Output class '2': a softmax over the ten digits (the weights are random, so this untrained network has no real answer).
+digit 3	Output	#fdd49e	1	Output class '3': a softmax over the ten digits (the weights are random, so this untrained network has no real answer).
+digit 4	Output	#fdd49e	1	Output class '4': a softmax over the ten digits (the weights are random, so this untrained network has no real answer).
+digit 5	Output	#fdd49e	1	Output class '5': a softmax over the ten digits (the weights are random, so this untrained network has no real answer).
+digit 6	Output	#fdd49e	1	Output class '6': a softmax over the ten digits (the weights are random, so this untrained network has no real answer).
+digit 7	Output	#fdd49e	1	Output class '7': a softmax over the ten digits (the weights are random, so this untrained network has no real answer).
+digit 8	Output	#fdd49e	1	Output class '8': a softmax over the ten digits (the weights are random, so this untrained network has no real answer).
+digit 9	Output	#fdd49e	1	Output class '9': a softmax over the ten digits (the weights are random, so this untrained network has no real answer).

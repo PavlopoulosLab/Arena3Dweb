@@ -7,6 +7,8 @@
 
 import { ctx } from '../three'
 import type { EdgeShape } from '../three/runtime'
+import type { EdgeAttributeRow } from '../api/client'
+import { LINE_TYPE_LABELS, type LineType } from '../three/Edge'
 
 // v2 assignChannelColorsFromPalette — reassigns every known channel's color
 // in insertion order (channel order from the network build).
@@ -183,18 +185,25 @@ export function setInterChannelCurvature(curvature: number): void {
 // v2 edge.js setEdgeAttributes/setEdgeColorFromAttributes: recolor matching
 // edges from an attribute file (per channel when given, else the first
 // channel), then force loaded-edge-color priority so the colors show.
-export function applyEdgeAttributes(
-  rows: { edge_pair: string; color: string; channel: string | null }[]
-): void {
-  const pairs = ctx.edgeObjects.map((e) => `${e.source}---${e.target}`)
+// The width, opacity, line type and arrow columns are what Edit →
+// Attributes exports (per edge, so every channel row carries them).
+export function applyEdgeAttributes(rows: EdgeAttributeRow[]): void {
+  const pairs = new Map(
+    ctx.edgeObjects.map((e, i) => [`${e.source}---${e.target}`, i])
+  )
   for (const row of rows) {
-    const pos = pairs.indexOf(row.edge_pair)
-    if (pos === -1) continue // edge not in network
+    const pos = pairs.get(row.edge_pair)
+    if (pos === undefined) continue // edge not in network
     const edge = ctx.edgeObjects[pos]
     const channelPos = row.channel ? edge.channels.indexOf(row.channel) : 0
     if (channelPos === -1) continue // channel not on this edge
     edge.importedColors[channelPos] = row.color
     edge.colors[channelPos] = row.color
+    if (row.width != null) edge.widthFactor = row.width
+    if (row.opacity != null) edge.opacityFactor = row.opacity
+    if (row.line_type && row.line_type in LINE_TYPE_LABELS)
+      edge.lineType = row.line_type as LineType
+    if (row.arrow_color) edge.arrowColor = row.arrow_color
   }
   setEdgeFileColorPriority(true)
 }

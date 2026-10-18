@@ -11,6 +11,7 @@ import {
 import { bus } from '../bus'
 import { ctx } from '../three'
 import { escapeHtml } from '../utils'
+import { askDeleteSet, renameSet } from './networks'
 import { selectNodesByName, unselectAllNodes } from '../actions/node'
 import {
   groupColor,
@@ -40,6 +41,8 @@ export const ANNOTATIONS_HTML = `
     <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
       <label class="form-label small m-0" for="annotationSet">Annotation set</label>
       <select id="annotationSet" class="form-select form-select-sm" style="width:auto" aria-label="Annotation set"><option value="-1">(none)</option></select>
+      <button type="button" id="annotationSetRename" class="btn btn-outline-secondary btn-sm" title="Rename the annotation set shown" disabled>Rename</button>
+      <button type="button" id="annotationSetDelete" class="btn btn-outline-secondary btn-sm" title="Delete the annotation set shown" disabled>Delete</button>
       <span class="form-text m-0">every attribute or group file, enrichment or cluster run is kept; switch between them</span>
     </div>
     <div class="form-check mb-2">
@@ -252,6 +255,10 @@ function syncAnnotationSets(): void {
       .join('')
   select.value = String(slot?.activeSet ?? -1)
   select.disabled = sets.length === 0
+  // rename / delete the set shown
+  for (const id of ['annotationSetRename', 'annotationSetDelete'])
+    (document.getElementById(id) as HTMLButtonElement).disabled =
+      select.value === '-1'
 }
 
 export function initAnnotations(): void {
@@ -261,11 +268,26 @@ export function initAnnotations(): void {
   bus.on('network:loaded', syncAnnotationSets)
   syncAnnotationControls()
   syncAnnotationSets()
+  const setSelect = document.getElementById(
+    'annotationSet'
+  ) as HTMLSelectElement | null
+  setSelect?.addEventListener('change', () =>
+    applyAnnotationSet(Number(setSelect.value))
+  )
   document
-    .getElementById('annotationSet')
-    ?.addEventListener('change', (e) =>
-      applyAnnotationSet(Number((e.target as HTMLSelectElement).value))
-    )
+    .getElementById('annotationSetRename')
+    ?.addEventListener('click', () => {
+      const slot = activeSlot()
+      if (slot && setSelect && slot.activeSet >= 0)
+        renameSet(setSelect, slot.id, slot.activeSet)
+    })
+  document
+    .getElementById('annotationSetDelete')
+    ?.addEventListener('click', () => {
+      const slot = activeSlot()
+      if (slot && slot.activeSet >= 0)
+        void askDeleteSet(slot.id, slot.activeSet)
+    })
   document
     .getElementById('showPies')
     ?.addEventListener('change', (e) =>

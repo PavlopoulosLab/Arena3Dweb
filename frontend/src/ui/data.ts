@@ -15,9 +15,10 @@ import { bus } from '../bus'
 import { store } from '../store'
 import { ctx } from '../three'
 import { escapeHtml } from '../utils'
-import { upsetSvg, type UpsetSet } from '../actions/upset'
+import type { UpsetSet } from '../actions/upset'
 import { layerSwatchColor } from '../actions/legend'
 import type { GraphStats, LayerSimilarityResponse } from '../api/client'
+import { upsetBox } from './upset'
 
 const TABS = [
   { id: 'network', label: 'Network Data' },
@@ -209,7 +210,8 @@ function sortReport(tabId: string, col: number): void {
 }
 
 // An UpSet plot under a comparison table: the sets (layers, groups or the
-// layers of two networks) and what exactly they share, with an SVG download.
+// layers of two networks) and what exactly they share — interactive, with an
+// SVG download (ui/upset.ts).
 function appendUpset(
   paneId: string,
   sets: UpsetSet[],
@@ -218,25 +220,7 @@ function appendUpset(
 ): void {
   const pane = document.getElementById(`dataPane-${paneId}`)
   if (!pane || sets.length < 2) return
-  const box = document.createElement('div')
-  box.className = 'mt-3 upset-box'
-  const svg = upsetSvg(sets, { element })
-  box.innerHTML = `
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
-      <span class="small fw-semibold">UpSet plot: ${escapeHtml(element)} the sets share</span>
-      <button class="btn btn-sm btn-outline-primary upset-download">Download SVG</button>
-      <span class="small text-secondary">A bar with one dot: in that set only; with several dots: in exactly those sets.</span>
-    </div>
-    <div class="upset-plot">${svg}</div>`
-  box.querySelector('.upset-download')?.addEventListener('click', () => {
-    const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }))
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${fileName}_upset.svg`
-    a.click()
-    URL.revokeObjectURL(url)
-  })
-  pane.appendChild(box)
+  pane.appendChild(upsetBox(sets, element, fileName))
 }
 
 // the node names of a layer, for the layer UpSet plots
@@ -415,12 +399,14 @@ function renderSimilarity(res: LayerSimilarityResponse): void {
   pane.innerHTML =
     heat('Shared nodes (Jaccard)', res.node_jaccard) +
     heat('Shared edges (Jaccard)', res.edge_jaccard)
+  const network = store.get().network
   appendUpset(
     'similarity',
     res.layers.map((name) => ({
       name,
       members: layerNodeNames(name),
       color: layerSwatchColor(name),
+      origin: network ? { network, layer: name } : undefined,
     })),
     'nodes',
     'layerSimilarity'
@@ -556,10 +542,17 @@ export function renderGroupOverlapTable(
     true,
     true
   )
+  // members are Node_Layer ids of the network on screen
+  const network = store.get().network
   if (members.length === names.length)
     appendUpset(
       'groupOverlap',
-      names.map((name, i) => ({ name, members: members[i], color: colors[i] })),
+      names.map((name, i) => ({
+        name,
+        members: members[i],
+        color: colors[i],
+        origin: network ? { network } : undefined,
+      })),
       'nodes',
       'groupOverlap'
     )

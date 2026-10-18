@@ -12,6 +12,8 @@ import {
 } from '../api/client'
 import type { UploadProgress } from '../api/client'
 import { ctx } from '../three'
+import { VOLUME_CONTAINERS, type LayerContainer } from '../three/Layer'
+import type { HiveState } from '../three/runtime'
 import { history } from '../commands/base'
 import {
   ApplyLayoutCommand,
@@ -21,6 +23,7 @@ import {
   showSceneCoords,
 } from '../commands/scene'
 import { initialSpreadLayers } from './layer'
+import { fitViewNow } from './search'
 import { defaultHiveInput, hiveDirections, type HiveInput } from './hive'
 import { redrawIntraLayerEdges } from './edge'
 
@@ -196,10 +199,14 @@ export function applyPredefinedLayout(
   leaveHive()
   resetSceneAndLayerPositions()
 
-  if (name === 'parallel') initialSpreadLayers(1)
+  // volumes spaced wider than the window: bring them all into view
+  const fitWide = (spacing: number) => {
+    if (spacing * ctx.layers.length > ctx.xBoundMax * 2 + 1) fitViewNow()
+  }
+  if (name === 'parallel') fitWide(initialSpreadLayers(1))
   else if (name === 'zigZag') {
     for (let i = 1; i < ctx.layers.length; i += 2) ctx.layers[i].translateY(500)
-    initialSpreadLayers(1)
+    fitWide(initialSpreadLayers(1))
   } else if (name === 'starLike') applyStarLayout()
   else if (name === 'cube') applyCubeLayout()
   else if (name === 'helix') applyHelixLayout()
@@ -286,8 +293,35 @@ const largestWidth = () =>
 // the layer's name at its outer end, and each node on its layer's axis at its
 // place (0 = inner end, 1 = outer end), lifted off a flat hive's plane by its
 // height when there is one. Links curve between the axes (three/hive.ts).
+// What a hive plot set aside — the layers' 3D containers (its layers are
+// axes) and where the nodes were — kept with the hive state the arrangement
+// commands restore, so ending the plot (or undoing it) brings them back.
+interface BeforeHive {
+  containers: LayerContainer[]
+  positions: [number, number, number][]
+  placed: string // where the hive put the nodes: moved since, they stay
+}
+const beforeHive = new WeakMap<HiveState, BeforeHive>()
+
+const nodePlaces = () =>
+  ctx.nodeObjects.map(
+    (n) =>
+      [n.getPosition('x'), n.getPosition('y'), n.getPosition('z')] as [
+        number,
+        number,
+        number,
+      ]
+  )
+const placesKey = (places: [number, number, number][]) =>
+  places.map((p) => p.map((v) => v.toFixed(2)).join(',')).join(';')
+
 function applyHiveLayout(input: HiveInput): void {
   const n = ctx.layers.length
+  const containers = ctx.layers.map((l) => l.container)
+  const positions = nodePlaces()
+  // an axis is a line: volumes give way to it while the plot is on
+  for (const layer of ctx.layers)
+    if (VOLUME_CONTAINERS.includes(layer.container)) layer.setContainer('floor')
   const length = largestWidth() // of every axis
   const inner = length * 0.15 // the empty middle
   const lift = length * 0.6 // the most a node rises off a flat hive
@@ -351,18 +385,42 @@ function applyHiveLayout(input: HiveInput): void {
     up: up.toArray(),
     axes: input.axes,
   }
+  beforeHive.set(ctx.hive, {
+    containers,
+    positions,
+    placed: placesKey(nodePlaces()),
+  })
   redrawIntraLayerEdges()
 }
 
 // whether the hive plot hid the scene's axes (they come back after it)
 let hidSceneCoords = false
 
-// Any other arrangement ends the hive plot: square floors, straight links
-function leaveHive(): void {
+// Any other arrangement ends the hive plot: square floors, straight links,
+// and what it set aside back — the 3D containers and, unless the nodes have
+// been moved since, where they were
+export function leaveHive(): void {
   if (!ctx.hive) return
+  const before = beforeHive.get(ctx.hive)
   ctx.hive = null
   for (const layer of ctx.layers)
     if (layer.floorShape === 'axis') layer.setFloorShape('square')
+  if (before && before.containers.length === ctx.layers.length) {
+    ctx.layers.forEach((layer, i) => {
+      if (layer.container === 'floor' && before.containers[i] !== 'floor')
+        layer.setContainer(before.containers[i])
+    })
+    if (
+      before.positions.length === ctx.nodeObjects.length &&
+      placesKey(nodePlaces()) === before.placed
+    )
+      ctx.nodeObjects.forEach((node, i) => {
+        const [x, y, z] = before.positions[i]
+        node.setPosition('x', x)
+        node.setPosition('y', y)
+        node.setPosition('z', z)
+      })
+  }
   if (hidSceneCoords) showSceneCoords(true)
   hidSceneCoords = false
 }

@@ -31,6 +31,8 @@ export interface BusEvents {
   'legend:changed': { title: string | null }
   'values:loaded': { columns: string[] }
   'selection:changed': { count: number } // nodes selected or unselected
+  // open Edit → Attributes' inspector on one node or edge (indices)
+  'attributes:inspect': { kind: 'node' | 'edge'; index: number }
 }
 
 type Handler<T> = (payload: T) => void

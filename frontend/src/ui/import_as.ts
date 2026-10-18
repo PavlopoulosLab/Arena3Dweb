@@ -25,7 +25,12 @@ import {
   restoreNetwork3dState,
   setNetworkMode,
 } from '../actions/modes'
-import { registerLoad, snapshotActive } from '../actions/workspace'
+import {
+  noteAddition,
+  registerLoad,
+  snapshotActive,
+  type SlotSource,
+} from '../actions/workspace'
 import { store } from '../store'
 import { ctx } from '../three'
 import type { NetworkMode } from '../three/runtime'
@@ -340,12 +345,14 @@ async function layOut(
 }
 
 // Put a fetched network in the scene as the user chose; the status line text.
-// `onStage` names each step (for a progress bar).
+// `onStage` names each step (for a progress bar); `source` says where it came
+// from (the Networks menu shows it).
 export async function placeNetwork(
   data: NetworkData,
   choice: ImportChoice,
   name: string,
-  onStage?: (stage: string) => void
+  onStage?: (stage: string) => void,
+  source: SlotSource = 'file'
 ): Promise<string> {
   const { mode } = choice
   onStage?.('Building the scene')
@@ -367,6 +374,7 @@ export async function placeNetwork(
     loadNetwork(merged.network)
     restoreTransforms(kept)
     dismissOneLayerPrompt()
+    noteAddition(name)
     const s = merged.layers.length === 1 ? '' : 's'
     // only the new layers are laid out; the others stay as they were
     const laid = choice.layout ? await layOut(merged.layers, onStage) : ''
@@ -375,6 +383,7 @@ export async function placeNetwork(
   if (mode === 'expand' && hasNetwork()) {
     const in3d = ctx.networkMode === 'single'
     const grown = expandView(store.get().network!, data)
+    noteAddition(name)
     const n = `${grown.added} new node${grown.added === 1 ? '' : 's'}, ${grown.edges} new edge${grown.edges === 1 ? '' : 's'}`
     if (in3d)
       return `Expanded the view: ${n}; the nodes already there stayed where they were.`
@@ -385,7 +394,7 @@ export async function placeNetwork(
   }
   snapshotActive()
   loadNetwork(data)
-  registerLoad(name)
+  registerLoad(name, source)
   // the popup already answered the one-layer question: floor, or 3D
   if (mode === 'single') {
     onStage?.('Laying out in 3D (Fruchterman-Reingold)')

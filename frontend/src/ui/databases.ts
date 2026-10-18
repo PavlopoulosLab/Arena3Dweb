@@ -283,8 +283,12 @@ async function load<T extends NetworkData>(
   startLoader()
   try {
     const data = await request()
-    const placed = await placeNetwork(data, choice, `${what} import`, (stage) =>
-      progress.computing(stage)
+    const placed = await placeNetwork(
+      data,
+      choice,
+      `${what} import`,
+      (stage) => progress.computing(stage),
+      'database'
     )
     // after placing: annotation sets belong to the network's slot
     const extra = after?.(data) ?? ''

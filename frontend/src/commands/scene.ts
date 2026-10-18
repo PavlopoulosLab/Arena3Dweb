@@ -240,6 +240,14 @@ export class MoveLayerCommand implements Command {
   }
 }
 
+// Nodes moved: the edges between layers (drawn in scene space) and the labels
+// follow on the next frame, as when the scene itself moves
+function flagMovedNodes(): void {
+  ctx.renderInterLayerEdgesFlag = true
+  ctx.renderNodeLabelsFlag = true
+  ctx.renderLayerLabelsFlag = true
+}
+
 export class ApplyLayoutCommand implements Command {
   description = 'Apply layout'
   private readonly beforePos: Record<string, LayoutPosition> = {}
@@ -290,6 +298,7 @@ export class ApplyLayoutCommand implements Command {
       bus.emit('clustering:applied', { clusters: this.clusters })
     }
     redrawIntraLayerEdges()
+    flagMovedNodes()
     bus.emit('layout:applied', { positions: this.positions })
   }
 
@@ -304,6 +313,7 @@ export class ApplyLayoutCommand implements Command {
       ctx.nodeColorPrioritySource = this.beforePriority
     }
     redrawIntraLayerEdges()
+    flagMovedNodes()
     bus.emit('layout:applied', { positions: this.beforePos })
   }
 }
@@ -566,6 +576,8 @@ export class PredefinedLayoutCommand implements Command {
   private readonly oldRadio = checkedRadio('predefined_layout')
   // a hive plot turns floors into axes and links into curves: both come back
   private readonly floors = ctx.layers.map((l) => l.floorShape)
+  // …and sets 3D containers aside while it is on
+  private readonly containers = ctx.layers.map((l) => l.container)
   private readonly hive = ctx.hive
   private readonly coords = sceneCoordsShown() // a hive plot hides them
 
@@ -583,7 +595,11 @@ export class PredefinedLayoutCommand implements Command {
   }
 
   undo(): void {
-    ctx.layers.forEach((l, i) => l.setFloorShape(this.floors[i] ?? 'square'))
+    ctx.layers.forEach((l, i) => {
+      l.setFloorShape(this.floors[i] ?? 'square')
+      if (this.containers[i] && l.container !== this.containers[i])
+        l.setContainer(this.containers[i])
+    })
     ctx.hive = this.hive
     showSceneCoords(this.coords)
     applyTransforms(this.before)

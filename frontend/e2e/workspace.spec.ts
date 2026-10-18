@@ -100,6 +100,9 @@ test('loaded networks: list, switch back and forth, compare', async ({
   // remove the other network
   await tab(page, 'File')
   await page.locator('.workspace-remove[data-id="2"]').dispatchEvent('click')
+  // deleting asks first, in the page's own popup
+  await expect(page.locator('#confirmDialogText')).toContainText('aspirin')
+  await page.locator('#confirmDialogOk').click()
   await expect(page.locator('#workspaceList .workspace-row')).toHaveCount(1)
 })
 

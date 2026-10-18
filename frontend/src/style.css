@@ -1327,7 +1327,7 @@ footer a:hover {
 /* example cards */
 .home-examples {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   margin-bottom: 1.2rem;
 }
@@ -1397,6 +1397,22 @@ footer a:hover {
     150deg,
     rgba(167, 139, 250, 0.18),
     rgba(167, 139, 250, 0.02)
+  );
+}
+.home-example--4 {
+  --tone: #f5b14c;
+  background: linear-gradient(
+    150deg,
+    rgba(245, 177, 76, 0.16),
+    rgba(245, 177, 76, 0.02)
+  );
+}
+.home-example--5 {
+  --tone: #f472b6;
+  background: linear-gradient(
+    150deg,
+    rgba(244, 114, 182, 0.16),
+    rgba(244, 114, 182, 0.02)
   );
 }
 
@@ -2496,11 +2512,161 @@ body.mode-single .layout-panel .lp-step {
   overflow: auto;
   border: 1px solid var(--arena-border);
   border-radius: var(--arena-radius-sm);
-  background: #fff;
+  background: var(--upset-bg, #fff);
 }
 
 .upset-plot svg {
   display: block;
+}
+
+/* Interactive UpSet plot (ui/upset.ts): hover, picked bars and sets, the
+   tooltip and the pick's members. Colours follow the panel theme through the
+   SVG's classes; the downloaded SVG keeps its own light colours. */
+.upset-box {
+  --upset-bg: #fff;
+  --upset-text: #222;
+  --upset-muted: #666;
+  --upset-axis: #999;
+  --upset-stripe: #f3f5f8;
+  --upset-ink: #4a6fa5;
+  --upset-ink-hover: #2c5290;
+  --upset-dot-off: #dfe3ea;
+  --upset-hover: rgba(74, 111, 165, 0.12);
+  --upset-pick: #d9480f;
+  --upset-pick-soft: rgba(217, 72, 15, 0.13);
+}
+[data-bs-theme='dark'] .upset-box {
+  --upset-bg: var(--arena-surface-solid);
+  --upset-text: var(--arena-text);
+  --upset-muted: var(--arena-text-muted);
+  --upset-axis: rgba(255, 255, 255, 0.28);
+  --upset-stripe: rgba(255, 255, 255, 0.035);
+  --upset-ink: #7ea6e0;
+  --upset-ink-hover: #b3cdf5;
+  --upset-dot-off: rgba(255, 255, 255, 0.13);
+  --upset-hover: rgba(126, 166, 224, 0.15);
+  --upset-pick: #ff922b;
+  --upset-pick-soft: rgba(255, 146, 43, 0.17);
+}
+.upset-stage {
+  position: relative;
+}
+.upset-svg .up-bg {
+  fill: var(--upset-bg);
+}
+.upset-svg .up-ink {
+  fill: var(--upset-text);
+}
+.upset-svg .up-muted {
+  fill: var(--upset-muted);
+}
+.upset-svg .up-axis {
+  stroke: var(--upset-axis);
+}
+.upset-svg .up-stripe {
+  fill: var(--upset-stripe);
+}
+.upset-svg .up-dot {
+  fill: var(--upset-dot-off);
+}
+.upset-svg .up-bar,
+.upset-svg .up-dot.up-on {
+  fill: var(--upset-ink);
+}
+.upset-svg .up-link {
+  stroke: var(--upset-ink);
+}
+.upset-svg .up-col,
+.upset-svg .up-set {
+  cursor: pointer;
+  outline: none;
+}
+.upset-svg .up-col.is-hover .up-hit,
+.upset-svg .up-col.is-related .up-hit,
+.upset-svg .up-set.is-hover .up-hit,
+.upset-svg .up-set.is-related .up-hit,
+.upset-svg .up-band.is-hover,
+.upset-svg .up-band.is-related {
+  fill: var(--upset-hover);
+}
+.upset-svg .up-col.is-hover .up-bar,
+.upset-svg .up-col.is-hover .up-dot.up-on {
+  fill: var(--upset-ink-hover);
+}
+.upset-svg .up-col.is-hover .up-link {
+  stroke: var(--upset-ink-hover);
+}
+/* picked: the bars, the chosen sets and the bars their union /
+   intersection is made of */
+.upset-svg .up-col.is-picked .up-hit,
+.upset-svg .up-col.is-covered .up-hit,
+.upset-svg .up-set.is-picked .up-hit,
+.upset-svg .up-band.is-picked {
+  fill: var(--upset-pick-soft);
+}
+.upset-svg .up-col.is-picked .up-bar,
+.upset-svg .up-col.is-picked .up-dot.up-on {
+  fill: var(--upset-pick);
+}
+.upset-svg .up-col.is-picked .up-link {
+  stroke: var(--upset-pick);
+}
+.upset-svg .up-set.is-picked text {
+  font-weight: 700;
+}
+.upset-svg .up-col:focus-visible .up-hit,
+.upset-svg .up-set:focus-visible .up-hit {
+  stroke: var(--bs-primary, #5b9bff);
+  stroke-width: 2;
+}
+.upset-tip {
+  position: absolute;
+  z-index: 5;
+  max-width: 260px;
+  padding: 0.4rem 0.55rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--bs-body-color);
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--arena-radius-sm);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+.upset-tip[hidden],
+.upset-members[hidden],
+.upset-op[hidden] {
+  display: none;
+}
+.upset-tip__title {
+  font-weight: 600;
+}
+.upset-tip__names {
+  color: var(--bs-secondary-color);
+  overflow-wrap: anywhere;
+}
+.upset-tip__hint {
+  margin-top: 0.15rem;
+  color: var(--bs-secondary-color);
+  font-style: italic;
+}
+.upset-sort-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+.upset-sort-label .form-select {
+  width: auto;
+}
+.upset-members {
+  max-height: 7.5rem;
+  overflow: auto;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--arena-radius-sm);
+  overflow-wrap: anywhere;
+  user-select: text;
 }
 
 /* Section titles inside the Edit, File, Scene, Style and Analyze panels: a
@@ -2573,6 +2739,9 @@ body.mode-single .layout-panel .lp-step {
 }
 #navBar .nav-link[data-menu='layout'] {
   --menu: #9b59d0;
+}
+#navBar .nav-link[data-menu='clustering'] {
+  --menu: #36b9c9;
 }
 #navBar .nav-link[data-menu='edit'] {
   --menu: #2aa198;
@@ -2759,6 +2928,426 @@ body.mode-single .layout-panel .lp-step {
   color: #d64545;
 }
 
+/* Networks menu (ui/networks.ts): the top-bar button says what is on screen
+   — network · annotation — on a second line; the menu lists every loaded
+   network with its source, size and annotation sets. */
+#navBar .nav-link[data-menu='networks'] {
+  --menu: #b5c94a;
+}
+
+/* one column as wide as the second line wants (up to max-width), but never
+   narrower than the title: when the bar runs short of room, the second line
+   gives way first (ellipsis) instead of pushing the bar past the window */
+#menu-networks {
+  display: grid;
+  grid-template-columns: minmax(auto, max-content);
+  max-width: 11rem;
+  text-align: left;
+}
+
+#navBar .navbar-nav #menu-networks.has-now {
+  padding-bottom: 0;
+}
+
+/* the caret sits after the title, not under the second line */
+#menu-networks::after {
+  display: none;
+}
+
+.nav-networks__title {
+  white-space: nowrap;
+}
+
+.nav-networks__title::after {
+  display: inline-block;
+  margin-left: 0.5em; /* the others get a space from the markup */
+  vertical-align: 0.255em;
+  content: '';
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0;
+  border-left: 0.3em solid transparent;
+}
+
+.nav-networks__now {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  font-weight: 400;
+  line-height: 1;
+  margin-top: -0.15rem;
+  color: var(--arena-text-muted);
+}
+
+@media (min-width: 1700px) {
+  #menu-networks {
+    max-width: 18rem;
+  }
+}
+
+/* the room the menu takes: tighter menus and theme picker until the bar is
+   wide enough, so it still fits the window */
+@media (min-width: 1200px) and (max-width: 1799.98px) {
+  #navBar .navbar-nav .nav-link {
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+    font-size: 0.85rem;
+  }
+  .nav-theme .form-select {
+    min-width: 6.5rem;
+  }
+  /* Undo / Redo show their arrows; the words stay for screen readers and
+     the tooltips say which is which */
+  #navBar .nav-word {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  #undoButton,
+  #redoButton {
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+}
+
+.networks-menu {
+  width: min(25rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.networks-now {
+  padding: 0.3rem 0.45rem 0.55rem;
+  margin-bottom: 0.45rem;
+  border-bottom: 1px solid var(--arena-border);
+}
+
+.networks-now__label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--arena-text-muted);
+}
+
+.networks-now__name {
+  font-weight: 600;
+  color: var(--arena-text);
+  overflow-wrap: anywhere;
+}
+
+.networks-now__ann {
+  font-size: 0.8rem;
+  color: var(--arena-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.networks-now__ann b {
+  font-weight: 600;
+  color: var(--arena-text);
+}
+
+.networks-now--empty {
+  font-size: 0.85rem;
+  color: var(--arena-text-muted);
+}
+
+.networks-net {
+  padding: 0.35rem 0.45rem;
+  margin-bottom: 0.35rem;
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius-sm);
+}
+
+.networks-net.is-active {
+  border-color: rgba(var(--arena-accent-rgb), 0.55);
+  background: rgba(var(--arena-accent-rgb), 0.08);
+}
+
+.networks-net__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+.networks-net__switch {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.1rem 0;
+  text-align: left;
+  background: none;
+  border: 0;
+  color: var(--arena-text);
+}
+
+.networks-net__switch:not([aria-current]):hover .networks-net__name {
+  color: var(--arena-accent);
+}
+
+.networks-net__name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.networks-net__added,
+.networks-net__meta {
+  font-size: 0.75rem;
+  color: var(--arena-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.networks-net__badge {
+  padding-top: 0.2rem;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  color: var(--arena-accent);
+}
+
+/* rename (✎) and delete (×) beside a network or an annotation set */
+.networks-icon {
+  flex: none;
+  padding: 0 0.25rem;
+  font-size: 1rem;
+  line-height: 1.3;
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  color: var(--arena-text-muted);
+}
+
+.networks-icon:hover,
+.networks-icon:focus-visible {
+  color: var(--arena-text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.networks-net__delete:hover,
+.networks-set__delete:hover {
+  color: #e05252;
+}
+
+.networks-set-row {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.networks-set-row .networks-icon {
+  font-size: 0.9rem;
+}
+
+.networks-sets {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 0.3rem;
+  padding-left: 0.4rem;
+  border-left: 2px solid var(--arena-border);
+}
+
+.networks-set {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.2rem 0.4rem 0.2rem 1.3rem;
+  font-size: 0.82rem;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: 5px;
+  color: var(--arena-text-muted);
+}
+
+.networks-set:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--arena-text);
+}
+
+.networks-set[aria-pressed='true'] {
+  font-weight: 600;
+  color: var(--arena-text);
+}
+
+.networks-set[aria-pressed='true']::before {
+  content: '✓';
+  position: absolute;
+  left: 0.35rem;
+  color: var(--arena-accent);
+}
+
+.networks-set-row .networks-set {
+  flex: 1;
+  min-width: 0;
+}
+
+.networks-set__name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.networks-set__n {
+  font-size: 0.72rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--arena-text-muted);
+}
+
+.networks-empty {
+  margin-top: 0.25rem;
+  font-size: 0.78rem;
+  color: var(--arena-text-muted);
+}
+
+.networks-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.9rem;
+  margin-top: 0.45rem;
+  padding: 0.45rem 0.45rem 0;
+  border-top: 1px solid var(--arena-border);
+}
+
+.networks-link {
+  padding: 0;
+  font-size: 0.82rem;
+  background: none;
+  border: 0;
+  color: var(--arena-accent);
+}
+
+.networks-link:hover {
+  text-decoration: underline;
+}
+
+/* in the ☰ drawer the button and the menu take the full width */
+@media (max-width: 1199.98px) {
+  #menu-networks {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: none;
+  }
+  .networks-menu {
+    width: auto;
+    max-height: none;
+  }
+}
+
+/* the folded ☰ menu scrolls by itself when it is taller than the window */
+@media (max-width: 1199.98px) {
+  #navbarTabs.show,
+  #navbarTabs.collapsing {
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (pointer: coarse) {
+  .networks-net__switch,
+  .networks-set,
+  .networks-link {
+    min-height: 44px;
+  }
+  .networks-icon {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* File → Loaded networks: rename beside delete (ui/file.ts); the sizes may
+   wrap so both stay in the row */
+.workspace-row .workspace-switch {
+  overflow-wrap: break-word;
+}
+
+.workspace-row .workspace-meta {
+  white-space: normal;
+  text-align: right;
+}
+
+.workspace-rename {
+  background: none;
+  border: 0;
+  color: var(--arena-text-muted);
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.workspace-rename:hover {
+  color: var(--arena-text);
+}
+
+/* Rename in place (ui/inline_edit.ts): the box stands where the name was */
+.inline-edit {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.inline-edit__input {
+  min-width: 8rem;
+}
+
+.inline-edit__msg {
+  font-size: 0.75rem;
+  color: #f08080;
+}
+
+.inline-edit__msg:empty {
+  display: none;
+}
+
+/* Yes/no popup (ui/confirm.ts) */
+.confirm-dialog {
+  width: min(26rem, calc(100vw - 2rem));
+  padding: 0;
+  color: var(--arena-text);
+  background: var(--arena-surface-solid);
+  border: 1px solid var(--arena-border-strong);
+  border-radius: var(--arena-radius);
+  box-shadow: var(--arena-shadow);
+}
+
+.confirm-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.confirm-dialog form {
+  padding: 1rem 1.1rem;
+}
+
+.confirm-dialog__title {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.confirm-dialog__text {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--arena-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.confirm-dialog__buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
 /* Style panel: the Nodes | Edges switch over its two tables, as in Edit →
    Attributes, with each side's total */
 .style-head {
@@ -2909,4 +3498,347 @@ body.mode-single .layout-panel .lp-step {
   .style-props__head {
     display: none;
   }
+}
+
+/* Edit → Attributes (ui/attributes.ts): a node table and an edge table, every
+   cell editable; only the rows in view are drawn (absolutely placed by
+   index), so the table scrolls inside the drawer, which it fills. */
+#panelContent #panel-attributes {
+  width: min(920px, 96vw);
+}
+
+#panelContent > #panel-attributes.active {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.attr-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.attr-head__export {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.attr-badge {
+  margin-left: 0.25rem;
+  font-size: 0.72rem;
+  color: var(--arena-text-muted);
+}
+
+.btn.active .attr-badge {
+  color: inherit;
+}
+
+.attr-intro {
+  margin: 0 0 0.5rem;
+}
+
+.attr-section {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.attr-section[hidden] {
+  display: none;
+}
+
+.attr-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.attr-toolbar input[type='search'] {
+  flex: 1 1 12rem;
+  width: auto;
+}
+
+.attr-toolbar .form-select {
+  width: auto;
+  max-width: 13rem;
+}
+
+.attr-summary {
+  margin-bottom: 0.3rem;
+  color: var(--arena-text-muted);
+}
+
+.attr-table {
+  position: relative; /* the rows' offsetParent */
+  flex: 1 1 auto;
+  min-height: 220px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius-sm);
+  background: var(--arena-surface-solid);
+}
+
+.attr-row {
+  display: grid;
+  align-items: center;
+  gap: 0.3rem;
+  height: 34px; /* ROW_H in ui/attributes.ts */
+  padding: 0 0.35rem;
+  border-bottom: 1px solid var(--arena-border);
+}
+
+.attr-table--node .attr-row {
+  grid-template-columns:
+    1.4rem minmax(6.5rem, 1.1fr) minmax(4.5rem, 0.7fr) 3.6rem 7.4rem
+    4.2rem 4.6rem minmax(6rem, 1fr) minmax(7rem, 1.4fr) 1.6rem;
+  min-width: 860px;
+}
+
+.attr-table--edge .attr-row {
+  grid-template-columns:
+    1.4rem minmax(5.5rem, 1fr) minmax(5.5rem, 1fr) minmax(6rem, 1fr)
+    minmax(4.4rem, 0.7fr) 3.6rem 4.2rem 4.6rem 5.6rem 3.6rem 1.6rem;
+  min-width: 860px;
+}
+
+.attr-row--head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--arena-surface-solid);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--arena-text-muted);
+}
+
+.attr-body {
+  position: relative;
+}
+
+.attr-body .attr-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.attr-row.is-ticked {
+  background: rgba(var(--arena-accent-rgb), 0.14);
+}
+
+.attr-row.is-flash {
+  animation: attr-flash 1.4s var(--arena-ease);
+}
+
+@keyframes attr-flash {
+  from {
+    box-shadow: inset 0 0 0 2px var(--arena-accent);
+  }
+  to {
+    box-shadow: inset 0 0 0 2px transparent;
+  }
+}
+
+.attr-c {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.attr-c--text {
+  overflow: hidden;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.attr-c .form-control,
+.attr-c .form-select {
+  min-width: 0;
+  height: 26px;
+  padding: 0 0.3rem;
+  font-size: 0.78rem;
+}
+
+.attr-c .form-select {
+  padding-right: 1.4rem;
+  background-position: right 0.3rem center;
+}
+
+.attr-c input[type='color'] {
+  width: 2.1rem;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+}
+
+/* no arrow colour of its own: the picker shows the edge's, faded */
+.attr-row:not(.has-arrow) [data-f='arrowColor'],
+.attr-insp[data-kind='edge']:not(.has-arrow) #inspEdgeArrowColor,
+.attr-insp[data-kind='node']:not(.has-label-color) #inspNodeLabelColor {
+  opacity: 0.45;
+}
+
+.attr-row:not(.has-arrow) .attr-reset,
+.attr-insp[data-kind='edge']:not(.has-arrow) [data-act='arrowReset'],
+.attr-insp[data-kind='node']:not(.has-label-color)
+  [data-act='labelColorReset'] {
+  visibility: hidden;
+}
+
+.attr-reset,
+.attr-inspect,
+.attr-sort,
+.attr-insp__close {
+  padding: 0 0.25rem;
+  border: 0;
+  background: none;
+  color: var(--arena-text-muted);
+  cursor: pointer;
+}
+
+.attr-reset:hover,
+.attr-inspect:hover,
+.attr-sort:hover,
+.attr-insp__close:hover {
+  color: var(--arena-text);
+}
+
+.attr-sort {
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  white-space: nowrap;
+}
+
+[aria-sort='ascending'] > .attr-sort::after {
+  content: ' ▲';
+}
+
+[aria-sort='descending'] > .attr-sort::after {
+  content: ' ▼';
+}
+
+.attr-inspect {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.attr-empty {
+  padding: 1rem;
+  text-align: center;
+  color: var(--arena-text-muted);
+}
+
+/* the inspector (ui/inspector.ts): a card over the scene */
+.attr-insp {
+  position: fixed;
+  z-index: 7; /* above the drawers (5) and their handle (6) */
+  width: 288px;
+  max-width: calc(100vw - 16px);
+  padding: 0.6rem 0.75rem 0.7rem;
+  background: var(--arena-elevated);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid var(--arena-border-strong);
+  border-radius: var(--arena-radius);
+  box-shadow: var(--arena-shadow);
+  color: var(--arena-text);
+}
+
+.attr-insp:focus {
+  outline: none;
+}
+
+.attr-insp__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+}
+
+.attr-insp__titles {
+  min-width: 0;
+}
+
+.attr-insp__title {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attr-insp__sub {
+  font-size: 0.75rem;
+  color: var(--arena-text-muted);
+}
+
+.attr-insp__close {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.attr-insp__grid {
+  display: grid;
+  grid-template-columns: 6.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+}
+
+.attr-insp__name {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--arena-text-muted);
+}
+
+.attr-insp__value {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.attr-insp__value .form-control,
+.attr-insp__value .form-select {
+  height: 28px;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 0.8rem;
+}
+
+.attr-insp__value input[type='color'] {
+  flex: none;
+  width: 2.4rem;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+}
+
+.attr-insp__foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
 }

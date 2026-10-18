@@ -1,8 +1,9 @@
 import { expect, test, type Page } from './fixtures'
 import path from 'node:path'
 
-// Layout → Clustering: communities without a layout, coloured, listed, and
-// reusable as annotations.
+// The Clustering panel (top bar, next to Layout): communities without a
+// layout, in a panel of their own — coloured, summarised, listed, and reusable as annotations. The
+// Layout panel runs no clustering algorithm itself.
 
 const tab = (page: Page, name: string) =>
   page
@@ -44,6 +45,16 @@ test('find communities, then use them as annotations; both undoable', async ({
   expect(before.clustered).toBe(0)
 
   await tab(page, 'Layout')
+  await expect(
+    page
+      .locator('#panel-layouts')
+      .locator('#clusterAlgorithm, #clusteringAlgorithmChoice')
+  ).toHaveCount(0)
+  await tab(page, 'Clustering')
+  await expect(page.locator('#panel-clustering')).toHaveClass(/show/)
+  await expect(page.locator('#clusterSummary')).toContainText(
+    'No communities yet'
+  )
   await expect(page.locator('#clustersToAnnotations')).toBeDisabled()
   await page.locator('#clusterAlgorithm').selectOption('Louvain')
   await page.locator('#runClustering').dispatchEvent('click')
@@ -56,6 +67,13 @@ test('find communities, then use them as annotations; both undoable', async ({
   expect(after.clusters).toBeGreaterThan(1)
   expect(after.y0).toBe(before.y0) // nodes did not move
   await expect(page.locator('#clustersToAnnotations')).toBeEnabled()
+  // the summary: how many communities, over how many nodes, the largest listed
+  await expect(page.locator('#clusterCount')).toContainText(
+    `${after.clusters} communities (Louvain, within each layer), 255 of 255 nodes`
+  )
+  expect(
+    await page.locator('#clusterSummary tbody tr').count()
+  ).toBeGreaterThan(1)
 
   await page.locator('#clustersToAnnotations').dispatchEvent('click')
   const annotated = await read(page)
@@ -69,4 +87,8 @@ test('find communities, then use them as annotations; both undoable', async ({
   expect((await read(page)).annotated).toBe(0)
   await page.locator('#undoButton').dispatchEvent('click')
   expect((await read(page)).clustered).toBe(0)
+  await tab(page, 'Clustering')
+  await expect(page.locator('#clusterSummary')).toContainText(
+    'No communities yet'
+  )
 })

@@ -129,9 +129,9 @@ const STATS: [string, string][] = [
 // featured examples (by file) with a line on what they show
 const FEATURED: [string, string, string][] = [
   [
-    'figure2A_data.tsv',
-    'Four weighted layers',
-    'A clean start: four layers, weights, links between them.',
+    'figure1_export.json',
+    'Six layers',
+    'Six random topologies side by side — 1,600 nodes in one scene.',
   ],
   [
     'covid19_export.json',
@@ -147,6 +147,16 @@ const FEATURED: [string, string, string][] = [
     'prego.tsv',
     'Hive plot',
     'Three layers as three axes, nodes placed by their links.',
+  ],
+  [
+    'cnn_lenet.json',
+    'Convolutional network',
+    'A small CNN reading a drawn 7: feature maps as layers, filters as links.',
+  ],
+  [
+    'transformer_tiny.json',
+    'LLM-like transformer',
+    'Attention heads, MLPs and the residual stream of two decoder blocks.',
   ],
 ]
 

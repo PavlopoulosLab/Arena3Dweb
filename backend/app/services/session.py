@@ -166,6 +166,16 @@ def _number(value: Any, lo: float, hi: float) -> float | None:
     return min(hi, max(lo, v)) if math.isfinite(v) else None
 
 
+def _label(value: Any, limit: int = 200) -> str | None:
+    """A name to show (network, annotation set): one line of text (control
+    characters and runs of spaces become one space), trimmed and at most
+    `limit` long, or None."""
+    if not isinstance(value, str):
+        return None
+    text = re.sub(r"[\s\x00-\x1f\x7f]+", " ", value).strip()[:limit].strip()
+    return text or None
+
+
 def _hex(value: Any) -> str | None:
     """A #rrggbb colour, or None."""
     return value if isinstance(value, str) and re.fullmatch(r"#[0-9a-fA-F]{6}", value) else None
@@ -284,5 +294,7 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
         "interEdgeBundling": _strength(data.get("interEdgeBundling")),
         "edgeShape": _edge_shape(data.get("edgeShape")),
         "hive": _hive(data.get("hive")),
+        "name": _label(data.get("name")),
+        "annotationSet": _label(data.get("annotationSet")),
         "warnings": warnings,
     }

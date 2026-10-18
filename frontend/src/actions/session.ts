@@ -9,6 +9,7 @@ import { api, type SessionData } from '../api/client'
 import { store } from '../store'
 import { ctx } from '../three'
 import { network3dSessionState } from './modes'
+import { activeSlot } from './workspace'
 import type { Edge } from '../three/Edge'
 import type { Node } from '../three/Node'
 
@@ -101,7 +102,16 @@ export function collectSession(): SessionData {
     interEdgeBundling: ctx.interEdgeBundling,
     edgeShape: ctx.edgeShape,
     hive: ctx.hive,
+    ...namesOnScreen(),
   }
+}
+
+// the network's name and its annotation set's name, so a reload keeps them
+function namesOnScreen(): Pick<SessionData, 'name' | 'annotationSet'> {
+  const slot = activeSlot()
+  if (!slot) return {}
+  const set = slot.annotationSets[slot.activeSet]
+  return { name: slot.name, ...(set ? { annotationSet: set.name } : {}) }
 }
 
 // v2 updateEdgesRShiny + updateEdgeColorsRShiny: one export row per channel

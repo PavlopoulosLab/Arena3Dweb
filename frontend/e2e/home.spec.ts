@@ -31,17 +31,17 @@ test('the landing page leads to the File panel, the importers and an example', a
   // a featured example opens straight away (the fixture answers Import as)
   await home(page)
   const card = page.locator('.home-example', {
-    hasText: 'Four weighted layers',
+    hasText: 'Six layers',
   })
   await expect(card).toBeVisible()
   await card.click()
-  await expect(page.locator('#file_status')).toContainText('Loaded network')
+  await expect(page.locator('#file_status')).toContainText('Session loaded')
   const layers = await page.evaluate(
     () =>
       (window as unknown as { __arena: { ctx: { layers: unknown[] } } }).__arena
         .ctx.layers.length
   )
-  expect(layers).toBe(4)
+  expect(layers).toBe(6)
 })
 
 test('the hero button opens the first featured example', async ({ page }) => {
@@ -50,7 +50,7 @@ test('the hero button opens the first featured example', async ({ page }) => {
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
   await page.locator('#homeHeroExample').click()
-  await expect(page.locator('#file_status')).toContainText('Loaded network')
+  await expect(page.locator('#file_status')).toContainText('Session loaded')
 })
 
 test('each citation copies to the clipboard', async ({ page, context }) => {

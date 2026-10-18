@@ -10,6 +10,7 @@ import { store } from '../store'
 import { ctx, SELECTED_DEFAULT_COLOR } from '../three'
 import type { ColorPrioritySource } from '../three'
 import { NODE_DETAIL } from '../three/constants'
+import { shapeFromText } from '../three/Node'
 import {
   findIndexByUuid,
   getCaseInsensitiveIndices,
@@ -17,6 +18,7 @@ import {
   setRandomSeed,
 } from '../utils'
 import { raycaster, setRaycaster } from './screen'
+import { restyleNodeLabels } from './labels'
 
 // v2 set.seed(123): fixed so every network load scatters to the same layout.
 const SCRAMBLE_SEED = 123
@@ -105,17 +107,24 @@ export function getSelectedNodes(): number[] {
   return ctx.nodeObjects.filter((n) => n.isSelected).map((n) => n.id)
 }
 
+// @return the index of the node under the pointer, or -1
+export function pickNode(event: { clientX: number; clientY: number }): number {
+  setRaycaster(event)
+  const spheres = ctx.nodeObjects.map(({ sphere }) => sphere)
+  const intersects = raycaster().intersectObjects(spheres, false)
+  return intersects.length === 0
+    ? -1
+    : findIndexByUuid(spheres, intersects[0].object.uuid)
+}
+
 // @return whether a node was toggled
 export function performDoubleClickNodeSelection(event: {
   clientX: number
   clientY: number
 }): boolean {
-  setRaycaster(event)
-  const spheres = ctx.nodeObjects.map(({ sphere }) => sphere)
-  const intersects = raycaster().intersectObjects(spheres, false)
-  if (intersects.length === 0) return false
+  const i = pickNode(event)
+  if (i === -1) return false
 
-  const i = findIndexByUuid(spheres, intersects[0].object.uuid)
   ctx.nodeObjects[i].isSelected = !ctx.nodeObjects[i].isSelected
   repaintNode(i)
   decideNodeLabelFlags()
@@ -190,18 +199,27 @@ export function setNodeSelectedColorPriority(flag: boolean): void {
 
 // v2 node.js setNodeAttributes + handler_clickNodeColorPriority("default"):
 // apply per-node color/size/url/description from an attribute file, then
-// flip color priority to default so imported colors show.
+// flip color priority to default so imported colors show. The shape,
+// opacity and label columns are what Edit → Attributes exports.
 export function applyNodeAttributes(rows: NodeAttributeRow[]): void {
+  const pos = new Map(ctx.nodeLayerNames.map((id, i) => [id, i]))
   for (const row of rows) {
-    const pos = ctx.nodeLayerNames.indexOf(row.node_layer)
-    if (pos === -1) continue // node not in network
-    const node = ctx.nodeObjects[pos]
+    const i = pos.get(row.node_layer)
+    if (i === undefined) continue // node not in network
+    const node = ctx.nodeObjects[i]
     if (row.color) node.setColor(row.color, true)
     if (row.size !== null) node.setScale(row.size)
     if (row.url) node.url = row.url
     if (row.description) node.descr = row.description
     if (row.annotations) node.annotations = [...row.annotations]
+    const shape = row.shape ? shapeFromText(row.shape) : null
+    if (shape && shape !== node.shape) node.setGeometry(shape)
+    if (row.opacity != null) node.setAlpha(row.opacity)
+    if (row.label) node.label = row.label
+    if (row.label_color) node.labelColor = row.label_color
+    if (row.label_size != null) node.labelSize = row.label_size
   }
+  restyleNodeLabels()
   bus.emit('groups:changed', { source: 'annotation' })
   setNodeColorPriority('default')
 }

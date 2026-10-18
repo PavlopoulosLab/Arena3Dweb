@@ -6,7 +6,7 @@
     <title>Arena3D</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top" id="navBar">
+    <nav class="navbar navbar-expand-xl bg-body-tertiary fixed-top" id="navBar">
       <div class="container-fluid">
         <button
           class="navbar-toggler"
@@ -57,6 +57,27 @@
               >
                 Database Importers
               </button>
+            </li>
+            <!-- what is loaded and on screen: ui/networks.ts fills the menu -->
+            <li class="nav-item dropdown nav-networks" role="presentation">
+              <button
+                class="nav-link dropdown-toggle"
+                id="menu-networks"
+                data-menu="networks"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="outside"
+                aria-expanded="false"
+                aria-describedby="networksNow"
+              >
+                <span class="nav-networks__title">Networks</span>
+                <span class="nav-networks__now d-none" id="networksNow"></span>
+              </button>
+              <div
+                class="dropdown-menu networks-menu"
+                id="networksMenu"
+                aria-labelledby="menu-networks"
+              ></div>
             </li>
             <li class="nav-item dropdown" role="presentation">
               <button
@@ -141,6 +162,18 @@
                 Layout
               </button>
             </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#panel-clustering"
+                data-menu="clustering"
+                type="button"
+                role="tab"
+              >
+                Clustering
+              </button>
+            </li>
             <li class="nav-item dropdown" role="presentation">
               <button
                 class="nav-link dropdown-toggle"
@@ -196,6 +229,17 @@
                     role="tab"
                   >
                     Style
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-attributes"
+                    type="button"
+                    role="tab"
+                  >
+                    Attributes
                   </button>
                 </li>
               </ul>
@@ -303,7 +347,7 @@
               title="Undo (Ctrl+Z)"
               disabled
             >
-              &#x21b6; Undo
+              &#x21b6; <span class="nav-word">Undo</span>
             </button>
             <button
               id="redoButton"
@@ -312,7 +356,7 @@
               title="Redo (Ctrl+Shift+Z)"
               disabled
             >
-              &#x21b7; Redo
+              &#x21b7; <span class="nav-word">Redo</span>
             </button>
           </div>
         </div>
@@ -338,11 +382,13 @@
       ></div>
       <div class="tab-pane fade" id="panel-export" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-layouts" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-clustering" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-scene" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-layer" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-node" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-edge" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-style" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-attributes" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-analyze" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-data" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-fps" role="tabpanel"></div>

@@ -71,6 +71,7 @@ test('with nodes selected, the menu offers actions on the selection', async ({
       isSelected: boolean
       getWorldPosition: (a: string) => number
     }[]
+    edgeObjects: { sourceNodeIndex: number; targetNodeIndex: number }[]
   }
   const selectedCount = () =>
     page.evaluate(
@@ -79,7 +80,8 @@ test('with nodes selected, the menu offers actions on the selection', async ({
           window as unknown as { __arena: { ctx: Ctx } }
         ).__arena.ctx.nodeObjects.filter((n) => n.isSelected).length
     )
-  // a point on the canvas itself, at least 40px from every node
+  // a point on the canvas itself, at least 40px from every node and 12px
+  // from every edge (an edge has a menu of its own)
   const background = await page.evaluate(() => {
     const c = (window as unknown as { __arena: { ctx: Ctx } }).__arena.ctx
     const canvas = document.querySelector('#app canvas')!
@@ -88,11 +90,23 @@ test('with nodes selected, the menu offers actions on the selection', async ({
       r.left + c.xBoundMax + n.getWorldPosition('x'),
       r.top + c.yBoundMax - n.getWorldPosition('y'),
     ])
+    const toEdge = (x: number, y: number, a: number[], b: number[]) => {
+      const [dx, dy] = [b[0] - a[0], b[1] - a[1]]
+      const len = dx * dx + dy * dy
+      const t = len
+        ? Math.max(0, Math.min(1, ((x - a[0]) * dx + (y - a[1]) * dy) / len))
+        : 0
+      return Math.hypot(x - a[0] - t * dx, y - a[1] - t * dy)
+    }
     for (let y = r.top + 120; y < r.bottom - 120; y += 20)
       for (let x = r.left + r.width * 0.3; x < r.right - 300; x += 20)
         if (
           document.elementFromPoint(x, y) === canvas &&
-          pts.every(([px, py]) => Math.hypot(px - x, py - y) > 40)
+          pts.every(([px, py]) => Math.hypot(px - x, py - y) > 40) &&
+          c.edgeObjects.every(
+            (e) =>
+              toEdge(x, y, pts[e.sourceNodeIndex], pts[e.targetNodeIndex]) > 12
+          )
         )
           return { x, y }
     return null

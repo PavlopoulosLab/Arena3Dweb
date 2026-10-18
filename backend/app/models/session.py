@@ -26,6 +26,9 @@ class SessionImportResponse(BaseModel):
     interEdgeBundling: float = 0.0
     edgeShape: str = "parallel"
     hive: dict[str, Any] | None = None  # the hive plot arrangement, when on
+    # the network's name and its annotation set's name (Networks menu), when given
+    name: str | None = None
+    annotationSet: str | None = None
     warnings: list[str] = []
 
 

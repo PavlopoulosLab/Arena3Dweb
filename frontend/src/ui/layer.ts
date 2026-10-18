@@ -14,7 +14,7 @@ import {
 } from '../actions/layer'
 import { bus } from '../bus'
 import { setLayerContainer } from '../actions/modes'
-import type { LayerContainer } from '../three/Layer'
+import { VOLUME_CONTAINERS, type LayerContainer } from '../three/Layer'
 import { store } from '../store'
 import type { NetworkData } from '../api/client'
 import { loadNetwork } from '../actions/network'
@@ -218,12 +218,14 @@ export function initLayerPanel(): void {
       const selected = ctx.layers.filter((l) => l.isSelected).map((l) => l.id)
       const ids = selected.length ? selected : ctx.layers.map((l) => l.id)
       if (ids.length === 0) return layerStatus('Load a network first.', true)
+      const endsHive = !!ctx.hive && VOLUME_CONTAINERS.includes(kind)
       setLayerContainer(ids, kind)
         .then((laidOut) =>
           layerStatus(
-            laidOut
-              ? `Layers set to ${kind}; nodes laid out in 3D inside.`
-              : `Layers set to ${kind}.`
+            (endsHive ? 'Hive plot ended (its layers are axes). ' : '') +
+              (laidOut
+                ? `Layers set to ${kind}; nodes laid out in 3D inside.`
+                : `Layers set to ${kind}.`)
           )
         )
         .catch((err: unknown) =>

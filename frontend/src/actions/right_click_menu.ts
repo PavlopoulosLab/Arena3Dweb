@@ -7,7 +7,8 @@
 // With nodes selected, the menu also lists what can be done to the selection
 // ("Selected nodes (N)"), on a node or on the background: focus the camera,
 // copy the names, and whatever the panels register with
-// registerSelectionAction (Explore's walks and paths, Style, …).
+// registerSelectionAction (Explore's walks and paths, Style, …). On an edge
+// (away from nodes) it offers Edit Edge Attributes and Select Edge.
 
 import { ctx, SPHERE_RADIUS } from '../three'
 import { exists } from '../utils'
@@ -18,6 +19,8 @@ import {
   updateSelectedNodesStore,
 } from './node'
 import { focusOnNodes } from './search'
+import { edgeCell, pickEdge, tickEdges } from './attributes'
+import { bus } from '../bus'
 
 let optionsList: HTMLSelectElement | null = null
 
@@ -233,10 +236,16 @@ export function replaceContextMenuOverNode(event: {
     container.appendChild(optionsList)
     return
   }
+  // an edge: Edit Edge Attributes and Select Edge, then the selection's
+  const edge = pickEdge(
+    event.layerX,
+    event.layerY,
+    Math.max(6, (event.hitRadius ?? 0) / 2)
+  )
   // the background, with nodes selected: the selection's actions alone
-  if (!sel.length) return
+  if (edge === -1 && !sel.length) return
   event.preventDefault()
-  optionsList = buildMenu(null, event.layerX, event.layerY, sel)
+  optionsList = buildMenu(null, event.layerX, event.layerY, sel, edge)
   container.appendChild(optionsList)
 }
 
@@ -244,7 +253,8 @@ function buildMenu(
   nodeIndex: number | null,
   x: number,
   y: number,
-  sel: number[]
+  sel: number[],
+  edge = -1 // an edge under the pointer (not on a node)
 ): HTMLSelectElement {
   const select = document.createElement('select')
   select.className = 'optionsBox'
@@ -269,6 +279,7 @@ function buildMenu(
     ]
     if (node.url !== '') options.push('Link')
     if (node.descr !== '') options.push('Description')
+    options.push('Edit Attributes…')
     // a group of its own only when the selection's group follows
     const group = sel.length ? document.createElement('optgroup') : select
     if (group instanceof HTMLOptGroupElement) {
@@ -276,6 +287,18 @@ function buildMenu(
       select.appendChild(group)
     }
     for (const text of options) add(group, text)
+  }
+
+  if (edge !== -1) {
+    const name = `Edge ${edgeCell(edge, 'source')} – ${edgeCell(edge, 'target')}`
+    select.setAttribute('aria-label', name)
+    const group = sel.length ? document.createElement('optgroup') : select
+    if (group instanceof HTMLOptGroupElement) {
+      group.label = name
+      select.appendChild(group)
+    }
+    add(group, 'Edit Edge Attributes…', 'edge:edit')
+    add(group, 'Select Edge', 'edge:select')
   }
 
   const actions = selectionMenu(sel)
@@ -288,7 +311,13 @@ function buildMenu(
 
   select.addEventListener('change', () => {
     const value = select.value
-    if (value.startsWith('selection:')) {
+    if (value === 'edge:edit') {
+      bus.emit('attributes:inspect', { kind: 'edge', index: edge })
+      removeContextMenu()
+    } else if (value === 'edge:select') {
+      tickEdges([edge], true)
+      removeContextMenu()
+    } else if (value.startsWith('selection:')) {
       actions[Number(value.slice('selection:'.length))]?.run()
       finishCommand()
       select.value = '-' // ready for another action on the same selection
@@ -335,6 +364,11 @@ export function executeCommand(nodeIndex: number, option: string): void {
   else if (option === 'Select Downstream Path') selectDownstreamPath(nodeIndex)
   else if (option === 'Link') openNodeLink(node.url)
   else if (option === 'Description') showDescription(node.descr)
+  else if (option === 'Edit Attributes…') {
+    // the inspector opens beside the node: the menu would cover it
+    removeContextMenu()
+    bus.emit('attributes:inspect', { kind: 'node', index: nodeIndex })
+  }
 
   finishCommand()
 }

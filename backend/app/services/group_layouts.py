@@ -90,6 +90,32 @@ def _edge_blind(algorithm: str) -> bool:
     return algorithm in config.NO_EDGE_LAYOUTS
 
 
+def check_combination(strategy: str, algorithm: str, local: str, dim: int) -> None:
+    """Refuse what cannot group the nodes (the Group Layout card hides these too):
+    gravity acts only through edge weights, so it needs an algorithm that reads
+    them; virtual nodes only pull through edges, so an edge-blind algorithm
+    (Circle, Grid, Random) ignores them; 3D group layouts need 3D algorithms."""
+    from app.services.layouts import LAYOUTS_3D, WEIGHTED_LAYOUTS
+
+    if dim == 3:
+        for name in (algorithm, local):
+            if name != "keep" and name not in LAYOUTS_3D:
+                raise GroupLayoutError(
+                    f"This group layout runs in 3D (layers as groups, or sphere/cube/cloud "
+                    f"layers) and {name} has no 3D version — use one of {', '.join(LAYOUTS_3D)}."
+                )
+    if strategy == "gravity" and algorithm not in WEIGHTED_LAYOUTS:
+        raise GroupLayoutError(
+            f"Group gravity works through edge weights, which {algorithm} ignores — use "
+            f"{', '.join(WEIGHTED_LAYOUTS)}, or another strategy."
+        )
+    if strategy == "virtual" and _edge_blind(algorithm):
+        raise GroupLayoutError(
+            f"{algorithm} places nodes without reading edges, so virtual nodes cannot pull "
+            "the groups together — pick another algorithm, or Super nodes per group."
+        )
+
+
 def _group_pairs(members: list[str], rng: random.Random) -> list[tuple[str, str]]:
     if len(members) <= CLIQUE_FULL_LIMIT:
         return [(a, b) for i, a in enumerate(members) for b in members[i + 1 :]]
@@ -225,6 +251,7 @@ def group_layout(
             f"{local} is disabled as a 3D group-local layout (a known igraph bug can "
             "crash the layout engine on certain graphs) — pick a different local layout."
         )
+    check_combination(strategy, algorithm, local, dim)
     rng = random.Random(seed)
     random.seed(seed)  # igraph's layouts draw from Python's random
     id_set = set(ids)

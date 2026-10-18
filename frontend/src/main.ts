@@ -19,6 +19,7 @@ import { initFindPanel } from './ui/find'
 import { initNetworkMode } from './ui/mode'
 import { initLegend } from './ui/legend'
 import { initFilePanel } from './ui/file'
+import { initNetworksMenu } from './ui/networks'
 import { initLayerSelectionPanel } from './ui/layer_selection'
 import { initLayoutsPanel } from './ui/layouts'
 import { initScenePanel } from './ui/scene'
@@ -26,7 +27,10 @@ import { initLayerPanel } from './ui/layer'
 import { initNodePanel } from './ui/node'
 import { initEdgePanel } from './ui/edge'
 import { initStylePanel } from './ui/style'
+import { initAttributesPanel } from './ui/attributes'
+import { initInspector } from './ui/inspector'
 import { initAnalyzePanel } from './ui/analyze'
+import { initClusteringPanel } from './ui/clustering'
 import { initFpsPanel } from './ui/fps'
 import { initDataPanel } from './ui/data'
 import { initHelpPanel } from './ui/help'
@@ -80,8 +84,12 @@ async function main(): Promise<void> {
   initNodePanel()
   initEdgePanel()
   initStylePanel()
+  initAttributesPanel()
+  initInspector()
   initAnalyzePanel()
+  initClusteringPanel()
   initMenuAutoClose()
+  initNetworksMenu()
   initFpsPanel()
   initNetworkMode()
   initLegend()
@@ -124,7 +132,7 @@ async function loadExternalSession(): Promise<void> {
     const session = await api.resolveExternal(token)
     loadSession(session)
     await showSessionAs(view)
-    registerLoad('Shared session')
+    registerLoad('Shared session', 'link', session)
     showTab('#panel-main-view')
   } catch (err) {
     console.error('[arena3d] external session load failed', err)

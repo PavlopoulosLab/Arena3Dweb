@@ -2,8 +2,9 @@ import { expect, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // Top bar → Layer selection: the layers to work on are ticked in a tab of
-// their own; the Layout panel only reports the count and opens the tab, and
-// the tab steps aside in Single network mode.
+// their own, with buttons on to the panels that use them; the Layout panel
+// only reports the count and opens the tab, and the tab steps aside in
+// Single network mode.
 
 const tab = (page: Page, name: string) =>
   page
@@ -53,6 +54,21 @@ test('layers are ticked in the Layer selection tab', async ({ page }) => {
   )
   await page.locator('#openLayerSelection').click()
   await expect(page.locator('#panel-layer-selection')).toHaveClass(/active/)
+
+  // the tab links on to the panels that use the ticks
+  for (const [name, pane] of [
+    ['Layout…', '#panel-layouts'],
+    ['Clustering…', '#panel-clustering'],
+    ['Analysis…', '#panel-analyze'],
+    ['Export…', '#panel-export'],
+  ] as const) {
+    await page
+      .locator('#layerSelectionNext')
+      .getByRole('button', { name, exact: true })
+      .click()
+    await expect(page.locator(pane)).toHaveClass(/active/)
+    await tab(page, 'Layer selection')
+  }
 
   // the Analysis panel follows the ticks too
   await tab(page, 'Analysis')

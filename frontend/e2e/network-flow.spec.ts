@@ -38,7 +38,7 @@ function readNodes() {
   }
 }
 
-test('load example → layout → clustered layout → export', async ({ page }) => {
+test('load example → layout → clustering → export', async ({ page }) => {
   await page.goto('/')
   await page.waitForFunction(
     () => '__arena' in (window as unknown as Record<string, unknown>)
@@ -96,9 +96,12 @@ test('load example → layout → clustered layout → export', async ({ page })
     { timeout: 15_000 }
   )
 
-  // --- Apply clustered layout (Louvain) -----------------------------------
-  await selectOption(page, '#clusteringAlgorithmChoice', 'Louvain')
-  await page.locator('#runLayout').dispatchEvent('click')
+  // --- Find communities (Clustering panel, Louvain) ------------------------
+  await page
+    .getByRole('tab', { name: 'Clustering', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  await selectOption(page, '#clusterAlgorithm', 'Louvain')
+  await page.locator('#runClustering').dispatchEvent('click')
   // Wait for clustering to assign ids (status text is unchanged between runs).
   await page.waitForFunction(
     () => {

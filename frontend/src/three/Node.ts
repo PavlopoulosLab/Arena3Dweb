@@ -46,6 +46,16 @@ export const NODE_SHAPE_LABELS: Record<NodeGeometryType, string> = {
 }
 export const NODE_SHAPES = Object.keys(NODE_SHAPE_LABELS) as NodeGeometryType[]
 
+// a shape from a file: its key or its label, in any case ('box', 'Cube')
+export function shapeFromText(text: string): NodeGeometryType | null {
+  const t = text.trim().toLowerCase()
+  return (
+    NODE_SHAPES.find(
+      (s) => s === t || NODE_SHAPE_LABELS[s].toLowerCase() === t
+    ) ?? null
+  )
+}
+
 export interface NodeOptions {
   id?: number
   name?: string

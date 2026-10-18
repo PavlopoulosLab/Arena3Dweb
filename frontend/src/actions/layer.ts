@@ -9,6 +9,7 @@ import { bus } from '../bus'
 import { store } from '../store'
 import { ctx, SELECTED_LAYER_DEFAULT_COLOR } from '../three'
 import { LAYER_DEFAULT_COLOR } from '../three/constants'
+import { VOLUME_CONTAINERS } from '../three/Layer'
 import type { ColorPrioritySource } from '../three'
 import { findIndexByUuid } from '../utils'
 import { decideNodeLabelFlags } from './node'
@@ -16,9 +17,17 @@ import { raycaster, setRaycaster } from './screen'
 
 // Spread layers evenly along x (v2: predefined layouts, upload/import,
 // canvas controls; direction -1 stacks them back).
-export function initialSpreadLayers(direction = 1): void {
+// Side by side across the window — wider apart when 3D volumes (cubes,
+// spheres, clouds) would otherwise overlap. @return the spacing used
+export function initialSpreadLayers(direction = 1): number {
   const n = ctx.layers.length
-  const spacing = (ctx.xBoundMax * 2) / n
+  const radius = Math.max(
+    0,
+    ...ctx.layers
+      .filter((l) => VOLUME_CONTAINERS.includes(l.container))
+      .map((l) => l.containerRadius())
+  )
+  const spacing = Math.max((ctx.xBoundMax * 2) / n, 2 * radius * 1.15)
   ctx.layers.forEach((layer, i) => {
     const offset =
       n % 2
@@ -26,6 +35,7 @@ export function initialSpreadLayers(direction = 1): void {
         : (i - n / 2) * spacing + spacing / 2
     layer.translateX(direction * offset)
   })
+  return spacing
 }
 
 function updateSelectedLayersStore(): void {

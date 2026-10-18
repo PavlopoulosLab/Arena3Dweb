@@ -1,6 +1,7 @@
 // Layer selection panel (top bar → Layer selection): which layers the
-// Layout, Analyze and Export panels work on, with a Hide and a Labels switch
-// per layer. v2 (and Arena3D 3.0 until now) kept these checkboxes at the top
+// Layout, Clustering, Analyze and Export panels work on (with a button to
+// each), with a Hide and a Labels switch per layer. v2 (and Arena3D 3.0
+// until now) kept these checkboxes at the top
 // of the Layout panel (www/js/object_actions/layer.js attachLayerCheckboxes);
 // they are a step of their own now, so the Layout panel starts at the
 // algorithm. The panel is hidden in Single network mode (one graph).
@@ -8,6 +9,7 @@
 import { bus } from '../bus'
 import { ctx } from '../three'
 import { escapeHtml } from '../utils'
+import { showTab } from './tabs'
 import { layerSwatchColor } from '../actions/legend'
 import {
   selectLayer,
@@ -35,6 +37,16 @@ const HTML = `
     </div>
     <div id="checkboxdiv" class="checkboxdiv mb-2"></div>
     <div id="layerSelectionEmpty" class="form-text">Load a network to list its layers.</div>
+  </section>
+  <section class="lp-section">
+    <h6 class="lp-title">Then work on them</h6>
+    <div class="form-text mt-0 mb-2">These panels use the ticked layers (every layer while none is ticked):</div>
+    <div id="layerSelectionNext" class="d-flex flex-wrap gap-2">
+      <button class="btn btn-outline-primary btn-sm" data-goto="#panel-layouts">Layout…</button>
+      <button class="btn btn-outline-primary btn-sm" data-goto="#panel-clustering">Clustering…</button>
+      <button class="btn btn-outline-primary btn-sm" data-goto="#panel-analyze">Analysis…</button>
+      <button class="btn btn-outline-primary btn-sm" data-goto="#panel-export">Export…</button>
+    </div>
   </section>
 </div>
 `
@@ -127,6 +139,11 @@ export function initLayerSelectionPanel(): void {
       ctx.layers.forEach((layer, i) => selectLayer(i, !layer.isSelected))
       syncTicks()
     })
+  // on to the panels that use the selection
+  for (const button of pane.querySelectorAll<HTMLButtonElement>(
+    '#layerSelectionNext [data-goto]'
+  ))
+    button.addEventListener('click', () => showTab(button.dataset.goto!))
   bus.on('network:loaded', buildLayerCheckboxes)
   bus.on('layers:selected', syncTicks)
   syncSummary()

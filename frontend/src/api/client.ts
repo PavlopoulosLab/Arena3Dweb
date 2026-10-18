@@ -123,6 +123,9 @@ export interface SessionData {
     up: [number, number, number]
     axes?: 'flat' | '3d'
   } | null
+  // the network's name and its annotation set's name (Networks menu)
+  name?: string | null
+  annotationSet?: string | null
   warnings?: string[]
 }
 
@@ -423,6 +426,12 @@ export interface NodeAttributeRow {
   url: string | null
   description: string | null
   annotations?: string[] | null
+  // written by Edit → Attributes (Export node attributes)
+  shape?: string | null
+  opacity?: number | null
+  label?: string | null
+  label_color?: string | null
+  label_size?: number | null
 }
 
 // POST /api/attributes/groups — a node and the groups a group file puts it in
@@ -441,6 +450,11 @@ export interface EdgeAttributeRow {
   edge_pair: string
   color: string
   channel: string | null
+  // written by Edit → Attributes (Export edge attributes)
+  width?: number | null
+  opacity?: number | null
+  line_type?: string | null
+  arrow_color?: string | null
 }
 
 export const api = {

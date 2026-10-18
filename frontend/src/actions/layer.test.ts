@@ -38,6 +38,18 @@ describe('initialSpreadLayers', () => {
     expect(xs[0]).toBeLessThan(0)
   })
 
+  it('spaces 3D volumes far enough apart not to overlap', () => {
+    seed(3)
+    initialSpreadLayers()
+    initialSpreadLayers(-1)
+    for (const l of ctx.layers) l.setContainer('sphere')
+    const spaced = initialSpreadLayers()
+    const r = ctx.layers[0].containerRadius()
+    expect(spaced).toBeGreaterThanOrEqual(2 * r)
+    const xs = ctx.layers.map((l) => l.getPosition('x'))
+    expect(xs[1] - xs[0]).toBeCloseTo(spaced)
+  })
+
   it('direction -1 stacks an even count back to 0', () => {
     seed(2)
     initialSpreadLayers(1)

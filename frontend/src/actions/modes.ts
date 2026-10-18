@@ -15,9 +15,13 @@ import type { LayerContainer } from '../three/Layer'
 import { VOLUME_CONTAINERS } from '../three/Layer'
 import { history } from '../commands/base'
 import type { Command } from '../commands/base'
-import { ApplyLayoutCommand, ChangeContainerCommand } from '../commands/scene'
+import {
+  ApplyLayoutCommand,
+  ChangeContainerCommand,
+  PredefinedLayoutCommand,
+} from '../commands/scene'
 import type { LayoutPosition } from '../api/client'
-import { applyLayout } from './layout'
+import { applyLayout, applyPredefinedLayout } from './layout'
 import { redrawIntraLayerEdges } from './edge'
 import { focusOnNodes } from './search'
 import { showFloors } from './layer'
@@ -263,6 +267,14 @@ export async function setLayerContainer(
 ): Promise<boolean> {
   const net = store.get().network
   if (!net || layerIds.length === 0) return false
+  // a hive plot's layers are axes: a volume ends it first (its own undo
+  // step), bringing back the floors, the containers and the nodes it moved
+  if (ctx.hive && VOLUME_CONTAINERS.includes(kind))
+    history.execute(
+      new PredefinedLayoutCommand('parallel', () =>
+        applyPredefinedLayout('parallel')
+      )
+    )
   history.execute(new ChangeContainerCommand(layerIds, kind))
   if (!VOLUME_CONTAINERS.includes(kind)) return false
   const spread = spreadOverlappingVolumes()

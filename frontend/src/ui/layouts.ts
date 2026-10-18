@@ -1,10 +1,11 @@
 // Layouts panel — port of v2 views/layouts.R and the channel layout list
 // (edge.js attachChannelLayoutList). The layer checkbox group of v2 is the
 // Layer selection tab now (ui/layer_selection.ts); the panel's first section
-// only says how many layers are ticked and opens that tab.
+// only says how many layers are ticked and opens that tab. Clustering has a
+// panel of its own (ui/clustering.ts, top bar → Clustering); layouts only use
+// its clusters (the Group Layout card) and never run a clustering algorithm.
 
 import { store } from '../store'
-import { registerAnnotationSet } from '../actions/workspace'
 import {
   HIVE_AXES,
   HIVE_PROPERTIES,
@@ -17,18 +18,13 @@ import {
   type HiveScale,
   HIVE_FIT,
 } from '../actions/hive'
-import { api } from '../api/client'
 import { history } from '../commands/base'
 import {
   PREDEFINED_LAYOUTS,
   applyPredefinedLayout,
   type PredefinedLayout,
 } from '../actions/layout'
-import {
-  ApplyClustersCommand,
-  ClustersAsAnnotationsCommand,
-  PredefinedLayoutCommand,
-} from '../commands/scene'
+import { PredefinedLayoutCommand } from '../commands/scene'
 import {
   setHullSource,
   setHullStyle,
@@ -40,12 +36,15 @@ import { bus } from '../bus'
 import { ctx } from '../three'
 import { applyLayout } from '../actions/layout'
 import {
+  groupAlgorithmProblem,
+  groupLayoutRuns3D,
+  groupLocalProblem,
+  LAYOUTS_3D,
   runGroupLayout,
-  UNSAFE_3D_LOCAL_LAYOUTS,
+  WEIGHTED_ALGORITHMS,
   type GroupSource,
   type GroupStrategy,
 } from '../actions/group_layout'
-import { VOLUME_CONTAINERS } from '../three/Layer'
 import { startLoader, finishLoader } from '../actions/screen'
 import { selectionSummary } from './layer_selection'
 import { fitViewNow } from '../actions/search'
@@ -70,28 +69,9 @@ const LAYOUT_ALGORITHMS = [
   'Multidimensional Scaling',
   'Sugiyama',
 ]
-// backend services/layouts.py LAYOUTS_3D
-const LAYOUTS_3D = [
-  'Fruchterman-Reingold',
-  'Kamada-Kawai',
-  'DrL',
-  'Random',
-  'Grid',
-  'Circle', // on a sphere in 3D
-]
-// backend services/layouts.py WEIGHTED_LAYOUTS; the rest ignore weights
-const WEIGHTED_ALGORITHMS = ['Fruchterman-Reingold', 'Kamada-Kawai', 'DrL']
 // backend models/layout.py MIN_/MAX_CHANNEL_WEIGHT
 const MIN_CHANNEL_WEIGHT = 0.1
 const MAX_CHANNEL_WEIGHT = 10
-const CLUSTERING_ALGORITHMS = [
-  '-',
-  'Louvain',
-  'Walktrap',
-  'Fast Greedy',
-  'Label Propagation',
-  'Leiden', // multiplex Leiden with "Align Nodes Across Selected Layers"
-]
 
 const options = (values: string[]) =>
   values.map((v) => `<option value="${v}">${v}</option>`).join('')
@@ -111,7 +91,7 @@ const LAYOUTS_HTML = `
 
   <section class="lp-section">
     <h6 class="lp-title"><span class="lp-step">2</span><span data-multilayer-only>Layout</span><span data-single-only>Layout of the whole network</span></h6>
-    <div class="form-text mt-0 mb-2" data-single-only>One graph, as in NORMA: the layout runs on every node at once (in 3D while <i>3D Layout</i> is on); clustering and the Groups card below organise it.</div>
+    <div class="form-text mt-0 mb-2" data-single-only>One graph, as in NORMA: the layout runs on every node at once (in 3D while <i>3D Layout</i> is on); the Groups card below organises it by clusters (the Clustering panel) or annotations.</div>
     <label class="form-label small" for="layoutAlgorithmChoice">Algorithm</label>
     <select class="form-select form-select-sm mb-3" id="layoutAlgorithmChoice">${options(LAYOUT_ALGORITHMS)}</select>
 
@@ -139,7 +119,7 @@ const LAYOUTS_HTML = `
       <input class="form-check-input" type="checkbox" role="switch" id="useEdgeWeightsCheckbox" />
       <label class="form-check-label" for="useEdgeWeightsCheckbox">Use Edge Weights (and Channel Weights)</label>
     </div>
-    <div class="form-text mt-0 mb-2">Heavier edges pull nodes closer: ${WEIGHTED_ALGORITHMS.join(', ')}, without clustering.</div>
+    <div class="form-text mt-0 mb-2">Heavier edges pull nodes closer: ${WEIGHTED_ALGORITHMS.join(', ')}.</div>
     <div class="form-check form-switch mb-1">
       <input class="form-check-input" type="checkbox" role="switch" id="layout3dCheckbox" />
       <label class="form-check-label" for="layout3dCheckbox">3D Layout</label>
@@ -148,40 +128,12 @@ const LAYOUTS_HTML = `
 
     <div class="lp-grid">
       <div>
-        <label class="form-label small" for="clusteringAlgorithmChoice">Clustering (optional)</label>
-        <select class="form-select form-select-sm" id="clusteringAlgorithmChoice">${options(CLUSTERING_ALGORITHMS)}</select>
-      </div>
-      <div>
-        <label class="form-label small" for="localLayoutAlgorithmChoice">Layout inside clusters / selected nodes</label>
+        <label class="form-label small" for="localLayoutAlgorithmChoice">Layout inside the selected nodes</label>
         <select class="form-select form-select-sm" id="localLayoutAlgorithmChoice">${options(LAYOUT_ALGORITHMS)}</select>
       </div>
     </div>
+    <div class="form-text mt-2">Communities come from the <a href="#" id="layoutOpenClustering">Clustering</a> panel; the Group Layout card below lays them out.</div>
     <div id="layoutCompat" class="form-text mt-2 d-none"></div>
-  </section>
-
-  <section class="lp-section" id="clusteringSection">
-    <h6 class="lp-title"><span class="lp-step">3</span>Clustering</h6>
-    <div class="form-text mt-0 mb-2">Find communities without moving the nodes: they colour the nodes, fill Data Tables → Clustering Data, and can serve as annotations for pies, hulls, fog clouds and the Groups card — like an annotation file.</div>
-    <div class="lp-grid mb-2">
-      <div>
-        <label class="form-label small" for="clusterAlgorithm">Algorithm</label>
-        <select id="clusterAlgorithm" class="form-select form-select-sm">${options(CLUSTERING_ALGORITHMS.filter((a) => a !== '-'))}</select>
-      </div>
-      <div data-multilayer-only>
-        <label class="form-label small" for="clusterScope">Communities</label>
-        <select id="clusterScope" class="form-select form-select-sm">
-          <option value="perLayer">Within each layer</option>
-          <option value="allLayers">Over the selected layers as one graph</option>
-          <option value="coupled">Shared across layers by node name</option>
-        </select>
-      </div>
-    </div>
-    <div class="d-flex flex-wrap align-items-center gap-2">
-      <button id="runClustering" class="btn btn-primary btn-sm">Find Communities</button>
-      <button id="clustersToAnnotations" class="btn btn-outline-primary btn-sm" disabled>Use Clusters as Annotations</button>
-    </div>
-    ${PROGRESS_HTML('clusterProgress', 'Clustering progress')}
-    <div id="cluster_status" class="small mt-2"></div>
   </section>
 
   <div class="lp-runbar">
@@ -246,7 +198,7 @@ const LAYOUTS_HTML = `
   <details id="alignmentCard" class="lp-section lp-more" data-multilayer-only>
     <summary><span class="lp-step lp-step--opt">+</span>Cross-Layer Alignment</summary>
     <div id="alignmentBox" class="mt-2">
-      <div class="form-text mt-0 mb-2">Per Layer scope, 2D, no clustering. Fewer crossings between layers while each layer keeps its own structure; nodes are matched by name and by inter-layer edges.</div>
+      <div class="form-text mt-0 mb-2">Per Layer scope, 2D. Fewer crossings between layers while each layer keeps its own structure; nodes are matched by name and by inter-layer edges.</div>
       <div class="d-flex flex-wrap align-items-center gap-2">
         <select id="alignmentMode" class="form-select form-select-sm" style="width:auto" aria-label="Alignment mode">
           <option value="none">None (independent layers)</option>
@@ -263,7 +215,7 @@ const LAYOUTS_HTML = `
       </div>
       <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
         <button id="runAlignedLayout" class="btn btn-primary btn-sm">Run Aligned Layout</button>
-        <span class="form-text m-0">runs the chosen algorithm per layer with this alignment (2D, no clustering); the misalignment score under the run bar shows the effect — lower means straighter links</span>
+        <span class="form-text m-0">runs the chosen algorithm per layer with this alignment (2D); the misalignment score under the run bar shows the effect — lower means straighter links</span>
       </div>
     </div>
   </details>
@@ -306,6 +258,8 @@ const LAYOUTS_HTML = `
       <label class="form-label small" for="groupScale">Group size: <span id="groupScaleValue">1.0</span>×</label>
       <input type="range" class="form-range" id="groupScale" min="0.25" max="4" step="0.25" value="1" />
       <div class="form-text mb-2">Karatzas et al. 2022 (NORMA-2.0). Uses the layers selected above (all if none). Sphere/cube/cloud layers get 3D layouts inside each group.</div>
+      <div id="groupCompat" class="form-text mb-2 d-none"></div>
+      <div id="groupNoClusters" class="form-text mb-2 d-none">No clusters yet: find communities in the <a href="#" id="groupOpenClustering">Clustering</a> panel first, or group by annotations.</div>
       <div class="lp-grid mb-2" data-single-only>
         <div>
           <label class="form-label small" for="groupDraw">Draw groups as</label>
@@ -405,47 +359,37 @@ function useWeights(): boolean {
 }
 
 // What goes together. The backend refuses the other combinations, so the
-// panel disables them as soon as a choice rules them out, with a note: 3D
-// layouts and clustering exclude each other; the local layout only applies
-// inside clusters or to the selected nodes; edge weights work with the
-// weighted algorithms on the plain scopes, without clustering or alignment;
-// alignment needs the Per Layer scope, a 2D layout and no clustering.
+// panel disables them as soon as a choice rules them out, with a note: the
+// local layout only applies to the selected nodes; edge weights work with the
+// weighted algorithms on the plain scopes, without alignment; alignment
+// needs the Per Layer scope and a 2D layout.
 function syncCompatibility(): void {
   const el = <T extends HTMLElement>(id: string) =>
     document.getElementById(id) as T | null
   const box3d = el<HTMLInputElement>('layout3dCheckbox')
-  const cluster = el<HTMLSelectElement>('clusteringAlgorithmChoice')
   const local = el<HTMLSelectElement>('localLayoutAlgorithmChoice')
   const weights = el<HTMLInputElement>('useEdgeWeightsCheckbox')
   const align = el<HTMLSelectElement>('alignmentMode')
   const algorithm = el<HTMLSelectElement>('layoutAlgorithmChoice')
-  if (!box3d || !cluster || !local || !weights || !align || !algorithm) return
+  if (!box3d || !local || !weights || !align || !algorithm) return
   const single = ctx.networkMode === 'single'
   const scope: Scope = single ? 'allLayers' : currentScope()
   const three = box3d.checked
-  const clustering = cluster.value !== '-'
   const notes: string[] = []
-  cluster.disabled = three
-  box3d.disabled = clustering
-  if (three)
-    notes.push('Clustering needs a 2D layout: switch 3D Layout off to cluster.')
-  if (clustering)
-    notes.push(`${cluster.value} clustering keeps the layout in 2D.`)
-  local.disabled = !clustering && scope !== 'nodesPerLayers'
+  local.disabled = scope !== 'nodesPerLayers'
   // no algorithm chosen yet: the switch stays usable (weights count once a
   // weighted algorithm runs)
   const weightsOk =
     (algorithm.value === '-' ||
       WEIGHTED_ALGORITHMS.includes(algorithm.value)) &&
-    !clustering &&
     (scope === 'perLayer' || scope === 'allLayers') &&
     (align.disabled || align.value === 'none')
   weights.disabled = !weightsOk
   if (!weightsOk && weights.checked)
     notes.push(
-      `Edge weights are left out here: they work with ${WEIGHTED_ALGORITHMS.join(', ')} on the Per Layer or All Selected Layers scope, without clustering or alignment.`
+      `Edge weights are left out here: they work with ${WEIGHTED_ALGORITHMS.join(', ')} on the Per Layer or All Selected Layers scope, without alignment.`
     )
-  const alignOk = !single && scope === 'perLayer' && !three && !clustering
+  const alignOk = !single && scope === 'perLayer' && !three
   align.disabled = !alignOk
   const reference = el<HTMLSelectElement>('alignmentReference')
   const strength = el<HTMLInputElement>('alignmentStrength')
@@ -455,7 +399,7 @@ function syncCompatibility(): void {
   if (alignNote) {
     alignNote.textContent = alignOk
       ? ''
-      : 'Alignment needs the Per Layer scope, a 2D layout and no clustering.'
+      : 'Alignment needs the Per Layer scope and a 2D layout.'
     alignNote.classList.toggle('d-none', alignOk)
   }
   const note = el('layoutCompat')
@@ -575,25 +519,18 @@ async function onRunLayout(): Promise<void> {
       : mainAlgorithm
   if (algorithm === '-') return status('Select a layout algorithm.', true)
 
-  const clusteringAlg = (
-    document.getElementById('clusteringAlgorithmChoice') as HTMLSelectElement
-  ).value
   const is3d = (document.getElementById('layout3dCheckbox') as HTMLInputElement)
     .checked
-  if (is3d) {
-    if (!LAYOUTS_3D.includes(algorithm))
-      return status(`${algorithm} has no 3D version.`, true)
-    if (clusteringAlg !== '-')
-      return status('3D layouts cannot be combined with clustering.', true)
-  }
+  if (is3d && !LAYOUTS_3D.includes(algorithm))
+    return status(`${algorithm} has no 3D version.`, true)
   const align = document.getElementById('alignmentMode') as HTMLSelectElement
   if (
     !align.disabled &&
     align.value !== 'none' &&
-    (scope !== 'perLayer' || is3d || clusteringAlg !== '-')
+    (scope !== 'perLayer' || is3d)
   )
     return status(
-      'Alignment works with the Per Layer scope, a 2D layout and no clustering.',
+      'Alignment works with the Per Layer scope and a 2D layout.',
       true
     )
   // a fresh status, so nothing (users or tests) mistakes the previous
@@ -616,19 +553,9 @@ async function onRunLayout(): Promise<void> {
         dimensions: is3d ? 3 : 2,
         ...(align.disabled ? {} : alignmentFields(scope)),
         channel_weights: useWeights() ? channelWeights() : null,
-        clustering:
-          clusteringAlg !== '-'
-            ? {
-                algorithm: clusteringAlg,
-                local_layout:
-                  localAlgorithm !== '-' ? localAlgorithm : algorithm,
-              }
-            : null,
       },
       false,
-      layoutProgress.upload(
-        `Computing ${algorithm}${clusteringAlg !== '-' ? ` + ${clusteringAlg} clustering` : ''} on the server`
-      )
+      layoutProgress.upload(`Computing ${algorithm} on the server`)
     )
     layoutProgress.done('Layout applied')
     status('Layout applied.')
@@ -646,81 +573,12 @@ export function initLayoutsPanel(): void {
   if (!pane) return
   pane.innerHTML = LAYOUTS_HTML
 
-  // ---- Clustering as a step of its own
-  const clusterProgress = new ProgressBar('clusterProgress')
-  const clusterStatus = (msg: string, isError = false) => {
-    const el = document.getElementById('cluster_status')
-    if (!el) return
-    el.textContent = msg
-    el.className = `small mt-2 ${isError ? 'text-danger' : 'text-success'}`
-  }
-  const annotateButton = document.getElementById(
-    'clustersToAnnotations'
-  ) as HTMLButtonElement
-  const syncAnnotateButton = () => {
-    annotateButton.disabled = !ctx.nodeObjects.some((n) => n.cluster !== '')
-  }
-  document.getElementById('runClustering')?.addEventListener('click', () => {
-    const st = store.get()
-    if (!st.network) return clusterStatus('Upload a network first.', true)
-    const layers =
-      ctx.networkMode === 'single' || st.selectedLayers.length === 0
-        ? st.network.layers
-        : st.selectedLayers
-    const algorithm = (
-      document.getElementById('clusterAlgorithm') as HTMLSelectElement
-    ).value
-    const scope =
-      ctx.networkMode === 'single'
-        ? 'allLayers'
-        : ((document.getElementById('clusterScope') as HTMLSelectElement)
-            .value as 'perLayer' | 'allLayers' | 'coupled')
-    clusterStatus('Finding communities…')
-    clusterProgress.computing(`Running ${algorithm} on the server`)
-    startLoader()
-    api
-      .clustering({
-        nodes: st.network.nodes,
-        edges: st.network.edges,
-        algorithm,
-        scope,
-        selected_layers: layers,
-        selected_channels: selectedChannels(),
-      })
-      .then(({ clusters, count }) => {
-        history.execute(new ApplyClustersCommand(clusters))
-        clusterProgress.done('Communities found')
-        clusterStatus(
-          `${count} communities (${algorithm}, ${
-            scope === 'perLayer'
-              ? 'within each layer'
-              : scope === 'coupled'
-                ? 'shared across layers'
-                : 'one graph'
-          }); nodes coloured by community — Data Tables lists them.`
-        )
-        syncAnnotateButton()
-      })
-      .catch((err: unknown) => {
-        clusterProgress.hide()
-        clusterStatus(err instanceof Error ? err.message : String(err), true)
-      })
-      .finally(finishLoader)
-  })
-  annotateButton.addEventListener('click', () => {
-    if (!ctx.nodeObjects.some((n) => n.cluster !== ''))
-      return clusterStatus('Find communities first.', true)
-    history.execute(new ClustersAsAnnotationsCommand())
-    registerAnnotationSet(
-      `${(document.getElementById('clusterAlgorithm') as HTMLSelectElement).value} clusters`
-    )
-    clusterStatus(
-      'The clusters are now annotations: pies, hulls, fog clouds and the Groups card use them.'
-    )
-  })
-  bus.on('network:loaded', syncAnnotateButton)
-  bus.on('clustering:applied', syncAnnotateButton)
-  bus.on('history:changed', syncAnnotateButton)
+  document
+    .getElementById('layoutOpenClustering')
+    ?.addEventListener('click', (e) => {
+      e.preventDefault()
+      showTab('#panel-clustering')
+    })
 
   document
     .getElementById('openLayerSelection')
@@ -737,7 +595,6 @@ export function initLayoutsPanel(): void {
   for (const id of [
     'layoutAlgorithmChoice',
     'layout3dCheckbox',
-    'clusteringAlgorithmChoice',
     'useEdgeWeightsCheckbox',
     'alignmentMode',
   ])
@@ -781,7 +638,7 @@ export function initLayoutsPanel(): void {
       )
   })
   document.getElementById('runAlignedLayout')?.addEventListener('click', () => {
-    // alignment needs Per Layer, 2D and no clustering: set them, then run
+    // alignment needs Per Layer and 2D: set them, then run
     const perLayer = document.getElementById(
       'subgraph_perLayer'
     ) as HTMLInputElement
@@ -790,13 +647,6 @@ export function initLayoutsPanel(): void {
     if (box.checked) {
       box.checked = false
       box.dispatchEvent(new Event('change', { bubbles: true }))
-    }
-    const cluster = document.getElementById(
-      'clusteringAlgorithmChoice'
-    ) as HTMLSelectElement
-    if (cluster.value !== '-') {
-      cluster.value = '-'
-      cluster.dispatchEvent(new Event('change', { bubbles: true }))
     }
     syncCompatibility()
     if (alignMode.value === 'none') alignMode.value = 'soft'
@@ -899,36 +749,71 @@ async function arrangeLayers(): Promise<void> {
   }
 }
 
-// Kamada-Kawai's 3D layout can crash the server (igraph bug — see
-// UNSAFE_3D_LOCAL_LAYOUTS); hide/disable it whenever this group layout would
-// run in 3D (grouping by layers, or every selected layer is a volume
-// container), mirroring runGroupLayout's own guard.
-function syncGroupLocalOptions(): void {
-  const source = document.getElementById('groupSource') as HTMLSelectElement
-  const local = document.getElementById('groupLocal') as HTMLSelectElement
+// The Group Layout card never offers what its strategy cannot run (mirrors
+// runGroupLayout's guard and the backend's check_combination): in 3D (layers
+// as groups, or every chosen layer a sphere/cube/cloud) only 3D algorithms,
+// and no Kamada-Kawai inside groups (igraph bug); group gravity only with
+// the algorithms that read edge weights; virtual nodes not with Circle, Grid
+// or Random, which ignore edges; super nodes always lay groups out locally.
+// A choice ruled out falls back, and a note says why.
+function syncGroupOptions(): void {
+  const el = <T extends HTMLElement>(id: string) =>
+    document.getElementById(id) as T
+  const source = el<HTMLSelectElement>('groupSource')
+  const strategy = el<HTMLSelectElement>('groupStrategy').value as GroupStrategy
+  const algorithm = el<HTMLSelectElement>('groupAlgorithm')
+  const local = el<HTMLSelectElement>('groupLocal')
+  // the layers the run uses: every layer while none is ticked
+  const { network, selectedLayers } = store.get()
   const layers =
-    ctx.networkMode === 'single'
-      ? (store.get().network?.layers ?? [])
-      : store.get().selectedLayers
-  // store.selectedLayers can briefly name a layer that no longer exists right
-  // after a restructure (split/merge) rebuilds ctx with a new layer set —
-  // treat that as "not volume" rather than crash; the next resync corrects it.
-  const volume =
-    layers.length > 0 &&
-    layers.every((l) => {
-      const container = ctx.layers[ctx.layerGroups[l]]?.container
-      return container !== undefined && VOLUME_CONTAINERS.includes(container)
-    })
-  const forced3D = source.value === 'layers' || volume
-  for (const option of local.options) {
-    const unsafe = forced3D && UNSAFE_3D_LOCAL_LAYOUTS.includes(option.value)
-    option.hidden = unsafe
-    option.disabled = unsafe
+    ctx.networkMode === 'single' || selectedLayers.length === 0
+      ? (network?.layers ?? [])
+      : selectedLayers
+  const three = groupLayoutRuns3D(source.value as GroupSource, layers)
+  const notes: string[] = []
+  if (three)
+    notes.push(
+      source.value === 'layers'
+        ? 'Layers as groups are laid out in 3D: only algorithms with a 3D version are offered.'
+        : 'Sphere/cube/cloud layers get 3D group layouts: only algorithms with a 3D version are offered.'
+    )
+  if (strategy === 'gravity')
+    notes.push(
+      `Group gravity works through edge weights, so it runs ${WEIGHTED_ALGORITHMS.slice(0, -1).join(', ')} or ${WEIGHTED_ALGORITHMS.at(-1)} — the others ignore weights.`
+    )
+  if (strategy === 'virtual')
+    notes.push(
+      'Virtual nodes pull through edges, so Circle, Grid and Random (which ignore edges) are not offered.'
+    )
+  const restrict = (
+    select: HTMLSelectElement,
+    problem: (value: string) => string | null,
+    fallback: string
+  ) => {
+    for (const option of select.options) {
+      const ruledOut = problem(option.value) !== null
+      option.hidden = ruledOut
+      option.disabled = ruledOut
+    }
+    if (problem(select.value) === null) return
+    const label = select.selectedOptions[0]?.textContent ?? select.value
+    notes.push(`${label} was switched to ${fallback}.`)
+    select.value = fallback
+    select.dispatchEvent(new Event('change', { bubbles: true }))
   }
-  if (forced3D && UNSAFE_3D_LOCAL_LAYOUTS.includes(local.value)) {
-    local.value = 'Circle'
-    local.dispatchEvent(new Event('change', { bubbles: true }))
-  }
+  restrict(
+    algorithm,
+    (a) => groupAlgorithmProblem(strategy, a, three),
+    'Fruchterman-Reingold'
+  )
+  restrict(local, (l) => groupLocalProblem(strategy, l, three), 'Circle')
+  const note = el('groupCompat')
+  note.textContent = notes.join(' ')
+  note.classList.toggle('d-none', notes.length === 0)
+  el('groupNoClusters').classList.toggle(
+    'd-none',
+    source.value !== 'clusters' || ctx.nodeObjects.some((n) => n.cluster !== '')
+  )
 }
 
 // NORMA-2.0 group layouts (actions/group_layout.ts)
@@ -940,21 +825,20 @@ function initGroupLayout(): void {
   const local = el<HTMLSelectElement>('groupLocal')
   local.value = 'Circle'
   el<HTMLSelectElement>('groupAlgorithm').value = 'Fruchterman-Reingold'
-  source.addEventListener('change', syncGroupLocalOptions)
+  source.addEventListener('change', syncGroupOptions)
+  strategy.addEventListener('change', syncGroupOptions)
   document
     .getElementById('groupLayoutCard')
-    ?.addEventListener('toggle', syncGroupLocalOptions)
-  bus.on('history:changed', syncGroupLocalOptions) // layer container/selection changes
-  bus.on('network:loaded', syncGroupLocalOptions)
-  syncGroupLocalOptions()
-  // super nodes always lay groups out locally
-  const syncKeep = () => {
-    const keep = local.querySelector<HTMLOptionElement>('option[value="keep"]')!
-    keep.disabled = strategy.value === 'supernodes'
-    if (keep.disabled && local.value === 'keep') local.value = 'Circle'
-  }
-  strategy.addEventListener('change', syncKeep)
-  syncKeep()
+    ?.addEventListener('toggle', syncGroupOptions)
+  bus.on('history:changed', syncGroupOptions) // layer container/selection changes
+  bus.on('network:loaded', syncGroupOptions)
+  bus.on('mode:changed', syncGroupOptions)
+  bus.on('clustering:applied', syncGroupOptions)
+  syncGroupOptions()
+  el('groupOpenClustering').addEventListener('click', (e) => {
+    e.preventDefault()
+    showTab('#panel-clustering')
+  })
   for (const [id, digits] of [
     ['groupForce', 0],
     ['groupScale', 1],

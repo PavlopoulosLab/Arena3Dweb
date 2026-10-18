@@ -26,6 +26,7 @@ import {
   decideNodeLabelFlags,
   getSelectedNodes,
   performDoubleClickNodeSelection,
+  pickNode,
   repaintNode,
   unselectAllNodes,
   updateSelectedNodesStore,
@@ -358,6 +359,12 @@ export function dblClick(event: CanvasMouseEvent): void {
   if (!ctx.scene?.exists()) return
   // a browser's own double-tap dblclick: touch_controls already sent ours
   if (event.isTrusted && lastPointerWasTouch()) return
+  // Alt (Option) + double-click: Edit → Attributes' inspector on the node
+  if (event.altKey) {
+    const i = pickNode(event)
+    if (i !== -1)
+      return bus.emit('attributes:inspect', { kind: 'node', index: i })
+  }
   if (performDoubleClickNodeSelection(event)) return
   if (ctx.lastHoveredLayerIndex !== null) performDoubleClickLayerSelection()
   else {

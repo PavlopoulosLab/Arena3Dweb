@@ -178,3 +178,128 @@ def test_endpoint_per_layer_and_across_layers() -> None:
     assert all(len(p) == 3 for p in res.json()["positions"].values())
     bad = client.post("/api/layout", json={**body, "scope": "coupled"})
     assert bad.status_code == 400
+
+
+# ------------------------------------------------- after Layout → Clustering
+def _two_layer_body() -> tuple[dict, list[str]]:
+    ids, edges, _, _ = _net()
+    nodes = [{"id": f"{n}_{lay}", "label": n, "layer": lay} for lay in ("L1", "L2") for n in ids]
+    rows = [
+        {
+            "src": f"{a}_{lay}",
+            "trg": f"{b}_{lay}",
+            "source_node": a,
+            "source_layer": lay,
+            "target_node": b,
+            "target_layer": lay,
+            "weight": 1.0,
+            "scaled_weight": 1.0,
+            "channel": None,
+        }
+        for lay in ("L1", "L2")
+        for a, b, _ in edges
+    ]
+    return {"nodes": nodes, "edges": rows, "selected_layers": ["L1", "L2"]}, ids
+
+
+def _clustered_groups(body: dict) -> dict[str, list[str]]:
+    """What the Clustering section + "Use Clusters as Annotations" hand the card."""
+    res = client.post("/api/clustering", json={**body, "algorithm": "Louvain"})
+    assert res.status_code == 200, res.text
+    return {n: [f"Cluster {c}"] for n, c in res.json()["clusters"].items()}
+
+
+@pytest.mark.parametrize(
+    "strategy,algorithm",
+    [
+        ("virtual", "Reingold-Tilford"),
+        ("virtual", "Fruchterman-Reingold"),
+        ("gravity", "Fruchterman-Reingold"),
+        ("gravity", "Kamada-Kawai"),
+        ("gravity", "DrL"),
+        ("supernodes", "Reingold-Tilford"),
+        ("supernodes", "Circle"),
+        ("supernodes", "Fruchterman-Reingold"),
+    ],
+)
+def test_after_clustering_each_offered_combination_groups_per_layer(
+    strategy: str, algorithm: str
+) -> None:
+    body, ids = _two_layer_body()
+    groups = _clustered_groups(body)
+    res = client.post(
+        "/api/layout",
+        json={
+            **body,
+            "algorithm": algorithm,
+            "group_strategy": strategy,
+            "groups": groups,
+            "group_local": "Fruchterman-Reingold",
+        },
+    )
+    assert res.status_code == 200, res.text
+    pos = res.json()["positions"]
+    for lay in ("L1", "L2"):
+        by_group: dict[str, list[str]] = {}
+        for n in ids:
+            by_group.setdefault(groups[f"{n}_{lay}"][0], []).append(f"{n}_{lay}")
+        assert _separation(pos, by_group) > 1.8, (lay, strategy, algorithm)
+
+
+@pytest.mark.parametrize(
+    "algorithm", ["Reingold-Tilford", "Sugiyama", "Graphopt", "Circle", "Grid", "Random"]
+)
+def test_group_gravity_refuses_algorithms_that_ignore_weights(algorithm: str) -> None:
+    # The reported bug: Annotations (clusters) + Group gravity + Reingold-Tilford ran,
+    # but Reingold-Tilford ignores the weights gravity works through — Force strength
+    # did nothing and the groups were not pulled together. Now refused with the reason.
+    body, _ = _two_layer_body()
+    res = client.post(
+        "/api/layout",
+        json={
+            **body,
+            "algorithm": algorithm,
+            "group_strategy": "gravity",
+            "groups": _clustered_groups(body),
+            "group_local": "Fruchterman-Reingold",
+            "group_force": 10,
+        },
+    )
+    assert res.status_code == 400
+    assert "Group gravity works through edge weights" in res.json()["detail"]
+
+
+@pytest.mark.parametrize("algorithm", ["Circle", "Grid", "Random"])
+def test_virtual_nodes_refuse_edge_blind_algorithms(algorithm: str) -> None:
+    ids, edges, groups_of, _ = _net()
+    with pytest.raises(GroupLayoutError, match="without reading edges"):
+        group_layout(ids, edges, groups_of, "virtual", algorithm, local="Circle")
+    # super nodes lay the collapsed graph out, so a circle of groups is fine
+    group_layout(ids, edges, groups_of, "supernodes", algorithm, local="Circle")
+
+
+@pytest.mark.parametrize("strategy", ["virtual", "gravity", "supernodes"])
+def test_layers_as_groups_refuse_2d_only_algorithms_with_the_reason(strategy: str) -> None:
+    # Layers as groups always run in 3D: Reingold-Tilford used to come back as a bare
+    # "has no 3D version" 400 with nothing moved, for every strategy.
+    body, _ = _two_layer_body()
+    by_layer = {n["id"]: [n["layer"]] for n in body["nodes"]}
+    layers = {
+        **body,
+        "scope": "allLayers",
+        "dimensions": 3,
+        "group_strategy": strategy,
+        "groups": by_layer,
+        "group_local": "Fruchterman-Reingold",
+    }
+    res = client.post("/api/layout", json={**layers, "algorithm": "Reingold-Tilford"})
+    assert res.status_code == 400
+    assert "runs in 3D" in res.json()["detail"]
+    res = client.post("/api/layout", json={**layers, "algorithm": "Fruchterman-Reingold"})
+    assert res.status_code == 200, res.text
+    local = client.post(
+        "/api/layout",
+        json={**layers, "algorithm": "Fruchterman-Reingold", "group_local": "Sugiyama"},
+    )
+    assert local.status_code == 400
+    assert "Sugiyama has no 3D version" in local.json()["detail"]

@@ -70,11 +70,13 @@ const HELP_HTML = `
   <button class="tablinks" data-help-tab="Find_tab">Find</button>
   <button class="tablinks" data-help-tab="Navigation_tab">3D View &amp; Navigation</button>
   <button class="tablinks" data-help-tab="Layouts_tab">Layout</button>
+  <button class="tablinks" data-help-tab="Clustering_tab">Clustering</button>
   <button class="tablinks" data-help-tab="Scene_tab">Scene &amp; Camera</button>
   <button class="tablinks" data-help-tab="Node_tab">Edit → Nodes</button>
   <button class="tablinks" data-help-tab="Edge_tab">Edit → Edges</button>
   <button class="tablinks" data-help-tab="Layer_tab">Edit → Layers</button>
   <button class="tablinks" data-help-tab="Style_tab">Edit → Style</button>
+  <button class="tablinks" data-help-tab="Attributes_tab">Edit → Attributes</button>
   <button class="tablinks" data-help-tab="Analyze_tab">Analyze</button>
   <button class="tablinks" data-help-tab="Export_tab">Export</button>
   <button class="tablinks" data-help-tab="API_tab">API</button>
@@ -84,7 +86,7 @@ const HELP_HTML = `
 
 <div id="Start_tab" class="tabcontent">
   <h2>Getting Started</h2>
-  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/topbar.png" alt="The top bar: Home, View, Find, File, Database Importers, Layout, Edit, Analyze, Export and Help menus, the Multilayered / Single network switch, the theme picker and Undo / Redo" loading="lazy">
+  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/topbar.png" alt="The top bar: Home, File, Database Importers, Networks, View, Find, Layer selection, Layout, Clustering, Edit, Analyze, Export and Help menus, the Multilayered / Single network switch, the theme picker and Undo / Redo" loading="lazy">
   <p>
     Arena3D shows a multilayered network in 3D: every layer is a floor (or a disk, cube, sphere or cloud), a node
     may appear in several layers, and edges run within layers (intra-layer) or between them (inter-layer). Edges can
@@ -94,11 +96,11 @@ const HELP_HTML = `
     <li><b>Load a network</b> — File → upload a file or load a saved session; Database Importers → import from STRING, IntAct,
       OmniPath or NDEx; or pick an example on the Home page.</li>
     <li><b>Lay it out</b> — Layer selection → tick the layers to work on; Layout → an algorithm; optionally align
-      layers, cluster, or run a group layout.</li>
+      layers or run a group layout, with communities from the Clustering panel.</li>
     <li><b>Explore</b> — search nodes, expand neighbourhoods, follow paths, hide weak edges.</li>
     <li><b>Analyse</b> — Analyze → node metrics, network statistics, layer comparison, enrichment.</li>
     <li><b>Style and export</b> — Edit → Style for colours, sizes, shapes, borders, labels, line types and colour-blind tools;
-      File for images,
+      Edit → Attributes to set them node by node and edge by edge (or for a selection) in a table; File for images,
       3D models, video, other formats or NORMA.</li>
   </ol>
   <p>Step-by-step recipes for the usual tasks are on the <i>How to…</i> page.</p>
@@ -106,20 +108,45 @@ const HELP_HTML = `
   <p>
     The menu bar is grouped by task, and every menu has its own colour (the open or active menu is tinted with
     it). <b>File</b>: load networks, attributes and sessions. <b>Database Importers</b>: fetch from STRING, Reactome,
-    OmniPath, NDEx, IntAct and Gene Ontology. <b>View</b>: the 3D view, Scene &amp; Camera (background, axes,
+    OmniPath, NDEx, IntAct and Gene Ontology. <b>Networks</b>: which network and annotation are on screen, and
+    every loaded network with its annotation sets, to switch between them. <b>View</b>: the 3D view, Scene &amp; Camera (background, axes,
     arrangements, rotation, legend) and Performance (frame rate, resolution, detail). <b>Find</b>: search nodes
     and edges. <b>Layer selection</b>: the layers the layouts, analyses and exports work on, with a Hide and a
-    Labels switch per layer (Multilayered mode). <b>Layout</b>: algorithms, clustering, alignment and group
-    layouts. <b>Edit</b>: Nodes (labels,
-    shapes), Edges, Layers (floors, shapes, containers, split/merge) and Style (colours, sizes, palettes, colour
-    vision). <b>Analyze</b>: Analysis (metrics, statistics, layer comparison, explore, annotations, enrichment,
+    Labels switch per layer (Multilayered mode). <b>Layout</b>: algorithms, alignment and group
+    layouts. <b>Clustering</b>: communities, a summary of them, and saving them as an annotation set. <b>Edit</b>: Nodes (labels,
+    shapes), Edges, Layers (floors, shapes, containers, split/merge), Style (colours, sizes, borders, labels, line types, palettes, colour
+    vision) and Attributes (a table of every node and edge, edited one at a time or many at once, and an inspector). <b>Analyze</b>: Analysis (metrics, statistics, layer comparison, explore, annotations, enrichment,
     groups) and Data Tables. <b>Export</b>: images, 3D, video, Cytoscape, visualizations, other tools and the
     session. On phones and narrow windows the menus fold into a drawer.
+  </p>
+  <h3>Networks menu</h3>
+  <p>
+    The <b>Networks</b> button always says what is on screen: under its name, the network shown and its annotation
+    set (or <i>no annotation</i>); the browser tab's title names the network too. The menu starts with the same, in
+    full, then lists every loaded network: its name (with <i>+ name</i> for each network added to it as layers or
+    into the graph), where it came from (file, example, session file, database or shared link), its layers, nodes
+    and edges, and <i>on screen</i> for the one shown. Under each network are its annotation sets — every
+    attribute or group file, enrichment, cluster run or STRING grouping it received, and the annotations a saved
+    session brought (<i>Saved with the session</i>) — with the one it shows ticked, and <i>No annotation</i>.
+    Click a network to switch to it, or a set to show it; a set of another network switches to that network with
+    that set in one click. <i>Load another network…</i> opens File and <i>Annotation options…</i> opens Analyze →
+    Annotations &amp; Enrichment (pies, hulls). The menu, File → Loaded networks and Analyze → Annotations always
+    agree.
+  </p>
+  <p>
+    <b>Rename and delete.</b> ✎ beside a network or an annotation set renames it in place: type the new name and
+    press <kbd>Enter</kbd> (or click elsewhere); <kbd>Esc</kbd> keeps the old one. Annotation sets of one network
+    need different names, and a name already taken is refused with a note. The network's list entry keeps where it
+    came from, e.g. <i>File (figure2A_data.tsv)</i>. × deletes for good, after asking: an annotation set (the
+    network then shows no annotation, if it was the one shown), or a whole network with all its annotation sets.
+    Deleting the network on screen shows the loaded network before it instead, or the empty start and the Home page
+    if it was the last one. Deleting a network also clears the undo history, so no Undo can bring it back, and frees
+    the memory its scenes used. A saved session keeps the network's name and the name of the annotation set shown.
   </p>
   <h3>Undo and redo</h3>
   <p>
     Every change to the scene — loading, layouts, moves, styling, camera focus — can be undone and redone with the
-    Undo / Redo buttons at the top right or <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd>.
+    Undo / Redo buttons at the top right (on narrower windows only their arrows show) or <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd>.
   </p>
   <h3>Network mode</h3>
   <p>
@@ -162,7 +189,7 @@ const HELP_HTML = `
 <div id="Howto_tab" class="tabcontent">
   <h2>How to…</h2>
   <p>
-    Short recipes for common tasks. Panel names are those of the menu bar (View, File, Database Importers, Layout, Edit,
+    Short recipes for common tasks. Panel names are those of the menu bar (View, File, Database Importers, Layout, Clustering, Edit,
     Analyze); every step can be undone with Undo in the top bar.
   </p>
 
@@ -195,11 +222,23 @@ const HELP_HTML = `
       lower is better, so settings can be compared.</li>
   </ol>
 
+  <h3>…find communities and lay them out</h3>
+  <ol>
+    <li><i>Clustering</i> (top bar, next to Layout): pick an algorithm (Louvain, Walktrap, Fast Greedy, Label Propagation or Leiden)
+      and, in Multilayered mode, whether communities are found within each layer, over the selected layers as one
+      graph, or shared across layers by node name; <i>Find Communities</i>. The nodes take their community's colour
+      and the panel lists the communities by size.</li>
+    <li>Optionally <i>Save as Annotation Set</i>, so pies, hulls, fog clouds and the Networks menu treat the
+      communities like an annotation file.</li>
+    <li><i>Lay Out by Cluster…</i> opens Layout → <i>Group Layout (NORMA-2.0)</i> with the clusters as groups: pick a
+      strategy and <i>Run Group Layout</i>.</li>
+  </ol>
+
   <h3>…show pathways, GO terms or clusters as groups</h3>
   <ol>
     <li>Give nodes groups: a node attribute file with an <i>Annotation</i> column, a NORMA-format group file
       (File → <i>Upload GROUP file</i>), or Analyze → <i>Enrichment of Selected Nodes</i> → <i>Annotate Nodes with
-      Top 5 Terms</i>. Clusters come from Layout → <i>Clustering</i>.</li>
+      Top 5 Terms</i>. Clusters come from the <i>Clustering</i> panel.</li>
     <li>Analyze → Annotations &amp; Enrichment: pies on the nodes; <i>Hulls Around</i> clusters or annotations, as
       hulls or fog clouds.</li>
     <li>Analyze → Groups: recolour, hide a group's hull, select its members, show them in the legend, open the
@@ -277,12 +316,12 @@ const HELP_HTML = `
 
 <div id="Examples_tab" class="tabcontent">
   <h2>Example Data</h2>
-  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/home.jpg" alt="The Home page with the example picker" loading="lazy">
+  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/home.jpg" alt="The Home page: six featured examples that open with one click, and the All examples picker" loading="lazy">
   <p>
     Click a card under <i>Start from an example</i> on the Home page to open it at once, or pick any example from
     <i>All examples</i> there (or in File → <i>Example</i>) and press <i>Load Example</i>: every network below is listed, opened as its saved session where there is one — among
-    them a network without layers, a 3D network with the layers ignored and layers drawn as spheres. Every file can
-    also be downloaded below.
+    them a network without layers, a 3D network with the layers ignored, layers drawn as spheres and two neural
+    network architectures. Every file can also be downloaded below.
   </p>
   <p>
     <b>Network without layers (SARS-CoV-2 interactome): </b> <br />
@@ -363,6 +402,34 @@ const HELP_HTML = `
     <b>Cytoscape–Arena3D aspirin multi-channel interoperability example: </b> <br />
     The <a href="${import.meta.env.BASE_URL}data/StringApp_aspirin.cys" download>network file</a> in Cytoscape format. <br />
     An <a href="${import.meta.env.BASE_URL}data/Arena3DApp_aspirin.json" download>exported session</a> of this example. <br />
+  </p>
+  <hr>
+  <p>
+    <b>Neural network architectures (illustrative, not trained models): </b> <br />
+    Two neural networks drawn as multilayer networks: each network layer is an Arena3D layer, and the kind of each
+    link is its channel. The filters and attention patterns are written by hand to show how these networks work, and
+    the other weights are random, so neither network has learned anything. <br />
+    <i>Convolutional network (LeNet-like, 7 layers):</i> a 10×10 drawing of the digit 7 goes through four 3×3 edge
+    filters (Conv 1), 2×2 max-pooling, six 3×3 filters that each read two pooled maps (Conv 2, as in LeNet-5), a
+    second pooling, a dense layer and ten output classes. Each unit links to its receptive field (channels
+    <i>Convolution</i>, <i>Pooling</i>, <i>Dense</i>; the link weights are the filter weights, and the strongest link
+    of a pooling window is the one that wins), and node sizes show how strongly each unit responds to the 7, up to
+    Max-pool 2. <br />
+    <i>Transformer (decoder-only, LLM-like, 10 layers):</i> nine tokens through two blocks of attention, MLP and
+    Add &amp; Norm, then next-token predictions. In each attention layer, every one of four heads is a column of keys
+    and a column of queries linked by attention weights; a token attends only to itself and earlier tokens (the causal
+    mask). Block 1 has previous-token, attention-sink, local and broad heads. Block 2 has an induction head: the second
+    "draws" looks at "networks", the token after the first "draws", so the output predicts "networks" next. The MLP
+    acts on each token on its own, and the Add &amp; Norm layers carry the residual stream (channels
+    <i>Projection</i>, <i>Residual</i>, <i>Feed-forward</i>, <i>Attention</i>). <br />
+    The convolutional network: <a href="${import.meta.env.BASE_URL}data/cnn_lenet.tsv" download>network file</a>,
+    <a href="${import.meta.env.BASE_URL}data/cnn_lenet_node_attributes.tsv" download>node attributes file</a> and
+    <a href="${import.meta.env.BASE_URL}data/cnn_lenet.json" download>session</a>. <br />
+    The transformer: <a href="${import.meta.env.BASE_URL}data/transformer_tiny.tsv" download>network file</a>,
+    <a href="${import.meta.env.BASE_URL}data/transformer_tiny_node_attributes.tsv" download>node attributes file</a> and
+    <a href="${import.meta.env.BASE_URL}data/transformer_tiny.json" download>session</a>. <br />
+    A script in the <a href="https://github.com/Pavlopoulos-Lab/Arena3D" target="_blank" rel="noopener">source code</a>,
+    <code>frontend/scripts/neural_network_examples.py</code>, writes these files. <br />
   </p>
   <hr>
   <p>
@@ -462,7 +529,9 @@ const HELP_HTML = `
     switch is one undo step. <i>Compare Networks</i> puts the active network against another one in Data Tables →
     Network Comparison: layers, nodes by name, node copies, edges by name and by copy, and the nodes of every
     shared layer, with the counts in both, in one only and the Jaccard index, plus an UpSet plot of the node sets
-    of every layer of both networks. Remove a network from the list with ×.
+    of every layer of both networks. ✎ renames a network; × deletes it with its annotation sets, after asking (the
+    undo history is cleared). The <i>Networks</i> menu in the top bar lists the same networks, with their annotation
+    sets, and says which is on screen.
   </p>
   <h3>Sessions and attributes</h3>
   <p>
@@ -518,6 +587,8 @@ const HELP_HTML = `
   <p>
     Node attributes — only <i>Node</i> and <i>Layer</i> are required, and only the nodes of interest need to be listed.
     <i>Annotation</i> takes several terms separated by <i>;</i> (shown as pie charts and hulls, see Analyze).
+    Edit → Attributes writes these columns too, and they are read back: <i>Shape</i> (sphere, box or Cube, diamond,
+    cone, …), <i>Opacity</i> (0–1), <i>Label</i>, <i>LabelColor</i> and <i>LabelSize</i> (px).
   </p>
   ${tsv(
     [
@@ -540,7 +611,11 @@ const HELP_HTML = `
     }
   )}
 
-  <p>Edge attributes — <i>Color</i> in hex; optional <i>Channel</i>:</p>
+  <p>
+    Edge attributes — <i>Color</i> in hex; optional <i>Channel</i>, and the columns Edit → Attributes writes:
+    <i>Width</i> (× the edge width), <i>Opacity</i> (× the edge opacity, 0–1), <i>LineType</i> (solid, dashed or
+    dotted) and <i>ArrowColor</i>:
+  </p>
   ${tsv(
     [
       ['SourceNode', 'SourceLayer', 'TargetNode', 'TargetLayer', 'Color'],
@@ -720,12 +795,13 @@ const HELP_HTML = `
 
   <p>
     The panel follows the order of work: <b>1 · Layers</b> (how many layers are ticked in the <i>Layer selection</i>
-    tab, with a button to it), <b>2 · Layout</b> (algorithm, what to apply it to, options and clustering), then <i>Run Layout</i> in the bar that stays at the bottom of the
+    tab, with a button to it), <b>2 · Layout</b> (algorithm, what to apply it to and options), then <i>Run Layout</i> in the bar that stays at the bottom of the
     panel, with the result and the misalignment score next to it. The optional extras — Cross-Layer Alignment and Group
     Layout — are folded below; click a title to open it. In <i>Single network</i> mode (top bar) the panel works the
     NORMA way: the layer section, the scope and the alignment are hidden, every layout applies to the whole network,
     and the <i>Groups</i> card — clusters or annotation terms, drawn as fog clouds or hulls, with pie charts for
-    nodes in several groups — is the main tool.
+    nodes in several groups — is the main tool. The Layout panel runs no clustering algorithm: communities are
+    found in the <i>Clustering</i> panel (top bar, next to Layout), and the layouts use them.
   </p>
   <h3>Layer selection (top bar)</h3>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/layer_selection.png" alt="The Layer selection panel" loading="lazy">
@@ -734,7 +810,8 @@ const HELP_HTML = `
     layouts, the alignment, the analyses and the NORMA and Flame exports run on the ticked layers, or on every
     layer while none is ticked. Each row shows the floor colour and the node count, and can also hide the layer
     with its inter-layer edges or show its node labels; <i>Select/Deselect All Layers</i> and <i>Invert</i> act on
-    the whole list, and the count under them says what is selected.
+    the whole list, and the count under them says what is selected. Below the list, <i>Layout…</i>,
+    <i>Clustering…</i>, <i>Analysis…</i> and <i>Export…</i> open the panels that work on the selection.
   </p>
   <h3>1 · Layers</h3>
   <p>
@@ -747,10 +824,10 @@ const HELP_HTML = `
     <li><i>All Selected Layers</i> — the selected layers are combined into one network; nodes return to their own
       layers afterwards.</li>
     <li><i>Selected Nodes Only</i> — only the selected nodes move, within each layer, with the <i>Layout inside
-      clusters / selected nodes</i> algorithm (or the main one if none is chosen).</li>
+      the selected nodes</i> algorithm (or the main one if none is chosen).</li>
     <li><i>Align Nodes Across Selected Layers</i> — the layers are merged by node name and laid out once, so every
       copy of a node sits in the same spot in each layer and inter-layer edges run straight. Links between copies of
-      a node are ignored while computing it. Applies to layouts and clustering.</li>
+      a node are ignored while computing it.</li>
   </ul>
 
   <h3>Algorithms</h3>
@@ -764,36 +841,23 @@ const HELP_HTML = `
   </ul>
   <img src="${import.meta.env.BASE_URL}images/help/layouts_figure.png" alt="Examples of layout algorithms" style="max-width:100%;" loading="lazy">
 
-  <h3>Clustering</h3>
+  <h3>Clusters in layouts</h3>
   <p>
-    <i>Clustering (optional)</i> finds communities with <b>Louvain</b>, <b>Walktrap</b>,
-    <b>Fast Greedy</b>, <b>Label Propagation</b> or <b>Leiden</b>, colours them, arranges the clusters with the main
-    algorithm and lays each cluster out with <i>Layout inside clusters / selected nodes</i> (the main algorithm if
-    none is chosen). With <i>Align Nodes Across Selected Layers</i>, Leiden runs as multiplex
-    Leiden and finds communities shared by all selected layers.
-  </p>
-  <img src="${import.meta.env.BASE_URL}images/help/clustering.png" alt="Clustered layout" style="max-width:100%;" loading="lazy">
-
-  <h3>3 · Clustering as a step of its own</h3>
-  <p>
-    The <i>Clustering</i> section finds communities without moving the nodes — <i>Within each layer</i>, over the
-    <i>selected layers as one graph</i>, or <i>shared across layers by node name</i> (multiplex Leiden for Leiden,
-    the label-merged graph for the others). The nodes are coloured by community and Data Tables → Clustering Data
-    lists the memberships. <i>Use Clusters as Annotations</i> turns them into annotation terms (<i>Cluster 1</i>,
-    <i>Cluster 2</i>, …), so pies, hulls, fog clouds, the Groups card and group layouts treat them like an
-    annotation file; both steps are undoable.
+    Communities are found in their own panel, <i>Clustering</i> in the top bar (see its page). To lay them out, open the
+    <i>Group Layout</i> card below with <i>Groups: Clusters</i> (or the annotation set saved from them); while there
+    are no clusters the card says so and links to the Clustering panel.
   </p>
   <h3>Weighted layouts</h3>
   <p>
     <i>Use Edge Weights (and Channel Weights)</i> lets heavier edges pull their nodes closer (Fruchterman-Reingold,
-    Kamada-Kawai and DrL, without clustering). In multi-channel networks each channel then gets a weight (0.1–10,
+    Kamada-Kawai and DrL). In multi-channel networks each channel then gets a weight (0.1–10,
     default 1) that multiplies its edges' weights, so a network can be laid out mainly by one evidence type.
     Unchecking a channel leaves its edges out of the layout.
   </p>
 
   <h3>Cross-Layer Alignment</h3>
   <p>
-    With the <i>Per Layer</i> scope, a 2D layout and no clustering, you can trade alignment against each layer keeping
+    With the <i>Per Layer</i> scope and a 2D layout, you can trade alignment against each layer keeping
     its own shape, to reduce crossings between layers. <i>Soft</i> blends each layer's own layout toward the fully
     aligned one; <i>Anchor to a reference layer</i> lays out the chosen layer first and starts every other layer from
     the positions of its counterparts (the same node, or partners through inter-layer edges); <i>Chain</i> anchors
@@ -801,7 +865,7 @@ const HELP_HTML = `
     layers) to 1 (shared nodes exactly aligned). After every multi-layer layout the panel reports the
     <i>inter-layer misalignment</i> — the average in-plane distance between linked nodes of different layers, as a %
     of the layout size. Lower means straighter links, so options can be compared directly. The alignment is applied
-    by <i>Run Aligned Layout</i> in the card (it sets the Per Layer scope, a 2D layout and no clustering, then runs
+    by <i>Run Aligned Layout</i> in the card (it sets the Per Layer scope and a 2D layout, then runs
     the chosen algorithm) or by <i>Run Layout</i> with those settings; choosing a mode alone changes nothing yet.
   </p>
 
@@ -856,6 +920,8 @@ const HELP_HTML = `
     A flat hive turns to face you (with axes spread in 3D or a height, the view tilts instead) and the scene's own
     axes are hidden while the hive plot is on; any other
     arrangement or undo brings floors, straight links and the axes back, and saved sessions keep the hive plot.
+    3D containers (cubes, spheres, fog clouds) give way to the axes while the plot is on and come back, with the
+    nodes where they were, when it ends; choosing a 3D container during a hive plot ends the plot first.
     The example list (Home page, or File → <i>Load Example</i>) has three ready to load: <i>PREGO</i> (three layers, the classic three axes, by degree
     rank), <i>GPCR signalling</i> (four axes) and the <i>SARS-CoV-2 host–virus network</i> (five axes), and three
     with the axes spread in 3D: GPCR signalling as a tetrahedron, the SARS-CoV-2 network on a sphere, and six layers along
@@ -867,15 +933,16 @@ const HELP_HTML = `
     other control is disabled and a note under the section says why.
   </p>
   <ul>
-    <li><i>3D Layout</i> and <i>Clustering</i> exclude each other — clustering needs a 2D layout.</li>
-    <li><i>Layout inside clusters / selected nodes</i> only applies with a clustering or the <i>Selected Nodes
-      Only</i> scope.</li>
+    <li><i>Layout inside the selected nodes</i> only applies with the <i>Selected Nodes Only</i> scope.</li>
     <li><i>Use Edge Weights</i> works with Fruchterman-Reingold, Kamada-Kawai and DrL on the <i>Per Layer</i> or
-      <i>All Selected Layers</i> scope, without clustering or alignment.</li>
-    <li><i>Cross-Layer Alignment</i> needs the <i>Per Layer</i> scope, a 2D layout and no clustering (and layers to
+      <i>All Selected Layers</i> scope, without alignment.</li>
+    <li><i>Cross-Layer Alignment</i> needs the <i>Per Layer</i> scope and a 2D layout (and layers to
       align, so not in Single network mode).</li>
-    <li>Group layouts run without clustering or alignment on the <i>Per Layer</i> or <i>All Selected Layers</i>
-      scope.</li>
+    <li>Group layouts run without alignment on the <i>Per Layer</i> or <i>All Selected Layers</i>
+      scope. In the Group Layout card, <i>Group gravity</i> runs Fruchterman-Reingold, Kamada-Kawai or DrL (it works
+      through edge weights, which the other algorithms ignore), <i>Virtual node per group</i> any algorithm that reads
+      edges (not Circle, Grid or Random), and <i>Super nodes per group</i> any algorithm; layers as groups and
+      sphere, cube or cloud layers are laid out in 3D, so only algorithms with a 3D version are offered there.</li>
   </ul>
 
   <h3>Group Layout (NORMA-2.0)</h3>
@@ -884,14 +951,15 @@ const HELP_HTML = `
     <i>Virtual node per group</i> (a hidden hub pulls each group together), <i>Group gravity</i> (members attract each
     other; <i>Force strength</i> strengthens links inside groups and weakens those between them) and <i>Super nodes
     per group</i> (each group is laid out as one node, then each group's own layout fills its disc). <i>Groups</i> can
-    be clusters (run a clustered layout first), annotations, or the layers themselves: then the whole network is laid
+    be clusters (from the <i>Clustering</i> panel), annotations, or the layers themselves: then the whole network is laid
     out once in 3D, each floor moves to its group's place and turns to face outward, and its nodes are laid out within
     it. <i>Layout inside each group</i> picks the local layout; <i>Group size</i> scales the groups. Sphere, cube and
     cloud layers get their local layouts in 3D.
   </p>
   <p>
     In <i>Single network</i> mode the card becomes <i>Groups (NORMA-2.0)</i>: the groups are the clusters
-    or the annotation terms, <i>Draw groups as</i> shows them as fog clouds or hulls the way NORMA draws its groups
+    or the annotation terms, the whole network is laid out at once (a group spanning layers stays together),
+    <i>Draw groups as</i> shows them as fog clouds or hulls the way NORMA draws its groups
     (after a group layout they appear as fog clouds unless you chose otherwise), and <i>Pie charts for annotated
     nodes</i> splits nodes that belong to several groups.
   </p>
@@ -1022,8 +1090,8 @@ const HELP_HTML = `
   </ul>
   <h3>Restructure Layers</h3>
   <p class="last_p">
-    <i>Split Selected Layer by Cluster</i> turns every cluster of one selected layer into its own layer — run a
-    clustered layout on it first; edges between clusters become inter-layer edges. <i>Merge Selected Layers</i>
+    <i>Split Selected Layer by Cluster</i> turns every cluster of one selected layer into its own layer — find its
+    communities first (the Clustering panel); edges between clusters become inter-layer edges. <i>Merge Selected Layers</i>
     flattens the selected layers into one: copies of the same node merge and the links between them disappear.
     <i>Lift Nodes by Degree</i> raises each node off its floor in proportion to its degree; any 2D layout flattens
     them again.
@@ -1062,11 +1130,57 @@ const HELP_HTML = `
     dashed or dotted) and arrow colour (arrows show when Direction is on; <i>Reset</i> makes them follow the edge
     colour again). <i>Channel Palette</i> recolours the channels with the palette chosen beside it.
   </p>
-  <p class="last_p">
+  <p>
     <b>Colour vision.</b> <i>Colour-Blind Friendly Mode</i> switches to Okabe–Ito colours by layer (or by cluster
     after clustering), recolours channels, and gives each layer its own node shape, so groups never rely on colour
     alone. <i>Preview as</i> simulates protanopia, deuteranopia, tritanopia or achromatopsia on the view, to check a
     figure before publishing. Everything set in this panel is saved in sessions.
+  </p>
+  <p class="last_p">
+    To set these node by node or edge by edge, or for the rows ticked in a table, use <i>Edit → Attributes</i>.
+  </p>
+</div>
+
+<div id="Attributes_tab" class="tabcontent">
+  <h2>Edit → Attributes</h2>
+  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/attributes.png" alt="The Edit → Attributes panel: the node table, with ticked rows" loading="lazy">
+  <p>
+    <b>Tables.</b> After Cytoscape's Node and Edge Tables: one row per node or per edge (<i>Nodes</i> / <i>Edges</i>
+    at the top, with their counts). Nodes show their name, layer, colour, shape, size, opacity, label (text in place of
+    the name; empty shows the name) and description (shown on hover). Edges show their source, target, layers,
+    channels, colour, width (× the edge width of Edit → Edges), opacity (× the edge opacity), line type (solid,
+    dashed, dotted) and arrow colour (a faded swatch follows the edge colour; × takes a colour of its own away).
+    Every cell but the names, layers and channels is edited in place: pick a colour or a shape, or type a number or
+    text and press Enter (Esc keeps the old value). Each change is one undo step, and sessions keep it.
+  </p>
+  <p>
+    <b>Finding rows.</b> Filter by text (name, label or description; for edges, source or target), by layer and by
+    group (annotation terms and clusters, as in the Groups card); edges by channel and by intra- or inter-layer.
+    <i>Selected only</i> lists the selected nodes or edges. Click a column title to sort (again for descending, a
+    third time for the loaded order). Only the rows in view are drawn, so tables of up to 20,000 nodes scroll
+    smoothly.
+  </p>
+  <p>
+    <b>Many at once.</b> The tick boxes are the selection: ticking a row selects its node or edge in the scene, and a
+    selection made in the scene (a double-click, Shift + Drag with a rectangle or a lasso, Find, Explore, a group)
+    ticks its rows. Shift-click ticks a run of rows; the box in the header ticks every row in the list. Editing a
+    ticked row changes every ticked row in the list (the line above the table says how many), as one undo step;
+    editing a row that is not ticked changes that row alone. With nodes selected, right-click → <i>Edit Attributes…</i> (under
+    <i>Selected nodes</i>) opens the table on them.
+  </p>
+  <p>
+    <b>Inspector.</b> Right-click a node → <i>Edit Attributes…</i>, Alt (Option) + double-click a node, or ⋯ at the end
+    of a row opens a small card beside it with all its attributes: colour, shape, size, opacity, border (colour and
+    width; 0 is none), label, label colour and size (blank: as the label style of Edit → Nodes) and description.
+    Right-click an edge, away from its nodes → <i>Edit Edge Attributes…</i> for its colour, width, opacity, line type
+    and arrow colour (<i>Select Edge</i> selects it). Each change is one undo step; drag the card by its title, Esc or
+    × closes it, <i>Select</i> selects the node or edge and <i>Show in table</i> opens its row.
+  </p>
+  <p class="last_p">
+    <b>Export.</b> <i>Export node attributes</i> and <i>Export edge attributes</i> save tab-separated files in the
+    node and edge attribute formats of the File tab, every node or edge with all its attributes (edges one row per
+    channel); File → Node attributes / Edge attributes loads them back, onto the same network or another with the
+    same names and layers. Edit → Style sets the same properties for a layer, the selection or all, with palettes.
   </p>
 </div>
 
@@ -1095,7 +1209,8 @@ const HELP_HTML = `
     average clustering, transitivity and degree assortativity, plus a degree-distribution chart. <i>Compare
     Layers</i> shows how many nodes and edges each pair of layers shares (Jaccard index) as heatmaps, and an
     <i>UpSet plot</i> of the layers' node sets: one bar per combination, so a bar with one dot holds the nodes only
-    that layer has and a bar with several dots the nodes exactly those layers share (the plot downloads as SVG).
+    that layer has and a bar with several dots the nodes exactly those layers share. The plot is interactive (see
+    Data Tables below) and downloads as SVG.
   </p>
 
   <h3>Explore</h3>
@@ -1141,7 +1256,9 @@ const HELP_HTML = `
   <h3>Annotations &amp; Enrichment</h3>
   <p>
     <i>Annotation set</i> keeps every set of annotations the network received — each attribute or group file, an
-    enrichment, a cluster run — and switches between them (or to none); the newest set is the one shown.
+    enrichment, a cluster run — and switches between them (or to none); the newest set is the one shown. <i>Rename</i>
+    and <i>Delete</i> beside it act on the set shown (after asking, for Delete). The <i>Networks</i> menu in the top
+    bar shows the set on screen, switches, renames and deletes sets too, for any loaded network.
   </p>
   <p>
     The annotation options (pie charts, annotation hulls and fog clouds, annotations as groups or colours) are
@@ -1158,13 +1275,47 @@ const HELP_HTML = `
 
   <h3>Data Tables</h3>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/data.png" alt="The Data Tables panel" loading="lazy">
-  <p class="last_p">
+  <p>
     Analyze → Data Tables holds every report as a tab — the network on loading, the selected edges, the clusters,
     every computed metric, layer similarity, network statistics, group statistics and overlap, the network comparison
     and the node values — each drawn as a table with a header that stays put while the rows scroll, numbers
     right-aligned, the row count and a CSV download. Click a column title to sort the report by it (numbers largest
     first, text A→Z) and click again to turn the order round; the order is kept while the report refreshes and the
     CSV follows it. The comparison tabs add an UpSet plot of the sets they compare.
+  </p>
+  <p class="last_p">
+    <b>Interactive UpSet plots.</b> Hover a bar, its column of dots or a set on the left to see the exact sets, the
+    count and the first members. Click a bar to pick what is in exactly those sets; Shift- or Ctrl-click adds more
+    bars. Click set names (or their size bars) to pick their <i>Union</i> or <i>Intersection</i> — the switch
+    under the plot chooses which, and the bars it is made of are tinted. The pick's count and members show below:
+    <i>Copy names</i> copies them, <i>Select in scene</i> selects every copy of them in the picked layers (or the
+    group members), and <i>Load as new network</i> loads the subnetwork they induce — those nodes, every edge
+    among them, their layers — through the Import as popup, so it can replace the network or be added to it, and
+    it joins the loaded networks. With two networks compared, the layers of each are named after their network.
+    <i>Sort</i> orders the bars by size or by degree (the number of sets). The bars and set names take the
+    keyboard too: Tab to them, Enter or Space to pick, the arrow keys to move, Escape to clear. The SVG download
+    is the plot as drawn, without the highlights.
+  </p>
+</div>
+
+<div id="Clustering_tab" class="tabcontent">
+  <h2>Clustering</h2>
+  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/clustering.png" alt="The Clustering panel" loading="lazy">
+  <p>
+    The <i>Clustering</i> panel (top bar, next to Layout) finds communities without moving the nodes, with <b>Louvain</b>, <b>Walktrap</b>,
+    <b>Fast Greedy</b>, <b>Label Propagation</b> or <b>Leiden</b>. In Multilayered mode <i>Communities</i> chooses
+    where they are found: <i>Within each layer</i>, over the <i>selected layers as one graph</i>, or <i>shared across
+    layers by node name</i> (multiplex Leiden for Leiden, the label-merged graph for the others); it runs on the layers
+    ticked in Layer selection, or on every layer while none is. In Single network mode the whole network is one graph.
+  </p>
+  <p>
+    <i>Find Communities</i> colours the nodes by community and fills Data Tables → Clustering Data. Under
+    <i>Communities</i> the panel sums the result up — how many communities, over how many nodes, their sizes — and
+    lists the largest with their colour, size and the number of layers they span. <i>Save as Annotation Set</i>
+    turns them into annotation terms (<i>Cluster 1</i>, <i>Cluster 2</i>, …) kept as a set in the Networks menu, so
+    pies, hulls, fog clouds, the Groups card and group layouts treat them like an annotation file. <i>Lay Out by
+    Cluster…</i> opens Layout → <i>Group Layout (NORMA-2.0)</i> with the clusters as groups; layouts only use the
+    communities, they never compute them. Every step is undoable.
   </p>
 </div>
 
