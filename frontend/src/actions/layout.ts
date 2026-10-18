@@ -17,8 +17,11 @@ import {
   ApplyLayoutCommand,
   ApplyTopologyCommand,
   ColorNodesByValueCommand,
+  sceneCoordsShown,
+  showSceneCoords,
 } from '../commands/scene'
 import { initialSpreadLayers } from './layer'
+import { defaultHiveInput, type HiveInput } from './hive'
 import { redrawIntraLayerEdges } from './edge'
 
 // v2 executeLayout: the backend returns raw 2D [y, z] coords; map them into the
@@ -164,6 +167,7 @@ export type PredefinedLayout =
   | 'stack'
   | 'fan'
   | 'connectivity'
+  | 'hive'
 
 // the arrangements with their labels, in menu order (Layout and Scene panels)
 export const PREDEFINED_LAYOUTS: [PredefinedLayout, string][] = [
@@ -179,10 +183,17 @@ export const PREDEFINED_LAYOUTS: [PredefinedLayout, string][] = [
   ['stack', 'Stack (shelves)'],
   ['fan', 'Fan (pages around a spine)'],
   ['connectivity', 'By Inter-Layer Links'],
+  ['hive', 'Hive plot (layers as axes)'],
 ]
 
-export function applyPredefinedLayout(name: PredefinedLayout): void {
+// `hive`: where each node sits on its axis (actions/hive.ts); the default
+// (degree, each axis full length) when not given
+export function applyPredefinedLayout(
+  name: PredefinedLayout,
+  hive?: HiveInput
+): void {
   if (ctx.layers.length <= 1) return
+  leaveHive()
   resetSceneAndLayerPositions()
 
   if (name === 'parallel') initialSpreadLayers(1)
@@ -199,6 +210,7 @@ export function applyPredefinedLayout(name: PredefinedLayout): void {
   else if (name === 'stack') applyStackLayout()
   else if (name === 'fan') applyFanLayout()
   else if (name === 'connectivity') applyConnectivityLayout()
+  else if (name === 'hive') applyHiveLayout(hive ?? defaultHiveInput())
 
   // replaces the v2 Shiny syncs: displaced layers need edge + label redraw
   ctx.renderInterLayerEdgesFlag = true
@@ -267,6 +279,96 @@ function decideCubeStartingX(
 
 const largestWidth = () =>
   Math.max(...ctx.layers.map((l) => l.geometry_parameters_width))
+
+// Hive plot (Krzywinski et al. 2012): every layer is an axis radiating from
+// one centre in the plane facing the viewer — evenly spread, or 120° apart
+// for two — its floor a thin bar, and each node on its layer's axis at its
+// place (0 = inner end, 1 = outer end). Links curve between the axes
+// (three/hive.ts).
+function applyHiveLayout(input: HiveInput): void {
+  const n = ctx.layers.length
+  // a hive plot is read face on, without the scene's own axes at its centre
+  ctx.scene!.getQuaternion().identity()
+  if (sceneCoordsShown()) {
+    showSceneCoords(false)
+    hidSceneCoords = true
+  }
+  const length = largestWidth() // of every axis
+  const inner = length * 0.15 // the empty middle
+  const base = ctx.layers[0].plane.quaternion.clone() // the reset frame
+  const right = new Vector3(1, 0, 0).applyQuaternion(base)
+  const up = new Vector3(0, 1, 0).applyQuaternion(base)
+  const at = (theta: number, r: number) =>
+    right
+      .clone()
+      .multiplyScalar(r * Math.cos(theta))
+      .addScaledVector(up, r * Math.sin(theta))
+  const angle = (i: number) =>
+    n === 2
+      ? Math.PI / 2 + ((i === 0 ? 1 : -1) * Math.PI) / 3
+      : Math.PI / 2 - (2 * Math.PI * i) / n
+  // as in the chord diagram: the floor faces the viewer, its y along the radius
+  const faceOn = new Quaternion().setFromAxisAngle(
+    new Vector3(0, 1, 0),
+    Math.PI / 2
+  )
+  const frames = ctx.layers.map((layer, li) => {
+    const theta = angle(li)
+    const centre = at(theta, inner + length / 2)
+    const q = base
+      .clone()
+      .multiply(
+        new Quaternion().setFromAxisAngle(
+          new Vector3(0, 0, 1),
+          theta - Math.PI / 2
+        )
+      )
+      .multiply(faceOn)
+    layer.setFloorShape('axis')
+    layer.plane.position.copy(centre)
+    layer.plane.quaternion.copy(q)
+    const inv = q.clone().invert()
+    // the layer's name at the outer end of its axis
+    layer.sphere?.position.copy(
+      at(theta, inner + length * 1.06)
+        .sub(centre)
+        .applyQuaternion(inv)
+    )
+    return { theta, centre, inv }
+  })
+  ctx.nodeObjects.forEach((node, i) => {
+    const id = ctx.nodeLayerNames[i]
+    const li = ctx.layerGroups[ctx.nodeGroups[id]]
+    const f = frames[li]
+    if (!f) return
+    const t = Math.min(1, Math.max(0, input.position[id] ?? 0))
+    const p = at(f.theta, inner + t * length)
+      .sub(f.centre)
+      .applyQuaternion(f.inv)
+    node.setPosition('x', 0)
+    node.setPosition('y', p.y)
+    node.setPosition('z', p.z)
+  })
+  ctx.hive = {
+    curved: input.curved,
+    right: right.toArray(),
+    up: up.toArray(),
+  }
+  redrawIntraLayerEdges()
+}
+
+// whether the hive plot hid the scene's axes (they come back after it)
+let hidSceneCoords = false
+
+// Any other arrangement ends the hive plot: square floors, straight links
+function leaveHive(): void {
+  if (!ctx.hive) return
+  ctx.hive = null
+  for (const layer of ctx.layers)
+    if (layer.floorShape === 'axis') layer.setFloorShape('square')
+  if (hidSceneCoords) showSceneCoords(true)
+  hidSceneCoords = false
+}
 
 // Spiral staircase: spread along x like Parallel, each layer a further step
 // around the x axis, so neighbours stay readable while the stack is compact.

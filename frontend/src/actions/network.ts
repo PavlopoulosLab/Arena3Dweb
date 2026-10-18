@@ -153,6 +153,9 @@ export function buildFromSession(s: SessionData): void {
   resetContext()
   resetNetworkMode()
   ctx.edgeDefaultColor = edgeDefaultColor
+  // drawing settings first: the edges are built with them
+  if (s.edgeShape) ctx.edgeShape = s.edgeShape
+  ctx.hive = s.hive ?? null
 
   // scene from JSON
   const scene = new Scene()
@@ -180,7 +183,10 @@ export function buildFromSession(s: SessionData): void {
       rotation_z: Number(l.rotation_z),
       floor_current_color: l.floor_current_color,
       geometry_parameters_width: Number(l.geometry_parameters_width),
-      floor_shape: l.floor_shape === 'disk' ? 'disk' : 'square',
+      floor_shape:
+        l.floor_shape === 'disk' || l.floor_shape === 'axis'
+          ? l.floor_shape
+          : 'square',
       floor_style: FLOOR_STYLES.find((f) => f === l.floor_style) ?? 'solid',
       container: (['floor', 'none', 'cube', 'sphere', 'cloud'] as const).find(
         (c) => c === l.container
@@ -301,7 +307,6 @@ export function buildFromSession(s: SessionData): void {
   // bundled paths are computed on the first redraw (three/bundling.ts)
   ctx.intraEdgeBundling = Number(s.intraEdgeBundling ?? 0)
   ctx.interEdgeBundling = Number(s.interEdgeBundling ?? 0)
-  if (s.edgeShape) ctx.edgeShape = s.edgeShape
   ctx.edgeFileColorPriority = true
 
   store.update({

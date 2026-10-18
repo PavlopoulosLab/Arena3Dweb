@@ -75,6 +75,18 @@ def test_edge_shape_defaults_and_validation() -> None:
         assert normalize_session({**_minimal(), "edgeShape": bad})["edgeShape"] == "parallel"
 
 
+def test_hive_state_kept_or_dropped() -> None:
+    assert normalize_session(_minimal())["hive"] is None
+    hive = {"curved": False, "right": [1, 0, 0], "up": ["0", 1, 0]}
+    assert normalize_session({**_minimal(), "hive": hive})["hive"] == {
+        "curved": False,
+        "right": [1.0, 0.0, 0.0],
+        "up": [0.0, 1.0, 0.0],
+    }
+    for bad in ("on", {"right": [1, 0]}, {"right": [1, 0, 0], "up": [0, "x", 0]}):
+        assert normalize_session({**_minimal(), "hive": bad})["hive"] is None
+
+
 def test_missing_mandatory_object_raises() -> None:
     with pytest.raises(SessionValidationError):
         normalize_session({"layers": [{"name": "L1"}], "nodes": []})

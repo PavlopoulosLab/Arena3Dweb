@@ -74,6 +74,7 @@ export function collectSession(): SessionData {
     intraEdgeBundling: ctx.intraEdgeBundling,
     interEdgeBundling: ctx.interEdgeBundling,
     edgeShape: ctx.edgeShape,
+    hive: ctx.hive,
   }
 }
 

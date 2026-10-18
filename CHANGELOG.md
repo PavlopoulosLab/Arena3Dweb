@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- Arranging layers as a chord diagram fitted the view as an undo step of its own, recorded when the camera animation ended, so one Undo took back either the view or the arrangement depending on timing; the fit is now part of the arrangement's step (as for the hive plot), and the e2e test that passed only by that timing checks the real result.
 - Navigation Controls ignored quick clicks (the first step waited 70 ms, so a click released sooner did nothing) and a held button stopped at the slightest mouse movement, or kept going when released outside it. Every button now steps on press; held down it repeats until released anywhere, through small movements, after a 300 ms pause, so a click stays one step. The spread/pull buttons repeat too, each press is one undo step, the buttons never select text, and they work with touch and pen.
 - OmniPath fetched nothing for gene names typed in lower case, for UniProt IDs and for a single protein, and crashed (HTTP 500) for organisms OmniPath does not cover; names are sent as OmniPath expects them (TP53 for human, Trp53 for mouse and rat), UniProt IDs match, and other organisms get a clear message.
 - IntAct crashed (HTTP 500) whenever interaction partners were included — names such as `"ccsb isoform id: ndn_2"` broke the import's table — and could not match UniProt IDs among the proteins; quotes are dropped from imported names (all importers), and IntAct matches gene names or any identifier.
@@ -19,6 +20,7 @@
 
 ### Added
 
+- **Hive plot layout (multilayered mode).** Layout → Layer Arrangement → _Hive plot (layers as axes)_, after Krzywinski M, Birol I, Jones S, Marra MA (2012), Hive plots — rational approach to visualizing networks, _Briefings in Bioinformatics_ 13(5):627–644 (doi:10.1093/bib/bbr069): every layer becomes an axis radiating from one centre (its floor a thin bar, its name at the outer end), and every node sits on its axis by _degree_, _betweenness centrality_, _clustering coefficient_ or _name_, on a scale of each axis full length (the paper's "absolute connectivity with normalized axis length"), one scale for all axes, or rank. Links curve between the axes; links within one axis arc beside it, where the paper draws them to the axis's clone. The view faces you and the scene axes step aside; undo, any other arrangement and saved sessions (`hive`, floor shape `axis`) all handle it. Three examples open as hive plots: PREGO (three axes), GPCR signalling (four) and the SARS-CoV-2 host–virus network (five).
 - **Fruchterman-Reingold on every new network.** The Import as popup has _Lay out with Fruchterman-Reingold_, ticked: a new network is laid out layer by layer at once (only the new layers when adding), instead of keeping random positions; a single 3D network is laid out in 3D as before, and an expanded view keeps its places.
 - **Same-name links, on request.** The Import as popup has _Link nodes with the same name across layers_: ticked, every node's copies in consecutive layers are joined (missing links added); unticked, a database import's own links are left out and added layers are not linked. Ticked by default for database imports, unticked for files.
 - **Progress bars in the Database Importers.** Each card has its own bar under its button, following every step — fetching (with elapsed seconds; each STRING call when the browser asks STRING directly), building the scene, laying out — and turning green when done.
@@ -103,6 +105,7 @@
 
 ### Changed
 
+- Fit to view (Recenter, double-click on the background) keeps the layer names in view too.
 - Gene Ontology: _Include genes of child terms_ is ticked by default.
 - The OmniPath card offers human, mouse and rat only (the organisms OmniPath covers); a card keeps its organism when another card picks one it does not offer.
 - _Only interactions among these proteins_ explains itself in a popup (hover or focus its label or the ⓘ beside it): what ticked and unticked do; with a single protein its partners are included.

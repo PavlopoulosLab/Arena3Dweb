@@ -22,6 +22,7 @@ class SessionImportResponse(BaseModel):
     intraEdgeBundling: float = 0.0
     interEdgeBundling: float = 0.0
     edgeShape: str = "parallel"
+    hive: dict[str, Any] | None = None  # the hive plot arrangement, when on
     warnings: list[str] = []
 
 

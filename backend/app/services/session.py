@@ -6,6 +6,7 @@ and decides the scramble/generate-coordinate flags — so a partial JSON (e.g. a
 external-API payload with only src/trg) renders like v2.
 """
 
+import math
 from typing import Any
 
 from app import config
@@ -134,6 +135,21 @@ def _edge_shape(value: Any) -> str:
     return value if value in EDGE_SHAPES else EDGE_SHAPES[0]
 
 
+def _hive(value: Any) -> dict[str, Any] | None:
+    """The hive plot arrangement (curved links; the plane its axes radiate in,
+    as two directions), or None when it is off or unreadable."""
+    if not isinstance(value, dict):
+        return None
+    try:
+        right = [float(v) for v in value["right"]]
+        up = [float(v) for v in value["up"]]
+    except (KeyError, TypeError, ValueError):
+        return None
+    if len(right) != 3 or len(up) != 3 or not all(math.isfinite(v) for v in right + up):
+        return None
+    return {"curved": bool(value.get("curved", True)), "right": right, "up": up}
+
+
 def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
     """Validate + fill defaults, returning the canonical session dict."""
     _validate(data)
@@ -201,5 +217,6 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
         "intraEdgeBundling": _strength(data.get("intraEdgeBundling")),
         "interEdgeBundling": _strength(data.get("interEdgeBundling")),
         "edgeShape": _edge_shape(data.get("edgeShape")),
+        "hive": _hive(data.get("hive")),
         "warnings": warnings,
     }

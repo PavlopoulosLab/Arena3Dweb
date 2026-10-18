@@ -204,6 +204,7 @@ test('the Layer Arrangement card moves the floors, undoably', async ({
         x: Math.max(...c.nodeObjects.map((n) => Math.abs(n.getPosition('x')))),
       }
     })
+  const fan = await floors() // where Fan put the floors
   await page.locator('#layerArrangement').selectOption('chord')
   await page.locator('#applyArrangement').dispatchEvent('click')
   await expect(page.locator('#layouts_status')).toContainText('Chord')
@@ -211,8 +212,7 @@ test('the Layer Arrangement card moves the floors, undoably', async ({
   const spread = await nodeSpread()
   expect(spread.x).toBeLessThan(1) // flat on the floor
   expect(spread.z).toBeGreaterThan(100) // along the arc
+  // one undo takes the chord diagram and its view fit back: the Fan floors
   await page.locator('#undoButton').dispatchEvent('click')
-  await expect
-    .poll(async () => (await floors()).every((z) => z === 0))
-    .toBe(true)
+  await expect.poll(() => floors()).toEqual(fan)
 })

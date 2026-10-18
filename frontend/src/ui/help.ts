@@ -806,8 +806,35 @@ const HELP_HTML = `
     lie flat on one ring facing you, each a sector with its nodes strung along the arc, so intra-layer edges hug the
     ring and inter-layer edges cross it as chords — the nodes move with the floors, and the view zooms out to the
     ring; the floors read best as outlines or hidden, Edit → Layers), <i>Stack</i> (horizontal
-    shelves), <i>Fan</i> (pages around a vertical spine) and <i>By Inter-Layer Links</i>. <i>Arrange Layers</i>
-    applies the choice; undo brings the previous arrangement back.
+    shelves), <i>Fan</i> (pages around a vertical spine), <i>By Inter-Layer Links</i> and <i>Hive plot</i> (below).
+    <i>Arrange Layers</i> applies the choice; undo brings the previous arrangement back.
+  </p>
+  <h3>Hive plot</h3>
+  <p>
+    A hive plot (Krzywinski M, Birol I, Jones S, Marra MA. Hive plots — rational approach to visualizing networks.
+    <i>Briefings in Bioinformatics</i> 2012;13(5):627–644, doi:10.1093/bib/bbr069; hiveplot.com) replaces an
+    aesthetic layout by a rule you can state: here, <b>every layer is an axis</b> radiating from one centre (evenly
+    spread; two layers sit 120° apart), its floor drawn as a thin bar with the layer's name at its outer end, and
+    <b>every node sits on its layer's axis</b> by a network property, so two hive plots built with the same rules can
+    be compared by eye. In Layout → <i>Layer Arrangement</i>, choose <i>Hive plot (layers as axes)</i>, then:
+  </p>
+  <ul>
+    <li><b>Position on axis</b>: <i>Degree</i> (all a node's connections, inter-layer links included — the paper's
+      default), <i>Betweenness centrality</i> or <i>Clustering coefficient</i> (computed within each layer), or
+      <i>Name</i> (A→Z).</li>
+    <li><b>Scale</b>: <i>Value, each axis full length</i> (value ÷ that axis's largest — "absolute connectivity with
+      normalized axis length", the variant the paper finds most revealing); <i>Value, one scale for all axes</i>
+      (comparable across axes); or <i>Rank</i> (evenly spaced in value order — use it when many nodes share a value
+      and would otherwise sit on one spot).</li>
+    <li><b>Curved links</b>: links between axes curve round the centre from one axis to the other; links between
+      nodes of one axis arc beside it, where the paper draws them between the axis and its clone. Unticked, links
+      are straight. Links between non-neighbouring axes (four axes or more) pass over the axes between.</li>
+  </ul>
+  <p>
+    The view turns to face you and the scene's own axes are hidden while the hive plot is on; any other
+    arrangement or undo brings floors, straight links and the axes back, and saved sessions keep the hive plot.
+    The example list (Home page, or File → <i>Load Example</i>) has three ready to load: <i>PREGO</i> (three layers, the classic three axes, by degree
+    rank), <i>GPCR signalling</i> (four axes) and the <i>SARS-CoV-2 host–virus network</i> (five axes).
   </p>
   <h3>What goes together</h3>
   <p>
@@ -867,7 +894,8 @@ const HELP_HTML = `
     <i>Parallel Coordinates</i> (the default), <i>Zig Zag</i>, <i>Star</i> and <i>Cube</i>, plus <i>Helix</i> (a
     spiral staircase), <i>Sphere</i> (floors tangent to a sphere), <i>Grid</i> (floors side by side in rows),
     <i>Circle</i> (floors on a ring, facing the centre), <i>Stack</i> (horizontal shelves), <i>Fan</i> (pages around
-    a vertical spine) and <i>By Inter-Layer Links</i> (layers with many links between them sit next to each other).
+    a vertical spine), <i>By Inter-Layer Links</i> (layers with many links between them sit next to each other) and
+    <i>Hive plot</i> (every layer an axis, nodes on it by degree — see Layout → Hive plot).
     The same choices sit in Layout → <i>Layer Arrangement</i>; every arrangement is undoable.
   </p>
   <img src="${import.meta.env.BASE_URL}images/help/predefined_layouts.png" alt="Predefined layer arrangements" style="max-width:100%;" loading="lazy">

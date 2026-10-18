@@ -544,10 +544,26 @@ export class TransformCommand implements Command {
   }
 }
 
+// The scene's coordinate axes (Scene & Camera → Show Scene Coord System)
+export const sceneCoordsShown = (): boolean =>
+  (document.getElementById('toggleSceneCoords') as HTMLInputElement | null)
+    ?.checked ?? true
+export function showSceneCoords(show: boolean): void {
+  const box = document.getElementById(
+    'toggleSceneCoords'
+  ) as HTMLInputElement | null
+  if (box) box.checked = show
+  ctx.scene?.toggleCoords(show)
+}
+
 export class PredefinedLayoutCommand implements Command {
   description: string
   private readonly before = captureTransforms()
   private readonly oldRadio = checkedRadio('predefined_layout')
+  // a hive plot turns floors into axes and links into curves: both come back
+  private readonly floors = ctx.layers.map((l) => l.floorShape)
+  private readonly hive = ctx.hive
+  private readonly coords = sceneCoordsShown() // a hive plot hides them
 
   constructor(
     private readonly layout: string,
@@ -563,6 +579,9 @@ export class PredefinedLayoutCommand implements Command {
   }
 
   undo(): void {
+    ctx.layers.forEach((l, i) => l.setFloorShape(this.floors[i] ?? 'square'))
+    ctx.hive = this.hive
+    showSceneCoords(this.coords)
     applyTransforms(this.before)
     syncRadio('predefined_layout', this.oldRadio)
     syncSelect('layerArrangement', this.oldRadio ?? 'parallel')

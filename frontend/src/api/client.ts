@@ -50,7 +50,7 @@ export interface SessionLayer {
   last_layer_scale: string | number
   floor_current_color: string
   geometry_parameters_width: string | number
-  floor_shape?: 'square' | 'disk'
+  floor_shape?: 'square' | 'disk' | 'axis' // axis: a hive plot axis
   floor_style?: 'solid' | 'wireframe' | 'grid' | 'dots' | 'outline'
   container?: 'floor' | 'none' | 'cube' | 'sphere' | 'cloud'
   floor_visible?: boolean
@@ -103,6 +103,12 @@ export interface SessionData {
   interEdgeBundling?: number
   // multi-channel edges (Edit → Edges → Edge Shape)
   edgeShape?: 'parallel' | 'curved' | 'straight'
+  // the hive plot arrangement, when it was on (three/hive.ts)
+  hive?: {
+    curved: boolean
+    right: [number, number, number]
+    up: [number, number, number]
+  } | null
   warnings?: string[]
 }
 

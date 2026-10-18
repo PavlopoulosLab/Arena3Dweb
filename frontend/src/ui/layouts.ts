@@ -5,6 +5,16 @@
 
 import { store } from '../store'
 import { registerAnnotationSet } from '../actions/workspace'
+import {
+  HIVE_PROPERTIES,
+  HIVE_SCALES,
+  hivePositions,
+  hiveValues,
+  type HiveInput,
+  type HiveProperty,
+  type HiveScale,
+  HIVE_FIT,
+} from '../actions/hive'
 import { api } from '../api/client'
 import { history } from '../commands/base'
 import {
@@ -36,7 +46,7 @@ import {
 import { VOLUME_CONTAINERS } from '../three/Layer'
 import { startLoader, finishLoader } from '../actions/screen'
 import { selectionSummary } from './layer_selection'
-import { fitView } from '../actions/search'
+import { fitViewNow } from '../actions/search'
 import { showTab } from './tabs'
 import { escapeHtml } from '../utils'
 import { PROGRESS_HTML, ProgressBar } from './progress'
@@ -190,6 +200,27 @@ const LAYOUTS_HTML = `
           ${PREDEFINED_LAYOUTS.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
         </select>
         <button id="applyArrangement" class="btn btn-primary btn-sm">Arrange Layers</button>
+      </div>
+      <div id="hiveOptions" class="mt-2 d-none">
+        <div class="form-text mt-0 mb-2">Each layer becomes an axis (Krzywinski et al. 2012, hive plots): nodes sit on their axis by a network property instead of an aesthetic layout, and links curve between the axes.</div>
+        <div class="lp-grid">
+          <div>
+            <label class="form-label small" for="hiveProperty">Position on axis</label>
+            <select id="hiveProperty" class="form-select form-select-sm">
+              ${HIVE_PROPERTIES.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="form-label small" for="hiveScale">Scale</label>
+            <select id="hiveScale" class="form-select form-select-sm">
+              ${HIVE_SCALES.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="form-check mt-1">
+          <input class="form-check-input" type="checkbox" id="hiveCurved" checked />
+          <label class="form-check-label" for="hiveCurved">Curved links between the axes (as in hive plots)</label>
+        </div>
       </div>
     </div>
   </details>
@@ -754,21 +785,18 @@ export function initLayoutsPanel(): void {
     syncAlign()
     void onRunLayout()
   })
-  document.getElementById('applyArrangement')?.addEventListener('click', () => {
-    if (ctx.layers.length <= 1)
-      return status('Arrangements need at least two layers.', true)
-    const name = (
-      document.getElementById('layerArrangement') as HTMLSelectElement
-    ).value as PredefinedLayout
-    history.execute(
-      new PredefinedLayoutCommand(name, () => applyPredefinedLayout(name))
-    )
-    // the chord ring is wider than the default zoom: bring it all into view
-    if (name === 'chord') fitView()
-    status(
-      `Layers arranged: ${PREDEFINED_LAYOUTS.find(([v]) => v === name)?.[1] ?? name}.`
-    )
-  })
+  const arrangement = document.getElementById(
+    'layerArrangement'
+  ) as HTMLSelectElement
+  const syncHiveOptions = () =>
+    document
+      .getElementById('hiveOptions')
+      ?.classList.toggle('d-none', arrangement.value !== 'hive')
+  arrangement.addEventListener('change', syncHiveOptions)
+  syncHiveOptions()
+  document
+    .getElementById('applyArrangement')
+    ?.addEventListener('click', () => void arrangeLayers())
   const strength = document.getElementById(
     'alignmentStrength'
   ) as HTMLInputElement
@@ -785,6 +813,53 @@ export function initLayoutsPanel(): void {
     buildChannelList()
     status('')
   })
+}
+
+async function arrangeLayers(): Promise<void> {
+  if (ctx.layers.length <= 1)
+    return status('Arrangements need at least two layers.', true)
+  const name = (
+    document.getElementById('layerArrangement') as HTMLSelectElement
+  ).value as PredefinedLayout
+  const label = PREDEFINED_LAYOUTS.find(([v]) => v === name)?.[1] ?? name
+  if (name !== 'hive') {
+    history.execute(
+      new PredefinedLayoutCommand(name, () => {
+        applyPredefinedLayout(name)
+        // the chord ring is wider than the default zoom: bring it all into
+        // view, in the same undo step
+        if (name === 'chord') fitViewNow()
+      })
+    )
+    return status(`Layers arranged: ${label}.`)
+  }
+  const pick = (id: string) =>
+    (document.getElementById(id) as HTMLSelectElement).value
+  const property = pick('hiveProperty') as HiveProperty
+  const scale = pick('hiveScale') as HiveScale
+  const curved = (document.getElementById('hiveCurved') as HTMLInputElement)
+    .checked
+  try {
+    if (property === 'betweenness' || property === 'clustering')
+      status('Computing the node property for the axes…')
+    const input: HiveInput = {
+      position: hivePositions(await hiveValues(property), scale),
+      curved,
+    }
+    history.execute(
+      new PredefinedLayoutCommand('hive', () => {
+        applyPredefinedLayout('hive', input)
+        fitViewNow(HIVE_FIT)
+      })
+    )
+    const of = (list: [string, string][], v: string) =>
+      list.find(([k]) => k === v)?.[1] ?? v
+    status(
+      `Hive plot: ${ctx.layers.length} axes, nodes by ${of(HIVE_PROPERTIES, property).toLowerCase()} (${of(HIVE_SCALES, scale).toLowerCase()}).`
+    )
+  } catch (err) {
+    status(err instanceof Error ? err.message : String(err), true)
+  }
 }
 
 // Kamada-Kawai's 3D layout can crash the server (igraph bug — see

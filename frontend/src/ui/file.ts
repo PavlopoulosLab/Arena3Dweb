@@ -35,6 +35,17 @@ import { renderValuesTable } from './data'
 import { startLoader, finishLoader } from '../actions/screen'
 import { exportSession } from '../actions/session'
 import { showTab } from './tabs'
+import { ctx } from '../three'
+import { history } from '../commands/base'
+import { PredefinedLayoutCommand } from '../commands/scene'
+import { applyPredefinedLayout } from '../actions/layout'
+import {
+  HIVE_FIT,
+  hivePositions,
+  nodeDegrees,
+  type HiveScale,
+} from '../actions/hive'
+import { fitViewNow } from '../actions/search'
 
 // Load Example choices (public/data); .json files load as sessions
 export const EXAMPLES = [
@@ -78,6 +89,22 @@ export const EXAMPLES = [
     label: 'PREGO anaerobic ammonium oxidation, three channels',
   },
   { file: 'edgelist_2columns.tsv', label: 'Minimal two-column edgelist' },
+  // hive plots (Krzywinski et al. 2012): the layers become the axes
+  {
+    file: 'prego.tsv',
+    label: 'Hive plot: PREGO, three layers as three axes',
+    hive: 'rank', // most nodes share one or two links: rank spreads them
+  },
+  {
+    file: 'GPCRs_data.tsv',
+    label: 'Hive plot: GPCR signalling, four axes',
+    hive: 'axis',
+  },
+  {
+    file: 'covid19_data.tsv',
+    label: 'Hive plot: SARS-CoV-2 host–virus network, five axes',
+    hive: 'axis',
+  },
 ]
 
 const FILE_HTML = `
@@ -260,7 +287,11 @@ async function onLoadExample(): Promise<void> {
     const choice = document.getElementById(
       'exampleChoice'
     ) as HTMLSelectElement | null
-    const name = EXAMPLES[Number(choice?.value ?? 0)]?.file ?? EXAMPLES[0].file
+    const example =
+      (EXAMPLES as { file: string; hive?: HiveScale }[])[
+        Number(choice?.value ?? 0)
+      ] ?? EXAMPLES[0]
+    const name = example.file
     const res = await fetch(`${import.meta.env.BASE_URL}data/${name}`)
     if (!res.ok)
       throw new Error(`Failed to fetch example network: ${res.status}`)
@@ -268,7 +299,29 @@ async function onLoadExample(): Promise<void> {
     const file = new File([await res.blob()], name, {
       type: json ? 'application/json' : 'text/tab-separated-values',
     })
-    await (json ? onLoadSession(file) : onUploadNetwork(file))
+    const loaded = await (json ? onLoadSession(file) : onUploadNetwork(file))
+    // hive plot examples open as one, when shown multilayered
+    if (
+      loaded &&
+      example.hive &&
+      ctx.layers.length > 1 &&
+      ctx.networkMode === 'multilayer'
+    ) {
+      const scale = example.hive
+      const input = {
+        position: hivePositions(nodeDegrees(), scale),
+        curved: true,
+      }
+      history.execute(
+        new PredefinedLayoutCommand('hive', () => {
+          applyPredefinedLayout('hive', input)
+          fitViewNow(HIVE_FIT)
+        })
+      )
+      status(
+        `Loaded ${name} as a hive plot: ${ctx.layers.length} layers as axes, nodes by degree${scale === 'rank' ? ' (rank)' : ''}. Layout → Layer Arrangement changes it.`
+      )
+    }
   } catch (err) {
     status(err instanceof Error ? err.message : 'Example load failed.', true)
   }

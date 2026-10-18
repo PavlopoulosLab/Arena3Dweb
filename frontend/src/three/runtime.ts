@@ -19,6 +19,14 @@ import type { Edge } from './Edge'
 
 export type NetworkMode = 'multilayer' | 'single'
 export type EdgeShape = 'curved' | 'parallel' | 'straight'
+// Hive plot (Layout → Layer Arrangement → Hive plot): the plane the axes
+// radiate in (its right/up directions in the scene sphere's frame, centred on
+// the sphere's origin) and whether links are drawn as hive curves
+export interface HiveState {
+  curved: boolean
+  right: [number, number, number]
+  up: [number, number, number]
+}
 // Channels as parallel lines side by side, as STRING draws them
 export const DEFAULT_EDGE_SHAPE: EdgeShape = 'parallel'
 
@@ -92,6 +100,8 @@ export interface RuntimeContext {
   // channel, or one shared straight line (Edit → Edges → Edge Shape); a view
   // preference kept across loads
   edgeShape: EdgeShape
+  // the hive plot arrangement, while it is on (three/hive.ts), else null
+  hive: HiveState | null
 
   // Color-priority sources
   layerColorPrioritySource: ColorPrioritySource
@@ -162,6 +172,7 @@ export const ctx: RuntimeContext = {
   channelColors: {},
   channelVisibility: {},
   edgeShape: DEFAULT_EDGE_SHAPE,
+  hive: null,
 
   edgeDefaultColor: '#000000',
   containerDefaultColor: '#5b8def',
@@ -237,6 +248,7 @@ export function resetContext(): void {
   ctx.networkMode = 'multilayer'
   ctx.intraEdgeBundling = 0
   ctx.interEdgeBundling = 0
+  ctx.hive = null
   ctx.layerColorPrioritySource = 'default'
   ctx.nodeColorPrioritySource = 'default'
   ctx.lastHoveredNodeIndex = null

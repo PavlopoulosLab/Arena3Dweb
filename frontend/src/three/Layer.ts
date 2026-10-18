@@ -31,7 +31,10 @@ export interface LayerOptions {
 }
 
 // Square = the v2 floor; disk = a round floor of the same width (Phase 18)
-export type FloorShape = 'square' | 'disk'
+// a hive plot axis floor is this fraction of the floor width thick
+const AXIS_THICKNESS = 0.012
+
+export type FloorShape = 'square' | 'disk' | 'axis'
 // How a floor is drawn: the plane itself, its wireframe, or a faint plane
 // under a grid, a dotted grid or just the outline
 export type FloorStyle = 'solid' | 'wireframe' | 'grid' | 'dots' | 'outline'
@@ -132,12 +135,15 @@ export class Layer {
     const g =
       this.floorShape === 'disk'
         ? new THREE.CircleGeometry(width / 2, DISK_SEGMENTS)
-        : new THREE.PlaneGeometry(
-            width,
-            width,
-            PLANE_WIDTHSEGMENTS,
-            PLANE_HEIGHTSEGMENTS
-          )
+        : this.floorShape === 'axis'
+          ? // a hive plot axis: a thin bar along the floor's own y
+            new THREE.PlaneGeometry(Math.max(4, width * AXIS_THICKNESS), width)
+          : new THREE.PlaneGeometry(
+              width,
+              width,
+              PLANE_WIDTHSEGMENTS,
+              PLANE_HEIGHTSEGMENTS
+            )
     g.rotateY(THREE.MathUtils.degToRad(90))
     return g
   }

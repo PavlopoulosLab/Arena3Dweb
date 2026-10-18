@@ -196,6 +196,10 @@ export function fitTarget(): [number, number, number] | null {
   const box = new THREE.Box3()
   for (const n of ctx.nodeObjects)
     if (n.sphere.visible) box.expandByPoint(n.getWorldPosition())
+  // the layer names too (a hive plot's sit beyond its axes' ends)
+  for (const l of ctx.layers)
+    if (l.sphere && l.plane.visible)
+      box.expandByPoint(l.sphere.getWorldPosition(new THREE.Vector3()))
   const floor = new THREE.Box3()
   for (const l of ctx.layers) {
     const plane = l.plane
@@ -250,4 +254,16 @@ export function focusOnNodes(indices: number[], animate = true): boolean {
 
 export function fitView(animate = true): boolean {
   return flyTo(fitTarget(), 'Fit network to view', animate)
+}
+
+// The same fit at once and without an undo step of its own, for a command
+// that already records the view (layer arrangements: one undo takes both
+// back). `margin` < 1 leaves room around the network.
+export function fitViewNow(margin = 1): void {
+  settle()
+  const t = fitTarget()
+  if (!t || !ctx.scene) return
+  ctx.scene.setPosition('x', t[0] * margin)
+  ctx.scene.setPosition('y', t[1] * margin)
+  ctx.scene.setScale(clampScale(t[2] * margin))
 }

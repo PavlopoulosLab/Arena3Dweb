@@ -10,6 +10,7 @@ import {
 } from './constants'
 import { ctx, disposeObject3D, edgeResolution } from './runtime'
 import { bundledPoints } from './bundling'
+import { hivePath } from './hive'
 
 // Parallel channel lanes: this many line widths apart
 const PARALLEL_SPACING = 1.6
@@ -128,8 +129,9 @@ export class Edge {
       return
     }
 
-    // bundled edges follow their bundle's path (three/bundling.ts)
-    const path = bundledPoints(this) ?? points
+    // bundled edges follow their bundle's path (three/bundling.ts), hive
+    // links their hive curve (three/hive.ts)
+    const path = bundledPoints(this) ?? hivePath(this, points) ?? points
     this.THREE_Object = this.createLine(
       path,
       color,
@@ -250,7 +252,7 @@ export class Edge {
 
     const verticalPushConstant =
       (points[0].distanceTo(points[1]) * curveFactor) / 400
-    const path = bundledPoints(this)
+    const path = bundledPoints(this) ?? hivePath(this, points)
     if (this.channels.length % 2 == 0) pushForce = 1 // skip straight line
 
     for (let i = 0; i < this.channels.length; i++) {
