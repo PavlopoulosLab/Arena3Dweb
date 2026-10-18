@@ -682,7 +682,10 @@ const HELP_HTML = `
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/navcontrols.png" alt="The navigation controls: shortcuts, scene, layer and node controls" loading="lazy">
   <p>
     <i>Navigation Controls</i> shows or hides the table; <i>Pause Inter-Layer Edges</i> hides inter-layer edges while
-    you work on large networks. The coloured buttons act on the red (X), green (Y) and blue (Z) axes. Every button
+    you work on large networks. <i>Redraw</i> (&#8635;) puts the scene right if something gets stuck: it lets go of a
+    drag, a held key or an area outline left half done (say, the mouse was released outside the window), hides a
+    loading veil left up by a failed request, and redraws nodes, edges, bundles and labels at the window's size; the
+    view, the selection and undo stay as they are. The coloured buttons act on the red (X), green (Y) and blue (Z) axes. Every button
     takes one step as soon as you press it; keep it pressed and it keeps going — rotating, moving or spreading —
     until you let go (or move off the button). Each press is one undo step.
   </p>

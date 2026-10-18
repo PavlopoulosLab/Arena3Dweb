@@ -22,6 +22,7 @@ import {
   type SelectShape,
 } from './canvas_controls'
 import { history } from '../commands/base'
+import { redrawScene } from './redraw'
 import { GROUP_ICONS, axisIcon } from '../ui/nav_icons'
 import {
   captureTransforms,
@@ -353,7 +354,13 @@ function attachNavControls(): void {
 
   buttonsDiv.innerHTML = `
     <button id="interLayerEdgesRenderPauseButton" class="displayCanvasControls nav-toggle-btn" type="button" data-multilayer-only></button>
-    <button id="displayCanvasControlsButton" class="displayCanvasControls nav-toggle-btn" type="button"></button>`
+    <div class="nav-btn-row">
+      <button id="displayCanvasControlsButton" class="displayCanvasControls nav-toggle-btn" type="button"></button>
+      <button id="redrawSceneButton" class="displayCanvasControls nav-toggle-btn" type="button" title="Redraw the scene if something is stuck: lets go of a drag or an area left half done, hides a stuck loading veil and redraws nodes, edges and labels (the view and the selection stay)" aria-label="Redraw the scene"><span class="nav-toggle-icon">&#8635;</span>Redraw</button>
+    </div>`
+  document
+    .getElementById('redrawSceneButton')!
+    .addEventListener('click', redrawScene)
   document
     .getElementById('interLayerEdgesRenderPauseButton')!
     .addEventListener('click', () => {

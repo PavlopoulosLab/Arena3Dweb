@@ -447,6 +447,13 @@ body {
   border-color: var(--arena-accent);
 }
 
+/* Navigation Controls and Redraw side by side, so the table below keeps its
+   place */
+.nav-btn-row {
+  display: flex;
+  gap: 6px;
+}
+
 /* Icon + label toggle buttons (render-pause, controls disclosure): the icon
    swaps per state instead of the label alone carrying the meaning. */
 .nav-toggle-btn {

@@ -311,6 +311,15 @@ function flagWorldSpaceRedrawsOnSceneMove(): void {
 // FPS-limited render loop. Pure rAF (no setTimeout) so the browser can
 // align frames with vsync and auto-pause when the tab is hidden; the
 // timestamp check enforces ctx.fps as an upper bound.
+// each distinct frame error is logged once, not 60 times a second
+const reportedFrameErrors = new Set<string>()
+function reportFrameError(err: unknown): void {
+  const msg = err instanceof Error ? err.message : String(err)
+  if (reportedFrameErrors.has(msg)) return
+  reportedFrameErrors.add(msg)
+  console.error('Arena3D frame step failed:', err)
+}
+
 let lastFrameTime = 0
 export function animate(now = 0): void {
   requestAnimationFrame(animate)
@@ -319,9 +328,14 @@ export function animate(now = 0): void {
   // Snap to the frame grid so throttled rates stay even (e.g. 30 on 60Hz).
   lastFrameTime = now - ((now - lastFrameTime) % interval)
 
-  flagWorldSpaceRedrawsOnSceneMove()
-  renderInterLayerEdges()
-  for (const fn of animateHooks) fn()
+  // a step that throws must not freeze the picture: report it, draw anyway
+  try {
+    flagWorldSpaceRedrawsOnSceneMove()
+    renderInterLayerEdges()
+    for (const fn of animateHooks) fn()
+  } catch (err) {
+    reportFrameError(err)
+  }
   renderFrame()
   // measured frame rate for the Performance panel
   frames++

@@ -493,6 +493,33 @@ function drawOutline(outline: [number, number][]): void {
   ctx.scene!.add(lasso)
 }
 
+// Let go of whatever the mouse left half done — a release the canvas never
+// saw (outside the window, over a dialog) leaves a drag, a held axis key or
+// an area outline behind (Navigation Controls → Redraw)
+export function cancelPointerState(): void {
+  if (lasso) {
+    ctx.scene?.remove(lasso)
+    lasso.geometry.dispose()
+    lasso = null
+  }
+  lassoHits.clear()
+  lassoPath = []
+  shiftX = null
+  shiftY = null
+  dragBefore = null
+  transformDragged = false
+  pendingHover = null
+  if (ctx.scene) {
+    ctx.scene.dragging = false
+    ctx.scene.leftClickPressed = false
+    ctx.scene.middleClickPressed = false
+    ctx.scene.axisPressed = ''
+  }
+  ctx.lastHoveredNodeIndex = null
+  ctx.lastHoveredLayerIndex = null
+  for (const node of ctx.nodeObjects) node.setOpacity(1) // area/hover feedback
+}
+
 // Called once from main.ts, after the canvas is mounted.
 export function registerCanvasControls(): void {
   const canvas = ctx.renderer?.domElement
