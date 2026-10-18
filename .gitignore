@@ -53,3 +53,6 @@ frontend/dist/
 # Editors
 .DS_Store
 .playwright-cli/
+
+# Manuscript drafts and figures: kept local, never pushed
+paper/
