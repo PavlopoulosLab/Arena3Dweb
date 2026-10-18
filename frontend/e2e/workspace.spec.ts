@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // Several loaded networks: the File panel lists them, switching restores each

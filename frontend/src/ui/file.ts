@@ -21,7 +21,13 @@ import {
   type FileKind,
 } from '../actions/filecheck'
 import { applyEdgeAttributes } from '../actions/edge'
-import { loadNetwork, loadSession } from '../actions/network'
+import { loadSession } from '../actions/network'
+import {
+  askImportAs,
+  askSessionView,
+  placeNetwork,
+  showSessionAs,
+} from './import_as'
 import { applyNodeAttributes } from '../actions/node'
 import { applyGroups } from '../actions/groups'
 import { matchedNodes, setValues } from '../actions/values'
@@ -179,8 +185,11 @@ async function precheck(file: File, kind: FileKind): Promise<boolean> {
   return problem === null
 }
 
-async function onUploadNetwork(file: File): Promise<void> {
-  if (!(await precheck(file, 'network'))) return
+// @return false when the user cancels the "Import as" popup
+async function onUploadNetwork(file: File): Promise<boolean> {
+  if (!(await precheck(file, 'network'))) return true
+  const mode = await askImportAs(file.name)
+  if (!mode) return false
   startLoader()
   try {
     progress('Uploading 0%', 0)
@@ -189,12 +198,7 @@ async function onUploadNetwork(file: File): Promise<void> {
       `Building the scene (${data.nodes.length} nodes, ${data.edges.length} edges)…`
     )
     await nextFrame()
-    snapshotActive()
-    loadNetwork(data)
-    registerLoad(file.name)
-    status(
-      `Loaded network: ${data.layers.length} layers, ${data.nodes.length} nodes.`
-    )
+    status(await placeNetwork(data, mode, file.name))
     showTab('#panel-main-view') // reveal the scene; drawer toggle shows closed
   } catch (err) {
     status(err instanceof Error ? err.message : 'Network upload failed.', true)
@@ -202,10 +206,14 @@ async function onUploadNetwork(file: File): Promise<void> {
     progress(false)
     finishLoader()
   }
+  return true
 }
 
-async function onLoadSession(file: File): Promise<void> {
-  if (!(await precheck(file, 'session'))) return
+// @return false when the user cancels the "Import as" popup
+async function onLoadSession(file: File): Promise<boolean> {
+  if (!(await precheck(file, 'session'))) return true
+  const view = await askSessionView(file.name)
+  if (!view) return false
   startLoader()
   try {
     progress('Uploading 0%', 0)
@@ -215,6 +223,7 @@ async function onLoadSession(file: File): Promise<void> {
     snapshotActive()
     loadSession(session)
     registerLoad(file.name)
+    await showSessionAs(view)
     const warnings = session.warnings ?? []
     status(
       warnings.length
@@ -228,6 +237,7 @@ async function onLoadSession(file: File): Promise<void> {
     progress(false)
     finishLoader()
   }
+  return true
 }
 
 // also used by the Home page's example picker
@@ -435,14 +445,22 @@ export function initFilePanel(): void {
     'input_network_file'
   ) as HTMLInputElement
   netInput.addEventListener('change', () => {
-    if (netInput.files?.[0]) void onUploadNetwork(netInput.files[0])
+    const file = netInput.files?.[0]
+    if (!file) return
+    void onUploadNetwork(file).then((loaded) => {
+      if (!loaded) netInput.value = '' // the same file can be picked again
+    })
   })
 
   const sessInput = document.getElementById(
     'load_network_file'
   ) as HTMLInputElement
   sessInput.addEventListener('change', () => {
-    if (sessInput.files?.[0]) void onLoadSession(sessInput.files[0])
+    const file = sessInput.files?.[0]
+    if (!file) return
+    void onLoadSession(file).then((loaded) => {
+      if (!loaded) sessInput.value = '' // the same file can be picked again
+    })
   })
 
   for (const [id, handler] of [

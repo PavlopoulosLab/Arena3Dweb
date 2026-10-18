@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 import path from 'node:path'
 
 // PLAN-ROADMAP Phase 21: network statistics table + degree chart; new node

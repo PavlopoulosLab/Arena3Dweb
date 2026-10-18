@@ -53,7 +53,7 @@ import {
 
 const EXPORT_HTML = `
 <div class="col-md-8 col-lg-6 layout-panel export-panel">
-  <details class="lp-section lp-more" id="exportCard_image" open>
+  <details class="lp-section lp-more" id="exportCard_image">
     <summary>Image &amp; 3D</summary>
     <div class="d-flex flex-wrap align-items-center gap-2">
       <button id="export_scene_image" class="btn btn-primary btn-sm">PNG (current view)</button>

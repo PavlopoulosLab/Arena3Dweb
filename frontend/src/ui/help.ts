@@ -66,7 +66,7 @@ const HELP_HTML = `
   <button class="tablinks" data-help-tab="Howto_tab">How to…</button>
   <button class="tablinks" data-help-tab="Examples_tab">Examples</button>
   <button class="tablinks" data-help-tab="File_tab">File</button>
-  <button class="tablinks" data-help-tab="Databases_tab">Databases</button>
+  <button class="tablinks" data-help-tab="Databases_tab">Database Importers</button>
   <button class="tablinks" data-help-tab="Find_tab">Find</button>
   <button class="tablinks" data-help-tab="Navigation_tab">3D View &amp; Navigation</button>
   <button class="tablinks" data-help-tab="Layouts_tab">Layout</button>
@@ -84,14 +84,14 @@ const HELP_HTML = `
 
 <div id="Start_tab" class="tabcontent">
   <h2>Getting Started</h2>
-  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/topbar.png" alt="The top bar: Home, View, Find, File, Databases, Layout, Edit, Analyze, Export and Help menus, the Multilayered / Single network switch, the theme picker and Undo / Redo" loading="lazy">
+  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/topbar.png" alt="The top bar: Home, View, Find, File, Database Importers, Layout, Edit, Analyze, Export and Help menus, the Multilayered / Single network switch, the theme picker and Undo / Redo" loading="lazy">
   <p>
     Arena3D shows a multilayered network in 3D: every layer is a floor (or a disk, cube, sphere or cloud), a node
     may appear in several layers, and edges run within layers (intra-layer) or between them (inter-layer). Edges can
     carry weights, directions and several information channels.
   </p>
   <ol>
-    <li><b>Load a network</b> — File → upload a file or load a saved session; Databases → import from STRING, IntAct,
+    <li><b>Load a network</b> — File → upload a file or load a saved session; Database Importers → import from STRING, IntAct,
       OmniPath or NDEx; or pick an example on the Home page.</li>
     <li><b>Lay it out</b> — Layer selection → tick the layers to work on; Layout → an algorithm; optionally align
       layers, cluster, or run a group layout.</li>
@@ -104,7 +104,7 @@ const HELP_HTML = `
   <h3>Menus</h3>
   <p>
     The menu bar is grouped by task, and every menu has its own colour (the open or active menu is tinted with
-    it). <b>File</b>: load networks, attributes and sessions. <b>Databases</b>: fetch from STRING, Reactome,
+    it). <b>File</b>: load networks, attributes and sessions. <b>Database Importers</b>: fetch from STRING, Reactome,
     OmniPath, NDEx, IntAct and Gene Ontology. <b>View</b>: the 3D view, Scene &amp; Camera (background, axes,
     arrangements, rotation, legend) and Performance (frame rate, resolution, detail). <b>Find</b>: search nodes
     and edges. <b>Layer selection</b>: the layers the layouts, analyses and exports work on, with a Hide and a
@@ -122,9 +122,22 @@ const HELP_HTML = `
   </p>
   <h3>Network mode</h3>
   <p>
-    A network with one layer asks on loading whether to show it as a <i>single layer on a floor</i> (Multilayered
-    mode with one floor) or as a <i>single 3D network</i> (Single network mode, laid out in space at once); saved
-    sessions bring their own answer, and the top-bar switch changes it any time.
+    Every load — an uploaded network file, an example, a database import, a saved session or a shared link —
+    first asks in an <b>Import as</b> popup, always, two things. <b>Show as</b>: a <i>Multilayered network</i>
+    (every layer on its own floor) or a <i>Single 3D network</i> (one graph in space, no floors, laid out at once).
+    <b>Into the view</b>: <i>Replace the current network</i>, or <i>Add to the current network</i> (needs a loaded
+    network). Added to a multilayered view, the network comes in as new layers and copies of a node are linked
+    across layers; added to a single 3D network it expands the view — the new nodes and edges join the graph (a
+    protein already there is the same node, not a copy), the nodes already there keep their places, colours and
+    sizes, and the new ones are placed next to the nodes they link to. A saved session or shared link always
+    replaces the current network; only the view is asked. Two more choices: <i>Link nodes with the same name across
+    layers</i> draws a line between the copies of a node in consecutive layers (ticked for database imports, which
+    link copies themselves; unticked for files, which bring their own inter-layer edges — and unticking it for a
+    database import leaves its links out), and <i>Lay out with Fruchterman-Reingold</i> (ticked) lays every new
+    layer out at once instead of leaving random positions. The popup offers your previous answers again;
+    <i>Cancel</i> (or <kbd>Esc</kbd>) loads nothing. For a network with one layer the answer also settles how it is
+    shown: multilayered, it sits on a floor; single 3D, it is laid out in space. The top-bar switch changes the mode
+    any time.
   </p>
   <p>
     The switch in the top bar chooses how the data are treated. <b>Multilayered</b>: every layer on its own floor,
@@ -148,7 +161,7 @@ const HELP_HTML = `
 <div id="Howto_tab" class="tabcontent">
   <h2>How to…</h2>
   <p>
-    Short recipes for common tasks. Panel names are those of the menu bar (View, File, Databases, Layout, Edit,
+    Short recipes for common tasks. Panel names are those of the menu bar (View, File, Database Importers, Layout, Edit,
     Analyze); every step can be undone with Undo in the top bar.
   </p>
 
@@ -164,7 +177,7 @@ const HELP_HTML = `
 
   <h3>…build a multilayer network from databases</h3>
   <ol>
-    <li>Databases → type the proteins (gene names or IDs) and choose the organism and a minimum score.</li>
+    <li>Database Importers → type the proteins (gene names or IDs) and choose the organism and a minimum score.</li>
     <li>Either <i>STRING — evidence types as channels</i> (one layer, each evidence type a curved channel) or
       <i>STRING · IntAct · OmniPath — one layer each</i> (copies of a protein linked across the layers).</li>
     <li>Layout → <i>Apply to: Align Nodes Across Selected Layers</i> → <i>Run Layout</i>: every protein sits in the
@@ -540,42 +553,83 @@ const HELP_HTML = `
 </div>
 
 <div id="Databases_tab" class="tabcontent">
-  <h2>Databases</h2>
-  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/databases.png" alt="The Databases panel: Import as, then one card per source" loading="lazy">
+  <h2>Database Importers</h2>
+  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/databases.png" alt="The Database Importers panel: one card per source" loading="lazy">
   <p>
-    The Databases panel (top menu) fetches networks straight from public resources. As in NORMA, every source is an
-    expandable, colour-coded card with its own fields and Import button, and a <b>?</b> that opens this page.
-    Proteins, organism and score typed in one card are copied to the other cards that take them.
+    The Database Importers panel (top menu) fetches networks straight from public resources. As in NORMA, every source is an
+    expandable, colour-coded card with its own fields and Import button, and a <b>?</b> that opens this page; the
+    cards start folded — click a card's title to open it.
+    Proteins, organism and score typed in one card are copied to the other cards that take them. Each card shows a
+    progress bar under its button while it fetches, builds the scene and lays the network out.
   </p>
   <ul>
-    <li><b>STRING</b>: one layer whose edges are split into STRING's evidence channels (experiments, curated
-      databases, text mining, co-expression, neighborhood, gene fusion, co-occurrence), each weighted by that
-      evidence score. Untick channels you do not want; <i>Add interactors</i> extends the network with STRING's top
-      partners.</li>
-    <li><b>Reactome</b>: pathways as layers. Search a pathway by name and click a hit, or type identifiers such as
+    <li><b>STRING</b>: the options of NORMA's STRING importer (see <i>STRING in detail</i> below).
+      Type proteins or genes (Ctrl+Enter fetches), choose the organism (or <i>Other</i> and an NCBI taxon ID), the
+      network (functional associations or physical interactions only), how many interactors STRING adds and the
+      minimum confidence; the result is one layer whose edges are STRING's evidence channels.</li>
+    <li><b>Reactome</b>: pathways as layers. Search a pathway by name — the hits sort by name, ID or as found — and
+      click a hit, or type identifiers such as
       <i>R-HSA-109581</i>, one per line; each pathway becomes a layer holding its proteins, with STRING's interactions
       among them as the layer's edges, and copies of a protein are linked across the pathway layers. <i>Genes per
       pathway</i> caps large pathways (the first N genes are kept and the warning says so).</li>
-    <li><b>OmniPath</b>: curated signalling interactions among (or around) the proteins, one layer.</li>
-    <li><b>NDEx</b>: paste the UUID (or the link) of a public network from ndexbio.org.</li>
-    <li><b>IntAct</b>: experimentally verified interactions with their MI-score, one layer.</li>
+    <li><b>OmniPath</b>: curated signalling interactions among (or around) the proteins, one layer; human, mouse
+      and rat. Gene symbols in any case or UniProt IDs.</li>
+    <li><b>NDEx</b>: paste the UUID (or the link) of a public network from ndexbio.org, or load one of the examples
+      (NCI-PID p53 pathway, SIGNOR Inhibition of Apoptosis, SARS-CoV-2/Human interactome) with one click.</li>
+    <li><b>IntAct</b>: experimentally verified interactions with their MI-score, one layer; gene names or UniProt
+      IDs.</li>
+    <li><b>Only interactions among these proteins</b> (IntAct, OmniPath, Compare databases): ticked, only the edges
+      between two of the typed proteins; unticked, their other interaction partners join too and the network grows
+      around them. With one protein its partners are always included. When nothing is found among the proteins, the
+      message says how many interactions with other partners there are.</li>
     <li><b>Gene Ontology</b>: GO terms as layers. Search a term by name or type identifiers such as
       <i>GO:0006915</i>; each term becomes a layer holding the genes annotated to it in the chosen organism
-      (QuickGO), with STRING's interactions among them; <i>Include genes of child terms</i> widens the set.</li>
+      (QuickGO), with STRING's interactions among them; <i>Include genes of child terms</i> (ticked by default)
+      widens the set. The search hits sort by name, ID or as found.</li>
     <li><b>Compare databases</b>: STRING, IntAct and OmniPath each become a layer, and copies of the same protein
       are linked between layers, so the databases can be compared side by side (try Layout → Align Nodes Across
       Selected Layers). By default only interactions among the typed proteins are kept.</li>
   </ul>
   <p>
-    <b>Import as</b> (top of the panel) decides what happens with the fetched network: <i>New network</i> replaces
-    the loaded one; <i>New layer(s)</i> adds it to the loaded network as extra layers, keeps every layer and node
-    where it was, lines the new layers up after the last one and links every copy of a node to the copies with the
-    same name in the other layers (channel <i>same node</i> when the network has channels) — run a layout for the new
-    layers afterwards; <i>Single 3D network</i> loads it as one graph without floors (Single network mode).
+    Before fetching, the <b>Import as</b> popup asks how to show the network (multilayered or single 3D) and
+    whether it replaces the current network or is added to it. Added as layers, every layer and node already there
+    stays where it was, the new layers line up after the last one and every copy of a node is linked to the copies
+    with the same name in the other layers (channel <i>same node</i> when the network has channels) — run a layout
+    for the new layers afterwards. Added to a single 3D network, the view expands in place (see Home → Network mode).
   </p>
+  <h3>STRING in detail</h3>
+  <ul>
+    <li><b>Interactors to add</b> (0–500): STRING's best partners of the typed proteins join the network.</li>
+    <li><b>Minimum confidence</b>: Highest (0.900), High (0.700), Medium (0.400), Low (0.150) or a custom value.</li>
+    <li><b>Evidence channels</b>: gene neighborhood, gene fusion, co-occurrence, co-expression, experiments, curated
+      databases and text mining, each drawn in STRING's colour. Untick a channel to leave that evidence out: each
+      connection's confidence is then recomputed from the ticked channels only, the way STRING combines them
+      (the prior is removed from every channel, the channels are combined as independent evidence and the prior is
+      added back), and connections that fall below the minimum are left out (the status line says how many).
+      <i>Edges</i>: one edge per channel (a multi-edge, one curved line per evidence type, weighted by that
+      channel's score) or one edge per pair carrying the combined score.</li>
+    <li><b>Groupings from functional terms</b>: each ticked term collection (GO processes, functions and components,
+      KEGG, Reactome, WikiPathways, UniProt keywords, Pfam, InterPro and SMART domains, diseases, tissues,
+      subcellular localization, Monarch phenotypes, STRING's local network clusters, reference publications — and,
+      if ticked, any other collection STRING offers) becomes an annotation set, with one group per term, ready for pies,
+      hulls and the Groups card; switch between the sets in the Annotations card. <i>Enriched in the network</i>
+      (recommended) keeps the terms enriched among the network's proteins with an FDR at most the given value;
+      <i>All annotations of its proteins</i> keeps every term (KEGG pathways come only with enriched terms, because
+      STRING does not share full KEGG annotations). <i>Groups per collection</i> keeps the best terms (lowest FDR, or
+      the largest), and <i>Smallest group</i> drops terms with fewer proteins in the network. <i>None</i> turns
+      groupings off. <i>Fetch groupings for the current view</i> does the same for whatever network is loaded,
+      using its node names.</li>
+    <li><b>STRING server</b>: <i>Connect</i> through this server, directly from the browser, or automatically (through
+      this server, switching to the browser for the rest of the session if the server cannot reach STRING — decided
+      at the first request). <i>Address</i>: https://string-db.org answers with the latest STRING version (the status
+      line names it); a version address such as https://version-12-0.string-db.org gives the same answers every time.
+      <i>Fetch protein descriptions</i> puts STRING's description of every protein on its node (right-click a node →
+      Description; Find searches it too), and every node links to its STRING page (right-click → Link).</li>
+  </ul>
+  <p>STRING asks callers to wait a second between requests and to identify themselves; both are respected.</p>
   <p class="last_p">
     Imports use the same size limits as uploaded files and can be undone. The API equivalents are
-    <i>POST /api/import/string</i>, <i>/api/import/reactome</i>, <i>/api/import/go</i>, <i>/api/import/databases</i>
+    <i>POST /api/import/string</i> (with <i>/api/import/string/groupings</i> for the groupings of a list of names), <i>/api/import/reactome</i>, <i>/api/import/go</i>, <i>/api/import/databases</i>
     (IntAct, OmniPath and the comparison) and <i>/api/import/ndex</i>; <i>GET /api/import/reactome/search</i> and
     <i>/api/import/go/search</i> find pathways and terms by name.
   </p>
@@ -782,7 +836,7 @@ const HELP_HTML = `
     cloud layers get their local layouts in 3D.
   </p>
   <p>
-    In <i>Single network</i> mode the card opens by itself as <i>Groups (NORMA-2.0)</i>: the groups are the clusters
+    In <i>Single network</i> mode the card becomes <i>Groups (NORMA-2.0)</i>: the groups are the clusters
     or the annotation terms, <i>Draw groups as</i> shows them as fog clouds or hulls the way NORMA draws its groups
     (after a group layout they appear as fog clouds unless you chose otherwise), and <i>Pie charts for annotated
     nodes</i> splits nodes that belong to several groups.

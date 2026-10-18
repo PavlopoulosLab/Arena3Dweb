@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // Analyze → Data Tables: a click on a column title sorts the report by that

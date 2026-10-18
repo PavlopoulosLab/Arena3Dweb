@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 import path from 'node:path'
 
 // PLAN-ROADMAP Phase 2: "Align Nodes Across Selected Layers". After a coupled

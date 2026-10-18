@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // NORMA-2.0 group layouts: clusters within layers, layers as groups (floors

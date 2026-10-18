@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // PLAN-ROADMAP Phase 3: Import from Databases card. The backend route is
 // intercepted (no internet in CI) — the test checks the request the card
@@ -46,9 +46,17 @@ test('STRING import sends evidence channels and loads the network', async ({
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
   await page
-    .getByRole('tab', { name: 'Databases', includeHidden: true, exact: true })
+    .getByRole('tab', {
+      name: 'Database Importers',
+      includeHidden: true,
+      exact: true,
+    })
     .click()
+  await page.locator('#card_string > summary').click()
   await page.locator('#db_identifiers').fill('TP53, MDM2\nATM')
+  await page
+    .locator('#card_string summary:has-text("Evidence channels")')
+    .click()
   await page.locator('#db_ch_pscore').uncheck()
   await page.locator('#db_import_string').click()
 
@@ -58,8 +66,12 @@ test('STRING import sends evidence channels and loads the network', async ({
   expect(body).toMatchObject({
     identifiers: ['TP53', 'MDM2', 'ATM'],
     species: 9606,
+    network_type: 'functional',
     required_score: 0.4,
-    add_nodes: 0,
+    add_nodes: 20,
+    edge_mode: 'channels',
+    descriptions: true,
+    address: null,
   })
   expect((body as unknown as { channels: string[] }).channels).not.toContain(
     'pscore'
@@ -88,9 +100,14 @@ test('one-layer-per-database importer sends the ticked databases; errors show de
 
   await page.goto('/')
   await page
-    .getByRole('tab', { name: 'Databases', includeHidden: true, exact: true })
+    .getByRole('tab', {
+      name: 'Database Importers',
+      includeHidden: true,
+      exact: true,
+    })
     .click()
   // each source is its own card; proteins typed in one card reach the others
+  await page.locator('#card_string > summary').click()
   await page.locator('#db_identifiers').fill('TP53 MDM2')
   await page.locator('#card_compare summary').click()
   await expect(page.locator('#db_layer_opts')).toBeVisible()
@@ -108,79 +125,50 @@ test('one-layer-per-database importer sends the ticked databases; errors show de
   })
 })
 
-const PTGS = {
-  nodes: [
-    { id: 'PTGS1_STRING', label: 'PTGS1', layer: 'STRING' },
-    { id: 'PTGS2_STRING', label: 'PTGS2', layer: 'STRING' },
-    { id: 'NEWGENE_STRING', label: 'NEWGENE', layer: 'STRING' },
-  ],
-  edges: [
-    { ...edge('PTGS1', 'STRING', 'PTGS2', 'STRING', ''), channel: null },
-    { ...edge('PTGS2', 'STRING', 'NEWGENE', 'STRING', ''), channel: null },
-  ],
-  layers: ['STRING'],
-  channels: [],
-  warnings: [],
-}
-
-type Ctx = {
-  layers: { name: string }[]
-  nodeObjects: unknown[]
-  edgeObjects: { interLayer: boolean }[]
-}
-const read = (page: import('@playwright/test').Page) =>
-  page.evaluate(() => {
-    const c = (window as unknown as { __arena: { ctx: Ctx } }).__arena.ctx
-    return {
-      layers: c.layers.map((l) => l.name),
-      nodes: c.nodeObjects.length,
-      edges: c.edgeObjects.length,
-      inter: c.edgeObjects.filter((e) => e.interLayer).length,
-      single: document.body.classList.contains('mode-single'),
-    }
-  })
-
-test('Import as: a new layer joins the loaded network with links to copies; single 3D network', async ({
+test('NDEx examples load with one click; OmniPath offers its organisms only', async ({
   page,
 }) => {
-  await page.route('**/api/import/string', (route) =>
-    route.fulfill({ json: PTGS })
-  )
+  let body: Record<string, unknown> | null = null
+  await page.route('**/api/import/ndex', async (route) => {
+    body = route.request().postDataJSON() as Record<string, unknown>
+    await route.fulfill({ json: NETWORK })
+  })
   await page.goto('/')
-  await page.waitForFunction(
-    () => '__arena' in (window as unknown as Record<string, unknown>)
+  await page
+    .getByRole('tab', {
+      name: 'Database Importers',
+      includeHidden: true,
+      exact: true,
+    })
+    .click()
+  await page.locator('#card_omnipath > summary').click()
+  await expect(page.locator('#omnipath_species option')).toHaveText([
+    'Human',
+    'Mouse',
+    'Rat',
+  ])
+  // the among checkbox explains itself in a popup, on hover of the ⓘ or the
+  // label, gone when the pointer leaves
+  const tip = page.locator('.tooltip.arena-tooltip')
+  for (const target of [
+    '#card_omnipath .db-tip',
+    'label[for="omnipath_only_among"]',
+  ]) {
+    await page.locator(target).hover()
+    await expect(tip).toBeVisible()
+    await expect(tip).toContainText(
+      'Ticked: only interactions between two of the proteins you typed. Unticked: their other interaction partners join too'
+    )
+    await page.mouse.move(0, 0)
+    await expect(tip).toHaveCount(0)
+  }
+  await page.locator('#card_ndex > summary').click()
+  await expect(page.locator('.ndex-example')).toHaveCount(3)
+  await page.locator('.ndex-example', { hasText: 'p53 pathway' }).click()
+  await expect(page.locator('#db_status')).toContainText('Loaded network')
+  expect(body).toEqual({ uuid: '35e031eb-45d1-11ed-b7d0-0ac135e8bacf' })
+  // the card's own progress bar finished
+  await expect(page.locator('#progress_ndex')).toContainText(
+    'NDEx: p53 pathway loaded'
   )
-  await page
-    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
-    .dispatchEvent('click')
-  await page
-    .locator('#input_network_file')
-    .setInputFiles('public/data/aspirin_3channels.tsv')
-  await expect(page.locator('#file_status')).toContainText('Loaded network')
-  const before = await read(page)
-
-  await page
-    .getByRole('tab', { name: 'Databases', includeHidden: true, exact: true })
-    .dispatchEvent('click')
-  await page.locator('#db_mode_layer').check()
-  await page.locator('#db_identifiers').fill('PTGS1 PTGS2')
-  await page.locator('#db_import_string').click()
-  await expect(page.locator('#db_status')).toContainText('Added layer STRING')
-  await expect(page.locator('#db_status')).toContainText('links to copies')
-  const after = await read(page)
-  expect(after.layers).toEqual([...before.layers, 'STRING'])
-  expect(after.nodes).toBe(before.nodes + 3)
-  // PTGS1 and PTGS2 exist in the aspirin layers: every copy got a link
-  expect(after.inter).toBeGreaterThan(before.inter)
-  expect(after.single).toBe(false)
-
-  // single 3D network: the import replaces the network and stacks it
-  await page
-    .getByRole('tab', { name: 'Databases', includeHidden: true, exact: true })
-    .dispatchEvent('click')
-  await page.locator('#db_mode_single').check()
-  await page.locator('#db_import_string').click()
-  await expect(page.locator('#db_status')).toContainText('as one 3D network')
-  await expect.poll(async () => (await read(page)).single).toBe(true)
-  expect((await read(page)).layers).toEqual(['STRING'])
 })

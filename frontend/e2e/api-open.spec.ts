@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // POST /api/open: another tool sends plain edges and gets a link; opening the
 // link loads the network laid out, with the requested node look and arrows.

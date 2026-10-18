@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // Full flow from PLAN Phase 14: upload (example) network → apply layout →
 // apply clustered layout → export session. The WebGL canvas is opaque to the

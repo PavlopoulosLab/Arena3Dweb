@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // PLAN-ROADMAP Phase 4 (+16): new layer arrangements, split a layer by

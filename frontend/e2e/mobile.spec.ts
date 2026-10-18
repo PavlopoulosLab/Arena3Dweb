@@ -1,4 +1,4 @@
-import { expect, test, type CDPSession, type Page } from '@playwright/test'
+import { expect, test, type CDPSession, type Page } from './fixtures'
 
 // Phones and tablets (projects "phone" and "tablet"): the menu folds into ☰,
 // panels open as bottom sheets, and touch gestures drive the scene — one-finger

@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // Edit → Nodes → Label Style: colour, font, weight, halo, background and

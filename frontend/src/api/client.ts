@@ -318,12 +318,72 @@ export interface LayerSimilarityResponse {
   edge_jaccard: number[][]
 }
 
+export interface StringGroupingOptions {
+  mode: 'enrichment' | 'annotation'
+  fdr: number
+  categories: string[] // STRING collection keys: Process, KEGG, RCTM, ...
+  other_categories: boolean
+  max_terms: number // groups per collection
+  min_group: number // smallest group
+}
+
+type RawRows = Record<string, unknown>[]
+
+// STRING's own answers, fetched by the browser (Connect: Directly)
+export interface StringRaw {
+  version?: RawRows | null
+  ids: RawRows
+  network: RawRows
+  info?: RawRows | null
+  terms?: RawRows | null
+}
+
 export interface StringImportRequest {
   identifiers: string[]
   species?: number
+  network_type?: 'functional' | 'physical'
   required_score?: number
   channels?: string[] | null // STRING score fields: escore, dscore, ...
+  edge_mode?: 'channels' | 'combined'
   add_nodes?: number
+  descriptions?: boolean
+  groupings?: StringGroupingOptions | null
+  address?: string | null
+  raw?: StringRaw | null
+}
+
+export interface StringGrouping {
+  category: string
+  name: string
+  terms: {
+    term: string
+    description: string
+    members: string[] // node names
+    fdr: number | null
+    p_value: number | null
+  }[]
+}
+
+// The STRING extras are optional: older servers answer with the network only
+export interface StringImportResponse extends NetworkData {
+  string_version?: string | null
+  taxon_name?: string | null
+  node_info?: {
+    name: string
+    string_id: string
+    description: string | null
+    url: string
+    query: boolean
+  }[]
+  groupings?: StringGrouping[]
+}
+
+export interface StringGroupingsRequest {
+  identifiers: string[]
+  species: number
+  groupings: StringGroupingOptions
+  address?: string | null
+  raw_terms?: RawRows | null
 }
 
 export interface DatabaseImportRequest {
@@ -397,7 +457,12 @@ export const api = {
     layers: string[]
   }) => post<GraphStats[]>('/api/network-stats', req),
   importString: (req: StringImportRequest) =>
-    post<NetworkData>('/api/import/string', req),
+    post<StringImportResponse>('/api/import/string', req),
+  stringGroupings: (req: StringGroupingsRequest) =>
+    post<{ groupings: StringGrouping[]; warnings: string[] }>(
+      '/api/import/string/groupings',
+      req
+    ),
   importDatabases: (req: DatabaseImportRequest) =>
     post<NetworkData>('/api/import/databases', req),
   importReactome: (req: {

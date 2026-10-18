@@ -10,6 +10,7 @@ import './style.css'
 import { api } from './api/client'
 import { fetchConfig } from './api/config'
 import { loadSession } from './actions/network'
+import { askSessionView, showSessionAs } from './ui/import_as'
 import { initMenuAutoClose, showTab } from './ui/tabs'
 import { initHomePanel } from './ui/home'
 import { initDatabasesPanel } from './ui/databases'
@@ -118,8 +119,11 @@ async function loadExternalSession(): Promise<void> {
   const token = new URLSearchParams(window.location.search).get('session')
   if (!token) return
   try {
+    const view = await askSessionView('the shared network')
+    if (!view) return
     const session = await api.resolveExternal(token)
     loadSession(session)
+    await showSessionAs(view)
     registerLoad('Shared session')
     showTab('#panel-main-view')
   } catch (err) {

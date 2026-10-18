@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // 2D navigator: appears on network load and its thumbnail re-projects when the
 // scene rotates (the core requirement — it must always show the current

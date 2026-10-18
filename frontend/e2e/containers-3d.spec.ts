@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // PLAN-ROADMAP Phases 19-20: layers as cubes/spheres/clouds with 3D layouts

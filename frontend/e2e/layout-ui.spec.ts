@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // Layout panel: with 3D Layout on only the algorithms that have a 3D version
@@ -119,12 +119,14 @@ test('incompatible options are disabled, not mixed; single mode shows the NORMA 
   await expect(page.locator('#localLayoutAlgorithmChoice')).toBeEnabled()
   await click('#subgraph_perLayer')
   await expect(page.locator('#alignmentMode')).toBeEnabled()
-  // single network: the layer-centric controls step aside, the NORMA card opens
+  // single network: the layer-centric controls step aside; the NORMA card
+  // stays folded like every card until clicked
   await page.locator('#modeSingle').dispatchEvent('click')
   await expect(page.locator('body')).toHaveClass(/mode-single/)
   await expect(page.locator('#subgraph_perLayer')).toBeHidden()
   await expect(page.locator('#alignmentCard')).toBeHidden()
-  await expect(page.locator('#groupLayoutCard')).toHaveAttribute('open', '')
+  await expect(page.locator('#groupLayoutCard')).not.toHaveAttribute('open', '')
+  await page.locator('#groupLayoutCard > summary').click()
   await expect(page.locator('#groupDraw')).toBeVisible()
   await expect(page.locator('#groupPies')).toBeVisible()
   await expect(page.locator('#clusteringAlgorithmChoice')).toBeDisabled() // 3D is on

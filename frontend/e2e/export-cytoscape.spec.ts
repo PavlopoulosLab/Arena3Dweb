@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 import { readFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'

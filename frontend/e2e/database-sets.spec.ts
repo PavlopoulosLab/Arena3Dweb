@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 
 // Reactome and Gene Ontology cards: search a set by name, add the hit, import
 // (the backend is mocked: pathways/terms become layers). Cards expand, the
@@ -43,8 +43,9 @@ test('Reactome card: search, add a hit, import pathways as layers', async ({
   await page.route('**/api/import/reactome/search**', (route) =>
     route.fulfill({
       json: [
-        { id: 'R-HSA-109581', name: 'Apoptosis', detail: 'Homo sapiens' },
         { id: 'R-HSA-73894', name: 'DNA Repair', detail: 'Homo sapiens' },
+        { id: 'R-HSA-1640170', name: 'Cell Cycle', detail: 'Homo sapiens' },
+        { id: 'R-HSA-109581', name: 'Apoptosis', detail: 'Homo sapiens' },
       ],
     })
   )
@@ -56,17 +57,38 @@ test('Reactome card: search, add a hit, import pathways as layers', async ({
   await page.waitForFunction(
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
-  await tab(page, 'Databases')
-  // cards: STRING open, the others folded until clicked
-  await expect(page.locator('#card_string')).toHaveAttribute('open', '')
+  await tab(page, 'Database Importers')
+  // cards: all folded until clicked
+  await expect(page.locator('#card_string')).not.toHaveAttribute('open', '')
   await expect(page.locator('#reactome_query')).toBeHidden()
   await page.locator('#card_reactome summary').click()
   await expect(page.locator('#reactome_query')).toBeVisible()
   await page.locator('#reactome_query').fill('apopt')
   await page.locator('#reactome_search').click()
-  await expect(page.locator('#reactome_results .db-hit')).toHaveCount(2)
-  await page.locator('#reactome_results .db-hit').nth(0).click()
-  await page.locator('#reactome_results .db-hit').nth(1).click()
+  const hits = page.locator('#reactome_results .db-hit')
+  await expect(hits).toHaveCount(3)
+  // sorted by name by default; by ID or as found on request
+  const order = () => hits.evaluateAll((bs) => bs.map((b) => b.dataset.id))
+  expect(await order()).toEqual([
+    'R-HSA-109581',
+    'R-HSA-1640170',
+    'R-HSA-73894',
+  ])
+  await page.locator('#reactome_sort').selectOption('id')
+  expect(await order()).toEqual([
+    'R-HSA-73894',
+    'R-HSA-109581',
+    'R-HSA-1640170',
+  ])
+  await page.locator('#reactome_sort').selectOption('relevance')
+  expect(await order()).toEqual([
+    'R-HSA-73894',
+    'R-HSA-1640170',
+    'R-HSA-109581',
+  ])
+  await page.locator('#reactome_sort').selectOption('name')
+  await hits.nth(0).click() // Apoptosis
+  await hits.nth(2).click() // DNA Repair
   await expect(page.locator('#reactome_ids')).toHaveValue(
     'R-HSA-109581\nR-HSA-73894'
   )
@@ -95,10 +117,10 @@ test('Gene Ontology card imports terms; the ? opens the help page', async ({
   await page.waitForFunction(
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
-  await tab(page, 'Databases')
+  await tab(page, 'Database Importers')
   await page.locator('#card_go summary').click()
   await page.locator('#go_ids').fill('GO:0006915\nGO:0006281')
-  await page.locator('#go_children').check()
+  await expect(page.locator('#go_children')).toBeChecked() // the default
   await page.locator('#db_import_go').click()
   await expect(page.locator('#db_status')).toContainText(
     'Loaded network: 2 layers'
@@ -108,7 +130,7 @@ test('Gene Ontology card imports terms; the ? opens the help page', async ({
     taxon: 9606,
     include_children: true,
   })
-  await tab(page, 'Databases')
+  await tab(page, 'Database Importers')
   await page.locator('#card_intact .db-card__help').click()
   await expect(page.locator('#panel-help')).toHaveClass(/active/)
   await expect(page.locator('#Databases_tab')).toBeVisible()

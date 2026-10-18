@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 import path from 'node:path'
 
 // PLAN-ROADMAP Phase 23: search modes (regex, suffix, ...) and camera focus.

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // Help: every page opens; file formats are shown as tables, not tab-separated
 // text; the How-to page holds its recipes; images and example downloads work.

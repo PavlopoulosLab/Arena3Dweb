@@ -45,7 +45,7 @@ Arena3D 3.0 is a full rewrite of Arena3D<sup>web</sup> (R/Shiny) and adds:
 - **Edge bundling**: force-directed bundling of intra- and inter-layer edges, each with its own strength, or of the whole graph in Single network mode, to untangle dense views.
 - **Weighted and multi-channel layouts**: edge weights and per-channel weights drive force-directed layouts.
 - **Multilayer analytics**: multiplex degree, participation coefficient, multilayer PageRank, multiplex Leiden clustering, layer similarity heatmaps with UpSet plots, and network statistics (density, components, diameter, path length, clustering, assortativity, degree distribution), on an undirected, directed or multi-edged graph; every report in sortable tables.
-- **Live database import**: a Databases panel with one expandable, colour-coded card per source, as in NORMA — STRING (evidence types as channels), Reactome pathways and Gene Ontology terms as layers, IntAct, OmniPath, NDEx and a STRING · IntAct · OmniPath comparison; a fetched network can replace the loaded one, join it as new layers with copies of a node linked across layers, or load as a single 3D network.
+- **Live database import**: a Database Importers panel with one expandable, colour-coded card per source, as in NORMA — STRING (evidence types as channels), Reactome pathways and Gene Ontology terms as layers, IntAct, OmniPath, NDEx and a STRING · IntAct · OmniPath comparison; a fetched network can replace the loaded one, join it as new layers with copies of a node linked across layers, or load as a single 3D network.
 - **Export and hand-offs**: an Export panel with high-resolution PNG, SVG, GLB (3D) and WebM video; Cytoscape (_Send to Cytoscape_ through cyREST, CX2, Cytoscape.js JSON, SIF + tables), GraphML, MuxViz and sessions; chord diagrams, adjacency heatmaps, Sankey diagrams (SVG, SankeyMATIC, Plotly) and Circos input files; one click to an interactive heatmap in the Vega editor, the network in Gephi Lite (hosted by `/api/share`), the proteins on STRING, the gene lists of the layers in [Flame](https://flame.pavlopouloslab.info) for functional enrichment, or [NORMA](https://normaviz.org) with each layer as an annotation group.
 - **Exploration**: a Find panel for nodes and edges (exact, contains, prefix, suffix, regular expression; edges by either end, source, target, both or channel) with camera focus; unlimited zoom with a double-click to fit the network; neighbourhood expansion; shortest paths across layers; weight-threshold filtering.
 - **Groups, the NORMA way**: a group list with colours, counts, per-group hulls and selection; NORMA-format group files; pie-chart nodes, convex hulls or fog clouds; a super-node view; group overlap tables; STRING functional enrichment of selected nodes.
@@ -54,7 +54,7 @@ Arena3D 3.0 is a full rewrite of Arena3D<sup>web</sup> (R/Shiny) and adds:
 - **Phones and tablets**: touch gestures (orbit, pinch, pan, double-tap, long-press) and bottom-sheet panels.
 - **Layout per network mode**: in Single network mode the Layout panel works the NORMA way (one graph, clustering, groups drawn as fog clouds or hulls); layer arrangements (parallel, zig-zag, star, cube, helix, sphere, grid, circle, chord diagram, stack, fan, by links); impossible layout/clustering combinations are disabled with a note; communities can be found as a step of their own and reused as annotations.
 - **Several networks at once**: every load is kept in a list, switching restores each network as left, two networks can be compared; annotation sets per network; NORMA-style group statistics; label styles per layer.
-- **Menus grouped by task, each with its own colour**: Home · File · Databases · View · Find · Layer selection · Layout · Edit · Analyze · Export · Help; the Export panel folds into cards and the Edit panels have titled sections; Help pages open with screenshots of their panels.
+- **Menus grouped by task, each with its own colour**: Home · File · Database Importers · View · Find · Layer selection · Layout · Edit · Analyze · Export · Help; the Export panel folds into cards and the Edit panels have titled sections; Help pages open with screenshots of their panels.
 
 See [CHANGELOG.md](CHANGELOG.md) for full details.
 
@@ -134,7 +134,7 @@ Node and edge attribute files and saved sessions (`*_export.json`) sit next to t
 
 ## 💻 Usage
 
-1. **Load** a network: File → upload a file or open a session; Databases → import from STRING, IntAct, OmniPath or NDEx; or pick an example on the Home page.
+1. **Load** a network: File → upload a file or open a session; Database Importers → import from STRING, IntAct, OmniPath or NDEx; or pick an example on the Home page.
 2. **Lay out** the layers: Layout → choose the layers, an algorithm and what to apply it to (per layer, across layers, selected nodes, aligned), then optionally alignment or a group layout. Edge bundling is under Edit → Edges.
 3. **Explore**: search nodes, expand neighbourhoods, find shortest paths, filter by weight.
 4. **Analyse**: Analyze → node metrics, network statistics, layer comparison, enrichment.

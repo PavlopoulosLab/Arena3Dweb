@@ -95,45 +95,52 @@ export function dismissOneLayerPrompt(): void {
   showOneLayerPrompt(false)
 }
 
+// A one-layer network on a floor, with the multilayer controls.
+export async function showOneLayerOnFloor(): Promise<void> {
+  dismissOneLayerPrompt()
+  await setNetworkMode('multilayer')
+}
+
+// The loaded network as one graph in space: several layers are stacked by the
+// mode switch (with its 3D layout); a single layer gets a 3D layout of its own.
+export async function showAsSingle3d(): Promise<void> {
+  dismissOneLayerPrompt()
+  const net = store.get().network
+  if (!net || ctx.layers.length === 0) return
+  if (ctx.layers.length > 1) return setNetworkMode('single')
+  const box = document.getElementById(
+    'layout3dCheckbox'
+  ) as HTMLInputElement | null
+  if (box && !box.checked) {
+    box.checked = true
+    box.dispatchEvent(new Event('change', { bubbles: true }))
+  }
+  if (ctx.networkMode !== 'single') await setNetworkMode('single')
+  // one graph in space: a 3D layout of every node
+  await applyLayout({
+    nodes: net.nodes,
+    edges: net.edges,
+    algorithm: 'Fruchterman-Reingold',
+    scope: 'allLayers',
+    selected_layers: net.layers,
+    selected_channels: store.get().selectedChannels,
+    dimensions: 3,
+  })
+}
+
 function initOneLayerPrompt(): void {
   if (document.getElementById('oneLayerPrompt')) return
   document.body.insertAdjacentHTML('beforeend', PROMPT_HTML)
-  document.getElementById('oneLayerFloor')?.addEventListener('click', () => {
-    dismissOneLayerPrompt()
+  const run = (step: () => Promise<void>, what: string) => () => {
     startLoader()
-    setNetworkMode('multilayer')
-      .catch((err: unknown) => console.error('[arena3d] network mode', err))
+    step()
+      .catch((err: unknown) => console.error(`[arena3d] ${what}`, err))
       .finally(finishLoader)
-  })
-  document.getElementById('oneLayerSingle')?.addEventListener('click', () => {
-    dismissOneLayerPrompt()
-    const net = store.get().network
-    if (!net) return
-    startLoader()
-    const box = document.getElementById(
-      'layout3dCheckbox'
-    ) as HTMLInputElement | null
-    if (box && !box.checked) {
-      box.checked = true
-      box.dispatchEvent(new Event('change', { bubbles: true }))
-    }
-    ;(ctx.networkMode === 'single'
-      ? Promise.resolve()
-      : setNetworkMode('single')
-    )
-      .then(() =>
-        // one graph in space: a 3D layout of every node
-        applyLayout({
-          nodes: net.nodes,
-          edges: net.edges,
-          algorithm: 'Fruchterman-Reingold',
-          scope: 'allLayers',
-          selected_layers: net.layers,
-          selected_channels: store.get().selectedChannels,
-          dimensions: 3,
-        })
-      )
-      .catch((err: unknown) => console.error('[arena3d] one-layer 3D', err))
-      .finally(finishLoader)
-  })
+  }
+  document
+    .getElementById('oneLayerFloor')
+    ?.addEventListener('click', run(showOneLayerOnFloor, 'network mode'))
+  document
+    .getElementById('oneLayerSingle')
+    ?.addEventListener('click', run(showAsSingle3d, 'one-layer 3D'))
 }

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // Theme picker (top bar): enabled once a network loads; choosing a preset
 // recolours the scene; undo restores the previous theme and the picker. The canvas

@@ -705,10 +705,6 @@ export function initLayoutsPanel(): void {
       box.checked = true
       syncAlgorithmOptions()
     }
-    // single network: the NORMA groups card is the main tool, so it opens
-    if (mode === 'single')
-      (document.getElementById('groupLayoutCard') as HTMLDetailsElement).open =
-        true
     syncCompatibility()
   })
   document.getElementById('runLayout')?.addEventListener('click', () => {

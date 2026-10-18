@@ -1,8 +1,8 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 import path from 'node:path'
 
-// Network mode (top bar): a one-layer network opens as a single network with
-// the layer-only controls hidden; a multilayer network can be switched to one
+// Network mode (top bar): a one-layer network imported as a single 3D network
+// opens with the layer-only controls hidden; a multilayer network can be switched to one
 // graph (layers stacked, laid out at once) and back; undo keeps the switch
 // truthful.
 
@@ -16,6 +16,10 @@ const load = async (page: Page, f: string) => {
   await page.locator('#input_network_file').setInputFiles(D(f))
   await expect(page.locator('#file_status')).toContainText('Loaded network')
 }
+const answer = (page: Page, mode: 'replace' | 'single') =>
+  page.evaluate((m) => {
+    ;(window as unknown as { __arenaImportAs?: string }).__arenaImportAs = m
+  }, mode)
 const scene = (page: Page) =>
   page.evaluate(() => {
     const c = (
@@ -46,11 +50,10 @@ test('one layer opens as a single network; the switch brings the floor back', as
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
   await expect(page.locator('#modeSingle')).toBeDisabled()
+  // Import as "Single 3D network": the one-layer graph is laid out in 3D,
+  // and the one-layer prompt does not ask again
+  await answer(page, 'single')
   await load(page, 'edgelist_2columns.tsv')
-  // one layer: the prompt asks; "single 3D network" keeps the mode and lays
-  // the graph out in 3D
-  await expect(page.locator('#oneLayerPrompt')).toBeVisible()
-  await page.locator('#oneLayerSingle').dispatchEvent('click')
   await expect(page.locator('#oneLayerPrompt')).toBeHidden()
   await expect(page.locator('body')).toHaveClass(/mode-single/)
   await expect
@@ -135,16 +138,15 @@ test('a multilayer network becomes one graph and back, with undo in step', async
   expect((await scene(page)).xs).toBe(4)
 })
 
-test('one layer: "single layer on a floor" keeps the floor and the multilayer controls', async ({
+test('one layer as a new network keeps the floor and the multilayer controls', async ({
   page,
 }) => {
   await page.goto('/')
   await page.waitForFunction(
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
+  // Import as "New network": a one-layer network sits on its floor
   await load(page, 'edgelist_2columns.tsv')
-  await expect(page.locator('#oneLayerPrompt')).toBeVisible()
-  await page.locator('#oneLayerFloor').dispatchEvent('click')
   await expect(page.locator('#oneLayerPrompt')).toBeHidden()
   await expect(page.locator('body')).not.toHaveClass(/mode-single/)
   expect(await scene(page)).toMatchObject({

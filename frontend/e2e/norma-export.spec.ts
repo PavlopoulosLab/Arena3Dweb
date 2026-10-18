@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 import path from 'node:path'
 
 // Export to NORMA: the payload goes to <server>/api/external and the

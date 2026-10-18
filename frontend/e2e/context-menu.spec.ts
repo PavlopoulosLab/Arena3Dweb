@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // Regression: the right-click node menu must survive the mouse leaving the
 // canvas on its way to the menu. mouseleave routes through clickUp; before the

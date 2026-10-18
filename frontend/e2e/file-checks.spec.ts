@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // PLAN-ROADMAP Phase 22: files are checked before upload (with the line at
 // fault), server errors read cleanly, and a progress bar shows the stages.

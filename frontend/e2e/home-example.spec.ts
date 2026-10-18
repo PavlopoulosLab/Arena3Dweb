@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // The Home page's example picker loads any bundled example — here the GPCR
 // session whose layers are spheres.

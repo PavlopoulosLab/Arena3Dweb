@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // Edge weight as thickness. WebGL renders line primitives at a fixed 1px, so
 // this is Line2 (instanced quads) rather than THREE.Line — meaning the only

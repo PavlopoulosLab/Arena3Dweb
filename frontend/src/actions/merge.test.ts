@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import type { EdgeModel, NetworkData } from '../api/client'
-import { LINK_CHANNEL, mergeAsLayers } from './merge'
+import {
+  LINK_CHANNEL,
+  expandNetwork,
+  linkSameNames,
+  mergeAsLayers,
+  unlinkSameNames,
+} from './merge'
 
 const edge = (
   s: string,
@@ -111,5 +117,138 @@ describe('mergeAsLayers', () => {
     expect(xy).toHaveLength(1)
     expect(xy[0].weight).toBe(0.9)
     expect(xy[0].channel).toBeNull()
+  })
+})
+
+describe('expandNetwork', () => {
+  it('joins nodes by name into the loaded graph, new ones in the first layer', () => {
+    const current = net(
+      ['A', 'B'],
+      [
+        ['TP53', 'A'],
+        ['MDM2', 'B'],
+      ],
+      [edge('TP53', 'A', 'MDM2', 'B')]
+    )
+    const incoming = net(
+      ['STRING'],
+      [
+        ['MDM2', 'STRING'],
+        ['TP53', 'STRING'],
+        ['ATM', 'STRING'],
+      ],
+      [
+        edge('MDM2', 'STRING', 'TP53', 'STRING'), // already there, other way round
+        edge('ATM', 'STRING', 'TP53', 'STRING'),
+      ]
+    )
+    const { network, added, edges } = expandNetwork(current, incoming)
+    expect(network.layers).toEqual(['A', 'B']) // no new layer
+    expect(added).toEqual(['ATM_A'])
+    expect(edges).toBe(1)
+    expect(network.edges.at(-1)).toMatchObject({
+      src: 'ATM_A',
+      trg: 'TP53_A',
+      source_layer: 'A',
+      target_layer: 'A',
+    })
+    expect(network.nodes).toHaveLength(3)
+  })
+
+  it('keeps channels on both sides and drops them when only one side has them', () => {
+    const current = net(
+      ['L'],
+      [
+        ['X', 'L'],
+        ['Y', 'L'],
+      ],
+      [edge('X', 'L', 'Y', 'L', 1, 'Experiments')],
+      ['Experiments']
+    )
+    const withChannels = net(
+      ['S'],
+      [
+        ['X', 'S'],
+        ['Y', 'S'],
+      ],
+      [
+        edge('X', 'S', 'Y', 'S', 1, 'Experiments'),
+        edge('X', 'S', 'Y', 'S', 1, 'Text mining'),
+      ],
+      ['Experiments', 'Text mining']
+    )
+    const kept = expandNetwork(current, withChannels)
+    expect(kept.network.channels).toEqual(['Experiments', 'Text mining'])
+    expect(kept.edges).toBe(1) // the Experiments edge was already there
+    const plain = net(
+      ['S'],
+      [
+        ['Y', 'S'],
+        ['Z', 'S'],
+      ],
+      [edge('Y', 'S', 'Z', 'S')]
+    )
+    const dropped = expandNetwork(current, plain)
+    expect(dropped.network.channels).toEqual([])
+    expect(dropped.network.edges.every((e) => e.channel === null)).toBe(true)
+  })
+})
+
+describe('linkSameNames / unlinkSameNames', () => {
+  const layered = net(
+    ['A', 'B', 'C'],
+    [
+      ['X', 'A'],
+      ['X', 'B'],
+      ['X', 'C'],
+      ['Y', 'A'],
+      ['Y', 'C'],
+      ['Z', 'B'],
+    ],
+    [edge('X', 'A', 'X', 'B')] // already joined
+  )
+
+  it('joins copies of a name in consecutive layers, once', () => {
+    const { network, links } = linkSameNames(layered)
+    expect(links).toBe(2) // X B-C, Y A-C; X A-B was there
+    const pairs = network.edges.map((e) => `${e.src}>${e.trg}`)
+    expect(pairs).toEqual(['X_A>X_B', 'X_B>X_C', 'Y_A>Y_C'])
+    expect(network.channels).toEqual([])
+  })
+
+  it('files the links under one channel when the network has channels', () => {
+    const withChannels = { ...layered, channels: ['ppi'] }
+    const { network } = linkSameNames(withChannels)
+    expect(network.channels).toEqual(['ppi', LINK_CHANNEL])
+    expect(network.edges.at(-1)?.channel).toBe(LINK_CHANNEL)
+  })
+
+  it('removes the links an importer drew, and their channel', () => {
+    const linked = {
+      ...net(
+        ['A', 'B'],
+        [
+          ['X', 'A'],
+          ['X', 'B'],
+          ['Y', 'A'],
+        ],
+        [
+          edge('X', 'A', 'Y', 'A', 1, 'ppi'),
+          edge('X', 'A', 'X', 'B', 1, 'same protein'),
+        ]
+      ),
+      channels: ['ppi', 'same protein'],
+    }
+    const { network, links } = unlinkSameNames(linked)
+    expect(links).toBe(1)
+    expect(network.edges).toHaveLength(1)
+    expect(network.channels).toEqual(['ppi'])
+  })
+
+  it('adds layers without linking copies when asked', () => {
+    const current = net(['L'], [['X', 'L']], [])
+    const incoming = net(['S'], [['X', 'S']], [])
+    expect(mergeAsLayers(current, incoming, false).links).toBe(0)
+    expect(mergeAsLayers(current, incoming).links).toBe(1)
   })
 })

@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 
 // Refreshes the interface screenshots embedded in the Help pages
 // (public/images/help/ui/*). Skipped in the normal run; after a panel
@@ -138,14 +138,23 @@ test('capture the interface screenshots for the Help pages', async ({
       ],
     })
   )
-  await panel(page, 'Databases', '#panel-databases', 'databases', async () => {
-    await page.locator('#db_identifiers').fill('TP53 MDM2 CDKN1A ATM CHEK2 BAX')
-    await page.locator('#card_reactome summary').click()
-    await page.locator('#reactome_query').fill('apoptosis')
-    await page.locator('#reactome_search').click()
-    await expect(page.locator('#reactome_results .db-hit')).toHaveCount(3)
-    await page.locator('#reactome_results .db-hit').first().click()
-  })
+  await panel(
+    page,
+    'Database Importers',
+    '#panel-databases',
+    'databases',
+    async () => {
+      await page.locator('#card_string > summary').click()
+      await page
+        .locator('#db_identifiers')
+        .fill('TP53 MDM2 CDKN1A ATM CHEK2 BAX')
+      await page.locator('#card_reactome summary').click()
+      await page.locator('#reactome_query').fill('apoptosis')
+      await page.locator('#reactome_search').click()
+      await expect(page.locator('#reactome_results .db-hit')).toHaveCount(3)
+      await page.locator('#reactome_results .db-hit').first().click()
+    }
+  )
   await page.unroute('**/api/import/reactome/search**')
   await panel(page, 'Find', '#panel-find', 'find', async () => {
     await page.locator('#nodeSearchBar').fill('^CDK')

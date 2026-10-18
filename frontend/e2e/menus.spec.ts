@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // Grouped menus: View / Edit / Analyze dropdowns open their panels with real
 // clicks; the Analysis panel holds the moved analysis tools.
@@ -18,15 +18,15 @@ test('grouped menus open their panels', async ({ page }) => {
   // top-level panels (no dropdown); the Databases panel holds one importer per card
   for (const [item, pane] of [
     ['File', '#panel-file'],
-    ['Databases', '#panel-databases'],
+    ['Database Importers', '#panel-databases'],
     ['Find', '#panel-find'],
     ['Export', '#panel-export'],
     ['Layout', '#panel-layouts'],
   ] as const) {
     await page.getByRole('tab', { name: item, exact: true }).click()
     await expect(page.locator(pane)).toHaveClass(/show/)
-    if (item === 'Databases') {
-      // one card per source; STRING open, the others folded until clicked
+    if (item === 'Database Importers') {
+      // one card per source, all folded until clicked
       for (const key of [
         'string',
         'reactome',
@@ -37,10 +37,15 @@ test('grouped menus open their panels', async ({ page }) => {
         'compare',
       ])
         await expect(
-          page.locator(`#panel-databases #card_${key} summary`)
+          page.locator(`#panel-databases #card_${key} > summary`)
         ).toBeVisible()
-      await expect(page.locator('#db_import_string')).toBeVisible()
+      await expect(page.locator('#panel-databases details[open]')).toHaveCount(
+        0
+      )
+      await expect(page.locator('#db_import_string')).toBeHidden()
       await expect(page.locator('#db_import_layers')).toBeHidden()
+      await page.locator('#card_string > summary').click()
+      await expect(page.locator('#db_import_string')).toBeVisible()
       await page.locator('#card_compare summary').click()
       await expect(page.locator('#db_import_layers')).toBeVisible()
     }
