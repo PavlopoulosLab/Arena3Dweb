@@ -1,7 +1,8 @@
 """POST /api/import/string and /api/import/databases — PPI database importers."""
 
 from collections.abc import Callable
-from typing import Annotated, Any
+from functools import partial
+from typing import Annotated, Any, TypeVar
 
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.concurrency import run_in_threadpool
@@ -12,7 +13,10 @@ from app.models.databases import (
     GoImportRequest,
     ReactomeImportRequest,
     SetSearchHit,
+    StringGroupingsRequest,
+    StringGroupingsResponse,
     StringImportRequest,
+    StringImportResponse,
 )
 from app.models.network import NetworkModel
 from app.services import databases as db
@@ -25,17 +29,45 @@ router = APIRouter()
     "/api/import/string",
     summary="Import from STRING with evidence channels",
     tags=["Import"],
-    response_model=NetworkModel,
+    response_model=StringImportResponse,
 )
-async def import_string(req: StringImportRequest) -> NetworkModel:
-    """STRING network, one channel per evidence type, in a single layer."""
+async def import_string(req: StringImportRequest) -> StringImportResponse:
+    """STRING network in a single layer — one channel per evidence type or one
+    combined edge per pair — with optional protein descriptions and groupings
+    from functional terms. `raw` carries STRING's answers fetched by the browser."""
     return await _run(
-        db.import_string,
+        partial(
+            db.import_string,
+            network_type=req.network_type,
+            edge_mode=req.edge_mode,
+            descriptions=req.descriptions,
+            groupings=req.groupings,
+            address=req.address,
+            raw=req.raw,
+        ),
         req.identifiers,
         req.species,
         req.required_score,
         req.channels,
         req.add_nodes,
+    )
+
+
+@router.post(
+    "/api/import/string/groupings",
+    summary="STRING groupings for the network on screen",
+    tags=["Import"],
+    response_model=StringGroupingsResponse,
+)
+async def string_groupings(req: StringGroupingsRequest) -> StringGroupingsResponse:
+    """Term collections (enriched or all annotations) of the given node names."""
+    return await _run(
+        db.string_groupings_for,
+        req.identifiers,
+        req.species,
+        req.groupings,
+        req.address,
+        req.raw_terms,
     )
 
 
@@ -57,10 +89,13 @@ async def import_databases(req: DatabaseImportRequest) -> NetworkModel:
     )
 
 
-async def _run(fn: Callable[..., NetworkModel], *args: Any) -> NetworkModel:
+T = TypeVar("T")
+
+
+async def _run(fn: Callable[..., T], *args: Any) -> T:
     try:
         # urllib is blocking — keep it off the event loop
-        result: NetworkModel = await run_in_threadpool(fn, *args)
+        result: T = await run_in_threadpool(fn, *args)
     except (db.DatabaseError, NetworkValidationError) as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except db.UpstreamError as e:

@@ -46,6 +46,8 @@ QUICKGO_API = os.environ.get("ARENA_QUICKGO_API", "https://www.ebi.ac.uk/QuickGO
 MAX_GENES_PER_SET = 300  # genes per pathway / GO term layer (STRING query size)
 DB_TIMEOUT_SECONDS = float(os.environ.get("ARENA_DB_TIMEOUT_SECONDS", "60"))
 MAX_DB_IDENTIFIERS = 500
+MAX_GROUPING_IDENTIFIERS = 2000  # node names sent for "groupings for the current view"
+STRING_CALL_GAP_SECONDS = 1.0  # STRING asks for one second between calls
 
 # Topology scaling
 DEFAULT_MAP_VALUE = 0.3

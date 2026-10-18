@@ -13,27 +13,81 @@ Two shapes:
 """
 
 import json
+import math
 import re
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
+from typing import Any
 
 from app import config
+from app.models.databases import (
+    StringGrouping,
+    StringGroupingOptions,
+    StringGroupingsResponse,
+    StringImportResponse,
+    StringNodeInfo,
+    StringRaw,
+    StringTerm,
+)
 from app.models.network import NetworkModel
 from app.services.parser import parse_network_tsv
 
-# STRING per-evidence score fields -> channel names (NORMA STRING_CHANNELS)
+# STRING per-evidence score fields -> channel names, in STRING's order (NORMA STRING_CHANNELS)
 STRING_CHANNELS: dict[str, str] = {
-    "escore": "Experiments",
-    "dscore": "Databases",
-    "tscore": "Text mining",
-    "ascore": "Co-expression",
-    "nscore": "Neighborhood",
+    "nscore": "Gene neighborhood",
     "fscore": "Gene fusion",
     "pscore": "Co-occurrence",
+    "ascore": "Co-expression",
+    "escore": "Experiments",
+    "dscore": "Curated databases",
+    "tscore": "Text mining",
 }
+# STRING's prior: the chance two random proteins are linked, removed from each
+# channel before the channels are combined as independent evidence
+STRING_PRIOR = 0.041
+# STRING term collection key -> readable name, in the order they are offered
+STRING_CATEGORIES: dict[str, str] = {
+    "Process": "GO Biological Process",
+    "Function": "GO Molecular Function",
+    "Component": "GO Cellular Component",
+    "KEGG": "KEGG pathways",
+    "RCTM": "Reactome pathways",
+    "WikiPathways": "WikiPathways",
+    "Keyword": "UniProt keywords",
+    "Pfam": "Pfam domains",
+    "InterPro": "InterPro domains and features",
+    "SMART": "SMART domains",
+    "DISEASES": "Diseases (DISEASES)",
+    "TISSUES": "Tissues (TISSUES)",
+    "COMPARTMENTS": "Subcellular localization (COMPARTMENTS)",
+    "HPO": "Human phenotypes (Monarch)",
+    "MPO": "Mammalian phenotypes (Monarch)",
+    "DPO": "Drosophila phenotypes (Monarch)",
+    "WPO": "C. elegans phenotypes (Monarch)",
+    "ZPO": "Zebrafish phenotypes (Monarch)",
+    "FYPO": "Fission yeast phenotypes (Monarch)",
+    "NetworkNeighborAL": "Local network clusters (STRING)",
+    "PMID": "Reference publications (PubMed)",
+}
+_CATEGORY_ALIASES = {
+    "go process": "Process",
+    "biological process": "Process",
+    "go function": "Function",
+    "molecular function": "Function",
+    "go component": "Component",
+    "cellular component": "Component",
+    "kegg pathways": "KEGG",
+    "reactome": "RCTM",
+    "reactome pathways": "RCTM",
+    "uniprot keywords": "Keyword",
+    "keywords": "Keyword",
+}
+# Only STRING itself and its frozen version sites (SSRF guard for the address box)
+_STRING_ADDRESS = re.compile(r"^https://(version-\d+-\d+\.)?string-db\.org/?$")
+STRING_SITE = "https://string-db.org"
 DATABASES = ("STRING", "IntAct", "OmniPath")
 COUPLING_WEIGHT = 1.0
 
@@ -78,6 +132,26 @@ def _get(
     req = urllib.request.Request(
         url, headers={"Accept": accept, "User-Agent": "Arena3D (https://arena3d.org)"}
     )
+    return _read(req, url)
+
+
+def _post(url: str, params: dict[str, str], *, accept: str = "application/json") -> str:
+    """Form-encoded POST (STRING: long identifier lists overflow a GET URL). Tests
+    monkeypatch this."""
+    req = urllib.request.Request(
+        url,
+        data=urllib.parse.urlencode(params).encode(),
+        headers={
+            "Accept": accept,
+            "Content-Type": "application/x-www-form-urlencoded",
+            "User-Agent": "Arena3D (https://arena3d.org)",
+        },
+    )
+    return _read(req, url)
+
+
+def _read(req: urllib.request.Request, url: str) -> str:
+    """Send with a timeout and a size cap; HTTP errors become Database/UpstreamError."""
     try:
         with urllib.request.urlopen(req, timeout=config.DB_TIMEOUT_SECONDS) as res:  # noqa: S310
             body: bytes = res.read(config.MAX_UPLOAD_BYTES + 1)
@@ -94,69 +168,310 @@ def _get(
 
 
 def _clean(name: str) -> str:
-    # node names end up in a TSV cell
-    return " ".join(str(name).split())
+    # node names end up in a TSV cell: no tabs or new lines, and no double
+    # quotes (IntAct has names like "ccsb isoform id: ndn_2"), which the TSV
+    # parser would read as an unterminated quoted field
+    return " ".join(str(name).replace('"', "").split())
 
 
 # ---------------------------------------------------------------- STRING
+def string_api(address: str | None) -> str:
+    """The STRING API base for a site address; None = the configured default."""
+    if not address:
+        return config.STRING_API
+    if not _STRING_ADDRESS.match(address):
+        raise DatabaseError(
+            "The STRING address must be https://string-db.org or a version address "
+            "such as https://version-12-0.string-db.org."
+        )
+    return f"{address.rstrip('/')}/api"
+
+
+class _StringClient:
+    """STRING's JSON API for one import: form POSTs, caller_identity, one second
+    between calls (as STRING asks) and the import's overall time budget."""
+
+    def __init__(self, address: str | None, budget: _Budget | None = None) -> None:
+        self.api = string_api(address)
+        self.budget = budget or _Budget(config.DB_TOTAL_SECONDS)
+        self.last = 0.0
+
+    def __call__(self, method: str, params: dict[str, Any]) -> list[dict[str, Any]]:
+        self.budget.check()
+        wait = self.last + config.STRING_CALL_GAP_SECONDS - time.monotonic()
+        if wait > 0:
+            time.sleep(wait)
+        self.last = time.monotonic()
+        form = {k: str(v) for k, v in params.items()} | {"caller_identity": "arena3d"}
+        body = _post(f"{self.api}/json/{method}", form)
+        try:
+            data = json.loads(body or "[]")
+        except json.JSONDecodeError as e:
+            raise UpstreamError("STRING sent an answer that is not JSON; check the address.") from e
+        # STRING reports errors as {"Error": ...} or [{"Error": ...}]
+        err = data[0] if isinstance(data, list) and len(data) == 1 else data
+        if isinstance(err, dict) and ("Error" in err or "ErrorMessage" in err):
+            raise DatabaseError(f"STRING: {err.get('ErrorMessage') or err.get('Error')}")
+        if not isinstance(data, list):
+            raise UpstreamError("STRING sent an answer of an unexpected shape.")
+        return [r for r in data if isinstance(r, dict)]
+
+
+def _score(value: Any) -> float:
+    """A STRING score on 0-1 (some answers use 0-1000)."""
+    try:
+        x = float(value or 0)
+    except (TypeError, ValueError):
+        return 0.0
+    if not math.isfinite(x) or x < 0:
+        return 0.0
+    return x / 1000 if x > 1 else x
+
+
+def _number(value: Any) -> float | None:
+    try:
+        x = float(value)
+    except (TypeError, ValueError):
+        return None
+    return x if math.isfinite(x) else None
+
+
+def combine_string_scores(scores: list[float]) -> float:
+    """STRING's rule: remove the prior from each channel, combine the channels as
+    independent evidence, then add the prior back."""
+    miss = 1.0
+    for s in scores:
+        if s > 0:
+            miss *= 1 - max(0.0, (s - STRING_PRIOR) / (1 - STRING_PRIOR))
+    combined = 1 - miss
+    return combined + STRING_PRIOR * (1 - combined)
+
+
+def _string_fields(channels: list[str] | None) -> list[str]:
+    fields = channels or list(STRING_CHANNELS)
+    unknown = [c for c in fields if c not in STRING_CHANNELS]
+    if unknown:
+        raise DatabaseError(f"Unknown STRING evidence channel: {', '.join(unknown)}")
+    return [f for f in STRING_CHANNELS if f in fields]  # STRING's order, no repeats
+
+
+def _sample(names: list[str], n: int = 8) -> str:
+    return ", ".join(names[:n]) + (f" and {len(names) - n} more" if len(names) > n else "")
+
+
+def resolve_string_ids(
+    rows: list[dict[str, Any]], identifiers: list[str]
+) -> tuple[dict[str, str], str | None, list[str]]:
+    """get_string_ids (echo_query) -> ({stringId: preferred name}, taxon name, notes)."""
+    by_query: dict[str, dict[str, Any]] = {}
+    for r in rows:
+        q = r.get("queryItem")
+        idx = r.get("queryIndex")
+        if q is None and isinstance(idx, int) and 0 <= idx < len(identifiers):
+            q = identifiers[idx]
+        if q is not None and r.get("stringId"):
+            by_query.setdefault(str(q), r)
+    found = [i for i in identifiers if i in by_query]
+    missing = [i for i in identifiers if i not in by_query]
+    query: dict[str, str] = {}
+    for name in found:
+        r = by_query[name]
+        query.setdefault(str(r["stringId"]), _clean(str(r.get("preferredName") or name)))
+    notes = []
+    if found and missing:
+        notes.append(f"Not found in STRING: {_sample(missing)}.")
+    renamed = [
+        f"{n} as {by_query[n]['preferredName']}"
+        for n in found
+        if by_query[n].get("preferredName")
+        and str(by_query[n]["preferredName"]).lower() != n.lower()
+    ]
+    if renamed:
+        notes.append(f"Matched {_sample(renamed)}.")
+    taxon = str(by_query[found[0]].get("taxonName") or "") or None if found else None
+    return query, taxon, notes
+
+
+def build_string(
+    rows: list[dict[str, Any]],
+    query: dict[str, str],
+    fields: list[str],
+    threshold: float,
+    edge_mode: str = "channels",
+) -> tuple[list[Interaction], dict[str, str], list[str]]:
+    """STRING network rows -> (interactions, {stringId: node name} of the connected
+    proteins, notes). With fewer than all channels ticked each pair's confidence
+    is recomputed from those channels alone, and pairs below `threshold` drop."""
+    name_of: dict[str, str] = {}
+    used: set[str] = set()
+
+    def node(sid: str, preferred: Any) -> str:
+        if sid not in name_of:
+            name = _clean(str(preferred or "")) or sid
+            if name in used:  # two STRING ids with one preferred name
+                name = f"{name} ({sid})"
+            used.add(name)
+            name_of[sid] = name
+        return name_of[sid]
+
+    for sid, preferred in query.items():
+        node(sid, preferred)
+    all_channels = len(fields) == len(STRING_CHANNELS)
+    out: list[Interaction] = []
+    seen: set[tuple[str, str]] = set()
+    dropped = 0
+    for r in rows:
+        # older answers / tests carry names only — the name then stands in for the id
+        a = str(r.get("stringId_A") or r.get("preferredName_A") or "")
+        b = str(r.get("stringId_B") or r.get("preferredName_B") or "")
+        if not a or not b or a == b or (min(a, b), max(a, b)) in seen:
+            continue  # STRING may list a pair in both directions
+        seen.add((min(a, b), max(a, b)))
+        scores = [_score(r.get(f)) for f in fields]
+        combined = _score(r.get("score")) if all_channels else combine_string_scores(scores)
+        if combined < threshold - 1e-9:
+            dropped += 1
+            continue
+        if edge_mode != "combined" and not any(scores):
+            continue
+        na, nb = node(a, r.get("preferredName_A")), node(b, r.get("preferredName_B"))
+        src, trg = min(na, nb), max(na, nb)
+        if edge_mode == "combined":
+            out.append(Interaction(src, trg, round(combined, 3)))
+        else:
+            out.extend(
+                Interaction(src, trg, s, STRING_CHANNELS[f])
+                for f, s in zip(fields, scores, strict=True)
+                if s > 0
+            )
+    notes = []
+    if dropped:
+        notes.append(
+            f"Left out {dropped} connection{'' if dropped == 1 else 's'} whose score from "
+            f"the ticked channels alone is below {threshold:.2f}."
+        )
+    connected = {n for i in out for n in (i.source, i.target)}
+    lonely = [n for sid, n in name_of.items() if sid in query and n not in connected]
+    if lonely and out:
+        notes.append(f"No connection passes the filters for {_sample(lonely)}; not shown.")
+    return out, {sid: n for sid, n in name_of.items() if n in connected}, notes
+
+
+def _category_key(raw: Any) -> str:
+    if not raw:
+        return "Other"
+    key = str(raw)
+    if key in STRING_CATEGORIES:
+        return key
+    return _CATEGORY_ALIASES.get(key.lower(), key)
+
+
+def _as_list(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(v) for v in value]
+    return [v for v in str(value or "").split(",") if v]
+
+
+def string_groupings(
+    rows: list[dict[str, Any]],
+    by_id: dict[str, str],
+    by_name: dict[str, str],
+    opts: StringGroupingOptions,
+) -> list[StringGrouping]:
+    """enrichment / functional_annotation rows -> one grouping per term
+    collection: the top `max_terms` terms with at least `min_group` nodes.
+    Members map back to node names by STRING id, then by name (any case)."""
+    enrichment = opts.mode == "enrichment"
+    wanted = set(opts.categories)
+    by_cat: dict[str, list[StringTerm]] = {}
+    for r in rows:
+        cat = _category_key(r.get("category"))
+        if not (cat in wanted or (cat not in STRING_CATEGORIES and opts.other_categories)):
+            continue
+        fdr = _number(r.get("fdr"))
+        if enrichment and not (fdr is not None and fdr <= opts.fdr):
+            continue
+        inputs, preferred = _as_list(r.get("inputGenes")), _as_list(r.get("preferredNames"))
+        members: list[str] = []
+        for i, gene in enumerate(inputs):
+            pref = preferred[i] if i < len(preferred) else gene
+            name = by_id.get(gene) or by_name.get(pref.lower()) or by_name.get(gene.lower())
+            if name and name not in members:
+                members.append(name)
+        if len(members) < opts.min_group:
+            continue
+        term = _clean(str(r.get("term") or ""))
+        by_cat.setdefault(cat, []).append(
+            StringTerm(
+                term=term,
+                description=_clean(str(r.get("description") or "")) or term,
+                members=members,
+                fdr=fdr if enrichment else None,
+                p_value=_number(r.get("p_value")) if enrichment else None,
+            )
+        )
+    order = [k for k in STRING_CATEGORIES if k in by_cat]
+    order += [k for k in by_cat if k not in STRING_CATEGORIES]
+    out = []
+    for cat in order:
+        terms = by_cat[cat]
+        if enrichment:
+            terms.sort(key=lambda t: (t.fdr if t.fdr is not None else 1.0, -len(t.members)))
+        else:
+            terms.sort(key=lambda t: -len(t.members))
+        top = terms[: opts.max_terms]
+        used: set[str] = set()
+        for t in top:  # group names must be unique within a collection
+            if t.description in used:
+                t.description = f"{t.description} ({t.term})"
+            used.add(t.description)
+        out.append(StringGrouping(category=cat, name=STRING_CATEGORIES.get(cat, cat), terms=top))
+    return out
+
+
 def fetch_string(
     identifiers: list[str],
     species: int,
     required_score: float,
     channels: list[str] | None = None,
     add_nodes: int = 0,
+    network_type: str = "functional",
 ) -> list[Interaction]:
-    """One row per (pair, evidence channel) with a non-zero score in that channel."""
-    fields = channels or list(STRING_CHANNELS)
-    unknown = [c for c in fields if c not in STRING_CHANNELS]
-    if unknown:
-        raise DatabaseError(f"Unknown STRING evidence channel: {', '.join(unknown)}")
-    params = {
+    """One row per (pair, evidence channel) with a non-zero score in that channel,
+    straight from the typed names (no id lookup)."""
+    fields = _string_fields(channels)
+    params: dict[str, Any] = {
         "identifiers": "\r".join(identifiers),
-        "species": str(species),
-        "required_score": str(round(required_score * 1000)),
-        "caller_identity": "arena3d",
+        "species": species,
+        "required_score": round(required_score * 1000),
+        "network_type": network_type,
     }
     if add_nodes:
-        params["add_nodes"] = str(add_nodes)
-    rows = json.loads(_get(f"{config.STRING_API}/json/network", params) or "[]")
-    if isinstance(rows, dict):  # STRING reports errors as {"Error": ...}
-        raise DatabaseError(str(rows.get("ErrorMessage") or rows.get("Error") or rows))
-    out: list[Interaction] = []
-    seen: set[tuple[str, str]] = set()
-    for r in rows:
-        a, b = _clean(r.get("preferredName_A", "")), _clean(r.get("preferredName_B", ""))
-        if not a or not b or a == b:
-            continue
-        key = (min(a, b), max(a, b))
-        if key in seen:  # STRING may list a pair in both directions
-            continue
-        seen.add(key)
-        for field in fields:
-            score = float(r.get(field) or 0)
-            if score > 0:
-                out.append(Interaction(key[0], key[1], score, STRING_CHANNELS[field]))
-    return out
+        params["add_nodes"] = add_nodes
+    rows = _StringClient(None)("network", params)
+    return build_string(rows, {}, fields, 0.0)[0]
 
 
 def string_combined(
-    identifiers: list[str], species: int, required_score: float
+    identifiers: list[str],
+    species: int,
+    required_score: float,
+    call: _StringClient | None = None,
 ) -> list[Interaction]:
     """STRING as a single channel-less layer (combined score), for per-database mode."""
-    params = {
-        "identifiers": "\r".join(identifiers),
-        "species": str(species),
-        "required_score": str(round(required_score * 1000)),
-        "caller_identity": "arena3d",
-    }
-    rows = json.loads(_get(f"{config.STRING_API}/json/network", params) or "[]")
-    if isinstance(rows, dict):
-        raise DatabaseError(str(rows.get("ErrorMessage") or rows.get("Error") or rows))
+    rows = (call or _StringClient(None))(
+        "network",
+        {
+            "identifiers": "\r".join(identifiers),
+            "species": species,
+            "required_score": round(required_score * 1000),
+        },
+    )
     pairs: dict[tuple[str, str], float] = {}
     for r in rows:
         a, b = _clean(r.get("preferredName_A", "")), _clean(r.get("preferredName_B", ""))
         if a and b and a != b:
-            pairs[(min(a, b), max(a, b))] = float(r.get("score") or 0)
+            pairs[(min(a, b), max(a, b))] = _score(r.get("score"))
     return [Interaction(a, b, s) for (a, b), s in pairs.items()]
 
 
@@ -173,10 +488,28 @@ def _mitab_name(id_field: str, alt_field: str, alias_field: str) -> str:
     return id_field.split("|")[0].split(":", 1)[-1]
 
 
+def _mitab_ids(*fields: str) -> set[str]:
+    """Every identifier in PSI-MITAB id/alt-id columns, without its database
+    prefix, in capitals (P04637, EBI-366083, ...)."""
+    return {
+        item.split(":", 1)[-1].replace('"', "").upper()
+        for field in fields
+        for item in field.split("|")
+        if item and item != "-"
+    }
+
+
 def fetch_intact(
-    identifiers: list[str], species: int, min_score: float = 0.0, max_rows: int = 2000
-) -> list[Interaction]:
-    """IntAct via PSICQUIC (tab25); weight = best IntAct MI-score per pair."""
+    identifiers: list[str],
+    species: int,
+    min_score: float = 0.0,
+    max_rows: int = 2000,
+    only_among: bool = False,
+) -> tuple[list[Interaction], int]:
+    """IntAct via PSICQUIC (tab25); weight = best IntAct MI-score per pair.
+    With `only_among`, only interactions between two of the proteins (matched by
+    gene name or any identifier, e.g. UniProt). Also returns how many
+    interactions with other partners were left out."""
     ids = " OR ".join(f'"{i}"' if any(c in i for c in " ():") else i for i in identifiers)
     miql = f"identifier:({ids}) AND taxidA:{species} AND taxidB:{species}"
     text = _get(
@@ -184,7 +517,9 @@ def fetch_intact(
         {"format": "tab25", "firstResult": "0", "maxResults": str(max_rows)},
         accept="text/plain",
     )
+    wanted = {i.upper() for i in identifiers}
     best: dict[tuple[str, str], float] = {}
+    left_out = 0
     for line in text.splitlines():
         c = line.split("\t")
         if len(c) < 15:
@@ -198,36 +533,78 @@ def fetch_intact(
                 score = float(part.split(":", 1)[1])
         if score < min_score:
             continue
+        if only_among and not (
+            ({a.upper()} | _mitab_ids(c[0], c[2])) & wanted
+            and ({b.upper()} | _mitab_ids(c[1], c[3])) & wanted
+        ):
+            left_out += 1
+            continue
         key = (min(a, b), max(a, b))
         best[key] = max(best.get(key, 0.0), score)
-    return [Interaction(a, b, s) for (a, b), s in best.items()]
+    return [Interaction(a, b, s) for (a, b), s in best.items()], left_out
 
 
 # ---------------------------------------------------------------- OmniPath
-def fetch_omnipath(identifiers: list[str], species: int) -> list[Interaction]:
-    """OmniPath interactions among/around the proteins; weight = curation effort."""
-    rows = json.loads(
-        _get(
-            f"{config.OMNIPATH_API}/interactions",
-            {
-                "partners": ",".join(identifiers),
-                "genesymbols": "yes",
-                "organisms": str(species),
-                "fields": "curation_effort",
-                "format": "json",
-            },
-        )
-        or "[]"
+# OmniPath answers for these organisms only (other taxa get an error text)
+OMNIPATH_SPECIES = {9606: "human", 10090: "mouse", 10116: "rat"}
+_UNIPROT = re.compile(
+    r"^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2})(-\d+)?$"
+)
+
+
+def _omnipath_name(name: str, species: int) -> str:
+    """OmniPath matches gene symbols case-sensitively: TP53 (human), Trp53
+    (mouse, rat); UniProt accessions in capitals."""
+    if _UNIPROT.match(name.upper()):
+        return name.upper()
+    return name.upper() if species == 9606 else name[:1].upper() + name[1:].lower()
+
+
+def fetch_omnipath(
+    identifiers: list[str], species: int, only_among: bool = False
+) -> tuple[list[Interaction], int]:
+    """OmniPath interactions of the proteins (gene symbols or UniProt IDs);
+    weight = curation effort. With `only_among`, only those between two of the
+    proteins. Also returns how many interactions with other partners were left
+    out, so an empty answer can say why."""
+    if species not in OMNIPATH_SPECIES:
+        raise DatabaseError("OmniPath covers human, mouse and rat only.")
+    query = [_omnipath_name(i, species) for i in identifiers]
+    body = _get(
+        f"{config.OMNIPATH_API}/interactions",
+        {
+            "partners": ",".join(query),
+            "genesymbols": "yes",
+            "organisms": str(species),
+            "fields": "curation_effort",
+            "format": "json",
+        },
     )
+    try:
+        rows = json.loads(body or "[]")
+    except json.JSONDecodeError as e:
+        raise UpstreamError(f"OmniPath sent an unreadable answer: {body[:120]}") from e
+    if not isinstance(rows, list):
+        raise UpstreamError("OmniPath sent an answer of an unexpected shape.")
+    wanted = {q.upper() for q in query}
     best: dict[tuple[str, str], float] = {}
+    left_out = 0
     for r in rows:
+        if not isinstance(r, dict):  # OmniPath reports problems as [["text"]]
+            continue
         a = _clean(r.get("source_genesymbol") or r.get("source", ""))
         b = _clean(r.get("target_genesymbol") or r.get("target", ""))
         if not a or not b or a == b:
             continue
+        if only_among and not (
+            {a.upper(), str(r.get("source", "")).upper()} & wanted
+            and {b.upper(), str(r.get("target", "")).upper()} & wanted
+        ):
+            left_out += 1
+            continue
         key = (min(a, b), max(a, b))
         best[key] = max(best.get(key, 0.0), float(r.get("curation_effort") or 1))
-    return [Interaction(a, b, w) for (a, b), w in best.items()]
+    return [Interaction(a, b, w) for (a, b), w in best.items()], left_out
 
 
 # ---------------------------------------------------------------- building
@@ -269,11 +646,137 @@ def import_string(
     identifiers: list[str],
     species: int,
     required_score: float,
-    channels: list[str] | None,
-    add_nodes: int,
-) -> NetworkModel:
-    rows = fetch_string(identifiers, species, required_score, channels, add_nodes)
-    return rows_to_network({"STRING": rows}, couple=False)
+    channels: list[str] | None = None,
+    add_nodes: int = 0,
+    *,
+    network_type: str = "functional",
+    edge_mode: str = "channels",
+    descriptions: bool = False,
+    groupings: StringGroupingOptions | None = None,
+    address: str | None = None,
+    raw: StringRaw | None = None,
+) -> StringImportResponse:
+    """NORMA's STRING import: look the names up, fetch the network (plus up to
+    `add_nodes` interactors), keep the ticked evidence channels, then optionally
+    fetch protein descriptions and term collections (groupings).
+
+    With `raw` the browser has already fetched STRING's answers (Connect:
+    Directly) and nothing is fetched here.
+    """
+    fields = _string_fields(channels)
+    site = (address or STRING_SITE).rstrip("/")
+    client = None if raw else _StringClient(address)
+    notes: list[str] = []
+
+    def ask(
+        method: str, params: dict[str, Any], given: list[dict[str, Any]] | None
+    ) -> list[dict[str, Any]]:
+        """STRING's answer: the browser's copy when it sent one, else a fresh call."""
+        if client is None:
+            return given or []
+        return client(method, params)
+
+    try:
+        version_rows = ask("version", {}, raw.version if raw else None)
+    except (DatabaseError, UpstreamError):
+        version_rows = []  # the version is only a note
+    version = str(version_rows[0].get("string_version") or "") or None if version_rows else None
+
+    ids_rows = ask(
+        "get_string_ids",
+        {"identifiers": "\r".join(identifiers), "species": species, "echo_query": 1, "limit": 1},
+        raw.ids if raw else None,
+    )
+    query, taxon, lookup_notes = resolve_string_ids(ids_rows, identifiers)
+    if not query:
+        raise DatabaseError(
+            f"STRING found none of the names for taxon {species}. "
+            "Check the spelling and the organism."
+        )
+    notes += lookup_notes
+
+    params: dict[str, Any] = {
+        "identifiers": "\r".join(query),
+        "species": species,
+        "required_score": round(required_score * 1000),
+        "network_type": network_type,
+    }
+    if add_nodes:
+        params["add_nodes"] = add_nodes
+    rows = ask("network", params, raw.network if raw else None)
+    interactions, name_of, build_notes = build_string(
+        rows, query, fields, required_score, edge_mode
+    )
+    if not interactions:
+        raise DatabaseError(
+            f"No {network_type} connections pass a confidence of {required_score:.2f} "
+            "with the ticked channels. Lower the confidence, tick more channels or "
+            "add interactors."
+        )
+    notes += build_notes
+    of_network = {"identifiers": "\r".join(name_of), "species": species}
+
+    described: dict[str, str] = {}
+    if descriptions:
+        try:
+            info = ask("get_string_ids", of_network, raw.info if raw else None)
+            described = {
+                str(r.get("stringId")): _clean(str(r["annotation"]))
+                for r in info
+                if r.get("annotation") and str(r["annotation"]).strip() not in ("", "-")
+            }
+        except (DatabaseError, UpstreamError) as e:
+            notes.append(f"Protein descriptions couldn't be fetched: {e}")
+
+    groups: list[StringGrouping] = []
+    if groupings:
+        method = "enrichment" if groupings.mode == "enrichment" else "functional_annotation"
+        try:
+            terms = ask(method, of_network, raw.terms if raw else None)
+            groups = string_groupings(
+                terms, name_of, {n.lower(): n for n in name_of.values()}, groupings
+            )
+            if not groups:
+                notes.append("No term collection has groups that pass the filters.")
+        except (DatabaseError, UpstreamError) as e:
+            notes.append(f"Groupings couldn't be fetched: {e}")
+
+    net = rows_to_network({"STRING": interactions}, couple=False)
+    return StringImportResponse(
+        **net.model_dump(exclude={"warnings"}),
+        warnings=[*net.warnings, *notes],
+        string_version=version,
+        taxon_name=taxon,
+        node_info=[
+            StringNodeInfo(
+                name=name,
+                string_id=sid,
+                description=described.get(sid),
+                url=f"{site}/network/{urllib.parse.quote(sid)}",
+                query=sid in query,
+            )
+            for sid, name in name_of.items()
+        ],
+        groupings=groups,
+    )
+
+
+def string_groupings_for(
+    identifiers: list[str],
+    species: int,
+    opts: StringGroupingOptions,
+    address: str | None = None,
+    raw_terms: list[dict[str, Any]] | None = None,
+) -> StringGroupingsResponse:
+    """Groupings for the network on screen: its node names go to STRING as they are."""
+    if raw_terms is None:
+        method = "enrichment" if opts.mode == "enrichment" else "functional_annotation"
+        raw_terms = _StringClient(address)(
+            method, {"identifiers": "\r".join(identifiers), "species": species}
+        )
+    groups = string_groupings(raw_terms, {}, {i.lower(): i for i in identifiers}, opts)
+    warnings = [] if groups else ["No term collection has groups that pass the filters."]
+    return StringGroupingsResponse(groupings=groups, warnings=warnings)
 
 
 def import_per_database(
@@ -286,24 +789,40 @@ def import_per_database(
     unknown = [d for d in databases if d not in DATABASES]
     if unknown:
         raise DatabaseError(f"Unknown database: {', '.join(unknown)}")
+    notes: list[str] = []
+    if only_among and len(identifiers) < 2:
+        # one protein has nothing "among" itself: its partners are the network
+        only_among = False
+        notes.append("With one protein its interaction partners are included.")
+    # STRING answers among the query; IntAct and OmniPath return partners too
+    # and keep only those among the proteins when asked (comparable layers)
+    left_out: dict[str, int] = {}
+
+    def partners(name: str, found: tuple[list[Interaction], int]) -> list[Interaction]:
+        rows, left_out[name] = found
+        return rows
+
     fetch = {
         "STRING": lambda: string_combined(identifiers, species, required_score),
-        "IntAct": lambda: fetch_intact(identifiers, species, min_score=required_score),
-        "OmniPath": lambda: fetch_omnipath(identifiers, species),
+        "IntAct": lambda: partners(
+            "IntAct",
+            fetch_intact(identifiers, species, min_score=required_score, only_among=only_among),
+        ),
+        "OmniPath": lambda: partners("OmniPath", fetch_omnipath(identifiers, species, only_among)),
     }
     layers = {db: fetch[db]() for db in databases}
-    if only_among:
-        # STRING already answers among the query; IntAct/OmniPath return all
-        # partners — keep layers comparable by restricting every one of them
-        wanted = {i.upper() for i in identifiers}
-        layers = {
-            db: [r for r in rows if r.source.upper() in wanted and r.target.upper() in wanted]
-            for db, rows in layers.items()
-        }
+    only = databases[0] if len(databases) == 1 else ""
+    if only and not layers[only] and left_out.get(only):
+        raise DatabaseError(
+            f"{only} has {left_out[only]} interactions of these proteins with other "
+            "partners, but none among them. Untick “Only interactions among these "
+            "proteins” to include the partners."
+        )
     net = rows_to_network(layers, couple=True)
     empty = [db for db in databases if not layers[db]]
     if empty:
-        net.warnings.append(f"No interactions from: {', '.join(empty)}")
+        notes.append(f"No interactions from: {', '.join(empty)}")
+    net.warnings.extend(notes)
     return net
 
 
@@ -459,6 +978,7 @@ def import_gene_sets(
     """One layer per (name, genes) with STRING edges among the genes; copies coupled."""
     layers: dict[str, list[Interaction]] = {}
     notes: list[str] = []
+    call = _StringClient(None, budget)
     for name, genes in sets:
         if budget:
             budget.check()
@@ -466,7 +986,7 @@ def import_gene_sets(
             notes.append(f"{name}: fewer than two genes, left out.")
             continue
         wanted = {g.upper() for g in genes}
-        rows = string_combined(genes, species, required_score)
+        rows = string_combined(genes, species, required_score, call)
         layers[name] = [
             r for r in rows if r.source.upper() in wanted and r.target.upper() in wanted
         ]
