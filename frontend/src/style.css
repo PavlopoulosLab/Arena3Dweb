@@ -662,6 +662,10 @@ body {
   width: 40px;
   height: 40px;
   cursor: pointer;
+  /* a fast click or a long press never selects text or scrolls the panel */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
   border-radius: var(--arena-radius-sm);
   transition: background-color 0.15s var(--arena-ease);
 }

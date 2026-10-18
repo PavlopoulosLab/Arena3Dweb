@@ -1,7 +1,9 @@
 // Port of v2 www/js/object_actions/canvas_controls.js nav-control remainder:
 // the two fixed buttons (#navControlButtonsDiv) and the Scene/Layers/Nodes
-// control table inside #info. Hold-to-repeat buttons run a 70ms interval, as
-// v2 did; Shiny syncs are replaced by render/label flags.
+// control table inside #info. Every button takes one step as soon as it is
+// pressed, so a click always does something; held down, it keeps going (one
+// step every 70 ms after a short pause) until it is released, wherever that
+// happens. Shiny syncs are replaced by render/label flags.
 
 import * as THREE from 'three'
 import { bus } from '../bus'
@@ -22,35 +24,41 @@ import {
 type Axis = 'X' | 'Y' | 'Z'
 
 const REPEAT_MS = 70
+// a click is one step; held longer than this, the button keeps going
+const HOLD_DELAY_MS = 300
 
 let repeatId: ReturnType<typeof setInterval> | undefined
-// Hold-to-repeat interactions register one undo entry per hold: snapshot on
-// press, command pushed on release (only if a tick actually ran).
+let holdId: ReturnType<typeof setTimeout> | undefined
+// One undo entry per press: snapshot on press, command pushed on release.
 let repeatBefore: TransformSnapshot | null = null
+let repeatDescription = ''
 let repeatMoved = false
 
 function stopRepeat(): void {
+  clearTimeout(holdId)
   clearInterval(repeatId)
-  repeatId = undefined
+  holdId = repeatId = undefined
   if (repeatBefore && repeatMoved)
     history.execute(
-      new TransformCommand(
-        'Nav control move',
-        repeatBefore,
-        captureTransforms()
-      )
+      new TransformCommand(repeatDescription, repeatBefore, captureTransforms())
     )
   repeatBefore = null
   repeatMoved = false
 }
 
-function startRepeat(fn: () => void): void {
+// One step now, then — while the button stays pressed — one every REPEAT_MS
+function startRepeat(step: () => void, description = 'Nav control move'): void {
   stopRepeat()
   repeatBefore = captureTransforms()
-  repeatId = setInterval(() => {
+  repeatDescription = description
+  const tick = () => {
+    step()
     repeatMoved = true
-    fn()
-  }, REPEAT_MS)
+  }
+  tick()
+  holdId = setTimeout(() => {
+    repeatId = setInterval(tick, REPEAT_MS)
+  }, HOLD_DELAY_MS)
 }
 
 function sliderValue(id: string): number {
@@ -119,12 +127,10 @@ function moveLayers(direction: number, axis: Axis): void {
 }
 
 function spreadLayers(direction: number): void {
-  const before = captureTransforms()
-  initialSpreadLayers(direction)
-  raiseMovedFlags()
-  history.execute(
-    new TransformCommand('Spread layers', before, captureTransforms())
-  )
+  startRepeat(() => {
+    initialSpreadLayers(direction)
+    raiseMovedFlags()
+  }, 'Spread layers')
 }
 
 function scaleLayers(): void {
@@ -154,17 +160,15 @@ function scaleLayers(): void {
 function spreadNodes(multiplier: number): void {
   const selected = getSelectedNodes()
   if (selected.length === 0) return alert('Please select at least one node.')
-  const before = captureTransforms()
-  for (const i of selected) {
-    const node = ctx.nodeObjects[i]
-    node.setPosition('y', node.getPosition('y') * multiplier)
-    node.setPosition('z', node.getPosition('z') * multiplier)
-  }
-  redrawIntraLayerEdges()
-  raiseMovedFlags()
-  history.execute(
-    new TransformCommand('Spread nodes', before, captureTransforms())
-  )
+  startRepeat(() => {
+    for (const i of selected) {
+      const node = ctx.nodeObjects[i]
+      node.setPosition('y', node.getPosition('y') * multiplier)
+      node.setPosition('z', node.getPosition('z') * multiplier)
+    }
+    redrawIntraLayerEdges()
+    raiseMovedFlags()
+  }, 'Spread nodes')
 }
 
 function moveNodes(direction: number, axis: Axis): void {
@@ -378,24 +382,30 @@ function attachNavControls(): void {
   let tSeen = 0
   for (const el of info.querySelectorAll<HTMLElement>('[data-nav]')) {
     const name = el.dataset.nav!
-    if (name === 'expandLayers')
-      el.addEventListener('click', () => spreadLayers(1))
-    else if (name === 'collapseLayers')
-      el.addEventListener('click', () => spreadLayers(-1))
-    else if (name === 'expandNodes')
-      el.addEventListener('click', () => spreadNodes(1.1))
-    else if (name === 'collapseNodes')
-      el.addEventListener('click', () => spreadNodes(0.9))
+    let press: () => void
+    if (name === 'expandLayers') press = () => spreadLayers(1)
+    else if (name === 'collapseLayers') press = () => spreadLayers(-1)
+    else if (name === 'expandNodes') press = () => spreadNodes(1.1)
+    else if (name === 'collapseNodes') press = () => spreadNodes(0.9)
     else {
       const isT = name.endsWith('_T')
       const group = isT
         ? 2 + Math.floor(tSeen++ / 6)
         : Math.floor(plainSeen++ / 6)
-      el.addEventListener('mousedown', () => groups[group](name))
-      el.addEventListener('mouseup', stopRepeat)
-      el.addEventListener('mousemove', stopRepeat)
+      press = () => groups[group](name)
     }
+    // pointer events: mouse, pen and touch alike; the step runs on press
+    el.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return
+      e.preventDefault() // no text selection or focus jump on fast clicks
+      press()
+    })
+    el.addEventListener('pointerleave', stopRepeat)
   }
+  // released anywhere (or the window loses the pointer): stop
+  window.addEventListener('pointerup', stopRepeat)
+  window.addEventListener('pointercancel', stopRepeat)
+  window.addEventListener('blur', stopRepeat)
 
   // Live-scale on input; one undo entry per drag, finalized on 'change'.
   // `sync` re-applies the restored scale to the slider + its value label on

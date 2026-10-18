@@ -677,7 +677,9 @@ const HELP_HTML = `
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/navcontrols.png" alt="The navigation controls: shortcuts, scene, layer and node controls" loading="lazy">
   <p>
     <i>Navigation Controls</i> shows or hides the table; <i>Pause Inter-Layer Edges</i> hides inter-layer edges while
-    you work on large networks. The coloured buttons act on the red (X), green (Y) and blue (Z) axes:
+    you work on large networks. The coloured buttons act on the red (X), green (Y) and blue (Z) axes. Every button
+    takes one step as soon as you press it; keep it pressed and it keeps going — rotating, moving or spreading —
+    until you let go (or move off the button). Each press is one undo step.
   </p>
   <ul>
     <li><b>Scene</b>: rotate the whole network by the chosen angle (1°–15°); with <i>Enable Scene Auto Rotate</i>

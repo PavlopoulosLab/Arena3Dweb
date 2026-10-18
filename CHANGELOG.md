@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- Navigation Controls ignored quick clicks (the first step waited 70 ms, so a click released sooner did nothing) and a held button stopped at the slightest mouse movement, or kept going when released outside it. Every button now steps on press; held down it repeats until released anywhere, through small movements, after a 300 ms pause, so a click stays one step. The spread/pull buttons repeat too, each press is one undo step, the buttons never select text, and they work with touch and pen.
 - OmniPath fetched nothing for gene names typed in lower case, for UniProt IDs and for a single protein, and crashed (HTTP 500) for organisms OmniPath does not cover; names are sent as OmniPath expects them (TP53 for human, Trp53 for mouse and rat), UniProt IDs match, and other organisms get a clear message.
 - IntAct crashed (HTTP 500) whenever interaction partners were included — names such as `"ccsb isoform id: ndn_2"` broke the import's table — and could not match UniProt IDs among the proteins; quotes are dropped from imported names (all importers), and IntAct matches gene names or any identifier.
 - When nothing is found among the typed proteins, IntAct and OmniPath now say how many interactions with other partners exist and which checkbox includes them.
