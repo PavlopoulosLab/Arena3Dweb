@@ -306,7 +306,7 @@ function layerStatus(msg: string, isError = false): void {
 
 // Split / merge reload the network (one undo step); lift is a layout command.
 function initRestructure(): void {
-  const maxLayers = () => store.get().config?.max_layers ?? 18
+  const maxLayers = () => store.get().config?.max_layers ?? 20
   const reload = (build: (net: NetworkData) => NetworkData, done: string) => {
     const net = store.get().network
     if (!net) return layerStatus('Load a network first.', true)

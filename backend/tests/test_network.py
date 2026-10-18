@@ -89,6 +89,18 @@ def test_empty_channel_400() -> None:
     assert _post(tsv).status_code == 400
 
 
+def test_twenty_layers_and_ten_channels_load_and_a_21st_layer_is_refused() -> None:
+    # a chain L1 - L2 - ... - L20, each link in its own channel (ten channels)
+    rows = [f"A{i}\tL{i}\tA{i + 1}\tL{i + 1}\tc{i % 10}" for i in range(1, 20)]
+    body = _post(f"{HDR}\tChannel\n" + "\n".join(rows) + "\n").json()
+    assert len(body["layers"]) == 20
+    assert len(body["channels"]) == 10
+    rows.append("A20\tL20\tA21\tL21\tc0")
+    resp = _post(f"{HDR}\tChannel\n" + "\n".join(rows) + "\n")
+    assert resp.status_code == 400
+    assert "no more than 20 layers" in resp.json()["detail"]
+
+
 def test_duplicate_rows_collapsed() -> None:
     tsv = f"{HDR}\nA\tL1\tB\tL2\nA\tL1\tB\tL2\n"
     assert len(_post(tsv).json()["edges"]) == 1

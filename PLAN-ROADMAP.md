@@ -109,7 +109,7 @@ default because IntAct/OmniPath otherwise return every partner.
 
 **Goal:** fetch a STRING network for a list of identifiers and map each evidence score
 (experiments, database, textmining, coexpression, neighborhood, fusion, cooccurrence) to a
-channel. `MAX_CHANNELS = 9` fits all seven.
+channel. `MAX_CHANNELS = 10` fits all seven.
 
 Touches: new `routers/string_db.py`, new `services/string_db.py`, `models/network.py`
 (request model), `main.py` (register router), `config.py` (STRING base URL, timeout,
@@ -153,7 +153,7 @@ Touches: `actions/layout.ts`, `actions/layer.ts`, `commands/scene.ts`, `ui/layou
 `actions/session.ts`, `actions/network.ts`, `services/session.py`, `actions/layout.test.ts`.
 
 - [x] New arrangements: `helix` (layers rotate around x as they spread), `sphere` (layers
-      tangent to a sphere), `grid` (2D tile of layers, for many layers ≤ `MAX_LAYERS = 18`).
+      tangent to a sphere), `grid` (2D tile of layers, for many layers ≤ `MAX_LAYERS = 20`).
 - [x] Wrap arrangements in an `ApplyArrangementCommand` that snapshots every
       `layer.plane` position + quaternion, so they become undoable.
 - [x] Persist the active arrangement (or raw per-layer transforms) in the session so a shared

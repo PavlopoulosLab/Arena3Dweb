@@ -6,7 +6,7 @@
 import type { EdgeModel, NetworkData, NodeModel } from '../api/client'
 
 export const LINK_CHANNEL = 'same node'
-const MAX_CHANNELS = 9
+const MAX_CHANNELS = 10 // backend config.MAX_CHANNELS
 
 export interface MergeResult {
   network: NetworkData

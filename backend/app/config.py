@@ -21,8 +21,8 @@ MANDATORY_JSON_EDGE_COLUMNS = ["src", "trg"]
 # (docker-compose.yml sets these for local dev/prod).
 MAX_EDGES = int(os.environ.get("ARENA_MAX_EDGES", "10000"))
 MAX_NODES = int(os.environ.get("ARENA_MAX_NODES", "20000"))
-MAX_CHANNELS = 9
-MAX_LAYERS = 18
+MAX_CHANNELS = 10
+MAX_LAYERS = 20
 # DoS fix: caps request-body size for TSV/JSON uploads (bare uvicorn has no
 # built-in limit; nginx's client_max_body_size only covers the prod Docker
 # image, not local/dev deployments).
@@ -99,10 +99,11 @@ _SET1 = [
     "#F781BF",
     "#999999",
 ]
-NODE_COLORS = _SET3 + _SET3[:6]  # 18 layers
+NODE_COLORS = _SET3 + _SET3[:8]  # 20 layers
 EDGE_DEFAULT_COLOR = "#CFCFCF"
 CHANNEL_COLORS_LIGHT = _SET3[:MAX_CHANNELS]
-CHANNEL_COLORS_DARK = _SET1
+# Set1 has nine colours; a cyan (category10) completes the ten channels
+CHANNEL_COLORS_DARK = [*_SET1, "#17BECF"]
 
 # UI defaults
 FLOOR_DEFAULT_COLOR = "#777777"

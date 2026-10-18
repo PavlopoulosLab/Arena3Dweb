@@ -97,6 +97,31 @@ describe('mergeAsLayers', () => {
     ).toBe(LINK_CHANNEL)
   })
 
+  it('has room for ten channels, the link channel included', () => {
+    const mine = ['c1', 'c2', 'c3', 'c4', 'c5']
+    const theirs = ['c6', 'c7', 'c8', 'c9']
+    const current = net(
+      ['A'],
+      [
+        ['X', 'A'],
+        ['Z', 'A'],
+      ],
+      mine.map((c) => edge('X', 'A', 'Z', 'A', 1, c)),
+      mine
+    )
+    const incoming = net(
+      ['B'],
+      [
+        ['X', 'B'],
+        ['Y', 'B'],
+      ],
+      theirs.map((c) => edge('X', 'B', 'Y', 'B', 1, c)),
+      theirs
+    )
+    const r = mergeAsLayers(current, incoming)
+    expect(r.network.channels).toEqual([...mine, ...theirs, LINK_CHANNEL])
+  })
+
   it('drops channels from the side that would mix them in', () => {
     const current = net(['A'], [['X', 'A']], [edge('X', 'A', 'X', 'A')])
     const incoming = net(

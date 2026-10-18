@@ -411,7 +411,7 @@ const HELP_HTML = `
     become weights and channels (SIF relation types become channels).
   </p>
   <p>
-    The online version accepts up to 10,000 edges, 18 layers and 9 channels. Running Arena3D locally (see About),
+    The online version accepts up to 10,000 edges, 20 layers and 10 channels. Running Arena3D locally (see About),
     the edge and node limits are set with the <i>ARENA_MAX_EDGES</i> and <i>ARENA_MAX_NODES</i> environment
     variables.
   </p>
@@ -1333,8 +1333,8 @@ const HELP_HTML = `
     ],
   ])}
   <p>
-    A node that appears in two layers is the same node in both. The limits are those of uploads (10,000 edges, 18
-    layers, 9 channels). From Python:
+    A node that appears in two layers is the same node in both. The limits are those of uploads (10,000 edges, 20
+    layers, 10 channels). From Python:
   </p>
   <pre class="help-code">import requests, webbrowser
 

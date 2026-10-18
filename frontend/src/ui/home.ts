@@ -119,8 +119,8 @@ const ICONS: Record<string, string> = {
 }
 
 const STATS: [string, string][] = [
-  ['18', 'layers in one scene'],
-  ['9', 'edge channels per network'],
+  ['20', 'layers in one scene'],
+  ['10', 'edge channels per network'],
   ['11', 'layout algorithms'],
   ['13', 'layer arrangements'],
   ['6', 'database importers'],
