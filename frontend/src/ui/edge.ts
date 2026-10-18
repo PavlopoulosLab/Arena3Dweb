@@ -4,6 +4,7 @@
 // www/js/object_actions/edge.js attachChannelEditList.
 
 import { ctx } from '../three'
+import type { EdgeShape } from '../three/runtime'
 import { bus } from '../bus'
 import { history } from '../commands/base'
 import { ChangeChannelColorCommand } from '../commands/scene'
@@ -22,6 +23,7 @@ import {
   setEdgeSelectedColorPriority,
   setEdgeFileColorPriority,
   setChannelVisibility,
+  setEdgeShape,
 } from '../actions/edge'
 import { escapeHtml } from '../utils'
 import { edgesBelowThreshold, setEdgeWeightThreshold } from '../actions/explore'
@@ -99,6 +101,14 @@ const EDGE_HTML = `
     <label class="form-label" for="interLayerEdgeWidth">Inter-Layer Edge Width:</label>
     <input type="range" class="form-range" id="interLayerEdgeWidth" min="1" max="10" step="0.5" value="1" />
   </div>
+  <div class="mb-3 d-none" id="edgeShapeWrap">
+    <label class="form-label" for="edgeShape">Edge Shape (channels):</label>
+    <select id="edgeShape" class="form-select form-select-sm">
+      <option value="parallel">Parallel — channels side by side, as STRING draws them</option>
+      <option value="curved">Bézier curves — one curve per channel</option>
+      <option value="straight">Straight — channels share one line</option>
+    </select>
+  </div>
   <div class="mb-3 d-none" id="intraChannelCurvatureWrap">
     <label class="form-label" for="intraChannelCurvature">Intra-Layer Channel Curvature:</label>
     <input type="range" class="form-range" id="intraChannelCurvature" min="10" max="60" step="1" value="15" />
@@ -161,8 +171,13 @@ function syncEncodingSliders(): void {
 // text already described them as multi-edge only; this makes that true.
 function syncChannelControls(): void {
   const multiEdge = (store.get().network?.channels ?? []).length > 0
-  show('intraChannelCurvatureWrap', multiEdge)
-  show('interChannelCurvatureWrap', multiEdge)
+  const shape = ctx.edgeShape
+  const select = document.getElementById('edgeShape') as HTMLSelectElement
+  if (select) select.value = shape
+  show('edgeShapeWrap', multiEdge)
+  // only Bézier curves have a curvature to set
+  show('intraChannelCurvatureWrap', multiEdge && shape === 'curved')
+  show('interChannelCurvatureWrap', multiEdge && shape === 'curved')
 }
 
 // v2 attachChannelEditList: per channel a color picker + a Hide checkbox.
@@ -262,6 +277,11 @@ export function initEdgePanel(): void {
     ?.addEventListener('change', (e) => {
       setEdgeFileColorPriority((e.target as HTMLInputElement).checked)
     })
+
+  document.getElementById('edgeShape')?.addEventListener('change', (e) => {
+    setEdgeShape((e.target as HTMLSelectElement).value as EdgeShape)
+    syncChannelControls()
+  })
 
   syncEncodingSliders()
   syncChannelControls()

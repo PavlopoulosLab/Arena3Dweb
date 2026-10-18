@@ -124,6 +124,16 @@ def _strength(value: Any) -> float:
     return min(1.0, max(0.0, v)) if v == v else 0.0
 
 
+# Multi-channel edges: parallel lines side by side (as STRING draws them),
+# Bézier curves or one shared straight line
+EDGE_SHAPES = ("parallel", "curved", "straight")
+
+
+def _edge_shape(value: Any) -> str:
+    """The edge shape; anything missing or unknown is the default, parallel."""
+    return value if value in EDGE_SHAPES else EDGE_SHAPES[0]
+
+
 def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
     """Validate + fill defaults, returning the canonical session dict."""
     _validate(data)
@@ -190,5 +200,6 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
         "scramble_nodes": scramble,
         "intraEdgeBundling": _strength(data.get("intraEdgeBundling")),
         "interEdgeBundling": _strength(data.get("interEdgeBundling")),
+        "edgeShape": _edge_shape(data.get("edgeShape")),
         "warnings": warnings,
     }

@@ -301,6 +301,7 @@ export function buildFromSession(s: SessionData): void {
   // bundled paths are computed on the first redraw (three/bundling.ts)
   ctx.intraEdgeBundling = Number(s.intraEdgeBundling ?? 0)
   ctx.interEdgeBundling = Number(s.interEdgeBundling ?? 0)
+  if (s.edgeShape) ctx.edgeShape = s.edgeShape
   ctx.edgeFileColorPriority = true
 
   store.update({

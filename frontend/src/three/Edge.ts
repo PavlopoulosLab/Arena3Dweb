@@ -11,6 +11,19 @@ import {
 import { ctx, disposeObject3D, edgeResolution } from './runtime'
 import { bundledPoints } from './bundling'
 
+// Parallel channel lanes: this many line widths apart
+const PARALLEL_SPACING = 1.6
+
+// A unit vector across the line p1→p2 in the layer's plane (local x is the
+// layer normal), or across it some other way when the line runs along x.
+function sideways(p1: THREE.Vector3, p2: THREE.Vector3): THREE.Vector3 {
+  const d = p2.clone().sub(p1)
+  const across = d.clone().cross(new THREE.Vector3(1, 0, 0))
+  if (across.lengthSq() < 1e-9 * Math.max(1, d.lengthSq()))
+    across.copy(d).cross(new THREE.Vector3(0, 1, 0))
+  return across.lengthSq() > 0 ? across.normalize() : across
+}
+
 export interface EdgeOptions {
   id?: number
   source?: string
@@ -250,6 +263,11 @@ export class Edge {
       const color = this.decideColor(i)
       const opacity = this.decideOpacity(i)
 
+      // parallel: lanes side by side across the pair, centred on it
+      const lane =
+        (i - (this.channels.length - 1) / 2) *
+        PARALLEL_SPACING *
+        Math.max(...this.channels.map((_, k) => this.decideWidth(k)))
       THREE_curveGroup = this.createCurve(
         THREE_curveGroup,
         points[0],
@@ -259,7 +277,8 @@ export class Edge {
         this.channels[i],
         opacity,
         this.decideWidth(i),
-        path
+        path,
+        lane
       )
     }
 
@@ -275,22 +294,34 @@ export class Edge {
     channelName: string,
     opacity: number,
     width: number,
-    bundled: THREE.Vector3[] | null = null
+    bundled: THREE.Vector3[] | null = null,
+    lane = 0
   ): THREE.Group {
+    const shape = ctx.edgeShape
     let curvePoints: THREE.Vector3[]
-    if (bundled) {
+    if (shape === 'parallel') {
+      // STRING-style: a straight line per channel, shifted sideways
+      const shift = sideways(p1, p2).multiplyScalar(lane)
+      curvePoints = (bundled ?? [p1, p2]).map((p) => p.clone().add(shift))
+    } else if (bundled) {
       // bundled: each channel runs alongside the bundle's path, pushed out
       // most in the middle, as the plain curves are
-      const push = new THREE.Vector3(
-        this.interLayer ? verticalPush : 0,
-        verticalPush,
-        verticalPush
-      )
+      const push =
+        shape === 'straight'
+          ? new THREE.Vector3() // straight: channels follow the bundle itself
+          : new THREE.Vector3(
+              this.interLayer ? verticalPush : 0,
+              verticalPush,
+              verticalPush
+            )
       curvePoints = bundled.map((p, k) =>
         p
           .clone()
           .addScaledVector(push, Math.sin((Math.PI * k) / (bundled.length - 1)))
       )
+    } else if (shape === 'straight') {
+      // straight: the channels of a pair share one line (Edit → Edge Shape)
+      curvePoints = [p1, p2]
     } else {
       const p3 = p1.clone()
       const p4 = p2.clone()
@@ -342,8 +373,12 @@ export class Edge {
     color: string,
     channelName: string
   ): THREE.Group {
+    // a curve points the arrow along its last stretch; a straight (parallel)
+    // line has only its two ends
     const arrowHelper = this.createArrowHelper(
-      [curvePoints[points - 4], curvePoints[points - 1]],
+      points >= 4
+        ? [curvePoints[points - 4], curvePoints[points - 1]]
+        : curvePoints.slice(-2),
       color
     )
     arrowHelper.userData.tag = channelName

@@ -113,7 +113,7 @@ test('manual width slider thickens edges when weight drives neither', async ({
 })
 
 // Curvature only bends channel curves, which single-edge networks never build.
-test('channel curvature sliders appear only for multi-edge networks', async ({
+test('channel curvature sliders appear only for Bézier channel edges', async ({
   page,
 }) => {
   await loadExample(page) // figure2A_data.tsv has no Channel column
@@ -145,6 +145,10 @@ test('channel curvature sliders appear only for multi-edge networks', async ({
   await page
     .getByRole('tab', { name: 'Edges', includeHidden: true, exact: true })
     .dispatchEvent('click')
+  // channels are parallel lines by default: nothing to curve
+  await expect(page.locator('#edgeShapeWrap')).toBeVisible()
+  await expect(page.locator('#intraChannelCurvatureWrap')).toBeHidden()
+  await page.locator('#edgeShape').selectOption('curved')
   await expect(page.locator('#intraChannelCurvatureWrap')).toBeVisible()
   // one layer opens as a single network: nothing is inter-layer there
   await expect(page.locator('body')).toHaveClass(/mode-single/)

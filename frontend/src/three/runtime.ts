@@ -18,6 +18,9 @@ import type { Node } from './Node'
 import type { Edge } from './Edge'
 
 export type NetworkMode = 'multilayer' | 'single'
+export type EdgeShape = 'curved' | 'parallel' | 'straight'
+// Channels as parallel lines side by side, as STRING draws them
+export const DEFAULT_EDGE_SHAPE: EdgeShape = 'parallel'
 
 export type ColorPrioritySource = 'default' | 'picker' | 'cluster'
 
@@ -85,6 +88,10 @@ export interface RuntimeContext {
   // edge bundling strength, 0 = straight edges (three/bundling.ts)
   intraEdgeBundling: number
   interEdgeBundling: number
+  // multi-channel edges: parallel lines side by side, one Bézier curve per
+  // channel, or one shared straight line (Edit → Edges → Edge Shape); a view
+  // preference kept across loads
+  edgeShape: EdgeShape
 
   // Color-priority sources
   layerColorPrioritySource: ColorPrioritySource
@@ -154,6 +161,7 @@ export const ctx: RuntimeContext = {
 
   channelColors: {},
   channelVisibility: {},
+  edgeShape: DEFAULT_EDGE_SHAPE,
 
   edgeDefaultColor: '#000000',
   containerDefaultColor: '#5b8def',

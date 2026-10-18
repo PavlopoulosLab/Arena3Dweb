@@ -21,6 +21,7 @@ class SessionImportResponse(BaseModel):
     # edge bundling strength, 0-1 (0 = straight edges)
     intraEdgeBundling: float = 0.0
     interEdgeBundling: float = 0.0
+    edgeShape: str = "parallel"
     warnings: list[str] = []
 
 

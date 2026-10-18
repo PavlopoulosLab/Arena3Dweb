@@ -915,7 +915,10 @@ const HELP_HTML = `
       inter-layer arrows.</li>
     <li><i>Show Edge Weight As</i>: opacity, width, both or neither. Whichever property weight does not drive is set
       with the intra- and inter-layer opacity and width sliders.</li>
-    <li><i>Channel Curvature</i> (multi-channel networks) pulls the parallel channel edges apart, within and between
+    <li><i>Edge Shape</i> (multi-channel networks): <i>Parallel</i> (the default) draws every channel as its own
+      straight line, side by side, the way STRING draws its evidence channels; <i>Bézier curves</i> bend each channel
+      away from the others; <i>Straight</i> lets the channels of a pair share one line. Sessions remember it.</li>
+    <li><i>Channel Curvature</i> (Bézier curves) pulls the curved channel edges apart, within and between
       layers.</li>
     <li><i>Highlight Selected Edges in Color</i> and <i>Priority on Loaded Edge Color</i> (colours from the edge
       attribute file). Without priority, multi-channel networks show the channel list: rename, recolour or hide each

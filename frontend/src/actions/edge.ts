@@ -6,6 +6,7 @@
 // pause-button label (canvas_controls.ts).
 
 import { ctx } from '../three'
+import type { EdgeShape } from '../three/runtime'
 
 // v2 assignChannelColorsFromPalette — reassigns every known channel's color
 // in insertion order (channel order from the network build).
@@ -72,6 +73,14 @@ export function toggleInterLayerEdgesRendering(): boolean {
 }
 
 // v2 changeChannelColor minus the DOM picker element.
+// Multi-channel edges: parallel lines (the default), one Bézier curve per
+// channel, or one shared straight line.
+export function setEdgeShape(shape: EdgeShape): void {
+  ctx.edgeShape = shape
+  ctx.renderInterLayerEdgesFlag = true
+  redrawIntraLayerEdges()
+}
+
 export function setChannelColor(channel: string, color: string): void {
   ctx.channelColors[channel] = color
   ctx.renderInterLayerEdgesFlag = true

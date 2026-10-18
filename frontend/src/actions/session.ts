@@ -73,6 +73,7 @@ export function collectSession(): SessionData {
     scramble_nodes: false,
     intraEdgeBundling: ctx.intraEdgeBundling,
     interEdgeBundling: ctx.interEdgeBundling,
+    edgeShape: ctx.edgeShape,
   }
 }
 

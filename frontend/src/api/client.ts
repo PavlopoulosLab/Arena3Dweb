@@ -101,6 +101,8 @@ export interface SessionData {
   scramble_nodes: boolean
   intraEdgeBundling?: number
   interEdgeBundling?: number
+  // multi-channel edges (Edit → Edges → Edge Shape)
+  edgeShape?: 'parallel' | 'curved' | 'straight'
   warnings?: string[]
 }
 

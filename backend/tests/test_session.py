@@ -67,6 +67,14 @@ def test_edge_bundling_strengths_clamped_and_defaulted() -> None:
     assert s["interEdgeBundling"] == 0.0
 
 
+def test_edge_shape_defaults_and_validation() -> None:
+    # parallel lines by default; Bézier curves or straight lines on request
+    assert normalize_session(_minimal())["edgeShape"] == "parallel"
+    assert normalize_session({**_minimal(), "edgeShape": "curved"})["edgeShape"] == "curved"
+    for bad in ("x", None, {"single": "curved"}):
+        assert normalize_session({**_minimal(), "edgeShape": bad})["edgeShape"] == "parallel"
+
+
 def test_missing_mandatory_object_raises() -> None:
     with pytest.raises(SessionValidationError):
         normalize_session({"layers": [{"name": "L1"}], "nodes": []})
