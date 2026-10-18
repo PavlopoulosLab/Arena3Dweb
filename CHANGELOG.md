@@ -114,6 +114,7 @@
 
 ### Changed
 
+- The SARS-CoV-2 host–virus example (5 layers) opens undirected, without arrows.
 - Edit → Edges → Channels: the channel names, colour swatches and Hide boxes stand in aligned columns (as wide as the longest name), under a section title like the others; clicking _Hide_ toggles its box. In the Groups card the member counts have a fixed, right-aligned column, so the hull and select controls line up.
 - The Home page is a landing page: a hero with the calls to action (load your network, import from a database, open an example), the numbers at a glance, six feature cards, a product shot, three steps from data to insight, four featured examples that open with one click (the full example list stays below them) and citation cards with a Copy button.
 - Fit to view (Recenter, double-click on the background) keeps the layer names in view too.

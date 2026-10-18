@@ -22,3 +22,29 @@ test('Home page loads a chosen example', async ({ page }) => {
   expect(containers.length).toBe(4)
   expect(new Set(containers)).toEqual(new Set(['sphere']))
 })
+
+test('the SARS-CoV-2 example opens undirected: no arrows', async ({ page }) => {
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  await page
+    .locator('#exampleChoice')
+    .selectOption({ label: 'SARS-CoV-2 host–virus network (5 layers)' })
+  await page.locator('#exampleButton').click()
+  await expect(page.locator('#file_status')).toContainText('Session loaded', {
+    timeout: 30_000,
+  })
+  const directed = await page.evaluate(
+    () =>
+      (
+        window as unknown as {
+          __arena: { ctx: { isDirectionEnabled: boolean } }
+        }
+      ).__arena.ctx.isDirectionEnabled
+  )
+  expect(directed).toBe(false)
+})
