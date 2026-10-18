@@ -221,7 +221,8 @@ const HELP_HTML = `
       between exactly two selected nodes (double-click each; a name search selects every copy of a node, so pick
       the two copies you mean), or switch on <i>Highlight paths between selected nodes</i> to see the paths joining
       every selected node as the selection changes.</li>
-    <li>Right-click a node for its neighbours, a multilayer path or its link and description.</li>
+    <li>Right-click a node for its neighbours, a multilayer path or its link and description; with nodes selected,
+      right-click also offers actions on the whole selection.</li>
   </ol>
 
   <h3>…untangle a dense network</h3>
@@ -675,8 +676,11 @@ const HELP_HTML = `
       <kbd>Option</kbd> as you release). Both choices are remembered in the browser. <b>Unselect all</b> (and fit the
       view): double-click the background.</li>
     <li><b>Right-click a node</b> to select its neighbours (in every layer), a multilayer path starting from it, or a
-      downstream path through the following layers, and to open its URL or description. Right-click the background
-      to save the view as an image.</li>
+      downstream path through the following layers, and to open its URL or description. With nodes selected, the
+      menu (on a node or on the background) also has a <i>Selected nodes</i> group: expand the selection by one hop,
+      select its connected component, the shortest path between two selected nodes, highlight the paths between
+      them, focus the camera on them, copy their names, style them (Edit → Style), invert or clear the selection.
+      With nothing selected, right-click the background to save the view as an image.</li>
   </ul>
   <h3>Navigation table</h3>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/navcontrols.png" alt="The navigation controls: shortcuts, scene, layer and node controls" loading="lazy">

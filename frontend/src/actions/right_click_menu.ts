@@ -3,6 +3,11 @@
 // path, downstream path) are pure; the menu is a <select> appended to
 // #labelDiv over the clicked node, as in v2. Loader spinner + description
 // panel content stay with Phase 13 UI.
+//
+// With nodes selected, the menu also lists what can be done to the selection
+// ("Selected nodes (N)"), on a node or on the background: focus the camera,
+// copy the names, and whatever the panels register with
+// registerSelectionAction (Explore's walks and paths, Style, …).
 
 import { ctx, SPHERE_RADIUS } from '../three'
 import { exists } from '../utils'
@@ -12,8 +17,60 @@ import {
   repaintNode,
   updateSelectedNodesStore,
 } from './node'
+import { focusOnNodes } from './search'
 
 let optionsList: HTMLSelectElement | null = null
+
+// An action on the selected nodes (indices into ctx.nodeObjects)
+export interface SelectionAction {
+  label: string | ((selected: number[]) => string)
+  when?: (selected: number[]) => boolean // offered only when true
+  run: (selected: number[]) => void
+  order?: number // place in the menu, low first (default 50)
+}
+
+const selected = () =>
+  ctx.nodeObjects.flatMap((n, i) => (n.isSelected ? [i] : []))
+
+const uniqueNames = (indices: number[]) => [
+  ...new Set(indices.map((i) => ctx.nodeObjects[i].name)),
+]
+
+// built in; the panels add theirs after these
+const selectionActions: SelectionAction[] = [
+  {
+    label: 'Focus Camera on Selection',
+    order: 60,
+    run: (sel) => {
+      focusOnNodes(sel)
+    },
+  },
+  {
+    label: (sel) => `Copy Names (${uniqueNames(sel).length})`,
+    order: 61,
+    run: (sel) => {
+      void navigator.clipboard?.writeText(uniqueNames(sel).join('\n'))
+    },
+  },
+]
+
+export function registerSelectionAction(action: SelectionAction): void {
+  selectionActions.push(action)
+}
+
+// the actions offered for this selection, with their labels
+export function selectionMenu(
+  sel: number[]
+): { label: string; run: () => void }[] {
+  if (!sel.length) return []
+  return [...selectionActions]
+    .sort((a, b) => (a.order ?? 50) - (b.order ?? 50))
+    .filter((a) => !a.when || a.when(sel))
+    .map((a) => ({
+      label: typeof a.label === 'string' ? a.label : a.label(sel),
+      run: () => a.run(sel),
+    }))
+}
 
 function selectNodeAndEdge(nodeIndex: number, edgeIndex: number): void {
   ctx.nodeObjects[nodeIndex].isSelected = true
@@ -160,6 +217,7 @@ export function replaceContextMenuOverNode(event: {
   const container =
     typeof document === 'undefined' ? null : document.getElementById('labelDiv')
   if (!container) return
+  const sel = selected()
 
   for (let i = 0; i < ctx.nodeObjects.length; i++) {
     const nodeX = ctx.xBoundMax + ctx.nodeObjects[i].getWorldPosition('x')
@@ -171,37 +229,70 @@ export function replaceContextMenuOverNode(event: {
       continue
 
     event.preventDefault()
-    optionsList = buildMenu(i, nodeX, nodeY)
+    optionsList = buildMenu(i, nodeX, nodeY, sel)
     container.appendChild(optionsList)
     return
   }
+  // the background, with nodes selected: the selection's actions alone
+  if (!sel.length) return
+  event.preventDefault()
+  optionsList = buildMenu(null, event.layerX, event.layerY, sel)
+  container.appendChild(optionsList)
 }
 
-function buildMenu(nodeIndex: number, x: number, y: number): HTMLSelectElement {
-  const node = ctx.nodeObjects[nodeIndex]
+function buildMenu(
+  nodeIndex: number | null,
+  x: number,
+  y: number,
+  sel: number[]
+): HTMLSelectElement {
   const select = document.createElement('select')
   select.className = 'optionsBox'
   select.style.position = 'absolute'
   select.style.left = `${x}px`
   select.style.top = `${y}px`
   select.style.display = 'inline-block'
-
-  const options = [
-    '-',
-    'Select Neighbors',
-    'Select MultiLayer Path',
-    'Select Downstream Path',
-  ]
-  if (node.url !== '') options.push('Link')
-  if (node.descr !== '') options.push('Description')
-  for (const text of options) {
+  const add = (parent: HTMLElement, text: string, value = text) => {
     const option = document.createElement('option')
     option.text = text
-    select.appendChild(option)
+    option.value = value
+    parent.appendChild(option)
+  }
+  add(select, '-')
+
+  if (nodeIndex !== null) {
+    const node = ctx.nodeObjects[nodeIndex]
+    const options = [
+      'Select Neighbors',
+      'Select MultiLayer Path',
+      'Select Downstream Path',
+    ]
+    if (node.url !== '') options.push('Link')
+    if (node.descr !== '') options.push('Description')
+    // a group of its own only when the selection's group follows
+    const group = sel.length ? document.createElement('optgroup') : select
+    if (group instanceof HTMLOptGroupElement) {
+      group.label = node.name
+      select.appendChild(group)
+    }
+    for (const text of options) add(group, text)
+  }
+
+  const actions = selectionMenu(sel)
+  if (actions.length) {
+    const group = document.createElement('optgroup')
+    group.label = `Selected nodes (${sel.length})`
+    actions.forEach((a, i) => add(group, a.label, `selection:${i}`))
+    select.appendChild(group)
   }
 
   select.addEventListener('change', () => {
-    executeCommand(nodeIndex, select.options[select.selectedIndex].text)
+    const value = select.value
+    if (value.startsWith('selection:')) {
+      actions[Number(value.slice('selection:'.length))]?.run()
+      finishCommand()
+      select.value = '-' // ready for another action on the same selection
+    } else if (nodeIndex !== null) executeCommand(nodeIndex, value)
   })
   return select
 }

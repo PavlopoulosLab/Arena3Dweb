@@ -3,6 +3,8 @@ import { ctx } from '../three'
 // whole-selection tools and the live highlight of paths between selected nodes.
 
 import { bus } from '../bus'
+import { registerSelectionAction } from '../actions/right_click_menu'
+import { showTab } from './tabs'
 import {
   MAX_PATH_ENDS,
   clearPathHighlight,
@@ -123,7 +125,87 @@ function updatePaths(): void {
   }
 }
 
+// The right-click menu's "Selected nodes" group: Explore's walks and paths,
+// Style for the selection, invert and clear
+function registerMenuActions(): void {
+  const say = (msg: string) => status(msg)
+  registerSelectionAction({
+    label: 'Expand Selection by 1 Hop',
+    order: 10,
+    run: () => {
+      const n = expandSelection(1, mode())
+      say(`Added ${plural(n, 'node')} to the selection.`)
+    },
+  })
+  registerSelectionAction({
+    label: 'Select Connected Component',
+    order: 11,
+    run: () =>
+      say(
+        `Added ${plural(selectComponents(mode()), 'connected node')} to the selection.`
+      ),
+  })
+  registerSelectionAction({
+    label: 'Select Shortest Path Between the 2',
+    order: 12,
+    when: (sel) => sel.length === 2,
+    run: () => {
+      const path = selectPathBetweenSelected(mode())
+      say(
+        path
+          ? `Path of ${plural(path.length - 1, 'step')} selected.`
+          : 'No path between the two nodes in this mode.'
+      )
+    },
+  })
+  const highlight = () =>
+    document.getElementById('highlightPaths') as HTMLInputElement | null
+  registerSelectionAction({
+    label: () =>
+      highlight()?.checked
+        ? 'Stop Highlighting Paths'
+        : 'Highlight Paths Between Selected',
+    order: 13,
+    when: (sel) =>
+      !!highlight() &&
+      (highlight()!.checked || (sel.length > 1 && sel.length <= MAX_PATH_ENDS)),
+    run: () => {
+      const box = highlight()!
+      box.checked = !box.checked
+      box.dispatchEvent(new Event('change'))
+    },
+  })
+  registerSelectionAction({
+    label: 'Style Selected Nodes…',
+    order: 70,
+    run: () => {
+      showTab('#panel-style')
+      const target = document.getElementById(
+        'styleNodeTarget'
+      ) as HTMLSelectElement | null
+      if (!target) return
+      target.value = 'selected'
+      target.dispatchEvent(new Event('change'))
+    },
+  })
+  registerSelectionAction({
+    label: 'Invert Selection',
+    order: 80,
+    run: () =>
+      say(`Selection inverted: ${plural(invertSelection(), 'node')} selected.`),
+  })
+  registerSelectionAction({
+    label: 'Clear Selection',
+    order: 90,
+    run: () => {
+      clearSelection()
+      say('Nothing selected.')
+    },
+  })
+}
+
 export function initExplore(): void {
+  registerMenuActions()
   const on = (id: string, run: () => void) =>
     document.getElementById(id)?.addEventListener('click', () => {
       try {
