@@ -93,3 +93,46 @@ test('channels are parallel lines by default; Bézier curves or straight on requ
     .poll(async () => (await channelLines(page)).map((l) => l.segments))
     .toEqual([1, 1])
 })
+
+test('the channel colours line up in columns, and Hide hides a channel', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  await page
+    .locator('#input_network_file')
+    .setInputFiles('public/data/aspirin_3channels.tsv')
+  await expect(page.locator('#file_status')).toContainText('Loaded network')
+  await page
+    .getByRole('tab', { name: 'Edges', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+
+  // every swatch and every Hide box starts at the same x, whatever the name
+  const rows = page.locator('#channelColorPicker .channel_subcontainer')
+  await expect(rows).toHaveCount(3)
+  const lefts = async (selector: string) =>
+    page
+      .locator(`#channelColorPicker ${selector}`)
+      .evaluateAll((els) =>
+        els.map((el) => Math.round(el.getBoundingClientRect().left))
+      )
+  for (const selector of ['.channel_colorPicker', '.channel_checkbox'])
+    expect(new Set(await lefts(selector)).size).toBe(1)
+
+  // the label wraps its box: clicking "Hide" hides that channel
+  await rows.nth(1).getByText('Hide').click()
+  const hidden = await page.evaluate(
+    () =>
+      (
+        window as unknown as {
+          __arena: { ctx: { channelVisibility: Record<string, boolean> } }
+        }
+      ).__arena.ctx.channelVisibility
+  )
+  expect(Object.values(hidden)).toContain(false)
+})

@@ -191,18 +191,22 @@ function buildChannelEditList(): void {
   const channels = store.get().network?.channels ?? []
   if (channels.length === 0) return
 
-  const title = document.createElement('h4')
+  const title = document.createElement('h6')
   title.textContent = 'Channels'
   container.appendChild(title)
+  // names, swatches and Hide switches in aligned columns (style.css)
+  const grid = document.createElement('div')
+  grid.className = 'channel-grid'
+  container.appendChild(grid)
 
   for (const ch of channels) {
     const row = document.createElement('div')
-    row.className = 'channel_subcontainer d-flex align-items-center gap-2 mb-2'
+    row.className = 'channel_subcontainer'
+    // the picker keeps its id: the STRING card recolours it by name
     row.innerHTML = `
-      <span class="channelLabel">${escapeHtml(ch)}:</span>
-      <input type="color" class="colorPicker channel_colorPicker" id="color${escapeHtml(ch)}" value="${escapeHtml(ctx.channelColors[ch] ?? '#cfcfcf')}" />
-      <input class="form-check-input channel_checkbox" type="checkbox" id="checkbox${escapeHtml(ch)}" />
-      <label class="channelCheckboxLabel" for="checkbox${escapeHtml(ch)}">Hide</label>
+      <span class="channelLabel" title="${escapeHtml(ch)}">${escapeHtml(ch)}</span>
+      <input type="color" class="channel_colorPicker" id="color${escapeHtml(ch)}" value="${escapeHtml(ctx.channelColors[ch] ?? '#cfcfcf')}" aria-label="Colour of channel ${escapeHtml(ch)}" />
+      <label class="channelCheckboxLabel"><input class="form-check-input channel_checkbox" type="checkbox" />Hide</label>
     `
     const picker = row.querySelector<HTMLInputElement>('.channel_colorPicker')!
     const hide = row.querySelector<HTMLInputElement>('.channel_checkbox')!
@@ -212,7 +216,7 @@ function buildChannelEditList(): void {
     hide.addEventListener('change', () =>
       setChannelVisibility(ch, !hide.checked)
     )
-    container.appendChild(row)
+    grid.appendChild(row)
   }
 }
 

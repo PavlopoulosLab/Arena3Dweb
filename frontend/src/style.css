@@ -1966,6 +1966,48 @@ body.mode-single .layout-panel .lp-step {
   }
 }
 
+/* Channel colours (Edit → Edges, ui/edge.ts): names, swatches and Hide
+   switches in aligned columns, the names as wide as the longest (≤ 14rem) */
+.channel-grid {
+  display: grid;
+  grid-template-columns: fit-content(14rem) auto auto;
+  justify-content: start;
+  align-items: center;
+  gap: 0.45rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.channel-grid .channel_subcontainer {
+  display: contents;
+}
+
+.channel-grid .channelLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.channel-grid .channel_colorPicker {
+  width: 2.4rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+}
+
+.channel-grid .channelCheckboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.channel-grid .channelCheckboxLabel .form-check-input {
+  margin: 0;
+}
+
 /* Groups card (ui/groups.ts) */
 .groups-list {
   max-height: 40vh;
@@ -1974,7 +2016,8 @@ body.mode-single .layout-panel .lp-step {
 
 .group-row {
   display: grid;
-  grid-template-columns: 1.6rem 1fr auto auto auto;
+  /* fixed count column: hull and select line up whatever the counts */
+  grid-template-columns: 1.6rem 1fr 3rem auto auto;
   align-items: center;
   gap: 0.5rem;
   padding: 0.2rem 0;
@@ -1999,6 +2042,8 @@ body.mode-single .layout-panel .lp-step {
 
 .group-row .group-count {
   color: var(--arena-text-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .group-row .group-hull {
