@@ -4,6 +4,7 @@ import { ctx } from '../three'
 
 import { bus } from '../bus'
 import { registerSelectionAction } from '../actions/right_click_menu'
+import { showStyleSection } from './style'
 import { showTab } from './tabs'
 import {
   MAX_PATH_ENDS,
@@ -180,6 +181,7 @@ function registerMenuActions(): void {
     order: 70,
     run: () => {
       showTab('#panel-style')
+      showStyleSection('nodes')
       const target = document.getElementById(
         'styleNodeTarget'
       ) as HTMLSelectElement | null

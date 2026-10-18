@@ -1,10 +1,13 @@
 // Rich editing — PLAN-ROADMAP Phase 24. Style a target set of nodes or edges
-// (colour, size, shape, width) or colour them by a palette; every change is
-// one undoable command and persists in sessions (colour/scale/shape/width).
+// (colour, size, shape, width, after Cytoscape's Style panel also opacity,
+// border, stretch, label text/colour/size, description, line type and arrow
+// colour) or colour them by a palette; every change is one undoable command
+// and persists in sessions.
 
 import * as THREE from 'three'
 import { ctx } from '../three'
 import type { NodeGeometryType } from '../three/Node'
+import type { LineType } from '../three/Edge'
 import type { Command } from '../commands/base'
 import { history } from '../commands/base'
 import { setLegend, type Legend, type LegendEntry } from './legend'
@@ -17,6 +20,7 @@ import {
   type SequentialPalette,
 } from './palettes'
 import { redrawIntraLayerEdges } from './edge'
+import { restyleNodeLabels } from './labels'
 
 // ---------------------------------------------------------------- targets
 export type NodeTarget = 'selected' | 'all' | `layer:${string}`
@@ -44,20 +48,34 @@ export function edgeTargets(target: EdgeTarget): number[] {
 }
 
 // ---------------------------------------------------------------- nodes
-type NodeStyle = {
+export type NodeStyle = {
   color: string
   imported: string
   scale: number
   shape: NodeGeometryType
+  alpha: number
+  border: { color: string; width: number }
+  stretch: [number, number, number]
+  label: string
+  labelColor: string
+  labelSize: number
+  descr: string
 }
 
-const nodeStyle = (i: number): NodeStyle => {
+export const nodeStyle = (i: number): NodeStyle => {
   const n = ctx.nodeObjects[i]
   return {
     color: n.color,
     imported: n.importedColor,
     scale: n.getScale(),
     shape: n.shape,
+    alpha: n.alpha,
+    border: { color: n.borderColor, width: n.borderWidth },
+    stretch: [...n.stretch],
+    label: n.label,
+    labelColor: n.labelColor,
+    labelSize: n.labelSize,
+    descr: n.descr,
   }
 }
 
@@ -90,8 +108,16 @@ export class NodeStyleCommand implements Command {
       }
       if (s.scale !== undefined) n.setScale(s.scale)
       if (s.shape !== undefined && s.shape !== n.shape) n.setGeometry(s.shape)
+      if (s.alpha !== undefined) n.setAlpha(s.alpha)
+      if (s.border !== undefined) n.setBorder(s.border.color, s.border.width)
+      if (s.stretch !== undefined) n.setStretch(s.stretch)
+      if (s.label !== undefined) n.label = s.label
+      if (s.labelColor !== undefined) n.labelColor = s.labelColor
+      if (s.labelSize !== undefined) n.labelSize = s.labelSize
+      if (s.descr !== undefined) n.descr = s.descr
     })
     ctx.nodeColorPrioritySource = priority
+    restyleNodeLabels()
     ctx.renderNodeLabelsFlag = true
   }
 
@@ -109,18 +135,40 @@ export class NodeStyleCommand implements Command {
   }
 }
 
-export function styleNodes(
-  target: NodeTarget,
-  patch: Partial<Omit<NodeStyle, 'imported'>>
+export type NodePatch = Partial<Omit<NodeStyle, 'imported'>>
+
+export function styleNodes(target: NodeTarget, patch: NodePatch): number {
+  return styleNodeIndices(nodeTargets(target), patch)
+}
+
+// The same for given nodes (Edit → Attributes: a row, the ticked rows or the
+// inspector's node). One undo step. @return nodes changed
+export function styleNodeIndices(
+  ids: number[],
+  patch: NodePatch,
+  description = 'Style nodes'
 ): number {
-  const ids = nodeTargets(target)
   if (ids.length)
-    history.execute(new NodeStyleCommand('Style nodes', ids, () => patch))
+    history.execute(new NodeStyleCommand(description, ids, () => patch))
   return ids.length
 }
 
 // ---------------------------------------------------------------- edges
-type EdgeStyle = { colors: string[]; imported: string[]; widthFactor: number }
+export type EdgePatch = {
+  color?: string
+  widthFactor?: number
+  opacityFactor?: number
+  lineType?: LineType
+  arrowColor?: string // '' = the edge's colour
+}
+type EdgeStyle = {
+  colors: string[]
+  imported: string[]
+  widthFactor: number
+  opacityFactor: number
+  lineType: LineType
+  arrowColor: string
+}
 
 export class EdgeStyleCommand implements Command {
   private readonly before: EdgeStyle[]
@@ -128,7 +176,7 @@ export class EdgeStyleCommand implements Command {
   constructor(
     public description: string,
     private readonly indices: number[],
-    private readonly patch: { color?: string; widthFactor?: number }
+    private readonly patch: EdgePatch
   ) {
     this.before = indices.map((i) => {
       const e = ctx.edgeObjects[i]
@@ -136,6 +184,9 @@ export class EdgeStyleCommand implements Command {
         colors: e.colors.slice(),
         imported: e.importedColors.slice(),
         widthFactor: e.widthFactor,
+        opacityFactor: e.opacityFactor,
+        lineType: e.lineType,
+        arrowColor: e.arrowColor,
       }
     })
   }
@@ -156,6 +207,11 @@ export class EdgeStyleCommand implements Command {
       }
       if (this.patch.widthFactor !== undefined)
         e.widthFactor = this.patch.widthFactor
+      if (this.patch.opacityFactor !== undefined)
+        e.opacityFactor = this.patch.opacityFactor
+      if (this.patch.lineType !== undefined) e.lineType = this.patch.lineType
+      if (this.patch.arrowColor !== undefined)
+        e.arrowColor = this.patch.arrowColor
     }
     if (this.patch.color) ctx.edgeFileColorPriority = true
     this.redraw()
@@ -166,19 +222,26 @@ export class EdgeStyleCommand implements Command {
       e.colors = this.before[k].colors.slice()
       e.importedColors = this.before[k].imported.slice()
       e.widthFactor = this.before[k].widthFactor
+      e.opacityFactor = this.before[k].opacityFactor
+      e.lineType = this.before[k].lineType
+      e.arrowColor = this.before[k].arrowColor
     })
     ctx.edgeFileColorPriority = this.beforePriority
     this.redraw()
   }
 }
 
-export function styleEdges(
-  target: EdgeTarget,
-  patch: { color?: string; widthFactor?: number }
+export function styleEdges(target: EdgeTarget, patch: EdgePatch): number {
+  return styleEdgeIndices(edgeTargets(target), patch)
+}
+
+// The same for given edges. One undo step. @return edges changed
+export function styleEdgeIndices(
+  ids: number[],
+  patch: EdgePatch,
+  description = 'Style edges'
 ): number {
-  const ids = edgeTargets(target)
-  if (ids.length)
-    history.execute(new EdgeStyleCommand('Style edges', ids, patch))
+  if (ids.length) history.execute(new EdgeStyleCommand(description, ids, patch))
   return ids.length
 }
 

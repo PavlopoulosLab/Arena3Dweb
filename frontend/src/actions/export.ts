@@ -227,9 +227,14 @@ export async function glbBlob(): Promise<Blob> {
   const scene = ctx.scene!.THREE_Object
   scene.updateMatrixWorld(true)
   const lines: Line2[] = []
+  // node outlines (Edit → Style) are back faces only, which glTF cannot say:
+  // the model would show a solid shell around each node, so they stay out
+  const outlines: THREE.Object3D[] = []
   scene.traverse((o) => {
     if (o instanceof Line2 && o.visible) lines.push(o)
+    if (o.userData.outline && o.visible) outlines.push(o)
   })
+  for (const o of outlines) o.visible = false
   const materials = new Map<string, THREE.MeshBasicMaterial>()
   const standIns = lines.map((l) => {
     // LineGeometry stores segments as (start, end) pairs: the polyline is
@@ -287,6 +292,7 @@ export async function glbBlob(): Promise<Blob> {
       plain.geometry.dispose()
       line.visible = true
     }
+    for (const o of outlines) o.visible = true
     for (const m of materials.values()) m.dispose()
   }
 }

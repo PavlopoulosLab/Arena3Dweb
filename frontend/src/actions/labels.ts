@@ -46,7 +46,7 @@ export function createLabels(): void {
   ctx.nodeObjects.forEach((node, i) => {
     const div = createLabel(
       container,
-      node.name,
+      node.getLabel(),
       `${ctx.nodeLayerNames[i]}_label`,
       'labels'
     )
@@ -66,6 +66,7 @@ export function createLabels(): void {
     layerLabelsDivs.push(div)
   }
   labelStyles = {}
+  restyleNodeLabels() // per-node overrides (Edit → Style)
   ctx.renderLayerLabelsFlag = true
 }
 
@@ -103,7 +104,7 @@ export function resizeLayerLabels(size: number): void {
 
 export function resizeNodeLabels(size: number): void {
   labelStyles['*'] = { ...labelStyles['*'], size }
-  for (const div of nodeLabelsDivs) div.style.fontSize = `${size}px`
+  restyleNodeLabels()
 }
 
 // Animate-loop rendering =====
@@ -169,8 +170,9 @@ export function registerLabelRendering(): void {
 
 // ---------------------------------------------------------------- label style
 // Colour, font, weight, halo, background and opacity of the node labels, for
-// every node ('*') or per layer; per-layer entries win. Re-applied whenever
-// labels are (re)created or the theme recolours them.
+// every node ('*') or per layer; per-layer entries win, and a node's own text,
+// colour and size (Edit → Style) win over both. Re-applied whenever labels
+// are (re)created or the theme recolours them.
 export interface LabelStyle {
   color?: string
   size?: number
@@ -210,10 +212,13 @@ export function applyLabelStyle(
 
 export function restyleNodeLabels(): void {
   nodeLabelsDivs.forEach((div, i) => {
+    const node = ctx.nodeObjects[i]
     const layer = ctx.nodeGroups[ctx.nodeLayerNames[i]]
     const st: LabelStyle = { ...labelStyles['*'], ...labelStyles[layer] }
-    div.style.color = st.color ?? ctx.labelColor
-    if (st.size) div.style.fontSize = `${st.size}px`
+    if (node) div.textContent = node.getLabel()
+    div.style.color = node?.labelColor || (st.color ?? ctx.labelColor)
+    const size = node?.labelSize || st.size
+    div.style.fontSize = size ? `${size}px` : NODE_LABEL_DEFAULT_SIZE
     div.style.fontWeight = st.weight ?? ''
     div.style.fontStyle = st.italic ? 'italic' : ''
     div.style.fontFamily = st.font ? FONTS[st.font] : ''

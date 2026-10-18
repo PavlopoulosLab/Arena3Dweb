@@ -70,7 +70,16 @@ export function checkHoverOverNode(event: {
     hovering = true
   }
 
-  if (changed) decideNodeLabelFlags()
+  if (changed) {
+    decideNodeLabelFlags()
+    // a node's description is its tooltip (Edit → Style)
+    const canvas = ctx.renderer?.domElement
+    if (canvas)
+      canvas.title =
+        ctx.lastHoveredNodeIndex === null
+          ? ''
+          : ctx.nodeObjects[ctx.lastHoveredNodeIndex].descr
+  }
   return hovering
 }
 

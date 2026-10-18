@@ -7,6 +7,7 @@ external-API payload with only src/trg) renders like v2.
 """
 
 import math
+import re
 from typing import Any
 
 from app import config
@@ -156,6 +157,63 @@ def _hive(value: Any) -> dict[str, Any] | None:
     }
 
 
+def _number(value: Any, lo: float, hi: float) -> float | None:
+    """A finite number clamped to [lo, hi], or None when unreadable."""
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return None
+    return min(hi, max(lo, v)) if math.isfinite(v) else None
+
+
+def _hex(value: Any) -> str | None:
+    """A #rrggbb colour, or None."""
+    return value if isinstance(value, str) and re.fullmatch(r"#[0-9a-fA-F]{6}", value) else None
+
+
+# Edge line types (Edit → Style)
+LINE_TYPES = ("solid", "dashed", "dotted")
+
+
+def _node_style(n: dict[str, Any]) -> None:
+    """Keep the optional per-node style (Edit → Style) when readable, drop it
+    otherwise; nodes without it render as before."""
+    checks: dict[str, Any] = {
+        "opacity": _number(n.get("opacity"), 0.05, 1),
+        "border_color": _hex(n.get("border_color")),
+        "border_width": _number(n.get("border_width"), 0, 10),
+        "label_color": _hex(n.get("label_color")),
+        "label_size": _number(n.get("label_size"), 4, 72),
+    }
+    stretch = n.get("stretch")
+    if isinstance(stretch, list) and len(stretch) == 3:
+        axes = [_number(v, 0.1, 10) for v in stretch]
+        checks["stretch"] = None if None in axes else axes
+    else:
+        checks["stretch"] = None
+    label = n.get("label")
+    checks["label"] = label[:200] if isinstance(label, str) and label.strip() else None
+    for key, value in checks.items():
+        if value is None:
+            n.pop(key, None)
+        else:
+            n[key] = value
+
+
+def _edge_style(e: dict[str, Any]) -> None:
+    """The same for the optional per-edge style."""
+    checks: dict[str, Any] = {
+        "opacity_factor": _number(e.get("opacity_factor"), 0, 1),
+        "line_type": e.get("line_type") if e.get("line_type") in LINE_TYPES else None,
+        "arrow_color": _hex(e.get("arrow_color")),
+    }
+    for key, value in checks.items():
+        if value is None:
+            e.pop(key, None)
+        else:
+            e[key] = value
+
+
 def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
     """Validate + fill defaults, returning the canonical session dict."""
     _validate(data)
@@ -200,6 +258,7 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
         n["annotations"] = (
             [str(t) for t in terms if not _empty(t)][:12] if isinstance(terms, list) else []
         )
+        _node_style(n)
 
     edges = [dict(e) for e in data["edges"]]
     edges, warnings = _handle_channels(edges)
@@ -207,6 +266,7 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
     for e in edges:
         e["opacity"] = _default(e.get("opacity"), 1)
         e["color"] = _default(e.get("color"), config.EDGE_DEFAULT_COLOR)
+        _edge_style(e)
 
     return {
         "scene": scene,

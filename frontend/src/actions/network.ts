@@ -11,6 +11,8 @@ import type {
   NetworkData,
   NodeModel,
   SessionData,
+  SessionEdge,
+  SessionNode,
 } from '../api/client'
 import { history } from '../commands/base'
 import { LoadNetworkCommand } from '../commands/scene'
@@ -147,6 +149,27 @@ export function loadSession(session: SessionData): void {
   history.execute(new LoadNetworkCommand(() => buildFromSession(session)))
 }
 
+// Edit → Style fields of a session row; the backend has checked them
+function restoreNodeStyle(node: Node, n: SessionNode): void {
+  if (n.opacity !== undefined) node.setAlpha(Number(n.opacity))
+  if (n.border_width && n.border_color)
+    node.setBorder(n.border_color, Number(n.border_width))
+  if (n.stretch?.length === 3)
+    node.setStretch(n.stretch.map(Number) as [number, number, number])
+  node.label = n.label ?? ''
+  node.labelColor = n.label_color ?? ''
+  node.labelSize = Number(n.label_size ?? 0)
+}
+
+function restoreEdgeStyle(edge: Edge, e: SessionEdge): void {
+  const width = Number(e.width_factor)
+  if (width && Number.isFinite(width)) edge.widthFactor = width
+  if (e.opacity_factor !== undefined)
+    edge.opacityFactor = Number(e.opacity_factor)
+  if (e.line_type) edge.lineType = e.line_type
+  edge.arrowColor = e.arrow_color ?? ''
+}
+
 // v2 importNetwork/initialize*FromJSON/setJSONExtras.
 export function buildFromSession(s: SessionData): void {
   const edgeDefaultColor = ctx.edgeDefaultColor
@@ -243,6 +266,7 @@ export function buildFromSession(s: SessionData): void {
     node.annotations = n.annotations ?? []
     if (n.shape && NODE_SHAPES.includes(n.shape as NodeGeometryType))
       node.setGeometry(n.shape as NodeGeometryType)
+    restoreNodeStyle(node, n)
     ctx.nodeObjects.push(node)
     ctx.layers[ctx.layerGroups[n.layer]].addNode(node.sphere)
   })
@@ -287,15 +311,11 @@ export function buildFromSession(s: SessionData): void {
     }
   })
   createEdgeObjects(rows)
-  // per-edge width (Style panel): rows were grouped per src---trg pair
-  const factor = new Map(
-    s.edges
-      .filter((e) => e.width_factor !== undefined)
-      .map((e) => [`${e.src}---${e.trg}`, Number(e.width_factor)])
-  )
+  // per-edge style (Style panel): rows were grouped per src---trg pair
+  const rowOf = new Map(s.edges.map((e) => [`${e.src}---${e.trg}`, e]))
   for (const edge of ctx.edgeObjects) {
-    const f = factor.get(`${edge.source}---${edge.target}`)
-    if (f && Number.isFinite(f)) edge.widthFactor = f
+    const row = rowOf.get(`${edge.source}---${edge.target}`)
+    if (row) restoreEdgeStyle(edge, row)
   }
   createLabels()
 

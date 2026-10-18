@@ -15,6 +15,18 @@ import { hivePath } from './hive'
 // Parallel channel lanes: this many line widths apart
 const PARALLEL_SPACING = 1.6
 
+export type LineType = 'solid' | 'dashed' | 'dotted'
+export const LINE_TYPE_LABELS: Record<LineType, string> = {
+  solid: 'Solid',
+  dashed: 'Dashed',
+  dotted: 'Dotted',
+}
+// dash and gap, in line widths, with a floor for hairlines
+const DASHES: Record<Exclude<LineType, 'solid'>, [number, number]> = {
+  dashed: [6, 4],
+  dotted: [1.5, 3],
+}
+
 // A unit vector across the line p1→p2 in the layer's plane (local x is the
 // layer normal), or across it some other way when the line runs along x.
 function sideways(p1: THREE.Vector3, p2: THREE.Vector3): THREE.Vector3 {
@@ -54,6 +66,9 @@ export class Edge {
 
   isSelected = false
   widthFactor = 1 // per-edge width multiplier (Style panel)
+  opacityFactor = 1 // per-edge opacity multiplier (Style panel)
+  lineType: LineType = 'solid'
+  arrowColor = '' // '' = the edge's colour
 
   // in single-network mode every edge follows the intra-layer settings
   private get asInter(): boolean {
@@ -139,7 +154,15 @@ export class Edge {
       this.decideWidth()
     )
 
-    if (ctx.isDirectionEnabled) this.createArrow(path.slice(-2), color)
+    if (ctx.isDirectionEnabled)
+      this.createArrow(path.slice(-2), this.decideArrowColor(color))
+  }
+
+  // a custom arrow colour, unless the selection highlight shows
+  decideArrowColor(edgeColor: string): string {
+    return this.arrowColor && !(this.isSelected && ctx.selectedEdgeColorFlag)
+      ? this.arrowColor
+      : edgeColor
   }
 
   // Thick lines: WebGL renders every line primitive at exactly 1px, so real
@@ -169,7 +192,16 @@ export class Edge {
     // units. Assign the uniform's value directly: the `resolution` setter
     // copies, and we need every edge to share the one mutable Vector2.
     material.uniforms.resolution.value = edgeResolution
-    return new Line2(geometry, material)
+    const line = new Line2(geometry, material)
+    if (this.lineType !== 'solid') {
+      const [dash, gap] = DASHES[this.lineType]
+      const w = Math.max(width, 1)
+      material.dashed = true
+      material.dashSize = dash * w
+      material.gapSize = gap * w
+      line.computeLineDistances()
+    }
+    return line
   }
 
   decideColor(i = 0, forExport = false): string {
@@ -194,7 +226,7 @@ export class Edge {
       opacity = this.asInter
         ? ctx.interLayerEdgeOpacity
         : ctx.intraLayerEdgeOpacity
-    return opacity
+    return opacity * this.opacityFactor
   }
 
   // Mirrors decideOpacity. Weights arrive scaled to [0-1] by the backend, so
@@ -355,7 +387,7 @@ export class Edge {
         curveGroup,
         curvePoints,
         points,
-        color,
+        this.decideArrowColor(color),
         channelName
       )
 

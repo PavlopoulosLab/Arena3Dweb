@@ -9,6 +9,31 @@ import { api, type SessionData } from '../api/client'
 import { store } from '../store'
 import { ctx } from '../three'
 import { network3dSessionState } from './modes'
+import type { Edge } from '../three/Edge'
+import type { Node } from '../three/Node'
+
+// Edit → Style per-node / per-edge style, only what differs from the default
+// so sessions stay small
+function nodeStyleFields(n: Node): Partial<SessionData['nodes'][number]> {
+  return {
+    ...(n.alpha !== 1 ? { opacity: n.alpha } : {}),
+    ...(n.borderWidth > 0
+      ? { border_color: n.borderColor, border_width: n.borderWidth }
+      : {}),
+    ...(n.stretch.some((v) => v !== 1) ? { stretch: [...n.stretch] } : {}),
+    ...(n.label ? { label: n.label } : {}),
+    ...(n.labelColor ? { label_color: n.labelColor } : {}),
+    ...(n.labelSize ? { label_size: n.labelSize } : {}),
+  }
+}
+
+function edgeStyleFields(e: Edge): Partial<SessionData['edges'][number]> {
+  return {
+    ...(e.opacityFactor !== 1 ? { opacity_factor: e.opacityFactor } : {}),
+    ...(e.lineType !== 'solid' ? { line_type: e.lineType } : {}),
+    ...(e.arrowColor ? { arrow_color: e.arrowColor } : {}),
+  }
+}
 
 // v2 collected scene/layers/nodes/edges through the Shiny bridge; here we read
 // the Three.js objects directly. Values are numbers (v2 stringified them via
@@ -61,6 +86,7 @@ export function collectSession(): SessionData {
       descr: n.descr,
       annotations: n.annotations,
       shape: n.shape,
+      ...nodeStyleFields(n),
       ...(layered?.nodes[ctx.nodeLayerNames[i]]
         ? { layered_position: layered.nodes[ctx.nodeLayerNames[i]] }
         : {}),
@@ -92,6 +118,7 @@ function collectEdges(): SessionData['edges'] {
           color: edge.decideColor(j, true),
           channel,
           width_factor: edge.widthFactor,
+          ...edgeStyleFields(edge),
         })
       })
     } else {
@@ -101,6 +128,7 @@ function collectEdges(): SessionData['edges'] {
         opacity: edge.weights[0],
         color: edge.decideColor(0, true),
         width_factor: edge.widthFactor,
+        ...edgeStyleFields(edge),
       })
     }
   }

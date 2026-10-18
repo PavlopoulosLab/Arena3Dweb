@@ -92,6 +92,42 @@ def test_hive_state_kept_or_dropped() -> None:
         assert normalize_session({**_minimal(), "hive": bad})["hive"] is None
 
 
+def test_node_and_edge_style_kept_clamped_or_dropped() -> None:
+    data = _minimal()
+    data["nodes"][0].update(
+        opacity="0.4",
+        border_color="#ff0000",
+        border_width=30,
+        stretch=[2, "0.5", 1],
+        label="TP53 (tumour suppressor)",
+        label_color="#00ff00",
+        label_size=2,
+    )
+    data["nodes"][1].update(
+        opacity="x", border_color="red", stretch=[1, 2], label="  ", label_color="#12345"
+    )
+    data["edges"][0].update(opacity_factor=1.5, line_type="dashed", arrow_color="#0000ff")
+    s = normalize_session(data)
+    a, b = s["nodes"]
+    assert a["opacity"] == 0.4
+    assert a["border_color"] == "#ff0000"
+    assert a["border_width"] == 10  # clamped
+    assert a["stretch"] == [2.0, 0.5, 1.0]
+    assert a["label"] == "TP53 (tumour suppressor)"
+    assert a["label_color"] == "#00ff00"
+    assert a["label_size"] == 4  # clamped
+    for key in ("opacity", "border_color", "stretch", "label", "label_color"):
+        assert key not in b
+    e = s["edges"][0]
+    assert e["opacity_factor"] == 1.0
+    assert e["line_type"] == "dashed"
+    assert e["arrow_color"] == "#0000ff"
+    odd = normalize_session(
+        {**_minimal(), "edges": [{"src": "A_L1", "trg": "B_L1", "line_type": "wavy"}]}
+    )
+    assert "line_type" not in odd["edges"][0]
+
+
 def test_missing_mandatory_object_raises() -> None:
     with pytest.raises(SessionValidationError):
         normalize_session({"layers": [{"name": "L1"}], "nodes": []})

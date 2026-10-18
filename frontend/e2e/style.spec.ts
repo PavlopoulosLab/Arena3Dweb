@@ -57,11 +57,22 @@ test('style panel edits, palettes, colour-blind mode, CVD preview, session', asy
   const s1 = await page.evaluate(snap)
   expect(new Set(s1.layer1)).toEqual(new Set(['#ff00aa,2,tetrahedron']))
 
+  // Nodes | Edges: one table at a time
+  await expect(page.locator('#styleEdges')).toBeHidden()
+  await page.locator('#styleShowEdges').click()
+  await expect(page.locator('#styleNodes')).toBeHidden()
+  await expect(page.locator('#styleShowEdges')).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  )
+  await expect(page.locator('#styleEdgeTotal')).toHaveText(/^\d+$/)
   await page.locator('#styleEdgeTarget').selectOption('inter')
   await page.locator('#styleEdgeWidth').fill('3')
   await page.locator('#styleEdgeWidthApply').click()
   expect((await page.evaluate(snap)).wide).toBe(s1.inter)
 
+  await page.locator('#styleShowNodes').click()
+  await expect(page.locator('#styleEdges')).toBeHidden()
   await page.locator('#styleNodeTarget').selectOption('all')
   await page.locator('#styleColorBy').selectOption('degree')
   await expect(page.locator('#styleSequential')).toBeVisible()

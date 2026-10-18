@@ -2758,3 +2758,155 @@ body.mode-single .layout-panel .lp-step {
 .workspace-remove:not(:disabled):hover {
   color: #d64545;
 }
+
+/* Style panel: the Nodes | Edges switch over its two tables, as in Edit →
+   Attributes, with each side's total */
+.style-head {
+  margin-bottom: 0.6rem;
+}
+
+.style-badge {
+  margin-left: 0.25rem;
+  font-size: 0.72rem;
+  color: var(--arena-text-muted);
+}
+
+.btn.active .style-badge {
+  color: inherit;
+}
+
+/* Style panel property tables (ui/style.ts), after Cytoscape's Style panel:
+   what the targets show now, the property, a new value, and Set / Reset */
+.style-props {
+  display: grid;
+  margin-bottom: 0.75rem;
+  border-top: 1px solid var(--arena-border);
+}
+
+.style-props__row {
+  display: grid;
+  /* fixed Set / Reset column, so the values line up row to row */
+  grid-template-columns: 2.4rem 5.6rem minmax(0, 1fr) 5.3rem;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--arena-border);
+}
+
+.style-props__head {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--arena-text-muted);
+}
+
+.style-props__now {
+  height: 1.6rem;
+  line-height: 1.5rem;
+  padding: 0 0.15rem;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.72rem;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: 4px;
+}
+
+.style-props__now--mixed {
+  font-style: italic;
+  color: var(--arena-text-muted);
+}
+
+.style-props__name {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.style-props__value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.style-props__value input[type='range'] {
+  flex: 1 1 3rem;
+  min-width: 2.5rem;
+}
+
+.style-props__value input[type='color'] {
+  width: 2.2rem;
+  height: 1.6rem;
+  padding: 0;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+}
+
+.style-props__value .form-control,
+.style-props__value .form-select {
+  flex: 1 1 6rem;
+  min-width: 0;
+}
+
+.style-props__num {
+  min-width: 2.3rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.style-props__stack {
+  display: grid;
+  flex: 1 1 100%;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.style-props__axis {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.style-props__axis input[type='range'] {
+  min-width: 0;
+}
+
+.style-props__axis abbr {
+  width: 0.9rem;
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+
+.style-props__actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.style-props__actions .btn {
+  padding: 0.1rem 0.45rem;
+  font-size: 0.78rem;
+}
+
+.style-props__count {
+  color: var(--arena-text-muted);
+}
+
+/* phones: the new value goes under the property */
+@media (max-width: 480px) {
+  .style-props__row {
+    grid-template-columns: 2.4rem minmax(0, 1fr) 5.3rem;
+  }
+
+  .style-props__value {
+    grid-column: 2 / -1;
+    grid-row: 2;
+  }
+
+  .style-props__head {
+    display: none;
+  }
+}

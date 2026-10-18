@@ -79,6 +79,19 @@ export class Node {
   annotations: string[] = [] // attribute-file / enrichment terms (pies, hulls)
   shape: NodeGeometryType = 'sphere'
 
+  // Edit → Style, per node: opacity, an outline (none at width 0), a
+  // stretch along the layer's z / y / x (width, height, depth) on top of the
+  // size, and label overrides ('' / 0 = the name / the label style)
+  alpha = 1
+  borderColor = '#ffffff'
+  borderWidth = 0
+  outline: THREE.Mesh | null = null
+  stretch: [number, number, number] = [1, 1, 1]
+  label = ''
+  labelColor = ''
+  labelSize = 0
+  private size = 1
+
   constructor({
     id = 0,
     name = '',
@@ -172,6 +185,10 @@ export class Node {
     return (this.sphere.material as THREE.MeshStandardMaterial).opacity
   }
 
+  getLabel(): string {
+    return this.label || this.name
+  }
+
   getColor(): string {
     let color = this.color
     if (ctx.nodeColorPrioritySource === 'default') color = this.importedColor
@@ -181,7 +198,7 @@ export class Node {
   }
 
   getScale(): number {
-    return this.sphere.scale.x
+    return this.size
   }
 
   getCluster(): string {
@@ -192,8 +209,53 @@ export class Node {
     this.sphere.position[axis] = value
   }
 
+  // hover / lasso feedback: a fraction of the node's own opacity
   setOpacity(value: number): void {
-    ;(this.sphere.material as THREE.MeshStandardMaterial).opacity = value
+    ;(this.sphere.material as THREE.MeshStandardMaterial).opacity =
+      value * this.alpha
+    if (this.outline)
+      (this.outline.material as THREE.MeshBasicMaterial).opacity =
+        value * this.alpha
+  }
+
+  setAlpha(value: number): void {
+    this.alpha = value
+    this.setOpacity(1)
+  }
+
+  // An inverted hull: the node's geometry drawn back faces only, a little
+  // larger, so only its rim shows around the node. Not pickable.
+  setBorder(color: string, width: number): void {
+    this.borderColor = color
+    this.borderWidth = width
+    if (width <= 0) {
+      if (this.outline) {
+        this.sphere.remove(this.outline)
+        ;(this.outline.material as THREE.Material).dispose()
+        this.outline = null
+      }
+      return
+    }
+    if (!this.outline) {
+      this.outline = new THREE.Mesh(
+        this.sphere.geometry,
+        new THREE.MeshBasicMaterial({
+          side: THREE.BackSide,
+          transparent: true,
+          opacity: this.alpha,
+        })
+      )
+      this.outline.raycast = () => {}
+      this.outline.userData.outline = true
+      this.sphere.add(this.outline)
+    }
+    ;(this.outline.material as THREE.MeshBasicMaterial).color.set(color)
+    this.outline.scale.setScalar(1 + width / SPHERE_RADIUS)
+  }
+
+  setStretch(stretch: [number, number, number]): void {
+    this.stretch = [...stretch]
+    this.setScale(this.size)
   }
 
   setGeometry(type: NodeGeometryType): void {
@@ -281,6 +343,7 @@ export class Node {
     }
     this.sphere.geometry.dispose()
     this.sphere.geometry = geometry
+    if (this.outline) this.outline.geometry = geometry
     this.shape = type
   }
 
@@ -293,7 +356,9 @@ export class Node {
   }
 
   setScale(value: number): void {
-    this.sphere.scale.x = this.sphere.scale.y = this.sphere.scale.z = value
+    this.size = value
+    const [w, h, d] = this.stretch
+    this.sphere.scale.set(value * d, value * h, value * w)
   }
 
   setCluster(clusterName: string): void {

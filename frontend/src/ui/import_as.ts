@@ -17,6 +17,8 @@ import {
   unlinkSameNames,
 } from '../actions/merge'
 import { redrawIntraLayerEdges, setChannelColor } from '../actions/edge'
+import { restyleNodeLabels } from '../actions/labels'
+import { nodeStyle } from '../actions/style'
 import {
   network3dSessionState,
   reconcileNetworkMode,
@@ -415,6 +417,7 @@ function expandView(
         url: n.url,
         descr: n.descr,
         annotations: [...n.annotations],
+        style: nodeStyle(i), // Edit → Style
       },
     ])
   )
@@ -435,7 +438,16 @@ function expandView(
     n.url = look.url
     n.descr = look.descr
     n.annotations = look.annotations
+    const st = look.style
+    n.setGeometry(st.shape)
+    n.setAlpha(st.alpha)
+    n.setBorder(st.border.color, st.border.width)
+    n.setStretch(st.stretch)
+    n.label = st.label
+    n.labelColor = st.labelColor
+    n.labelSize = st.labelSize
   })
+  restyleNodeLabels()
   if (layered) restoreNetwork3dState(layered.layers, layered.nodes)
   placeNearNeighbours(new Set(grown.added))
   redrawIntraLayerEdges()

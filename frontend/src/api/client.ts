@@ -78,6 +78,15 @@ export interface SessionNode {
   annotations?: string[]
   shape?: string
   layered_position?: LayoutPosition // 3D-network mode, as [y, z(, x)]
+  // Edit → Style, only when set: opacity, outline, stretch along the layer's
+  // z / y / x (width, height, depth), label text / colour / size
+  opacity?: number
+  border_color?: string
+  border_width?: number
+  stretch?: [number, number, number]
+  label?: string
+  label_color?: string
+  label_size?: number
 }
 
 export interface SessionEdge {
@@ -87,6 +96,10 @@ export interface SessionEdge {
   color: string
   channel?: string
   width_factor?: number // Style panel per-edge width multiplier
+  // Edit → Style, only when set
+  opacity_factor?: number
+  line_type?: 'solid' | 'dashed' | 'dotted'
+  arrow_color?: string
 }
 
 export interface SessionData {

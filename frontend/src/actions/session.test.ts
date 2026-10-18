@@ -196,6 +196,60 @@ describe('collectSession', () => {
     expect(ctx.edgeObjects).toHaveLength(1)
   })
 
+  it('saves the Edit → Style overrides, only when set, and restores them', () => {
+    seed()
+    const [a, b] = ctx.nodeObjects
+    a.setAlpha(0.5)
+    a.setBorder('#ff0000', 2)
+    a.setStretch([1, 2, 1])
+    a.label = 'Hub'
+    a.labelColor = '#00ff00'
+    a.labelSize = 18
+    const e = ctx.edgeObjects[0]
+    e.opacityFactor = 0.3
+    e.lineType = 'dotted'
+    e.arrowColor = '#0000ff'
+    const out = collectSession()
+    expect(out.nodes[0]).toMatchObject({
+      opacity: 0.5,
+      border_color: '#ff0000',
+      border_width: 2,
+      stretch: [1, 2, 1],
+      label: 'Hub',
+      label_color: '#00ff00',
+      label_size: 18,
+    })
+    for (const key of ['opacity', 'border_color', 'stretch', 'label'])
+      expect(out.nodes[1]).not.toHaveProperty(key)
+    expect(b.getLabel()).toBe('B')
+    expect(out.edges[0]).toMatchObject({
+      opacity_factor: 0.3,
+      line_type: 'dotted',
+      arrow_color: '#0000ff',
+    })
+
+    resetContext()
+    store.update({ network: null })
+    buildFromSession(out)
+    const [a2, b2] = ctx.nodeObjects
+    expect(a2.alpha).toBe(0.5)
+    expect(a2.outline).not.toBeNull()
+    expect([a2.borderColor, a2.borderWidth]).toEqual(['#ff0000', 2])
+    expect(a2.stretch).toEqual([1, 2, 1])
+    expect([a2.getLabel(), a2.labelColor, a2.labelSize]).toEqual([
+      'Hub',
+      '#00ff00',
+      18,
+    ])
+    expect([b2.alpha, b2.outline, b2.getLabel()]).toEqual([1, null, 'B'])
+    const e2 = ctx.edgeObjects[0]
+    expect([e2.opacityFactor, e2.lineType, e2.arrowColor]).toEqual([
+      0.3,
+      'dotted',
+      '#0000ff',
+    ])
+  })
+
   it('emits one edge row per channel', () => {
     ctx.scene = new Scene()
     ctx.channelColors = { c1: '#111', c2: '#222' }

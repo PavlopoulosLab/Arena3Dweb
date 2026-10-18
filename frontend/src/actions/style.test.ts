@@ -1,4 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+import type {
+  ArrowHelper,
+  MeshBasicMaterial,
+  MeshStandardMaterial,
+} from 'three'
+import type { Line2 } from 'three/addons/lines/Line2.js'
 import { Edge, Layer, Node, Scene, ctx, resetContext } from '../three'
 import { history } from '../commands/base'
 import {
@@ -102,6 +108,98 @@ describe('style commands', () => {
     expect(ctx.edgeObjects[1].widthFactor).toBe(1)
     history.undo()
     expect(ctx.edgeObjects[0].widthFactor).toBe(1)
+  })
+
+  it('sets opacity, border, proportions, labels and descriptions, undoes in one step', () => {
+    ctx.nodeObjects[0].isSelected = true
+    ctx.nodeObjects[1].isSelected = true
+    styleNodes('selected', {
+      alpha: 0.4,
+      border: { color: '#ff0000', width: 2 },
+      stretch: [1, 3, 0.5],
+      label: 'Hub',
+      labelColor: '#00ff00',
+      labelSize: 20,
+      descr: 'a hub',
+    })
+    const [a, b, c] = ctx.nodeObjects
+    expect(a.alpha).toBe(0.4)
+    expect((a.sphere.material as MeshStandardMaterial).opacity).toBe(0.4)
+    expect(a.outline).not.toBeNull()
+    expect(a.sphere.children).toContain(a.outline)
+    expect(a.outline!.geometry).toBe(a.sphere.geometry)
+    // width = z, height = y, depth = x (out of the floor); size stays 1
+    expect(a.sphere.scale.toArray()).toEqual([0.5, 3, 1])
+    expect(a.getScale()).toBe(1)
+    expect([b.getLabel(), b.labelColor, b.labelSize, b.descr]).toEqual([
+      'Hub',
+      '#00ff00',
+      20,
+      'a hub',
+    ])
+    expect(c.getLabel()).toBe('A') // not selected
+    expect(c.outline).toBeNull()
+    history.undo()
+    expect(a.alpha).toBe(1)
+    expect(a.outline).toBeNull()
+    expect(a.sphere.children).toHaveLength(0)
+    expect(a.sphere.scale.toArray()).toEqual([1, 1, 1])
+    expect([b.getLabel(), b.labelColor, b.labelSize, b.descr]).toEqual([
+      'B',
+      '',
+      0,
+      '',
+    ])
+  })
+
+  it('keeps proportions through a resize and the outline through a new shape', () => {
+    styleNodes('all', {
+      stretch: [2, 1, 1],
+      border: { color: '#fff', width: 1 },
+    })
+    const n = ctx.nodeObjects[0]
+    n.setScale(3) // e.g. scaled by a topology metric
+    expect(n.sphere.scale.toArray()).toEqual([3, 3, 6])
+    styleNodes('all', { shape: 'box' })
+    expect(n.outline!.geometry).toBe(n.sphere.geometry)
+  })
+
+  it('hover feedback is relative to the node opacity', () => {
+    const n = ctx.nodeObjects[0]
+    n.setAlpha(0.6)
+    n.setOpacity(0.5)
+    expect(n.getOpacity()).toBeCloseTo(0.3)
+    n.setOpacity(1)
+    expect(n.getOpacity()).toBeCloseTo(0.6)
+  })
+
+  it('sets edge opacity, line type and arrow colour, undoes', () => {
+    ctx.isDirectionEnabled = true
+    styleEdges('intra', {
+      opacityFactor: 0.5,
+      lineType: 'dashed',
+      arrowColor: '#0000ff',
+    })
+    const e = ctx.edgeObjects[0]
+    expect(e.decideOpacity()).toBeCloseTo(ctx.intraLayerEdgeOpacity * 0.5)
+    expect(e.decideArrowColor('#cccccc')).toBe('#0000ff')
+    const [line, arrow] = e.THREE_Object.children as [Line2, ArrowHelper]
+    expect(line.material.dashed).toBe(true)
+    expect(line.geometry.attributes.instanceDistanceStart).toBeDefined()
+    expect(
+      (arrow.cone.material as MeshBasicMaterial).color.getHexString()
+    ).toBe('0000ff')
+    expect(ctx.edgeObjects[1].lineType).toBe('solid')
+    // the selection highlight wins over a custom arrow colour
+    e.isSelected = true
+    expect(e.decideArrowColor('#cccccc')).toBe('#cccccc')
+    history.undo()
+    expect([e.opacityFactor, e.lineType, e.arrowColor]).toEqual([
+      1,
+      'solid',
+      '',
+    ])
+    expect((e.THREE_Object.children[0] as Line2).material.dashed).toBe(false)
   })
 
   it('colours by layer with the palette order of the layers', () => {

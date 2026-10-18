@@ -11,7 +11,10 @@ class SessionImportResponse(BaseModel):
 
     scene: dict[str, Any]
     layers: list[dict[str, Any]]
+    # optional per-node style (Edit → Style): opacity, border_color, border_width,
+    # stretch [x, y, z], label, label_color, label_size
     nodes: list[dict[str, Any]]
+    # optional per-edge style: opacity_factor, line_type, arrow_color
     edges: list[dict[str, Any]]
     universalLabelColor: str
     direction: bool

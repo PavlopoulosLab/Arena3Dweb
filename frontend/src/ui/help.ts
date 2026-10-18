@@ -97,7 +97,8 @@ const HELP_HTML = `
       layers, cluster, or run a group layout.</li>
     <li><b>Explore</b> — search nodes, expand neighbourhoods, follow paths, hide weak edges.</li>
     <li><b>Analyse</b> — Analyze → node metrics, network statistics, layer comparison, enrichment.</li>
-    <li><b>Style and export</b> — Edit → Style for colours, sizes, shapes and colour-blind tools; File for images,
+    <li><b>Style and export</b> — Edit → Style for colours, sizes, shapes, borders, labels, line types and colour-blind tools;
+      File for images,
       3D models, video, other formats or NORMA.</li>
   </ol>
   <p>Step-by-step recipes for the usual tasks are on the <i>How to…</i> page.</p>
@@ -949,7 +950,7 @@ const HELP_HTML = `
     <li><i>Label Style</i>: colour, font (system, serif, monospace), bold, italic, a dark halo for light backgrounds,
       a background pill and opacity — applied to all node labels or to the labels of the layers selected in
       Layout, so each layer can read differently; undoable. Labels keep the theme colour until a colour is
-      applied.</li>
+      applied. A node's own label text, colour and font size (Edit → Style) win over these.</li>
     <li><i>Node Geometry</i>: sphere, cube, diamond, cone, cylinder, tetrahedron, capsule, torus, icosahedron,
       dodecahedron, pyramid, disc, hexagonal prism or ring — for all nodes, or for the <i>Selected layers</i> so that
       each layer gets its own shape (Edit → Style sets shapes per node; Colour-Blind Mode gives every layer a
@@ -1033,8 +1034,22 @@ const HELP_HTML = `
   <h2>Edit → Style</h2>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/style.png" alt="The Edit → Style panel" loading="lazy">
   <p>
-    <b>Nodes.</b> Choose what to change (<i>Selected nodes</i>, <i>All nodes</i> or one layer), then apply a colour, a
-    size or a shape (sphere, cube, diamond, cone, cylinder, tetrahedron). <i>Colour by</i> colours nodes by layer,
+    The <i>Nodes</i> and <i>Edges</i> buttons at the top switch between the two tables (each with its total), as
+    in Edit → Attributes; <i>Colour Vision</i> stays below both.
+  </p>
+  <p>
+    <b>Nodes.</b> Choose what to change (<i>Selected nodes</i>, <i>All nodes</i> or one layer); the count beside it
+    says how many nodes that is. The table works like Cytoscape's Style panel: each row shows what those nodes have
+    <i>Now</i> (one value, or <i>mixed</i> when they differ), a new value and <i>Set</i>; <i>Reset</i> takes a
+    per-node setting away again. The rows are fill colour; opacity; border (a rim of the chosen colour and width
+    around the node); size; proportions (width, height and depth: stretched along the floor's two sides and out of
+    it, on top of the size; <i>Lock width, height and depth</i> keeps the three equal); shape (sphere, cube,
+    diamond, cone, cylinder, tetrahedron and more); label (text in place of the node name); label colour and font
+    size (over the label style of Edit → Nodes); and description (shown when the pointer rests on the node, and by
+    right-click → Description). Every Set and Reset is one undo step.
+  </p>
+  <p>
+    <i>Colour by</i> colours nodes by layer,
     cluster, first annotation or degree, with a palette: <i>Distinct</i> (checked for colour-blind readers),
     <i>Okabe–Ito</i> (the standard colour-blind-safe set) or, for degree, <i>Blues</i> / <i>Cividis</i> (colour-blind
     optimised). Palettes have 8 colours; further groups are grey rather than repeating a colour. <i>Uploaded values</i>
@@ -1042,14 +1057,16 @@ const HELP_HTML = `
     centred on zero when the column has values on both sides of it. Every colouring updates the legend.
   </p>
   <p>
-    <b>Edges.</b> Choose all, selected, intra-layer or inter-layer edges and set a colour or a width (×0.25–5);
-    <i>Channel Palette</i> recolours the channels.
+    <b>Edges.</b> Choose all, selected, intra-layer or inter-layer edges; the same table sets their colour, width
+    (×0.25–5), opacity (×0.05–1, multiplying the opacity set in Edit → Edges or by weight), line type (solid,
+    dashed or dotted) and arrow colour (arrows show when Direction is on; <i>Reset</i> makes them follow the edge
+    colour again). <i>Channel Palette</i> recolours the channels with the palette chosen beside it.
   </p>
   <p class="last_p">
     <b>Colour vision.</b> <i>Colour-Blind Friendly Mode</i> switches to Okabe–Ito colours by layer (or by cluster
     after clustering), recolours channels, and gives each layer its own node shape, so groups never rely on colour
     alone. <i>Preview as</i> simulates protanopia, deuteranopia, tritanopia or achromatopsia on the view, to check a
-    figure before publishing. Shapes, colours, sizes and widths are saved in sessions.
+    figure before publishing. Everything set in this panel is saved in sessions.
   </p>
 </div>
 
