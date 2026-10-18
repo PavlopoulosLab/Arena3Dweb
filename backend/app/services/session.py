@@ -137,7 +137,8 @@ def _edge_shape(value: Any) -> str:
 
 def _hive(value: Any) -> dict[str, Any] | None:
     """The hive plot arrangement (curved links; the plane its axes radiate in,
-    as two directions), or None when it is off or unreadable."""
+    as two directions; axes in that plane or spread in 3D — sessions from before
+    3D axes are flat), or None when it is off or unreadable."""
     if not isinstance(value, dict):
         return None
     try:
@@ -147,7 +148,12 @@ def _hive(value: Any) -> dict[str, Any] | None:
         return None
     if len(right) != 3 or len(up) != 3 or not all(math.isfinite(v) for v in right + up):
         return None
-    return {"curved": bool(value.get("curved", True)), "right": right, "up": up}
+    return {
+        "curved": bool(value.get("curved", True)),
+        "right": right,
+        "up": up,
+        "axes": "3d" if value.get("axes") == "3d" else "flat",
+    }
 
 
 def normalize_session(data: dict[str, Any]) -> dict[str, Any]:

@@ -26,6 +26,8 @@ export interface HiveState {
   curved: boolean
   right: [number, number, number]
   up: [number, number, number]
+  // the axes in that plane (default), or spread through 3D from its centre
+  axes?: 'flat' | '3d'
 }
 // Channels as parallel lines side by side, as STRING draws them
 export const DEFAULT_EDGE_SHAPE: EdgeShape = 'parallel'

@@ -1,9 +1,16 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { Node, Layer, Scene, Edge, ctx, resetContext } from '../three'
 import {
+  clearPathHighlight,
+  clearSelection,
   edgesBelowThreshold,
   expandSelection,
+  highlightPathsBetweenSelected,
+  invertSelection,
   selectByAttribute,
+  selectByLinks,
+  selectComponents,
+  selectNodesOfSelectedLayers,
   selectPathBetweenSelected,
   shortestPath,
 } from './explore'
@@ -101,5 +108,88 @@ describe('edge weight threshold', () => {
     expect(edgesBelowThreshold()).toBe(1)
     expect(ctx.edgeObjects[1].decideOpacity()).toBe(0)
     expect(ctx.edgeObjects[0].decideOpacity()).toBeGreaterThan(0)
+  })
+})
+
+describe('whole-selection tools', () => {
+  it('selects the connected component, within or across layers', () => {
+    ctx.nodeObjects[0].isSelected = true
+    expect(selectComponents('within')).toBe(2)
+    expect(selected()).toEqual([0, 1, 2])
+    expect(selectComponents('across')).toBe(2)
+    expect(selected()).toEqual([0, 1, 2, 3, 4])
+  })
+
+  it('inverts and clears the selection, edges included', () => {
+    ctx.nodeObjects[0].isSelected = true
+    expect(invertSelection()).toBe(4)
+    expect(selected()).toEqual([1, 2, 3, 4])
+    ctx.edgeObjects[0].select()
+    clearSelection()
+    expect(selected()).toEqual([])
+    expect(ctx.edgeObjects.some((e) => e.isSelected)).toBe(false)
+  })
+
+  it('selects the nodes of the selected layers', () => {
+    expect(() => selectNodesOfSelectedLayers()).toThrow(/Select a layer/)
+    ctx.layers[1].isSelected = true
+    expect(selectNodesOfSelectedLayers()).toBe(2)
+    expect(selected()).toEqual([3, 4])
+  })
+
+  it('selects the hubs: nodes with at least N links', () => {
+    expect(selectByLinks(2, 'within')).toBe(1)
+    expect(selected()).toEqual([1]) // B: A-B and B-C
+    expect(selectByLinks(1, 'within')).toBe(5)
+  })
+})
+
+describe('highlightPathsBetweenSelected', () => {
+  it('highlights the paths and can select the nodes along them', () => {
+    ctx.nodeObjects[0].isSelected = true
+    ctx.nodeObjects[2].isSelected = true
+    expect(highlightPathsBetweenSelected('within', true)).toEqual({
+      ends: 2,
+      pairs: 1,
+      joined: 1,
+      edges: 2,
+      nodes: 1,
+    })
+    expect(selected()).toEqual([0, 1, 2])
+    expect(ctx.edgeObjects.map((e) => e.isSelected)).toEqual([
+      true,
+      true,
+      false,
+    ])
+  })
+
+  it('takes back what it added, never counting its own nodes as ends', () => {
+    ctx.nodeObjects[0].isSelected = true
+    ctx.nodeObjects[4].isSelected = true
+    // no path within layers; across them through the copies of C
+    expect(highlightPathsBetweenSelected('within', true).joined).toBe(0)
+    const r = highlightPathsBetweenSelected('across', true)
+    expect(r).toMatchObject({ ends: 2, joined: 1, edges: 3, nodes: 3 })
+    expect(selected()).toEqual([0, 1, 2, 3, 4])
+    // updated again: still the same two ends
+    expect(highlightPathsBetweenSelected('across', true).ends).toBe(2)
+    ctx.nodeObjects[4].isSelected = false
+    expect(highlightPathsBetweenSelected('across', true).ends).toBe(1)
+    expect(selected()).toEqual([0])
+    expect(ctx.edgeObjects.some((e) => e.isSelected)).toBe(false)
+  })
+
+  it("leaves the user's own edges selected when cleared", () => {
+    ctx.edgeObjects[0].select()
+    ctx.nodeObjects[0].isSelected = true
+    ctx.nodeObjects[2].isSelected = true
+    highlightPathsBetweenSelected('within', false)
+    expect(selected()).toEqual([0, 2])
+    clearPathHighlight()
+    expect(ctx.edgeObjects.map((e) => e.isSelected)).toEqual([
+      true,
+      false,
+      false,
+    ])
   })
 })

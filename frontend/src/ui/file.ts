@@ -43,6 +43,7 @@ import {
   HIVE_FIT,
   hivePositions,
   nodeDegrees,
+  type HiveAxes,
   type HiveScale,
 } from '../actions/hive'
 import { fitViewNow } from '../actions/search'
@@ -89,23 +90,44 @@ export const EXAMPLES = [
     label: 'PREGO anaerobic ammonium oxidation, three channels',
   },
   { file: 'edgelist_2columns.tsv', label: 'Minimal two-column edgelist' },
-  // hive plots (Krzywinski et al. 2012): the layers become the axes
+  // hive plots (Krzywinski et al. 2012): the layers become the axes, nodes
+  // placed by degree — by rank where most nodes share one or two links
   {
     file: 'prego.tsv',
     label: 'Hive plot: PREGO, three layers as three axes',
-    hive: 'rank', // most nodes share one or two links: rank spreads them
+    hive: { scale: 'rank', axes: 'flat' },
   },
   {
     file: 'GPCRs_data.tsv',
     label: 'Hive plot: GPCR signalling, four axes',
-    hive: 'axis',
+    hive: { scale: 'axis', axes: 'flat' },
   },
   {
     file: 'covid19_data.tsv',
     label: 'Hive plot: SARS-CoV-2 host–virus network, five axes',
-    hive: 'axis',
+    hive: { scale: 'axis', axes: 'flat' },
   },
-]
+  // …and with the axes spread in 3D: every two axes neighbours
+  {
+    file: 'GPCRs_data.tsv',
+    label: '3D hive plot: GPCR signalling, four axes as a tetrahedron',
+    hive: { scale: 'axis', axes: '3d' },
+  },
+  {
+    file: 'covid19_data.tsv',
+    label: '3D hive plot: SARS-CoV-2 host–virus network, five axes on a sphere',
+    hive: { scale: 'axis', axes: '3d' },
+  },
+  {
+    file: 'figure1_data.tsv',
+    label: '3D hive plot: six layers along ±X, ±Y and ±Z',
+    hive: { scale: 'rank', axes: '3d' },
+  },
+] satisfies {
+  file: string
+  label: string
+  hive?: { scale: HiveScale; axes: HiveAxes }
+}[]
 
 const FILE_HTML = `
 <div class="col-md-6 col-lg-4">
@@ -288,9 +310,12 @@ async function onLoadExample(): Promise<void> {
       'exampleChoice'
     ) as HTMLSelectElement | null
     const example =
-      (EXAMPLES as { file: string; hive?: HiveScale }[])[
-        Number(choice?.value ?? 0)
-      ] ?? EXAMPLES[0]
+      (
+        EXAMPLES as {
+          file: string
+          hive?: { scale: HiveScale; axes: HiveAxes }
+        }[]
+      )[Number(choice?.value ?? 0)] ?? EXAMPLES[0]
     const name = example.file
     const res = await fetch(`${import.meta.env.BASE_URL}data/${name}`)
     if (!res.ok)
@@ -307,10 +332,11 @@ async function onLoadExample(): Promise<void> {
       ctx.layers.length > 1 &&
       ctx.networkMode === 'multilayer'
     ) {
-      const scale = example.hive
+      const { scale, axes } = example.hive
       const input = {
         position: hivePositions(nodeDegrees(), scale),
         curved: true,
+        axes,
       }
       history.execute(
         new PredefinedLayoutCommand('hive', () => {
@@ -319,7 +345,7 @@ async function onLoadExample(): Promise<void> {
         })
       )
       status(
-        `Loaded ${name} as a hive plot: ${ctx.layers.length} layers as axes, nodes by degree${scale === 'rank' ? ' (rank)' : ''}. Layout → Layer Arrangement changes it.`
+        `Loaded ${name} as a ${axes === '3d' ? '3D ' : ''}hive plot: ${ctx.layers.length} layers as axes${axes === '3d' ? ' spread in 3D' : ''}, nodes by degree${scale === 'rank' ? ' (rank)' : ''}. Layout → Layer Arrangement changes it.`
       )
     }
   } catch (err) {

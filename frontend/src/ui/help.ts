@@ -219,7 +219,8 @@ const HELP_HTML = `
       <i>Focus camera</i> flies to the matches.</li>
     <li>Analyze → Explore: <i>Expand Selection</i> by one or two hops, within or across layers; <i>Shortest Path</i>
       between exactly two selected nodes (double-click each; a name search selects every copy of a node, so pick
-      the two copies you mean).</li>
+      the two copies you mean), or switch on <i>Highlight paths between selected nodes</i> to see the paths joining
+      every selected node as the selection changes.</li>
     <li>Right-click a node for its neighbours, a multilayer path or its link and description.</li>
   </ol>
 
@@ -276,8 +277,8 @@ const HELP_HTML = `
   <h2>Example Data</h2>
   <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/home.jpg" alt="The Home page with the example picker" loading="lazy">
   <p>
-    Choose an example on the Home page (<i>Try an example</i>) or in File → <i>Example</i> and press
-    <i>Load Example</i>: every network below is listed, opened as its saved session where there is one — among
+    Click a card under <i>Start from an example</i> on the Home page to open it at once, or pick any example from
+    <i>All examples</i> there (or in File → <i>Example</i>) and press <i>Load Example</i>: every network below is listed, opened as its saved session where there is one — among
     them a network without layers, a 3D network with the layers ignored and layers drawn as spheres. Every file can
     also be downloaded below.
   </p>
@@ -668,7 +669,11 @@ const HELP_HTML = `
       <kbd>C</kbd> and drag. <b>Move selected nodes</b> within their layer: hold <kbd>Z</kbd> or <kbd>C</kbd> and drag
       (selected nodes take priority over layers).</li>
     <li><b>Select</b> a node or layer: double-click it (it flashes on hover and changes colour when selected).
-      <b>Lasso</b>: hold <kbd>Shift</kbd> and drag. <b>Unselect all</b> (and fit the view): double-click the background.</li>
+      <b>Select an area</b>: hold <kbd>Shift</kbd> and drag — a rectangle, or a freehand <b>lasso</b> chosen under
+      <i>Area Shape</i> in the Navigation Controls; <i>Area Mode</i> there makes the area replace the selection
+      (<i>New</i>), add to it (<i>Add</i>, the default) or take its nodes out (<i>Remove</i>, or hold <kbd>Alt</kbd> /
+      <kbd>Option</kbd> as you release). Both choices are remembered in the browser. <b>Unselect all</b> (and fit the
+      view): double-click the background.</li>
     <li><b>Right-click a node</b> to select its neighbours (in every layer), a multilayer path starting from it, or a
       downstream path through the following layers, and to open its URL or description. Right-click the background
       to save the view as an image.</li>
@@ -826,15 +831,27 @@ const HELP_HTML = `
       normalized axis length", the variant the paper finds most revealing); <i>Value, one scale for all axes</i>
       (comparable across axes); or <i>Rank</i> (evenly spaced in value order — use it when many nodes share a value
       and would otherwise sit on one spot).</li>
-    <li><b>Curved links</b>: links between axes curve round the centre from one axis to the other; links between
-      nodes of one axis arc beside it, where the paper draws them between the axis and its clone. Unticked, links
-      are straight. Links between non-neighbouring axes (four axes or more) pass over the axes between.</li>
+    <li><b>Axes</b>: <i>In a plane (classic)</i>, or <i>Spread in 3D</i> — three axes at right angles to each
+      other (a tripod), four towards a tetrahedron's corners (109.5° apart), six along ±X, ±Y and ±Z, any other number
+      spread evenly over a sphere. In a plane, links between axes that are not neighbours (four axes or more) pass
+      over the axes between — the reason the paper keeps to three axes; spread in 3D, every two axes are
+      neighbours, so no link crosses an axis. Turn the view to read it (drag, or the Navigation Controls).</li>
+    <li><b>Height off the plane</b> (axes in a plane): a second property — degree, betweenness, clustering
+      coefficient or name, on the same scale — lifts each node off the plane, the best-scored node of its axis
+      the highest, so two of the paper's hive panel views share one plot. The view tilts to show the depth.</li>
+    <li><b>Curved links</b>: links between axes curve round the centre from one axis to the other, in the plane
+      the two axes span — between opposite axes round the centre rather than through it — carrying any height
+      from one end to the other; links between nodes of one axis arc beside it, where the paper draws them between
+      the axis and its clone. Unticked, links are straight.</li>
   </ul>
   <p>
-    The view turns to face you and the scene's own axes are hidden while the hive plot is on; any other
+    A flat hive turns to face you (with axes spread in 3D or a height, the view tilts instead) and the scene's own
+    axes are hidden while the hive plot is on; any other
     arrangement or undo brings floors, straight links and the axes back, and saved sessions keep the hive plot.
     The example list (Home page, or File → <i>Load Example</i>) has three ready to load: <i>PREGO</i> (three layers, the classic three axes, by degree
-    rank), <i>GPCR signalling</i> (four axes) and the <i>SARS-CoV-2 host–virus network</i> (five axes).
+    rank), <i>GPCR signalling</i> (four axes) and the <i>SARS-CoV-2 host–virus network</i> (five axes), and three
+    with the axes spread in 3D: GPCR signalling as a tetrahedron, the SARS-CoV-2 network on a sphere, and six layers along
+    ±X, ±Y and ±Z.
   </p>
   <h3>What goes together</h3>
   <p>
@@ -1062,6 +1079,20 @@ const HELP_HTML = `
     follows intra-layer edges; <i>Across layers</i> also follows inter-layer edges and copies of the same node.
     <i>Shortest Path Between 2 Selected</i> selects the path between exactly two selected nodes (layer hops allowed
     across layers). The text box selects nodes whose description, annotations or URL contain the text.
+  </p>
+  <p>
+    <i>Select All</i>, <i>Invert</i> and <i>Clear</i> (nodes and edges) act on the whole selection;
+    <i>Connected Component</i> adds every node the selected ones reach, within or across layers; <i>Nodes of Selected
+    Layers</i> adds every node on the selected floors; <i>Nodes with at least N links</i> selects the hubs (within
+    layers counts each node's links in its own layer, across layers its inter-layer links too). These tools add to
+    the selection, so <i>Clear</i> first to start afresh.
+  </p>
+  <p>
+    <i>Highlight paths between selected nodes</i> draws, in the edge selection colour, the shortest paths joining
+    every pair of selected nodes (up to 25 of them), within or across layers, and follows the selection as it
+    changes; <i>Also select the nodes along the paths</i> selects the nodes in between too. The highlight never
+    treats its own nodes as path ends, and switching it off takes back only what it added. To keep a path,
+    use <i>Shortest Path Between 2 Selected</i>.
   </p>
 
   <h3>Groups</h3>

@@ -82,7 +82,12 @@ def test_hive_state_kept_or_dropped() -> None:
         "curved": False,
         "right": [1.0, 0.0, 0.0],
         "up": [0.0, 1.0, 0.0],
+        "axes": "flat",  # sessions from before 3D axes
     }
+    spread = normalize_session({**_minimal(), "hive": {**hive, "axes": "3d"}})["hive"]
+    assert spread["axes"] == "3d"
+    odd = normalize_session({**_minimal(), "hive": {**hive, "axes": "sphere"}})["hive"]
+    assert odd["axes"] == "flat"
     for bad in ("on", {"right": [1, 0]}, {"right": [1, 0, 0], "up": [0, "x", 0]}):
         assert normalize_session({**_minimal(), "hive": bad})["hive"] is None
 

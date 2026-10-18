@@ -12,7 +12,15 @@ import { redrawIntraLayerEdges, toggleInterLayerEdgesRendering } from './edge'
 import { getSelectedLayers, initialSpreadLayers } from './layer'
 import { getSelectedNodes } from './node'
 import { fitView } from './search'
-import { resetZoomTarget } from './canvas_controls'
+import {
+  getSelectCombine,
+  getSelectShape,
+  resetZoomTarget,
+  setSelectCombine,
+  setSelectShape,
+  type SelectCombine,
+  type SelectShape,
+} from './canvas_controls'
 import { history } from '../commands/base'
 import { GROUP_ICONS, axisIcon } from '../ui/nav_icons'
 import {
@@ -236,7 +244,16 @@ const INFO_HTML = `
     <li data-single-only><span>Rotate about Axis</span><span><kbd class='blue'>Z</kbd><kbd class='red'>X</kbd><kbd class='green'>C</kbd> + <kbd>Drag</kbd></span></li>
     <li><span>Move Selected Nodes</span><span><kbd class='blue'>Z</kbd><kbd class='green'>C</kbd> + <kbd>Drag</kbd></span></li>
     <li><span>Select Node/Layer</span><span><kbd>Dbl Click</kbd></span></li>
-    <li><span>Lasso Nodes</span><span><kbd>Shift</kbd> + <kbd>Drag</kbd></span></li>
+    <li><span>Select an Area</span><span><kbd>Shift</kbd> + <kbd>Drag</kbd></span></li>
+    <li class="nav-shape"><span>Area Shape</span><span class="nav-shape__btns" role="group" aria-label="Shape of the area Shift + Drag selects">
+      <button type="button" data-shape="rectangle" title="Shift + Drag selects the nodes inside a rectangle">&#9645; Rectangle</button>
+      <button type="button" data-shape="lasso" title="Shift + Drag draws a freehand lasso; the nodes inside it are selected">&#10044; Lasso</button>
+    </span></li>
+    <li class="nav-shape"><span>Area Mode</span><span class="nav-shape__btns" role="group" aria-label="What the area does to the selection">
+      <button type="button" data-combine="new" title="The area's nodes replace the selection">New</button>
+      <button type="button" data-combine="add" title="The area's nodes are added to the selection">Add</button>
+      <button type="button" data-combine="remove" title="The area's nodes are taken out of the selection (or hold Alt / Option as you release)">Remove</button>
+    </span></li>
     <li><span>Fit View, Unselect All</span><span><kbd>Dbl Click</kbd> Scene</span></li>
   </ul>
   <table id="canvasControls_table"><tbody>
@@ -351,6 +368,27 @@ function attachNavControls(): void {
     })
 
   info.innerHTML = INFO_HTML
+  // the area Shift + Drag selects: a rectangle or a freehand lasso, and
+  // whether it replaces, adds to or takes from the selection
+  const switches = [
+    ...info.querySelectorAll<HTMLButtonElement>('.nav-shape button'),
+  ]
+  const syncSwitches = () =>
+    switches.forEach((b) => {
+      const on =
+        b.dataset.shape === getSelectShape() ||
+        b.dataset.combine === getSelectCombine()
+      b.classList.toggle('is-active', on)
+      b.setAttribute('aria-pressed', String(on))
+    })
+  switches.forEach((b) =>
+    b.addEventListener('click', () => {
+      if (b.dataset.shape) setSelectShape(b.dataset.shape as SelectShape)
+      else setSelectCombine(b.dataset.combine as SelectCombine)
+      syncSwitches()
+    })
+  )
+  syncSwitches()
   // on phones the table would cover most of the scene: start it closed
   const phone =
     typeof window.matchMedia === 'function' &&

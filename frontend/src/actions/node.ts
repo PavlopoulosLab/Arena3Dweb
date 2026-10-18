@@ -38,11 +38,11 @@ export function scrambleNodes(
 }
 
 export function updateSelectedNodesStore(): void {
-  store.update({
-    selectedNodes: ctx.nodeObjects
-      .filter((n) => n.isSelected)
-      .map((n) => n.nodeLayerName),
-  })
+  const selectedNodes = ctx.nodeObjects
+    .filter((n) => n.isSelected)
+    .map((n) => n.nodeLayerName)
+  store.update({ selectedNodes })
+  bus.emit('selection:changed', { count: selectedNodes.length })
 }
 
 // @return whether the pointer is over a node

@@ -6,10 +6,12 @@
 import { store } from '../store'
 import { registerAnnotationSet } from '../actions/workspace'
 import {
+  HIVE_AXES,
   HIVE_PROPERTIES,
   HIVE_SCALES,
   hivePositions,
   hiveValues,
+  type HiveAxes,
   type HiveInput,
   type HiveProperty,
   type HiveScale,
@@ -217,6 +219,22 @@ const LAYOUTS_HTML = `
             </select>
           </div>
         </div>
+        <div class="lp-grid mt-1">
+          <div>
+            <label class="form-label small" for="hiveAxes">Axes</label>
+            <select id="hiveAxes" class="form-select form-select-sm">
+              ${HIVE_AXES.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="form-label small" for="hiveHeight">Height off the plane</label>
+            <select id="hiveHeight" class="form-select form-select-sm">
+              <option value="">None (flat)</option>
+              ${HIVE_PROPERTIES.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="form-text mt-0 d-none" id="hiveHeightNote">Spread in 3D, the axes use all three dimensions: a height needs axes in a plane.</div>
         <div class="form-check mt-1">
           <input class="form-check-input" type="checkbox" id="hiveCurved" checked />
           <label class="form-check-label" for="hiveCurved">Curved links between the axes (as in hive plots)</label>
@@ -788,11 +806,22 @@ export function initLayoutsPanel(): void {
   const arrangement = document.getElementById(
     'layerArrangement'
   ) as HTMLSelectElement
-  const syncHiveOptions = () =>
+  const syncHiveOptions = () => {
     document
       .getElementById('hiveOptions')
       ?.classList.toggle('d-none', arrangement.value !== 'hive')
+    // a height lifts nodes off a flat hive's plane: none with 3D axes
+    const in3d =
+      (document.getElementById('hiveAxes') as HTMLSelectElement).value === '3d'
+    const height = document.getElementById('hiveHeight') as HTMLSelectElement
+    height.disabled = in3d
+    if (in3d) height.value = ''
+    document.getElementById('hiveHeightNote')?.classList.toggle('d-none', !in3d)
+  }
   arrangement.addEventListener('change', syncHiveOptions)
+  document
+    .getElementById('hiveAxes')
+    ?.addEventListener('change', syncHiveOptions)
   syncHiveOptions()
   document
     .getElementById('applyArrangement')
@@ -839,12 +868,20 @@ async function arrangeLayers(): Promise<void> {
   const scale = pick('hiveScale') as HiveScale
   const curved = (document.getElementById('hiveCurved') as HTMLInputElement)
     .checked
+  const axes = pick('hiveAxes') as HiveAxes
+  const height = pick('hiveHeight') as HiveProperty | ''
   try {
-    if (property === 'betweenness' || property === 'clustering')
-      status('Computing the node property for the axes…')
+    const remote = ['betweenness', 'clustering']
+    if (remote.includes(property) || remote.includes(height))
+      status('Computing the node properties for the axes…')
     const input: HiveInput = {
       position: hivePositions(await hiveValues(property), scale),
       curved,
+      axes,
+      height:
+        axes === 'flat' && height
+          ? hivePositions(await hiveValues(height), scale)
+          : null,
     }
     history.execute(
       new PredefinedLayoutCommand('hive', () => {
@@ -855,7 +892,7 @@ async function arrangeLayers(): Promise<void> {
     const of = (list: [string, string][], v: string) =>
       list.find(([k]) => k === v)?.[1] ?? v
     status(
-      `Hive plot: ${ctx.layers.length} axes, nodes by ${of(HIVE_PROPERTIES, property).toLowerCase()} (${of(HIVE_SCALES, scale).toLowerCase()}).`
+      `Hive plot: ${ctx.layers.length} axes${axes === '3d' ? ' spread in 3D' : ''}, nodes by ${of(HIVE_PROPERTIES, property).toLowerCase()} (${of(HIVE_SCALES, scale).toLowerCase()})${input.height ? `, height by ${of(HIVE_PROPERTIES, height).toLowerCase()}` : ''}.`
     )
   } catch (err) {
     status(err instanceof Error ? err.message : String(err), true)

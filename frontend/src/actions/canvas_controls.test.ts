@@ -8,6 +8,7 @@ import {
   dblClick,
   keyPressed,
   lassoSelectNodes,
+  pointInPolygon,
   rotateLayersWithHeldKey,
   sceneZoom,
   easeZoomStep,
@@ -127,5 +128,37 @@ describe('dblClick', () => {
     ctx.nodeObjects[0].isSelected = true
     dblClick(fakeEvent({ clientX: 0, clientY: 0 }))
     expect(ctx.nodeObjects[0].isSelected).toBe(false)
+  })
+})
+
+describe('pointInPolygon (freehand lasso)', () => {
+  const square: [number, number][] = [
+    [0, 0],
+    [10, 0],
+    [10, 10],
+    [0, 10],
+  ]
+  // a "C": its mouth (x 4..10, y 4..6) is outside
+  const c: [number, number][] = [
+    [0, 0],
+    [10, 0],
+    [10, 4],
+    [4, 4],
+    [4, 6],
+    [10, 6],
+    [10, 10],
+    [0, 10],
+  ]
+
+  it('tells inside from outside', () => {
+    expect(pointInPolygon(5, 5, square)).toBe(true)
+    expect(pointInPolygon(11, 5, square)).toBe(false)
+    expect(pointInPolygon(-1, -1, square)).toBe(false)
+  })
+
+  it('follows a concave outline', () => {
+    expect(pointInPolygon(2, 5, c)).toBe(true) // the back of the C
+    expect(pointInPolygon(8, 5, c)).toBe(false) // inside its mouth
+    expect(pointInPolygon(8, 2, c)).toBe(true) // the upper arm
   })
 })

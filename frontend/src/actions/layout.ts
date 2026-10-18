@@ -3,7 +3,7 @@
 // igraph coordinates into each node's layer plane, and dispatches the Phase 10
 // commands so the change is one undo step.
 
-import { MathUtils, Quaternion, Vector3 } from 'three'
+import { MathUtils, Matrix4, Quaternion, Vector3 } from 'three'
 import {
   api,
   type LayoutPosition,
@@ -21,7 +21,7 @@ import {
   showSceneCoords,
 } from '../commands/scene'
 import { initialSpreadLayers } from './layer'
-import { defaultHiveInput, type HiveInput } from './hive'
+import { defaultHiveInput, hiveDirections, type HiveInput } from './hive'
 import { redrawIntraLayerEdges } from './edge'
 
 // v2 executeLayout: the backend returns raw 2D [y, z] coords; map them into the
@@ -281,78 +281,75 @@ const largestWidth = () =>
   Math.max(...ctx.layers.map((l) => l.geometry_parameters_width))
 
 // Hive plot (Krzywinski et al. 2012): every layer is an axis radiating from
-// one centre in the plane facing the viewer — evenly spread, or 120° apart
-// for two — its floor a thin bar, and each node on its layer's axis at its
-// place (0 = inner end, 1 = outer end). Links curve between the axes
-// (three/hive.ts).
+// one centre — in the plane facing the viewer, or spread through 3D
+// (actions/hive.ts hiveDirections) — its floor a thin bar along the axis with
+// the layer's name at its outer end, and each node on its layer's axis at its
+// place (0 = inner end, 1 = outer end), lifted off a flat hive's plane by its
+// height when there is one. Links curve between the axes (three/hive.ts).
 function applyHiveLayout(input: HiveInput): void {
   const n = ctx.layers.length
-  // a hive plot is read face on, without the scene's own axes at its centre
-  ctx.scene!.getQuaternion().identity()
+  const length = largestWidth() // of every axis
+  const inner = length * 0.15 // the empty middle
+  const lift = length * 0.6 // the most a node rises off a flat hive
+  const flat = input.axes === 'flat'
+  const lifted = flat && !!input.height
+  // the view's frame within the scene: right, up, and towards the viewer
+  const base = ctx.layers[0].plane.quaternion.clone()
+  const right = new Vector3(1, 0, 0).applyQuaternion(base)
+  const up = new Vector3(0, 1, 0).applyQuaternion(base)
+  const toViewer = right.clone().cross(up).normalize()
+  // a classic hive is read face on; depth needs a turned view. Either way the
+  // scene's own axes would sit at the hive's centre.
+  const scene = ctx.scene!
+  scene.getQuaternion().identity()
+  if (!flat || lifted) {
+    // lifted: turned sideways too, so a lift never runs along an axis
+    scene.setRotation('x', MathUtils.degToRad(lifted ? 50 : 20))
+    scene.setRotation('y', MathUtils.degToRad(-30))
+  }
   if (sceneCoordsShown()) {
     showSceneCoords(false)
     hidSceneCoords = true
   }
-  const length = largestWidth() // of every axis
-  const inner = length * 0.15 // the empty middle
-  const base = ctx.layers[0].plane.quaternion.clone() // the reset frame
-  const right = new Vector3(1, 0, 0).applyQuaternion(base)
-  const up = new Vector3(0, 1, 0).applyQuaternion(base)
-  const at = (theta: number, r: number) =>
+  const directions = hiveDirections(n, input.axes).map(([x, y, z]) =>
     right
       .clone()
-      .multiplyScalar(r * Math.cos(theta))
-      .addScaledVector(up, r * Math.sin(theta))
-  const angle = (i: number) =>
-    n === 2
-      ? Math.PI / 2 + ((i === 0 ? 1 : -1) * Math.PI) / 3
-      : Math.PI / 2 - (2 * Math.PI * i) / n
-  // as in the chord diagram: the floor faces the viewer, its y along the radius
-  const faceOn = new Quaternion().setFromAxisAngle(
-    new Vector3(0, 1, 0),
-    Math.PI / 2
+      .multiplyScalar(x)
+      .addScaledVector(up, y)
+      .addScaledVector(toViewer, z)
+      .normalize()
   )
-  const frames = ctx.layers.map((layer, li) => {
-    const theta = angle(li)
-    const centre = at(theta, inner + length / 2)
-    const q = base
-      .clone()
-      .multiply(
-        new Quaternion().setFromAxisAngle(
-          new Vector3(0, 0, 1),
-          theta - Math.PI / 2
-        )
-      )
-      .multiply(faceOn)
-    layer.setFloorShape('axis')
-    layer.plane.position.copy(centre)
-    layer.plane.quaternion.copy(q)
-    const inv = q.clone().invert()
-    // the layer's name at the outer end of its axis
-    layer.sphere?.position.copy(
-      at(theta, inner + length * 1.06)
-        .sub(centre)
-        .applyQuaternion(inv)
+  ctx.layers.forEach((layer, li) => {
+    const d = directions[li]
+    // the floor's own frame: y along the axis, its normal (x) as close to the
+    // viewer as the axis allows
+    let normal = toViewer.clone().addScaledVector(d, -d.dot(toViewer))
+    if (normal.lengthSq() < 1e-6) normal = up.clone().addScaledVector(d, -d.y)
+    normal.normalize()
+    const q = new Quaternion().setFromRotationMatrix(
+      new Matrix4().makeBasis(normal, d, normal.clone().cross(d))
     )
-    return { theta, centre, inv }
+    layer.setFloorShape('axis')
+    layer.plane.position.copy(d.clone().multiplyScalar(inner + length / 2))
+    layer.plane.quaternion.copy(q)
+    // the layer's name just past the outer end of its axis
+    layer.sphere?.position.set(0, length * 0.56, 0)
   })
   ctx.nodeObjects.forEach((node, i) => {
     const id = ctx.nodeLayerNames[i]
-    const li = ctx.layerGroups[ctx.nodeGroups[id]]
-    const f = frames[li]
-    if (!f) return
+    if (ctx.layerGroups[ctx.nodeGroups[id]] === undefined) return
     const t = Math.min(1, Math.max(0, input.position[id] ?? 0))
-    const p = at(f.theta, inner + t * length)
-      .sub(f.centre)
-      .applyQuaternion(f.inv)
-    node.setPosition('x', 0)
-    node.setPosition('y', p.y)
-    node.setPosition('z', p.z)
+    const h = lifted ? Math.min(1, Math.max(0, input.height?.[id] ?? 0)) : 0
+    // along the floor's y from its centre; lifted along its normal
+    node.setPosition('x', h * lift)
+    node.setPosition('y', t * length - length / 2)
+    node.setPosition('z', 0)
   })
   ctx.hive = {
     curved: input.curved,
     right: right.toArray(),
     up: up.toArray(),
+    axes: input.axes,
   }
   redrawIntraLayerEdges()
 }

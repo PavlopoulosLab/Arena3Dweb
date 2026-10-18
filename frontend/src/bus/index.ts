@@ -30,6 +30,7 @@ export interface BusEvents {
   'workspace:changed': { active: number }
   'legend:changed': { title: string | null }
   'values:loaded': { columns: string[] }
+  'selection:changed': { count: number } // nodes selected or unselected
 }
 
 type Handler<T> = (payload: T) => void

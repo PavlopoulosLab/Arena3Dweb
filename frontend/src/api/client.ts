@@ -108,6 +108,7 @@ export interface SessionData {
     curved: boolean
     right: [number, number, number]
     up: [number, number, number]
+    axes?: 'flat' | '3d'
   } | null
   warnings?: string[]
 }

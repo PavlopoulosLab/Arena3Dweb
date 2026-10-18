@@ -545,9 +545,13 @@ export class TransformCommand implements Command {
 }
 
 // The scene's coordinate axes (Scene & Camera → Show Scene Coord System)
+// — whether they are on screen: a newly loaded network draws them whatever
+// the checkbox says
 export const sceneCoordsShown = (): boolean =>
+  ctx.scene?.coordSystem[0]?.visible ??
   (document.getElementById('toggleSceneCoords') as HTMLInputElement | null)
-    ?.checked ?? true
+    ?.checked ??
+  true
 export function showSceneCoords(show: boolean): void {
   const box = document.getElementById(
     'toggleSceneCoords'

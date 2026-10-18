@@ -87,3 +87,88 @@ test('expand, shortest path, attribute search, weight filter', async ({
   )
   expect(hidden).toBeGreaterThan(0)
 })
+
+test('whole-selection tools and the live path highlight', async ({ page }) => {
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .click()
+  await page.locator('#input_network_file').setInputFiles(ASPIRIN)
+  await expect(page.locator('#file_status')).toContainText('Loaded network')
+  await page
+    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  await page.locator('#explore_card summary').click()
+  await page.locator('#walk_across').check()
+  const total = await page.evaluate(
+    () =>
+      (window as unknown as { __arena: { ctx: Ctx } }).__arena.ctx.nodeObjects
+        .length
+  )
+  const selectedEdges = () =>
+    page.evaluate(
+      () =>
+        (
+          window as unknown as { __arena: { ctx: Ctx } }
+        ).__arena.ctx.edgeObjects.filter((e) => e.isSelected).length
+    )
+
+  await page.locator('#selectEverything').click()
+  expect(await page.evaluate(selectedCount)).toBe(total)
+  await page.locator('#clearSelection').click()
+  expect(await page.evaluate(selectedCount)).toBe(0)
+  await page.locator('#invertSelection').click()
+  expect(await page.evaluate(selectedCount)).toBe(total)
+  await page.locator('#clearSelection').click()
+
+  // hubs, then everything connected to aspirin
+  await page.locator('#minLinks').fill('3')
+  await page.locator('#selectHubs').click()
+  await expect(page.locator('#explore_status')).toContainText(
+    'with at least 3 links'
+  )
+  await page.locator('#clearSelection').click()
+  await page.evaluate(() => {
+    const ctx = (window as unknown as { __arena: { ctx: Ctx } }).__arena.ctx
+    ctx.nodeObjects.find((n) => n.name === 'aspirin')!.isSelected = true
+  })
+  await page.locator('#selectComponent').click()
+  await expect(page.locator('#explore_status')).toContainText('connected node')
+  expect(await page.evaluate(selectedCount)).toBeGreaterThan(1)
+  await page.locator('#clearSelection').click()
+
+  // two selected nodes, not linked: the path between them (through aspirin)
+  // lights up as the switch goes on
+  await page.evaluate(() => {
+    const ctx = (window as unknown as { __arena: { ctx: Ctx } }).__arena.ctx
+    ctx.nodeObjects.find((n) => n.name === 'PTGS1')!.isSelected = true
+    ctx.nodeObjects.find((n) => n.name === 'SELP')!.isSelected = true
+  })
+  await expect(page.locator('#pathNodes')).toBeDisabled()
+  await page.locator('#highlightPaths').check()
+  await expect(page.locator('#path_status')).toContainText('1 of 1 pair joined')
+  expect(await selectedEdges()).toBeGreaterThan(1)
+  expect(await page.evaluate(selectedCount)).toBe(2)
+  await page.locator('#pathNodes').check()
+  await expect(page.locator('#path_status')).toContainText('along the paths')
+  expect(await page.evaluate(selectedCount)).toBeGreaterThan(2)
+
+  // the selection changes: the highlight follows it
+  await page.locator('#clearSelection').click()
+  await expect(page.locator('#path_status')).toContainText(
+    'Select two or more nodes'
+  )
+  expect(await selectedEdges()).toBe(0)
+  await page.locator('#selectEverything').click()
+  await expect(page.locator('#path_status')).toContainText(
+    total > 25 ? 'at most 25' : 'joined'
+  )
+  // switched off: everything it added is taken back
+  await page.locator('#highlightPaths').uncheck()
+  await expect(page.locator('#path_status')).toBeEmpty()
+  expect(await selectedEdges()).toBe(0)
+  expect(await page.evaluate(selectedCount)).toBe(total)
+})
