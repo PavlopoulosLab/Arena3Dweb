@@ -1940,8 +1940,18 @@ body.mode-single .layout-panel .lp-step {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid transparent; /* room for the frame: nothing shifts */
+  border-radius: 5px;
   cursor: pointer;
   white-space: nowrap;
+}
+
+/* a selected layer: framed in the yellow its floor turns
+   (three/constants.ts SELECTED_LAYER_DEFAULT_COLOR) */
+#legend .legend-entry.is-selected {
+  border-color: #f7f43e;
+  background: rgba(247, 244, 62, 0.12);
 }
 
 #legend .legend-entry:hover {

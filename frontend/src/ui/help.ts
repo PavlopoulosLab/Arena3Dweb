@@ -903,7 +903,8 @@ const HELP_HTML = `
     <li><i>Node Glow</i> makes nodes glow on dark backgrounds.</li>
     <li><i>Show Navigator (2D)</i> shows or hides the overview at the bottom right.</li>
     <li><i>Show Legend</i> shows or hides the legend at the bottom of the view: the layers after a load, then
-      whatever was coloured last — groups (click an entry to select its members), a metric or value gradient.</li>
+      whatever was coloured last — groups (click an entry to select its members), a metric or value gradient. A
+      selected layer's entry is framed in the yellow its floor turns.</li>
     <li>Treating the data as one 3D graph is the <i>Single network</i> mode in the top bar (Getting Started → Network
       mode); nodes keep their layer colour and <i>Multilayered</i> brings the layers back exactly as they were.</li>
     <li><i>Background Color</i> sets the background. On light backgrounds, raise floor opacity (Edit → Layers) and

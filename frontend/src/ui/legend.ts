@@ -60,6 +60,25 @@ export function renderLegend(): void {
     const entry = (l.entries ?? []).find((e) => e.label === span.dataset.label)
     if (entry?.select) span.addEventListener('click', () => select(entry))
   })
+  syncSelectedLayers()
+}
+
+// The entries of selected layers are framed in the selection yellow their
+// floors turn (style.css), whichever way the layers were selected
+function syncSelectedLayers(): void {
+  const selected = new Set(
+    ctx.layers.filter((l) => l.isSelected).map((l) => l.name)
+  )
+  const entries = legend()?.entries ?? []
+  document
+    .querySelectorAll<HTMLElement>('#legend .legend-entry')
+    .forEach((span) => {
+      const entry = entries.find((e) => e.label === span.dataset.label)
+      const on = entry?.select === 'layer' && selected.has(entry.label)
+      span.classList.toggle('is-selected', on)
+      if (entry?.select === 'layer')
+        span.title = `Select the nodes of ${entry.label}${on ? ' (layer selected)' : ''}`
+    })
 }
 
 export function setLegendShown(flag: boolean): void {
@@ -69,6 +88,7 @@ export function setLegendShown(flag: boolean): void {
 
 export function initLegend(): void {
   bus.on('legend:changed', renderLegend)
+  bus.on('layers:selected', syncSelectedLayers)
   bus.on('network:loaded', () => setLegend(layerLegend()))
   // Also Colour Nodes by Metric: the metric's gradient
   bus.on('topology:applied', ({ metric, scales }) => {
