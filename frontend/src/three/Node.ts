@@ -1,18 +1,141 @@
 import * as THREE from 'three'
+import { safeColor } from '../utils'
 import {
   SPHERE_RADIUS,
-  SPHERE_WIDTHSEGMENTS,
-  SPHERE_HEIGHTSEGMENTS,
+  NODE_DETAIL,
   BOX_SIZE,
   DIAMOND_RADIUS,
   CONE_RADIUS,
   CONE_HEIGHT,
   BLOOM_LAYER,
+  FADED_NODE,
 } from './constants'
 import { ctx } from './runtime'
 
 export type Axis = 'x' | 'y' | 'z'
-export type NodeGeometryType = 'sphere' | 'box' | 'diamond' | 'cone'
+export type NodeGeometryType =
+  | 'sphere'
+  | 'box'
+  | 'diamond'
+  | 'cone'
+  | 'cylinder'
+  | 'tetrahedron'
+  | 'capsule'
+  | 'torus'
+  | 'icosahedron'
+  | 'dodecahedron'
+  | 'pyramid'
+  | 'disc'
+  | 'hexagon'
+  | 'ring'
+
+// every shape with its label, in menu order
+export const NODE_SHAPE_LABELS: Record<NodeGeometryType, string> = {
+  sphere: 'Sphere',
+  box: 'Cube',
+  diamond: 'Diamond',
+  cone: 'Cone',
+  cylinder: 'Cylinder',
+  tetrahedron: 'Tetrahedron',
+  capsule: 'Capsule',
+  torus: 'Torus',
+  icosahedron: 'Icosahedron',
+  dodecahedron: 'Dodecahedron',
+  pyramid: 'Pyramid',
+  disc: 'Disc',
+  hexagon: 'Hexagonal prism',
+  ring: 'Ring',
+}
+export const NODE_SHAPES = Object.keys(NODE_SHAPE_LABELS) as NodeGeometryType[]
+
+// A node's own label look (Edit → Style): plain text, a halo (an outline
+// around the letters), a box behind them or a soft shadow, optionally bold.
+// `color` is the halo, box or shadow colour ('' = picked against the text
+// colour); `width` the halo's px, `opacity` the box's.
+export type LabelLookStyle = 'plain' | 'halo' | 'box' | 'shadow'
+export const LABEL_LOOK_LABELS: Record<LabelLookStyle, string> = {
+  plain: 'Plain',
+  halo: 'Halo (outline)',
+  box: 'Box',
+  shadow: 'Shadow',
+}
+export interface LabelLook {
+  style: LabelLookStyle
+  color: string
+  width: number
+  opacity: number
+  bold: boolean
+}
+export const DEFAULT_LABEL_LOOK: LabelLook = {
+  style: 'halo',
+  color: '',
+  width: 2,
+  opacity: 0.75,
+  bold: false,
+}
+// where the label sits: right of the node (as always), centred on it,
+// above or below it
+export type LabelPosition = 'right' | 'centre' | 'above' | 'below'
+export const LABEL_POSITION_LABELS: Record<LabelPosition, string> = {
+  right: 'Right',
+  centre: 'Centre',
+  above: 'Above',
+  below: 'Below',
+}
+
+// a shape from a file: its key or its label, in any case ('box', 'Cube')
+export function shapeFromText(text: string): NodeGeometryType | null {
+  const t = text.trim().toLowerCase()
+  return (
+    NODE_SHAPES.find(
+      (s) => s === t || NODE_SHAPE_LABELS[s].toLowerCase() === t
+    ) ?? null
+  )
+}
+
+// the halo's px and the box's opacity, as the editors keep them
+export const LABEL_HALO_PX = [0.5, 8] as const
+export const LABEL_BOX_OPACITY = [0.05, 1] as const
+const clamp = (v: number, [lo, hi]: readonly [number, number]) =>
+  Math.min(hi, Math.max(lo, v))
+
+// A label look as attribute files write it: the style, then its colour
+// (none: picked against the text), the halo's px or the box's opacity, and
+// "bold" — e.g. "halo #ffffff 3 bold", "box 0.6", "plain". '' = as the label
+// style.
+export function labelLookText(look: LabelLook | null): string {
+  if (!look) return ''
+  const parts: (string | number)[] = [look.style]
+  if (look.color) parts.push(look.color)
+  if (look.style === 'halo') parts.push(Number(look.width.toFixed(3)))
+  if (look.style === 'box') parts.push(Number(look.opacity.toFixed(3)))
+  if (look.bold) parts.push('bold')
+  return parts.join(' ')
+}
+
+/** The look a text names (in any order; null for blank), or undefined when
+ * it is not one. */
+export function labelLookFromText(raw: string): LabelLook | null | undefined {
+  const tokens = raw.trim().toLowerCase().split(/\s+/).filter(Boolean)
+  if (tokens.length === 0) return null
+  const look: LabelLook = { ...DEFAULT_LABEL_LOOK }
+  let style: LabelLookStyle | null = null
+  for (const t of tokens) {
+    const v = /^[0-9.]+$/.test(t) ? Number(t) : NaN
+    if (t in LABEL_LOOK_LABELS) style = t as LabelLookStyle
+    else if (t === 'bold') look.bold = true
+    else if (/^#[0-9a-f]{6}$/.test(t)) look.color = t
+    else if (Number.isFinite(v)) {
+      look.width = clamp(v, LABEL_HALO_PX)
+      look.opacity = clamp(v, LABEL_BOX_OPACITY)
+    } else return undefined
+  }
+  if (!style) return undefined
+  look.style = style
+  if (style !== 'halo') look.width = DEFAULT_LABEL_LOOK.width
+  if (style !== 'box') look.opacity = DEFAULT_LABEL_LOOK.opacity
+  return look
+}
 
 export interface NodeOptions {
   id?: number
@@ -44,6 +167,27 @@ export class Node {
   isSelected = false
   showLabel = false
   cluster = ''
+  annotations: string[] = [] // attribute-file / enrichment terms (pies, hulls)
+  shape: NodeGeometryType = 'sphere'
+
+  // Edit → Style, per node: opacity, an outline (none at width 0), a
+  // stretch along the layer's z / y / x (width, height, depth) on top of the
+  // size, and label overrides ('' / 0 = the name / the label style)
+  alpha = 1
+  // outside the groups chosen in the Groups card / Clustering summary
+  // (actions/annotations.ts applyGroupFade): drawn faint
+  faded = false
+  borderColor = '#ffffff'
+  borderWidth = 0
+  outline: THREE.Mesh | null = null
+  stretch: [number, number, number] = [1, 1, 1]
+  label = ''
+  labelColor = ''
+  labelSize = 0
+  labelLook: LabelLook | null = null // null = the label style (Edit → Nodes)
+  labelPosition: LabelPosition = 'right'
+  labelShown = false // pinned: shown with Show Labels: Chosen, whatever the selection
+  private size = 1
 
   constructor({
     id = 0,
@@ -58,6 +202,7 @@ export class Node {
     url = '',
     descr = '',
   }: NodeOptions) {
+    color = safeColor(color, '#FFFFFF') // from a file or session (utils.ts)
     this.id = id
     this.name = name
     this.layer = layer
@@ -76,8 +221,8 @@ export class Node {
   createSphere(nodeColor: string): void {
     const geometry = new THREE.SphereGeometry(
       SPHERE_RADIUS,
-      SPHERE_WIDTHSEGMENTS,
-      SPHERE_HEIGHTSEGMENTS
+      NODE_DETAIL.width,
+      NODE_DETAIL.height
     )
     const material = new THREE.MeshStandardMaterial({
       color: nodeColor,
@@ -138,6 +283,10 @@ export class Node {
     return (this.sphere.material as THREE.MeshStandardMaterial).opacity
   }
 
+  getLabel(): string {
+    return this.label || this.name
+  }
+
   getColor(): string {
     let color = this.color
     if (ctx.nodeColorPrioritySource === 'default') color = this.importedColor
@@ -147,7 +296,7 @@ export class Node {
   }
 
   getScale(): number {
-    return this.sphere.scale.x
+    return this.size
   }
 
   getCluster(): string {
@@ -158,8 +307,52 @@ export class Node {
     this.sphere.position[axis] = value
   }
 
+  // hover / lasso feedback: a fraction of the node's own opacity
   setOpacity(value: number): void {
-    ;(this.sphere.material as THREE.MeshStandardMaterial).opacity = value
+    const opacity = value * this.alpha * (this.faded ? FADED_NODE : 1)
+    ;(this.sphere.material as THREE.MeshStandardMaterial).opacity = opacity
+    if (this.outline)
+      (this.outline.material as THREE.MeshBasicMaterial).opacity = opacity
+  }
+
+  setAlpha(value: number): void {
+    this.alpha = value
+    this.setOpacity(1)
+  }
+
+  // An inverted hull: the node's geometry drawn back faces only, a little
+  // larger, so only its rim shows around the node. Not pickable.
+  setBorder(color: string, width: number): void {
+    this.borderColor = color
+    this.borderWidth = width
+    if (width <= 0) {
+      if (this.outline) {
+        this.sphere.remove(this.outline)
+        ;(this.outline.material as THREE.Material).dispose()
+        this.outline = null
+      }
+      return
+    }
+    if (!this.outline) {
+      this.outline = new THREE.Mesh(
+        this.sphere.geometry,
+        new THREE.MeshBasicMaterial({
+          side: THREE.BackSide,
+          transparent: true,
+          opacity: this.alpha,
+        })
+      )
+      this.outline.raycast = () => {}
+      this.outline.userData.outline = true
+      this.sphere.add(this.outline)
+    }
+    ;(this.outline.material as THREE.MeshBasicMaterial).color.set(color)
+    this.outline.scale.setScalar(1 + width / SPHERE_RADIUS)
+  }
+
+  setStretch(stretch: [number, number, number]): void {
+    this.stretch = [...stretch]
+    this.setScale(this.size)
   }
 
   setGeometry(type: NodeGeometryType): void {
@@ -168,8 +361,8 @@ export class Node {
       case 'sphere':
         geometry = new THREE.SphereGeometry(
           SPHERE_RADIUS,
-          SPHERE_WIDTHSEGMENTS,
-          SPHERE_HEIGHTSEGMENTS
+          NODE_DETAIL.width,
+          NODE_DETAIL.height
         )
         break
       case 'box':
@@ -181,15 +374,79 @@ export class Node {
       case 'cone':
         geometry = new THREE.ConeGeometry(CONE_RADIUS, CONE_HEIGHT, CONE_RADIUS)
         break
+      case 'cylinder':
+        geometry = new THREE.CylinderGeometry(
+          CONE_RADIUS,
+          CONE_RADIUS,
+          CONE_HEIGHT,
+          16
+        )
+        break
+      case 'tetrahedron':
+        geometry = new THREE.TetrahedronGeometry(DIAMOND_RADIUS, 0)
+        break
+      case 'capsule':
+        geometry = new THREE.CapsuleGeometry(
+          CONE_RADIUS * 0.75,
+          CONE_HEIGHT * 0.8,
+          4,
+          12
+        )
+        break
+      case 'torus':
+        geometry = new THREE.TorusGeometry(
+          SPHERE_RADIUS * 0.8,
+          SPHERE_RADIUS * 0.35,
+          10,
+          24
+        )
+        break
+      case 'icosahedron':
+        geometry = new THREE.IcosahedronGeometry(DIAMOND_RADIUS, 0)
+        break
+      case 'dodecahedron':
+        geometry = new THREE.DodecahedronGeometry(DIAMOND_RADIUS, 0)
+        break
+      case 'pyramid':
+        geometry = new THREE.ConeGeometry(CONE_RADIUS * 1.2, CONE_HEIGHT, 4)
+        break
+      case 'disc':
+        geometry = new THREE.CylinderGeometry(
+          SPHERE_RADIUS * 1.1,
+          SPHERE_RADIUS * 1.1,
+          2,
+          24
+        )
+        break
+      case 'hexagon':
+        geometry = new THREE.CylinderGeometry(
+          SPHERE_RADIUS,
+          SPHERE_RADIUS,
+          CONE_HEIGHT * 0.6,
+          6
+        )
+        break
+      case 'ring':
+        geometry = new THREE.TorusGeometry(
+          SPHERE_RADIUS * 0.9,
+          SPHERE_RADIUS * 0.18,
+          8,
+          28
+        )
+        break
       default:
         console.error(`Unknown geometry type: ${type as string}`)
         return
     }
     this.sphere.geometry.dispose()
     this.sphere.geometry = geometry
+    if (this.outline) this.outline.geometry = geometry
+    this.shape = type
   }
 
-  setColor(hexColor: string, importMode = false, clusterMode = false): void {
+  setColor(color: string, importMode = false, clusterMode = false): void {
+    // a colour from a file or session: CSS colour forms only (utils.ts)
+    const hexColor = safeColor(color)
     ;(this.sphere.material as THREE.MeshStandardMaterial).color =
       new THREE.Color(hexColor)
     this.color = hexColor
@@ -198,7 +455,9 @@ export class Node {
   }
 
   setScale(value: number): void {
-    this.sphere.scale.x = this.sphere.scale.y = this.sphere.scale.z = value
+    this.size = value
+    const [w, h, d] = this.stretch
+    this.sphere.scale.set(value * d, value * h, value * w)
   }
 
   setCluster(clusterName: string): void {

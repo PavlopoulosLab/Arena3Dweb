@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // 2D navigator: appears on network load and its thumbnail re-projects when the
 // scene rotates (the core requirement — it must always show the current
@@ -13,7 +13,9 @@ test('minimap shows on load and redraws on rotation', async ({ page }) => {
   // Hidden until a network exists.
   await expect(page.locator('#minimap')).toBeHidden()
 
-  await page.getByRole('tab', { name: 'File' }).click()
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .click()
   await page.getByRole('button', { name: 'Load Example' }).click()
   await expect(page.locator('#file_status')).toContainText('Loaded network')
 
@@ -57,7 +59,35 @@ test('minimap shows on load and redraws on rotation', async ({ page }) => {
   // Toggle via the Scene panel hides it. dispatchEvent, not click()/uncheck():
   // the post-load WebGL render loop saturates the main thread on headless CI,
   // so Playwright's actionability wait times out — fire the handler directly.
-  await page.getByRole('tab', { name: 'Scene Actions' }).dispatchEvent('click')
+  await page
+    .getByRole('tab', {
+      name: 'Scene & Camera',
+      includeHidden: true,
+      exact: true,
+    })
+    .dispatchEvent('click')
   await page.locator('#toggleMinimap').dispatchEvent('click')
+  await expect(minimap).toBeHidden()
+
+  // Performance → Navigator refresh Off hides it and unticks the box; ticking
+  // the box shows it again and turns the refresh back on, so it draws
+  const choose = (id: string, value: string) =>
+    page.locator(id).evaluate((el, v) => {
+      ;(el as HTMLSelectElement).value = v
+      el.dispatchEvent(new Event('change', { bubbles: true }))
+    }, value)
+  await page.locator('#toggleMinimap').dispatchEvent('click')
+  await expect(minimap).toBeVisible()
+  await choose('#perf_minimap', '0')
+  await expect(minimap).toBeHidden()
+  await expect(page.locator('#toggleMinimap')).not.toBeChecked()
+  await page.locator('#toggleMinimap').dispatchEvent('click')
+  await expect(minimap).toBeVisible()
+  await expect(page.locator('#perf_minimap')).toHaveValue('1')
+  // another Performance change leaves an unticked navigator hidden
+  await page.locator('#toggleMinimap').dispatchEvent('click')
+  await expect(minimap).toBeHidden()
+  await choose('#perf_minimap', '3')
+  await choose('#perf_detail', 'low')
   await expect(minimap).toBeHidden()
 })

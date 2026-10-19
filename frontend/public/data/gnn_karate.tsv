@@ -1,0 +1,995 @@
+SourceNode	SourceLayer	TargetNode	TargetLayer	Weight	Channel
+member 1	Input	member 2	Input	1	Graph edge
+member 1	Input	member 3	Input	1	Graph edge
+member 1	Input	member 4	Input	1	Graph edge
+member 1	Input	member 5	Input	1	Graph edge
+member 1	Input	member 6	Input	1	Graph edge
+member 1	Input	member 7	Input	1	Graph edge
+member 1	Input	member 8	Input	1	Graph edge
+member 1	Input	member 9	Input	1	Graph edge
+member 1	Input	member 11	Input	1	Graph edge
+member 1	Input	member 12	Input	1	Graph edge
+member 1	Input	member 13	Input	1	Graph edge
+member 1	Input	member 14	Input	1	Graph edge
+member 1	Input	member 18	Input	1	Graph edge
+member 1	Input	member 20	Input	1	Graph edge
+member 1	Input	member 22	Input	1	Graph edge
+member 1	Input	member 32	Input	1	Graph edge
+member 2	Input	member 3	Input	1	Graph edge
+member 2	Input	member 4	Input	1	Graph edge
+member 2	Input	member 8	Input	1	Graph edge
+member 2	Input	member 14	Input	1	Graph edge
+member 2	Input	member 18	Input	1	Graph edge
+member 2	Input	member 20	Input	1	Graph edge
+member 2	Input	member 22	Input	1	Graph edge
+member 2	Input	member 31	Input	1	Graph edge
+member 3	Input	member 4	Input	1	Graph edge
+member 3	Input	member 8	Input	1	Graph edge
+member 3	Input	member 9	Input	1	Graph edge
+member 3	Input	member 10	Input	1	Graph edge
+member 3	Input	member 14	Input	1	Graph edge
+member 3	Input	member 28	Input	1	Graph edge
+member 3	Input	member 29	Input	1	Graph edge
+member 3	Input	member 33	Input	1	Graph edge
+member 4	Input	member 8	Input	1	Graph edge
+member 4	Input	member 13	Input	1	Graph edge
+member 4	Input	member 14	Input	1	Graph edge
+member 5	Input	member 7	Input	1	Graph edge
+member 5	Input	member 11	Input	1	Graph edge
+member 6	Input	member 7	Input	1	Graph edge
+member 6	Input	member 11	Input	1	Graph edge
+member 6	Input	member 17	Input	1	Graph edge
+member 7	Input	member 17	Input	1	Graph edge
+member 9	Input	member 31	Input	1	Graph edge
+member 9	Input	member 33	Input	1	Graph edge
+member 9	Input	member 34	Input	1	Graph edge
+member 10	Input	member 34	Input	1	Graph edge
+member 14	Input	member 34	Input	1	Graph edge
+member 15	Input	member 33	Input	1	Graph edge
+member 15	Input	member 34	Input	1	Graph edge
+member 16	Input	member 33	Input	1	Graph edge
+member 16	Input	member 34	Input	1	Graph edge
+member 19	Input	member 33	Input	1	Graph edge
+member 19	Input	member 34	Input	1	Graph edge
+member 20	Input	member 34	Input	1	Graph edge
+member 21	Input	member 33	Input	1	Graph edge
+member 21	Input	member 34	Input	1	Graph edge
+member 23	Input	member 33	Input	1	Graph edge
+member 23	Input	member 34	Input	1	Graph edge
+member 24	Input	member 26	Input	1	Graph edge
+member 24	Input	member 28	Input	1	Graph edge
+member 24	Input	member 30	Input	1	Graph edge
+member 24	Input	member 33	Input	1	Graph edge
+member 24	Input	member 34	Input	1	Graph edge
+member 25	Input	member 26	Input	1	Graph edge
+member 25	Input	member 28	Input	1	Graph edge
+member 25	Input	member 32	Input	1	Graph edge
+member 26	Input	member 32	Input	1	Graph edge
+member 27	Input	member 30	Input	1	Graph edge
+member 27	Input	member 34	Input	1	Graph edge
+member 28	Input	member 34	Input	1	Graph edge
+member 29	Input	member 32	Input	1	Graph edge
+member 29	Input	member 34	Input	1	Graph edge
+member 30	Input	member 33	Input	1	Graph edge
+member 30	Input	member 34	Input	1	Graph edge
+member 31	Input	member 33	Input	1	Graph edge
+member 31	Input	member 34	Input	1	Graph edge
+member 32	Input	member 33	Input	1	Graph edge
+member 32	Input	member 34	Input	1	Graph edge
+member 33	Input	member 34	Input	1	Graph edge
+member 1	GCN layer 1	member 2	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 3	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 4	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 5	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 6	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 7	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 8	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 9	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 11	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 12	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 13	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 14	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 18	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 20	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 22	GCN layer 1	1	Graph edge
+member 1	GCN layer 1	member 32	GCN layer 1	1	Graph edge
+member 2	GCN layer 1	member 3	GCN layer 1	1	Graph edge
+member 2	GCN layer 1	member 4	GCN layer 1	1	Graph edge
+member 2	GCN layer 1	member 8	GCN layer 1	1	Graph edge
+member 2	GCN layer 1	member 14	GCN layer 1	1	Graph edge
+member 2	GCN layer 1	member 18	GCN layer 1	1	Graph edge
+member 2	GCN layer 1	member 20	GCN layer 1	1	Graph edge
+member 2	GCN layer 1	member 22	GCN layer 1	1	Graph edge
+member 2	GCN layer 1	member 31	GCN layer 1	1	Graph edge
+member 3	GCN layer 1	member 4	GCN layer 1	1	Graph edge
+member 3	GCN layer 1	member 8	GCN layer 1	1	Graph edge
+member 3	GCN layer 1	member 9	GCN layer 1	1	Graph edge
+member 3	GCN layer 1	member 10	GCN layer 1	1	Graph edge
+member 3	GCN layer 1	member 14	GCN layer 1	1	Graph edge
+member 3	GCN layer 1	member 28	GCN layer 1	1	Graph edge
+member 3	GCN layer 1	member 29	GCN layer 1	1	Graph edge
+member 3	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 4	GCN layer 1	member 8	GCN layer 1	1	Graph edge
+member 4	GCN layer 1	member 13	GCN layer 1	1	Graph edge
+member 4	GCN layer 1	member 14	GCN layer 1	1	Graph edge
+member 5	GCN layer 1	member 7	GCN layer 1	1	Graph edge
+member 5	GCN layer 1	member 11	GCN layer 1	1	Graph edge
+member 6	GCN layer 1	member 7	GCN layer 1	1	Graph edge
+member 6	GCN layer 1	member 11	GCN layer 1	1	Graph edge
+member 6	GCN layer 1	member 17	GCN layer 1	1	Graph edge
+member 7	GCN layer 1	member 17	GCN layer 1	1	Graph edge
+member 9	GCN layer 1	member 31	GCN layer 1	1	Graph edge
+member 9	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 9	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 10	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 14	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 15	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 15	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 16	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 16	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 19	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 19	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 20	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 21	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 21	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 23	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 23	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 24	GCN layer 1	member 26	GCN layer 1	1	Graph edge
+member 24	GCN layer 1	member 28	GCN layer 1	1	Graph edge
+member 24	GCN layer 1	member 30	GCN layer 1	1	Graph edge
+member 24	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 24	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 25	GCN layer 1	member 26	GCN layer 1	1	Graph edge
+member 25	GCN layer 1	member 28	GCN layer 1	1	Graph edge
+member 25	GCN layer 1	member 32	GCN layer 1	1	Graph edge
+member 26	GCN layer 1	member 32	GCN layer 1	1	Graph edge
+member 27	GCN layer 1	member 30	GCN layer 1	1	Graph edge
+member 27	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 28	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 29	GCN layer 1	member 32	GCN layer 1	1	Graph edge
+member 29	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 30	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 30	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 31	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 31	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 32	GCN layer 1	member 33	GCN layer 1	1	Graph edge
+member 32	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 33	GCN layer 1	member 34	GCN layer 1	1	Graph edge
+member 1	GCN layer 2	member 2	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 3	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 4	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 5	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 6	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 7	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 8	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 9	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 11	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 12	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 13	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 14	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 18	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 20	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 22	GCN layer 2	1	Graph edge
+member 1	GCN layer 2	member 32	GCN layer 2	1	Graph edge
+member 2	GCN layer 2	member 3	GCN layer 2	1	Graph edge
+member 2	GCN layer 2	member 4	GCN layer 2	1	Graph edge
+member 2	GCN layer 2	member 8	GCN layer 2	1	Graph edge
+member 2	GCN layer 2	member 14	GCN layer 2	1	Graph edge
+member 2	GCN layer 2	member 18	GCN layer 2	1	Graph edge
+member 2	GCN layer 2	member 20	GCN layer 2	1	Graph edge
+member 2	GCN layer 2	member 22	GCN layer 2	1	Graph edge
+member 2	GCN layer 2	member 31	GCN layer 2	1	Graph edge
+member 3	GCN layer 2	member 4	GCN layer 2	1	Graph edge
+member 3	GCN layer 2	member 8	GCN layer 2	1	Graph edge
+member 3	GCN layer 2	member 9	GCN layer 2	1	Graph edge
+member 3	GCN layer 2	member 10	GCN layer 2	1	Graph edge
+member 3	GCN layer 2	member 14	GCN layer 2	1	Graph edge
+member 3	GCN layer 2	member 28	GCN layer 2	1	Graph edge
+member 3	GCN layer 2	member 29	GCN layer 2	1	Graph edge
+member 3	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 4	GCN layer 2	member 8	GCN layer 2	1	Graph edge
+member 4	GCN layer 2	member 13	GCN layer 2	1	Graph edge
+member 4	GCN layer 2	member 14	GCN layer 2	1	Graph edge
+member 5	GCN layer 2	member 7	GCN layer 2	1	Graph edge
+member 5	GCN layer 2	member 11	GCN layer 2	1	Graph edge
+member 6	GCN layer 2	member 7	GCN layer 2	1	Graph edge
+member 6	GCN layer 2	member 11	GCN layer 2	1	Graph edge
+member 6	GCN layer 2	member 17	GCN layer 2	1	Graph edge
+member 7	GCN layer 2	member 17	GCN layer 2	1	Graph edge
+member 9	GCN layer 2	member 31	GCN layer 2	1	Graph edge
+member 9	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 9	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 10	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 14	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 15	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 15	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 16	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 16	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 19	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 19	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 20	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 21	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 21	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 23	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 23	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 24	GCN layer 2	member 26	GCN layer 2	1	Graph edge
+member 24	GCN layer 2	member 28	GCN layer 2	1	Graph edge
+member 24	GCN layer 2	member 30	GCN layer 2	1	Graph edge
+member 24	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 24	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 25	GCN layer 2	member 26	GCN layer 2	1	Graph edge
+member 25	GCN layer 2	member 28	GCN layer 2	1	Graph edge
+member 25	GCN layer 2	member 32	GCN layer 2	1	Graph edge
+member 26	GCN layer 2	member 32	GCN layer 2	1	Graph edge
+member 27	GCN layer 2	member 30	GCN layer 2	1	Graph edge
+member 27	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 28	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 29	GCN layer 2	member 32	GCN layer 2	1	Graph edge
+member 29	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 30	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 30	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 31	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 31	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 32	GCN layer 2	member 33	GCN layer 2	1	Graph edge
+member 32	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 33	GCN layer 2	member 34	GCN layer 2	1	Graph edge
+member 1	GCN layer 3	member 2	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 3	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 4	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 5	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 6	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 7	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 8	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 9	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 11	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 12	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 13	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 14	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 18	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 20	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 22	GCN layer 3	1	Graph edge
+member 1	GCN layer 3	member 32	GCN layer 3	1	Graph edge
+member 2	GCN layer 3	member 3	GCN layer 3	1	Graph edge
+member 2	GCN layer 3	member 4	GCN layer 3	1	Graph edge
+member 2	GCN layer 3	member 8	GCN layer 3	1	Graph edge
+member 2	GCN layer 3	member 14	GCN layer 3	1	Graph edge
+member 2	GCN layer 3	member 18	GCN layer 3	1	Graph edge
+member 2	GCN layer 3	member 20	GCN layer 3	1	Graph edge
+member 2	GCN layer 3	member 22	GCN layer 3	1	Graph edge
+member 2	GCN layer 3	member 31	GCN layer 3	1	Graph edge
+member 3	GCN layer 3	member 4	GCN layer 3	1	Graph edge
+member 3	GCN layer 3	member 8	GCN layer 3	1	Graph edge
+member 3	GCN layer 3	member 9	GCN layer 3	1	Graph edge
+member 3	GCN layer 3	member 10	GCN layer 3	1	Graph edge
+member 3	GCN layer 3	member 14	GCN layer 3	1	Graph edge
+member 3	GCN layer 3	member 28	GCN layer 3	1	Graph edge
+member 3	GCN layer 3	member 29	GCN layer 3	1	Graph edge
+member 3	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 4	GCN layer 3	member 8	GCN layer 3	1	Graph edge
+member 4	GCN layer 3	member 13	GCN layer 3	1	Graph edge
+member 4	GCN layer 3	member 14	GCN layer 3	1	Graph edge
+member 5	GCN layer 3	member 7	GCN layer 3	1	Graph edge
+member 5	GCN layer 3	member 11	GCN layer 3	1	Graph edge
+member 6	GCN layer 3	member 7	GCN layer 3	1	Graph edge
+member 6	GCN layer 3	member 11	GCN layer 3	1	Graph edge
+member 6	GCN layer 3	member 17	GCN layer 3	1	Graph edge
+member 7	GCN layer 3	member 17	GCN layer 3	1	Graph edge
+member 9	GCN layer 3	member 31	GCN layer 3	1	Graph edge
+member 9	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 9	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 10	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 14	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 15	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 15	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 16	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 16	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 19	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 19	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 20	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 21	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 21	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 23	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 23	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 24	GCN layer 3	member 26	GCN layer 3	1	Graph edge
+member 24	GCN layer 3	member 28	GCN layer 3	1	Graph edge
+member 24	GCN layer 3	member 30	GCN layer 3	1	Graph edge
+member 24	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 24	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 25	GCN layer 3	member 26	GCN layer 3	1	Graph edge
+member 25	GCN layer 3	member 28	GCN layer 3	1	Graph edge
+member 25	GCN layer 3	member 32	GCN layer 3	1	Graph edge
+member 26	GCN layer 3	member 32	GCN layer 3	1	Graph edge
+member 27	GCN layer 3	member 30	GCN layer 3	1	Graph edge
+member 27	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 28	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 29	GCN layer 3	member 32	GCN layer 3	1	Graph edge
+member 29	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 30	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 30	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 31	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 31	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 32	GCN layer 3	member 33	GCN layer 3	1	Graph edge
+member 32	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 33	GCN layer 3	member 34	GCN layer 3	1	Graph edge
+member 1	Output	member 2	Output	1	Graph edge
+member 1	Output	member 3	Output	1	Graph edge
+member 1	Output	member 4	Output	1	Graph edge
+member 1	Output	member 5	Output	1	Graph edge
+member 1	Output	member 6	Output	1	Graph edge
+member 1	Output	member 7	Output	1	Graph edge
+member 1	Output	member 8	Output	1	Graph edge
+member 1	Output	member 9	Output	1	Graph edge
+member 1	Output	member 11	Output	1	Graph edge
+member 1	Output	member 12	Output	1	Graph edge
+member 1	Output	member 13	Output	1	Graph edge
+member 1	Output	member 14	Output	1	Graph edge
+member 1	Output	member 18	Output	1	Graph edge
+member 1	Output	member 20	Output	1	Graph edge
+member 1	Output	member 22	Output	1	Graph edge
+member 1	Output	member 32	Output	1	Graph edge
+member 2	Output	member 3	Output	1	Graph edge
+member 2	Output	member 4	Output	1	Graph edge
+member 2	Output	member 8	Output	1	Graph edge
+member 2	Output	member 14	Output	1	Graph edge
+member 2	Output	member 18	Output	1	Graph edge
+member 2	Output	member 20	Output	1	Graph edge
+member 2	Output	member 22	Output	1	Graph edge
+member 2	Output	member 31	Output	1	Graph edge
+member 3	Output	member 4	Output	1	Graph edge
+member 3	Output	member 8	Output	1	Graph edge
+member 3	Output	member 9	Output	1	Graph edge
+member 3	Output	member 10	Output	1	Graph edge
+member 3	Output	member 14	Output	1	Graph edge
+member 3	Output	member 28	Output	1	Graph edge
+member 3	Output	member 29	Output	1	Graph edge
+member 3	Output	member 33	Output	1	Graph edge
+member 4	Output	member 8	Output	1	Graph edge
+member 4	Output	member 13	Output	1	Graph edge
+member 4	Output	member 14	Output	1	Graph edge
+member 5	Output	member 7	Output	1	Graph edge
+member 5	Output	member 11	Output	1	Graph edge
+member 6	Output	member 7	Output	1	Graph edge
+member 6	Output	member 11	Output	1	Graph edge
+member 6	Output	member 17	Output	1	Graph edge
+member 7	Output	member 17	Output	1	Graph edge
+member 9	Output	member 31	Output	1	Graph edge
+member 9	Output	member 33	Output	1	Graph edge
+member 9	Output	member 34	Output	1	Graph edge
+member 10	Output	member 34	Output	1	Graph edge
+member 14	Output	member 34	Output	1	Graph edge
+member 15	Output	member 33	Output	1	Graph edge
+member 15	Output	member 34	Output	1	Graph edge
+member 16	Output	member 33	Output	1	Graph edge
+member 16	Output	member 34	Output	1	Graph edge
+member 19	Output	member 33	Output	1	Graph edge
+member 19	Output	member 34	Output	1	Graph edge
+member 20	Output	member 34	Output	1	Graph edge
+member 21	Output	member 33	Output	1	Graph edge
+member 21	Output	member 34	Output	1	Graph edge
+member 23	Output	member 33	Output	1	Graph edge
+member 23	Output	member 34	Output	1	Graph edge
+member 24	Output	member 26	Output	1	Graph edge
+member 24	Output	member 28	Output	1	Graph edge
+member 24	Output	member 30	Output	1	Graph edge
+member 24	Output	member 33	Output	1	Graph edge
+member 24	Output	member 34	Output	1	Graph edge
+member 25	Output	member 26	Output	1	Graph edge
+member 25	Output	member 28	Output	1	Graph edge
+member 25	Output	member 32	Output	1	Graph edge
+member 26	Output	member 32	Output	1	Graph edge
+member 27	Output	member 30	Output	1	Graph edge
+member 27	Output	member 34	Output	1	Graph edge
+member 28	Output	member 34	Output	1	Graph edge
+member 29	Output	member 32	Output	1	Graph edge
+member 29	Output	member 34	Output	1	Graph edge
+member 30	Output	member 33	Output	1	Graph edge
+member 30	Output	member 34	Output	1	Graph edge
+member 31	Output	member 33	Output	1	Graph edge
+member 31	Output	member 34	Output	1	Graph edge
+member 32	Output	member 33	Output	1	Graph edge
+member 32	Output	member 34	Output	1	Graph edge
+member 33	Output	member 34	Output	1	Graph edge
+member 2	Input	member 1	GCN layer 1	0.0767	Message
+member 3	Input	member 1	GCN layer 1	0.0731	Message
+member 4	Input	member 1	GCN layer 1	0.0917	Message
+member 5	Input	member 1	GCN layer 1	0.1213	Message
+member 6	Input	member 1	GCN layer 1	0.1085	Message
+member 7	Input	member 1	GCN layer 1	0.1085	Message
+member 8	Input	member 1	GCN layer 1	0.1085	Message
+member 9	Input	member 1	GCN layer 1	0.099	Message
+member 11	Input	member 1	GCN layer 1	0.1213	Message
+member 12	Input	member 1	GCN layer 1	0.1715	Message
+member 13	Input	member 1	GCN layer 1	0.14	Message
+member 14	Input	member 1	GCN layer 1	0.099	Message
+member 18	Input	member 1	GCN layer 1	0.14	Message
+member 20	Input	member 1	GCN layer 1	0.1213	Message
+member 22	Input	member 1	GCN layer 1	0.14	Message
+member 32	Input	member 1	GCN layer 1	0.0917	Message
+member 1	Input	member 2	GCN layer 1	0.0767	Message
+member 3	Input	member 2	GCN layer 1	0.0953	Message
+member 4	Input	member 2	GCN layer 1	0.1195	Message
+member 8	Input	member 2	GCN layer 1	0.1414	Message
+member 14	Input	member 2	GCN layer 1	0.1291	Message
+member 18	Input	member 2	GCN layer 1	0.1826	Message
+member 20	Input	member 2	GCN layer 1	0.1581	Message
+member 22	Input	member 2	GCN layer 1	0.1826	Message
+member 31	Input	member 2	GCN layer 1	0.1414	Message
+member 1	Input	member 3	GCN layer 1	0.0731	Message
+member 2	Input	member 3	GCN layer 1	0.0953	Message
+member 33	Input	member 3	GCN layer 1	0.0836	Message
+member 4	Input	member 3	GCN layer 1	0.114	Message
+member 8	Input	member 3	GCN layer 1	0.1348	Message
+member 9	Input	member 3	GCN layer 1	0.1231	Message
+member 10	Input	member 3	GCN layer 1	0.1741	Message
+member 14	Input	member 3	GCN layer 1	0.1231	Message
+member 28	Input	member 3	GCN layer 1	0.1348	Message
+member 29	Input	member 3	GCN layer 1	0.1508	Message
+member 1	Input	member 4	GCN layer 1	0.0917	Message
+member 2	Input	member 4	GCN layer 1	0.1195	Message
+member 3	Input	member 4	GCN layer 1	0.114	Message
+member 8	Input	member 4	GCN layer 1	0.169	Message
+member 13	Input	member 4	GCN layer 1	0.2182	Message
+member 14	Input	member 4	GCN layer 1	0.1543	Message
+member 1	Input	member 5	GCN layer 1	0.1213	Message
+member 11	Input	member 5	GCN layer 1	0.25	Message
+member 7	Input	member 5	GCN layer 1	0.2236	Message
+member 1	Input	member 6	GCN layer 1	0.1085	Message
+member 17	Input	member 6	GCN layer 1	0.2582	Message
+member 11	Input	member 6	GCN layer 1	0.2236	Message
+member 7	Input	member 6	GCN layer 1	0.2	Message
+member 1	Input	member 7	GCN layer 1	0.1085	Message
+member 17	Input	member 7	GCN layer 1	0.2582	Message
+member 5	Input	member 7	GCN layer 1	0.2236	Message
+member 6	Input	member 7	GCN layer 1	0.2	Message
+member 1	Input	member 8	GCN layer 1	0.1085	Message
+member 2	Input	member 8	GCN layer 1	0.1414	Message
+member 3	Input	member 8	GCN layer 1	0.1348	Message
+member 4	Input	member 8	GCN layer 1	0.169	Message
+member 1	Input	member 9	GCN layer 1	0.099	Message
+member 34	Input	member 9	GCN layer 1	0.0962	Message
+member 3	Input	member 9	GCN layer 1	0.1231	Message
+member 33	Input	member 9	GCN layer 1	0.1132	Message
+member 31	Input	member 9	GCN layer 1	0.1826	Message
+member 34	Input	member 10	GCN layer 1	0.1361	Message
+member 3	Input	member 10	GCN layer 1	0.1741	Message
+member 1	Input	member 11	GCN layer 1	0.1213	Message
+member 5	Input	member 11	GCN layer 1	0.25	Message
+member 6	Input	member 11	GCN layer 1	0.2236	Message
+member 1	Input	member 12	GCN layer 1	0.1715	Message
+member 1	Input	member 13	GCN layer 1	0.14	Message
+member 4	Input	member 13	GCN layer 1	0.2182	Message
+member 1	Input	member 14	GCN layer 1	0.099	Message
+member 2	Input	member 14	GCN layer 1	0.1291	Message
+member 3	Input	member 14	GCN layer 1	0.1231	Message
+member 4	Input	member 14	GCN layer 1	0.1543	Message
+member 34	Input	member 14	GCN layer 1	0.0962	Message
+member 33	Input	member 15	GCN layer 1	0.1601	Message
+member 34	Input	member 15	GCN layer 1	0.1361	Message
+member 33	Input	member 16	GCN layer 1	0.1601	Message
+member 34	Input	member 16	GCN layer 1	0.1361	Message
+member 6	Input	member 17	GCN layer 1	0.2582	Message
+member 7	Input	member 17	GCN layer 1	0.2582	Message
+member 1	Input	member 18	GCN layer 1	0.14	Message
+member 2	Input	member 18	GCN layer 1	0.1826	Message
+member 33	Input	member 19	GCN layer 1	0.1601	Message
+member 34	Input	member 19	GCN layer 1	0.1361	Message
+member 1	Input	member 20	GCN layer 1	0.1213	Message
+member 2	Input	member 20	GCN layer 1	0.1581	Message
+member 34	Input	member 20	GCN layer 1	0.1179	Message
+member 33	Input	member 21	GCN layer 1	0.1601	Message
+member 34	Input	member 21	GCN layer 1	0.1361	Message
+member 1	Input	member 22	GCN layer 1	0.14	Message
+member 2	Input	member 22	GCN layer 1	0.1826	Message
+member 33	Input	member 23	GCN layer 1	0.1601	Message
+member 34	Input	member 23	GCN layer 1	0.1361	Message
+member 33	Input	member 24	GCN layer 1	0.1132	Message
+member 34	Input	member 24	GCN layer 1	0.0962	Message
+member 26	Input	member 24	GCN layer 1	0.2041	Message
+member 28	Input	member 24	GCN layer 1	0.1826	Message
+member 30	Input	member 24	GCN layer 1	0.1826	Message
+member 26	Input	member 25	GCN layer 1	0.25	Message
+member 28	Input	member 25	GCN layer 1	0.2236	Message
+member 32	Input	member 25	GCN layer 1	0.189	Message
+member 25	Input	member 26	GCN layer 1	0.25	Message
+member 32	Input	member 26	GCN layer 1	0.189	Message
+member 24	Input	member 26	GCN layer 1	0.2041	Message
+member 34	Input	member 27	GCN layer 1	0.1361	Message
+member 30	Input	member 27	GCN layer 1	0.2582	Message
+member 25	Input	member 28	GCN layer 1	0.2236	Message
+member 34	Input	member 28	GCN layer 1	0.1054	Message
+member 3	Input	member 28	GCN layer 1	0.1348	Message
+member 24	Input	member 28	GCN layer 1	0.1826	Message
+member 34	Input	member 29	GCN layer 1	0.1179	Message
+member 3	Input	member 29	GCN layer 1	0.1508	Message
+member 32	Input	member 29	GCN layer 1	0.189	Message
+member 33	Input	member 30	GCN layer 1	0.124	Message
+member 34	Input	member 30	GCN layer 1	0.1054	Message
+member 27	Input	member 30	GCN layer 1	0.2582	Message
+member 24	Input	member 30	GCN layer 1	0.1826	Message
+member 9	Input	member 31	GCN layer 1	0.1826	Message
+member 2	Input	member 31	GCN layer 1	0.1414	Message
+member 33	Input	member 31	GCN layer 1	0.124	Message
+member 34	Input	member 31	GCN layer 1	0.1054	Message
+member 1	Input	member 32	GCN layer 1	0.0917	Message
+member 33	Input	member 32	GCN layer 1	0.1048	Message
+member 34	Input	member 32	GCN layer 1	0.0891	Message
+member 25	Input	member 32	GCN layer 1	0.189	Message
+member 26	Input	member 32	GCN layer 1	0.189	Message
+member 29	Input	member 32	GCN layer 1	0.189	Message
+member 34	Input	member 33	GCN layer 1	0.0654	Message
+member 3	Input	member 33	GCN layer 1	0.0836	Message
+member 9	Input	member 33	GCN layer 1	0.1132	Message
+member 15	Input	member 33	GCN layer 1	0.1601	Message
+member 16	Input	member 33	GCN layer 1	0.1601	Message
+member 19	Input	member 33	GCN layer 1	0.1601	Message
+member 21	Input	member 33	GCN layer 1	0.1601	Message
+member 23	Input	member 33	GCN layer 1	0.1601	Message
+member 24	Input	member 33	GCN layer 1	0.1132	Message
+member 30	Input	member 33	GCN layer 1	0.124	Message
+member 31	Input	member 33	GCN layer 1	0.124	Message
+member 32	Input	member 33	GCN layer 1	0.1048	Message
+member 33	Input	member 34	GCN layer 1	0.0654	Message
+member 9	Input	member 34	GCN layer 1	0.0962	Message
+member 10	Input	member 34	GCN layer 1	0.1361	Message
+member 14	Input	member 34	GCN layer 1	0.0962	Message
+member 15	Input	member 34	GCN layer 1	0.1361	Message
+member 16	Input	member 34	GCN layer 1	0.1361	Message
+member 19	Input	member 34	GCN layer 1	0.1361	Message
+member 20	Input	member 34	GCN layer 1	0.1179	Message
+member 21	Input	member 34	GCN layer 1	0.1361	Message
+member 23	Input	member 34	GCN layer 1	0.1361	Message
+member 24	Input	member 34	GCN layer 1	0.0962	Message
+member 27	Input	member 34	GCN layer 1	0.1361	Message
+member 28	Input	member 34	GCN layer 1	0.1054	Message
+member 29	Input	member 34	GCN layer 1	0.1179	Message
+member 30	Input	member 34	GCN layer 1	0.1054	Message
+member 31	Input	member 34	GCN layer 1	0.1054	Message
+member 32	Input	member 34	GCN layer 1	0.0891	Message
+member 2	GCN layer 1	member 1	GCN layer 2	0.0767	Message
+member 3	GCN layer 1	member 1	GCN layer 2	0.0731	Message
+member 4	GCN layer 1	member 1	GCN layer 2	0.0917	Message
+member 5	GCN layer 1	member 1	GCN layer 2	0.1213	Message
+member 6	GCN layer 1	member 1	GCN layer 2	0.1085	Message
+member 7	GCN layer 1	member 1	GCN layer 2	0.1085	Message
+member 8	GCN layer 1	member 1	GCN layer 2	0.1085	Message
+member 9	GCN layer 1	member 1	GCN layer 2	0.099	Message
+member 11	GCN layer 1	member 1	GCN layer 2	0.1213	Message
+member 12	GCN layer 1	member 1	GCN layer 2	0.1715	Message
+member 13	GCN layer 1	member 1	GCN layer 2	0.14	Message
+member 14	GCN layer 1	member 1	GCN layer 2	0.099	Message
+member 18	GCN layer 1	member 1	GCN layer 2	0.14	Message
+member 20	GCN layer 1	member 1	GCN layer 2	0.1213	Message
+member 22	GCN layer 1	member 1	GCN layer 2	0.14	Message
+member 32	GCN layer 1	member 1	GCN layer 2	0.0917	Message
+member 1	GCN layer 1	member 2	GCN layer 2	0.0767	Message
+member 3	GCN layer 1	member 2	GCN layer 2	0.0953	Message
+member 4	GCN layer 1	member 2	GCN layer 2	0.1195	Message
+member 8	GCN layer 1	member 2	GCN layer 2	0.1414	Message
+member 14	GCN layer 1	member 2	GCN layer 2	0.1291	Message
+member 18	GCN layer 1	member 2	GCN layer 2	0.1826	Message
+member 20	GCN layer 1	member 2	GCN layer 2	0.1581	Message
+member 22	GCN layer 1	member 2	GCN layer 2	0.1826	Message
+member 31	GCN layer 1	member 2	GCN layer 2	0.1414	Message
+member 1	GCN layer 1	member 3	GCN layer 2	0.0731	Message
+member 2	GCN layer 1	member 3	GCN layer 2	0.0953	Message
+member 33	GCN layer 1	member 3	GCN layer 2	0.0836	Message
+member 4	GCN layer 1	member 3	GCN layer 2	0.114	Message
+member 8	GCN layer 1	member 3	GCN layer 2	0.1348	Message
+member 9	GCN layer 1	member 3	GCN layer 2	0.1231	Message
+member 10	GCN layer 1	member 3	GCN layer 2	0.1741	Message
+member 14	GCN layer 1	member 3	GCN layer 2	0.1231	Message
+member 28	GCN layer 1	member 3	GCN layer 2	0.1348	Message
+member 29	GCN layer 1	member 3	GCN layer 2	0.1508	Message
+member 1	GCN layer 1	member 4	GCN layer 2	0.0917	Message
+member 2	GCN layer 1	member 4	GCN layer 2	0.1195	Message
+member 3	GCN layer 1	member 4	GCN layer 2	0.114	Message
+member 8	GCN layer 1	member 4	GCN layer 2	0.169	Message
+member 13	GCN layer 1	member 4	GCN layer 2	0.2182	Message
+member 14	GCN layer 1	member 4	GCN layer 2	0.1543	Message
+member 1	GCN layer 1	member 5	GCN layer 2	0.1213	Message
+member 11	GCN layer 1	member 5	GCN layer 2	0.25	Message
+member 7	GCN layer 1	member 5	GCN layer 2	0.2236	Message
+member 1	GCN layer 1	member 6	GCN layer 2	0.1085	Message
+member 17	GCN layer 1	member 6	GCN layer 2	0.2582	Message
+member 11	GCN layer 1	member 6	GCN layer 2	0.2236	Message
+member 7	GCN layer 1	member 6	GCN layer 2	0.2	Message
+member 1	GCN layer 1	member 7	GCN layer 2	0.1085	Message
+member 17	GCN layer 1	member 7	GCN layer 2	0.2582	Message
+member 5	GCN layer 1	member 7	GCN layer 2	0.2236	Message
+member 6	GCN layer 1	member 7	GCN layer 2	0.2	Message
+member 1	GCN layer 1	member 8	GCN layer 2	0.1085	Message
+member 2	GCN layer 1	member 8	GCN layer 2	0.1414	Message
+member 3	GCN layer 1	member 8	GCN layer 2	0.1348	Message
+member 4	GCN layer 1	member 8	GCN layer 2	0.169	Message
+member 1	GCN layer 1	member 9	GCN layer 2	0.099	Message
+member 34	GCN layer 1	member 9	GCN layer 2	0.0962	Message
+member 3	GCN layer 1	member 9	GCN layer 2	0.1231	Message
+member 33	GCN layer 1	member 9	GCN layer 2	0.1132	Message
+member 31	GCN layer 1	member 9	GCN layer 2	0.1826	Message
+member 34	GCN layer 1	member 10	GCN layer 2	0.1361	Message
+member 3	GCN layer 1	member 10	GCN layer 2	0.1741	Message
+member 1	GCN layer 1	member 11	GCN layer 2	0.1213	Message
+member 5	GCN layer 1	member 11	GCN layer 2	0.25	Message
+member 6	GCN layer 1	member 11	GCN layer 2	0.2236	Message
+member 1	GCN layer 1	member 12	GCN layer 2	0.1715	Message
+member 1	GCN layer 1	member 13	GCN layer 2	0.14	Message
+member 4	GCN layer 1	member 13	GCN layer 2	0.2182	Message
+member 1	GCN layer 1	member 14	GCN layer 2	0.099	Message
+member 2	GCN layer 1	member 14	GCN layer 2	0.1291	Message
+member 3	GCN layer 1	member 14	GCN layer 2	0.1231	Message
+member 4	GCN layer 1	member 14	GCN layer 2	0.1543	Message
+member 34	GCN layer 1	member 14	GCN layer 2	0.0962	Message
+member 33	GCN layer 1	member 15	GCN layer 2	0.1601	Message
+member 34	GCN layer 1	member 15	GCN layer 2	0.1361	Message
+member 33	GCN layer 1	member 16	GCN layer 2	0.1601	Message
+member 34	GCN layer 1	member 16	GCN layer 2	0.1361	Message
+member 6	GCN layer 1	member 17	GCN layer 2	0.2582	Message
+member 7	GCN layer 1	member 17	GCN layer 2	0.2582	Message
+member 1	GCN layer 1	member 18	GCN layer 2	0.14	Message
+member 2	GCN layer 1	member 18	GCN layer 2	0.1826	Message
+member 33	GCN layer 1	member 19	GCN layer 2	0.1601	Message
+member 34	GCN layer 1	member 19	GCN layer 2	0.1361	Message
+member 1	GCN layer 1	member 20	GCN layer 2	0.1213	Message
+member 2	GCN layer 1	member 20	GCN layer 2	0.1581	Message
+member 34	GCN layer 1	member 20	GCN layer 2	0.1179	Message
+member 33	GCN layer 1	member 21	GCN layer 2	0.1601	Message
+member 34	GCN layer 1	member 21	GCN layer 2	0.1361	Message
+member 1	GCN layer 1	member 22	GCN layer 2	0.14	Message
+member 2	GCN layer 1	member 22	GCN layer 2	0.1826	Message
+member 33	GCN layer 1	member 23	GCN layer 2	0.1601	Message
+member 34	GCN layer 1	member 23	GCN layer 2	0.1361	Message
+member 33	GCN layer 1	member 24	GCN layer 2	0.1132	Message
+member 34	GCN layer 1	member 24	GCN layer 2	0.0962	Message
+member 26	GCN layer 1	member 24	GCN layer 2	0.2041	Message
+member 28	GCN layer 1	member 24	GCN layer 2	0.1826	Message
+member 30	GCN layer 1	member 24	GCN layer 2	0.1826	Message
+member 26	GCN layer 1	member 25	GCN layer 2	0.25	Message
+member 28	GCN layer 1	member 25	GCN layer 2	0.2236	Message
+member 32	GCN layer 1	member 25	GCN layer 2	0.189	Message
+member 25	GCN layer 1	member 26	GCN layer 2	0.25	Message
+member 32	GCN layer 1	member 26	GCN layer 2	0.189	Message
+member 24	GCN layer 1	member 26	GCN layer 2	0.2041	Message
+member 34	GCN layer 1	member 27	GCN layer 2	0.1361	Message
+member 30	GCN layer 1	member 27	GCN layer 2	0.2582	Message
+member 25	GCN layer 1	member 28	GCN layer 2	0.2236	Message
+member 34	GCN layer 1	member 28	GCN layer 2	0.1054	Message
+member 3	GCN layer 1	member 28	GCN layer 2	0.1348	Message
+member 24	GCN layer 1	member 28	GCN layer 2	0.1826	Message
+member 34	GCN layer 1	member 29	GCN layer 2	0.1179	Message
+member 3	GCN layer 1	member 29	GCN layer 2	0.1508	Message
+member 32	GCN layer 1	member 29	GCN layer 2	0.189	Message
+member 33	GCN layer 1	member 30	GCN layer 2	0.124	Message
+member 34	GCN layer 1	member 30	GCN layer 2	0.1054	Message
+member 27	GCN layer 1	member 30	GCN layer 2	0.2582	Message
+member 24	GCN layer 1	member 30	GCN layer 2	0.1826	Message
+member 9	GCN layer 1	member 31	GCN layer 2	0.1826	Message
+member 2	GCN layer 1	member 31	GCN layer 2	0.1414	Message
+member 33	GCN layer 1	member 31	GCN layer 2	0.124	Message
+member 34	GCN layer 1	member 31	GCN layer 2	0.1054	Message
+member 1	GCN layer 1	member 32	GCN layer 2	0.0917	Message
+member 33	GCN layer 1	member 32	GCN layer 2	0.1048	Message
+member 34	GCN layer 1	member 32	GCN layer 2	0.0891	Message
+member 25	GCN layer 1	member 32	GCN layer 2	0.189	Message
+member 26	GCN layer 1	member 32	GCN layer 2	0.189	Message
+member 29	GCN layer 1	member 32	GCN layer 2	0.189	Message
+member 34	GCN layer 1	member 33	GCN layer 2	0.0654	Message
+member 3	GCN layer 1	member 33	GCN layer 2	0.0836	Message
+member 9	GCN layer 1	member 33	GCN layer 2	0.1132	Message
+member 15	GCN layer 1	member 33	GCN layer 2	0.1601	Message
+member 16	GCN layer 1	member 33	GCN layer 2	0.1601	Message
+member 19	GCN layer 1	member 33	GCN layer 2	0.1601	Message
+member 21	GCN layer 1	member 33	GCN layer 2	0.1601	Message
+member 23	GCN layer 1	member 33	GCN layer 2	0.1601	Message
+member 24	GCN layer 1	member 33	GCN layer 2	0.1132	Message
+member 30	GCN layer 1	member 33	GCN layer 2	0.124	Message
+member 31	GCN layer 1	member 33	GCN layer 2	0.124	Message
+member 32	GCN layer 1	member 33	GCN layer 2	0.1048	Message
+member 33	GCN layer 1	member 34	GCN layer 2	0.0654	Message
+member 9	GCN layer 1	member 34	GCN layer 2	0.0962	Message
+member 10	GCN layer 1	member 34	GCN layer 2	0.1361	Message
+member 14	GCN layer 1	member 34	GCN layer 2	0.0962	Message
+member 15	GCN layer 1	member 34	GCN layer 2	0.1361	Message
+member 16	GCN layer 1	member 34	GCN layer 2	0.1361	Message
+member 19	GCN layer 1	member 34	GCN layer 2	0.1361	Message
+member 20	GCN layer 1	member 34	GCN layer 2	0.1179	Message
+member 21	GCN layer 1	member 34	GCN layer 2	0.1361	Message
+member 23	GCN layer 1	member 34	GCN layer 2	0.1361	Message
+member 24	GCN layer 1	member 34	GCN layer 2	0.0962	Message
+member 27	GCN layer 1	member 34	GCN layer 2	0.1361	Message
+member 28	GCN layer 1	member 34	GCN layer 2	0.1054	Message
+member 29	GCN layer 1	member 34	GCN layer 2	0.1179	Message
+member 30	GCN layer 1	member 34	GCN layer 2	0.1054	Message
+member 31	GCN layer 1	member 34	GCN layer 2	0.1054	Message
+member 32	GCN layer 1	member 34	GCN layer 2	0.0891	Message
+member 2	GCN layer 2	member 1	GCN layer 3	0.0767	Message
+member 3	GCN layer 2	member 1	GCN layer 3	0.0731	Message
+member 4	GCN layer 2	member 1	GCN layer 3	0.0917	Message
+member 5	GCN layer 2	member 1	GCN layer 3	0.1213	Message
+member 6	GCN layer 2	member 1	GCN layer 3	0.1085	Message
+member 7	GCN layer 2	member 1	GCN layer 3	0.1085	Message
+member 8	GCN layer 2	member 1	GCN layer 3	0.1085	Message
+member 9	GCN layer 2	member 1	GCN layer 3	0.099	Message
+member 11	GCN layer 2	member 1	GCN layer 3	0.1213	Message
+member 12	GCN layer 2	member 1	GCN layer 3	0.1715	Message
+member 13	GCN layer 2	member 1	GCN layer 3	0.14	Message
+member 14	GCN layer 2	member 1	GCN layer 3	0.099	Message
+member 18	GCN layer 2	member 1	GCN layer 3	0.14	Message
+member 20	GCN layer 2	member 1	GCN layer 3	0.1213	Message
+member 22	GCN layer 2	member 1	GCN layer 3	0.14	Message
+member 32	GCN layer 2	member 1	GCN layer 3	0.0917	Message
+member 1	GCN layer 2	member 2	GCN layer 3	0.0767	Message
+member 3	GCN layer 2	member 2	GCN layer 3	0.0953	Message
+member 4	GCN layer 2	member 2	GCN layer 3	0.1195	Message
+member 8	GCN layer 2	member 2	GCN layer 3	0.1414	Message
+member 14	GCN layer 2	member 2	GCN layer 3	0.1291	Message
+member 18	GCN layer 2	member 2	GCN layer 3	0.1826	Message
+member 20	GCN layer 2	member 2	GCN layer 3	0.1581	Message
+member 22	GCN layer 2	member 2	GCN layer 3	0.1826	Message
+member 31	GCN layer 2	member 2	GCN layer 3	0.1414	Message
+member 1	GCN layer 2	member 3	GCN layer 3	0.0731	Message
+member 2	GCN layer 2	member 3	GCN layer 3	0.0953	Message
+member 33	GCN layer 2	member 3	GCN layer 3	0.0836	Message
+member 4	GCN layer 2	member 3	GCN layer 3	0.114	Message
+member 8	GCN layer 2	member 3	GCN layer 3	0.1348	Message
+member 9	GCN layer 2	member 3	GCN layer 3	0.1231	Message
+member 10	GCN layer 2	member 3	GCN layer 3	0.1741	Message
+member 14	GCN layer 2	member 3	GCN layer 3	0.1231	Message
+member 28	GCN layer 2	member 3	GCN layer 3	0.1348	Message
+member 29	GCN layer 2	member 3	GCN layer 3	0.1508	Message
+member 1	GCN layer 2	member 4	GCN layer 3	0.0917	Message
+member 2	GCN layer 2	member 4	GCN layer 3	0.1195	Message
+member 3	GCN layer 2	member 4	GCN layer 3	0.114	Message
+member 8	GCN layer 2	member 4	GCN layer 3	0.169	Message
+member 13	GCN layer 2	member 4	GCN layer 3	0.2182	Message
+member 14	GCN layer 2	member 4	GCN layer 3	0.1543	Message
+member 1	GCN layer 2	member 5	GCN layer 3	0.1213	Message
+member 11	GCN layer 2	member 5	GCN layer 3	0.25	Message
+member 7	GCN layer 2	member 5	GCN layer 3	0.2236	Message
+member 1	GCN layer 2	member 6	GCN layer 3	0.1085	Message
+member 17	GCN layer 2	member 6	GCN layer 3	0.2582	Message
+member 11	GCN layer 2	member 6	GCN layer 3	0.2236	Message
+member 7	GCN layer 2	member 6	GCN layer 3	0.2	Message
+member 1	GCN layer 2	member 7	GCN layer 3	0.1085	Message
+member 17	GCN layer 2	member 7	GCN layer 3	0.2582	Message
+member 5	GCN layer 2	member 7	GCN layer 3	0.2236	Message
+member 6	GCN layer 2	member 7	GCN layer 3	0.2	Message
+member 1	GCN layer 2	member 8	GCN layer 3	0.1085	Message
+member 2	GCN layer 2	member 8	GCN layer 3	0.1414	Message
+member 3	GCN layer 2	member 8	GCN layer 3	0.1348	Message
+member 4	GCN layer 2	member 8	GCN layer 3	0.169	Message
+member 1	GCN layer 2	member 9	GCN layer 3	0.099	Message
+member 34	GCN layer 2	member 9	GCN layer 3	0.0962	Message
+member 3	GCN layer 2	member 9	GCN layer 3	0.1231	Message
+member 33	GCN layer 2	member 9	GCN layer 3	0.1132	Message
+member 31	GCN layer 2	member 9	GCN layer 3	0.1826	Message
+member 34	GCN layer 2	member 10	GCN layer 3	0.1361	Message
+member 3	GCN layer 2	member 10	GCN layer 3	0.1741	Message
+member 1	GCN layer 2	member 11	GCN layer 3	0.1213	Message
+member 5	GCN layer 2	member 11	GCN layer 3	0.25	Message
+member 6	GCN layer 2	member 11	GCN layer 3	0.2236	Message
+member 1	GCN layer 2	member 12	GCN layer 3	0.1715	Message
+member 1	GCN layer 2	member 13	GCN layer 3	0.14	Message
+member 4	GCN layer 2	member 13	GCN layer 3	0.2182	Message
+member 1	GCN layer 2	member 14	GCN layer 3	0.099	Message
+member 2	GCN layer 2	member 14	GCN layer 3	0.1291	Message
+member 3	GCN layer 2	member 14	GCN layer 3	0.1231	Message
+member 4	GCN layer 2	member 14	GCN layer 3	0.1543	Message
+member 34	GCN layer 2	member 14	GCN layer 3	0.0962	Message
+member 33	GCN layer 2	member 15	GCN layer 3	0.1601	Message
+member 34	GCN layer 2	member 15	GCN layer 3	0.1361	Message
+member 33	GCN layer 2	member 16	GCN layer 3	0.1601	Message
+member 34	GCN layer 2	member 16	GCN layer 3	0.1361	Message
+member 6	GCN layer 2	member 17	GCN layer 3	0.2582	Message
+member 7	GCN layer 2	member 17	GCN layer 3	0.2582	Message
+member 1	GCN layer 2	member 18	GCN layer 3	0.14	Message
+member 2	GCN layer 2	member 18	GCN layer 3	0.1826	Message
+member 33	GCN layer 2	member 19	GCN layer 3	0.1601	Message
+member 34	GCN layer 2	member 19	GCN layer 3	0.1361	Message
+member 1	GCN layer 2	member 20	GCN layer 3	0.1213	Message
+member 2	GCN layer 2	member 20	GCN layer 3	0.1581	Message
+member 34	GCN layer 2	member 20	GCN layer 3	0.1179	Message
+member 33	GCN layer 2	member 21	GCN layer 3	0.1601	Message
+member 34	GCN layer 2	member 21	GCN layer 3	0.1361	Message
+member 1	GCN layer 2	member 22	GCN layer 3	0.14	Message
+member 2	GCN layer 2	member 22	GCN layer 3	0.1826	Message
+member 33	GCN layer 2	member 23	GCN layer 3	0.1601	Message
+member 34	GCN layer 2	member 23	GCN layer 3	0.1361	Message
+member 33	GCN layer 2	member 24	GCN layer 3	0.1132	Message
+member 34	GCN layer 2	member 24	GCN layer 3	0.0962	Message
+member 26	GCN layer 2	member 24	GCN layer 3	0.2041	Message
+member 28	GCN layer 2	member 24	GCN layer 3	0.1826	Message
+member 30	GCN layer 2	member 24	GCN layer 3	0.1826	Message
+member 26	GCN layer 2	member 25	GCN layer 3	0.25	Message
+member 28	GCN layer 2	member 25	GCN layer 3	0.2236	Message
+member 32	GCN layer 2	member 25	GCN layer 3	0.189	Message
+member 25	GCN layer 2	member 26	GCN layer 3	0.25	Message
+member 32	GCN layer 2	member 26	GCN layer 3	0.189	Message
+member 24	GCN layer 2	member 26	GCN layer 3	0.2041	Message
+member 34	GCN layer 2	member 27	GCN layer 3	0.1361	Message
+member 30	GCN layer 2	member 27	GCN layer 3	0.2582	Message
+member 25	GCN layer 2	member 28	GCN layer 3	0.2236	Message
+member 34	GCN layer 2	member 28	GCN layer 3	0.1054	Message
+member 3	GCN layer 2	member 28	GCN layer 3	0.1348	Message
+member 24	GCN layer 2	member 28	GCN layer 3	0.1826	Message
+member 34	GCN layer 2	member 29	GCN layer 3	0.1179	Message
+member 3	GCN layer 2	member 29	GCN layer 3	0.1508	Message
+member 32	GCN layer 2	member 29	GCN layer 3	0.189	Message
+member 33	GCN layer 2	member 30	GCN layer 3	0.124	Message
+member 34	GCN layer 2	member 30	GCN layer 3	0.1054	Message
+member 27	GCN layer 2	member 30	GCN layer 3	0.2582	Message
+member 24	GCN layer 2	member 30	GCN layer 3	0.1826	Message
+member 9	GCN layer 2	member 31	GCN layer 3	0.1826	Message
+member 2	GCN layer 2	member 31	GCN layer 3	0.1414	Message
+member 33	GCN layer 2	member 31	GCN layer 3	0.124	Message
+member 34	GCN layer 2	member 31	GCN layer 3	0.1054	Message
+member 1	GCN layer 2	member 32	GCN layer 3	0.0917	Message
+member 33	GCN layer 2	member 32	GCN layer 3	0.1048	Message
+member 34	GCN layer 2	member 32	GCN layer 3	0.0891	Message
+member 25	GCN layer 2	member 32	GCN layer 3	0.189	Message
+member 26	GCN layer 2	member 32	GCN layer 3	0.189	Message
+member 29	GCN layer 2	member 32	GCN layer 3	0.189	Message
+member 34	GCN layer 2	member 33	GCN layer 3	0.0654	Message
+member 3	GCN layer 2	member 33	GCN layer 3	0.0836	Message
+member 9	GCN layer 2	member 33	GCN layer 3	0.1132	Message
+member 15	GCN layer 2	member 33	GCN layer 3	0.1601	Message
+member 16	GCN layer 2	member 33	GCN layer 3	0.1601	Message
+member 19	GCN layer 2	member 33	GCN layer 3	0.1601	Message
+member 21	GCN layer 2	member 33	GCN layer 3	0.1601	Message
+member 23	GCN layer 2	member 33	GCN layer 3	0.1601	Message
+member 24	GCN layer 2	member 33	GCN layer 3	0.1132	Message
+member 30	GCN layer 2	member 33	GCN layer 3	0.124	Message
+member 31	GCN layer 2	member 33	GCN layer 3	0.124	Message
+member 32	GCN layer 2	member 33	GCN layer 3	0.1048	Message
+member 33	GCN layer 2	member 34	GCN layer 3	0.0654	Message
+member 9	GCN layer 2	member 34	GCN layer 3	0.0962	Message
+member 10	GCN layer 2	member 34	GCN layer 3	0.1361	Message
+member 14	GCN layer 2	member 34	GCN layer 3	0.0962	Message
+member 15	GCN layer 2	member 34	GCN layer 3	0.1361	Message
+member 16	GCN layer 2	member 34	GCN layer 3	0.1361	Message
+member 19	GCN layer 2	member 34	GCN layer 3	0.1361	Message
+member 20	GCN layer 2	member 34	GCN layer 3	0.1179	Message
+member 21	GCN layer 2	member 34	GCN layer 3	0.1361	Message
+member 23	GCN layer 2	member 34	GCN layer 3	0.1361	Message
+member 24	GCN layer 2	member 34	GCN layer 3	0.0962	Message
+member 27	GCN layer 2	member 34	GCN layer 3	0.1361	Message
+member 28	GCN layer 2	member 34	GCN layer 3	0.1054	Message
+member 29	GCN layer 2	member 34	GCN layer 3	0.1179	Message
+member 30	GCN layer 2	member 34	GCN layer 3	0.1054	Message
+member 31	GCN layer 2	member 34	GCN layer 3	0.1054	Message
+member 32	GCN layer 2	member 34	GCN layer 3	0.0891	Message
+member 1	Input	member 1	GCN layer 1	0.0588	Self
+member 2	Input	member 2	GCN layer 1	0.1	Self
+member 3	Input	member 3	GCN layer 1	0.0909	Self
+member 4	Input	member 4	GCN layer 1	0.1429	Self
+member 5	Input	member 5	GCN layer 1	0.25	Self
+member 6	Input	member 6	GCN layer 1	0.2	Self
+member 7	Input	member 7	GCN layer 1	0.2	Self
+member 8	Input	member 8	GCN layer 1	0.2	Self
+member 9	Input	member 9	GCN layer 1	0.1667	Self
+member 10	Input	member 10	GCN layer 1	0.3333	Self
+member 11	Input	member 11	GCN layer 1	0.25	Self
+member 12	Input	member 12	GCN layer 1	0.5	Self
+member 13	Input	member 13	GCN layer 1	0.3333	Self
+member 14	Input	member 14	GCN layer 1	0.1667	Self
+member 15	Input	member 15	GCN layer 1	0.3333	Self
+member 16	Input	member 16	GCN layer 1	0.3333	Self
+member 17	Input	member 17	GCN layer 1	0.3333	Self
+member 18	Input	member 18	GCN layer 1	0.3333	Self
+member 19	Input	member 19	GCN layer 1	0.3333	Self
+member 20	Input	member 20	GCN layer 1	0.25	Self
+member 21	Input	member 21	GCN layer 1	0.3333	Self
+member 22	Input	member 22	GCN layer 1	0.3333	Self
+member 23	Input	member 23	GCN layer 1	0.3333	Self
+member 24	Input	member 24	GCN layer 1	0.1667	Self
+member 25	Input	member 25	GCN layer 1	0.25	Self
+member 26	Input	member 26	GCN layer 1	0.25	Self
+member 27	Input	member 27	GCN layer 1	0.3333	Self
+member 28	Input	member 28	GCN layer 1	0.2	Self
+member 29	Input	member 29	GCN layer 1	0.25	Self
+member 30	Input	member 30	GCN layer 1	0.2	Self
+member 31	Input	member 31	GCN layer 1	0.2	Self
+member 32	Input	member 32	GCN layer 1	0.1429	Self
+member 33	Input	member 33	GCN layer 1	0.0769	Self
+member 34	Input	member 34	GCN layer 1	0.0556	Self
+member 1	GCN layer 1	member 1	GCN layer 2	0.0588	Self
+member 2	GCN layer 1	member 2	GCN layer 2	0.1	Self
+member 3	GCN layer 1	member 3	GCN layer 2	0.0909	Self
+member 4	GCN layer 1	member 4	GCN layer 2	0.1429	Self
+member 5	GCN layer 1	member 5	GCN layer 2	0.25	Self
+member 6	GCN layer 1	member 6	GCN layer 2	0.2	Self
+member 7	GCN layer 1	member 7	GCN layer 2	0.2	Self
+member 8	GCN layer 1	member 8	GCN layer 2	0.2	Self
+member 9	GCN layer 1	member 9	GCN layer 2	0.1667	Self
+member 10	GCN layer 1	member 10	GCN layer 2	0.3333	Self
+member 11	GCN layer 1	member 11	GCN layer 2	0.25	Self
+member 12	GCN layer 1	member 12	GCN layer 2	0.5	Self
+member 13	GCN layer 1	member 13	GCN layer 2	0.3333	Self
+member 14	GCN layer 1	member 14	GCN layer 2	0.1667	Self
+member 15	GCN layer 1	member 15	GCN layer 2	0.3333	Self
+member 16	GCN layer 1	member 16	GCN layer 2	0.3333	Self
+member 17	GCN layer 1	member 17	GCN layer 2	0.3333	Self
+member 18	GCN layer 1	member 18	GCN layer 2	0.3333	Self
+member 19	GCN layer 1	member 19	GCN layer 2	0.3333	Self
+member 20	GCN layer 1	member 20	GCN layer 2	0.25	Self
+member 21	GCN layer 1	member 21	GCN layer 2	0.3333	Self
+member 22	GCN layer 1	member 22	GCN layer 2	0.3333	Self
+member 23	GCN layer 1	member 23	GCN layer 2	0.3333	Self
+member 24	GCN layer 1	member 24	GCN layer 2	0.1667	Self
+member 25	GCN layer 1	member 25	GCN layer 2	0.25	Self
+member 26	GCN layer 1	member 26	GCN layer 2	0.25	Self
+member 27	GCN layer 1	member 27	GCN layer 2	0.3333	Self
+member 28	GCN layer 1	member 28	GCN layer 2	0.2	Self
+member 29	GCN layer 1	member 29	GCN layer 2	0.25	Self
+member 30	GCN layer 1	member 30	GCN layer 2	0.2	Self
+member 31	GCN layer 1	member 31	GCN layer 2	0.2	Self
+member 32	GCN layer 1	member 32	GCN layer 2	0.1429	Self
+member 33	GCN layer 1	member 33	GCN layer 2	0.0769	Self
+member 34	GCN layer 1	member 34	GCN layer 2	0.0556	Self
+member 1	GCN layer 2	member 1	GCN layer 3	0.0588	Self
+member 2	GCN layer 2	member 2	GCN layer 3	0.1	Self
+member 3	GCN layer 2	member 3	GCN layer 3	0.0909	Self
+member 4	GCN layer 2	member 4	GCN layer 3	0.1429	Self
+member 5	GCN layer 2	member 5	GCN layer 3	0.25	Self
+member 6	GCN layer 2	member 6	GCN layer 3	0.2	Self
+member 7	GCN layer 2	member 7	GCN layer 3	0.2	Self
+member 8	GCN layer 2	member 8	GCN layer 3	0.2	Self
+member 9	GCN layer 2	member 9	GCN layer 3	0.1667	Self
+member 10	GCN layer 2	member 10	GCN layer 3	0.3333	Self
+member 11	GCN layer 2	member 11	GCN layer 3	0.25	Self
+member 12	GCN layer 2	member 12	GCN layer 3	0.5	Self
+member 13	GCN layer 2	member 13	GCN layer 3	0.3333	Self
+member 14	GCN layer 2	member 14	GCN layer 3	0.1667	Self
+member 15	GCN layer 2	member 15	GCN layer 3	0.3333	Self
+member 16	GCN layer 2	member 16	GCN layer 3	0.3333	Self
+member 17	GCN layer 2	member 17	GCN layer 3	0.3333	Self
+member 18	GCN layer 2	member 18	GCN layer 3	0.3333	Self
+member 19	GCN layer 2	member 19	GCN layer 3	0.3333	Self
+member 20	GCN layer 2	member 20	GCN layer 3	0.25	Self
+member 21	GCN layer 2	member 21	GCN layer 3	0.3333	Self
+member 22	GCN layer 2	member 22	GCN layer 3	0.3333	Self
+member 23	GCN layer 2	member 23	GCN layer 3	0.3333	Self
+member 24	GCN layer 2	member 24	GCN layer 3	0.1667	Self
+member 25	GCN layer 2	member 25	GCN layer 3	0.25	Self
+member 26	GCN layer 2	member 26	GCN layer 3	0.25	Self
+member 27	GCN layer 2	member 27	GCN layer 3	0.3333	Self
+member 28	GCN layer 2	member 28	GCN layer 3	0.2	Self
+member 29	GCN layer 2	member 29	GCN layer 3	0.25	Self
+member 30	GCN layer 2	member 30	GCN layer 3	0.2	Self
+member 31	GCN layer 2	member 31	GCN layer 3	0.2	Self
+member 32	GCN layer 2	member 32	GCN layer 3	0.1429	Self
+member 33	GCN layer 2	member 33	GCN layer 3	0.0769	Self
+member 34	GCN layer 2	member 34	GCN layer 3	0.0556	Self
+member 1	GCN layer 3	member 1	Output	1	Self
+member 2	GCN layer 3	member 2	Output	1	Self
+member 3	GCN layer 3	member 3	Output	1	Self
+member 4	GCN layer 3	member 4	Output	1	Self
+member 5	GCN layer 3	member 5	Output	1	Self
+member 6	GCN layer 3	member 6	Output	1	Self
+member 7	GCN layer 3	member 7	Output	1	Self
+member 8	GCN layer 3	member 8	Output	1	Self
+member 9	GCN layer 3	member 9	Output	1	Self
+member 10	GCN layer 3	member 10	Output	1	Self
+member 11	GCN layer 3	member 11	Output	1	Self
+member 12	GCN layer 3	member 12	Output	1	Self
+member 13	GCN layer 3	member 13	Output	1	Self
+member 14	GCN layer 3	member 14	Output	1	Self
+member 15	GCN layer 3	member 15	Output	1	Self
+member 16	GCN layer 3	member 16	Output	1	Self
+member 17	GCN layer 3	member 17	Output	1	Self
+member 18	GCN layer 3	member 18	Output	1	Self
+member 19	GCN layer 3	member 19	Output	1	Self
+member 20	GCN layer 3	member 20	Output	1	Self
+member 21	GCN layer 3	member 21	Output	1	Self
+member 22	GCN layer 3	member 22	Output	1	Self
+member 23	GCN layer 3	member 23	Output	1	Self
+member 24	GCN layer 3	member 24	Output	1	Self
+member 25	GCN layer 3	member 25	Output	1	Self
+member 26	GCN layer 3	member 26	Output	1	Self
+member 27	GCN layer 3	member 27	Output	1	Self
+member 28	GCN layer 3	member 28	Output	1	Self
+member 29	GCN layer 3	member 29	Output	1	Self
+member 30	GCN layer 3	member 30	Output	1	Self
+member 31	GCN layer 3	member 31	Output	1	Self
+member 32	GCN layer 3	member 32	Output	1	Self
+member 33	GCN layer 3	member 33	Output	1	Self
+member 34	GCN layer 3	member 34	Output	1	Self

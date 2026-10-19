@@ -1,0 +1,684 @@
+SourceNode	SourceLayer	TargetNode	TargetLayer	Weight	Channel
+BOS (1)	Embedding	H1 key · BOS (1)	Block 1 · Attention	0.6167	Projection
+BOS (1)	Embedding	H1 query · BOS (1)	Block 1 · Attention	0.6918	Projection
+Arena (2)	Embedding	H1 key · Arena (2)	Block 1 · Attention	0.9469	Projection
+Arena (2)	Embedding	H1 query · Arena (2)	Block 1 · Attention	0.626	Projection
+draws (3)	Embedding	H1 key · draws (3)	Block 1 · Attention	0.6555	Projection
+draws (3)	Embedding	H1 query · draws (3)	Block 1 · Attention	0.7112	Projection
+networks (4)	Embedding	H1 key · networks (4)	Block 1 · Attention	0.4293	Projection
+networks (4)	Embedding	H1 query · networks (4)	Block 1 · Attention	0.6583	Projection
+in (5)	Embedding	H1 key · in (5)	Block 1 · Attention	0.7409	Projection
+in (5)	Embedding	H1 query · in (5)	Block 1 · Attention	0.8551	Projection
+3D (6)	Embedding	H1 key · 3D (6)	Block 1 · Attention	0.3659	Projection
+3D (6)	Embedding	H1 query · 3D (6)	Block 1 · Attention	0.5124	Projection
+. (7)	Embedding	H1 key · . (7)	Block 1 · Attention	0.3635	Projection
+. (7)	Embedding	H1 query · . (7)	Block 1 · Attention	0.8668	Projection
+Arena (8)	Embedding	H1 key · Arena (8)	Block 1 · Attention	0.7854	Projection
+Arena (8)	Embedding	H1 query · Arena (8)	Block 1 · Attention	0.3293	Projection
+draws (9)	Embedding	H1 key · draws (9)	Block 1 · Attention	0.9875	Projection
+draws (9)	Embedding	H1 query · draws (9)	Block 1 · Attention	0.9753	Projection
+BOS (1)	Embedding	H2 key · BOS (1)	Block 1 · Attention	0.7577	Projection
+BOS (1)	Embedding	H2 query · BOS (1)	Block 1 · Attention	0.7309	Projection
+Arena (2)	Embedding	H2 key · Arena (2)	Block 1 · Attention	0.4102	Projection
+Arena (2)	Embedding	H2 query · Arena (2)	Block 1 · Attention	0.3105	Projection
+draws (3)	Embedding	H2 key · draws (3)	Block 1 · Attention	0.6699	Projection
+draws (3)	Embedding	H2 query · draws (3)	Block 1 · Attention	0.3417	Projection
+networks (4)	Embedding	H2 key · networks (4)	Block 1 · Attention	0.4331	Projection
+networks (4)	Embedding	H2 query · networks (4)	Block 1 · Attention	0.4694	Projection
+in (5)	Embedding	H2 key · in (5)	Block 1 · Attention	0.3211	Projection
+in (5)	Embedding	H2 query · in (5)	Block 1 · Attention	0.6248	Projection
+3D (6)	Embedding	H2 key · 3D (6)	Block 1 · Attention	0.6084	Projection
+3D (6)	Embedding	H2 query · 3D (6)	Block 1 · Attention	0.8897	Projection
+. (7)	Embedding	H2 key · . (7)	Block 1 · Attention	0.6634	Projection
+. (7)	Embedding	H2 query · . (7)	Block 1 · Attention	0.7482	Projection
+Arena (8)	Embedding	H2 key · Arena (8)	Block 1 · Attention	0.6498	Projection
+Arena (8)	Embedding	H2 query · Arena (8)	Block 1 · Attention	0.7637	Projection
+draws (9)	Embedding	H2 key · draws (9)	Block 1 · Attention	0.6201	Projection
+draws (9)	Embedding	H2 query · draws (9)	Block 1 · Attention	0.4947	Projection
+BOS (1)	Embedding	H3 key · BOS (1)	Block 1 · Attention	0.9984	Projection
+BOS (1)	Embedding	H3 query · BOS (1)	Block 1 · Attention	0.997	Projection
+Arena (2)	Embedding	H3 key · Arena (2)	Block 1 · Attention	0.8882	Projection
+Arena (2)	Embedding	H3 query · Arena (2)	Block 1 · Attention	0.7955	Projection
+draws (3)	Embedding	H3 key · draws (3)	Block 1 · Attention	0.5207	Projection
+draws (3)	Embedding	H3 query · draws (3)	Block 1 · Attention	0.4608	Projection
+networks (4)	Embedding	H3 key · networks (4)	Block 1 · Attention	0.5023	Projection
+networks (4)	Embedding	H3 query · networks (4)	Block 1 · Attention	0.3492	Projection
+in (5)	Embedding	H3 key · in (5)	Block 1 · Attention	0.8364	Projection
+in (5)	Embedding	H3 query · in (5)	Block 1 · Attention	0.5803	Projection
+3D (6)	Embedding	H3 key · 3D (6)	Block 1 · Attention	0.8926	Projection
+3D (6)	Embedding	H3 query · 3D (6)	Block 1 · Attention	0.5706	Projection
+. (7)	Embedding	H3 key · . (7)	Block 1 · Attention	0.9706	Projection
+. (7)	Embedding	H3 query · . (7)	Block 1 · Attention	0.8931	Projection
+Arena (8)	Embedding	H3 key · Arena (8)	Block 1 · Attention	0.3004	Projection
+Arena (8)	Embedding	H3 query · Arena (8)	Block 1 · Attention	0.4468	Projection
+draws (9)	Embedding	H3 key · draws (9)	Block 1 · Attention	0.9372	Projection
+draws (9)	Embedding	H3 query · draws (9)	Block 1 · Attention	0.629	Projection
+BOS (1)	Embedding	H4 key · BOS (1)	Block 1 · Attention	0.9863	Projection
+BOS (1)	Embedding	H4 query · BOS (1)	Block 1 · Attention	0.5782	Projection
+Arena (2)	Embedding	H4 key · Arena (2)	Block 1 · Attention	0.3511	Projection
+Arena (2)	Embedding	H4 query · Arena (2)	Block 1 · Attention	0.7406	Projection
+draws (3)	Embedding	H4 key · draws (3)	Block 1 · Attention	0.845	Projection
+draws (3)	Embedding	H4 query · draws (3)	Block 1 · Attention	0.4888	Projection
+networks (4)	Embedding	H4 key · networks (4)	Block 1 · Attention	0.361	Projection
+networks (4)	Embedding	H4 query · networks (4)	Block 1 · Attention	0.5328	Projection
+in (5)	Embedding	H4 key · in (5)	Block 1 · Attention	0.9749	Projection
+in (5)	Embedding	H4 query · in (5)	Block 1 · Attention	0.8306	Projection
+3D (6)	Embedding	H4 key · 3D (6)	Block 1 · Attention	0.3826	Projection
+3D (6)	Embedding	H4 query · 3D (6)	Block 1 · Attention	0.4725	Projection
+. (7)	Embedding	H4 key · . (7)	Block 1 · Attention	0.3707	Projection
+. (7)	Embedding	H4 query · . (7)	Block 1 · Attention	0.3419	Projection
+Arena (8)	Embedding	H4 key · Arena (8)	Block 1 · Attention	0.8579	Projection
+Arena (8)	Embedding	H4 query · Arena (8)	Block 1 · Attention	0.4244	Projection
+draws (9)	Embedding	H4 key · draws (9)	Block 1 · Attention	0.6915	Projection
+draws (9)	Embedding	H4 query · draws (9)	Block 1 · Attention	0.6132	Projection
+H1 query · BOS (1)	Block 1 · Attention	BOS (1)	Block 1 · Add & Norm 1	0.4335	Projection
+H2 query · BOS (1)	Block 1 · Attention	BOS (1)	Block 1 · Add & Norm 1	0.8123	Projection
+H3 query · BOS (1)	Block 1 · Attention	BOS (1)	Block 1 · Add & Norm 1	0.3917	Projection
+H4 query · BOS (1)	Block 1 · Attention	BOS (1)	Block 1 · Add & Norm 1	0.7506	Projection
+H1 query · Arena (2)	Block 1 · Attention	Arena (2)	Block 1 · Add & Norm 1	0.3816	Projection
+H2 query · Arena (2)	Block 1 · Attention	Arena (2)	Block 1 · Add & Norm 1	0.5945	Projection
+H3 query · Arena (2)	Block 1 · Attention	Arena (2)	Block 1 · Add & Norm 1	0.449	Projection
+H4 query · Arena (2)	Block 1 · Attention	Arena (2)	Block 1 · Add & Norm 1	0.4889	Projection
+H1 query · draws (3)	Block 1 · Attention	draws (3)	Block 1 · Add & Norm 1	0.9797	Projection
+H2 query · draws (3)	Block 1 · Attention	draws (3)	Block 1 · Add & Norm 1	0.8624	Projection
+H3 query · draws (3)	Block 1 · Attention	draws (3)	Block 1 · Add & Norm 1	0.5129	Projection
+H4 query · draws (3)	Block 1 · Attention	draws (3)	Block 1 · Add & Norm 1	0.9194	Projection
+H1 query · networks (4)	Block 1 · Attention	networks (4)	Block 1 · Add & Norm 1	0.4475	Projection
+H2 query · networks (4)	Block 1 · Attention	networks (4)	Block 1 · Add & Norm 1	0.576	Projection
+H3 query · networks (4)	Block 1 · Attention	networks (4)	Block 1 · Add & Norm 1	0.8981	Projection
+H4 query · networks (4)	Block 1 · Attention	networks (4)	Block 1 · Add & Norm 1	0.7493	Projection
+H1 query · in (5)	Block 1 · Attention	in (5)	Block 1 · Add & Norm 1	0.3702	Projection
+H2 query · in (5)	Block 1 · Attention	in (5)	Block 1 · Add & Norm 1	0.9925	Projection
+H3 query · in (5)	Block 1 · Attention	in (5)	Block 1 · Add & Norm 1	0.4493	Projection
+H4 query · in (5)	Block 1 · Attention	in (5)	Block 1 · Add & Norm 1	0.4808	Projection
+H1 query · 3D (6)	Block 1 · Attention	3D (6)	Block 1 · Add & Norm 1	0.8409	Projection
+H2 query · 3D (6)	Block 1 · Attention	3D (6)	Block 1 · Add & Norm 1	0.5303	Projection
+H3 query · 3D (6)	Block 1 · Attention	3D (6)	Block 1 · Add & Norm 1	0.5074	Projection
+H4 query · 3D (6)	Block 1 · Attention	3D (6)	Block 1 · Add & Norm 1	0.3514	Projection
+H1 query · . (7)	Block 1 · Attention	. (7)	Block 1 · Add & Norm 1	0.3631	Projection
+H2 query · . (7)	Block 1 · Attention	. (7)	Block 1 · Add & Norm 1	0.7079	Projection
+H3 query · . (7)	Block 1 · Attention	. (7)	Block 1 · Add & Norm 1	0.4701	Projection
+H4 query · . (7)	Block 1 · Attention	. (7)	Block 1 · Add & Norm 1	0.7209	Projection
+H1 query · Arena (8)	Block 1 · Attention	Arena (8)	Block 1 · Add & Norm 1	0.5602	Projection
+H2 query · Arena (8)	Block 1 · Attention	Arena (8)	Block 1 · Add & Norm 1	0.6172	Projection
+H3 query · Arena (8)	Block 1 · Attention	Arena (8)	Block 1 · Add & Norm 1	0.9714	Projection
+H4 query · Arena (8)	Block 1 · Attention	Arena (8)	Block 1 · Add & Norm 1	0.6386	Projection
+H1 query · draws (9)	Block 1 · Attention	draws (9)	Block 1 · Add & Norm 1	0.7022	Projection
+H2 query · draws (9)	Block 1 · Attention	draws (9)	Block 1 · Add & Norm 1	0.9066	Projection
+H3 query · draws (9)	Block 1 · Attention	draws (9)	Block 1 · Add & Norm 1	0.428	Projection
+H4 query · draws (9)	Block 1 · Attention	draws (9)	Block 1 · Add & Norm 1	0.4079	Projection
+BOS (1)	Block 1 · Add & Norm 2	H1 key · BOS (1)	Block 2 · Attention	0.7375	Projection
+BOS (1)	Block 1 · Add & Norm 2	H1 query · BOS (1)	Block 2 · Attention	0.5676	Projection
+Arena (2)	Block 1 · Add & Norm 2	H1 key · Arena (2)	Block 2 · Attention	0.7079	Projection
+Arena (2)	Block 1 · Add & Norm 2	H1 query · Arena (2)	Block 2 · Attention	0.7262	Projection
+draws (3)	Block 1 · Add & Norm 2	H1 key · draws (3)	Block 2 · Attention	0.3561	Projection
+draws (3)	Block 1 · Add & Norm 2	H1 query · draws (3)	Block 2 · Attention	0.7476	Projection
+networks (4)	Block 1 · Add & Norm 2	H1 key · networks (4)	Block 2 · Attention	0.9953	Projection
+networks (4)	Block 1 · Add & Norm 2	H1 query · networks (4)	Block 2 · Attention	0.9159	Projection
+in (5)	Block 1 · Add & Norm 2	H1 key · in (5)	Block 2 · Attention	0.8097	Projection
+in (5)	Block 1 · Add & Norm 2	H1 query · in (5)	Block 2 · Attention	0.5719	Projection
+3D (6)	Block 1 · Add & Norm 2	H1 key · 3D (6)	Block 2 · Attention	0.8145	Projection
+3D (6)	Block 1 · Add & Norm 2	H1 query · 3D (6)	Block 2 · Attention	0.7067	Projection
+. (7)	Block 1 · Add & Norm 2	H1 key · . (7)	Block 2 · Attention	0.6084	Projection
+. (7)	Block 1 · Add & Norm 2	H1 query · . (7)	Block 2 · Attention	0.8869	Projection
+Arena (8)	Block 1 · Add & Norm 2	H1 key · Arena (8)	Block 2 · Attention	0.3586	Projection
+Arena (8)	Block 1 · Add & Norm 2	H1 query · Arena (8)	Block 2 · Attention	0.8251	Projection
+draws (9)	Block 1 · Add & Norm 2	H1 key · draws (9)	Block 2 · Attention	0.3209	Projection
+draws (9)	Block 1 · Add & Norm 2	H1 query · draws (9)	Block 2 · Attention	0.7209	Projection
+BOS (1)	Block 1 · Add & Norm 2	H2 key · BOS (1)	Block 2 · Attention	0.6367	Projection
+BOS (1)	Block 1 · Add & Norm 2	H2 query · BOS (1)	Block 2 · Attention	0.4612	Projection
+Arena (2)	Block 1 · Add & Norm 2	H2 key · Arena (2)	Block 2 · Attention	0.7888	Projection
+Arena (2)	Block 1 · Add & Norm 2	H2 query · Arena (2)	Block 2 · Attention	0.6481	Projection
+draws (3)	Block 1 · Add & Norm 2	H2 key · draws (3)	Block 2 · Attention	0.7302	Projection
+draws (3)	Block 1 · Add & Norm 2	H2 query · draws (3)	Block 2 · Attention	0.9443	Projection
+networks (4)	Block 1 · Add & Norm 2	H2 key · networks (4)	Block 2 · Attention	0.4791	Projection
+networks (4)	Block 1 · Add & Norm 2	H2 query · networks (4)	Block 2 · Attention	0.3079	Projection
+in (5)	Block 1 · Add & Norm 2	H2 key · in (5)	Block 2 · Attention	0.5107	Projection
+in (5)	Block 1 · Add & Norm 2	H2 query · in (5)	Block 2 · Attention	0.7747	Projection
+3D (6)	Block 1 · Add & Norm 2	H2 key · 3D (6)	Block 2 · Attention	0.4418	Projection
+3D (6)	Block 1 · Add & Norm 2	H2 query · 3D (6)	Block 2 · Attention	0.4187	Projection
+. (7)	Block 1 · Add & Norm 2	H2 key · . (7)	Block 2 · Attention	0.934	Projection
+. (7)	Block 1 · Add & Norm 2	H2 query · . (7)	Block 2 · Attention	0.762	Projection
+Arena (8)	Block 1 · Add & Norm 2	H2 key · Arena (8)	Block 2 · Attention	0.6094	Projection
+Arena (8)	Block 1 · Add & Norm 2	H2 query · Arena (8)	Block 2 · Attention	0.9242	Projection
+draws (9)	Block 1 · Add & Norm 2	H2 key · draws (9)	Block 2 · Attention	0.5289	Projection
+draws (9)	Block 1 · Add & Norm 2	H2 query · draws (9)	Block 2 · Attention	0.7661	Projection
+BOS (1)	Block 1 · Add & Norm 2	H3 key · BOS (1)	Block 2 · Attention	0.439	Projection
+BOS (1)	Block 1 · Add & Norm 2	H3 query · BOS (1)	Block 2 · Attention	0.6016	Projection
+Arena (2)	Block 1 · Add & Norm 2	H3 key · Arena (2)	Block 2 · Attention	0.8642	Projection
+Arena (2)	Block 1 · Add & Norm 2	H3 query · Arena (2)	Block 2 · Attention	0.94	Projection
+draws (3)	Block 1 · Add & Norm 2	H3 key · draws (3)	Block 2 · Attention	0.9162	Projection
+draws (3)	Block 1 · Add & Norm 2	H3 query · draws (3)	Block 2 · Attention	0.5691	Projection
+networks (4)	Block 1 · Add & Norm 2	H3 key · networks (4)	Block 2 · Attention	0.7082	Projection
+networks (4)	Block 1 · Add & Norm 2	H3 query · networks (4)	Block 2 · Attention	0.5215	Projection
+in (5)	Block 1 · Add & Norm 2	H3 key · in (5)	Block 2 · Attention	0.3953	Projection
+in (5)	Block 1 · Add & Norm 2	H3 query · in (5)	Block 2 · Attention	0.6475	Projection
+3D (6)	Block 1 · Add & Norm 2	H3 key · 3D (6)	Block 2 · Attention	0.886	Projection
+3D (6)	Block 1 · Add & Norm 2	H3 query · 3D (6)	Block 2 · Attention	0.8941	Projection
+. (7)	Block 1 · Add & Norm 2	H3 key · . (7)	Block 2 · Attention	0.7979	Projection
+. (7)	Block 1 · Add & Norm 2	H3 query · . (7)	Block 2 · Attention	0.965	Projection
+Arena (8)	Block 1 · Add & Norm 2	H3 key · Arena (8)	Block 2 · Attention	0.4938	Projection
+Arena (8)	Block 1 · Add & Norm 2	H3 query · Arena (8)	Block 2 · Attention	0.4184	Projection
+draws (9)	Block 1 · Add & Norm 2	H3 key · draws (9)	Block 2 · Attention	0.6155	Projection
+draws (9)	Block 1 · Add & Norm 2	H3 query · draws (9)	Block 2 · Attention	0.4926	Projection
+BOS (1)	Block 1 · Add & Norm 2	H4 key · BOS (1)	Block 2 · Attention	0.4499	Projection
+BOS (1)	Block 1 · Add & Norm 2	H4 query · BOS (1)	Block 2 · Attention	0.5898	Projection
+Arena (2)	Block 1 · Add & Norm 2	H4 key · Arena (2)	Block 2 · Attention	0.738	Projection
+Arena (2)	Block 1 · Add & Norm 2	H4 query · Arena (2)	Block 2 · Attention	0.6457	Projection
+draws (3)	Block 1 · Add & Norm 2	H4 key · draws (3)	Block 2 · Attention	0.5208	Projection
+draws (3)	Block 1 · Add & Norm 2	H4 query · draws (3)	Block 2 · Attention	0.8874	Projection
+networks (4)	Block 1 · Add & Norm 2	H4 key · networks (4)	Block 2 · Attention	0.9874	Projection
+networks (4)	Block 1 · Add & Norm 2	H4 query · networks (4)	Block 2 · Attention	0.6167	Projection
+in (5)	Block 1 · Add & Norm 2	H4 key · in (5)	Block 2 · Attention	0.3523	Projection
+in (5)	Block 1 · Add & Norm 2	H4 query · in (5)	Block 2 · Attention	0.322	Projection
+3D (6)	Block 1 · Add & Norm 2	H4 key · 3D (6)	Block 2 · Attention	0.911	Projection
+3D (6)	Block 1 · Add & Norm 2	H4 query · 3D (6)	Block 2 · Attention	0.329	Projection
+. (7)	Block 1 · Add & Norm 2	H4 key · . (7)	Block 2 · Attention	0.796	Projection
+. (7)	Block 1 · Add & Norm 2	H4 query · . (7)	Block 2 · Attention	0.6994	Projection
+Arena (8)	Block 1 · Add & Norm 2	H4 key · Arena (8)	Block 2 · Attention	0.5163	Projection
+Arena (8)	Block 1 · Add & Norm 2	H4 query · Arena (8)	Block 2 · Attention	0.8541	Projection
+draws (9)	Block 1 · Add & Norm 2	H4 key · draws (9)	Block 2 · Attention	0.3134	Projection
+draws (9)	Block 1 · Add & Norm 2	H4 query · draws (9)	Block 2 · Attention	0.3951	Projection
+H1 query · BOS (1)	Block 2 · Attention	BOS (1)	Block 2 · Add & Norm 1	0.6184	Projection
+H2 query · BOS (1)	Block 2 · Attention	BOS (1)	Block 2 · Add & Norm 1	0.3173	Projection
+H3 query · BOS (1)	Block 2 · Attention	BOS (1)	Block 2 · Add & Norm 1	0.8808	Projection
+H4 query · BOS (1)	Block 2 · Attention	BOS (1)	Block 2 · Add & Norm 1	0.4662	Projection
+H1 query · Arena (2)	Block 2 · Attention	Arena (2)	Block 2 · Add & Norm 1	0.3986	Projection
+H2 query · Arena (2)	Block 2 · Attention	Arena (2)	Block 2 · Add & Norm 1	0.3329	Projection
+H3 query · Arena (2)	Block 2 · Attention	Arena (2)	Block 2 · Add & Norm 1	0.7404	Projection
+H4 query · Arena (2)	Block 2 · Attention	Arena (2)	Block 2 · Add & Norm 1	0.6125	Projection
+H1 query · draws (3)	Block 2 · Attention	draws (3)	Block 2 · Add & Norm 1	0.741	Projection
+H2 query · draws (3)	Block 2 · Attention	draws (3)	Block 2 · Add & Norm 1	0.7585	Projection
+H3 query · draws (3)	Block 2 · Attention	draws (3)	Block 2 · Add & Norm 1	0.8652	Projection
+H4 query · draws (3)	Block 2 · Attention	draws (3)	Block 2 · Add & Norm 1	0.9709	Projection
+H1 query · networks (4)	Block 2 · Attention	networks (4)	Block 2 · Add & Norm 1	0.7791	Projection
+H2 query · networks (4)	Block 2 · Attention	networks (4)	Block 2 · Add & Norm 1	0.4395	Projection
+H3 query · networks (4)	Block 2 · Attention	networks (4)	Block 2 · Add & Norm 1	0.6326	Projection
+H4 query · networks (4)	Block 2 · Attention	networks (4)	Block 2 · Add & Norm 1	0.4251	Projection
+H1 query · in (5)	Block 2 · Attention	in (5)	Block 2 · Add & Norm 1	0.3075	Projection
+H2 query · in (5)	Block 2 · Attention	in (5)	Block 2 · Add & Norm 1	0.6305	Projection
+H3 query · in (5)	Block 2 · Attention	in (5)	Block 2 · Add & Norm 1	0.7999	Projection
+H4 query · in (5)	Block 2 · Attention	in (5)	Block 2 · Add & Norm 1	0.4254	Projection
+H1 query · 3D (6)	Block 2 · Attention	3D (6)	Block 2 · Add & Norm 1	0.4906	Projection
+H2 query · 3D (6)	Block 2 · Attention	3D (6)	Block 2 · Add & Norm 1	0.542	Projection
+H3 query · 3D (6)	Block 2 · Attention	3D (6)	Block 2 · Add & Norm 1	0.7881	Projection
+H4 query · 3D (6)	Block 2 · Attention	3D (6)	Block 2 · Add & Norm 1	0.6643	Projection
+H1 query · . (7)	Block 2 · Attention	. (7)	Block 2 · Add & Norm 1	0.7301	Projection
+H2 query · . (7)	Block 2 · Attention	. (7)	Block 2 · Add & Norm 1	0.8293	Projection
+H3 query · . (7)	Block 2 · Attention	. (7)	Block 2 · Add & Norm 1	0.5755	Projection
+H4 query · . (7)	Block 2 · Attention	. (7)	Block 2 · Add & Norm 1	0.8544	Projection
+H1 query · Arena (8)	Block 2 · Attention	Arena (8)	Block 2 · Add & Norm 1	0.9344	Projection
+H2 query · Arena (8)	Block 2 · Attention	Arena (8)	Block 2 · Add & Norm 1	0.361	Projection
+H3 query · Arena (8)	Block 2 · Attention	Arena (8)	Block 2 · Add & Norm 1	0.9528	Projection
+H4 query · Arena (8)	Block 2 · Attention	Arena (8)	Block 2 · Add & Norm 1	0.8057	Projection
+H1 query · draws (9)	Block 2 · Attention	draws (9)	Block 2 · Add & Norm 1	0.3909	Projection
+H2 query · draws (9)	Block 2 · Attention	draws (9)	Block 2 · Add & Norm 1	0.6175	Projection
+H3 query · draws (9)	Block 2 · Attention	draws (9)	Block 2 · Add & Norm 1	0.7379	Projection
+H4 query · draws (9)	Block 2 · Attention	draws (9)	Block 2 · Add & Norm 1	0.937	Projection
+BOS (1)	Block 2 · Add & Norm 2	Arena	Output	0.3	Projection
+BOS (1)	Block 2 · Add & Norm 2	graphs	Output	0.22	Projection
+Arena (2)	Block 2 · Add & Norm 2	draws	Output	0.45	Projection
+Arena (2)	Block 2 · Add & Norm 2	and	Output	0.15	Projection
+draws (3)	Block 2 · Add & Norm 2	graphs	Output	0.35	Projection
+draws (3)	Block 2 · Add & Norm 2	networks	Output	0.3	Projection
+draws (3)	Block 2 · Add & Norm 2	layers	Output	0.2	Projection
+networks (4)	Block 2 · Add & Norm 2	in	Output	0.55	Projection
+networks (4)	Block 2 · Add & Norm 2	and	Output	0.25	Projection
+in (5)	Block 2 · Add & Norm 2	3D	Output	0.6	Projection
+in (5)	Block 2 · Add & Norm 2	2D	Output	0.3	Projection
+3D (6)	Block 2 · Add & Norm 2	.	Output	0.7	Projection
+3D (6)	Block 2 · Add & Norm 2	and	Output	0.2	Projection
+. (7)	Block 2 · Add & Norm 2	Arena	Output	0.4	Projection
+. (7)	Block 2 · Add & Norm 2	graphs	Output	0.15	Projection
+Arena (8)	Block 2 · Add & Norm 2	draws	Output	0.85	Projection
+draws (9)	Block 2 · Add & Norm 2	networks	Output	0.8	Projection
+draws (9)	Block 2 · Add & Norm 2	graphs	Output	0.08	Projection
+BOS (1)	Embedding	BOS (1)	Block 1 · Add & Norm 1	1	Residual
+Arena (2)	Embedding	Arena (2)	Block 1 · Add & Norm 1	1	Residual
+draws (3)	Embedding	draws (3)	Block 1 · Add & Norm 1	1	Residual
+networks (4)	Embedding	networks (4)	Block 1 · Add & Norm 1	1	Residual
+in (5)	Embedding	in (5)	Block 1 · Add & Norm 1	1	Residual
+3D (6)	Embedding	3D (6)	Block 1 · Add & Norm 1	1	Residual
+. (7)	Embedding	. (7)	Block 1 · Add & Norm 1	1	Residual
+Arena (8)	Embedding	Arena (8)	Block 1 · Add & Norm 1	1	Residual
+draws (9)	Embedding	draws (9)	Block 1 · Add & Norm 1	1	Residual
+BOS (1)	Block 1 · Add & Norm 1	BOS (1)	Block 1 · Add & Norm 2	1	Residual
+Arena (2)	Block 1 · Add & Norm 1	Arena (2)	Block 1 · Add & Norm 2	1	Residual
+draws (3)	Block 1 · Add & Norm 1	draws (3)	Block 1 · Add & Norm 2	1	Residual
+networks (4)	Block 1 · Add & Norm 1	networks (4)	Block 1 · Add & Norm 2	1	Residual
+in (5)	Block 1 · Add & Norm 1	in (5)	Block 1 · Add & Norm 2	1	Residual
+3D (6)	Block 1 · Add & Norm 1	3D (6)	Block 1 · Add & Norm 2	1	Residual
+. (7)	Block 1 · Add & Norm 1	. (7)	Block 1 · Add & Norm 2	1	Residual
+Arena (8)	Block 1 · Add & Norm 1	Arena (8)	Block 1 · Add & Norm 2	1	Residual
+draws (9)	Block 1 · Add & Norm 1	draws (9)	Block 1 · Add & Norm 2	1	Residual
+BOS (1)	Block 1 · Add & Norm 2	BOS (1)	Block 2 · Add & Norm 1	1	Residual
+Arena (2)	Block 1 · Add & Norm 2	Arena (2)	Block 2 · Add & Norm 1	1	Residual
+draws (3)	Block 1 · Add & Norm 2	draws (3)	Block 2 · Add & Norm 1	1	Residual
+networks (4)	Block 1 · Add & Norm 2	networks (4)	Block 2 · Add & Norm 1	1	Residual
+in (5)	Block 1 · Add & Norm 2	in (5)	Block 2 · Add & Norm 1	1	Residual
+3D (6)	Block 1 · Add & Norm 2	3D (6)	Block 2 · Add & Norm 1	1	Residual
+. (7)	Block 1 · Add & Norm 2	. (7)	Block 2 · Add & Norm 1	1	Residual
+Arena (8)	Block 1 · Add & Norm 2	Arena (8)	Block 2 · Add & Norm 1	1	Residual
+draws (9)	Block 1 · Add & Norm 2	draws (9)	Block 2 · Add & Norm 1	1	Residual
+BOS (1)	Block 2 · Add & Norm 1	BOS (1)	Block 2 · Add & Norm 2	1	Residual
+Arena (2)	Block 2 · Add & Norm 1	Arena (2)	Block 2 · Add & Norm 2	1	Residual
+draws (3)	Block 2 · Add & Norm 1	draws (3)	Block 2 · Add & Norm 2	1	Residual
+networks (4)	Block 2 · Add & Norm 1	networks (4)	Block 2 · Add & Norm 2	1	Residual
+in (5)	Block 2 · Add & Norm 1	in (5)	Block 2 · Add & Norm 2	1	Residual
+3D (6)	Block 2 · Add & Norm 1	3D (6)	Block 2 · Add & Norm 2	1	Residual
+. (7)	Block 2 · Add & Norm 1	. (7)	Block 2 · Add & Norm 2	1	Residual
+Arena (8)	Block 2 · Add & Norm 1	Arena (8)	Block 2 · Add & Norm 2	1	Residual
+draws (9)	Block 2 · Add & Norm 1	draws (9)	Block 2 · Add & Norm 2	1	Residual
+BOS (1)	Block 1 · Add & Norm 1	n1 · BOS (1)	Block 1 · MLP	0.9267	Feed-forward
+BOS (1)	Block 1 · Add & Norm 1	n2 · BOS (1)	Block 1 · MLP	0.8542	Feed-forward
+BOS (1)	Block 1 · Add & Norm 1	n3 · BOS (1)	Block 1 · MLP	0.3996	Feed-forward
+BOS (1)	Block 1 · Add & Norm 1	n4 · BOS (1)	Block 1 · MLP	0.3518	Feed-forward
+Arena (2)	Block 1 · Add & Norm 1	n1 · Arena (2)	Block 1 · MLP	0.7915	Feed-forward
+Arena (2)	Block 1 · Add & Norm 1	n2 · Arena (2)	Block 1 · MLP	0.9523	Feed-forward
+Arena (2)	Block 1 · Add & Norm 1	n3 · Arena (2)	Block 1 · MLP	0.3573	Feed-forward
+Arena (2)	Block 1 · Add & Norm 1	n4 · Arena (2)	Block 1 · MLP	0.9601	Feed-forward
+draws (3)	Block 1 · Add & Norm 1	n1 · draws (3)	Block 1 · MLP	0.9058	Feed-forward
+draws (3)	Block 1 · Add & Norm 1	n2 · draws (3)	Block 1 · MLP	0.6828	Feed-forward
+draws (3)	Block 1 · Add & Norm 1	n3 · draws (3)	Block 1 · MLP	0.5372	Feed-forward
+draws (3)	Block 1 · Add & Norm 1	n4 · draws (3)	Block 1 · MLP	0.2831	Feed-forward
+networks (4)	Block 1 · Add & Norm 1	n1 · networks (4)	Block 1 · MLP	0.231	Feed-forward
+networks (4)	Block 1 · Add & Norm 1	n2 · networks (4)	Block 1 · MLP	0.9701	Feed-forward
+networks (4)	Block 1 · Add & Norm 1	n3 · networks (4)	Block 1 · MLP	0.3907	Feed-forward
+networks (4)	Block 1 · Add & Norm 1	n4 · networks (4)	Block 1 · MLP	0.7637	Feed-forward
+in (5)	Block 1 · Add & Norm 1	n1 · in (5)	Block 1 · MLP	0.4056	Feed-forward
+in (5)	Block 1 · Add & Norm 1	n2 · in (5)	Block 1 · MLP	0.859	Feed-forward
+in (5)	Block 1 · Add & Norm 1	n3 · in (5)	Block 1 · MLP	0.6772	Feed-forward
+in (5)	Block 1 · Add & Norm 1	n4 · in (5)	Block 1 · MLP	0.4347	Feed-forward
+3D (6)	Block 1 · Add & Norm 1	n1 · 3D (6)	Block 1 · MLP	0.3403	Feed-forward
+3D (6)	Block 1 · Add & Norm 1	n2 · 3D (6)	Block 1 · MLP	0.7763	Feed-forward
+3D (6)	Block 1 · Add & Norm 1	n3 · 3D (6)	Block 1 · MLP	0.255	Feed-forward
+3D (6)	Block 1 · Add & Norm 1	n4 · 3D (6)	Block 1 · MLP	0.3827	Feed-forward
+. (7)	Block 1 · Add & Norm 1	n1 · . (7)	Block 1 · MLP	0.6475	Feed-forward
+. (7)	Block 1 · Add & Norm 1	n2 · . (7)	Block 1 · MLP	0.8819	Feed-forward
+. (7)	Block 1 · Add & Norm 1	n3 · . (7)	Block 1 · MLP	0.6914	Feed-forward
+. (7)	Block 1 · Add & Norm 1	n4 · . (7)	Block 1 · MLP	0.4242	Feed-forward
+Arena (8)	Block 1 · Add & Norm 1	n1 · Arena (8)	Block 1 · MLP	0.9339	Feed-forward
+Arena (8)	Block 1 · Add & Norm 1	n2 · Arena (8)	Block 1 · MLP	0.3632	Feed-forward
+Arena (8)	Block 1 · Add & Norm 1	n3 · Arena (8)	Block 1 · MLP	0.2133	Feed-forward
+Arena (8)	Block 1 · Add & Norm 1	n4 · Arena (8)	Block 1 · MLP	0.4154	Feed-forward
+draws (9)	Block 1 · Add & Norm 1	n1 · draws (9)	Block 1 · MLP	0.5566	Feed-forward
+draws (9)	Block 1 · Add & Norm 1	n2 · draws (9)	Block 1 · MLP	0.2484	Feed-forward
+draws (9)	Block 1 · Add & Norm 1	n3 · draws (9)	Block 1 · MLP	0.341	Feed-forward
+draws (9)	Block 1 · Add & Norm 1	n4 · draws (9)	Block 1 · MLP	0.495	Feed-forward
+n1 · BOS (1)	Block 1 · MLP	BOS (1)	Block 1 · Add & Norm 2	0.6577	Feed-forward
+n2 · BOS (1)	Block 1 · MLP	BOS (1)	Block 1 · Add & Norm 2	0.3053	Feed-forward
+n3 · BOS (1)	Block 1 · MLP	BOS (1)	Block 1 · Add & Norm 2	0.4897	Feed-forward
+n4 · BOS (1)	Block 1 · MLP	BOS (1)	Block 1 · Add & Norm 2	0.9128	Feed-forward
+n1 · Arena (2)	Block 1 · MLP	Arena (2)	Block 1 · Add & Norm 2	0.9844	Feed-forward
+n2 · Arena (2)	Block 1 · MLP	Arena (2)	Block 1 · Add & Norm 2	0.7255	Feed-forward
+n3 · Arena (2)	Block 1 · MLP	Arena (2)	Block 1 · Add & Norm 2	0.753	Feed-forward
+n4 · Arena (2)	Block 1 · MLP	Arena (2)	Block 1 · Add & Norm 2	0.6676	Feed-forward
+n1 · draws (3)	Block 1 · MLP	draws (3)	Block 1 · Add & Norm 2	0.3123	Feed-forward
+n2 · draws (3)	Block 1 · MLP	draws (3)	Block 1 · Add & Norm 2	0.2281	Feed-forward
+n3 · draws (3)	Block 1 · MLP	draws (3)	Block 1 · Add & Norm 2	0.2143	Feed-forward
+n4 · draws (3)	Block 1 · MLP	draws (3)	Block 1 · Add & Norm 2	0.9282	Feed-forward
+n1 · networks (4)	Block 1 · MLP	networks (4)	Block 1 · Add & Norm 2	0.7608	Feed-forward
+n2 · networks (4)	Block 1 · MLP	networks (4)	Block 1 · Add & Norm 2	0.9702	Feed-forward
+n3 · networks (4)	Block 1 · MLP	networks (4)	Block 1 · Add & Norm 2	0.217	Feed-forward
+n4 · networks (4)	Block 1 · MLP	networks (4)	Block 1 · Add & Norm 2	0.7089	Feed-forward
+n1 · in (5)	Block 1 · MLP	in (5)	Block 1 · Add & Norm 2	0.5858	Feed-forward
+n2 · in (5)	Block 1 · MLP	in (5)	Block 1 · Add & Norm 2	0.7844	Feed-forward
+n3 · in (5)	Block 1 · MLP	in (5)	Block 1 · Add & Norm 2	0.4551	Feed-forward
+n4 · in (5)	Block 1 · MLP	in (5)	Block 1 · Add & Norm 2	0.9995	Feed-forward
+n1 · 3D (6)	Block 1 · MLP	3D (6)	Block 1 · Add & Norm 2	0.2602	Feed-forward
+n2 · 3D (6)	Block 1 · MLP	3D (6)	Block 1 · Add & Norm 2	0.6369	Feed-forward
+n3 · 3D (6)	Block 1 · MLP	3D (6)	Block 1 · Add & Norm 2	0.7896	Feed-forward
+n4 · 3D (6)	Block 1 · MLP	3D (6)	Block 1 · Add & Norm 2	0.9202	Feed-forward
+n1 · . (7)	Block 1 · MLP	. (7)	Block 1 · Add & Norm 2	0.7897	Feed-forward
+n2 · . (7)	Block 1 · MLP	. (7)	Block 1 · Add & Norm 2	0.763	Feed-forward
+n3 · . (7)	Block 1 · MLP	. (7)	Block 1 · Add & Norm 2	0.8346	Feed-forward
+n4 · . (7)	Block 1 · MLP	. (7)	Block 1 · Add & Norm 2	0.932	Feed-forward
+n1 · Arena (8)	Block 1 · MLP	Arena (8)	Block 1 · Add & Norm 2	0.4815	Feed-forward
+n2 · Arena (8)	Block 1 · MLP	Arena (8)	Block 1 · Add & Norm 2	0.7481	Feed-forward
+n3 · Arena (8)	Block 1 · MLP	Arena (8)	Block 1 · Add & Norm 2	0.9207	Feed-forward
+n4 · Arena (8)	Block 1 · MLP	Arena (8)	Block 1 · Add & Norm 2	0.8969	Feed-forward
+n1 · draws (9)	Block 1 · MLP	draws (9)	Block 1 · Add & Norm 2	0.5337	Feed-forward
+n2 · draws (9)	Block 1 · MLP	draws (9)	Block 1 · Add & Norm 2	0.8324	Feed-forward
+n3 · draws (9)	Block 1 · MLP	draws (9)	Block 1 · Add & Norm 2	0.8908	Feed-forward
+n4 · draws (9)	Block 1 · MLP	draws (9)	Block 1 · Add & Norm 2	0.6582	Feed-forward
+BOS (1)	Block 2 · Add & Norm 1	n1 · BOS (1)	Block 2 · MLP	0.5014	Feed-forward
+BOS (1)	Block 2 · Add & Norm 1	n2 · BOS (1)	Block 2 · MLP	0.6551	Feed-forward
+BOS (1)	Block 2 · Add & Norm 1	n3 · BOS (1)	Block 2 · MLP	0.9035	Feed-forward
+BOS (1)	Block 2 · Add & Norm 1	n4 · BOS (1)	Block 2 · MLP	0.8374	Feed-forward
+Arena (2)	Block 2 · Add & Norm 1	n1 · Arena (2)	Block 2 · MLP	0.9554	Feed-forward
+Arena (2)	Block 2 · Add & Norm 1	n2 · Arena (2)	Block 2 · MLP	0.571	Feed-forward
+Arena (2)	Block 2 · Add & Norm 1	n3 · Arena (2)	Block 2 · MLP	0.7211	Feed-forward
+Arena (2)	Block 2 · Add & Norm 1	n4 · Arena (2)	Block 2 · MLP	0.3639	Feed-forward
+draws (3)	Block 2 · Add & Norm 1	n1 · draws (3)	Block 2 · MLP	0.7775	Feed-forward
+draws (3)	Block 2 · Add & Norm 1	n2 · draws (3)	Block 2 · MLP	0.8547	Feed-forward
+draws (3)	Block 2 · Add & Norm 1	n3 · draws (3)	Block 2 · MLP	0.7133	Feed-forward
+draws (3)	Block 2 · Add & Norm 1	n4 · draws (3)	Block 2 · MLP	0.7741	Feed-forward
+networks (4)	Block 2 · Add & Norm 1	n1 · networks (4)	Block 2 · MLP	0.3706	Feed-forward
+networks (4)	Block 2 · Add & Norm 1	n2 · networks (4)	Block 2 · MLP	0.92	Feed-forward
+networks (4)	Block 2 · Add & Norm 1	n3 · networks (4)	Block 2 · MLP	0.9844	Feed-forward
+networks (4)	Block 2 · Add & Norm 1	n4 · networks (4)	Block 2 · MLP	0.9819	Feed-forward
+in (5)	Block 2 · Add & Norm 1	n1 · in (5)	Block 2 · MLP	0.6296	Feed-forward
+in (5)	Block 2 · Add & Norm 1	n2 · in (5)	Block 2 · MLP	0.8326	Feed-forward
+in (5)	Block 2 · Add & Norm 1	n3 · in (5)	Block 2 · MLP	0.4563	Feed-forward
+in (5)	Block 2 · Add & Norm 1	n4 · in (5)	Block 2 · MLP	0.928	Feed-forward
+3D (6)	Block 2 · Add & Norm 1	n1 · 3D (6)	Block 2 · MLP	0.8846	Feed-forward
+3D (6)	Block 2 · Add & Norm 1	n2 · 3D (6)	Block 2 · MLP	0.4788	Feed-forward
+3D (6)	Block 2 · Add & Norm 1	n3 · 3D (6)	Block 2 · MLP	0.2662	Feed-forward
+3D (6)	Block 2 · Add & Norm 1	n4 · 3D (6)	Block 2 · MLP	0.5527	Feed-forward
+. (7)	Block 2 · Add & Norm 1	n1 · . (7)	Block 2 · MLP	0.6402	Feed-forward
+. (7)	Block 2 · Add & Norm 1	n2 · . (7)	Block 2 · MLP	0.8146	Feed-forward
+. (7)	Block 2 · Add & Norm 1	n3 · . (7)	Block 2 · MLP	0.59	Feed-forward
+. (7)	Block 2 · Add & Norm 1	n4 · . (7)	Block 2 · MLP	0.2227	Feed-forward
+Arena (8)	Block 2 · Add & Norm 1	n1 · Arena (8)	Block 2 · MLP	0.8473	Feed-forward
+Arena (8)	Block 2 · Add & Norm 1	n2 · Arena (8)	Block 2 · MLP	0.2512	Feed-forward
+Arena (8)	Block 2 · Add & Norm 1	n3 · Arena (8)	Block 2 · MLP	0.8399	Feed-forward
+Arena (8)	Block 2 · Add & Norm 1	n4 · Arena (8)	Block 2 · MLP	0.3383	Feed-forward
+draws (9)	Block 2 · Add & Norm 1	n1 · draws (9)	Block 2 · MLP	0.468	Feed-forward
+draws (9)	Block 2 · Add & Norm 1	n2 · draws (9)	Block 2 · MLP	0.8303	Feed-forward
+draws (9)	Block 2 · Add & Norm 1	n3 · draws (9)	Block 2 · MLP	0.3124	Feed-forward
+draws (9)	Block 2 · Add & Norm 1	n4 · draws (9)	Block 2 · MLP	0.3189	Feed-forward
+n1 · BOS (1)	Block 2 · MLP	BOS (1)	Block 2 · Add & Norm 2	0.6132	Feed-forward
+n2 · BOS (1)	Block 2 · MLP	BOS (1)	Block 2 · Add & Norm 2	0.7789	Feed-forward
+n3 · BOS (1)	Block 2 · MLP	BOS (1)	Block 2 · Add & Norm 2	0.872	Feed-forward
+n4 · BOS (1)	Block 2 · MLP	BOS (1)	Block 2 · Add & Norm 2	0.7515	Feed-forward
+n1 · Arena (2)	Block 2 · MLP	Arena (2)	Block 2 · Add & Norm 2	0.9566	Feed-forward
+n2 · Arena (2)	Block 2 · MLP	Arena (2)	Block 2 · Add & Norm 2	0.5941	Feed-forward
+n3 · Arena (2)	Block 2 · MLP	Arena (2)	Block 2 · Add & Norm 2	0.9593	Feed-forward
+n4 · Arena (2)	Block 2 · MLP	Arena (2)	Block 2 · Add & Norm 2	0.2688	Feed-forward
+n1 · draws (3)	Block 2 · MLP	draws (3)	Block 2 · Add & Norm 2	0.3771	Feed-forward
+n2 · draws (3)	Block 2 · MLP	draws (3)	Block 2 · Add & Norm 2	0.6213	Feed-forward
+n3 · draws (3)	Block 2 · MLP	draws (3)	Block 2 · Add & Norm 2	0.4321	Feed-forward
+n4 · draws (3)	Block 2 · MLP	draws (3)	Block 2 · Add & Norm 2	0.7831	Feed-forward
+n1 · networks (4)	Block 2 · MLP	networks (4)	Block 2 · Add & Norm 2	0.7111	Feed-forward
+n2 · networks (4)	Block 2 · MLP	networks (4)	Block 2 · Add & Norm 2	0.6182	Feed-forward
+n3 · networks (4)	Block 2 · MLP	networks (4)	Block 2 · Add & Norm 2	0.8749	Feed-forward
+n4 · networks (4)	Block 2 · MLP	networks (4)	Block 2 · Add & Norm 2	0.648	Feed-forward
+n1 · in (5)	Block 2 · MLP	in (5)	Block 2 · Add & Norm 2	0.4494	Feed-forward
+n2 · in (5)	Block 2 · MLP	in (5)	Block 2 · Add & Norm 2	0.505	Feed-forward
+n3 · in (5)	Block 2 · MLP	in (5)	Block 2 · Add & Norm 2	0.8762	Feed-forward
+n4 · in (5)	Block 2 · MLP	in (5)	Block 2 · Add & Norm 2	0.9204	Feed-forward
+n1 · 3D (6)	Block 2 · MLP	3D (6)	Block 2 · Add & Norm 2	0.3666	Feed-forward
+n2 · 3D (6)	Block 2 · MLP	3D (6)	Block 2 · Add & Norm 2	0.8806	Feed-forward
+n3 · 3D (6)	Block 2 · MLP	3D (6)	Block 2 · Add & Norm 2	0.9748	Feed-forward
+n4 · 3D (6)	Block 2 · MLP	3D (6)	Block 2 · Add & Norm 2	0.6194	Feed-forward
+n1 · . (7)	Block 2 · MLP	. (7)	Block 2 · Add & Norm 2	0.6584	Feed-forward
+n2 · . (7)	Block 2 · MLP	. (7)	Block 2 · Add & Norm 2	0.3608	Feed-forward
+n3 · . (7)	Block 2 · MLP	. (7)	Block 2 · Add & Norm 2	0.6287	Feed-forward
+n4 · . (7)	Block 2 · MLP	. (7)	Block 2 · Add & Norm 2	0.6025	Feed-forward
+n1 · Arena (8)	Block 2 · MLP	Arena (8)	Block 2 · Add & Norm 2	0.6842	Feed-forward
+n2 · Arena (8)	Block 2 · MLP	Arena (8)	Block 2 · Add & Norm 2	0.2222	Feed-forward
+n3 · Arena (8)	Block 2 · MLP	Arena (8)	Block 2 · Add & Norm 2	0.9755	Feed-forward
+n4 · Arena (8)	Block 2 · MLP	Arena (8)	Block 2 · Add & Norm 2	0.6128	Feed-forward
+n1 · draws (9)	Block 2 · MLP	draws (9)	Block 2 · Add & Norm 2	0.5205	Feed-forward
+n2 · draws (9)	Block 2 · MLP	draws (9)	Block 2 · Add & Norm 2	0.8409	Feed-forward
+n3 · draws (9)	Block 2 · MLP	draws (9)	Block 2 · Add & Norm 2	0.6503	Feed-forward
+n4 · draws (9)	Block 2 · MLP	draws (9)	Block 2 · Add & Norm 2	0.5928	Feed-forward
+H1 key · BOS (1)	Block 1 · Attention	H1 query · BOS (1)	Block 1 · Attention	1	Attention
+H1 key · BOS (1)	Block 1 · Attention	H1 query · Arena (2)	Block 1 · Attention	0.982	Attention
+H1 key · Arena (2)	Block 1 · Attention	H1 query · draws (3)	Block 1 · Attention	0.9647	Attention
+H1 key · draws (3)	Block 1 · Attention	H1 query · networks (4)	Block 1 · Attention	0.9479	Attention
+H1 key · networks (4)	Block 1 · Attention	H1 query · in (5)	Block 1 · Attention	0.9317	Attention
+H1 key · in (5)	Block 1 · Attention	H1 query · 3D (6)	Block 1 · Attention	0.9161	Attention
+H1 key · 3D (6)	Block 1 · Attention	H1 query · . (7)	Block 1 · Attention	0.901	Attention
+H1 key · . (7)	Block 1 · Attention	H1 query · Arena (8)	Block 1 · Attention	0.8864	Attention
+H1 key · Arena (8)	Block 1 · Attention	H1 query · draws (9)	Block 1 · Attention	0.8722	Attention
+H2 key · BOS (1)	Block 1 · Attention	H2 query · BOS (1)	Block 1 · Attention	1	Attention
+H2 key · BOS (1)	Block 1 · Attention	H2 query · Arena (2)	Block 1 · Attention	0.9526	Attention
+H2 key · Arena (2)	Block 1 · Attention	H2 query · Arena (2)	Block 1 · Attention	0.0474	Attention
+H2 key · BOS (1)	Block 1 · Attention	H2 query · draws (3)	Block 1 · Attention	0.9094	Attention
+H2 key · Arena (2)	Block 1 · Attention	H2 query · draws (3)	Block 1 · Attention	0.0453	Attention
+H2 key · draws (3)	Block 1 · Attention	H2 query · draws (3)	Block 1 · Attention	0.0453	Attention
+H2 key · BOS (1)	Block 1 · Attention	H2 query · networks (4)	Block 1 · Attention	0.87	Attention
+H2 key · Arena (2)	Block 1 · Attention	H2 query · networks (4)	Block 1 · Attention	0.0433	Attention
+H2 key · draws (3)	Block 1 · Attention	H2 query · networks (4)	Block 1 · Attention	0.0433	Attention
+H2 key · networks (4)	Block 1 · Attention	H2 query · networks (4)	Block 1 · Attention	0.0433	Attention
+H2 key · BOS (1)	Block 1 · Attention	H2 query · in (5)	Block 1 · Attention	0.8339	Attention
+H2 key · Arena (2)	Block 1 · Attention	H2 query · in (5)	Block 1 · Attention	0.0415	Attention
+H2 key · draws (3)	Block 1 · Attention	H2 query · in (5)	Block 1 · Attention	0.0415	Attention
+H2 key · networks (4)	Block 1 · Attention	H2 query · in (5)	Block 1 · Attention	0.0415	Attention
+H2 key · in (5)	Block 1 · Attention	H2 query · in (5)	Block 1 · Attention	0.0415	Attention
+H2 key · BOS (1)	Block 1 · Attention	H2 query · 3D (6)	Block 1 · Attention	0.8007	Attention
+H2 key · Arena (2)	Block 1 · Attention	H2 query · 3D (6)	Block 1 · Attention	0.0399	Attention
+H2 key · draws (3)	Block 1 · Attention	H2 query · 3D (6)	Block 1 · Attention	0.0399	Attention
+H2 key · networks (4)	Block 1 · Attention	H2 query · 3D (6)	Block 1 · Attention	0.0399	Attention
+H2 key · in (5)	Block 1 · Attention	H2 query · 3D (6)	Block 1 · Attention	0.0399	Attention
+H2 key · 3D (6)	Block 1 · Attention	H2 query · 3D (6)	Block 1 · Attention	0.0399	Attention
+H2 key · BOS (1)	Block 1 · Attention	H2 query · . (7)	Block 1 · Attention	0.77	Attention
+H2 key · Arena (2)	Block 1 · Attention	H2 query · . (7)	Block 1 · Attention	0.0383	Attention
+H2 key · draws (3)	Block 1 · Attention	H2 query · . (7)	Block 1 · Attention	0.0383	Attention
+H2 key · networks (4)	Block 1 · Attention	H2 query · . (7)	Block 1 · Attention	0.0383	Attention
+H2 key · in (5)	Block 1 · Attention	H2 query · . (7)	Block 1 · Attention	0.0383	Attention
+H2 key · 3D (6)	Block 1 · Attention	H2 query · . (7)	Block 1 · Attention	0.0383	Attention
+H2 key · . (7)	Block 1 · Attention	H2 query · . (7)	Block 1 · Attention	0.0383	Attention
+H2 key · BOS (1)	Block 1 · Attention	H2 query · Arena (8)	Block 1 · Attention	0.7416	Attention
+H2 key · Arena (2)	Block 1 · Attention	H2 query · Arena (8)	Block 1 · Attention	0.0369	Attention
+H2 key · draws (3)	Block 1 · Attention	H2 query · Arena (8)	Block 1 · Attention	0.0369	Attention
+H2 key · networks (4)	Block 1 · Attention	H2 query · Arena (8)	Block 1 · Attention	0.0369	Attention
+H2 key · in (5)	Block 1 · Attention	H2 query · Arena (8)	Block 1 · Attention	0.0369	Attention
+H2 key · 3D (6)	Block 1 · Attention	H2 query · Arena (8)	Block 1 · Attention	0.0369	Attention
+H2 key · . (7)	Block 1 · Attention	H2 query · Arena (8)	Block 1 · Attention	0.0369	Attention
+H2 key · Arena (8)	Block 1 · Attention	H2 query · Arena (8)	Block 1 · Attention	0.0369	Attention
+H2 key · BOS (1)	Block 1 · Attention	H2 query · draws (9)	Block 1 · Attention	0.7152	Attention
+H2 key · Arena (2)	Block 1 · Attention	H2 query · draws (9)	Block 1 · Attention	0.0356	Attention
+H2 key · draws (3)	Block 1 · Attention	H2 query · draws (9)	Block 1 · Attention	0.0356	Attention
+H2 key · networks (4)	Block 1 · Attention	H2 query · draws (9)	Block 1 · Attention	0.0356	Attention
+H2 key · in (5)	Block 1 · Attention	H2 query · draws (9)	Block 1 · Attention	0.0356	Attention
+H2 key · 3D (6)	Block 1 · Attention	H2 query · draws (9)	Block 1 · Attention	0.0356	Attention
+H2 key · . (7)	Block 1 · Attention	H2 query · draws (9)	Block 1 · Attention	0.0356	Attention
+H2 key · Arena (8)	Block 1 · Attention	H2 query · draws (9)	Block 1 · Attention	0.0356	Attention
+H2 key · draws (9)	Block 1 · Attention	H2 query · draws (9)	Block 1 · Attention	0.0356	Attention
+H3 key · BOS (1)	Block 1 · Attention	H3 query · BOS (1)	Block 1 · Attention	1	Attention
+H3 key · BOS (1)	Block 1 · Attention	H3 query · Arena (2)	Block 1 · Attention	0.2891	Attention
+H3 key · Arena (2)	Block 1 · Attention	H3 query · Arena (2)	Block 1 · Attention	0.7109	Attention
+H3 key · BOS (1)	Block 1 · Attention	H3 query · draws (3)	Block 1 · Attention	0.1052	Attention
+H3 key · Arena (2)	Block 1 · Attention	H3 query · draws (3)	Block 1 · Attention	0.2587	Attention
+H3 key · draws (3)	Block 1 · Attention	H3 query · draws (3)	Block 1 · Attention	0.6362	Attention
+H3 key · BOS (1)	Block 1 · Attention	H3 query · networks (4)	Block 1 · Attention	0.041	Attention
+H3 key · Arena (2)	Block 1 · Attention	H3 query · networks (4)	Block 1 · Attention	0.1008	Attention
+H3 key · draws (3)	Block 1 · Attention	H3 query · networks (4)	Block 1 · Attention	0.248	Attention
+H3 key · networks (4)	Block 1 · Attention	H3 query · networks (4)	Block 1 · Attention	0.6101	Attention
+H3 key · Arena (2)	Block 1 · Attention	H3 query · in (5)	Block 1 · Attention	0.0403	Attention
+H3 key · draws (3)	Block 1 · Attention	H3 query · in (5)	Block 1 · Attention	0.0992	Attention
+H3 key · networks (4)	Block 1 · Attention	H3 query · in (5)	Block 1 · Attention	0.244	Attention
+H3 key · in (5)	Block 1 · Attention	H3 query · in (5)	Block 1 · Attention	0.6001	Attention
+H3 key · draws (3)	Block 1 · Attention	H3 query · 3D (6)	Block 1 · Attention	0.0401	Attention
+H3 key · networks (4)	Block 1 · Attention	H3 query · 3D (6)	Block 1 · Attention	0.0985	Attention
+H3 key · in (5)	Block 1 · Attention	H3 query · 3D (6)	Block 1 · Attention	0.2424	Attention
+H3 key · 3D (6)	Block 1 · Attention	H3 query · 3D (6)	Block 1 · Attention	0.5961	Attention
+H3 key · networks (4)	Block 1 · Attention	H3 query · . (7)	Block 1 · Attention	0.04	Attention
+H3 key · in (5)	Block 1 · Attention	H3 query · . (7)	Block 1 · Attention	0.0983	Attention
+H3 key · 3D (6)	Block 1 · Attention	H3 query · . (7)	Block 1 · Attention	0.2417	Attention
+H3 key · . (7)	Block 1 · Attention	H3 query · . (7)	Block 1 · Attention	0.5945	Attention
+H3 key · in (5)	Block 1 · Attention	H3 query · Arena (8)	Block 1 · Attention	0.0399	Attention
+H3 key · 3D (6)	Block 1 · Attention	H3 query · Arena (8)	Block 1 · Attention	0.0982	Attention
+H3 key · . (7)	Block 1 · Attention	H3 query · Arena (8)	Block 1 · Attention	0.2415	Attention
+H3 key · Arena (8)	Block 1 · Attention	H3 query · Arena (8)	Block 1 · Attention	0.5939	Attention
+H3 key · 3D (6)	Block 1 · Attention	H3 query · draws (9)	Block 1 · Attention	0.0399	Attention
+H3 key · . (7)	Block 1 · Attention	H3 query · draws (9)	Block 1 · Attention	0.0981	Attention
+H3 key · Arena (8)	Block 1 · Attention	H3 query · draws (9)	Block 1 · Attention	0.2413	Attention
+H3 key · draws (9)	Block 1 · Attention	H3 query · draws (9)	Block 1 · Attention	0.5936	Attention
+H4 key · BOS (1)	Block 1 · Attention	H4 query · BOS (1)	Block 1 · Attention	1	Attention
+H4 key · BOS (1)	Block 1 · Attention	H4 query · Arena (2)	Block 1 · Attention	0.5	Attention
+H4 key · Arena (2)	Block 1 · Attention	H4 query · Arena (2)	Block 1 · Attention	0.5	Attention
+H4 key · BOS (1)	Block 1 · Attention	H4 query · draws (3)	Block 1 · Attention	0.3333	Attention
+H4 key · Arena (2)	Block 1 · Attention	H4 query · draws (3)	Block 1 · Attention	0.3333	Attention
+H4 key · draws (3)	Block 1 · Attention	H4 query · draws (3)	Block 1 · Attention	0.3333	Attention
+H4 key · BOS (1)	Block 1 · Attention	H4 query · networks (4)	Block 1 · Attention	0.25	Attention
+H4 key · Arena (2)	Block 1 · Attention	H4 query · networks (4)	Block 1 · Attention	0.25	Attention
+H4 key · draws (3)	Block 1 · Attention	H4 query · networks (4)	Block 1 · Attention	0.25	Attention
+H4 key · networks (4)	Block 1 · Attention	H4 query · networks (4)	Block 1 · Attention	0.25	Attention
+H4 key · BOS (1)	Block 1 · Attention	H4 query · in (5)	Block 1 · Attention	0.2	Attention
+H4 key · Arena (2)	Block 1 · Attention	H4 query · in (5)	Block 1 · Attention	0.2	Attention
+H4 key · draws (3)	Block 1 · Attention	H4 query · in (5)	Block 1 · Attention	0.2	Attention
+H4 key · networks (4)	Block 1 · Attention	H4 query · in (5)	Block 1 · Attention	0.2	Attention
+H4 key · in (5)	Block 1 · Attention	H4 query · in (5)	Block 1 · Attention	0.2	Attention
+H4 key · BOS (1)	Block 1 · Attention	H4 query · 3D (6)	Block 1 · Attention	0.1667	Attention
+H4 key · Arena (2)	Block 1 · Attention	H4 query · 3D (6)	Block 1 · Attention	0.1667	Attention
+H4 key · draws (3)	Block 1 · Attention	H4 query · 3D (6)	Block 1 · Attention	0.1667	Attention
+H4 key · networks (4)	Block 1 · Attention	H4 query · 3D (6)	Block 1 · Attention	0.1667	Attention
+H4 key · in (5)	Block 1 · Attention	H4 query · 3D (6)	Block 1 · Attention	0.1667	Attention
+H4 key · 3D (6)	Block 1 · Attention	H4 query · 3D (6)	Block 1 · Attention	0.1667	Attention
+H4 key · BOS (1)	Block 1 · Attention	H4 query · . (7)	Block 1 · Attention	0.1429	Attention
+H4 key · Arena (2)	Block 1 · Attention	H4 query · . (7)	Block 1 · Attention	0.1429	Attention
+H4 key · draws (3)	Block 1 · Attention	H4 query · . (7)	Block 1 · Attention	0.1429	Attention
+H4 key · networks (4)	Block 1 · Attention	H4 query · . (7)	Block 1 · Attention	0.1429	Attention
+H4 key · in (5)	Block 1 · Attention	H4 query · . (7)	Block 1 · Attention	0.1429	Attention
+H4 key · 3D (6)	Block 1 · Attention	H4 query · . (7)	Block 1 · Attention	0.1429	Attention
+H4 key · . (7)	Block 1 · Attention	H4 query · . (7)	Block 1 · Attention	0.1429	Attention
+H4 key · BOS (1)	Block 1 · Attention	H4 query · Arena (8)	Block 1 · Attention	0.125	Attention
+H4 key · Arena (2)	Block 1 · Attention	H4 query · Arena (8)	Block 1 · Attention	0.125	Attention
+H4 key · draws (3)	Block 1 · Attention	H4 query · Arena (8)	Block 1 · Attention	0.125	Attention
+H4 key · networks (4)	Block 1 · Attention	H4 query · Arena (8)	Block 1 · Attention	0.125	Attention
+H4 key · in (5)	Block 1 · Attention	H4 query · Arena (8)	Block 1 · Attention	0.125	Attention
+H4 key · 3D (6)	Block 1 · Attention	H4 query · Arena (8)	Block 1 · Attention	0.125	Attention
+H4 key · . (7)	Block 1 · Attention	H4 query · Arena (8)	Block 1 · Attention	0.125	Attention
+H4 key · Arena (8)	Block 1 · Attention	H4 query · Arena (8)	Block 1 · Attention	0.125	Attention
+H4 key · BOS (1)	Block 1 · Attention	H4 query · draws (9)	Block 1 · Attention	0.1111	Attention
+H4 key · Arena (2)	Block 1 · Attention	H4 query · draws (9)	Block 1 · Attention	0.1111	Attention
+H4 key · draws (3)	Block 1 · Attention	H4 query · draws (9)	Block 1 · Attention	0.1111	Attention
+H4 key · networks (4)	Block 1 · Attention	H4 query · draws (9)	Block 1 · Attention	0.1111	Attention
+H4 key · in (5)	Block 1 · Attention	H4 query · draws (9)	Block 1 · Attention	0.1111	Attention
+H4 key · 3D (6)	Block 1 · Attention	H4 query · draws (9)	Block 1 · Attention	0.1111	Attention
+H4 key · . (7)	Block 1 · Attention	H4 query · draws (9)	Block 1 · Attention	0.1111	Attention
+H4 key · Arena (8)	Block 1 · Attention	H4 query · draws (9)	Block 1 · Attention	0.1111	Attention
+H4 key · draws (9)	Block 1 · Attention	H4 query · draws (9)	Block 1 · Attention	0.1111	Attention
+H1 key · BOS (1)	Block 2 · Attention	H1 query · BOS (1)	Block 2 · Attention	1	Attention
+H1 key · BOS (1)	Block 2 · Attention	H1 query · Arena (2)	Block 2 · Attention	0.8176	Attention
+H1 key · Arena (2)	Block 2 · Attention	H1 query · Arena (2)	Block 2 · Attention	0.1824	Attention
+H1 key · BOS (1)	Block 2 · Attention	H1 query · draws (3)	Block 2 · Attention	0.6914	Attention
+H1 key · Arena (2)	Block 2 · Attention	H1 query · draws (3)	Block 2 · Attention	0.1543	Attention
+H1 key · draws (3)	Block 2 · Attention	H1 query · draws (3)	Block 2 · Attention	0.1543	Attention
+H1 key · BOS (1)	Block 2 · Attention	H1 query · networks (4)	Block 2 · Attention	0.599	Attention
+H1 key · Arena (2)	Block 2 · Attention	H1 query · networks (4)	Block 2 · Attention	0.1337	Attention
+H1 key · draws (3)	Block 2 · Attention	H1 query · networks (4)	Block 2 · Attention	0.1337	Attention
+H1 key · networks (4)	Block 2 · Attention	H1 query · networks (4)	Block 2 · Attention	0.1337	Attention
+H1 key · BOS (1)	Block 2 · Attention	H1 query · in (5)	Block 2 · Attention	0.5284	Attention
+H1 key · Arena (2)	Block 2 · Attention	H1 query · in (5)	Block 2 · Attention	0.1179	Attention
+H1 key · draws (3)	Block 2 · Attention	H1 query · in (5)	Block 2 · Attention	0.1179	Attention
+H1 key · networks (4)	Block 2 · Attention	H1 query · in (5)	Block 2 · Attention	0.1179	Attention
+H1 key · in (5)	Block 2 · Attention	H1 query · in (5)	Block 2 · Attention	0.1179	Attention
+H1 key · BOS (1)	Block 2 · Attention	H1 query · 3D (6)	Block 2 · Attention	0.4727	Attention
+H1 key · Arena (2)	Block 2 · Attention	H1 query · 3D (6)	Block 2 · Attention	0.1055	Attention
+H1 key · draws (3)	Block 2 · Attention	H1 query · 3D (6)	Block 2 · Attention	0.1055	Attention
+H1 key · networks (4)	Block 2 · Attention	H1 query · 3D (6)	Block 2 · Attention	0.1055	Attention
+H1 key · in (5)	Block 2 · Attention	H1 query · 3D (6)	Block 2 · Attention	0.1055	Attention
+H1 key · 3D (6)	Block 2 · Attention	H1 query · 3D (6)	Block 2 · Attention	0.1055	Attention
+H1 key · BOS (1)	Block 2 · Attention	H1 query · . (7)	Block 2 · Attention	0.4276	Attention
+H1 key · Arena (2)	Block 2 · Attention	H1 query · . (7)	Block 2 · Attention	0.0954	Attention
+H1 key · draws (3)	Block 2 · Attention	H1 query · . (7)	Block 2 · Attention	0.0954	Attention
+H1 key · networks (4)	Block 2 · Attention	H1 query · . (7)	Block 2 · Attention	0.0954	Attention
+H1 key · in (5)	Block 2 · Attention	H1 query · . (7)	Block 2 · Attention	0.0954	Attention
+H1 key · 3D (6)	Block 2 · Attention	H1 query · . (7)	Block 2 · Attention	0.0954	Attention
+H1 key · . (7)	Block 2 · Attention	H1 query · . (7)	Block 2 · Attention	0.0954	Attention
+H1 key · draws (3)	Block 2 · Attention	H1 query · Arena (8)	Block 2 · Attention	0.934	Attention
+H1 key · networks (4)	Block 2 · Attention	H1 query · draws (9)	Block 2 · Attention	0.9282	Attention
+H2 key · BOS (1)	Block 2 · Attention	H2 query · BOS (1)	Block 2 · Attention	1	Attention
+H2 key · BOS (1)	Block 2 · Attention	H2 query · Arena (2)	Block 2 · Attention	0.8176	Attention
+H2 key · Arena (2)	Block 2 · Attention	H2 query · Arena (2)	Block 2 · Attention	0.1824	Attention
+H2 key · BOS (1)	Block 2 · Attention	H2 query · draws (3)	Block 2 · Attention	0.6914	Attention
+H2 key · Arena (2)	Block 2 · Attention	H2 query · draws (3)	Block 2 · Attention	0.1543	Attention
+H2 key · draws (3)	Block 2 · Attention	H2 query · draws (3)	Block 2 · Attention	0.1543	Attention
+H2 key · BOS (1)	Block 2 · Attention	H2 query · networks (4)	Block 2 · Attention	0.599	Attention
+H2 key · Arena (2)	Block 2 · Attention	H2 query · networks (4)	Block 2 · Attention	0.1337	Attention
+H2 key · draws (3)	Block 2 · Attention	H2 query · networks (4)	Block 2 · Attention	0.1337	Attention
+H2 key · networks (4)	Block 2 · Attention	H2 query · networks (4)	Block 2 · Attention	0.1337	Attention
+H2 key · BOS (1)	Block 2 · Attention	H2 query · in (5)	Block 2 · Attention	0.5284	Attention
+H2 key · Arena (2)	Block 2 · Attention	H2 query · in (5)	Block 2 · Attention	0.1179	Attention
+H2 key · draws (3)	Block 2 · Attention	H2 query · in (5)	Block 2 · Attention	0.1179	Attention
+H2 key · networks (4)	Block 2 · Attention	H2 query · in (5)	Block 2 · Attention	0.1179	Attention
+H2 key · in (5)	Block 2 · Attention	H2 query · in (5)	Block 2 · Attention	0.1179	Attention
+H2 key · BOS (1)	Block 2 · Attention	H2 query · 3D (6)	Block 2 · Attention	0.4727	Attention
+H2 key · Arena (2)	Block 2 · Attention	H2 query · 3D (6)	Block 2 · Attention	0.1055	Attention
+H2 key · draws (3)	Block 2 · Attention	H2 query · 3D (6)	Block 2 · Attention	0.1055	Attention
+H2 key · networks (4)	Block 2 · Attention	H2 query · 3D (6)	Block 2 · Attention	0.1055	Attention
+H2 key · in (5)	Block 2 · Attention	H2 query · 3D (6)	Block 2 · Attention	0.1055	Attention
+H2 key · 3D (6)	Block 2 · Attention	H2 query · 3D (6)	Block 2 · Attention	0.1055	Attention
+H2 key · BOS (1)	Block 2 · Attention	H2 query · . (7)	Block 2 · Attention	0.4276	Attention
+H2 key · Arena (2)	Block 2 · Attention	H2 query · . (7)	Block 2 · Attention	0.0954	Attention
+H2 key · draws (3)	Block 2 · Attention	H2 query · . (7)	Block 2 · Attention	0.0954	Attention
+H2 key · networks (4)	Block 2 · Attention	H2 query · . (7)	Block 2 · Attention	0.0954	Attention
+H2 key · in (5)	Block 2 · Attention	H2 query · . (7)	Block 2 · Attention	0.0954	Attention
+H2 key · 3D (6)	Block 2 · Attention	H2 query · . (7)	Block 2 · Attention	0.0954	Attention
+H2 key · . (7)	Block 2 · Attention	H2 query · . (7)	Block 2 · Attention	0.0954	Attention
+H2 key · Arena (2)	Block 2 · Attention	H2 query · Arena (8)	Block 2 · Attention	0.934	Attention
+H2 key · draws (3)	Block 2 · Attention	H2 query · draws (9)	Block 2 · Attention	0.9282	Attention
+H3 key · BOS (1)	Block 2 · Attention	H3 query · BOS (1)	Block 2 · Attention	1	Attention
+H3 key · BOS (1)	Block 2 · Attention	H3 query · Arena (2)	Block 2 · Attention	0.7311	Attention
+H3 key · Arena (2)	Block 2 · Attention	H3 query · Arena (2)	Block 2 · Attention	0.2689	Attention
+H3 key · BOS (1)	Block 2 · Attention	H3 query · draws (3)	Block 2 · Attention	0.5761	Attention
+H3 key · Arena (2)	Block 2 · Attention	H3 query · draws (3)	Block 2 · Attention	0.2119	Attention
+H3 key · draws (3)	Block 2 · Attention	H3 query · draws (3)	Block 2 · Attention	0.2119	Attention
+H3 key · BOS (1)	Block 2 · Attention	H3 query · networks (4)	Block 2 · Attention	0.4754	Attention
+H3 key · Arena (2)	Block 2 · Attention	H3 query · networks (4)	Block 2 · Attention	0.1749	Attention
+H3 key · draws (3)	Block 2 · Attention	H3 query · networks (4)	Block 2 · Attention	0.1749	Attention
+H3 key · networks (4)	Block 2 · Attention	H3 query · networks (4)	Block 2 · Attention	0.1749	Attention
+H3 key · BOS (1)	Block 2 · Attention	H3 query · in (5)	Block 2 · Attention	0.4046	Attention
+H3 key · Arena (2)	Block 2 · Attention	H3 query · in (5)	Block 2 · Attention	0.1488	Attention
+H3 key · draws (3)	Block 2 · Attention	H3 query · in (5)	Block 2 · Attention	0.1488	Attention
+H3 key · networks (4)	Block 2 · Attention	H3 query · in (5)	Block 2 · Attention	0.1488	Attention
+H3 key · in (5)	Block 2 · Attention	H3 query · in (5)	Block 2 · Attention	0.1488	Attention
+H3 key · BOS (1)	Block 2 · Attention	H3 query · 3D (6)	Block 2 · Attention	0.3522	Attention
+H3 key · Arena (2)	Block 2 · Attention	H3 query · 3D (6)	Block 2 · Attention	0.1296	Attention
+H3 key · draws (3)	Block 2 · Attention	H3 query · 3D (6)	Block 2 · Attention	0.1296	Attention
+H3 key · networks (4)	Block 2 · Attention	H3 query · 3D (6)	Block 2 · Attention	0.1296	Attention
+H3 key · in (5)	Block 2 · Attention	H3 query · 3D (6)	Block 2 · Attention	0.1296	Attention
+H3 key · 3D (6)	Block 2 · Attention	H3 query · 3D (6)	Block 2 · Attention	0.1296	Attention
+H3 key · BOS (1)	Block 2 · Attention	H3 query · . (7)	Block 2 · Attention	0.0978	Attention
+H3 key · Arena (2)	Block 2 · Attention	H3 query · . (7)	Block 2 · Attention	0.036	Attention
+H3 key · draws (3)	Block 2 · Attention	H3 query · . (7)	Block 2 · Attention	0.036	Attention
+H3 key · networks (4)	Block 2 · Attention	H3 query · . (7)	Block 2 · Attention	0.036	Attention
+H3 key · in (5)	Block 2 · Attention	H3 query · . (7)	Block 2 · Attention	0.036	Attention
+H3 key · 3D (6)	Block 2 · Attention	H3 query · . (7)	Block 2 · Attention	0.036	Attention
+H3 key · . (7)	Block 2 · Attention	H3 query · . (7)	Block 2 · Attention	0.7224	Attention
+H3 key · BOS (1)	Block 2 · Attention	H3 query · Arena (8)	Block 2 · Attention	0.0944	Attention
+H3 key · Arena (2)	Block 2 · Attention	H3 query · Arena (8)	Block 2 · Attention	0.0347	Attention
+H3 key · draws (3)	Block 2 · Attention	H3 query · Arena (8)	Block 2 · Attention	0.0347	Attention
+H3 key · networks (4)	Block 2 · Attention	H3 query · Arena (8)	Block 2 · Attention	0.0347	Attention
+H3 key · in (5)	Block 2 · Attention	H3 query · Arena (8)	Block 2 · Attention	0.0347	Attention
+H3 key · 3D (6)	Block 2 · Attention	H3 query · Arena (8)	Block 2 · Attention	0.0347	Attention
+H3 key · . (7)	Block 2 · Attention	H3 query · Arena (8)	Block 2 · Attention	0.6973	Attention
+H3 key · Arena (8)	Block 2 · Attention	H3 query · Arena (8)	Block 2 · Attention	0.0347	Attention
+H3 key · BOS (1)	Block 2 · Attention	H3 query · draws (9)	Block 2 · Attention	0.0912	Attention
+H3 key · Arena (2)	Block 2 · Attention	H3 query · draws (9)	Block 2 · Attention	0.0336	Attention
+H3 key · draws (3)	Block 2 · Attention	H3 query · draws (9)	Block 2 · Attention	0.0336	Attention
+H3 key · networks (4)	Block 2 · Attention	H3 query · draws (9)	Block 2 · Attention	0.0336	Attention
+H3 key · in (5)	Block 2 · Attention	H3 query · draws (9)	Block 2 · Attention	0.0336	Attention
+H3 key · 3D (6)	Block 2 · Attention	H3 query · draws (9)	Block 2 · Attention	0.0336	Attention
+H3 key · . (7)	Block 2 · Attention	H3 query · draws (9)	Block 2 · Attention	0.6739	Attention
+H3 key · Arena (8)	Block 2 · Attention	H3 query · draws (9)	Block 2 · Attention	0.0336	Attention
+H3 key · draws (9)	Block 2 · Attention	H3 query · draws (9)	Block 2 · Attention	0.0336	Attention
+H4 key · BOS (1)	Block 2 · Attention	H4 query · BOS (1)	Block 2 · Attention	1	Attention
+H4 key · BOS (1)	Block 2 · Attention	H4 query · Arena (2)	Block 2 · Attention	0.3543	Attention
+H4 key · Arena (2)	Block 2 · Attention	H4 query · Arena (2)	Block 2 · Attention	0.6457	Attention
+H4 key · BOS (1)	Block 2 · Attention	H4 query · draws (3)	Block 2 · Attention	0.1628	Attention
+H4 key · Arena (2)	Block 2 · Attention	H4 query · draws (3)	Block 2 · Attention	0.2967	Attention
+H4 key · draws (3)	Block 2 · Attention	H4 query · draws (3)	Block 2 · Attention	0.5405	Attention
+H4 key · BOS (1)	Block 2 · Attention	H4 query · networks (4)	Block 2 · Attention	0.082	Attention
+H4 key · Arena (2)	Block 2 · Attention	H4 query · networks (4)	Block 2 · Attention	0.1495	Attention
+H4 key · draws (3)	Block 2 · Attention	H4 query · networks (4)	Block 2 · Attention	0.2723	Attention
+H4 key · networks (4)	Block 2 · Attention	H4 query · networks (4)	Block 2 · Attention	0.4962	Attention
+H4 key · BOS (1)	Block 2 · Attention	H4 query · in (5)	Block 2 · Attention	0.0431	Attention
+H4 key · Arena (2)	Block 2 · Attention	H4 query · in (5)	Block 2 · Attention	0.0785	Attention
+H4 key · draws (3)	Block 2 · Attention	H4 query · in (5)	Block 2 · Attention	0.143	Attention
+H4 key · networks (4)	Block 2 · Attention	H4 query · in (5)	Block 2 · Attention	0.2606	Attention
+H4 key · in (5)	Block 2 · Attention	H4 query · in (5)	Block 2 · Attention	0.4748	Attention
+H4 key · Arena (2)	Block 2 · Attention	H4 query · 3D (6)	Block 2 · Attention	0.0421	Attention
+H4 key · draws (3)	Block 2 · Attention	H4 query · 3D (6)	Block 2 · Attention	0.0767	Attention
+H4 key · networks (4)	Block 2 · Attention	H4 query · 3D (6)	Block 2 · Attention	0.1397	Attention
+H4 key · in (5)	Block 2 · Attention	H4 query · 3D (6)	Block 2 · Attention	0.2546	Attention
+H4 key · 3D (6)	Block 2 · Attention	H4 query · 3D (6)	Block 2 · Attention	0.4639	Attention
+H4 key · draws (3)	Block 2 · Attention	H4 query · . (7)	Block 2 · Attention	0.0416	Attention
+H4 key · networks (4)	Block 2 · Attention	H4 query · . (7)	Block 2 · Attention	0.0757	Attention
+H4 key · in (5)	Block 2 · Attention	H4 query · . (7)	Block 2 · Attention	0.138	Attention
+H4 key · 3D (6)	Block 2 · Attention	H4 query · . (7)	Block 2 · Attention	0.2514	Attention
+H4 key · . (7)	Block 2 · Attention	H4 query · . (7)	Block 2 · Attention	0.4581	Attention
+H4 key · networks (4)	Block 2 · Attention	H4 query · Arena (8)	Block 2 · Attention	0.0413	Attention
+H4 key · in (5)	Block 2 · Attention	H4 query · Arena (8)	Block 2 · Attention	0.0752	Attention
+H4 key · 3D (6)	Block 2 · Attention	H4 query · Arena (8)	Block 2 · Attention	0.137	Attention
+H4 key · . (7)	Block 2 · Attention	H4 query · Arena (8)	Block 2 · Attention	0.2497	Attention
+H4 key · Arena (8)	Block 2 · Attention	H4 query · Arena (8)	Block 2 · Attention	0.4549	Attention
+H4 key · in (5)	Block 2 · Attention	H4 query · draws (9)	Block 2 · Attention	0.0411	Attention
+H4 key · 3D (6)	Block 2 · Attention	H4 query · draws (9)	Block 2 · Attention	0.0749	Attention
+H4 key · . (7)	Block 2 · Attention	H4 query · draws (9)	Block 2 · Attention	0.1365	Attention
+H4 key · Arena (8)	Block 2 · Attention	H4 query · draws (9)	Block 2 · Attention	0.2487	Attention
+H4 key · draws (9)	Block 2 · Attention	H4 query · draws (9)	Block 2 · Attention	0.4532	Attention

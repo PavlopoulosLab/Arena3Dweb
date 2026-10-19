@@ -47,6 +47,7 @@ cd backend && uv run pytest
 ```bash
 cd frontend && npm test          # Vitest unit tests
 cd frontend && npm run test:e2e  # Playwright E2E
+cd frontend && npm run help:shots  # re-capture the Help panel screenshots after a panel changes (run alone; needs the backend)
 ```
 
 **Lint / format / typecheck:**
@@ -71,7 +72,7 @@ Stateless FastAPI — the frontend holds all scene state; the server validates i
 - `three/` — `Scene`, `Layer`, `Node`, `Edge` classes on npm `three` r170; `runtime.ts` holds the shared mutable `ctx` (replaces v2 ambient globals); `constants.ts` static geometry/palette constants.
 - `actions/` — one module per domain (`network`, `layout`, `layer`, `node`, `edge`, `labels`, `themes`, `screen`, `canvas_controls`, `nav_controls`, `drag_controls`, `right_click_menu`, `session`). These mutate the object model + `ctx`.
 - `commands/` — `Command` interface + `CommandHistory` (undo/redo); `scene.ts` holds the concrete commands. Every scene mutation that should be undoable routes through a command.
-- `ui/` — one module per navbar panel (`home`, `file`, `layouts`, `scene`, `layer`, `node`, `edge`, `data`, `fps`, `help`), each filling its `#panel-*` pane with Bootstrap DOM and wiring controls to `actions`/`commands`.
+- `ui/` — one module per navbar panel (`home`, `find`, `file`, `databases`, `export`, `layouts`, `scene`, `layer`, `node`, `edge`, `style`, `analyze`, `data`, `fps`, `help`), each filling its `#panel-*` pane with Bootstrap DOM and wiring controls to `actions`/`commands`.
 - `bus/` — typed `EventBus` singleton (returns unsubscribe fns); `store/` — typed `AppState` store. Together they replace the old Shiny input/output sync.
 - `api/client.ts` — hand-written typed client mirroring the Pydantic models.
 

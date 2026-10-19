@@ -47,12 +47,16 @@ def build_graph(
     *,
     remove_multiple: bool,
     extra_vertices: list[str] | None = None,
+    channel_weights: dict[str, float] | None = None,
+    directed: bool = False,
 ) -> ig.Graph:
-    """Build a simplified weighted undirected graph from edge rows.
+    """Build a weighted graph from edge rows: undirected (or directed, source →
+    target) and, with `remove_multiple`, simplified.
 
     Ports createGraph(): edge weight = ScaledWeight, simplify with
     combine_edges="sum", loops kept. `extra_vertices` adds isolated nodes
-    (used by no-edge layouts so every layer node is placed).
+    (used by no-edge layouts so every layer node is placed). `channel_weights`
+    scales each edge by its channel's factor before parallel edges are summed.
     """
     names: list[str] = []
     seen: set[str] = set()
@@ -68,13 +72,30 @@ def build_graph(
 
     index = {name: i for i, name in enumerate(names)}
     edge_list = [(index[e.src], index[e.trg]) for e in edges]
+    factors = channel_weights or {}
     weights = [
-        w if (w := e.scaled_weight) > 0 and math.isfinite(w) else MIN_EDGE_WEIGHT for e in edges
+        w
+        if (w := e.scaled_weight * factors.get(e.channel or "", 1.0)) > 0 and math.isfinite(w)
+        else MIN_EDGE_WEIGHT
+        for e in edges
     ]
 
-    graph = ig.Graph(n=len(names), edges=edge_list)
+    graph = ig.Graph(n=len(names), edges=edge_list, directed=directed)
     graph.vs["name"] = names
     graph.es["weight"] = weights
     # remove_loops=False matches v2 (remove.loops = F); sum aggregates parallel edges
     graph.simplify(multiple=remove_multiple, loops=False, combine_edges={"weight": "sum"})
     return graph
+
+
+def merge_by_label(edges: list[EdgeModel]) -> list[EdgeModel]:
+    """Collapse Node_Layer endpoints onto node labels (multiplex flattening).
+
+    Edges between two copies of the same label (the coupling edges of a multiplex
+    network) are dropped; build_graph then sums parallel label-pair edges.
+    """
+    return [
+        e.model_copy(update={"src": e.source_node, "trg": e.target_node})
+        for e in edges
+        if e.source_node != e.target_node or e.source_layer == e.target_layer
+    ]

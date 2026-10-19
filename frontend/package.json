@@ -9,10 +9,12 @@
     "lint": "eslint src e2e",
     "format": "prettier --write src e2e",
     "test": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "help:shots": "HELP_SHOTS=1 playwright test e2e/help-shots.spec.ts --project=chromium"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
+    "swagger-ui-dist": "5.33.1",
     "three": "^0.185.1"
   },
   "devDependencies": {
@@ -25,6 +27,6 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.62.1",
     "vite": "^8.1.3",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.11"
   }
 }

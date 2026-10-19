@@ -5,7 +5,12 @@
 
 import { showTab } from './tabs'
 
-const NON_DRAWER_IDS = new Set(['panel-home', 'panel-main-view', 'panel-help'])
+const NON_DRAWER_IDS = new Set([
+  'panel-home',
+  'panel-main-view',
+  'panel-help',
+  'panel-api',
+])
 
 let lastDrawerSelector: string | null = null
 
@@ -27,7 +32,7 @@ function updateToggle(paneId?: string | null): void {
   if (!btn) return
   const id = paneId ?? activePaneId()
 
-  if (id === 'panel-home' || id === 'panel-help') {
+  if (id === 'panel-home' || id === 'panel-help' || id === 'panel-api') {
     // Full-width reading panes, not a drawer to collapse.
     btn.style.display = 'none'
     return

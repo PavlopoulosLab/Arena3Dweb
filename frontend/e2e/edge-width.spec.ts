@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // Edge weight as thickness. WebGL renders line primitives at a fixed 1px, so
 // this is Line2 (instanced quads) rather than THREE.Line — meaning the only
@@ -55,7 +55,9 @@ async function loadExample(page: import('@playwright/test').Page) {
   await page.waitForFunction(
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
-  await page.getByRole('tab', { name: 'File' }).click()
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .dispatchEvent('click')
   await page.getByRole('button', { name: 'Load Example' }).click()
   await expect(page.locator('#file_status')).toContainText('Loaded network')
   // Bloom off so pixel counts measure geometry, not glow. Driven on the input
@@ -66,7 +68,9 @@ async function loadExample(page: import('@playwright/test').Page) {
     box.checked = false
     box.dispatchEvent(new Event('change'))
   })
-  await page.getByRole('tab', { name: 'Edge Actions' }).click()
+  await page
+    .getByRole('tab', { name: 'Edges', includeHidden: true, exact: true })
+    .dispatchEvent('click')
 }
 
 test('weight-as-width thickens edges without touching nodes', async ({
@@ -109,14 +113,16 @@ test('manual width slider thickens edges when weight drives neither', async ({
 })
 
 // Curvature only bends channel curves, which single-edge networks never build.
-test('channel curvature sliders appear only for multi-edge networks', async ({
+test('channel curvature sliders appear only for Bézier channel edges', async ({
   page,
 }) => {
   await loadExample(page) // figure2A_data.tsv has no Channel column
   await expect(page.locator('#intraChannelCurvatureWrap')).toBeHidden()
   await expect(page.locator('#interChannelCurvatureWrap')).toBeHidden()
 
-  await page.getByRole('tab', { name: 'File' }).click()
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .dispatchEvent('click')
   await page.locator('#load_network_file').setInputFiles({
     name: 'channels.json',
     mimeType: 'application/json',
@@ -136,8 +142,19 @@ test('channel curvature sliders appear only for multi-edge networks', async ({
   })
   await expect(page.locator('#file_status')).toContainText('Session loaded')
 
-  await page.getByRole('tab', { name: 'Edge Actions' }).click()
+  await page
+    .getByRole('tab', { name: 'Edges', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  // channels are parallel lines by default: nothing to curve
+  await expect(page.locator('#edgeShapeWrap')).toBeVisible()
+  await expect(page.locator('#intraChannelCurvatureWrap')).toBeHidden()
+  await page.locator('#edgeShape').selectOption('curved')
   await expect(page.locator('#intraChannelCurvatureWrap')).toBeVisible()
+  // one layer opens as a single network: nothing is inter-layer there
+  await expect(page.locator('body')).toHaveClass(/mode-single/)
+  await expect(page.locator('#interChannelCurvatureWrap')).toBeHidden()
+  await page.locator('#modeMultilayer').dispatchEvent('click')
+  await expect(page.locator('body')).not.toHaveClass(/mode-single/)
   await expect(page.locator('#interChannelCurvatureWrap')).toBeVisible()
 })
 
@@ -158,7 +175,12 @@ test('the radio reflects whichever flag combination a session carries', async ({
     [false, false, 'edgeWeight_neither'],
     [true, false, 'edgeWeight_opacity'],
   ] as const) {
-    await page.getByRole('tab', { name: 'File' }).click()
+    await page
+      .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+      .dispatchEvent('click')
+    // clear the previous load's "Session loaded", or the wait below passes
+    // before this session is in (and its switch to the 3D view lands later)
+    await page.locator('#file_status').evaluate((el) => (el.textContent = ''))
     await page.locator('#load_network_file').setInputFiles({
       name: 'session.json',
       mimeType: 'application/json',
@@ -176,8 +198,12 @@ test('the radio reflects whichever flag combination a session carries', async ({
       ),
     })
     await expect(page.locator('#file_status')).toContainText('Session loaded')
+    // loading switches to the 3D view; let that tab switch finish first
+    await expect(page.locator('#panel-main-view')).toHaveClass(/show/)
 
-    await page.getByRole('tab', { name: 'Edge Actions' }).click()
+    await page
+      .getByRole('tab', { name: 'Edges', includeHidden: true, exact: true })
+      .dispatchEvent('click')
     await expect(page.locator(`#${expected}`)).toBeChecked()
     // The slider pair for a weight-driven property stays hidden.
     await expect(page.locator('#intraLayerEdgeOpacityWrap')).toBeVisible({

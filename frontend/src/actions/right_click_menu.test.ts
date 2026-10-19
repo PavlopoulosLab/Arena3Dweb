@@ -3,6 +3,8 @@ import { store } from '../store'
 import { ctx, Edge, Layer, Node, resetContext, Scene } from '../three'
 import {
   executeCommand,
+  registerSelectionAction,
+  selectionMenu,
   selectDownstreamPath,
   selectMultiLayerPath,
   selectNeighbors,
@@ -100,5 +102,32 @@ describe('executeCommand', () => {
     executeCommand(0, '-')
     expect(selectedNodes()).toEqual([])
     expect(ctx.renderInterLayerEdgesFlag).toBe(false)
+  })
+})
+
+describe('the selection group', () => {
+  it('is empty without a selection; lists the actions in order otherwise', () => {
+    expect(selectionMenu([])).toEqual([])
+    const ran: number[][] = []
+    registerSelectionAction({
+      label: 'Early action',
+      order: 1,
+      run: (sel) => ran.push(sel),
+    })
+    registerSelectionAction({
+      label: (sel) => `Only for pairs (${sel.length})`,
+      when: (sel) => sel.length === 2,
+      run: () => undefined,
+    })
+    const one = selectionMenu([0]).map((a) => a.label)
+    expect(one[0]).toBe('Early action')
+    expect(one).toContain('Focus Camera on Selection')
+    expect(one).toContain('Copy Names (1)')
+    expect(one).not.toContain('Only for pairs (1)')
+    expect(selectionMenu([0, 1]).map((a) => a.label)).toContain(
+      'Only for pairs (2)'
+    )
+    selectionMenu([0, 3])[0].run()
+    expect(ran).toEqual([[0, 3]])
   })
 })

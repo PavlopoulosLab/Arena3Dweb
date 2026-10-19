@@ -44,6 +44,15 @@ describe('layer drag', () => {
     expect(surface.style.cursor).toBe('move')
   })
 
+  it('leaves the floor alone when Shift + Drag selects an area', () => {
+    ctx.lastHoveredLayerIndex = 0
+    onPointerDown({ clientX: 400, clientY: 400, shiftKey: true })
+    ctx.scene!.leftClickPressed = true
+    onPointerMove({ clientX: 500, clientY: 400, pointerType: 'mouse' })
+    expect(ctx.layers[0].plane.position.x).toBe(0)
+    expect(surface.style.cursor).not.toBe('move')
+  })
+
   it('drags the hovered plane while the left button is held', () => {
     ctx.lastHoveredLayerIndex = 0
     onPointerDown({ clientX: 400, clientY: 400 })

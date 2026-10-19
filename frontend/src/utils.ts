@@ -12,6 +12,16 @@ export function escapeHtml(v: string | number): string {
     .replace(/'/g, '&#39;')
 }
 
+// Colours from files and sessions go into style="" and SVG attributes: only
+// CSS colour forms pass (hex, rgb()/hsl(), a colour name), so a value can
+// neither break out of the attribute nor add CSS declarations.
+const COLOUR =
+  /^(#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})|(rgb|hsl)a?\([\d\s.,%/+-]{1,60}\)|[a-z]{3,20})$/i
+export function safeColor(v: unknown, fallback = '#888888'): string {
+  const c = typeof v === 'string' ? v.trim() : ''
+  return COLOUR.test(c) ? c : fallback
+}
+
 export function exists<T>(array: T[], element: T): boolean {
   return array.some((l) => l == element)
 }

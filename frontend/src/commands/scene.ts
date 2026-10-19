@@ -6,6 +6,12 @@
 // actions, which construct these commands with the results.
 
 import { Color } from 'three'
+import {
+  applyLabelStyle,
+  labelStylesSnapshot,
+  restoreLabelStyles,
+  type LabelStyle,
+} from '../actions/labels'
 import { bus } from '../bus'
 import type { Command } from './base'
 import {
@@ -16,8 +22,16 @@ import {
 import { setRendererColor } from '../actions/screen'
 import { repaintLayers, getLastFloorColor } from '../actions/layer'
 import { createLabels } from '../actions/labels'
-import { setNodeShape } from '../actions/node'
 import type { NodeGeometryType } from '../three/Node'
+import type {
+  ContainerLook,
+  ContainerPlacement,
+  FloorShape,
+  FloorStyle,
+  LayerContainer,
+} from '../three/Layer'
+import type { LayoutPosition } from '../api/client'
+import { store, type AppState } from '../store'
 import {
   ctx,
   COLOR_VECTOR_280,
@@ -56,6 +70,56 @@ export class ChangeNodeColorCommand implements Command {
   }
   undo(): void {
     this.apply(this.oldColor)
+  }
+}
+
+// Low -> high: blue, pale yellow, red (ColorBrewer RdYlBu, reversed).
+const METRIC_STOPS = [
+  new Color('#2c7bb6'),
+  new Color('#ffffbf'),
+  new Color('#d7191c'),
+]
+
+export function metricColor(t: number): string {
+  const x = Math.min(1, Math.max(0, t)) * (METRIC_STOPS.length - 1)
+  const i = Math.min(METRIC_STOPS.length - 2, Math.floor(x))
+  return METRIC_STOPS[i]
+    .clone()
+    .lerp(METRIC_STOPS[i + 1], x - i)
+    .getHexString()
+}
+
+// Colour nodes along a low->high gradient by a value (e.g. a topology metric).
+export class ColorNodesByValueCommand implements Command {
+  description = 'Color nodes by metric'
+  private readonly before: Record<string, string> = {}
+  private readonly after: Record<string, string> = {}
+
+  constructor(values: Record<string, number>) {
+    const vs = Object.values(values)
+    const lo = Math.min(...vs)
+    const span = Math.max(...vs) - lo
+    for (const [name, v] of Object.entries(values)) {
+      const node = ctx.nodeObjects[ctx.nodeLayerNames.indexOf(name)]
+      if (!node) continue
+      this.before[name] = node.color
+      this.after[name] = `#${metricColor(span > 0 ? (v - lo) / span : 0.5)}`
+    }
+  }
+
+  private apply(colors: Record<string, string>): void {
+    for (const [name, color] of Object.entries(colors)) {
+      const node = ctx.nodeObjects[ctx.nodeLayerNames.indexOf(name)]
+      node.setColor(color)
+      bus.emit('node:color-changed', { nodeId: name, color })
+    }
+  }
+
+  execute(): void {
+    this.apply(this.after)
+  }
+  undo(): void {
+    this.apply(this.before)
   }
 }
 
@@ -182,9 +246,17 @@ export class MoveLayerCommand implements Command {
   }
 }
 
+// Nodes moved: the edges between layers (drawn in scene space) and the labels
+// follow on the next frame, as when the scene itself moves
+function flagMovedNodes(): void {
+  ctx.renderInterLayerEdgesFlag = true
+  ctx.renderNodeLabelsFlag = true
+  ctx.renderLayerLabelsFlag = true
+}
+
 export class ApplyLayoutCommand implements Command {
   description = 'Apply layout'
-  private readonly beforePos: Record<string, [number, number]> = {}
+  private readonly beforePos: Record<string, LayoutPosition> = {}
   private readonly beforeCluster: Record<
     string,
     { cluster: string; color: string }
@@ -192,12 +264,16 @@ export class ApplyLayoutCommand implements Command {
   private readonly beforePriority = ctx.nodeColorPrioritySource
 
   constructor(
-    private readonly positions: Record<string, [number, number]>,
+    private readonly positions: Record<string, LayoutPosition>,
     private readonly clusters: Record<string, number> | null = null
   ) {
     for (const name of Object.keys(positions)) {
       const node = ctx.nodeObjects[ctx.nodeLayerNames.indexOf(name)]
-      this.beforePos[name] = [node.getPosition('y'), node.getPosition('z')]
+      this.beforePos[name] = [
+        node.getPosition('y'),
+        node.getPosition('z'),
+        node.getPosition('x'),
+      ]
       if (clusters)
         this.beforeCluster[name] = {
           cluster: node.cluster,
@@ -206,10 +282,11 @@ export class ApplyLayoutCommand implements Command {
     }
   }
 
-  private place(positions: Record<string, [number, number]>): void {
-    for (const [name, [y, z]] of Object.entries(positions)) {
+  // 2D layouts flatten nodes back onto the plane (x = 0); 3D ones set depth
+  private place(positions: Record<string, LayoutPosition>): void {
+    for (const [name, [y, z, x]] of Object.entries(positions)) {
       const node = ctx.nodeObjects[ctx.nodeLayerNames.indexOf(name)]
-      node.setPosition('x', 0)
+      node.setPosition('x', x ?? 0)
       node.setPosition('y', y)
       node.setPosition('z', z)
     }
@@ -227,6 +304,7 @@ export class ApplyLayoutCommand implements Command {
       bus.emit('clustering:applied', { clusters: this.clusters })
     }
     redrawIntraLayerEdges()
+    flagMovedNodes()
     bus.emit('layout:applied', { positions: this.positions })
   }
 
@@ -241,6 +319,7 @@ export class ApplyLayoutCommand implements Command {
       ctx.nodeColorPrioritySource = this.beforePriority
     }
     redrawIntraLayerEdges()
+    flagMovedNodes()
     bus.emit('layout:applied', { positions: this.beforePos })
   }
 }
@@ -251,52 +330,67 @@ export class ApplyTopologyCommand implements Command {
 
   constructor(
     private readonly metric: string,
-    private readonly scales: Record<string, number>
+    private readonly scales: Record<string, number>,
+    private readonly raw: Record<string, number> = {}
   ) {
     for (const name of Object.keys(scales))
       this.before[name] =
         ctx.nodeObjects[ctx.nodeLayerNames.indexOf(name)].getScale()
   }
 
-  private apply(scales: Record<string, number>): void {
+  private apply(
+    scales: Record<string, number>,
+    raw?: Record<string, number>
+  ): void {
     for (const [name, s] of Object.entries(scales))
       ctx.nodeObjects[ctx.nodeLayerNames.indexOf(name)].setScale(s)
-    bus.emit('topology:applied', { metric: this.metric, scales })
+    bus.emit('topology:applied', { metric: this.metric, scales, raw })
   }
 
   execute(): void {
-    this.apply(this.scales)
+    this.apply(this.scales, this.raw)
   }
   undo(): void {
     this.apply(this.before)
   }
 }
 
-export class ChangeThemeCommand implements Command {
+export class ChangeThemeCommand<S = unknown> implements Command {
   description: string
   private readonly oldTheme: string
+  private readonly before: S | undefined
 
   // Store-only: the concrete recolour (renderer clear color, floor/edge/label
   // colors) is applied by the Phase 11 themes action listening to theme:changed.
+  // `colours` (actions/themes.ts): whether the user's own node and channel
+  // colours take the theme's palette too, and how to put them back on undo.
   constructor(
     private readonly newTheme: string,
     getTheme: () => string,
-    private readonly setTheme: (t: string) => void
+    private readonly setTheme: (t: string) => void,
+    private readonly colours?: {
+      recolour: boolean
+      snapshot: () => S
+      restore: (s: S) => void
+    }
   ) {
     this.oldTheme = getTheme()
+    this.before = colours?.snapshot()
     this.description = `Change theme to ${newTheme}`
   }
 
-  private apply(theme: string): void {
-    this.setTheme(theme)
-    bus.emit('theme:changed', { theme })
-  }
-
   execute(): void {
-    this.apply(this.newTheme)
+    this.setTheme(this.newTheme)
+    bus.emit('theme:changed', {
+      theme: this.newTheme,
+      recolour: this.colours?.recolour,
+    })
   }
   undo(): void {
-    this.apply(this.oldTheme)
+    this.setTheme(this.oldTheme)
+    bus.emit('theme:changed', { theme: this.oldTheme })
+    if (this.colours && this.before !== undefined)
+      this.colours.restore(this.before)
   }
 }
 
@@ -304,6 +398,10 @@ export class LoadNetworkCommand implements Command {
   description = 'Load network'
   private prev: RegistrySnapshot | null = null
   private next: RegistrySnapshot | null = null
+  // store.network goes with the scene, or panels would keep sending the
+  // undone network's nodes/edges to the API
+  private prevNetwork: AppState['network'] = null
+  private nextNetwork: AppState['network'] = null
 
   // `build` populates ctx with the new scene graph (concrete builder lands in
   // Phase 11 network action). The command wraps it with a reversible snapshot.
@@ -313,16 +411,20 @@ export class LoadNetworkCommand implements Command {
     bus.emit('network:loaded', {
       nodeCount: ctx.nodeObjects.length,
       edgeCount: ctx.edgeObjects.length,
+      session: ctx.lastLoadSource === 'session',
     })
   }
 
   execute(): void {
     if (this.next === null) {
       this.prev = snapshotRegistries()
+      this.prevNetwork = store.get().network
       this.build() // build() rebuilds the label divs itself
       this.next = snapshotRegistries()
+      this.nextNetwork = store.get().network
     } else {
       restoreRegistries(this.next)
+      store.update({ network: this.nextNetwork })
       createLabels() // restore only swaps the 3D registries — relabel the DOM
     }
     this.emitLoaded()
@@ -330,6 +432,7 @@ export class LoadNetworkCommand implements Command {
 
   undo(): void {
     if (this.prev) restoreRegistries(this.prev)
+    store.update({ network: this.prevNetwork })
     createLabels() // clears the label divs when rewinding to the empty scene
     this.emitLoaded()
   }
@@ -468,10 +571,32 @@ export class TransformCommand implements Command {
   }
 }
 
+// The scene's coordinate axes (Scene & Camera → Show Scene Coord System)
+// — whether they are on screen: a newly loaded network draws them whatever
+// the checkbox says
+export const sceneCoordsShown = (): boolean =>
+  ctx.scene?.coordSystem[0]?.visible ??
+  (document.getElementById('toggleSceneCoords') as HTMLInputElement | null)
+    ?.checked ??
+  true
+export function showSceneCoords(show: boolean): void {
+  const box = document.getElementById(
+    'toggleSceneCoords'
+  ) as HTMLInputElement | null
+  if (box) box.checked = show
+  ctx.scene?.toggleCoords(show)
+}
+
 export class PredefinedLayoutCommand implements Command {
   description: string
   private readonly before = captureTransforms()
   private readonly oldRadio = checkedRadio('predefined_layout')
+  // a hive plot turns floors into axes and links into curves: both come back
+  private readonly floors = ctx.layers.map((l) => l.floorShape)
+  // …and sets 3D containers aside while it is on
+  private readonly containers = ctx.layers.map((l) => l.container)
+  private readonly hive = ctx.hive
+  private readonly coords = sceneCoordsShown() // a hive plot hides them
 
   constructor(
     private readonly layout: string,
@@ -483,11 +608,20 @@ export class PredefinedLayoutCommand implements Command {
   execute(): void {
     this.applyFn()
     syncRadio('predefined_layout', this.layout)
+    syncSelect('layerArrangement', this.layout)
   }
 
   undo(): void {
+    ctx.layers.forEach((l, i) => {
+      l.setFloorShape(this.floors[i] ?? 'square')
+      if (this.containers[i] && l.container !== this.containers[i])
+        l.setContainer(this.containers[i])
+    })
+    ctx.hive = this.hive
+    showSceneCoords(this.coords)
     applyTransforms(this.before)
     syncRadio('predefined_layout', this.oldRadio)
+    syncSelect('layerArrangement', this.oldRadio ?? 'parallel')
   }
 }
 
@@ -550,27 +684,114 @@ export class ChangeFloorColorCommand implements Command {
   }
 }
 
-export class ChangeNodeGeometryCommand implements Command {
-  description: string
+// Node geometry for every node, or for the nodes of some layers (indexes),
+// so each layer can have its own shape; undo restores each node's own shape.
+// Clustering card: communities without a layout; the nodes keep their spots
+export class ApplyClustersCommand implements Command {
+  description = 'Find communities'
+  private readonly before: Record<string, { cluster: string; color: string }> =
+    {}
+  private readonly beforePriority = ctx.nodeColorPrioritySource
 
-  constructor(
-    private readonly newShape: NodeGeometryType,
-    private readonly oldShape: NodeGeometryType
-  ) {
-    this.description = `Change node geometry to ${newShape}`
-  }
-
-  private apply(shape: NodeGeometryType): void {
-    setNodeShape(shape)
-    syncRadio('nodeGeometryRadio', shape)
+  constructor(private readonly clusters: Record<string, number>) {
+    for (const name of Object.keys(clusters)) {
+      const node = ctx.nodeObjects[ctx.nodeLayerNames.indexOf(name)]
+      if (node)
+        this.before[name] = { cluster: node.cluster, color: node.clusterColor }
+    }
   }
 
   execute(): void {
-    this.apply(this.newShape)
+    for (const [name, id] of Object.entries(this.clusters)) {
+      const node = ctx.nodeObjects[ctx.nodeLayerNames.indexOf(name)]
+      if (!node) continue
+      node.setCluster(String(id))
+      node.setColor(clusterColor(id), false, true /* clusterMode */)
+    }
+    ctx.nodeColorPrioritySource = 'cluster'
+    bus.emit('clustering:applied', { clusters: this.clusters })
+    redrawIntraLayerEdges()
+  }
+
+  undo(): void {
+    for (const [name, prev] of Object.entries(this.before)) {
+      const node = ctx.nodeObjects[ctx.nodeLayerNames.indexOf(name)]
+      node.setCluster(prev.cluster)
+      node.setColor(prev.color, false, true)
+    }
+    ctx.nodeColorPrioritySource = this.beforePriority
+    redrawIntraLayerEdges()
+  }
+}
+
+// The clusters become annotation terms ("Cluster 3"), so pies, hulls, fog
+// clouds and the Groups card can use them like any annotation file
+export class ClustersAsAnnotationsCommand implements Command {
+  description = 'Use clusters as annotations'
+  private readonly before = ctx.nodeObjects.map((n) => [...n.annotations])
+
+  execute(): void {
+    for (const node of ctx.nodeObjects)
+      if (node.cluster !== '') node.annotations = [`Cluster ${node.cluster}`]
+    bus.emit('groups:changed', { source: 'annotation' })
+  }
+
+  undo(): void {
+    ctx.nodeObjects.forEach((n, i) => (n.annotations = [...this.before[i]]))
+    bus.emit('groups:changed', { source: 'annotation' })
+  }
+}
+
+// Edit → Nodes → Label Style, for every node or the selected layers
+export class LabelStyleCommand implements Command {
+  description = 'Change label style'
+  private readonly before = labelStylesSnapshot()
+
+  constructor(
+    private readonly style: LabelStyle,
+    private readonly layers: string[] | null
+  ) {}
+
+  execute(): void {
+    applyLabelStyle(this.style, this.layers)
   }
   undo(): void {
-    this.apply(this.oldShape)
+    restoreLabelStyles(this.before)
   }
+}
+
+export class ChangeNodeGeometryCommand implements Command {
+  description: string
+  private readonly nodes: number[]
+  private readonly before: NodeGeometryType[]
+
+  constructor(
+    private readonly shape: NodeGeometryType,
+    layerIds: number[] | null = null
+  ) {
+    const wanted = layerIds ? new Set(layerIds) : null
+    this.nodes = ctx.nodeObjects.flatMap((_, i) => {
+      if (!wanted) return [i]
+      const layer = ctx.layerGroups[ctx.nodeGroups[ctx.nodeLayerNames[i]]]
+      return wanted.has(layer) ? [i] : []
+    })
+    this.before = this.nodes.map((i) => ctx.nodeObjects[i].shape)
+    this.description = `Change node geometry to ${shape}`
+  }
+
+  execute(): void {
+    for (const i of this.nodes) ctx.nodeObjects[i].setGeometry(this.shape)
+    syncSelect('nodeGeometry', this.shape)
+  }
+  undo(): void {
+    this.nodes.forEach((i, k) => ctx.nodeObjects[i].setGeometry(this.before[k]))
+  }
+}
+
+function syncSelect(id: string, value: string): void {
+  if (typeof document === 'undefined') return
+  const el = document.getElementById(id) as HTMLSelectElement | null
+  if (el) el.value = value
 }
 
 export class ChangeChannelColorCommand implements Command {
@@ -595,5 +816,109 @@ export class ChangeChannelColorCommand implements Command {
   }
   undo(): void {
     this.apply(this.oldColor)
+  }
+}
+
+// Square/disk floors for the given layer indexes (Phase 18).
+export class ChangeFloorStyleCommand implements Command {
+  description: string
+  private readonly before: FloorStyle[]
+
+  constructor(
+    private readonly layerIds: number[],
+    private readonly style: FloorStyle
+  ) {
+    this.before = layerIds.map((i) => ctx.layers[i].floorStyle)
+    this.description = `Floor style: ${style}`
+  }
+
+  execute(): void {
+    for (const i of this.layerIds) ctx.layers[i].setFloorStyle(this.style)
+  }
+  undo(): void {
+    this.layerIds.forEach((i, k) => ctx.layers[i].setFloorStyle(this.before[k]))
+  }
+}
+
+export class ChangeFloorShapeCommand implements Command {
+  description: string
+  private readonly before: FloorShape[]
+
+  constructor(
+    private readonly layerIds: number[],
+    private readonly shape: FloorShape
+  ) {
+    this.before = layerIds.map((i) => ctx.layers[i].floorShape)
+    this.description = `Floor shape: ${shape}`
+  }
+
+  execute(): void {
+    for (const i of this.layerIds) ctx.layers[i].setFloorShape(this.shape)
+  }
+  undo(): void {
+    this.layerIds.forEach((i, k) => ctx.layers[i].setFloorShape(this.before[k]))
+  }
+}
+
+// A container's look per layer (Edit → Layers → Shape & container): colour
+// (null = the theme's), opacity, outline, wire cage, rim light and the floor
+// under it. Only the fields given change.
+export class ChangeContainerStyleCommand implements Command {
+  description = 'Container look'
+  private readonly before: ContainerLook[]
+  private readonly look: Partial<ContainerLook>
+
+  constructor(
+    private readonly layerIds: number[],
+    look: Partial<ContainerLook> | string | null,
+    opacity?: number
+  ) {
+    // (ids, colour, opacity): the original colour-and-opacity form
+    this.look =
+      typeof look === 'string' || look === null
+        ? { color: look, ...(opacity === undefined ? {} : { opacity }) }
+        : look
+    this.before = layerIds.map((i) => ctx.layers[i].containerLook())
+  }
+
+  execute(): void {
+    for (const i of this.layerIds) ctx.layers[i].setContainerLook(this.look)
+  }
+  undo(): void {
+    this.layerIds.forEach((i, k) =>
+      ctx.layers[i].setContainerLook(this.before[k])
+    )
+  }
+}
+
+// Floor / none / a 3D container per layer (Phase 20; three/containers.ts),
+// and whether nodes sit inside it or on its surface.
+export class ChangeContainerCommand implements Command {
+  description: string
+  private readonly before: [LayerContainer, ContainerPlacement][]
+
+  constructor(
+    private readonly layerIds: number[],
+    private readonly kind: LayerContainer,
+    private readonly placement?: ContainerPlacement
+  ) {
+    this.before = layerIds.map((i) => [
+      ctx.layers[i].container,
+      ctx.layers[i].containerPlacement,
+    ])
+    this.description = `Layer container: ${kind}`
+  }
+
+  execute(): void {
+    for (const i of this.layerIds) {
+      if (this.placement) ctx.layers[i].containerPlacement = this.placement
+      ctx.layers[i].setContainer(this.kind)
+    }
+  }
+  undo(): void {
+    this.layerIds.forEach((i, k) => {
+      ctx.layers[i].containerPlacement = this.before[k][1]
+      ctx.layers[i].setContainer(this.before[k][0])
+    })
   }
 }

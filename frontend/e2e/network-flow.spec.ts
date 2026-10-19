@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 // Full flow from PLAN Phase 14: upload (example) network → apply layout →
 // apply clustered layout → export session. The WebGL canvas is opaque to the
@@ -38,14 +38,16 @@ function readNodes() {
   }
 }
 
-test('load example → layout → clustered layout → export', async ({ page }) => {
+test('load example → layout → clustering → export', async ({ page }) => {
   await page.goto('/')
   await page.waitForFunction(
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
 
   // --- Upload: Load Example -----------------------------------------------
-  await page.getByRole('tab', { name: 'File' }).click()
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .click()
   await page.getByRole('button', { name: 'Load Example' }).click()
   await expect(page.locator('#file_status')).toContainText('Loaded network')
   const nodeCount = await page.evaluate(
@@ -63,7 +65,7 @@ test('load example → layout → clustered layout → export', async ({ page })
   // wait times out (and force-clicks land on drawer overlays, never toggling
   // the input). Firing the handler directly on the element sidesteps both.
   await page
-    .getByRole('tab', { name: 'Layer Selection & Layouts' })
+    .getByRole('tab', { name: 'Layout', includeHidden: true, exact: true })
     .dispatchEvent('click')
   await page.locator('#subgraph_allLayers').dispatchEvent('click')
   await page.locator('#selectAllLayersCheckbox').dispatchEvent('click')
@@ -94,9 +96,12 @@ test('load example → layout → clustered layout → export', async ({ page })
     { timeout: 15_000 }
   )
 
-  // --- Apply clustered layout (Louvain) -----------------------------------
-  await selectOption(page, '#clusteringAlgorithmChoice', 'Louvain')
-  await page.locator('#runLayout').dispatchEvent('click')
+  // --- Find communities (Clustering panel, Louvain) ------------------------
+  await page
+    .getByRole('tab', { name: 'Clustering', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  await selectOption(page, '#clusterAlgorithm', 'Louvain')
+  await page.locator('#runClustering').dispatchEvent('click')
   // Wait for clustering to assign ids (status text is unchanged between runs).
   await page.waitForFunction(
     () => {
@@ -112,7 +117,9 @@ test('load example → layout → clustered layout → export', async ({ page })
   )
 
   // --- Export session ------------------------------------------------------
-  await page.getByRole('tab', { name: 'File' }).dispatchEvent('click')
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .dispatchEvent('click')
   const downloadPromise = page.waitForEvent('download')
   await page
     .getByRole('button', { name: 'Save Session' })

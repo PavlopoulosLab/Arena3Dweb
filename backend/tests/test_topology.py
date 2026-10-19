@@ -154,3 +154,47 @@ def test_endpoint_returns_scales_and_raw() -> None:
     assert resp.status_code == 200
     body = resp.json()
     assert body["scales"] and body["raw"]
+
+
+def _chain_edges(pairs, channel=None):
+    def edge(a, b):
+        return {
+            "src": f"{a}_L1",
+            "trg": f"{b}_L1",
+            "source_node": a,
+            "source_layer": "L1",
+            "target_node": b,
+            "target_layer": "L1",
+            "weight": 1.0,
+            "scaled_weight": 1.0,
+            "channel": channel,
+        }
+
+    return [edge(a, b) for a, b in pairs]
+
+
+def test_graph_mode_directed_and_multi() -> None:
+    # A → B, A → C, B → C: undirected, A and C both have two links; directed, C
+    # is the sink that PageRank favours and A the source it starves
+    nodes = [{"id": f"{n}_L1", "label": n, "layer": "L1"} for n in "ABC"]
+    edges = _chain_edges([("A", "B"), ("A", "C"), ("B", "C")])
+    base = dict(nodes=nodes, edges=edges, metric="PageRank", selected_layers=["L1"])
+    _, undirected = compute_topology(TopologyRequest(**base))
+    assert undirected["A_L1"] == pytest.approx(undirected["C_L1"])
+    _, directed = compute_topology(TopologyRequest(**base, graph="directed"))
+    assert directed["C_L1"] > directed["A_L1"]
+
+    # two channels between A and B: merged by default, two edges as a multigraph
+    multi = _chain_edges([("A", "B")], "ppi") + _chain_edges([("A", "B")], "coexp")
+    base = dict(nodes=nodes[:2], edges=multi, metric="Degree", selected_layers=["L1"])
+    _, merged = compute_topology(TopologyRequest(**base))
+    assert merged["A_L1"] == 1
+    _, kept = compute_topology(TopologyRequest(**base, graph="multi"))
+    assert kept["A_L1"] == 2
+    # the clustering coefficient merges parallel edges itself rather than failing
+    _, cc = compute_topology(
+        TopologyRequest(**dict(base, metric="Clustering Coefficient"), graph="multi")
+    )
+    assert cc["A_L1"] == 0.0
+    resp = client.post("/api/topology", json={**base, "graph": "sideways"})
+    assert resp.status_code == 422

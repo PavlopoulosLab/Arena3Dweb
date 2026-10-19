@@ -1,12 +1,27 @@
 import * as THREE from 'three'
 import { ctx } from './runtime'
 import type { Axis } from './Node'
+import {
+  DEFAULT_AXES_OPACITY,
+  disposeAxes,
+  makeAxes,
+  setAxesOpacity,
+} from './axes'
+
+// Scene scale bounds: wide enough to read as unlimited zoom (1/100 to 100x).
+// The camera's depth range (screen.ts setCamera) follows SCALE_MAX, so the
+// stack is not clipped when zoomed in.
+export const SCALE_MIN = 0.01
+export const SCALE_MAX = 100
+export const clampScale = (s: number): number =>
+  Math.min(SCALE_MAX, Math.max(SCALE_MIN, s))
 
 export class Scene {
   THREE_Object!: THREE.Scene
   pan: THREE.Mesh | null = null // scene translations applied here
   sphere: THREE.Mesh | null = null // scene rotations applied here
-  coordSystem: THREE.Line[] = []
+  coordSystem: THREE.Object3D[] = []
+  axesOpacity = DEFAULT_AXES_OPACITY
   defaultColor = '#000000'
   autoRotate = false
   dragging = false
@@ -22,7 +37,7 @@ export class Scene {
     this.THREE_Object = new THREE.Scene()
     this.pan = null
     this.sphere = null
-    this.coordSystem = ['', '', ''] as unknown as THREE.Line[]
+    this.coordSystem = []
     this.defaultColor = '#000000'
     this.autoRotate = false
     this.dragging = false
@@ -98,31 +113,20 @@ export class Scene {
     this.sphere = threeSphere
   }
 
+  // the X/Y/Z arrows through the centre of the scene (three/axes.ts)
   appendCoordSystem(): void {
-    this.coordSystem[0] = this.appendLine(800, 0, 0, '#FB3D2A') // red
-    this.coordSystem[1] = this.appendLine(0, 800, 0, '#46FB2A') // green
-    this.coordSystem[2] = this.appendLine(0, 0, 800, '#2AC2FB') // blue
-  }
-
-  appendLine(x: number, y: number, z: number, color: string): THREE.Line {
-    const points = [
-      this.getPointPosition(),
-      new THREE.Vector3(x, y, z),
-      this.getPointPosition(),
-      new THREE.Vector3(-x, -y, -z),
-    ]
-    const geometry = new THREE.BufferGeometry().setFromPoints(points)
-    const material = new THREE.LineBasicMaterial({ color: color })
-    const line = new THREE.Line(geometry, material)
-    this.sphere!.add(line)
-    return line
+    disposeAxes(this.coordSystem)
+    this.coordSystem = makeAxes(800, this.axesOpacity)
+    for (const axis of this.coordSystem) this.sphere!.add(axis)
   }
 
   toggleCoords(sceneCoordsSwitch: boolean): void {
-    this.coordSystem[0].visible =
-      this.coordSystem[1].visible =
-      this.coordSystem[2].visible =
-        sceneCoordsSwitch
+    for (const axis of this.coordSystem) axis.visible = sceneCoordsSwitch
+  }
+
+  setAxesOpacity(opacity: number): void {
+    this.axesOpacity = opacity
+    setAxesOpacity(this.coordSystem, opacity)
   }
 
   exists(): boolean {
@@ -205,10 +209,8 @@ export class Scene {
   }
 
   zoom(deltaY: number): void {
-    let tempScale = this.getScale()
-    if (deltaY < 0 && tempScale < 2) tempScale = tempScale * 1.1
-    else if (deltaY > 0 && tempScale > 0.2) tempScale = tempScale * 0.9
-    this.setScale(tempScale)
+    const factor = deltaY < 0 ? 1.1 : deltaY > 0 ? 0.9 : 1
+    this.setScale(clampScale(this.getScale() * factor))
   }
 
   getPosition(axis: Axis): number {

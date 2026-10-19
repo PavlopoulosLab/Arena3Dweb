@@ -1,0 +1,545 @@
+Node	Layer	Color	Size	Description
+pixel 1,1	Input	#3d4c5e	0.507	Input pixel (1, 1) of a noisy 8×8 image of a blob; intensity 0.01.
+pixel 1,2	Input	#566373	0.598	Input pixel (1, 2) of a noisy 8×8 image of a blob; intensity 0.14.
+pixel 1,3	Input	#495767	0.549	Input pixel (1, 3) of a noisy 8×8 image of a blob; intensity 0.07.
+pixel 1,4	Input	#5c6978	0.619	Input pixel (1, 4) of a noisy 8×8 image of a blob; intensity 0.17.
+pixel 1,5	Input	#5e6b79	0.626	Input pixel (1, 5) of a noisy 8×8 image of a blob; intensity 0.18.
+pixel 1,6	Input	#3b4a5c	0.5	Input pixel (1, 6) of a noisy 8×8 image of a blob; intensity 0.
+pixel 1,7	Input	#3b4a5c	0.5	Input pixel (1, 7) of a noisy 8×8 image of a blob; intensity 0.
+pixel 1,8	Input	#727d8a	0.696	Input pixel (1, 8) of a noisy 8×8 image of a blob; intensity 0.28.
+pixel 2,1	Input	#3f4e5f	0.514	Input pixel (2, 1) of a noisy 8×8 image of a blob; intensity 0.02.
+pixel 2,2	Input	#3d4c5e	0.507	Input pixel (2, 2) of a noisy 8×8 image of a blob; intensity 0.01.
+pixel 2,3	Input	#808995	0.745	Input pixel (2, 3) of a noisy 8×8 image of a blob; intensity 0.35.
+pixel 2,4	Input	#515e6e	0.577	Input pixel (2, 4) of a noisy 8×8 image of a blob; intensity 0.11.
+pixel 2,5	Input	#727d8a	0.696	Input pixel (2, 5) of a noisy 8×8 image of a blob; intensity 0.28.
+pixel 2,6	Input	#515e6e	0.577	Input pixel (2, 6) of a noisy 8×8 image of a blob; intensity 0.11.
+pixel 2,7	Input	#606c7b	0.633	Input pixel (2, 7) of a noisy 8×8 image of a blob; intensity 0.19.
+pixel 2,8	Input	#3b4a5c	0.5	Input pixel (2, 8) of a noisy 8×8 image of a blob; intensity 0.
+pixel 3,1	Input	#606c7b	0.633	Input pixel (3, 1) of a noisy 8×8 image of a blob; intensity 0.19.
+pixel 3,2	Input	#747e8b	0.703	Input pixel (3, 2) of a noisy 8×8 image of a blob; intensity 0.29.
+pixel 3,3	Input	#566373	0.598	Input pixel (3, 3) of a noisy 8×8 image of a blob; intensity 0.14.
+pixel 3,4	Input	#f1f2f4	1.151	Input pixel (3, 4) of a noisy 8×8 image of a blob; intensity 0.93.
+pixel 3,5	Input	#ebedef	1.13	Input pixel (3, 5) of a noisy 8×8 image of a blob; intensity 0.9.
+pixel 3,6	Input	#b6bcc3	0.941	Input pixel (3, 6) of a noisy 8×8 image of a blob; intensity 0.63.
+pixel 3,7	Input	#6a7583	0.668	Input pixel (3, 7) of a noisy 8×8 image of a blob; intensity 0.24.
+pixel 3,8	Input	#5c6978	0.619	Input pixel (3, 8) of a noisy 8×8 image of a blob; intensity 0.17.
+pixel 4,1	Input	#435163	0.528	Input pixel (4, 1) of a noisy 8×8 image of a blob; intensity 0.04.
+pixel 4,2	Input	#3b4a5c	0.5	Input pixel (4, 2) of a noisy 8×8 image of a blob; intensity 0.
+pixel 4,3	Input	#747e8b	0.703	Input pixel (4, 3) of a noisy 8×8 image of a blob; intensity 0.29.
+pixel 4,4	Input	#dadde0	1.067	Input pixel (4, 4) of a noisy 8×8 image of a blob; intensity 0.81.
+pixel 4,5	Input	#eff1f2	1.144	Input pixel (4, 5) of a noisy 8×8 image of a blob; intensity 0.92.
+pixel 4,6	Input	#ffffff	1.2	Input pixel (4, 6) of a noisy 8×8 image of a blob; intensity 1.
+pixel 4,7	Input	#eff1f2	1.144	Input pixel (4, 7) of a noisy 8×8 image of a blob; intensity 0.92.
+pixel 4,8	Input	#78828f	0.717	Input pixel (4, 8) of a noisy 8×8 image of a blob; intensity 0.31.
+pixel 5,1	Input	#4b5869	0.556	Input pixel (5, 1) of a noisy 8×8 image of a blob; intensity 0.08.
+pixel 5,2	Input	#6e7986	0.682	Input pixel (5, 2) of a noisy 8×8 image of a blob; intensity 0.26.
+pixel 5,3	Input	#4f5c6c	0.57	Input pixel (5, 3) of a noisy 8×8 image of a blob; intensity 0.1.
+pixel 5,4	Input	#ffffff	1.2	Input pixel (5, 4) of a noisy 8×8 image of a blob; intensity 1.
+pixel 5,5	Input	#ffffff	1.2	Input pixel (5, 5) of a noisy 8×8 image of a blob; intensity 1.
+pixel 5,6	Input	#b8bec4	0.948	Input pixel (5, 6) of a noisy 8×8 image of a blob; intensity 0.64.
+pixel 5,7	Input	#bcc1c8	0.962	Input pixel (5, 7) of a noisy 8×8 image of a blob; intensity 0.66.
+pixel 5,8	Input	#3b4a5c	0.5	Input pixel (5, 8) of a noisy 8×8 image of a blob; intensity 0.
+pixel 6,1	Input	#7c8692	0.731	Input pixel (6, 1) of a noisy 8×8 image of a blob; intensity 0.33.
+pixel 6,2	Input	#4f5c6c	0.57	Input pixel (6, 2) of a noisy 8×8 image of a blob; intensity 0.1.
+pixel 6,3	Input	#5e6b79	0.626	Input pixel (6, 3) of a noisy 8×8 image of a blob; intensity 0.18.
+pixel 6,4	Input	#ccd0d5	1.018	Input pixel (6, 4) of a noisy 8×8 image of a blob; intensity 0.74.
+pixel 6,5	Input	#dee0e3	1.081	Input pixel (6, 5) of a noisy 8×8 image of a blob; intensity 0.83.
+pixel 6,6	Input	#d2d5da	1.039	Input pixel (6, 6) of a noisy 8×8 image of a blob; intensity 0.77.
+pixel 6,7	Input	#d0d4d8	1.032	Input pixel (6, 7) of a noisy 8×8 image of a blob; intensity 0.76.
+pixel 6,8	Input	#5a6776	0.612	Input pixel (6, 8) of a noisy 8×8 image of a blob; intensity 0.16.
+pixel 7,1	Input	#5a6776	0.612	Input pixel (7, 1) of a noisy 8×8 image of a blob; intensity 0.16.
+pixel 7,2	Input	#78828f	0.717	Input pixel (7, 2) of a noisy 8×8 image of a blob; intensity 0.31.
+pixel 7,3	Input	#64707e	0.647	Input pixel (7, 3) of a noisy 8×8 image of a blob; intensity 0.21.
+pixel 7,4	Input	#7a8490	0.724	Input pixel (7, 4) of a noisy 8×8 image of a blob; intensity 0.32.
+pixel 7,5	Input	#fdfdfd	1.193	Input pixel (7, 5) of a noisy 8×8 image of a blob; intensity 0.99.
+pixel 7,6	Input	#ffffff	1.2	Input pixel (7, 6) of a noisy 8×8 image of a blob; intensity 1.
+pixel 7,7	Input	#626e7d	0.64	Input pixel (7, 7) of a noisy 8×8 image of a blob; intensity 0.2.
+pixel 7,8	Input	#3b4a5c	0.5	Input pixel (7, 8) of a noisy 8×8 image of a blob; intensity 0.
+pixel 8,1	Input	#747e8b	0.703	Input pixel (8, 1) of a noisy 8×8 image of a blob; intensity 0.29.
+pixel 8,2	Input	#7c8692	0.731	Input pixel (8, 2) of a noisy 8×8 image of a blob; intensity 0.33.
+pixel 8,3	Input	#78828f	0.717	Input pixel (8, 3) of a noisy 8×8 image of a blob; intensity 0.31.
+pixel 8,4	Input	#5a6776	0.612	Input pixel (8, 4) of a noisy 8×8 image of a blob; intensity 0.16.
+pixel 8,5	Input	#667280	0.654	Input pixel (8, 5) of a noisy 8×8 image of a blob; intensity 0.22.
+pixel 8,6	Input	#3b4a5c	0.5	Input pixel (8, 6) of a noisy 8×8 image of a blob; intensity 0.
+pixel 8,7	Input	#707b88	0.689	Input pixel (8, 7) of a noisy 8×8 image of a blob; intensity 0.27.
+pixel 8,8	Input	#5a6776	0.612	Input pixel (8, 8) of a noisy 8×8 image of a blob; intensity 0.16.
+E1 map 1 · 1,1	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (1, 1): a 3×3 convolution of the input.
+E1 map 1 · 1,2	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (1, 2): a 3×3 convolution of the input.
+E1 map 1 · 1,3	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (1, 3): a 3×3 convolution of the input.
+E1 map 1 · 1,4	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (1, 4): a 3×3 convolution of the input.
+E1 map 1 · 1,5	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (1, 5): a 3×3 convolution of the input.
+E1 map 1 · 1,6	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (1, 6): a 3×3 convolution of the input.
+E1 map 1 · 1,7	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (1, 7): a 3×3 convolution of the input.
+E1 map 1 · 1,8	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (1, 8): a 3×3 convolution of the input.
+E1 map 1 · 2,1	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (2, 1): a 3×3 convolution of the input.
+E1 map 1 · 2,2	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (2, 2): a 3×3 convolution of the input.
+E1 map 1 · 2,3	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (2, 3): a 3×3 convolution of the input.
+E1 map 1 · 2,4	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (2, 4): a 3×3 convolution of the input.
+E1 map 1 · 2,5	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (2, 5): a 3×3 convolution of the input.
+E1 map 1 · 2,6	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (2, 6): a 3×3 convolution of the input.
+E1 map 1 · 2,7	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (2, 7): a 3×3 convolution of the input.
+E1 map 1 · 2,8	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (2, 8): a 3×3 convolution of the input.
+E1 map 1 · 3,1	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (3, 1): a 3×3 convolution of the input.
+E1 map 1 · 3,2	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (3, 2): a 3×3 convolution of the input.
+E1 map 1 · 3,3	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (3, 3): a 3×3 convolution of the input.
+E1 map 1 · 3,4	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (3, 4): a 3×3 convolution of the input.
+E1 map 1 · 3,5	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (3, 5): a 3×3 convolution of the input.
+E1 map 1 · 3,6	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (3, 6): a 3×3 convolution of the input.
+E1 map 1 · 3,7	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (3, 7): a 3×3 convolution of the input.
+E1 map 1 · 3,8	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (3, 8): a 3×3 convolution of the input.
+E1 map 1 · 4,1	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (4, 1): a 3×3 convolution of the input.
+E1 map 1 · 4,2	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (4, 2): a 3×3 convolution of the input.
+E1 map 1 · 4,3	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (4, 3): a 3×3 convolution of the input.
+E1 map 1 · 4,4	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (4, 4): a 3×3 convolution of the input.
+E1 map 1 · 4,5	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (4, 5): a 3×3 convolution of the input.
+E1 map 1 · 4,6	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (4, 6): a 3×3 convolution of the input.
+E1 map 1 · 4,7	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (4, 7): a 3×3 convolution of the input.
+E1 map 1 · 4,8	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (4, 8): a 3×3 convolution of the input.
+E1 map 1 · 5,1	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (5, 1): a 3×3 convolution of the input.
+E1 map 1 · 5,2	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (5, 2): a 3×3 convolution of the input.
+E1 map 1 · 5,3	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (5, 3): a 3×3 convolution of the input.
+E1 map 1 · 5,4	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (5, 4): a 3×3 convolution of the input.
+E1 map 1 · 5,5	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (5, 5): a 3×3 convolution of the input.
+E1 map 1 · 5,6	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (5, 6): a 3×3 convolution of the input.
+E1 map 1 · 5,7	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (5, 7): a 3×3 convolution of the input.
+E1 map 1 · 5,8	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (5, 8): a 3×3 convolution of the input.
+E1 map 1 · 6,1	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (6, 1): a 3×3 convolution of the input.
+E1 map 1 · 6,2	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (6, 2): a 3×3 convolution of the input.
+E1 map 1 · 6,3	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (6, 3): a 3×3 convolution of the input.
+E1 map 1 · 6,4	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (6, 4): a 3×3 convolution of the input.
+E1 map 1 · 6,5	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (6, 5): a 3×3 convolution of the input.
+E1 map 1 · 6,6	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (6, 6): a 3×3 convolution of the input.
+E1 map 1 · 6,7	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (6, 7): a 3×3 convolution of the input.
+E1 map 1 · 6,8	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (6, 8): a 3×3 convolution of the input.
+E1 map 1 · 7,1	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (7, 1): a 3×3 convolution of the input.
+E1 map 1 · 7,2	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (7, 2): a 3×3 convolution of the input.
+E1 map 1 · 7,3	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (7, 3): a 3×3 convolution of the input.
+E1 map 1 · 7,4	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (7, 4): a 3×3 convolution of the input.
+E1 map 1 · 7,5	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (7, 5): a 3×3 convolution of the input.
+E1 map 1 · 7,6	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (7, 6): a 3×3 convolution of the input.
+E1 map 1 · 7,7	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (7, 7): a 3×3 convolution of the input.
+E1 map 1 · 7,8	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (7, 8): a 3×3 convolution of the input.
+E1 map 1 · 8,1	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (8, 1): a 3×3 convolution of the input.
+E1 map 1 · 8,2	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (8, 2): a 3×3 convolution of the input.
+E1 map 1 · 8,3	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (8, 3): a 3×3 convolution of the input.
+E1 map 1 · 8,4	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (8, 4): a 3×3 convolution of the input.
+E1 map 1 · 8,5	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (8, 5): a 3×3 convolution of the input.
+E1 map 1 · 8,6	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (8, 6): a 3×3 convolution of the input.
+E1 map 1 · 8,7	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (8, 7): a 3×3 convolution of the input.
+E1 map 1 · 8,8	Encoder 1	#66c2a5	0.75	Encoder 1, feature map 1 of 2 (8×8), unit (8, 8): a 3×3 convolution of the input.
+E1 map 2 · 1,1	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (1, 1): a 3×3 convolution of the input.
+E1 map 2 · 1,2	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (1, 2): a 3×3 convolution of the input.
+E1 map 2 · 1,3	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (1, 3): a 3×3 convolution of the input.
+E1 map 2 · 1,4	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (1, 4): a 3×3 convolution of the input.
+E1 map 2 · 1,5	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (1, 5): a 3×3 convolution of the input.
+E1 map 2 · 1,6	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (1, 6): a 3×3 convolution of the input.
+E1 map 2 · 1,7	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (1, 7): a 3×3 convolution of the input.
+E1 map 2 · 1,8	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (1, 8): a 3×3 convolution of the input.
+E1 map 2 · 2,1	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (2, 1): a 3×3 convolution of the input.
+E1 map 2 · 2,2	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (2, 2): a 3×3 convolution of the input.
+E1 map 2 · 2,3	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (2, 3): a 3×3 convolution of the input.
+E1 map 2 · 2,4	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (2, 4): a 3×3 convolution of the input.
+E1 map 2 · 2,5	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (2, 5): a 3×3 convolution of the input.
+E1 map 2 · 2,6	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (2, 6): a 3×3 convolution of the input.
+E1 map 2 · 2,7	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (2, 7): a 3×3 convolution of the input.
+E1 map 2 · 2,8	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (2, 8): a 3×3 convolution of the input.
+E1 map 2 · 3,1	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (3, 1): a 3×3 convolution of the input.
+E1 map 2 · 3,2	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (3, 2): a 3×3 convolution of the input.
+E1 map 2 · 3,3	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (3, 3): a 3×3 convolution of the input.
+E1 map 2 · 3,4	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (3, 4): a 3×3 convolution of the input.
+E1 map 2 · 3,5	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (3, 5): a 3×3 convolution of the input.
+E1 map 2 · 3,6	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (3, 6): a 3×3 convolution of the input.
+E1 map 2 · 3,7	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (3, 7): a 3×3 convolution of the input.
+E1 map 2 · 3,8	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (3, 8): a 3×3 convolution of the input.
+E1 map 2 · 4,1	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (4, 1): a 3×3 convolution of the input.
+E1 map 2 · 4,2	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (4, 2): a 3×3 convolution of the input.
+E1 map 2 · 4,3	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (4, 3): a 3×3 convolution of the input.
+E1 map 2 · 4,4	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (4, 4): a 3×3 convolution of the input.
+E1 map 2 · 4,5	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (4, 5): a 3×3 convolution of the input.
+E1 map 2 · 4,6	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (4, 6): a 3×3 convolution of the input.
+E1 map 2 · 4,7	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (4, 7): a 3×3 convolution of the input.
+E1 map 2 · 4,8	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (4, 8): a 3×3 convolution of the input.
+E1 map 2 · 5,1	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (5, 1): a 3×3 convolution of the input.
+E1 map 2 · 5,2	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (5, 2): a 3×3 convolution of the input.
+E1 map 2 · 5,3	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (5, 3): a 3×3 convolution of the input.
+E1 map 2 · 5,4	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (5, 4): a 3×3 convolution of the input.
+E1 map 2 · 5,5	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (5, 5): a 3×3 convolution of the input.
+E1 map 2 · 5,6	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (5, 6): a 3×3 convolution of the input.
+E1 map 2 · 5,7	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (5, 7): a 3×3 convolution of the input.
+E1 map 2 · 5,8	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (5, 8): a 3×3 convolution of the input.
+E1 map 2 · 6,1	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (6, 1): a 3×3 convolution of the input.
+E1 map 2 · 6,2	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (6, 2): a 3×3 convolution of the input.
+E1 map 2 · 6,3	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (6, 3): a 3×3 convolution of the input.
+E1 map 2 · 6,4	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (6, 4): a 3×3 convolution of the input.
+E1 map 2 · 6,5	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (6, 5): a 3×3 convolution of the input.
+E1 map 2 · 6,6	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (6, 6): a 3×3 convolution of the input.
+E1 map 2 · 6,7	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (6, 7): a 3×3 convolution of the input.
+E1 map 2 · 6,8	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (6, 8): a 3×3 convolution of the input.
+E1 map 2 · 7,1	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (7, 1): a 3×3 convolution of the input.
+E1 map 2 · 7,2	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (7, 2): a 3×3 convolution of the input.
+E1 map 2 · 7,3	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (7, 3): a 3×3 convolution of the input.
+E1 map 2 · 7,4	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (7, 4): a 3×3 convolution of the input.
+E1 map 2 · 7,5	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (7, 5): a 3×3 convolution of the input.
+E1 map 2 · 7,6	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (7, 6): a 3×3 convolution of the input.
+E1 map 2 · 7,7	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (7, 7): a 3×3 convolution of the input.
+E1 map 2 · 7,8	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (7, 8): a 3×3 convolution of the input.
+E1 map 2 · 8,1	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (8, 1): a 3×3 convolution of the input.
+E1 map 2 · 8,2	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (8, 2): a 3×3 convolution of the input.
+E1 map 2 · 8,3	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (8, 3): a 3×3 convolution of the input.
+E1 map 2 · 8,4	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (8, 4): a 3×3 convolution of the input.
+E1 map 2 · 8,5	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (8, 5): a 3×3 convolution of the input.
+E1 map 2 · 8,6	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (8, 6): a 3×3 convolution of the input.
+E1 map 2 · 8,7	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (8, 7): a 3×3 convolution of the input.
+E1 map 2 · 8,8	Encoder 1	#fc8d62	0.75	Encoder 1, feature map 2 of 2 (8×8), unit (8, 8): a 3×3 convolution of the input.
+E2 map 1 · 1,1	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (1, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 1,2	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (1, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 1,3	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (1, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 1,4	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (1, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 2,1	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (2, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 2,2	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (2, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 2,3	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (2, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 2,4	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (2, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 3,1	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (3, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 3,2	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (3, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 3,3	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (3, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 3,4	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (3, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 4,1	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (4, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 4,2	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (4, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 4,3	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (4, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 1 · 4,4	Encoder 2	#8da0cb	0.75	Encoder 2, feature map 1 of 4 (4×4), unit (4, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 1,1	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (1, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 1,2	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (1, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 1,3	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (1, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 1,4	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (1, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 2,1	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (2, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 2,2	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (2, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 2,3	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (2, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 2,4	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (2, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 3,1	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (3, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 3,2	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (3, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 3,3	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (3, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 3,4	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (3, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 4,1	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (4, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 4,2	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (4, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 4,3	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (4, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 2 · 4,4	Encoder 2	#e78ac3	0.75	Encoder 2, feature map 2 of 4 (4×4), unit (4, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 1,1	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (1, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 1,2	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (1, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 1,3	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (1, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 1,4	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (1, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 2,1	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (2, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 2,2	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (2, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 2,3	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (2, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 2,4	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (2, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 3,1	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (3, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 3,2	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (3, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 3,3	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (3, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 3,4	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (3, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 4,1	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (4, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 4,2	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (4, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 4,3	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (4, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 3 · 4,4	Encoder 2	#a6d854	0.75	Encoder 2, feature map 3 of 4 (4×4), unit (4, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 1,1	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (1, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 1,2	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (1, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 1,3	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (1, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 1,4	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (1, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 2,1	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (2, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 2,2	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (2, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 2,3	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (2, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 2,4	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (2, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 3,1	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (3, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 3,2	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (3, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 3,3	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (3, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 3,4	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (3, 4): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 4,1	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (4, 1): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 4,2	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (4, 2): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 4,3	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (4, 3): a stride-2 convolution of encoder 1 (down-sampling).
+E2 map 4 · 4,4	Encoder 2	#ffd92f	0.75	Encoder 2, feature map 4 of 4 (4×4), unit (4, 4): a stride-2 convolution of encoder 1 (down-sampling).
+B map 1 · 1,1	Bottleneck	#8dd3c7	0.75	Bottleneck, feature map 1 of 8 (2×2), unit (1, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 1 · 1,2	Bottleneck	#8dd3c7	0.75	Bottleneck, feature map 1 of 8 (2×2), unit (1, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 1 · 2,1	Bottleneck	#8dd3c7	0.75	Bottleneck, feature map 1 of 8 (2×2), unit (2, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 1 · 2,2	Bottleneck	#8dd3c7	0.75	Bottleneck, feature map 1 of 8 (2×2), unit (2, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 2 · 1,1	Bottleneck	#ffffb3	0.75	Bottleneck, feature map 2 of 8 (2×2), unit (1, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 2 · 1,2	Bottleneck	#ffffb3	0.75	Bottleneck, feature map 2 of 8 (2×2), unit (1, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 2 · 2,1	Bottleneck	#ffffb3	0.75	Bottleneck, feature map 2 of 8 (2×2), unit (2, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 2 · 2,2	Bottleneck	#ffffb3	0.75	Bottleneck, feature map 2 of 8 (2×2), unit (2, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 3 · 1,1	Bottleneck	#bebada	0.75	Bottleneck, feature map 3 of 8 (2×2), unit (1, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 3 · 1,2	Bottleneck	#bebada	0.75	Bottleneck, feature map 3 of 8 (2×2), unit (1, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 3 · 2,1	Bottleneck	#bebada	0.75	Bottleneck, feature map 3 of 8 (2×2), unit (2, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 3 · 2,2	Bottleneck	#bebada	0.75	Bottleneck, feature map 3 of 8 (2×2), unit (2, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 4 · 1,1	Bottleneck	#fb8072	0.75	Bottleneck, feature map 4 of 8 (2×2), unit (1, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 4 · 1,2	Bottleneck	#fb8072	0.75	Bottleneck, feature map 4 of 8 (2×2), unit (1, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 4 · 2,1	Bottleneck	#fb8072	0.75	Bottleneck, feature map 4 of 8 (2×2), unit (2, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 4 · 2,2	Bottleneck	#fb8072	0.75	Bottleneck, feature map 4 of 8 (2×2), unit (2, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 5 · 1,1	Bottleneck	#80b1d3	0.75	Bottleneck, feature map 5 of 8 (2×2), unit (1, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 5 · 1,2	Bottleneck	#80b1d3	0.75	Bottleneck, feature map 5 of 8 (2×2), unit (1, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 5 · 2,1	Bottleneck	#80b1d3	0.75	Bottleneck, feature map 5 of 8 (2×2), unit (2, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 5 · 2,2	Bottleneck	#80b1d3	0.75	Bottleneck, feature map 5 of 8 (2×2), unit (2, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 6 · 1,1	Bottleneck	#fdb462	0.75	Bottleneck, feature map 6 of 8 (2×2), unit (1, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 6 · 1,2	Bottleneck	#fdb462	0.75	Bottleneck, feature map 6 of 8 (2×2), unit (1, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 6 · 2,1	Bottleneck	#fdb462	0.75	Bottleneck, feature map 6 of 8 (2×2), unit (2, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 6 · 2,2	Bottleneck	#fdb462	0.75	Bottleneck, feature map 6 of 8 (2×2), unit (2, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 7 · 1,1	Bottleneck	#b3de69	0.75	Bottleneck, feature map 7 of 8 (2×2), unit (1, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 7 · 1,2	Bottleneck	#b3de69	0.75	Bottleneck, feature map 7 of 8 (2×2), unit (1, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 7 · 2,1	Bottleneck	#b3de69	0.75	Bottleneck, feature map 7 of 8 (2×2), unit (2, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 7 · 2,2	Bottleneck	#b3de69	0.75	Bottleneck, feature map 7 of 8 (2×2), unit (2, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 8 · 1,1	Bottleneck	#fccde5	0.75	Bottleneck, feature map 8 of 8 (2×2), unit (1, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 8 · 1,2	Bottleneck	#fccde5	0.75	Bottleneck, feature map 8 of 8 (2×2), unit (1, 2): a stride-2 convolution of encoder 2: the coarsest view.
+B map 8 · 2,1	Bottleneck	#fccde5	0.75	Bottleneck, feature map 8 of 8 (2×2), unit (2, 1): a stride-2 convolution of encoder 2: the coarsest view.
+B map 8 · 2,2	Bottleneck	#fccde5	0.75	Bottleneck, feature map 8 of 8 (2×2), unit (2, 2): a stride-2 convolution of encoder 2: the coarsest view.
+D2 map 1 · 1,1	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (1, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 1,2	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (1, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 1,3	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (1, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 1,4	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (1, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 2,1	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (2, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 2,2	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (2, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 2,3	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (2, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 2,4	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (2, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 3,1	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (3, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 3,2	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (3, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 3,3	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (3, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 3,4	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (3, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 4,1	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (4, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 4,2	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (4, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 4,3	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (4, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 1 · 4,4	Decoder 2	#8da0cb	0.75	Decoder 2, feature map 1 of 4 (4×4), unit (4, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 1,1	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (1, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 1,2	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (1, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 1,3	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (1, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 1,4	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (1, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 2,1	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (2, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 2,2	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (2, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 2,3	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (2, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 2,4	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (2, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 3,1	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (3, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 3,2	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (3, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 3,3	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (3, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 3,4	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (3, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 4,1	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (4, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 4,2	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (4, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 4,3	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (4, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 2 · 4,4	Decoder 2	#e78ac3	0.75	Decoder 2, feature map 2 of 4 (4×4), unit (4, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 1,1	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (1, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 1,2	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (1, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 1,3	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (1, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 1,4	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (1, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 2,1	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (2, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 2,2	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (2, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 2,3	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (2, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 2,4	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (2, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 3,1	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (3, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 3,2	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (3, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 3,3	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (3, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 3,4	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (3, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 4,1	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (4, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 4,2	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (4, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 4,3	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (4, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 3 · 4,4	Decoder 2	#a6d854	0.75	Decoder 2, feature map 3 of 4 (4×4), unit (4, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 1,1	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (1, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 1,2	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (1, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 1,3	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (1, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 1,4	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (1, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 2,1	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (2, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 2,2	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (2, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 2,3	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (2, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 2,4	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (2, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 3,1	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (3, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 3,2	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (3, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 3,3	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (3, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 3,4	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (3, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 4,1	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (4, 1): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 4,2	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (4, 2): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 4,3	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (4, 3): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D2 map 4 · 4,4	Decoder 2	#ffd92f	0.75	Decoder 2, feature map 4 of 4 (4×4), unit (4, 4): up-sampled from the bottleneck, plus the copied encoder 2 map.
+D1 map 1 · 1,1	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (1, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 1,2	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (1, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 1,3	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (1, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 1,4	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (1, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 1,5	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (1, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 1,6	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (1, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 1,7	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (1, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 1,8	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (1, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 2,1	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (2, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 2,2	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (2, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 2,3	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (2, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 2,4	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (2, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 2,5	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (2, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 2,6	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (2, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 2,7	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (2, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 2,8	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (2, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 3,1	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (3, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 3,2	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (3, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 3,3	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (3, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 3,4	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (3, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 3,5	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (3, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 3,6	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (3, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 3,7	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (3, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 3,8	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (3, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 4,1	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (4, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 4,2	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (4, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 4,3	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (4, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 4,4	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (4, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 4,5	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (4, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 4,6	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (4, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 4,7	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (4, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 4,8	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (4, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 5,1	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (5, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 5,2	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (5, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 5,3	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (5, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 5,4	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (5, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 5,5	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (5, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 5,6	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (5, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 5,7	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (5, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 5,8	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (5, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 6,1	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (6, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 6,2	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (6, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 6,3	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (6, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 6,4	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (6, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 6,5	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (6, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 6,6	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (6, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 6,7	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (6, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 6,8	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (6, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 7,1	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (7, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 7,2	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (7, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 7,3	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (7, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 7,4	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (7, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 7,5	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (7, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 7,6	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (7, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 7,7	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (7, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 7,8	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (7, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 8,1	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (8, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 8,2	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (8, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 8,3	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (8, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 8,4	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (8, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 8,5	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (8, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 8,6	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (8, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 8,7	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (8, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 1 · 8,8	Decoder 1	#66c2a5	0.75	Decoder 1, feature map 1 of 2 (8×8), unit (8, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 1,1	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (1, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 1,2	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (1, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 1,3	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (1, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 1,4	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (1, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 1,5	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (1, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 1,6	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (1, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 1,7	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (1, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 1,8	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (1, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 2,1	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (2, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 2,2	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (2, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 2,3	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (2, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 2,4	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (2, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 2,5	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (2, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 2,6	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (2, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 2,7	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (2, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 2,8	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (2, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 3,1	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (3, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 3,2	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (3, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 3,3	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (3, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 3,4	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (3, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 3,5	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (3, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 3,6	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (3, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 3,7	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (3, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 3,8	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (3, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 4,1	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (4, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 4,2	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (4, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 4,3	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (4, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 4,4	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (4, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 4,5	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (4, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 4,6	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (4, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 4,7	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (4, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 4,8	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (4, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 5,1	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (5, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 5,2	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (5, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 5,3	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (5, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 5,4	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (5, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 5,5	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (5, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 5,6	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (5, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 5,7	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (5, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 5,8	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (5, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 6,1	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (6, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 6,2	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (6, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 6,3	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (6, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 6,4	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (6, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 6,5	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (6, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 6,6	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (6, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 6,7	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (6, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 6,8	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (6, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 7,1	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (7, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 7,2	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (7, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 7,3	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (7, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 7,4	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (7, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 7,5	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (7, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 7,6	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (7, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 7,7	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (7, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 7,8	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (7, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 8,1	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (8, 1): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 8,2	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (8, 2): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 8,3	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (8, 3): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 8,4	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (8, 4): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 8,5	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (8, 5): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 8,6	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (8, 6): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 8,7	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (8, 7): up-sampled from decoder 2, plus the copied encoder 1 map.
+D1 map 2 · 8,8	Decoder 1	#fc8d62	0.75	Decoder 1, feature map 2 of 2 (8×8), unit (8, 8): up-sampled from decoder 2, plus the copied encoder 1 map.
+mask 1,1	Output mask	#3b4a5c	0.5	Output pixel (1, 1): background in the mask a trained U-Net should return (drawn, not computed).
+mask 1,2	Output mask	#3b4a5c	0.5	Output pixel (1, 2): background in the mask a trained U-Net should return (drawn, not computed).
+mask 1,3	Output mask	#3b4a5c	0.5	Output pixel (1, 3): background in the mask a trained U-Net should return (drawn, not computed).
+mask 1,4	Output mask	#3b4a5c	0.5	Output pixel (1, 4): background in the mask a trained U-Net should return (drawn, not computed).
+mask 1,5	Output mask	#3b4a5c	0.5	Output pixel (1, 5): background in the mask a trained U-Net should return (drawn, not computed).
+mask 1,6	Output mask	#3b4a5c	0.5	Output pixel (1, 6): background in the mask a trained U-Net should return (drawn, not computed).
+mask 1,7	Output mask	#3b4a5c	0.5	Output pixel (1, 7): background in the mask a trained U-Net should return (drawn, not computed).
+mask 1,8	Output mask	#3b4a5c	0.5	Output pixel (1, 8): background in the mask a trained U-Net should return (drawn, not computed).
+mask 2,1	Output mask	#3b4a5c	0.5	Output pixel (2, 1): background in the mask a trained U-Net should return (drawn, not computed).
+mask 2,2	Output mask	#3b4a5c	0.5	Output pixel (2, 2): background in the mask a trained U-Net should return (drawn, not computed).
+mask 2,3	Output mask	#3b4a5c	0.5	Output pixel (2, 3): background in the mask a trained U-Net should return (drawn, not computed).
+mask 2,4	Output mask	#3b4a5c	0.5	Output pixel (2, 4): background in the mask a trained U-Net should return (drawn, not computed).
+mask 2,5	Output mask	#3b4a5c	0.5	Output pixel (2, 5): background in the mask a trained U-Net should return (drawn, not computed).
+mask 2,6	Output mask	#3b4a5c	0.5	Output pixel (2, 6): background in the mask a trained U-Net should return (drawn, not computed).
+mask 2,7	Output mask	#3b4a5c	0.5	Output pixel (2, 7): background in the mask a trained U-Net should return (drawn, not computed).
+mask 2,8	Output mask	#3b4a5c	0.5	Output pixel (2, 8): background in the mask a trained U-Net should return (drawn, not computed).
+mask 3,1	Output mask	#3b4a5c	0.5	Output pixel (3, 1): background in the mask a trained U-Net should return (drawn, not computed).
+mask 3,2	Output mask	#3b4a5c	0.5	Output pixel (3, 2): background in the mask a trained U-Net should return (drawn, not computed).
+mask 3,3	Output mask	#3b4a5c	0.5	Output pixel (3, 3): background in the mask a trained U-Net should return (drawn, not computed).
+mask 3,4	Output mask	#ffffff	1.2	Output pixel (3, 4): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 3,5	Output mask	#ffffff	1.2	Output pixel (3, 5): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 3,6	Output mask	#ffffff	1.2	Output pixel (3, 6): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 3,7	Output mask	#3b4a5c	0.5	Output pixel (3, 7): background in the mask a trained U-Net should return (drawn, not computed).
+mask 3,8	Output mask	#3b4a5c	0.5	Output pixel (3, 8): background in the mask a trained U-Net should return (drawn, not computed).
+mask 4,1	Output mask	#3b4a5c	0.5	Output pixel (4, 1): background in the mask a trained U-Net should return (drawn, not computed).
+mask 4,2	Output mask	#3b4a5c	0.5	Output pixel (4, 2): background in the mask a trained U-Net should return (drawn, not computed).
+mask 4,3	Output mask	#3b4a5c	0.5	Output pixel (4, 3): background in the mask a trained U-Net should return (drawn, not computed).
+mask 4,4	Output mask	#ffffff	1.2	Output pixel (4, 4): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 4,5	Output mask	#ffffff	1.2	Output pixel (4, 5): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 4,6	Output mask	#ffffff	1.2	Output pixel (4, 6): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 4,7	Output mask	#ffffff	1.2	Output pixel (4, 7): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 4,8	Output mask	#3b4a5c	0.5	Output pixel (4, 8): background in the mask a trained U-Net should return (drawn, not computed).
+mask 5,1	Output mask	#3b4a5c	0.5	Output pixel (5, 1): background in the mask a trained U-Net should return (drawn, not computed).
+mask 5,2	Output mask	#3b4a5c	0.5	Output pixel (5, 2): background in the mask a trained U-Net should return (drawn, not computed).
+mask 5,3	Output mask	#3b4a5c	0.5	Output pixel (5, 3): background in the mask a trained U-Net should return (drawn, not computed).
+mask 5,4	Output mask	#ffffff	1.2	Output pixel (5, 4): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 5,5	Output mask	#ffffff	1.2	Output pixel (5, 5): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 5,6	Output mask	#ffffff	1.2	Output pixel (5, 6): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 5,7	Output mask	#ffffff	1.2	Output pixel (5, 7): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 5,8	Output mask	#3b4a5c	0.5	Output pixel (5, 8): background in the mask a trained U-Net should return (drawn, not computed).
+mask 6,1	Output mask	#3b4a5c	0.5	Output pixel (6, 1): background in the mask a trained U-Net should return (drawn, not computed).
+mask 6,2	Output mask	#3b4a5c	0.5	Output pixel (6, 2): background in the mask a trained U-Net should return (drawn, not computed).
+mask 6,3	Output mask	#3b4a5c	0.5	Output pixel (6, 3): background in the mask a trained U-Net should return (drawn, not computed).
+mask 6,4	Output mask	#ffffff	1.2	Output pixel (6, 4): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 6,5	Output mask	#ffffff	1.2	Output pixel (6, 5): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 6,6	Output mask	#ffffff	1.2	Output pixel (6, 6): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 6,7	Output mask	#ffffff	1.2	Output pixel (6, 7): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 6,8	Output mask	#3b4a5c	0.5	Output pixel (6, 8): background in the mask a trained U-Net should return (drawn, not computed).
+mask 7,1	Output mask	#3b4a5c	0.5	Output pixel (7, 1): background in the mask a trained U-Net should return (drawn, not computed).
+mask 7,2	Output mask	#3b4a5c	0.5	Output pixel (7, 2): background in the mask a trained U-Net should return (drawn, not computed).
+mask 7,3	Output mask	#3b4a5c	0.5	Output pixel (7, 3): background in the mask a trained U-Net should return (drawn, not computed).
+mask 7,4	Output mask	#3b4a5c	0.5	Output pixel (7, 4): background in the mask a trained U-Net should return (drawn, not computed).
+mask 7,5	Output mask	#ffffff	1.2	Output pixel (7, 5): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 7,6	Output mask	#ffffff	1.2	Output pixel (7, 6): blob in the mask a trained U-Net should return (drawn, not computed).
+mask 7,7	Output mask	#3b4a5c	0.5	Output pixel (7, 7): background in the mask a trained U-Net should return (drawn, not computed).
+mask 7,8	Output mask	#3b4a5c	0.5	Output pixel (7, 8): background in the mask a trained U-Net should return (drawn, not computed).
+mask 8,1	Output mask	#3b4a5c	0.5	Output pixel (8, 1): background in the mask a trained U-Net should return (drawn, not computed).
+mask 8,2	Output mask	#3b4a5c	0.5	Output pixel (8, 2): background in the mask a trained U-Net should return (drawn, not computed).
+mask 8,3	Output mask	#3b4a5c	0.5	Output pixel (8, 3): background in the mask a trained U-Net should return (drawn, not computed).
+mask 8,4	Output mask	#3b4a5c	0.5	Output pixel (8, 4): background in the mask a trained U-Net should return (drawn, not computed).
+mask 8,5	Output mask	#3b4a5c	0.5	Output pixel (8, 5): background in the mask a trained U-Net should return (drawn, not computed).
+mask 8,6	Output mask	#3b4a5c	0.5	Output pixel (8, 6): background in the mask a trained U-Net should return (drawn, not computed).
+mask 8,7	Output mask	#3b4a5c	0.5	Output pixel (8, 7): background in the mask a trained U-Net should return (drawn, not computed).
+mask 8,8	Output mask	#3b4a5c	0.5	Output pixel (8, 8): background in the mask a trained U-Net should return (drawn, not computed).

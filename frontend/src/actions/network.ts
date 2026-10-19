@@ -3,31 +3,36 @@
 // /api/session/import; the backend normalizes + fills defaults). Layer/edge
 // count limits are enforced server-side. Channel UI stays with Phase 13.
 
+import { FLOOR_STYLES } from '../three/Layer'
+import { NODE_SHAPES } from '../three/Node'
 import type {
   EdgeModel,
+  LayoutPosition,
   NetworkData,
   NodeModel,
   SessionData,
+  SessionEdge,
+  SessionNode,
 } from '../api/client'
 import { history } from '../commands/base'
 import { LoadNetworkCommand } from '../commands/scene'
 import { store } from '../store'
-import {
-  COLOR_VECTOR_280,
-  ctx,
-  Edge,
-  Layer,
-  Node,
-  resetContext,
-  Scene,
-} from '../three'
+import { ctx, Edge, Layer, Node, resetContext, Scene } from '../three'
+import { isContainer } from '../three/containers'
+import { sessionContainerLook } from './containers'
+import { stashAnnotationView } from './annotations'
 import { createLabels, setLabelColor } from './labels'
-import { initialSpreadLayers } from './layer'
-import { scrambleNodes } from './node'
+import type { NodeGeometryType } from '../three/Node'
+import { applyDefaultFloorVisibility, initialSpreadLayers } from './layer'
+import { resetNetworkMode, restoreNetwork3dState } from './modes'
+import { nodeLabelState, scrambleNodes, setNodeLabelMode } from './node'
 import { setRendererColor } from './screen'
+import { themeChannelColor, themeNodeColor } from './palette'
+import { stashSessionTheme, THEMES } from './themes'
 
 // v2 uploadNetwork(): one undoable step wrapping the full build.
 export function loadNetwork(data: NetworkData): void {
+  ctx.lastLoadSource = 'network'
   const maxChannels = store.get().config?.max_channels
   if (maxChannels !== undefined && data.channels.length > maxChannels)
     throw new Error(
@@ -41,6 +46,7 @@ export function buildNetwork(data: NetworkData): void {
   // prev-snapshot still points at the intact previous scene graph.
   const edgeDefaultColor = ctx.edgeDefaultColor
   resetContext()
+  resetNetworkMode()
   ctx.edgeDefaultColor = edgeDefaultColor
 
   const scene = new Scene()
@@ -65,18 +71,22 @@ function initializeLayers(names: string[]): void {
     ctx.scene!.addLayer(layer.plane)
   })
   initialSpreadLayers()
+  applyDefaultFloorVisibility()
 }
 
+// the theme on screen: new networks get default colours that read on it
+const currentTheme = () => THEMES[store.get().currentTheme] ?? THEMES.dark
+
 function initializeChannels(channels: string[]): void {
-  const palette = store.get().config?.channel_colors_light ?? []
+  const theme = currentTheme()
   channels.forEach((channel, i) => {
-    ctx.channelColors[channel] =
-      palette[i % palette.length] ?? ctx.edgeDefaultColor
+    ctx.channelColors[channel] = themeChannelColor(theme, i)
     ctx.channelVisibility[channel] = true
   })
 }
 
 function initializeNodes(nodes: NodeModel[]): void {
+  const theme = currentTheme()
   nodes.forEach((n, i) => {
     ctx.nodeLayerNames.push(n.id)
     ctx.nodeGroups[n.id] = n.layer
@@ -86,7 +96,7 @@ function initializeNodes(nodes: NodeModel[]): void {
       name: n.label,
       layer: n.layer,
       nodeLayerName: n.id,
-      color: COLOR_VECTOR_280[layerIndex % COLOR_VECTOR_280.length],
+      color: themeNodeColor(theme, layerIndex),
     })
     ctx.nodeObjects.push(node)
     ctx.layers[layerIndex].addNode(node.sphere)
@@ -134,14 +144,47 @@ function createEdgeObjects(edges: EdgeRow[]): void {
 
 // v2 importNetwork(): one undoable step wrapping the session build.
 export function loadSession(session: SessionData): void {
+  ctx.lastLoadSource = 'session'
   history.execute(new LoadNetworkCommand(() => buildFromSession(session)))
+}
+
+// Edit → Style fields of a session row; the backend has checked them
+function restoreNodeStyle(node: Node, n: SessionNode): void {
+  if (n.opacity !== undefined) node.setAlpha(Number(n.opacity))
+  if (n.border_width && n.border_color)
+    node.setBorder(n.border_color, Number(n.border_width))
+  if (n.stretch?.length === 3)
+    node.setStretch(n.stretch.map(Number) as [number, number, number])
+  node.label = n.label ?? ''
+  node.labelColor = n.label_color ?? ''
+  node.labelSize = Number(n.label_size ?? 0)
+  node.labelLook = n.label_style ? { ...n.label_style } : null
+  node.labelPosition = n.label_position ?? 'right'
+  node.labelShown = n.label_shown === true
+}
+
+function restoreEdgeStyle(edge: Edge, e: SessionEdge): void {
+  const width = Number(e.width_factor)
+  if (width && Number.isFinite(width)) edge.widthFactor = width
+  if (e.opacity_factor !== undefined)
+    edge.opacityFactor = Number(e.opacity_factor)
+  if (e.line_type) edge.lineType = e.line_type
+  edge.arrowColor = e.arrow_color ?? ''
 }
 
 // v2 importNetwork/initialize*FromJSON/setJSONExtras.
 export function buildFromSession(s: SessionData): void {
   const edgeDefaultColor = ctx.edgeDefaultColor
   resetContext()
+  resetNetworkMode()
   ctx.edgeDefaultColor = edgeDefaultColor
+  // drawing settings first: the edges are built with them
+  if (s.edgeShape) ctx.edgeShape = s.edgeShape
+  ctx.hive = s.hive ?? null
+  // how the groups are drawn: applied once the scene is up
+  stashAnnotationView(s.annotationView)
+  // the theme it was saved with: the picker shows it once it is on screen
+  stashSessionTheme(s.theme)
 
   // scene from JSON
   const scene = new Scene()
@@ -169,6 +212,12 @@ export function buildFromSession(s: SessionData): void {
       rotation_z: Number(l.rotation_z),
       floor_current_color: l.floor_current_color,
       geometry_parameters_width: Number(l.geometry_parameters_width),
+      floor_shape:
+        l.floor_shape === 'disk' || l.floor_shape === 'axis'
+          ? l.floor_shape
+          : 'square',
+      floor_style: FLOOR_STYLES.find((f) => f === l.floor_style) ?? 'solid',
+      container: isContainer(l.container) ? l.container : undefined,
     })
     ctx.layers.push(layer)
     ctx.scene!.addLayer(layer.plane)
@@ -176,6 +225,24 @@ export function buildFromSession(s: SessionData): void {
   // sessions without layer coordinates get the upload spread (backend flag)
   if (s.layers.length > 0 && s.layers.every((l) => l.generate_coordinates))
     initialSpreadLayers()
+  applyDefaultFloorVisibility()
+  s.layers.forEach((l, i) => {
+    // Labels & axes: the label's own look (checked by the backend)
+    const layer = ctx.layers[i]
+    layer.labelLook = l.label_style ? { ...l.label_style } : null
+    layer.labelFont = l.label_font ?? ''
+    layer.labelBold = l.label_bold === true
+    layer.labelItalic = l.label_italic === true
+    layer.labelColor = l.label_color ?? ''
+    layer.labelPosition = l.label_position ?? 'corner'
+    if (typeof l.floor_visible === 'boolean')
+      ctx.layers[i].toggleFloor(l.floor_visible)
+    // Shape & container: the look and where nodes sit (older sessions:
+    // colour and opacity at most, the rest as before)
+    const { look, placement } = sessionContainerLook(l)
+    layer.containerPlacement = placement
+    layer.setContainerLook(look)
+  })
 
   // channels from the edge rows
   const channels = [
@@ -201,9 +268,25 @@ export function buildFromSession(s: SessionData): void {
       url: n.url,
       descr: n.descr,
     })
+    node.annotations = n.annotations ?? []
+    if (n.shape && NODE_SHAPES.includes(n.shape as NodeGeometryType))
+      node.setGeometry(n.shape as NodeGeometryType)
+    restoreNodeStyle(node, n)
     ctx.nodeObjects.push(node)
     ctx.layers[ctx.layerGroups[n.layer]].addNode(node.sphere)
   })
+  // saved in 3D-network mode: keep the layered state, so unticking the mode
+  // brings the layers back
+  if (s.layers.length > 0 && s.layers.every((l) => l.layered)) {
+    const nodes: Record<string, LayoutPosition> = {}
+    s.nodes.forEach((n) => {
+      if (n.layered_position) nodes[`${n.name}_${n.layer}`] = n.layered_position
+    })
+    restoreNetwork3dState(
+      s.layers.map((l) => l.layered!),
+      nodes
+    )
+  }
   if (s.scramble_nodes) {
     const minWidth = Math.min(
       ...ctx.layers.map((l) => l.geometry_parameters_width)
@@ -233,13 +316,26 @@ export function buildFromSession(s: SessionData): void {
     }
   })
   createEdgeObjects(rows)
+  // per-edge style (Style panel): rows were grouped per src---trg pair
+  const rowOf = new Map(s.edges.map((e) => [`${e.src}---${e.trg}`, e]))
+  for (const edge of ctx.edgeObjects) {
+    const row = rowOf.get(`${edge.source}---${edge.target}`)
+    if (row) restoreEdgeStyle(edge, row)
+  }
   createLabels()
 
   // v2 setJSONExtras
   setLabelColor(s.universalLabelColor)
+  // Show Labels as saved; a session from before has the default (Selected,
+  // as resetContext left it) — and the Edit → Nodes radio says so
+  const labels = s.nodeLabels ?? nodeLabelState()
+  setNodeLabelMode(labels.mode, labels.withSelection)
   ctx.isDirectionEnabled = Boolean(s.direction)
   ctx.edgeOpacityByWeight = Boolean(s.edgeOpacityByWeight)
   ctx.edgeWidthByWeight = Boolean(s.edgeWidthByWeight)
+  // bundled paths are computed on the first redraw (three/bundling.ts)
+  ctx.intraEdgeBundling = Number(s.intraEdgeBundling ?? 0)
+  ctx.interEdgeBundling = Number(s.interEdgeBundling ?? 0)
   ctx.edgeFileColorPriority = true
 
   store.update({

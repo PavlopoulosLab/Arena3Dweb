@@ -30,6 +30,11 @@ def _mapper(values: pd.Series, out_min: float, out_max: float) -> pd.Series:
     return pd.Series(scaled, index=values.index)
 
 
+def _line(mask: "pd.Series[bool]") -> int:
+    """File line of the first True row (line 1 is the header)."""
+    return int(np.argmax(mask.to_numpy())) + 2
+
+
 def _validate(df: pd.DataFrame) -> None:
     if not set(config.MANDATORY_NETWORK_COLUMNS).issubset(df.columns):
         raise NetworkValidationError(
@@ -40,25 +45,38 @@ def _validate(df: pd.DataFrame) -> None:
     # Reject rows with an empty/whitespace mandatory cell — a blank becomes NaN
     # and would crash EdgeModel construction with a 500 instead of a clean 400.
     mandatory = df[config.MANDATORY_NETWORK_COLUMNS].apply(lambda c: c.str.strip())
-    if mandatory.isna().to_numpy().any() or (mandatory == "").to_numpy().any():
+    blank = (mandatory.isna() | (mandatory == "")).any(axis=1)
+    if blank.any():
         raise NetworkValidationError(
-            "Every edge must have a non-empty SourceNode, SourceLayer, TargetNode and TargetLayer."
+            "Every edge must have a non-empty SourceNode, SourceLayer, TargetNode and TargetLayer"
+            f" (first problem on line {_line(blank)})."
         )
-    if (
-        "Weight" in df.columns
-        and not np.isfinite(pd.to_numeric(df["Weight"], errors="coerce")).all()
-    ):
+    if "Weight" in df.columns:
         # non-numeric coerces to NaN; inf is rejected too (it would map to a NaN
         # scaled_weight, which the finite-only EdgeModel then refuses -> 500)
-        raise NetworkValidationError("Make sure all input weights are finite numeric values.")
-    if "Channel" in df.columns and (df["Channel"].fillna("").astype(str).str.strip() == "").any():
-        raise NetworkValidationError(
-            "At least one edge has no channel name. "
-            "Please reupload the network file with all edge channels."
-        )
+        bad = ~np.isfinite(pd.to_numeric(df["Weight"], errors="coerce"))
+        if bad.any():
+            row = _line(bad)
+            raise NetworkValidationError(
+                "Make sure all input weights are finite numeric values"
+                f' (line {row}: "{df["Weight"].iloc[row - 2]}").'
+            )
+    if "Channel" in df.columns:
+        empty = df["Channel"].fillna("").astype(str).str.strip() == ""
+        if empty.any():
+            raise NetworkValidationError(
+                f"At least one edge has no channel name (first on line {_line(empty)}). "
+                "Please reupload the network file with all edge channels."
+            )
 
 
 def parse_network_tsv(text: str) -> NetworkModel:
+    # rows before pandas reads them (duplicates are dropped later, so allow
+    # some): a huge file is refused without being parsed
+    if text.count("\n") > 2 * config.MAX_EDGES + 1:
+        raise NetworkValidationError(
+            f"The network must contain no more than {config.MAX_EDGES} edges."
+        )
     """Parse a raw TSV string into a validated NetworkModel."""
     try:
         df = pd.read_csv(StringIO(text), sep="\t", dtype=str)

@@ -40,6 +40,15 @@ class CommandHistory {
     }
   }
 
+  // Forget every step, e.g. when a network is deleted and old steps could
+  // bring it back: each command frees what only it still holds.
+  clear(): void {
+    for (const cmd of [...this.undoStack, ...this.redoStack]) cmd.dispose?.()
+    this.undoStack = []
+    this.redoStack = []
+    this.notify()
+  }
+
   get canUndo(): boolean {
     return this.undoStack.length > 0
   }

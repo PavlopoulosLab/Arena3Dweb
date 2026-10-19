@@ -47,6 +47,7 @@ type PointerLikeEvent = {
   clientX: number
   clientY: number
   pointerType?: string
+  shiftKey?: boolean
 }
 
 function updatePointer(event: PointerLikeEvent): void {
@@ -80,6 +81,9 @@ export function onPointerDown(event: PointerLikeEvent): void {
   // the drag or grabbed the wrong plane. The hover pass already resolved
   // which plane the user sees under the cursor — trust it.
   if (ctx.lastHoveredNodeIndex !== null) return // grabbing a node, not a layer
+  // Shift + Drag selects an area: pointermove fires before the mousemove that
+  // starts the area, so a grabbed floor would jump by the first step
+  if (event.shiftKey) return
   const idx = ctx.lastHoveredLayerIndex
   if (idx === null || !ctx.layers[idx]) return
   updatePointer(event)

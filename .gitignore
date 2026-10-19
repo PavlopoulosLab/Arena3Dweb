@@ -45,6 +45,8 @@ __pycache__/
 *.pyc
 .mypy_cache/
 .ruff_cache/
+# shared links and hosted exports (one-hour TTL), never committed
+backend/tmp/
 
 # Node
 frontend/node_modules/
@@ -53,3 +55,12 @@ frontend/dist/
 # Editors
 .DS_Store
 .playwright-cli/
+
+# Manuscript drafts and figures: kept local, never pushed
+paper/
+
+# manuscripts and journal correspondence never go to GitHub, wherever they are
+*.docx
+*.doc
+*presubmission*
+nar_checklist*

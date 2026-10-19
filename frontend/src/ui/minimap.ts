@@ -100,8 +100,12 @@ function projectNodes(): (Pt | null)[] {
   })
 }
 
+let frame = 0
 function draw(): void {
   if (!enabled || !hasNetwork || !g || !canvas) return
+  // Performance panel: every Nth frame, or never
+  if (ctx.minimapEvery <= 0) return
+  if (ctx.minimapEvery > 1 && frame++ % ctx.minimapEvery !== 0) return
   const scene = ctx.scene
   if (!scene?.pan || ctx.nodeObjects.length === 0) return
 
@@ -216,8 +220,23 @@ function applyVisibility(): void {
     container.style.display = enabled && hasNetwork ? 'block' : 'none'
 }
 
+// Scene & Camera's checkbox and Performance's refresh both switch it: keep
+// them agreeing — showing it with the refresh off draws it every frame again,
+// and turning it off (either way) unticks the checkbox.
 export function setMinimapVisible(on: boolean): void {
   enabled = on
+  if (on && ctx.minimapEvery <= 0) {
+    ctx.minimapEvery = 1
+    const refresh = document.getElementById(
+      'perf_minimap'
+    ) as HTMLSelectElement | null
+    if (refresh) refresh.value = '1'
+  }
+  const box = document.getElementById(
+    'toggleMinimap'
+  ) as HTMLInputElement | null
+  if (box) box.checked = on
+  frame = 0 // draw at once, not on the next Nth frame
   applyVisibility()
 }
 

@@ -1,7 +1,9 @@
 // Port of v2 www/js/object_actions/canvas_controls.js nav-control remainder:
 // the two fixed buttons (#navControlButtonsDiv) and the Scene/Layers/Nodes
-// control table inside #info. Hold-to-repeat buttons run a 70ms interval, as
-// v2 did; Shiny syncs are replaced by render/label flags.
+// control table inside #info. Every button takes one step as soon as it is
+// pressed, so a click always does something; held down, it keeps going (one
+// step every 70 ms after a short pause) until it is released, wherever that
+// happens. Shiny syncs are replaced by render/label flags.
 
 import * as THREE from 'three'
 import { bus } from '../bus'
@@ -9,7 +11,19 @@ import { ctx } from '../three'
 import { redrawIntraLayerEdges, toggleInterLayerEdgesRendering } from './edge'
 import { getSelectedLayers, initialSpreadLayers } from './layer'
 import { getSelectedNodes } from './node'
+import { fitView } from './search'
+import {
+  getSelectCombine,
+  getSelectShape,
+  resetZoomTarget,
+  setSelectCombine,
+  setSelectShape,
+  type SelectCombine,
+  type SelectShape,
+} from './canvas_controls'
 import { history } from '../commands/base'
+import { redrawScene } from './redraw'
+import { GROUP_ICONS, axisIcon } from '../ui/nav_icons'
 import {
   captureTransforms,
   TransformCommand,
@@ -19,35 +33,41 @@ import {
 type Axis = 'X' | 'Y' | 'Z'
 
 const REPEAT_MS = 70
+// a click is one step; held longer than this, the button keeps going
+const HOLD_DELAY_MS = 300
 
 let repeatId: ReturnType<typeof setInterval> | undefined
-// Hold-to-repeat interactions register one undo entry per hold: snapshot on
-// press, command pushed on release (only if a tick actually ran).
+let holdId: ReturnType<typeof setTimeout> | undefined
+// One undo entry per press: snapshot on press, command pushed on release.
 let repeatBefore: TransformSnapshot | null = null
+let repeatDescription = ''
 let repeatMoved = false
 
 function stopRepeat(): void {
+  clearTimeout(holdId)
   clearInterval(repeatId)
-  repeatId = undefined
+  holdId = repeatId = undefined
   if (repeatBefore && repeatMoved)
     history.execute(
-      new TransformCommand(
-        'Nav control move',
-        repeatBefore,
-        captureTransforms()
-      )
+      new TransformCommand(repeatDescription, repeatBefore, captureTransforms())
     )
   repeatBefore = null
   repeatMoved = false
 }
 
-function startRepeat(fn: () => void): void {
+// One step now, then — while the button stays pressed — one every REPEAT_MS
+function startRepeat(step: () => void, description = 'Nav control move'): void {
   stopRepeat()
   repeatBefore = captureTransforms()
-  repeatId = setInterval(() => {
+  repeatDescription = description
+  const tick = () => {
+    step()
     repeatMoved = true
-    fn()
-  }, REPEAT_MS)
+  }
+  tick()
+  holdId = setTimeout(() => {
+    repeatId = setInterval(tick, REPEAT_MS)
+  }, HOLD_DELAY_MS)
 }
 
 function sliderValue(id: string): number {
@@ -74,14 +94,13 @@ function rotateScene(direction: number, axis: Axis): void {
   })
 }
 
+// Fit the whole network into the window (pan and zoom), like a double-click
+// on the background; one undoable step.
 export function recenterNetwork(): void {
   if (ctx.scene?.exists()) {
-    const before = captureTransforms()
-    ctx.scene.recenter()
+    resetZoomTarget()
+    fitView()
     raiseMovedFlags()
-    history.execute(
-      new TransformCommand('Recenter network', before, captureTransforms())
-    )
   }
 }
 
@@ -117,12 +136,10 @@ function moveLayers(direction: number, axis: Axis): void {
 }
 
 function spreadLayers(direction: number): void {
-  const before = captureTransforms()
-  initialSpreadLayers(direction)
-  raiseMovedFlags()
-  history.execute(
-    new TransformCommand('Spread layers', before, captureTransforms())
-  )
+  startRepeat(() => {
+    initialSpreadLayers(direction)
+    raiseMovedFlags()
+  }, 'Spread layers')
 }
 
 function scaleLayers(): void {
@@ -152,17 +169,15 @@ function scaleLayers(): void {
 function spreadNodes(multiplier: number): void {
   const selected = getSelectedNodes()
   if (selected.length === 0) return alert('Please select at least one node.')
-  const before = captureTransforms()
-  for (const i of selected) {
-    const node = ctx.nodeObjects[i]
-    node.setPosition('y', node.getPosition('y') * multiplier)
-    node.setPosition('z', node.getPosition('z') * multiplier)
-  }
-  redrawIntraLayerEdges()
-  raiseMovedFlags()
-  history.execute(
-    new TransformCommand('Spread nodes', before, captureTransforms())
-  )
+  startRepeat(() => {
+    for (const i of selected) {
+      const node = ctx.nodeObjects[i]
+      node.setPosition('y', node.getPosition('y') * multiplier)
+      node.setPosition('z', node.getPosition('z') * multiplier)
+    }
+    redrawIntraLayerEdges()
+    raiseMovedFlags()
+  }, 'Spread nodes')
 }
 
 function moveNodes(direction: number, axis: Axis): void {
@@ -190,6 +205,83 @@ function scaleNodes(): void {
   for (const i of selected) ctx.nodeObjects[i].setScale(value)
 }
 
+// --- Single network: spread ----------------------------------------------
+// In single-network mode every layer sits in one shared frame, so scaling
+// each node's distance from the network's centre makes the network take more
+// or less room without changing its layout (node sizes stay). The slider is
+// relative to the positions it started from; any other change — a layout,
+// undo, a drag, a new network or mode — makes the positions then the new 1×.
+
+type Point = { x: number; y: number; z: number }
+let spreadBase: Point[] | null = null
+let spreadCentre: Point = { x: 0, y: 0, z: 0 }
+let spreadBefore: TransformSnapshot | null = null
+let spreadCommitting = false
+
+// the slider is log2 of the factor: -2..2 is 0.25×..4×, 0 is 1×
+const spreadFactor = (v: number): number => 2 ** v
+const spreadLabel = (v: number): string => {
+  const f = spreadFactor(v)
+  return `x${f >= 10 ? f.toFixed(0) : f.toFixed(2).replace(/\.?0+$/, '')}`
+}
+
+function showSpread(v: number): void {
+  const slider = document.getElementById(
+    'networkSpreadSlider'
+  ) as HTMLInputElement | null
+  if (slider) slider.value = String(v)
+  const td = document.getElementById('networkSpreadValue')
+  if (td) td.textContent = spreadLabel(v)
+}
+
+export function spreadNetwork(v: number): void {
+  if (ctx.nodeObjects.length === 0) return
+  if (!spreadBase) {
+    spreadBase = ctx.nodeObjects.map((n) => ({
+      x: n.getPosition('x'),
+      y: n.getPosition('y'),
+      z: n.getPosition('z'),
+    }))
+    const n = spreadBase.length
+    spreadCentre = spreadBase.reduce(
+      (c, p) => ({ x: c.x + p.x / n, y: c.y + p.y / n, z: c.z + p.z / n }),
+      { x: 0, y: 0, z: 0 }
+    )
+  }
+  spreadBefore ??= captureTransforms()
+  const f = spreadFactor(v)
+  const c = spreadCentre
+  ctx.nodeObjects.forEach((node, i) => {
+    const p = spreadBase![i]
+    node.setPosition('x', c.x + (p.x - c.x) * f)
+    node.setPosition('y', c.y + (p.y - c.y) * f)
+    node.setPosition('z', c.z + (p.z - c.z) * f)
+  })
+  showSpread(v)
+  redrawIntraLayerEdges()
+  raiseMovedFlags()
+}
+
+// one undo step per drag (or per key press on the slider)
+function commitSpread(): void {
+  if (!spreadBefore) return
+  spreadCommitting = true
+  try {
+    history.execute(
+      new TransformCommand('Spread network', spreadBefore, captureTransforms())
+    )
+  } finally {
+    spreadCommitting = false
+    spreadBefore = null
+  }
+}
+
+function resetSpread(): void {
+  spreadBase = null
+  spreadBefore = null
+  showSpread(0)
+}
+
 // --- DOM -----------------------------------------------------------------
 
 // One Angle/Step group: value label + slider + the six axis buttons laid out
@@ -202,7 +294,7 @@ function axisRowsHtml(
   t: '' | '_T'
 ): string {
   const btn = (name: string): string =>
-    `<td class="canvasControls image_${name}${t}" data-nav="${name}${t}"></td>`
+    `<td class="canvasControls" data-nav="${name}${t}" title="${t ? 'Move' : 'Rotate'} ${name.startsWith('plus') ? '+' : '−'}${name.slice(-1)}">${axisIcon(name, t === '_T')}</td>`
   return `
     <tr>
       <td colspan="2" class="labelDrop" id="${valueId}">${valueText}</td>
@@ -218,30 +310,58 @@ function axisRowsHtml(
     <tr>${btn('minusZ')}${btn('plusZ')}</tr>`
 }
 
+// the mouse and keyboard cheat-sheet folds into one line: it starts folded,
+// and the browser remembers whether the user opened it
+const SHORTCUTS_KEY = 'arena3d.navShortcuts'
+
 const INFO_HTML = `
+  <details id="navShortcutsBox" class="nav-shortcuts-box">
+  <summary>Mouse &amp; keyboard</summary>
   <ul id="navShortcuts">
     <li><span>Zoom</span><span><kbd>Wheel</kbd></span></li>
-    <li><span>Pan</span><span><kbd>Drag</kbd> / <kbd>&#8592;&#8593;&#8594;&#8595;</kbd></span></li>
-    <li><span>Orbit</span><span><kbd>Middle Drag</kbd></span></li>
-    <li><span>Drag Layer</span><span><kbd>Drag</kbd></span></li>
-    <li><span>Rotate Layer</span><span><kbd class='blue'>Z</kbd><kbd class='red'>X</kbd><kbd class='green'>C</kbd> + <kbd>Drag</kbd></span></li>
+    <li data-multilayer-only><span>Pan</span><span><kbd>Drag</kbd> / <kbd>&#8592;&#8593;&#8594;&#8595;</kbd></span></li>
+    <li data-multilayer-only><span>Orbit</span><span><kbd>Middle Drag</kbd></span></li>
+    <li data-single-only><span>Rotate Network</span><span><kbd>Drag</kbd></span></li>
+    <li data-single-only><span>Pan</span><span><kbd>Middle Drag</kbd> / <kbd>&#8592;&#8593;&#8594;&#8595;</kbd></span></li>
+    <li data-multilayer-only><span>Drag Layer</span><span><kbd>Drag</kbd></span></li>
+    <li data-multilayer-only><span>Rotate Layer</span><span><kbd class='blue'>Z</kbd><kbd class='red'>X</kbd><kbd class='green'>C</kbd> + <kbd>Drag</kbd></span></li>
+    <li data-single-only><span>Rotate about Axis</span><span><kbd class='blue'>Z</kbd><kbd class='red'>X</kbd><kbd class='green'>C</kbd> + <kbd>Drag</kbd></span></li>
     <li><span>Move Selected Nodes</span><span><kbd class='blue'>Z</kbd><kbd class='green'>C</kbd> + <kbd>Drag</kbd></span></li>
     <li><span>Select Node/Layer</span><span><kbd>Dbl Click</kbd></span></li>
-    <li><span>Lasso Nodes</span><span><kbd>Shift</kbd> + <kbd>Drag</kbd></span></li>
-    <li><span>Unselect All</span><span><kbd>Dbl Click</kbd> Scene</span></li>
+    <li><span>Select an Area</span><span><kbd>Shift</kbd> + <kbd>Drag</kbd></span></li>
+    <li class="nav-shape"><span>Area Shape</span><span class="nav-shape__btns" role="group" aria-label="Shape of the area Shift + Drag selects">
+      <button type="button" data-shape="rectangle" title="Shift + Drag selects the nodes inside a rectangle">&#9645; Rectangle</button>
+      <button type="button" data-shape="lasso" title="Shift + Drag draws a freehand lasso; the nodes inside it are selected">&#10044; Lasso</button>
+    </span></li>
+    <li class="nav-shape"><span>Area Mode</span><span class="nav-shape__btns" role="group" aria-label="What the area does to the selection">
+      <button type="button" data-combine="new" title="The area's nodes replace the selection">New</button>
+      <button type="button" data-combine="add" title="The area's nodes are added to the selection">Add</button>
+      <button type="button" data-combine="remove" title="The area's nodes are taken out of the selection (or hold Alt / Option as you release)">Remove</button>
+    </span></li>
+    <li><span>Fit View, Unselect All</span><span><kbd>Dbl Click</kbd> Scene</span></li>
   </ul>
+  </details>
   <table id="canvasControls_table"><tbody>
     <tr><td colspan="4"><h5>Scene</h5></td></tr>
     <tr><td colspan="4" class="controlsSubLabel">Rotation Controls</td></tr>
     ${axisRowsHtml('sliderValue1', 'Angle: 5&#730;', 'sceneRotateSlider', { min: 1, max: 15, value: 5, step: 1 }, '')}
     <tr><td colspan="4"><button id="recenterButton">Recenter Network</button></td></tr>
+    <tr data-single-only title="Give the network more or less room: the layout keeps its shape and the nodes their size">
+      <td>Spread</td>
+      <td colspan="2">
+        <input class="canvasSlider" id="networkSpreadSlider" type="range" min="-2" max="2" value="0" step="0.05"
+          aria-label="Spread the network: more or less room, same layout" />
+      </td>
+      <td id="networkSpreadValue">x1</td>
+    </tr>
+  </tbody><tbody data-multilayer-only>
     <tr class="border_tr"><td colspan="4"><h5>Layers</h5></td></tr>
     <tr><td colspan="4" class="controlsSubLabel">Rotation Controls</td></tr>
     ${axisRowsHtml('sliderValue2', 'Angle: 5&#730;', 'layerRotateSlider', { min: 1, max: 15, value: 5, step: 1 }, '')}
     <tr><td colspan="4" class="controlsSubLabel">Translation Controls</td></tr>
     <tr>
-      <td colspan="2" class="canvasControls image_expandLayers" data-nav="expandLayers"></td>
-      <td colspan="2" class="canvasControls image_collapseLayers" data-nav="collapseLayers"></td>
+      <td colspan="2" class="canvasControls nav-group" data-nav="expandLayers" title="Spread layers apart">${GROUP_ICONS.expandLayers}</td>
+      <td colspan="2" class="canvasControls nav-group" data-nav="collapseLayers" title="Pull layers together">${GROUP_ICONS.collapseLayers}</td>
     </tr>
     ${axisRowsHtml('sliderValue3', 'Step: 25', 'layerTranslateSlider', { min: 5, max: 50, value: 25, step: 5 }, '_T')}
     <tr>
@@ -251,11 +371,12 @@ const INFO_HTML = `
       </td>
       <td id="sliderValue4">x1</td>
     </tr>
+  </tbody><tbody>
     <tr class="border_tr"><td colspan="4"><h5>Nodes</h5></td></tr>
     <tr><td colspan="4" class="controlsSubLabel">Translation Controls</td></tr>
     <tr>
-      <td colspan="2" class="canvasControls image_nodeExpand" data-nav="expandNodes"></td>
-      <td colspan="2" class="canvasControls image_nodeCollapse" data-nav="collapseNodes"></td>
+      <td colspan="2" class="canvasControls nav-group" data-nav="expandNodes" title="Spread selected nodes apart">${GROUP_ICONS.expandNodes}</td>
+      <td colspan="2" class="canvasControls nav-group" data-nav="collapseNodes" title="Pull selected nodes together">${GROUP_ICONS.collapseNodes}</td>
     </tr>
     ${axisRowsHtml('sliderValue5', 'Step: 25', 'nodeTranslateSlider', { min: 5, max: 50, value: 25, step: 5 }, '_T')}
     <tr>
@@ -324,8 +445,14 @@ function attachNavControls(): void {
   if (!buttonsDiv || !info) return
 
   buttonsDiv.innerHTML = `
-    <button id="interLayerEdgesRenderPauseButton" class="displayCanvasControls nav-toggle-btn" type="button"></button>
-    <button id="displayCanvasControlsButton" class="displayCanvasControls nav-toggle-btn" type="button"></button>`
+    <button id="interLayerEdgesRenderPauseButton" class="displayCanvasControls nav-toggle-btn" type="button" data-multilayer-only></button>
+    <div class="nav-btn-row">
+      <button id="displayCanvasControlsButton" class="displayCanvasControls nav-toggle-btn" type="button"></button>
+      <button id="redrawSceneButton" class="displayCanvasControls nav-toggle-btn" type="button" title="Redraw the scene if something is stuck: lets go of a drag or an area left half done, hides a stuck loading veil and redraws nodes, edges and labels (the view and the selection stay)" aria-label="Redraw the scene"><span class="nav-toggle-icon">&#8635;</span>Redraw</button>
+    </div>`
+  document
+    .getElementById('redrawSceneButton')!
+    .addEventListener('click', redrawScene)
   document
     .getElementById('interLayerEdgesRenderPauseButton')!
     .addEventListener('click', () => {
@@ -340,9 +467,54 @@ function attachNavControls(): void {
     })
 
   info.innerHTML = INFO_HTML
-  info.style.display = 'inline-block'
+  const shortcuts = info.querySelector<HTMLDetailsElement>('#navShortcutsBox')
+  if (shortcuts) {
+    try {
+      shortcuts.open = localStorage.getItem(SHORTCUTS_KEY) === 'open'
+    } catch {
+      /* private mode: folded */
+    }
+    // e2e/fixtures.ts: specs see every card open (ui/sections.ts)
+    if ((window as unknown as { __arenaOpenCards?: boolean }).__arenaOpenCards)
+      shortcuts.open = true
+    // only the user's clicks are remembered (Enter / Space click too); the
+    // click toggles the box after this listener, so save where it goes
+    shortcuts.querySelector('summary')?.addEventListener('click', () => {
+      try {
+        localStorage.setItem(SHORTCUTS_KEY, shortcuts.open ? 'folded' : 'open')
+      } catch {
+        /* private mode: the choice lasts for this visit */
+      }
+    })
+  }
+  // the area Shift + Drag selects: a rectangle or a freehand lasso, and
+  // whether it replaces, adds to or takes from the selection
+  const switches = [
+    ...info.querySelectorAll<HTMLButtonElement>('.nav-shape button'),
+  ]
+  const syncSwitches = () =>
+    switches.forEach((b) => {
+      const on =
+        b.dataset.shape === getSelectShape() ||
+        b.dataset.combine === getSelectCombine()
+      b.classList.toggle('is-active', on)
+      b.setAttribute('aria-pressed', String(on))
+    })
+  switches.forEach((b) =>
+    b.addEventListener('click', () => {
+      if (b.dataset.shape) setSelectShape(b.dataset.shape as SelectShape)
+      else setSelectCombine(b.dataset.combine as SelectCombine)
+      syncSwitches()
+    })
+  )
+  syncSwitches()
+  // on phones the table would cover most of the scene: start it closed
+  const phone =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(max-width: 768px)').matches
+  info.style.display = phone ? 'none' : 'inline-block'
   setPauseButtonState(ctx.interLayerEdgesRenderPauseFlag)
-  setControlsToggleState(true)
+  setControlsToggleState(!phone)
 
   document
     .getElementById('recenterButton')!
@@ -367,24 +539,30 @@ function attachNavControls(): void {
   let tSeen = 0
   for (const el of info.querySelectorAll<HTMLElement>('[data-nav]')) {
     const name = el.dataset.nav!
-    if (name === 'expandLayers')
-      el.addEventListener('click', () => spreadLayers(1))
-    else if (name === 'collapseLayers')
-      el.addEventListener('click', () => spreadLayers(-1))
-    else if (name === 'expandNodes')
-      el.addEventListener('click', () => spreadNodes(1.1))
-    else if (name === 'collapseNodes')
-      el.addEventListener('click', () => spreadNodes(0.9))
+    let press: () => void
+    if (name === 'expandLayers') press = () => spreadLayers(1)
+    else if (name === 'collapseLayers') press = () => spreadLayers(-1)
+    else if (name === 'expandNodes') press = () => spreadNodes(1.1)
+    else if (name === 'collapseNodes') press = () => spreadNodes(0.9)
     else {
       const isT = name.endsWith('_T')
       const group = isT
         ? 2 + Math.floor(tSeen++ / 6)
         : Math.floor(plainSeen++ / 6)
-      el.addEventListener('mousedown', () => groups[group](name))
-      el.addEventListener('mouseup', stopRepeat)
-      el.addEventListener('mousemove', stopRepeat)
+      press = () => groups[group](name)
     }
+    // pointer events: mouse, pen and touch alike; the step runs on press
+    el.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return
+      e.preventDefault() // no text selection or focus jump on fast clicks
+      press()
+    })
+    el.addEventListener('pointerleave', stopRepeat)
   }
+  // released anywhere (or the window loses the pointer): stop
+  window.addEventListener('pointerup', stopRepeat)
+  window.addEventListener('pointercancel', stopRepeat)
+  window.addEventListener('blur', stopRepeat)
 
   // Live-scale on input; one undo entry per drag, finalized on 'change'.
   // `sync` re-applies the restored scale to the slider + its value label on
@@ -454,4 +632,19 @@ function attachNavControls(): void {
       )
     })
   }
+  const spread = document.getElementById(
+    'networkSpreadSlider'
+  ) as HTMLInputElement
+  spread.addEventListener('input', () => spreadNetwork(Number(spread.value)))
+  spread.addEventListener('change', commitSpread)
+  // anything else that moves nodes (or a new network) starts a new 1×
+  bus.on('history:changed', () => {
+    if (!spreadCommitting) resetSpread()
+  })
+  for (const event of [
+    'network:loaded',
+    'layout:applied',
+    'mode:changed',
+  ] as const)
+    bus.on(event, resetSpread)
 }

@@ -4,10 +4,11 @@
 // color-picker DOM (Phase 13 UI), DragControls + held-key/slider
 // rotate/move/scale intervals (canvas_controls.ts).
 
-import type { MeshBasicMaterial } from 'three'
+import { bus } from '../bus'
 import { store } from '../store'
 import { ctx, SELECTED_LAYER_DEFAULT_COLOR } from '../three'
 import { LAYER_DEFAULT_COLOR } from '../three/constants'
+import { VOLUME_CONTAINERS } from '../three/Layer'
 import type { ColorPrioritySource } from '../three'
 import { findIndexByUuid } from '../utils'
 import { decideNodeLabelFlags } from './node'
@@ -15,9 +16,17 @@ import { raycaster, setRaycaster } from './screen'
 
 // Spread layers evenly along x (v2: predefined layouts, upload/import,
 // canvas controls; direction -1 stacks them back).
-export function initialSpreadLayers(direction = 1): void {
+// Side by side across the window — wider apart when 3D volumes (cubes,
+// spheres, clouds) would otherwise overlap. @return the spacing used
+export function initialSpreadLayers(direction = 1): number {
   const n = ctx.layers.length
-  const spacing = (ctx.xBoundMax * 2) / n
+  const radius = Math.max(
+    0,
+    ...ctx.layers
+      .filter((l) => VOLUME_CONTAINERS.includes(l.container))
+      .map((l) => l.containerRadius())
+  )
+  const spacing = Math.max((ctx.xBoundMax * 2) / n, 2 * radius * 1.15)
   ctx.layers.forEach((layer, i) => {
     const offset =
       n % 2
@@ -25,12 +34,14 @@ export function initialSpreadLayers(direction = 1): void {
         : (i - n / 2) * spacing + spacing / 2
     layer.translateX(direction * offset)
   })
+  return spacing
 }
 
 function updateSelectedLayersStore(): void {
-  store.update({
-    selectedLayers: ctx.layers.filter((l) => l.isSelected).map((l) => l.name),
-  })
+  const names = ctx.layers.filter((l) => l.isSelected).map((l) => l.name)
+  applyLayerCoords() // "Selected" axes follow the selection
+  store.update({ selectedLayers: names })
+  bus.emit('layers:selected', { names })
 }
 
 // @return selected layer indexes
@@ -82,7 +93,7 @@ export function checkHoverOverLayer(event: {
       ctx.hoveredLayerPaintedFlag = true
     }
     const i = findIndexByUuid(planes, intersects[0].object.uuid)
-    ;(ctx.layers[i].plane.material as MeshBasicMaterial).color.set(0xff0000)
+    ctx.layers[i].paintHover('#ff0000') // the floor and its container
     ctx.lastHoveredLayerIndex = i
   } else {
     if (ctx.hoveredLayerPaintedFlag) {
@@ -134,16 +145,51 @@ export function setLayerNodeLabels(index: number, show: boolean): void {
 
 // Handlers (v2 Shiny handlers) =====
 
+// Each layer's coordinate system: all, the selected layers (following the
+// selection), none — or 'chosen', each layer's own Axes tick in Layer
+// selection.
+export type LayerCoordsMode = 'all' | 'selected' | 'none' | 'chosen'
+let coordsMode: LayerCoordsMode = 'none'
+export const layerCoordsMode = (): LayerCoordsMode => coordsMode
+
+export function setLayerCoordsMode(mode: LayerCoordsMode): void {
+  coordsMode = mode
+  applyLayerCoords()
+}
+
+export function applyLayerCoords(): void {
+  if (coordsMode === 'chosen') return
+  for (const layer of ctx.layers)
+    layer.toggleCoords(
+      coordsMode === 'all' || (coordsMode === 'selected' && layer.isSelected)
+    )
+}
+
+export function setLayerCoords(index: number, show: boolean): void {
+  coordsMode = 'chosen'
+  ctx.layers[index]?.toggleCoords(show)
+}
+
 export function showLayerCoords(show: boolean): void {
-  for (const layer of ctx.layers) layer.toggleCoords(show)
+  setLayerCoordsMode(show ? 'all' : 'none')
+}
+
+export function setLayerAxesOpacity(opacity: number): void {
+  for (const layer of ctx.layers) layer.setAxesOpacity(opacity)
 }
 
 export function setFloorOpacity(opacity: number): void {
   for (const layer of ctx.layers) layer.setOpacity(opacity)
 }
 
-export function showWireFrames(flag: boolean): void {
-  for (const layer of ctx.layers) layer.toggleWireframe(flag)
+export function showFloors(flag: boolean): void {
+  for (const layer of ctx.layers) layer.toggleFloor(flag)
+}
+
+// A single-layer network (e.g. a 2-column edgelist) reads better without its
+// floor; multilayer networks keep them. Called after every network build.
+export function applyDefaultFloorVisibility(): void {
+  showFloors(ctx.layers.length !== 1)
 }
 
 export function setLayerColorPriority(source: ColorPrioritySource): void {

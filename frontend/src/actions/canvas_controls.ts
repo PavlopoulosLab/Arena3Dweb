@@ -6,7 +6,7 @@
 
 import * as THREE from 'three'
 import { bus } from '../bus'
-import { ctx } from '../three'
+import { clampScale, ctx } from '../three'
 import { registerAnimateHook } from './screen'
 import { history } from '../commands/base'
 import {
@@ -18,6 +18,7 @@ import { redrawIntraLayerEdges, unselectAllEdges } from './edge'
 import {
   checkHoverOverLayer,
   getSelectedLayers,
+  repaintLayers,
   performDoubleClickLayerSelection,
 } from './layer'
 import {
@@ -25,6 +26,7 @@ import {
   decideNodeLabelFlags,
   getSelectedNodes,
   performDoubleClickNodeSelection,
+  pickNode,
   repaintNode,
   unselectAllNodes,
   updateSelectedNodesStore,
@@ -33,15 +35,81 @@ import {
   removeContextMenu,
   replaceContextMenuOverNode,
 } from './right_click_menu'
+import { lastPointerWasTouch, registerTouchControls } from './touch_controls'
+import { fitView } from './search'
 
-// v2 globals: lasso anchor (shift+click) and the lasso rectangle line.
-// Node indices the current lasso rectangle covers. Tracked explicitly so
+// v2 globals: lasso anchor (shift+click) and the selection outline.
+// Node indices the current selection outline covers. Tracked explicitly so
 // selection doesn't rely on the opacity-0.5 sentinel, which hover also sets
 // (a node hovered at mouse-up would otherwise be selected too).
 const lassoHits = new Set<number>()
 let shiftX: number | null = null
 let shiftY: number | null = null
 let lasso: THREE.Line | null = null
+
+// Shift + drag selects an area: a rectangle (v2) or a freehand lasso, as
+// chosen in the Navigation Controls; the choice is remembered in the browser.
+export type SelectShape = 'rectangle' | 'lasso'
+const SHAPE_KEY = 'arena3d.selectShape'
+let selectShape: SelectShape = (() => {
+  try {
+    return localStorage.getItem(SHAPE_KEY) === 'lasso' ? 'lasso' : 'rectangle'
+  } catch {
+    return 'rectangle'
+  }
+})()
+export const getSelectShape = (): SelectShape => selectShape
+export function setSelectShape(shape: SelectShape): void {
+  selectShape = shape
+  try {
+    localStorage.setItem(SHAPE_KEY, shape)
+  } catch {
+    /* private mode: the choice lasts for this visit */
+  }
+}
+// What the area does to the selection: replaces it, adds to it (v2), or takes
+// its nodes out of it — remembered too. Alt / Option held when the mouse is
+// released takes them out whatever the choice.
+export type SelectCombine = 'new' | 'add' | 'remove'
+const COMBINE_KEY = 'arena3d.selectCombine'
+let selectCombine: SelectCombine = (() => {
+  try {
+    const v = localStorage.getItem(COMBINE_KEY)
+    return v === 'new' || v === 'remove' ? v : 'add'
+  } catch {
+    return 'add'
+  }
+})()
+export const getSelectCombine = (): SelectCombine => selectCombine
+export function setSelectCombine(combine: SelectCombine): void {
+  selectCombine = combine
+  try {
+    localStorage.setItem(COMBINE_KEY, combine)
+  } catch {
+    /* private mode: the choice lasts for this visit */
+  }
+}
+// the freehand lasso's points (scene x, y), from the press onwards
+let lassoPath: [number, number][] = []
+// above this many node × point tests, the lasso selects on release only, so
+// drawing stays smooth on big networks
+const LIVE_LASSO_WORK = 2_000_000
+
+// Ray casting: is (x, y) inside the polygon?
+export function pointInPolygon(
+  x: number,
+  y: number,
+  polygon: readonly (readonly [number, number])[]
+): boolean {
+  let inside = false
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [xi, yi] = polygon[i]
+    const [xj, yj] = polygon[j]
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
+      inside = !inside
+  }
+  return inside
+}
 
 type CanvasMouseEvent = MouseEvent & { layerX: number; layerY: number }
 
@@ -51,7 +119,7 @@ type CanvasMouseEvent = MouseEvent & { layerX: number; layerY: number }
 let dragBefore: TransformSnapshot | null = null
 let transformDragged = false
 
-// Smooth wheel zoom: the wheel sets a target scale (same 0.2–2 bounds as
+// Smooth wheel zoom: the wheel sets a target scale (same bounds as
 // Scene.zoom) and easeZoomStep lerps toward it each frame. Users with
 // prefers-reduced-motion get the old instant zoom.
 let zoomTarget: number | null = null
@@ -89,7 +157,7 @@ export function sceneZoom(event: WheelEvent): void {
   }
   const current = zoomTarget ?? ctx.scene.getScale()
   const factor = event.deltaY < 0 ? 1.1 : 0.9
-  zoomTarget = Math.min(2, Math.max(0.2, current * factor))
+  zoomTarget = clampScale(current * factor)
 }
 
 export function easeZoomStep(): void {
@@ -191,7 +259,12 @@ export function clickDrag(event: CanvasMouseEvent): void {
         translateNodesWithHeldKey(event)
         transformDragged = true
       } else if (ctx.scene.axisPressed !== '') {
-        rotateLayersWithHeldKey(event)
+        if (ctx.networkMode === 'single') rotateSceneWithHeldKey(event)
+        else rotateLayersWithHeldKey(event)
+        transformDragged = true
+      } else if (ctx.networkMode === 'single') {
+        // one graph, no layers to drag: the left button turns it
+        ctx.scene.orbitSphereWithMouse(x, y)
         transformDragged = true
       } else if (
         ctx.lastHoveredLayerIndex === null &&
@@ -203,7 +276,8 @@ export function clickDrag(event: CanvasMouseEvent): void {
     } else if (ctx.scene.middleClickPressed) {
       ctx.scene.dragging = true
       event.preventDefault()
-      ctx.scene.orbitSphereWithMouse(x, y)
+      if (ctx.networkMode === 'single') ctx.scene.translatePanWithMouse(x, y)
+      else ctx.scene.orbitSphereWithMouse(x, y)
       transformDragged = true
     }
 
@@ -223,7 +297,15 @@ export function processPendingHover(): void {
   if (!pendingHover || !ctx.scene?.exists()) return
   const event = pendingHover
   pendingHover = null
-  if (!checkHoverOverNode(event)) checkHoverOverLayer(event)
+  if (checkHoverOverNode(event)) return
+  if (ctx.networkMode === 'single') {
+    // no floors to hover or drag in single-network mode
+    if (ctx.hoveredLayerPaintedFlag) {
+      repaintLayers()
+      ctx.hoveredLayerPaintedFlag = false
+    }
+    ctx.lastHoveredLayerIndex = null
+  } else checkHoverOverLayer(event)
 }
 
 export function clickUp(event: MouseEvent): void {
@@ -244,13 +326,20 @@ export function clickUp(event: MouseEvent): void {
     // toward it — so the options were never reachable.
     if (event.type === 'mouseup') removeContextMenu() // v2 removed the right-click options list here
     if (lasso) {
-      // select exactly the nodes the lasso rectangle covered
+      // a big network's freehand lasso is tested once, now
+      if (selectShape === 'lasso') lassoHitTest(lassoPath)
+      // the nodes the outline covered: the selection, added, or taken out
+      const combine = event.altKey ? 'remove' : selectCombine
       ctx.nodeObjects.forEach((node, i) => {
-        if (lassoHits.has(i)) {
-          node.setOpacity(1)
-          node.isSelected = true
-          repaintNode(i)
-        }
+        const hit = lassoHits.has(i)
+        if (hit) node.setOpacity(1)
+        const selected =
+          combine === 'remove'
+            ? node.isSelected && !hit
+            : hit || (combine === 'add' && node.isSelected)
+        if (selected === node.isSelected) return
+        node.isSelected = selected
+        repaintNode(i)
       })
       decideNodeLabelFlags()
       updateSelectedNodesStore()
@@ -259,6 +348,7 @@ export function clickUp(event: MouseEvent): void {
       lasso = null
       lassoHits.clear()
     }
+    lassoPath = []
     shiftX = null
     shiftY = null
   } else if (event.button === 1) ctx.scene.middleClickPressed = false
@@ -267,12 +357,24 @@ export function clickUp(event: MouseEvent): void {
 // double click: select node -> select layer -> unselect everything
 export function dblClick(event: CanvasMouseEvent): void {
   if (!ctx.scene?.exists()) return
+  // a browser's own double-tap dblclick: touch_controls already sent ours
+  if (event.isTrusted && lastPointerWasTouch()) return
+  // Alt (Option) + double-click: Edit → Attributes' inspector on the node
+  if (event.altKey) {
+    const i = pickNode(event)
+    if (i !== -1)
+      return bus.emit('attributes:inspect', { kind: 'node', index: i })
+  }
   if (performDoubleClickNodeSelection(event)) return
   if (ctx.lastHoveredLayerIndex !== null) performDoubleClickLayerSelection()
   else {
+    // the background: clear the selection and bring the whole network back
+    // into the window (the way out of a deep zoom)
     unselectAllNodes()
     unselectAllEdges()
     redrawIntraLayerEdges()
+    resetZoomTarget() // a wheel zoom still easing would pull the view back
+    fitView()
   }
 }
 
@@ -313,21 +415,68 @@ export function rotateLayersWithHeldKey(event: {
   ctx.renderInterLayerEdgesFlag = true
 }
 
-// v2 node.js lassoSelectNodes — shift + left-drag rectangle select.
+// Single-network mode: z/x/c + drag turns the whole network about that axis
+// (there are no layers to rotate).
+export function rotateSceneWithHeldKey(event: {
+  screenX: number
+  screenY: number
+}): void {
+  const rads =
+    event.screenX - event.screenY >= ctx.mousePreviousX - ctx.mousePreviousY
+      ? 0.05
+      : -0.05
+  const axis = ctx.scene!.axisPressed
+  if (axis === 'z') ctx.scene!.rotateZ(rads)
+  else if (axis === 'x') ctx.scene!.rotateX(rads)
+  else if (axis === 'c') ctx.scene!.rotateY(rads)
+  ctx.renderInterLayerEdgesFlag = true
+  ctx.renderLayerLabelsFlag = true
+  ctx.renderNodeLabelsFlag = true
+}
+
+// v2 node.js lassoSelectNodes — shift + left-drag area select: a rectangle
+// from the press to the pointer, or a freehand lasso along the pointer's path.
 export function lassoSelectNodes(x: number, y: number): void {
   if (shiftX === null || shiftY === null) return
-  const minX = Math.min(shiftX, x)
-  const maxX = Math.max(shiftX, x)
-  const minY = Math.min(shiftY, y)
-  const maxY = Math.max(shiftY, y)
+  if (selectShape === 'rectangle') {
+    const outline: [number, number][] = [
+      [shiftX, shiftY],
+      [x, shiftY],
+      [x, y],
+      [shiftX, y],
+    ]
+    drawOutline(outline)
+    lassoHitTest(outline)
+    return
+  }
+  if (lassoPath.length === 0) lassoPath.push([shiftX, shiftY])
+  const [lx, ly] = lassoPath[lassoPath.length - 1]
+  if (Math.hypot(x - lx, y - ly) >= 3) lassoPath.push([x, y])
+  drawOutline(lassoPath)
+  if (ctx.nodeObjects.length * lassoPath.length <= LIVE_LASSO_WORK)
+    lassoHitTest(lassoPath)
+}
 
-  createLassoGeometry(x, y)
-
+// The nodes inside the outline: half-faded as feedback, kept in lassoHits
+function lassoHitTest(outline: [number, number][]): void {
   lassoHits.clear()
+  if (outline.length < 3) {
+    ctx.nodeObjects.forEach((node) => node.setOpacity(1))
+    return
+  }
+  const xs = outline.map(([px]) => px)
+  const ys = outline.map(([, py]) => py)
+  const [minX, maxX] = [Math.min(...xs), Math.max(...xs)]
+  const [minY, maxY] = [Math.min(...ys), Math.max(...ys)]
   ctx.nodeObjects.forEach((node, i) => {
-    const nodeX = node.getWorldPosition('x')
-    const nodeY = node.getWorldPosition('y')
-    const inside = nodeX < maxX && nodeX > minX && nodeY < maxY && nodeY > minY
+    const nx = node.getWorldPosition('x')
+    const ny = node.getWorldPosition('y')
+    const inside =
+      nx > minX &&
+      nx < maxX &&
+      ny > minY &&
+      ny < maxY &&
+      pointInPolygon(nx, ny, outline)
     node.setOpacity(inside ? 0.5 : 1) // visual feedback only
     if (inside) lassoHits.add(i)
   })
@@ -335,23 +484,47 @@ export function lassoSelectNodes(x: number, y: number): void {
 
 const lassoMaterial = new THREE.LineBasicMaterial({ color: '#eef1b6' })
 
-function createLassoGeometry(x: number, y: number): void {
+// The outline, closed back to its first point
+function drawOutline(outline: [number, number][]): void {
   if (lasso) {
     ctx.scene!.remove(lasso)
     lasso.geometry.dispose() // rebuilt every pointer move — don't accumulate
   }
-  const points = [
-    new THREE.Vector3(shiftX!, shiftY!, 0),
-    new THREE.Vector3(x, shiftY!, 0),
-    new THREE.Vector3(x, y, 0),
-    new THREE.Vector3(shiftX!, y, 0),
-    new THREE.Vector3(shiftX!, shiftY!, 0),
-  ]
+  const points = [...outline, outline[0]].map(
+    ([px, py]) => new THREE.Vector3(px, py, 0)
+  )
   lasso = new THREE.Line(
     new THREE.BufferGeometry().setFromPoints(points),
     lassoMaterial
   )
   ctx.scene!.add(lasso)
+}
+
+// Let go of whatever the mouse left half done — a release the canvas never
+// saw (outside the window, over a dialog) leaves a drag, a held axis key or
+// an area outline behind (Navigation Controls → Redraw)
+export function cancelPointerState(): void {
+  if (lasso) {
+    ctx.scene?.remove(lasso)
+    lasso.geometry.dispose()
+    lasso = null
+  }
+  lassoHits.clear()
+  lassoPath = []
+  shiftX = null
+  shiftY = null
+  dragBefore = null
+  transformDragged = false
+  pendingHover = null
+  if (ctx.scene) {
+    ctx.scene.dragging = false
+    ctx.scene.leftClickPressed = false
+    ctx.scene.middleClickPressed = false
+    ctx.scene.axisPressed = ''
+  }
+  ctx.lastHoveredNodeIndex = null
+  ctx.lastHoveredLayerIndex = null
+  for (const node of ctx.nodeObjects) node.setOpacity(1) // area/hover feedback
 }
 
 // Called once from main.ts, after the canvas is mounted.
@@ -374,4 +547,5 @@ export function registerCanvasControls(): void {
     'contextmenu',
     replaceContextMenuOverNode as unknown as EventListener
   )
+  registerTouchControls(canvas) // phones/tablets: orbit, pinch, taps
 }

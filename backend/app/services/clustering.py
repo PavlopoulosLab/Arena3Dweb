@@ -6,6 +6,7 @@ detect communities, lay the community super-nodes out with the global algorithm
 local algorithm, then translate members into their super-node's position.
 """
 
+import random
 from collections.abc import Callable
 
 import igraph as ig
@@ -26,6 +27,8 @@ CLUSTERING: dict[str, Callable[[ig.Graph], ig.VertexClustering]] = {
     "Walktrap": lambda gr: gr.community_walktrap().as_clustering(),
     "Fast Greedy": lambda gr: gr.community_fastgreedy().as_clustering(),
     "Label Propagation": lambda gr: gr.community_label_propagation(),
+    # with the "coupled" layout scope this becomes multiplex Leiden (layouts.py)
+    "Leiden": lambda gr: gr.community_leiden(objective_function="modularity"),
 }
 
 
@@ -39,6 +42,7 @@ def clustered_layout(
     global_layout: Callable[[ig.Graph], ig.Layout],
     local_layout: Callable[[ig.Graph], ig.Layout],
     is_kamada_kawai: bool,
+    membership_by_name: dict[str, int] | None = None,
 ) -> tuple[dict[str, tuple[float, float]], dict[str, int]]:
     """Return ({name: (y, z)}, {name: cluster_id}) for one subgraph.
 
@@ -48,7 +52,10 @@ def clustered_layout(
         raise ClusteringError(f"Unknown clustering algorithm: {cluster_algo}")
 
     names = graph.vs["name"]
-    membership = CLUSTERING[cluster_algo](graph).membership
+    if membership_by_name is not None:  # precomputed (multiplex Leiden)
+        membership = [membership_by_name[n] for n in names]
+    else:
+        membership = CLUSTERING[cluster_algo](graph).membership
     groups: dict[int, list[str]] = {}
     for name, cid in zip(names, membership, strict=True):
         groups.setdefault(cid, []).append(name)
@@ -146,3 +153,12 @@ def _local_group_coords(
     coords = local_layout(lg)
     # iterate real members only — this naturally drops the virtual hub (index n)
     return {members[i]: (float(coords[i][0]), float(coords[i][1])) for i in range(n)}
+
+
+def membership(graph: ig.Graph, algorithm: str, seed: int) -> dict[str, int]:
+    """Community id per vertex name for one graph."""
+    if algorithm not in CLUSTERING:
+        raise ClusteringError(f"Unknown clustering algorithm: {algorithm}")
+    random.seed(seed)
+    clustering = CLUSTERING[algorithm](graph)
+    return {name: int(c) for name, c in zip(graph.vs["name"], clustering.membership, strict=True)}

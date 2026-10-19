@@ -26,7 +26,7 @@ services:
     environment:
       # Public URL of this deployment (no sub-path, root of the domain).
       # Used by /api/external to build absolute handoff links.
-      - ARENA_PUBLIC_URL=${ARENA_PUBLIC_URL:-https://arena3d.org}
+      - ARENA_PUBLIC_URL=${ARENA_PUBLIC_URL:-https://www.arena3d.org}
       # Resource-limit DoS guards — same defaults as backend/app/config.py,
       # explicit here so they're tunable per-deployment without a rebuild.
       - ARENA_MAX_EDGES=${ARENA_MAX_EDGES:-10000}

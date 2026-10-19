@@ -1,0 +1,272 @@
+Node	Layer	Color	Size	Description
+BOS (1)	Embedding	#ffd92f	1.1	Token 'BOS' at position 1: token embedding plus position embedding.
+Arena (2)	Embedding	#ffd92f	1.1	Token 'Arena' at position 2: token embedding plus position embedding.
+draws (3)	Embedding	#ffd92f	1.1	Token 'draws' at position 3: token embedding plus position embedding.
+networks (4)	Embedding	#ffd92f	1.1	Token 'networks' at position 4: token embedding plus position embedding.
+in (5)	Embedding	#ffd92f	1.1	Token 'in' at position 5: token embedding plus position embedding.
+3D (6)	Embedding	#ffd92f	1.1	Token '3D' at position 6: token embedding plus position embedding.
+. (7)	Embedding	#ffd92f	1.1	Token '.' at position 7: token embedding plus position embedding.
+Arena (8)	Embedding	#ffd92f	1.1	Token 'Arena' at position 8: token embedding plus position embedding.
+draws (9)	Embedding	#ffd92f	1.1	Token 'draws' at position 9: token embedding plus position embedding.
+H1 key · BOS (1)	Block 1 · Attention	#f08182	0.7	Block 1, head 1 (previous token): key and value of BOS (1).
+H1 key · Arena (2)	Block 1 · Attention	#f08182	0.7	Block 1, head 1 (previous token): key and value of Arena (2).
+H1 key · draws (3)	Block 1 · Attention	#f08182	0.7	Block 1, head 1 (previous token): key and value of draws (3).
+H1 key · networks (4)	Block 1 · Attention	#f08182	0.7	Block 1, head 1 (previous token): key and value of networks (4).
+H1 key · in (5)	Block 1 · Attention	#f08182	0.7	Block 1, head 1 (previous token): key and value of in (5).
+H1 key · 3D (6)	Block 1 · Attention	#f08182	0.7	Block 1, head 1 (previous token): key and value of 3D (6).
+H1 key · . (7)	Block 1 · Attention	#f08182	0.7	Block 1, head 1 (previous token): key and value of . (7).
+H1 key · Arena (8)	Block 1 · Attention	#f08182	0.7	Block 1, head 1 (previous token): key and value of Arena (8).
+H1 key · draws (9)	Block 1 · Attention	#f08182	0.7	Block 1, head 1 (previous token): key and value of draws (9).
+H1 query · BOS (1)	Block 1 · Attention	#e41a1c	0.85	Block 1, head 1 (previous token): query of BOS (1), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · Arena (2)	Block 1 · Attention	#e41a1c	0.85	Block 1, head 1 (previous token): query of Arena (2), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · draws (3)	Block 1 · Attention	#e41a1c	0.85	Block 1, head 1 (previous token): query of draws (3), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · networks (4)	Block 1 · Attention	#e41a1c	0.85	Block 1, head 1 (previous token): query of networks (4), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · in (5)	Block 1 · Attention	#e41a1c	0.85	Block 1, head 1 (previous token): query of in (5), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · 3D (6)	Block 1 · Attention	#e41a1c	0.85	Block 1, head 1 (previous token): query of 3D (6), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · . (7)	Block 1 · Attention	#e41a1c	0.85	Block 1, head 1 (previous token): query of . (7), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · Arena (8)	Block 1 · Attention	#e41a1c	0.85	Block 1, head 1 (previous token): query of Arena (8), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · draws (9)	Block 1 · Attention	#e41a1c	0.85	Block 1, head 1 (previous token): query of draws (9), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 key · BOS (1)	Block 1 · Attention	#ffb973	0.7	Block 1, head 2 (attention sink (BOS)): key and value of BOS (1).
+H2 key · Arena (2)	Block 1 · Attention	#ffb973	0.7	Block 1, head 2 (attention sink (BOS)): key and value of Arena (2).
+H2 key · draws (3)	Block 1 · Attention	#ffb973	0.7	Block 1, head 2 (attention sink (BOS)): key and value of draws (3).
+H2 key · networks (4)	Block 1 · Attention	#ffb973	0.7	Block 1, head 2 (attention sink (BOS)): key and value of networks (4).
+H2 key · in (5)	Block 1 · Attention	#ffb973	0.7	Block 1, head 2 (attention sink (BOS)): key and value of in (5).
+H2 key · 3D (6)	Block 1 · Attention	#ffb973	0.7	Block 1, head 2 (attention sink (BOS)): key and value of 3D (6).
+H2 key · . (7)	Block 1 · Attention	#ffb973	0.7	Block 1, head 2 (attention sink (BOS)): key and value of . (7).
+H2 key · Arena (8)	Block 1 · Attention	#ffb973	0.7	Block 1, head 2 (attention sink (BOS)): key and value of Arena (8).
+H2 key · draws (9)	Block 1 · Attention	#ffb973	0.7	Block 1, head 2 (attention sink (BOS)): key and value of draws (9).
+H2 query · BOS (1)	Block 1 · Attention	#ff7f00	0.85	Block 1, head 2 (attention sink (BOS)): query of BOS (1), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · Arena (2)	Block 1 · Attention	#ff7f00	0.85	Block 1, head 2 (attention sink (BOS)): query of Arena (2), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · draws (3)	Block 1 · Attention	#ff7f00	0.85	Block 1, head 2 (attention sink (BOS)): query of draws (3), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · networks (4)	Block 1 · Attention	#ff7f00	0.85	Block 1, head 2 (attention sink (BOS)): query of networks (4), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · in (5)	Block 1 · Attention	#ff7f00	0.85	Block 1, head 2 (attention sink (BOS)): query of in (5), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · 3D (6)	Block 1 · Attention	#ff7f00	0.85	Block 1, head 2 (attention sink (BOS)): query of 3D (6), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · . (7)	Block 1 · Attention	#ff7f00	0.85	Block 1, head 2 (attention sink (BOS)): query of . (7), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · Arena (8)	Block 1 · Attention	#ff7f00	0.85	Block 1, head 2 (attention sink (BOS)): query of Arena (8), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · draws (9)	Block 1 · Attention	#ff7f00	0.85	Block 1, head 2 (attention sink (BOS)): query of draws (9), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 key · BOS (1)	Block 1 · Attention	#9dd39b	0.7	Block 1, head 3 (local window): key and value of BOS (1).
+H3 key · Arena (2)	Block 1 · Attention	#9dd39b	0.7	Block 1, head 3 (local window): key and value of Arena (2).
+H3 key · draws (3)	Block 1 · Attention	#9dd39b	0.7	Block 1, head 3 (local window): key and value of draws (3).
+H3 key · networks (4)	Block 1 · Attention	#9dd39b	0.7	Block 1, head 3 (local window): key and value of networks (4).
+H3 key · in (5)	Block 1 · Attention	#9dd39b	0.7	Block 1, head 3 (local window): key and value of in (5).
+H3 key · 3D (6)	Block 1 · Attention	#9dd39b	0.7	Block 1, head 3 (local window): key and value of 3D (6).
+H3 key · . (7)	Block 1 · Attention	#9dd39b	0.7	Block 1, head 3 (local window): key and value of . (7).
+H3 key · Arena (8)	Block 1 · Attention	#9dd39b	0.7	Block 1, head 3 (local window): key and value of Arena (8).
+H3 key · draws (9)	Block 1 · Attention	#9dd39b	0.7	Block 1, head 3 (local window): key and value of draws (9).
+H3 query · BOS (1)	Block 1 · Attention	#4daf4a	0.85	Block 1, head 3 (local window): query of BOS (1), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · Arena (2)	Block 1 · Attention	#4daf4a	0.85	Block 1, head 3 (local window): query of Arena (2), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · draws (3)	Block 1 · Attention	#4daf4a	0.85	Block 1, head 3 (local window): query of draws (3), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · networks (4)	Block 1 · Attention	#4daf4a	0.85	Block 1, head 3 (local window): query of networks (4), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · in (5)	Block 1 · Attention	#4daf4a	0.85	Block 1, head 3 (local window): query of in (5), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · 3D (6)	Block 1 · Attention	#4daf4a	0.85	Block 1, head 3 (local window): query of 3D (6), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · . (7)	Block 1 · Attention	#4daf4a	0.85	Block 1, head 3 (local window): query of . (7), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · Arena (8)	Block 1 · Attention	#4daf4a	0.85	Block 1, head 3 (local window): query of Arena (8), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · draws (9)	Block 1 · Attention	#4daf4a	0.85	Block 1, head 3 (local window): query of draws (9), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 key · BOS (1)	Block 1 · Attention	#91b8d8	0.7	Block 1, head 4 (broad (uniform)): key and value of BOS (1).
+H4 key · Arena (2)	Block 1 · Attention	#91b8d8	0.7	Block 1, head 4 (broad (uniform)): key and value of Arena (2).
+H4 key · draws (3)	Block 1 · Attention	#91b8d8	0.7	Block 1, head 4 (broad (uniform)): key and value of draws (3).
+H4 key · networks (4)	Block 1 · Attention	#91b8d8	0.7	Block 1, head 4 (broad (uniform)): key and value of networks (4).
+H4 key · in (5)	Block 1 · Attention	#91b8d8	0.7	Block 1, head 4 (broad (uniform)): key and value of in (5).
+H4 key · 3D (6)	Block 1 · Attention	#91b8d8	0.7	Block 1, head 4 (broad (uniform)): key and value of 3D (6).
+H4 key · . (7)	Block 1 · Attention	#91b8d8	0.7	Block 1, head 4 (broad (uniform)): key and value of . (7).
+H4 key · Arena (8)	Block 1 · Attention	#91b8d8	0.7	Block 1, head 4 (broad (uniform)): key and value of Arena (8).
+H4 key · draws (9)	Block 1 · Attention	#91b8d8	0.7	Block 1, head 4 (broad (uniform)): key and value of draws (9).
+H4 query · BOS (1)	Block 1 · Attention	#377eb8	0.85	Block 1, head 4 (broad (uniform)): query of BOS (1), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · Arena (2)	Block 1 · Attention	#377eb8	0.85	Block 1, head 4 (broad (uniform)): query of Arena (2), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · draws (3)	Block 1 · Attention	#377eb8	0.85	Block 1, head 4 (broad (uniform)): query of draws (3), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · networks (4)	Block 1 · Attention	#377eb8	0.85	Block 1, head 4 (broad (uniform)): query of networks (4), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · in (5)	Block 1 · Attention	#377eb8	0.85	Block 1, head 4 (broad (uniform)): query of in (5), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · 3D (6)	Block 1 · Attention	#377eb8	0.85	Block 1, head 4 (broad (uniform)): query of 3D (6), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · . (7)	Block 1 · Attention	#377eb8	0.85	Block 1, head 4 (broad (uniform)): query of . (7), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · Arena (8)	Block 1 · Attention	#377eb8	0.85	Block 1, head 4 (broad (uniform)): query of Arena (8), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · draws (9)	Block 1 · Attention	#377eb8	0.85	Block 1, head 4 (broad (uniform)): query of draws (9), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+BOS (1)	Block 1 · Add & Norm 1	#d9d9d9	1	BOS (1): residual stream after block 1's attention — the input plus the four heads' output projection, layer-normalised.
+Arena (2)	Block 1 · Add & Norm 1	#d9d9d9	1	Arena (2): residual stream after block 1's attention — the input plus the four heads' output projection, layer-normalised.
+draws (3)	Block 1 · Add & Norm 1	#d9d9d9	1	draws (3): residual stream after block 1's attention — the input plus the four heads' output projection, layer-normalised.
+networks (4)	Block 1 · Add & Norm 1	#d9d9d9	1	networks (4): residual stream after block 1's attention — the input plus the four heads' output projection, layer-normalised.
+in (5)	Block 1 · Add & Norm 1	#d9d9d9	1	in (5): residual stream after block 1's attention — the input plus the four heads' output projection, layer-normalised.
+3D (6)	Block 1 · Add & Norm 1	#d9d9d9	1	3D (6): residual stream after block 1's attention — the input plus the four heads' output projection, layer-normalised.
+. (7)	Block 1 · Add & Norm 1	#d9d9d9	1	. (7): residual stream after block 1's attention — the input plus the four heads' output projection, layer-normalised.
+Arena (8)	Block 1 · Add & Norm 1	#d9d9d9	1	Arena (8): residual stream after block 1's attention — the input plus the four heads' output projection, layer-normalised.
+draws (9)	Block 1 · Add & Norm 1	#d9d9d9	1	draws (9): residual stream after block 1's attention — the input plus the four heads' output projection, layer-normalised.
+n1 · BOS (1)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 1 at BOS (1): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · BOS (1)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 2 at BOS (1): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · BOS (1)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 3 at BOS (1): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · BOS (1)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 4 at BOS (1): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · Arena (2)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 1 at Arena (2): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · Arena (2)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 2 at Arena (2): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · Arena (2)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 3 at Arena (2): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · Arena (2)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 4 at Arena (2): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · draws (3)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 1 at draws (3): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · draws (3)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 2 at draws (3): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · draws (3)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 3 at draws (3): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · draws (3)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 4 at draws (3): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · networks (4)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 1 at networks (4): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · networks (4)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 2 at networks (4): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · networks (4)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 3 at networks (4): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · networks (4)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 4 at networks (4): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · in (5)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 1 at in (5): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · in (5)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 2 at in (5): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · in (5)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 3 at in (5): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · in (5)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 4 at in (5): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · 3D (6)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 1 at 3D (6): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · 3D (6)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 2 at 3D (6): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · 3D (6)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 3 at 3D (6): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · 3D (6)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 4 at 3D (6): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · . (7)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 1 at . (7): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · . (7)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 2 at . (7): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · . (7)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 3 at . (7): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · . (7)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 4 at . (7): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · Arena (8)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 1 at Arena (8): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · Arena (8)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 2 at Arena (8): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · Arena (8)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 3 at Arena (8): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · Arena (8)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 4 at Arena (8): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · draws (9)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 1 at draws (9): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · draws (9)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 2 at draws (9): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · draws (9)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 3 at draws (9): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · draws (9)	Block 1 · MLP	#a6d854	0.75	Block 1 MLP unit 4 at draws (9): the MLP acts on each position alone — tokens only exchange information in attention.
+BOS (1)	Block 1 · Add & Norm 2	#d9d9d9	1	BOS (1): residual stream after block 1's MLP, layer-normalised.
+Arena (2)	Block 1 · Add & Norm 2	#d9d9d9	1	Arena (2): residual stream after block 1's MLP, layer-normalised.
+draws (3)	Block 1 · Add & Norm 2	#d9d9d9	1	draws (3): residual stream after block 1's MLP, layer-normalised.
+networks (4)	Block 1 · Add & Norm 2	#d9d9d9	1	networks (4): residual stream after block 1's MLP, layer-normalised.
+in (5)	Block 1 · Add & Norm 2	#d9d9d9	1	in (5): residual stream after block 1's MLP, layer-normalised.
+3D (6)	Block 1 · Add & Norm 2	#d9d9d9	1	3D (6): residual stream after block 1's MLP, layer-normalised.
+. (7)	Block 1 · Add & Norm 2	#d9d9d9	1	. (7): residual stream after block 1's MLP, layer-normalised.
+Arena (8)	Block 1 · Add & Norm 2	#d9d9d9	1	Arena (8): residual stream after block 1's MLP, layer-normalised.
+draws (9)	Block 1 · Add & Norm 2	#d9d9d9	1	draws (9): residual stream after block 1's MLP, layer-normalised.
+H1 key · BOS (1)	Block 2 · Attention	#f08182	0.7	Block 2, head 1 (induction): key and value of BOS (1).
+H1 key · Arena (2)	Block 2 · Attention	#f08182	0.7	Block 2, head 1 (induction): key and value of Arena (2).
+H1 key · draws (3)	Block 2 · Attention	#f08182	0.7	Block 2, head 1 (induction): key and value of draws (3).
+H1 key · networks (4)	Block 2 · Attention	#f08182	0.7	Block 2, head 1 (induction): key and value of networks (4).
+H1 key · in (5)	Block 2 · Attention	#f08182	0.7	Block 2, head 1 (induction): key and value of in (5).
+H1 key · 3D (6)	Block 2 · Attention	#f08182	0.7	Block 2, head 1 (induction): key and value of 3D (6).
+H1 key · . (7)	Block 2 · Attention	#f08182	0.7	Block 2, head 1 (induction): key and value of . (7).
+H1 key · Arena (8)	Block 2 · Attention	#f08182	0.7	Block 2, head 1 (induction): key and value of Arena (8).
+H1 key · draws (9)	Block 2 · Attention	#f08182	0.7	Block 2, head 1 (induction): key and value of draws (9).
+H1 query · BOS (1)	Block 2 · Attention	#e41a1c	0.85	Block 2, head 1 (induction): query of BOS (1), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · Arena (2)	Block 2 · Attention	#e41a1c	0.85	Block 2, head 1 (induction): query of Arena (2), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · draws (3)	Block 2 · Attention	#e41a1c	0.85	Block 2, head 1 (induction): query of draws (3), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · networks (4)	Block 2 · Attention	#e41a1c	0.85	Block 2, head 1 (induction): query of networks (4), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · in (5)	Block 2 · Attention	#e41a1c	0.85	Block 2, head 1 (induction): query of in (5), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · 3D (6)	Block 2 · Attention	#e41a1c	0.85	Block 2, head 1 (induction): query of 3D (6), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · . (7)	Block 2 · Attention	#e41a1c	0.85	Block 2, head 1 (induction): query of . (7), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · Arena (8)	Block 2 · Attention	#e41a1c	0.85	Block 2, head 1 (induction): query of Arena (8), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H1 query · draws (9)	Block 2 · Attention	#e41a1c	0.85	Block 2, head 1 (induction): query of draws (9), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 key · BOS (1)	Block 2 · Attention	#ffb973	0.7	Block 2, head 2 (duplicate token): key and value of BOS (1).
+H2 key · Arena (2)	Block 2 · Attention	#ffb973	0.7	Block 2, head 2 (duplicate token): key and value of Arena (2).
+H2 key · draws (3)	Block 2 · Attention	#ffb973	0.7	Block 2, head 2 (duplicate token): key and value of draws (3).
+H2 key · networks (4)	Block 2 · Attention	#ffb973	0.7	Block 2, head 2 (duplicate token): key and value of networks (4).
+H2 key · in (5)	Block 2 · Attention	#ffb973	0.7	Block 2, head 2 (duplicate token): key and value of in (5).
+H2 key · 3D (6)	Block 2 · Attention	#ffb973	0.7	Block 2, head 2 (duplicate token): key and value of 3D (6).
+H2 key · . (7)	Block 2 · Attention	#ffb973	0.7	Block 2, head 2 (duplicate token): key and value of . (7).
+H2 key · Arena (8)	Block 2 · Attention	#ffb973	0.7	Block 2, head 2 (duplicate token): key and value of Arena (8).
+H2 key · draws (9)	Block 2 · Attention	#ffb973	0.7	Block 2, head 2 (duplicate token): key and value of draws (9).
+H2 query · BOS (1)	Block 2 · Attention	#ff7f00	0.85	Block 2, head 2 (duplicate token): query of BOS (1), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · Arena (2)	Block 2 · Attention	#ff7f00	0.85	Block 2, head 2 (duplicate token): query of Arena (2), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · draws (3)	Block 2 · Attention	#ff7f00	0.85	Block 2, head 2 (duplicate token): query of draws (3), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · networks (4)	Block 2 · Attention	#ff7f00	0.85	Block 2, head 2 (duplicate token): query of networks (4), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · in (5)	Block 2 · Attention	#ff7f00	0.85	Block 2, head 2 (duplicate token): query of in (5), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · 3D (6)	Block 2 · Attention	#ff7f00	0.85	Block 2, head 2 (duplicate token): query of 3D (6), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · . (7)	Block 2 · Attention	#ff7f00	0.85	Block 2, head 2 (duplicate token): query of . (7), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · Arena (8)	Block 2 · Attention	#ff7f00	0.85	Block 2, head 2 (duplicate token): query of Arena (8), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H2 query · draws (9)	Block 2 · Attention	#ff7f00	0.85	Block 2, head 2 (duplicate token): query of draws (9), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 key · BOS (1)	Block 2 · Attention	#9dd39b	0.7	Block 2, head 3 (punctuation): key and value of BOS (1).
+H3 key · Arena (2)	Block 2 · Attention	#9dd39b	0.7	Block 2, head 3 (punctuation): key and value of Arena (2).
+H3 key · draws (3)	Block 2 · Attention	#9dd39b	0.7	Block 2, head 3 (punctuation): key and value of draws (3).
+H3 key · networks (4)	Block 2 · Attention	#9dd39b	0.7	Block 2, head 3 (punctuation): key and value of networks (4).
+H3 key · in (5)	Block 2 · Attention	#9dd39b	0.7	Block 2, head 3 (punctuation): key and value of in (5).
+H3 key · 3D (6)	Block 2 · Attention	#9dd39b	0.7	Block 2, head 3 (punctuation): key and value of 3D (6).
+H3 key · . (7)	Block 2 · Attention	#9dd39b	0.7	Block 2, head 3 (punctuation): key and value of . (7).
+H3 key · Arena (8)	Block 2 · Attention	#9dd39b	0.7	Block 2, head 3 (punctuation): key and value of Arena (8).
+H3 key · draws (9)	Block 2 · Attention	#9dd39b	0.7	Block 2, head 3 (punctuation): key and value of draws (9).
+H3 query · BOS (1)	Block 2 · Attention	#4daf4a	0.85	Block 2, head 3 (punctuation): query of BOS (1), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · Arena (2)	Block 2 · Attention	#4daf4a	0.85	Block 2, head 3 (punctuation): query of Arena (2), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · draws (3)	Block 2 · Attention	#4daf4a	0.85	Block 2, head 3 (punctuation): query of draws (3), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · networks (4)	Block 2 · Attention	#4daf4a	0.85	Block 2, head 3 (punctuation): query of networks (4), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · in (5)	Block 2 · Attention	#4daf4a	0.85	Block 2, head 3 (punctuation): query of in (5), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · 3D (6)	Block 2 · Attention	#4daf4a	0.85	Block 2, head 3 (punctuation): query of 3D (6), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · . (7)	Block 2 · Attention	#4daf4a	0.85	Block 2, head 3 (punctuation): query of . (7), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · Arena (8)	Block 2 · Attention	#4daf4a	0.85	Block 2, head 3 (punctuation): query of Arena (8), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H3 query · draws (9)	Block 2 · Attention	#4daf4a	0.85	Block 2, head 3 (punctuation): query of draws (9), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 key · BOS (1)	Block 2 · Attention	#91b8d8	0.7	Block 2, head 4 (recency): key and value of BOS (1).
+H4 key · Arena (2)	Block 2 · Attention	#91b8d8	0.7	Block 2, head 4 (recency): key and value of Arena (2).
+H4 key · draws (3)	Block 2 · Attention	#91b8d8	0.7	Block 2, head 4 (recency): key and value of draws (3).
+H4 key · networks (4)	Block 2 · Attention	#91b8d8	0.7	Block 2, head 4 (recency): key and value of networks (4).
+H4 key · in (5)	Block 2 · Attention	#91b8d8	0.7	Block 2, head 4 (recency): key and value of in (5).
+H4 key · 3D (6)	Block 2 · Attention	#91b8d8	0.7	Block 2, head 4 (recency): key and value of 3D (6).
+H4 key · . (7)	Block 2 · Attention	#91b8d8	0.7	Block 2, head 4 (recency): key and value of . (7).
+H4 key · Arena (8)	Block 2 · Attention	#91b8d8	0.7	Block 2, head 4 (recency): key and value of Arena (8).
+H4 key · draws (9)	Block 2 · Attention	#91b8d8	0.7	Block 2, head 4 (recency): key and value of draws (9).
+H4 query · BOS (1)	Block 2 · Attention	#377eb8	0.85	Block 2, head 4 (recency): query of BOS (1), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · Arena (2)	Block 2 · Attention	#377eb8	0.85	Block 2, head 4 (recency): query of Arena (2), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · draws (3)	Block 2 · Attention	#377eb8	0.85	Block 2, head 4 (recency): query of draws (3), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · networks (4)	Block 2 · Attention	#377eb8	0.85	Block 2, head 4 (recency): query of networks (4), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · in (5)	Block 2 · Attention	#377eb8	0.85	Block 2, head 4 (recency): query of in (5), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · 3D (6)	Block 2 · Attention	#377eb8	0.85	Block 2, head 4 (recency): query of 3D (6), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · . (7)	Block 2 · Attention	#377eb8	0.85	Block 2, head 4 (recency): query of . (7), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · Arena (8)	Block 2 · Attention	#377eb8	0.85	Block 2, head 4 (recency): query of Arena (8), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+H4 query · draws (9)	Block 2 · Attention	#377eb8	0.85	Block 2, head 4 (recency): query of draws (9), which may attend only to itself and earlier tokens (causal mask); the links are the attention weights.
+BOS (1)	Block 2 · Add & Norm 1	#d9d9d9	1	BOS (1): residual stream after block 2's attention — the input plus the four heads' output projection, layer-normalised.
+Arena (2)	Block 2 · Add & Norm 1	#d9d9d9	1	Arena (2): residual stream after block 2's attention — the input plus the four heads' output projection, layer-normalised.
+draws (3)	Block 2 · Add & Norm 1	#d9d9d9	1	draws (3): residual stream after block 2's attention — the input plus the four heads' output projection, layer-normalised.
+networks (4)	Block 2 · Add & Norm 1	#d9d9d9	1	networks (4): residual stream after block 2's attention — the input plus the four heads' output projection, layer-normalised.
+in (5)	Block 2 · Add & Norm 1	#d9d9d9	1	in (5): residual stream after block 2's attention — the input plus the four heads' output projection, layer-normalised.
+3D (6)	Block 2 · Add & Norm 1	#d9d9d9	1	3D (6): residual stream after block 2's attention — the input plus the four heads' output projection, layer-normalised.
+. (7)	Block 2 · Add & Norm 1	#d9d9d9	1	. (7): residual stream after block 2's attention — the input plus the four heads' output projection, layer-normalised.
+Arena (8)	Block 2 · Add & Norm 1	#d9d9d9	1	Arena (8): residual stream after block 2's attention — the input plus the four heads' output projection, layer-normalised.
+draws (9)	Block 2 · Add & Norm 1	#d9d9d9	1	draws (9): residual stream after block 2's attention — the input plus the four heads' output projection, layer-normalised.
+n1 · BOS (1)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 1 at BOS (1): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · BOS (1)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 2 at BOS (1): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · BOS (1)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 3 at BOS (1): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · BOS (1)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 4 at BOS (1): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · Arena (2)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 1 at Arena (2): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · Arena (2)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 2 at Arena (2): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · Arena (2)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 3 at Arena (2): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · Arena (2)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 4 at Arena (2): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · draws (3)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 1 at draws (3): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · draws (3)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 2 at draws (3): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · draws (3)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 3 at draws (3): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · draws (3)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 4 at draws (3): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · networks (4)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 1 at networks (4): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · networks (4)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 2 at networks (4): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · networks (4)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 3 at networks (4): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · networks (4)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 4 at networks (4): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · in (5)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 1 at in (5): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · in (5)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 2 at in (5): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · in (5)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 3 at in (5): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · in (5)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 4 at in (5): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · 3D (6)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 1 at 3D (6): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · 3D (6)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 2 at 3D (6): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · 3D (6)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 3 at 3D (6): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · 3D (6)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 4 at 3D (6): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · . (7)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 1 at . (7): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · . (7)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 2 at . (7): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · . (7)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 3 at . (7): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · . (7)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 4 at . (7): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · Arena (8)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 1 at Arena (8): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · Arena (8)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 2 at Arena (8): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · Arena (8)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 3 at Arena (8): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · Arena (8)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 4 at Arena (8): the MLP acts on each position alone — tokens only exchange information in attention.
+n1 · draws (9)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 1 at draws (9): the MLP acts on each position alone — tokens only exchange information in attention.
+n2 · draws (9)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 2 at draws (9): the MLP acts on each position alone — tokens only exchange information in attention.
+n3 · draws (9)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 3 at draws (9): the MLP acts on each position alone — tokens only exchange information in attention.
+n4 · draws (9)	Block 2 · MLP	#a6d854	0.75	Block 2 MLP unit 4 at draws (9): the MLP acts on each position alone — tokens only exchange information in attention.
+BOS (1)	Block 2 · Add & Norm 2	#d9d9d9	1	BOS (1): residual stream after block 2's MLP, layer-normalised.
+Arena (2)	Block 2 · Add & Norm 2	#d9d9d9	1	Arena (2): residual stream after block 2's MLP, layer-normalised.
+draws (3)	Block 2 · Add & Norm 2	#d9d9d9	1	draws (3): residual stream after block 2's MLP, layer-normalised.
+networks (4)	Block 2 · Add & Norm 2	#d9d9d9	1	networks (4): residual stream after block 2's MLP, layer-normalised.
+in (5)	Block 2 · Add & Norm 2	#d9d9d9	1	in (5): residual stream after block 2's MLP, layer-normalised.
+3D (6)	Block 2 · Add & Norm 2	#d9d9d9	1	3D (6): residual stream after block 2's MLP, layer-normalised.
+. (7)	Block 2 · Add & Norm 2	#d9d9d9	1	. (7): residual stream after block 2's MLP, layer-normalised.
+Arena (8)	Block 2 · Add & Norm 2	#d9d9d9	1	Arena (8): residual stream after block 2's MLP, layer-normalised.
+draws (9)	Block 2 · Add & Norm 2	#d9d9d9	1	draws (9): residual stream after block 2's MLP, layer-normalised.
+Arena	Output	#fc8d62	0.6	Next-token logit for 'Arena'. Every position predicts the token after it; the size shows the prediction after the last 'draws'.
+draws	Output	#fc8d62	0.6	Next-token logit for 'draws'. Every position predicts the token after it; the size shows the prediction after the last 'draws'.
+networks	Output	#fc8d62	1.56	Next-token logit for 'networks' — 80% after the last token. Every position predicts the token after it; the size shows the prediction after the last 'draws'.
+graphs	Output	#fc8d62	0.696	Next-token logit for 'graphs' — 8% after the last token. Every position predicts the token after it; the size shows the prediction after the last 'draws'.
+layers	Output	#fc8d62	0.6	Next-token logit for 'layers'. Every position predicts the token after it; the size shows the prediction after the last 'draws'.
+and	Output	#fc8d62	0.6	Next-token logit for 'and'. Every position predicts the token after it; the size shows the prediction after the last 'draws'.
+in	Output	#fc8d62	0.6	Next-token logit for 'in'. Every position predicts the token after it; the size shows the prediction after the last 'draws'.
+3D	Output	#fc8d62	0.6	Next-token logit for '3D'. Every position predicts the token after it; the size shows the prediction after the last 'draws'.
+2D	Output	#fc8d62	0.6	Next-token logit for '2D'. Every position predicts the token after it; the size shows the prediction after the last 'draws'.
+.	Output	#fc8d62	0.6	Next-token logit for '.'. Every position predicts the token after it; the size shows the prediction after the last 'draws'.

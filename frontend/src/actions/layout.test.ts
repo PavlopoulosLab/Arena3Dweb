@@ -4,6 +4,7 @@ import { api } from '../api/client'
 import { history } from '../commands/base'
 import {
   normalizeLayoutPositions,
+  fitToContainers,
   applyLayout,
   applyTopology,
   applyPredefinedLayout,
@@ -45,10 +46,51 @@ describe('normalizeLayoutPositions', () => {
     expect(out['A::L1']).toEqual([0, 0])
   })
 
+  it('maps a 3D layout depth into the same range', () => {
+    const out = normalizeLayoutPositions({
+      'A::L1': [0, 0, -4],
+      'B::L1': [10, 10, 4],
+    })
+    expect(out['A::L1']).toEqual([-50, -50, -50])
+    expect(out['B::L1']).toEqual([50, 50, 50])
+  })
+
   it('multiplies by the node layer scale', () => {
     ctx.layers[0].setScale(2)
     const out = normalizeLayoutPositions({ 'A::L1': [0, 0], 'B::L1': [10, 10] })
     expect(out['B::L1']).toEqual([100, 100]) // 50 * scale 2
+  })
+})
+
+describe('fitToContainers', () => {
+  it('pulls nodes on a disk floor inside its rim, leaves squares alone', () => {
+    ctx.layers[0].setFloorShape('disk') // width 100 -> rim 46
+    const out = fitToContainers({
+      'A::L1': [50, 50],
+      'B::L1': [0, 10],
+      'C::L2': [150, 150],
+    })
+    expect(Math.hypot(...(out['A::L1'] as [number, number]))).toBeCloseTo(46)
+    expect(out['C::L2']).toEqual([150, 150])
+  })
+})
+
+describe('fitToContainers (3D)', () => {
+  it('brings sphere and cube nodes back inside, towards the centre', () => {
+    ctx.layers[0].setContainer('sphere') // width 100 -> inner wall 45
+    ctx.layers[1].setContainer('cube') // width 400 -> inner wall 180
+    const out = fitToContainers({
+      'A::L1': [40, 40, 40],
+      'B::L1': [10, -5, 3], // inside: stays
+      'C::L2': [300, 0, -500],
+    })
+    expect(Math.hypot(...(out['A::L1'] as number[]))).toBeCloseTo(45)
+    out['B::L1'].forEach((v, k) => expect(v).toBeCloseTo([10, -5, 3][k]))
+    // along the same direction to the inset wall
+    const [y, z, x] = out['C::L2'] as number[]
+    expect(Math.max(Math.abs(y), Math.abs(z), Math.abs(x))).toBeCloseTo(180)
+    expect(y / x).toBeCloseTo(300 / -500)
+    expect(z).toBeCloseTo(0)
   })
 })
 

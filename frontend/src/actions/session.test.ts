@@ -196,6 +196,140 @@ describe('collectSession', () => {
     expect(ctx.edgeObjects).toHaveLength(1)
   })
 
+  it('saves the Edit → Style overrides, only when set, and restores them', () => {
+    seed()
+    const [a, b] = ctx.nodeObjects
+    a.setAlpha(0.5)
+    a.setBorder('#ff0000', 2)
+    a.setStretch([1, 2, 1])
+    a.label = 'Hub'
+    a.labelColor = '#00ff00'
+    a.labelSize = 18
+    a.labelLook = {
+      style: 'box',
+      color: '#222222',
+      width: 2,
+      opacity: 0.6,
+      bold: true,
+    }
+    a.labelPosition = 'above'
+    a.labelShown = true
+    ctx.showSelectedNodeLabelsFlag = false
+    ctx.showChosenNodeLabelsFlag = true
+    ctx.chosenLabelsWithSelection = false
+    const e = ctx.edgeObjects[0]
+    e.opacityFactor = 0.3
+    e.lineType = 'dotted'
+    e.arrowColor = '#0000ff'
+    const out = collectSession()
+    expect(out.nodes[0]).toMatchObject({
+      opacity: 0.5,
+      border_color: '#ff0000',
+      border_width: 2,
+      stretch: [1, 2, 1],
+      label: 'Hub',
+      label_color: '#00ff00',
+      label_size: 18,
+      label_style: {
+        style: 'box',
+        color: '#222222',
+        width: 2,
+        opacity: 0.6,
+        bold: true,
+      },
+      label_position: 'above',
+      label_shown: true,
+    })
+    expect(out.nodeLabels).toEqual({ mode: 'chosen', withSelection: false })
+    for (const key of [
+      'opacity',
+      'border_color',
+      'stretch',
+      'label',
+      'label_style',
+      'label_position',
+      'label_shown',
+    ])
+      expect(out.nodes[1]).not.toHaveProperty(key)
+    expect(b.getLabel()).toBe('B')
+    expect(out.edges[0]).toMatchObject({
+      opacity_factor: 0.3,
+      line_type: 'dotted',
+      arrow_color: '#0000ff',
+    })
+
+    resetContext()
+    store.update({ network: null })
+    buildFromSession(out)
+    const [a2, b2] = ctx.nodeObjects
+    expect(a2.alpha).toBe(0.5)
+    expect(a2.outline).not.toBeNull()
+    expect([a2.borderColor, a2.borderWidth]).toEqual(['#ff0000', 2])
+    expect(a2.stretch).toEqual([1, 2, 1])
+    expect([a2.getLabel(), a2.labelColor, a2.labelSize]).toEqual([
+      'Hub',
+      '#00ff00',
+      18,
+    ])
+    expect(a2.labelLook).toEqual(a.labelLook)
+    expect(a2.labelPosition).toBe('above')
+    expect([a2.labelShown, b2.labelShown]).toEqual([true, false])
+    expect(ctx.showChosenNodeLabelsFlag).toBe(true)
+    expect(ctx.chosenLabelsWithSelection).toBe(false)
+    expect([b2.alpha, b2.outline, b2.getLabel()]).toEqual([1, null, 'B'])
+    expect([b2.labelLook, b2.labelPosition]).toEqual([null, 'right'])
+    const e2 = ctx.edgeObjects[0]
+    expect([e2.opacityFactor, e2.lineType, e2.arrowColor]).toEqual([
+      0.3,
+      'dotted',
+      '#0000ff',
+    ])
+  })
+
+  it('saves layer label styles, only when set, and restores them', () => {
+    seed()
+    const [l1, l2] = ctx.layers
+    l1.labelLook = {
+      style: 'shadow',
+      color: '',
+      width: 2,
+      opacity: 0.75,
+      bold: true,
+    }
+    l1.labelFont = 'serif'
+    l1.labelBold = true
+    l1.labelItalic = true
+    l1.labelColor = '#00ff00'
+    l1.labelPosition = 'above'
+    const out = collectSession()
+    expect(out.layers[0]).toMatchObject({
+      label_style: { style: 'shadow', bold: true },
+      label_font: 'serif',
+      label_bold: true,
+      label_italic: true,
+      label_color: '#00ff00',
+      label_position: 'above',
+    })
+    for (const key of ['label_style', 'label_font', 'label_position'])
+      expect(out.layers[1]).not.toHaveProperty(key)
+    expect(l2.labelPosition).toBe('corner')
+    resetContext()
+    store.update({ network: null })
+    buildFromSession(out)
+    const [m1, m2] = ctx.layers
+    expect([m1.labelFont, m1.labelBold, m1.labelItalic]).toEqual([
+      'serif',
+      true,
+      true,
+    ])
+    expect([m1.labelColor, m1.labelPosition, m1.labelLook?.style]).toEqual([
+      '#00ff00',
+      'above',
+      'shadow',
+    ])
+    expect([m2.labelFont, m2.labelColor, m2.labelLook]).toEqual(['', '', null])
+  })
+
   it('emits one edge row per channel', () => {
     ctx.scene = new Scene()
     ctx.channelColors = { c1: '#111', c2: '#222' }

@@ -3,23 +3,40 @@
 // canvas, wires global listeners and starts the render loop.
 
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { registerLoad } from './actions/workspace'
 import 'bootstrap' // data-bs-* tab + collapse behavior for the navbar
 import './style.css'
 
 import { api } from './api/client'
 import { fetchConfig } from './api/config'
 import { loadSession } from './actions/network'
-import { showTab } from './ui/tabs'
+import { askSessionView, showSessionAs } from './ui/import_as'
+import { initMenuAutoClose, showTab } from './ui/tabs'
 import { initHomePanel } from './ui/home'
+import { initDatabasesPanel } from './ui/databases'
+import { initExportPanel } from './ui/export'
+import { initFindPanel } from './ui/find'
+import { initNetworkMode } from './ui/mode'
+import { initLegend } from './ui/legend'
 import { initFilePanel } from './ui/file'
+import { initNetworksMenu } from './ui/networks'
+import { initLayerSelectionPanel } from './ui/layer_selection'
 import { initLayoutsPanel } from './ui/layouts'
 import { initScenePanel } from './ui/scene'
 import { initLayerPanel } from './ui/layer'
 import { initNodePanel } from './ui/node'
 import { initEdgePanel } from './ui/edge'
+import { initStylePanel } from './ui/style'
+import { initAttributesPanel } from './ui/attributes'
+import { initInspector } from './ui/inspector'
+import { initAnalyzePanel } from './ui/analyze'
+import { initClusteringPanel } from './ui/clustering'
+import { initAnnotationPanel } from './ui/annotation_panel'
 import { initFpsPanel } from './ui/fps'
 import { initDataPanel } from './ui/data'
 import { initHelpPanel } from './ui/help'
+import { initApiPanel } from './ui/api'
+import { initSections } from './ui/sections'
 import { initMinimap } from './ui/minimap'
 import { registerDrawerToggle } from './ui/drawer_toggle'
 import { store } from './store'
@@ -31,7 +48,7 @@ import { registerLayerDragControls } from './actions/drag_controls'
 import { registerLabelRendering } from './actions/labels'
 import { registerNavControls } from './actions/nav_controls'
 import { setRenderer, resetScreen, animate } from './actions/screen'
-import { registerThemeButtons, registerThemeListener } from './actions/themes'
+import { registerThemePicker, registerThemeListener } from './actions/themes'
 import { registerGlobalListeners } from './event_listeners'
 
 async function main(): Promise<void> {
@@ -60,19 +77,35 @@ async function main(): Promise<void> {
 
   initHomePanel()
   initFilePanel()
+  initDatabasesPanel()
+  initFindPanel()
+  initExportPanel()
+  initLayerSelectionPanel()
   initLayoutsPanel()
   initScenePanel()
   initLayerPanel()
   initNodePanel()
   initEdgePanel()
+  initStylePanel()
+  initAttributesPanel()
+  initInspector()
+  initAnalyzePanel()
+  initClusteringPanel()
+  initAnnotationPanel()
+  initMenuAutoClose()
+  initNetworksMenu()
   initFpsPanel()
+  initNetworkMode()
+  initLegend()
   initDataPanel()
   initHelpPanel()
+  initApiPanel()
+  initSections() // after every panel has its cards
   initMinimap()
   registerDrawerToggle()
   registerGlobalListeners()
   registerThemeListener()
-  registerThemeButtons()
+  registerThemePicker()
   registerLabelRendering()
   registerCanvasControls()
   registerLayerDragControls()
@@ -100,11 +133,23 @@ async function loadExternalSession(): Promise<void> {
   const token = new URLSearchParams(window.location.search).get('session')
   if (!token) return
   try {
+    const view = await askSessionView('the shared network')
+    if (!view) return
     const session = await api.resolveExternal(token)
     loadSession(session)
+    await showSessionAs(view)
+    registerLoad('Shared session', 'link', session)
     showTab('#panel-main-view')
   } catch (err) {
     console.error('[arena3d] external session load failed', err)
+    // say so where the user looks next, instead of a silent empty scene
+    const el = document.getElementById('file_status')
+    if (el) {
+      el.textContent =
+        'This shared link has expired or is not valid (links last one hour). Load a file or pick an example instead.'
+      el.className = 'mt-3 small text-danger'
+    }
+    showTab('#panel-file')
   }
 }
 

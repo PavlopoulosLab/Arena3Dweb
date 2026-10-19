@@ -11975,6 +11975,6 @@
         }
     ],
     "universalLabelColor": "#ffffff",
-    "direction": true,
+    "direction": false,
     "edgeOpacityByWeight": true
 }

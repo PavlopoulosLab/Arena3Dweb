@@ -2,7 +2,7 @@
 // Port of v2 www/js/object_actions/screen.js. Shiny sync calls dropped.
 
 import * as THREE from 'three'
-import { ctx, edgeResolution } from '../three'
+import { SCALE_MAX, ctx, edgeResolution } from '../three'
 import {
   onBackgroundColor,
   renderFrame,
@@ -15,13 +15,33 @@ const RAYCASTER = new THREE.Raycaster()
 const RAYVECTOR = new THREE.Vector3()
 const RAYDIR = new THREE.Vector3()
 
+// Phones/tablets (coarse pointer) render at most 1.5x: a 3x phone screen
+// would otherwise push four times the pixels for little visible gain.
+function maxPixelRatio(): number {
+  return typeof window.matchMedia === 'function' &&
+    window.matchMedia('(pointer: coarse)').matches
+    ? 1.5
+    : 2
+}
+
+// The device's ratio (capped at 2: full retina sharpness without the 3x+
+// fill-rate cost on mobile) unless the Performance panel set a render scale.
+function pixelRatio(): number {
+  return ctx.renderScale ?? Math.min(window.devicePixelRatio, maxPixelRatio())
+}
+
 export function setRenderer(): void {
   ctx.renderer = new THREE.WebGLRenderer({
     antialias: true,
     powerPreference: 'high-performance',
   })
-  // Cap DPR at 2: full retina sharpness, avoids 3x+ fill-rate cost on mobile.
-  ctx.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  ctx.renderer.setPixelRatio(pixelRatio())
+}
+
+// Performance panel: render at a fixed pixel ratio (null = the device's)
+export function applyRenderScale(scale: number | null): void {
+  ctx.renderScale = scale
+  resizeRenderer()
 }
 
 export function resetScreen(): void {
@@ -46,14 +66,15 @@ export function setWindowBounds(): void {
 }
 
 export function setCamera(): void {
-  // orthographic: left, right, top, bottom, near, far
+  // orthographic: left, right, top, bottom, near, far. The depth range grows
+  // with the zoom range: a stack zoomed in SCALE_MAX times is still inside.
   ctx.camera = new THREE.OrthographicCamera(
     ctx.xBoundMin,
     ctx.xBoundMax,
     ctx.yBoundMax,
     ctx.yBoundMin,
-    -4 * ctx.xBoundMax,
-    4 * ctx.xBoundMax
+    -4 * ctx.xBoundMax * SCALE_MAX,
+    4 * ctx.xBoundMax * SCALE_MAX
   )
   ctx.camera.position.set(0, 0, 100)
   ctx.camera.lookAt(0, 0, 0)
@@ -61,7 +82,7 @@ export function setCamera(): void {
 
 export function resizeRenderer(): void {
   // Re-read DPR too: the window may have moved between monitors.
-  ctx.renderer?.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  ctx.renderer?.setPixelRatio(pixelRatio())
   ctx.renderer?.setSize(2 * ctx.xBoundMax, 2 * ctx.yBoundMax)
   resizePostprocessing(2 * ctx.xBoundMax, 2 * ctx.yBoundMax)
 }
@@ -79,7 +100,9 @@ export function setRendererColor(hexColor: string): void {
 // then download as PNG.
 const EXPORT_LONG_EDGE = 4096 // safe max renderbuffer size on all GPUs
 
-export function exportSceneImage(): boolean {
+// `longEdge` > 4096 (print/poster sizes) is capped at what this GPU's
+// renderbuffers allow.
+export function exportSceneImage(longEdge = EXPORT_LONG_EDGE): boolean {
   if (!ctx.scene?.exists() || !ctx.renderer || !ctx.camera) return false
 
   ctx.scene.THREE_Object.updateMatrixWorld(true)
@@ -123,7 +146,14 @@ export function exportSceneImage(): boolean {
 
   const w = camera.right - camera.left
   const h = camera.top - camera.bottom
-  const scale = EXPORT_LONG_EDGE / Math.max(w, h)
+  const maxEdge = Math.min(
+    longEdge,
+    ctx.renderer.capabilities.maxTextureSize,
+    ctx.renderer
+      .getContext()
+      .getParameter(ctx.renderer.getContext().MAX_RENDERBUFFER_SIZE) as number
+  )
+  const scale = maxEdge / Math.max(w, h)
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
     preserveDrawingBuffer: true,
@@ -172,16 +202,69 @@ function drawExportLabels(
   scale: number
 ): void {
   g.textBaseline = 'top'
+  g.lineJoin = 'round'
   forEachVisibleLabel((div, worldX, worldY, offsetX, offsetY) => {
     const cs = getComputedStyle(div)
-    g.font = `${parseFloat(cs.fontSize) * scale}px ${cs.fontFamily}`
+    const text = div.textContent ?? ''
+    const x = (worldX - camera.left + offsetX) * scale
+    const y = (camera.top - worldY + offsetY) * scale
+    g.save()
+    g.globalAlpha = parseFloat(cs.opacity) || 1
+    // a box (Edit → Style, or the label style's background) behind the text
+    const box = cs.backgroundColor
+    if (box && box !== 'transparent' && !/,\s*0\)$/.test(box)) {
+      g.fillStyle = box
+      g.beginPath()
+      g.roundRect(
+        x,
+        y,
+        div.offsetWidth * scale,
+        div.offsetHeight * scale,
+        parseFloat(cs.borderTopLeftRadius) * scale || 0
+      )
+      g.fill()
+    }
+    g.font = `${cs.fontStyle} ${cs.fontWeight} ${parseFloat(cs.fontSize) * scale}px ${cs.fontFamily}`
+    const tx = x + (parseFloat(cs.paddingLeft) || 0) * scale
+    const ty = y + (parseFloat(cs.paddingTop) || 0) * scale
+    // a halo: the stroke first, so the letters sit on top of it
+    const stroke = parseFloat(cs.getPropertyValue('-webkit-text-stroke-width'))
+    if (stroke > 0) {
+      g.strokeStyle = cs.getPropertyValue('-webkit-text-stroke-color')
+      g.lineWidth = stroke * scale
+      g.strokeText(text, tx, ty)
+    }
+    if (div.dataset.shadow) {
+      g.shadowColor = div.dataset.shadow
+      g.shadowBlur = 4 * scale
+      g.shadowOffsetY = scale
+    }
     g.fillStyle = cs.color
-    g.fillText(
-      div.textContent ?? '',
-      (worldX - camera.left + offsetX) * scale,
-      (camera.top - worldY + offsetY) * scale
-    )
+    g.fillText(text, tx, ty)
+    g.restore()
   })
+}
+
+// px between a node's centre and a label above or below it (actions/labels.ts)
+export const LABEL_GAP = 9
+
+/** The px a node label at `position` (Edit → Style) moves by from its usual
+ * corner, 7px right of and 10px above the node centre; w, h: its size. */
+export function labelShift(
+  position: string | undefined,
+  w: number,
+  h: number
+): [number, number] {
+  switch (position) {
+    case 'centre':
+      return [-7 - w / 2, 10 - h / 2]
+    case 'above':
+      return [-7 - w / 2, 10 - LABEL_GAP - h]
+    case 'below':
+      return [-7 - w / 2, 10 + LABEL_GAP]
+    default:
+      return [0, 0]
+  }
 }
 
 // Iterate the currently visible label divs with their world-space anchor and
@@ -204,15 +287,34 @@ function forEachVisibleLabel(
   container.querySelectorAll<HTMLDivElement>('.labels').forEach((div, i) => {
     const node = ctx.nodeObjects[i]
     if (!node || div.style.display === 'none') return
-    cb(div, node.getWorldPosition('x'), node.getWorldPosition('y'), 7, -10)
+    const [dx, dy] = labelShift(
+      div.dataset.pos,
+      div.offsetWidth,
+      div.offsetHeight
+    )
+    cb(
+      div,
+      node.getWorldPosition('x'),
+      node.getWorldPosition('y'),
+      7 + dx,
+      -10 + dy
+    )
   })
   container
     .querySelectorAll<HTMLDivElement>('.layer-labels')
     .forEach((div, i) => {
       const layer = ctx.layers[i]
       if (!layer || div.style.display === 'none') return
-      const world = layer.sphere.getWorldPosition(RAYVECTOR)
-      cb(div, world.x, world.y, 0, 0)
+      // the floor's corner, or centred above / under the floor
+      const [x, y] = layer.labelAnchor()
+      const [w, h] = [div.offsetWidth, div.offsetHeight]
+      const [dx, dy] =
+        layer.labelPosition === 'above'
+          ? [-w / 2, -h - 6]
+          : layer.labelPosition === 'below'
+            ? [-w / 2, 6]
+            : [0, 0]
+      cb(div, x, y, dx, dy)
     })
 }
 
@@ -281,6 +383,15 @@ function flagWorldSpaceRedrawsOnSceneMove(): void {
 // FPS-limited render loop. Pure rAF (no setTimeout) so the browser can
 // align frames with vsync and auto-pause when the tab is hidden; the
 // timestamp check enforces ctx.fps as an upper bound.
+// each distinct frame error is logged once, not 60 times a second
+const reportedFrameErrors = new Set<string>()
+function reportFrameError(err: unknown): void {
+  const msg = err instanceof Error ? err.message : String(err)
+  if (reportedFrameErrors.has(msg)) return
+  reportedFrameErrors.add(msg)
+  console.error('Arena3D frame step failed:', err)
+}
+
 let lastFrameTime = 0
 export function animate(now = 0): void {
   requestAnimationFrame(animate)
@@ -289,8 +400,52 @@ export function animate(now = 0): void {
   // Snap to the frame grid so throttled rates stay even (e.g. 30 on 60Hz).
   lastFrameTime = now - ((now - lastFrameTime) % interval)
 
-  flagWorldSpaceRedrawsOnSceneMove()
-  renderInterLayerEdges()
-  for (const fn of animateHooks) fn()
+  // a step that throws must not freeze the picture: report it, draw anyway
+  try {
+    flagWorldSpaceRedrawsOnSceneMove()
+    renderInterLayerEdges()
+    for (const fn of animateHooks) fn()
+  } catch (err) {
+    reportFrameError(err)
+  }
   renderFrame()
+  // measured frame rate for the Performance panel
+  frames++
+  if (now - statStart >= 1000) {
+    measuredFps = (frames * 1000) / (now - statStart)
+    frames = 0
+    statStart = now
+  }
+}
+
+let frames = 0
+let statStart = 0
+let measuredFps = 0
+
+export interface PerfStats {
+  fps: number
+  calls: number
+  triangles: number
+  lines: number
+  geometries: number
+  textures: number
+  nodes: number
+  edges: number
+  pixelRatio: number
+}
+
+// What the renderer did in the last frame, for the Performance panel
+export function perfStats(): PerfStats {
+  const info = ctx.renderer?.info
+  return {
+    fps: measuredFps,
+    calls: info?.render.calls ?? 0,
+    triangles: info?.render.triangles ?? 0,
+    lines: info?.render.lines ?? 0,
+    geometries: info?.memory.geometries ?? 0,
+    textures: info?.memory.textures ?? 0,
+    nodes: ctx.nodeObjects.length,
+    edges: ctx.edgeObjects.length,
+    pixelRatio: ctx.renderer?.getPixelRatio() ?? 1,
+  }
 }

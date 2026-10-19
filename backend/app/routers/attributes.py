@@ -4,37 +4,87 @@ Replaces handleInput{Node,Edge}AttributeFileUpload() (functions/input.R).
 """
 
 from fastapi import APIRouter, HTTPException, UploadFile
+from fastapi.concurrency import run_in_threadpool
 
 from app import config
-from app.models.attributes import EdgeAttributeRow, NodeAttributeRow
-from app.services.attributes import parse_edge_attributes_tsv, parse_node_attributes_tsv
+from app.models.attributes import EdgeAttributeRow, GroupRow, NodeAttributeRow, ValueTable
+from app.services.attributes import (
+    parse_edge_attributes_tsv,
+    parse_groups_tsv,
+    parse_node_attributes_tsv,
+    parse_values_tsv,
+)
 from app.services.parser import NetworkValidationError
 
 router = APIRouter()
 
 
-async def _read_capped(file: UploadFile) -> str:
+async def _read_capped(file: UploadFile, max_rows: int = 2 * config.MAX_NODES) -> str:
     """DoS fix: bound upload size in-app, since bare uvicorn (no nginx in
-    front, e.g. local/dev) enforces no request-body limit of its own."""
-    raw_bytes = await file.read()
+    front, e.g. local/dev) enforces no request-body limit of its own; and the
+    row count before pandas parses anything."""
+    raw_bytes = await file.read(config.MAX_UPLOAD_BYTES + 1)
     if len(raw_bytes) > config.MAX_UPLOAD_BYTES:
         raise HTTPException(status_code=413, detail="File too large.")
+    if raw_bytes.count(b"\n") > max_rows:
+        raise HTTPException(status_code=400, detail=f"The file has more than {max_rows} rows.")
     return raw_bytes.decode("utf-8", errors="replace")
 
 
-@router.post("/api/attributes/nodes", response_model=list[NodeAttributeRow])
+@router.post(
+    "/api/attributes/nodes",
+    summary="Parse a node attribute file",
+    tags=["Networks"],
+    response_model=list[NodeAttributeRow],
+)
 async def upload_node_attributes(file: UploadFile) -> list[NodeAttributeRow]:
     raw = await _read_capped(file)
     try:
-        return parse_node_attributes_tsv(raw)
+        return await run_in_threadpool(parse_node_attributes_tsv, raw)
     except NetworkValidationError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 
-@router.post("/api/attributes/edges", response_model=list[EdgeAttributeRow])
+@router.post(
+    "/api/attributes/edges",
+    summary="Parse an edge attribute file",
+    tags=["Networks"],
+    response_model=list[EdgeAttributeRow],
+)
 async def upload_edge_attributes(file: UploadFile) -> list[EdgeAttributeRow]:
+    raw = await _read_capped(file, 2 * config.MAX_EDGES)
+    try:
+        return await run_in_threadpool(parse_edge_attributes_tsv, raw)
+    except NetworkValidationError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.post(
+    "/api/attributes/groups",
+    summary="Parse an annotation group file (NORMA format)",
+    tags=["Networks"],
+    response_model=list[GroupRow],
+)
+async def upload_groups(file: UploadFile) -> list[GroupRow]:
+    """One group per line (``Group<TAB>node1,node2,…``) or one node per line with
+    ``Node`` and ``Group`` columns; returns the groups of every node named."""
     raw = await _read_capped(file)
     try:
-        return parse_edge_attributes_tsv(raw)
+        return await run_in_threadpool(parse_groups_tsv, raw)
+    except NetworkValidationError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.post(
+    "/api/attributes/values",
+    summary="Parse a numeric node value table (expression, scores)",
+    tags=["Networks"],
+    response_model=ValueTable,
+)
+async def upload_values(file: UploadFile) -> ValueTable:
+    """``Node`` followed by one numeric column per condition; blank cells allowed."""
+    raw = await _read_capped(file)
+    try:
+        return await run_in_threadpool(parse_values_tsv, raw)
     except NetworkValidationError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e

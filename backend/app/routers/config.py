@@ -5,13 +5,33 @@ from typing import Any
 from fastapi import APIRouter
 
 from app import config
+from app.services.clustering import CLUSTERING
+from app.services.layouts import LAYOUTS, LAYOUTS_3D, UMAP
+
+API_VERSION = "3.0.0"  # as in main.py's FastAPI(version=…)
 
 router = APIRouter()
 
 
-@router.get("/api/config")
+@router.get(
+    "/api/config",
+    summary="Server limits, defaults and what it can compute",
+    tags=["Configuration"],
+)
 async def get_config() -> dict[str, Any]:
+    """The server's version and limits (edges, nodes, layers, channels, upload size,
+    seconds per computation), the default colours, and the names the other
+    endpoints accept: layout and 3D layout algorithms, clustering algorithms and
+    node metrics. A script can read this first to know what it may send."""
     return {
+        "version": API_VERSION,
+        "docs": {"swagger": "/api/docs", "redoc": "/api/redoc", "openapi": "/api/openapi.json"},
+        "max_nodes": config.MAX_NODES,
+        "max_upload_bytes": config.MAX_UPLOAD_BYTES,
+        "compute_seconds": config.COMPUTE_SECONDS,
+        "layouts": [*LAYOUTS, UMAP],
+        "layouts_3d": list(LAYOUTS_3D),
+        "clustering_algorithms": list(CLUSTERING),
         "max_edges": config.MAX_EDGES,
         "max_channels": config.MAX_CHANNELS,
         "max_layers": config.MAX_LAYERS,

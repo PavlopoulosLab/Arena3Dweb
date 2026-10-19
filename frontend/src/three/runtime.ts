@@ -17,6 +17,21 @@ import type { Layer } from './Layer'
 import type { Node } from './Node'
 import type { Edge } from './Edge'
 
+export type NetworkMode = 'multilayer' | 'single'
+export type EdgeShape = 'curved' | 'parallel' | 'straight'
+// Hive plot (Layout → Layer Arrangement → Hive plot): the plane the axes
+// radiate in (its right/up directions in the scene sphere's frame, centred on
+// the sphere's origin) and whether links are drawn as hive curves
+export interface HiveState {
+  curved: boolean
+  right: [number, number, number]
+  up: [number, number, number]
+  // the axes in that plane (default), or spread through 3D from its centre
+  axes?: 'flat' | '3d'
+}
+// Channels as parallel lines side by side, as STRING draws them
+export const DEFAULT_EDGE_SHAPE: EdgeShape = 'parallel'
+
 export type ColorPrioritySource = 'default' | 'picker' | 'cluster'
 
 export interface RuntimeContext {
@@ -25,6 +40,12 @@ export interface RuntimeContext {
   renderer: THREE.WebGLRenderer | null
   camera: THREE.OrthographicCamera | null
   fps: number
+  // Performance panel (ui/fps.ts)
+  renderScale: number | null // pixel ratio, null = the device's (capped)
+  nodeDetail: 'low' | 'medium' | 'high'
+  hideLabelsWhileMoving: boolean
+  pauseInterWhileMoving: boolean
+  minimapEvery: number // draw the navigator every Nth frame; 0 = off
 
   // Screen bounds (v2 screen.js; yBoundMax = window.innerHeight / 2)
   xBoundMin: number
@@ -51,6 +72,7 @@ export interface RuntimeContext {
 
   // Edge render config (config-driven; defaults from v2 static_variables.js)
   edgeDefaultColor: string
+  containerDefaultColor: string // themes.ts: cube/sphere/cloud colour when a layer has none
   selectedEdgeColorFlag: boolean
   edgeFileColorPriority: boolean
   isDirectionEnabled: boolean
@@ -58,6 +80,9 @@ export interface RuntimeContext {
   // view over this pair (none / opacity / width / both).
   edgeOpacityByWeight: boolean
   edgeWidthByWeight: boolean
+  // Edge Actions weight filter: edges/channels with a scaled weight below it
+  // are not drawn (0 = show all)
+  edgeWeightThreshold: number
   interLayerEdgeOpacity: number
   intraLayerEdgeOpacity: number
   interLayerEdgeWidth: number
@@ -66,6 +91,19 @@ export interface RuntimeContext {
   intraDirectionArrowSize: number
   interChannelCurvature: number
   intraChannelCurvature: number
+  // 'single' treats the data as one graph: layers stacked, floors off, layer
+  // controls hidden (actions/modes.ts, ui/mode.ts)
+  networkMode: NetworkMode
+  lastLoadSource: 'network' | 'session' // what the last load came from
+  // edge bundling strength, 0 = straight edges (three/bundling.ts)
+  intraEdgeBundling: number
+  interEdgeBundling: number
+  // multi-channel edges: parallel lines side by side, one Bézier curve per
+  // channel, or one shared straight line (Edit → Edges → Edge Shape); a view
+  // preference kept across loads
+  edgeShape: EdgeShape
+  // the hive plot arrangement, while it is on (three/hive.ts), else null
+  hive: HiveState | null
 
   // Color-priority sources
   layerColorPrioritySource: ColorPrioritySource
@@ -76,6 +114,9 @@ export interface RuntimeContext {
   selectedNodeColorFlag: boolean
   showAllNodeLabelsFlag: boolean
   showSelectedNodeLabelsFlag: boolean
+  // Show Labels: Chosen — the pinned labels, and the selection's when ticked
+  showChosenNodeLabelsFlag: boolean
+  chosenLabelsWithSelection: boolean
   renderNodeLabelsFlag: boolean
   showAllLayerLabelsFlag: boolean
   showSelectedLayerLabelsFlag: boolean
@@ -110,6 +151,11 @@ export const ctx: RuntimeContext = {
   renderer: null,
   camera: null,
   fps: 60,
+  renderScale: null,
+  nodeDetail: 'medium',
+  hideLabelsWhileMoving: false,
+  pauseInterWhileMoving: false,
+  minimapEvery: 1,
 
   xBoundMin: -winW / 2,
   xBoundMax: winW / 2,
@@ -130,13 +176,17 @@ export const ctx: RuntimeContext = {
 
   channelColors: {},
   channelVisibility: {},
+  edgeShape: DEFAULT_EDGE_SHAPE,
+  hive: null,
 
   edgeDefaultColor: '#000000',
+  containerDefaultColor: '#5b8def',
   selectedEdgeColorFlag: true,
   edgeFileColorPriority: false,
   isDirectionEnabled: false,
   edgeOpacityByWeight: true,
   edgeWidthByWeight: false,
+  edgeWeightThreshold: 0,
   interLayerEdgeOpacity: 0.4,
   intraLayerEdgeOpacity: 1,
   interLayerEdgeWidth: 1,
@@ -145,6 +195,10 @@ export const ctx: RuntimeContext = {
   intraDirectionArrowSize: 5,
   interChannelCurvature: 5,
   intraChannelCurvature: 15,
+  networkMode: 'multilayer',
+  lastLoadSource: 'network',
+  intraEdgeBundling: 0,
+  interEdgeBundling: 0,
 
   layerColorPrioritySource: 'default',
   nodeColorPrioritySource: 'default',
@@ -153,6 +207,8 @@ export const ctx: RuntimeContext = {
   selectedNodeColorFlag: true,
   showAllNodeLabelsFlag: false,
   showSelectedNodeLabelsFlag: true,
+  showChosenNodeLabelsFlag: false,
+  chosenLabelsWithSelection: true,
   renderNodeLabelsFlag: false,
   showAllLayerLabelsFlag: true,
   showSelectedLayerLabelsFlag: false,
@@ -196,12 +252,18 @@ export function resetContext(): void {
   ctx.intraDirectionArrowSize = 5
   ctx.interChannelCurvature = 5
   ctx.intraChannelCurvature = 15
+  ctx.networkMode = 'multilayer'
+  ctx.intraEdgeBundling = 0
+  ctx.interEdgeBundling = 0
+  ctx.hive = null
   ctx.layerColorPrioritySource = 'default'
   ctx.nodeColorPrioritySource = 'default'
   ctx.lastHoveredNodeIndex = null
   ctx.selectedNodeColorFlag = true
   ctx.showAllNodeLabelsFlag = false
   ctx.showSelectedNodeLabelsFlag = true
+  ctx.showChosenNodeLabelsFlag = false
+  ctx.chosenLabelsWithSelection = true
   ctx.renderNodeLabelsFlag = false
   ctx.showAllLayerLabelsFlag = true
   ctx.showSelectedLayerLabelsFlag = false

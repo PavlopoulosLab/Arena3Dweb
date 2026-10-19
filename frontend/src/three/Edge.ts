@@ -6,9 +6,37 @@ import {
   EDGE_MIN_VISIBLE_OPACITY,
   EDGE_WIDTH_MAX,
   EDGE_WIDTH_MIN,
+  FADED_EDGE,
   SELECTED_DEFAULT_COLOR,
 } from './constants'
 import { ctx, disposeObject3D, edgeResolution } from './runtime'
+import { bundledPoints } from './bundling'
+import { hivePath } from './hive'
+
+// Parallel channel lanes: this many line widths apart
+const PARALLEL_SPACING = 1.6
+
+export type LineType = 'solid' | 'dashed' | 'dotted'
+export const LINE_TYPE_LABELS: Record<LineType, string> = {
+  solid: 'Solid',
+  dashed: 'Dashed',
+  dotted: 'Dotted',
+}
+// dash and gap, in line widths, with a floor for hairlines
+const DASHES: Record<Exclude<LineType, 'solid'>, [number, number]> = {
+  dashed: [6, 4],
+  dotted: [1.5, 3],
+}
+
+// A unit vector across the line p1→p2 in the layer's plane (local x is the
+// layer normal), or across it some other way when the line runs along x.
+function sideways(p1: THREE.Vector3, p2: THREE.Vector3): THREE.Vector3 {
+  const d = p2.clone().sub(p1)
+  const across = d.clone().cross(new THREE.Vector3(1, 0, 0))
+  if (across.lengthSq() < 1e-9 * Math.max(1, d.lengthSq()))
+    across.copy(d).cross(new THREE.Vector3(0, 1, 0))
+  return across.lengthSq() > 0 ? across.normalize() : across
+}
 
 export interface EdgeOptions {
   id?: number
@@ -38,6 +66,16 @@ export class Edge {
   interLayer: boolean
 
   isSelected = false
+  widthFactor = 1 // per-edge width multiplier (Style panel)
+  opacityFactor = 1 // per-edge opacity multiplier (Style panel)
+  faded = false // an end outside the chosen groups (actions/annotations.ts)
+  lineType: LineType = 'solid'
+  arrowColor = '' // '' = the edge's colour
+
+  // in single-network mode every edge follows the intra-layer settings
+  private get asInter(): boolean {
+    return this.interLayer && ctx.networkMode !== 'single'
+  }
 
   constructor({
     id = 0,
@@ -108,14 +146,25 @@ export class Edge {
       return
     }
 
+    // bundled edges follow their bundle's path (three/bundling.ts), hive
+    // links their hive curve (three/hive.ts)
+    const path = bundledPoints(this) ?? hivePath(this, points) ?? points
     this.THREE_Object = this.createLine(
-      points,
+      path,
       color,
       opacity,
       this.decideWidth()
     )
 
-    if (ctx.isDirectionEnabled) this.createArrow(points, color)
+    if (ctx.isDirectionEnabled)
+      this.createArrow(path.slice(-2), this.decideArrowColor(color))
+  }
+
+  // a custom arrow colour, unless the selection highlight shows
+  decideArrowColor(edgeColor: string): string {
+    return this.arrowColor && !(this.isSelected && ctx.selectedEdgeColorFlag)
+      ? this.arrowColor
+      : edgeColor
   }
 
   // Thick lines: WebGL renders every line primitive at exactly 1px, so real
@@ -145,7 +194,16 @@ export class Edge {
     // units. Assign the uniform's value directly: the `resolution` setter
     // copies, and we need every edge to share the one mutable Vector2.
     material.uniforms.resolution.value = edgeResolution
-    return new Line2(geometry, material)
+    const line = new Line2(geometry, material)
+    if (this.lineType !== 'solid') {
+      const [dash, gap] = DASHES[this.lineType]
+      const w = Math.max(width, 1)
+      material.dashed = true
+      material.dashSize = dash * w
+      material.gapSize = gap * w
+      line.computeLineDistances()
+    }
+    return line
   }
 
   decideColor(i = 0, forExport = false): string {
@@ -162,24 +220,27 @@ export class Edge {
   }
 
   decideOpacity(i = 0): number {
+    // below the weight filter -> 0, which the faintness skip leaves undrawn
+    if (this.weights[i] < ctx.edgeWeightThreshold) return 0
     let opacity: number
     if (ctx.edgeOpacityByWeight) opacity = this.weights[i]
     else
-      opacity = this.interLayer
+      opacity = this.asInter
         ? ctx.interLayerEdgeOpacity
         : ctx.intraLayerEdgeOpacity
-    return opacity
+    return opacity * this.opacityFactor * (this.faded ? FADED_EDGE : 1)
   }
 
   // Mirrors decideOpacity. Weights arrive scaled to [0-1] by the backend, so
   // they map onto the width range rather than being used raw — a raw weight
   // near 0 would be a sub-pixel, invisible line.
   decideWidth(i = 0): number {
-    if (ctx.edgeWidthByWeight)
-      return (
-        EDGE_WIDTH_MIN + this.weights[i] * (EDGE_WIDTH_MAX - EDGE_WIDTH_MIN)
-      )
-    return this.interLayer ? ctx.interLayerEdgeWidth : ctx.intraLayerEdgeWidth
+    const base = ctx.edgeWidthByWeight
+      ? EDGE_WIDTH_MIN + this.weights[i] * (EDGE_WIDTH_MAX - EDGE_WIDTH_MIN)
+      : this.asInter
+        ? ctx.interLayerEdgeWidth
+        : ctx.intraLayerEdgeWidth
+    return base * this.widthFactor
   }
 
   createArrow(points: THREE.Vector3[], arrowColor: string): void {
@@ -197,7 +258,7 @@ export class Edge {
     const direction = points[1].clone().sub(points[0])
     const origin = points[1]
     const length = 1
-    let headLength = this.interLayer
+    let headLength = this.asInter
       ? ctx.interDirectionArrowSize
       : ctx.intraDirectionArrowSize
     headLength = headLength * 6
@@ -219,12 +280,13 @@ export class Edge {
     let pushForce = 0
     let pushForceFlag = false
     let direction = 1
-    const curveFactor = this.interLayer
+    const curveFactor = this.asInter
       ? ctx.interChannelCurvature
       : ctx.intraChannelCurvature
 
     const verticalPushConstant =
       (points[0].distanceTo(points[1]) * curveFactor) / 400
+    const path = bundledPoints(this) ?? hivePath(this, points)
     if (this.channels.length % 2 == 0) pushForce = 1 // skip straight line
 
     for (let i = 0; i < this.channels.length; i++) {
@@ -237,6 +299,11 @@ export class Edge {
       const color = this.decideColor(i)
       const opacity = this.decideOpacity(i)
 
+      // parallel: lanes side by side across the pair, centred on it
+      const lane =
+        (i - (this.channels.length - 1) / 2) *
+        PARALLEL_SPACING *
+        Math.max(...this.channels.map((_, k) => this.decideWidth(k)))
       THREE_curveGroup = this.createCurve(
         THREE_curveGroup,
         points[0],
@@ -245,7 +312,9 @@ export class Edge {
         color,
         this.channels[i],
         opacity,
-        this.decideWidth(i)
+        this.decideWidth(i),
+        path,
+        lane
       )
     }
 
@@ -260,26 +329,52 @@ export class Edge {
     color: string,
     channelName: string,
     opacity: number,
-    width: number
+    width: number,
+    bundled: THREE.Vector3[] | null = null,
+    lane = 0
   ): THREE.Group {
-    const p3 = p1.clone()
-    const p4 = p2.clone()
-    const points = 50
-
-    p3.addScalar(verticalPush)
-    p4.addScalar(verticalPush)
-
-    let curve: THREE.CubicBezierCurve3
-    if (!this.interLayer)
-      curve = new THREE.CubicBezierCurve3(
-        p1,
-        this.transformMiddlePointOnLayer(p3),
-        this.transformMiddlePointOnLayer(p4),
-        p2
+    const shape = ctx.edgeShape
+    let curvePoints: THREE.Vector3[]
+    if (shape === 'parallel') {
+      // STRING-style: a straight line per channel, shifted sideways
+      const shift = sideways(p1, p2).multiplyScalar(lane)
+      curvePoints = (bundled ?? [p1, p2]).map((p) => p.clone().add(shift))
+    } else if (bundled) {
+      // bundled: each channel runs alongside the bundle's path, pushed out
+      // most in the middle, as the plain curves are
+      const push =
+        shape === 'straight'
+          ? new THREE.Vector3() // straight: channels follow the bundle itself
+          : new THREE.Vector3(
+              this.interLayer ? verticalPush : 0,
+              verticalPush,
+              verticalPush
+            )
+      curvePoints = bundled.map((p, k) =>
+        p
+          .clone()
+          .addScaledVector(push, Math.sin((Math.PI * k) / (bundled.length - 1)))
       )
-    else curve = new THREE.CubicBezierCurve3(p1, p3, p4, p2)
-
-    const curvePoints = curve.getPoints(points)
+    } else if (shape === 'straight') {
+      // straight: the channels of a pair share one line (Edit → Edge Shape)
+      curvePoints = [p1, p2]
+    } else {
+      const p3 = p1.clone()
+      const p4 = p2.clone()
+      p3.addScalar(verticalPush)
+      p4.addScalar(verticalPush)
+      let curve: THREE.CubicBezierCurve3
+      if (!this.interLayer)
+        curve = new THREE.CubicBezierCurve3(
+          p1,
+          this.transformMiddlePointOnLayer(p3),
+          this.transformMiddlePointOnLayer(p4),
+          p2
+        )
+      else curve = new THREE.CubicBezierCurve3(p1, p3, p4, p2)
+      curvePoints = curve.getPoints(50)
+    }
+    const points = curvePoints.length - 1
     // Same faintness skip as createEdge — leave the channel out of the group
     // entirely rather than rasterising an invisible one.
     if (opacity < EDGE_MIN_VISIBLE_OPACITY) return curveGroup
@@ -294,7 +389,7 @@ export class Edge {
         curveGroup,
         curvePoints,
         points,
-        color,
+        this.decideArrowColor(color),
         channelName
       )
 
@@ -314,8 +409,12 @@ export class Edge {
     color: string,
     channelName: string
   ): THREE.Group {
+    // a curve points the arrow along its last stretch; a straight (parallel)
+    // line has only its two ends
     const arrowHelper = this.createArrowHelper(
-      [curvePoints[points - 4], curvePoints[points - 1]],
+      points >= 4
+        ? [curvePoints[points - 4], curvePoints[points - 1]]
+        : curvePoints.slice(-2),
       color
     )
     arrowHelper.userData.tag = channelName

@@ -9,7 +9,10 @@ import {
   ApplyTopologyCommand,
   ChangeThemeCommand,
   LoadNetworkCommand,
+  ColorNodesByValueCommand,
+  metricColor,
 } from './scene'
+import { store } from '../store'
 
 // Minimal populated scene: one layer "L", nodes A/B, one intra edge A->B.
 function seed(): void {
@@ -103,6 +106,17 @@ describe('ApplyLayoutCommand', () => {
     c.undo()
     expect(ctx.nodeObjects[0].getPosition('y')).toBe(0)
     expect(ctx.nodeObjects[0].getPosition('z')).toBe(0)
+  })
+
+  it('sets depth for 3D positions and flattens on a later 2D layout', () => {
+    const c3 = new ApplyLayoutCommand({ 'A::L': [1, 2, 30] })
+    c3.execute()
+    expect(ctx.nodeObjects[0].getPosition('x')).toBe(30)
+    const c2 = new ApplyLayoutCommand({ 'A::L': [1, 2] })
+    c2.execute()
+    expect(ctx.nodeObjects[0].getPosition('x')).toBe(0)
+    c2.undo() // undo restores the depth too
+    expect(ctx.nodeObjects[0].getPosition('x')).toBe(30)
   })
 
   it('assigns clusters + colours and reverts them', () => {
@@ -210,5 +224,40 @@ describe('ChangeFloorColorCommand', () => {
     expect(ctx.layers[0].color.toLowerCase()).toBe('#ff0000')
     c.undo()
     expect(ctx.layers[0].color.toLowerCase()).toBe('#111111')
+  })
+})
+
+describe('LoadNetworkCommand store sync', () => {
+  it('undo/redo restore store.network with the scene', () => {
+    const before = {
+      nodes: [],
+      edges: [],
+      layers: ['old'],
+      channels: [],
+      warnings: [],
+    }
+    const after = { ...before, layers: ['new'] }
+    store.update({ network: before })
+    const c = new LoadNetworkCommand(() => store.update({ network: after }))
+    c.execute()
+    expect(store.get().network?.layers).toEqual(['new'])
+    c.undo()
+    expect(store.get().network?.layers).toEqual(['old'])
+    c.execute()
+    expect(store.get().network?.layers).toEqual(['new'])
+  })
+})
+
+describe('ColorNodesByValueCommand', () => {
+  it('maps low/high to the gradient ends and undoes', () => {
+    const before = ctx.nodeObjects.map((n) => n.color)
+    const c = new ColorNodesByValueCommand({ 'A::L': 0, 'B::L': 10 })
+    c.execute()
+    expect(ctx.nodeObjects[0].color).toBe(`#${metricColor(0)}`)
+    expect(ctx.nodeObjects[1].color).toBe(`#${metricColor(1)}`)
+    expect(metricColor(0)).toBe('2c7bb6')
+    expect(metricColor(1)).toBe('d7191c')
+    c.undo()
+    expect(ctx.nodeObjects.map((n) => n.color)).toEqual(before)
   })
 })

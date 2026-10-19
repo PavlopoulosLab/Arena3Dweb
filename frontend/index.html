@@ -4,9 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arena3D</title>
+    <meta
+      name="description"
+      content="Arena3D: interactive 3D visualization and analysis of multilayered networks in the browser. Free and open to all users, no login required."
+    />
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top" id="navBar">
+    <nav class="navbar navbar-expand-xl bg-body-tertiary fixed-top" id="navBar">
       <div class="container-fluid">
         <button
           class="navbar-toggler"
@@ -20,12 +24,14 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTabs">
+          <!-- Grouped by task: look at it, load it, lay it out, edit it, analyse it. -->
           <ul class="navbar-nav" role="tablist">
             <li class="nav-item" role="presentation">
               <button
                 class="nav-link active"
                 data-bs-toggle="tab"
                 data-bs-target="#panel-home"
+                data-menu="home"
                 type="button"
                 role="tab"
               >
@@ -36,18 +42,8 @@
               <button
                 class="nav-link"
                 data-bs-toggle="tab"
-                data-bs-target="#panel-main-view"
-                type="button"
-                role="tab"
-              >
-                Main View
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
                 data-bs-target="#panel-file"
+                data-menu="file"
                 type="button"
                 role="tab"
               >
@@ -58,77 +54,351 @@
               <button
                 class="nav-link"
                 data-bs-toggle="tab"
+                data-bs-target="#panel-databases"
+                data-menu="databases"
+                type="button"
+                role="tab"
+              >
+                Database Importers
+              </button>
+            </li>
+            <!-- what is loaded and on screen: ui/networks.ts fills the menu -->
+            <li class="nav-item dropdown nav-networks" role="presentation">
+              <button
+                class="nav-link dropdown-toggle"
+                id="menu-networks"
+                data-menu="networks"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="outside"
+                aria-expanded="false"
+                aria-describedby="networksNow"
+              >
+                <span class="nav-networks__title">Networks</span>
+                <span class="nav-networks__now d-none" id="networksNow"></span>
+              </button>
+              <div
+                class="dropdown-menu networks-menu"
+                id="networksMenu"
+                aria-labelledby="menu-networks"
+              ></div>
+            </li>
+            <!-- the scene alone (every panel closed): no menu entry, the
+                 drawer handle does this; kept as a tab for showTab() -->
+            <li class="nav-item d-none" role="presentation">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#panel-main-view"
+                type="button"
+                role="tab"
+              >
+                3D View
+              </button>
+            </li>
+            <li class="nav-item dropdown" role="presentation">
+              <button
+                class="nav-link dropdown-toggle"
+                id="menu-view"
+                data-menu="view"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                View
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="menu-view">
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-scene"
+                    type="button"
+                    role="tab"
+                  >
+                    Scene &amp; Camera
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-annotation-view"
+                    type="button"
+                    role="tab"
+                  >
+                    Annotations
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-fps"
+                    type="button"
+                    role="tab"
+                  >
+                    Performance
+                  </button>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#panel-find"
+                data-menu="find"
+                type="button"
+                role="tab"
+              >
+                Find
+              </button>
+            </li>
+            <li class="nav-item" role="presentation" data-multilayer-only>
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#panel-layer-selection"
+                data-menu="layers"
+                type="button"
+                role="tab"
+              >
+                Layer selection
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
                 data-bs-target="#panel-layouts"
+                data-menu="layout"
                 type="button"
                 role="tab"
               >
-                Layer Selection &amp; Layouts
+                Layout
               </button>
             </li>
             <li class="nav-item" role="presentation">
               <button
                 class="nav-link"
                 data-bs-toggle="tab"
-                data-bs-target="#panel-scene"
+                data-bs-target="#panel-clustering"
+                data-menu="clustering"
                 type="button"
                 role="tab"
               >
-                Scene Actions
+                Clustering
+              </button>
+            </li>
+            <li class="nav-item dropdown" role="presentation">
+              <button
+                class="nav-link dropdown-toggle"
+                id="menu-edit"
+                data-menu="edit"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Edit
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="menu-edit">
+                <li role="presentation">
+                  <h6 class="dropdown-header">Appearance</h6>
+                </li>
+                <li role="presentation" class="has-hint">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-style"
+                    type="button"
+                    role="tab"
+                  >
+                    Style
+                  </button>
+                  <span class="dropdown-hint" aria-hidden="true"
+                    >Colours, sizes, shapes and labels, by property</span
+                  >
+                </li>
+                <li role="presentation" class="has-hint">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-attributes"
+                    type="button"
+                    role="tab"
+                  >
+                    Attributes
+                  </button>
+                  <span class="dropdown-hint" aria-hidden="true"
+                    >Every node and edge in an editable table</span
+                  >
+                </li>
+                <li role="presentation"><hr class="dropdown-divider" /></li>
+                <li role="presentation">
+                  <h6 class="dropdown-header">Network parts</h6>
+                </li>
+                <li role="presentation" class="has-hint">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-node"
+                    type="button"
+                    role="tab"
+                  >
+                    Nodes
+                  </button>
+                  <span class="dropdown-hint" aria-hidden="true"
+                    >Selection, labels, shape and size</span
+                  >
+                </li>
+                <li role="presentation" class="has-hint">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-edge"
+                    type="button"
+                    role="tab"
+                  >
+                    Edges
+                  </button>
+                  <span class="dropdown-hint" aria-hidden="true"
+                    >Weights, direction, channels and bundling</span
+                  >
+                </li>
+                <li role="presentation" class="has-hint" data-multilayer-only>
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-layer"
+                    data-multilayer-only
+                    type="button"
+                    role="tab"
+                  >
+                    Layers
+                  </button>
+                  <span class="dropdown-hint" aria-hidden="true"
+                    >Floors, labels, axes and 3D containers</span
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown" role="presentation">
+              <button
+                class="nav-link dropdown-toggle"
+                id="menu-analyze"
+                data-menu="analyze"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Analyze
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="menu-analyze">
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-metrics"
+                    type="button"
+                    role="tab"
+                  >
+                    Metrics
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-statistics"
+                    type="button"
+                    role="tab"
+                  >
+                    Statistics
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-plots"
+                    type="button"
+                    role="tab"
+                  >
+                    Plots
+                  </button>
+                </li>
+                <li role="presentation"><hr class="dropdown-divider" /></li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-perturbation"
+                    type="button"
+                    role="tab"
+                  >
+                    Perturbation
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-explore"
+                    type="button"
+                    role="tab"
+                  >
+                    Explore
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-annotations"
+                    type="button"
+                    role="tab"
+                  >
+                    Annotations &amp; Groups
+                  </button>
+                </li>
+                <li role="presentation"><hr class="dropdown-divider" /></li>
+                <li role="presentation">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-data"
+                    type="button"
+                    role="tab"
+                  >
+                    Data Tables
+                  </button>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#panel-export"
+                data-menu="export"
+                type="button"
+                role="tab"
+              >
+                Export
               </button>
             </li>
             <li class="nav-item" role="presentation">
               <button
                 class="nav-link"
                 data-bs-toggle="tab"
-                data-bs-target="#panel-layer"
+                data-bs-target="#panel-api"
+                data-menu="api"
                 type="button"
                 role="tab"
+                title="Arena3D's REST API: quick start, code and the interactive reference"
               >
-                Layer Actions
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#panel-node"
-                type="button"
-                role="tab"
-              >
-                Node Actions
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#panel-edge"
-                type="button"
-                role="tab"
-              >
-                Edge Actions
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#panel-data"
-                type="button"
-                role="tab"
-              >
-                View Data
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#panel-fps"
-                type="button"
-                role="tab"
-              >
-                FPS
+                API
               </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -136,6 +406,7 @@
                 class="nav-link"
                 data-bs-toggle="tab"
                 data-bs-target="#panel-help"
+                data-menu="help"
                 type="button"
                 role="tab"
               >
@@ -143,7 +414,40 @@
               </button>
             </li>
           </ul>
-          <div class="ms-auto" role="group" aria-label="Undo and redo">
+          <div
+            class="ms-auto nav-mode btn-group btn-group-sm"
+            role="group"
+            aria-label="Network mode"
+            title="Layers as floors, or one graph"
+          >
+            <button
+              type="button"
+              class="btn btn-outline-secondary active"
+              id="modeMultilayer"
+              disabled
+            >
+              Multilayered
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              id="modeSingle"
+              disabled
+            >
+              Single network
+            </button>
+          </div>
+          <div class="nav-theme">
+            <select
+              id="themeSelect"
+              class="form-select form-select-sm"
+              aria-label="Scene theme"
+              title="Scene theme"
+            >
+              <option>Theme</option>
+            </select>
+          </div>
+          <div role="group" aria-label="Undo and redo">
             <button
               id="undoButton"
               type="button"
@@ -151,7 +455,7 @@
               title="Undo (Ctrl+Z)"
               disabled
             >
-              &#x21b6; Undo
+              &#x21b6; <span class="nav-word">Undo</span>
             </button>
             <button
               id="redoButton"
@@ -160,7 +464,7 @@
               title="Redo (Ctrl+Shift+Z)"
               disabled
             >
-              &#x21b7; Redo
+              &#x21b7; <span class="nav-word">Redo</span>
             </button>
           </div>
         </div>
@@ -177,13 +481,36 @@
       <!-- Main View is intentionally empty: selecting it just reveals the canvas. -->
       <div class="tab-pane fade" id="panel-main-view" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-file" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-databases" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-find" role="tabpanel"></div>
+      <div
+        class="tab-pane fade"
+        id="panel-layer-selection"
+        role="tabpanel"
+      ></div>
+      <div class="tab-pane fade" id="panel-export" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-layouts" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-clustering" role="tabpanel"></div>
+      <div
+        class="tab-pane fade"
+        id="panel-annotation-view"
+        role="tabpanel"
+      ></div>
       <div class="tab-pane fade" id="panel-scene" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-layer" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-node" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-edge" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-style" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-attributes" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-metrics" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-statistics" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-plots" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-perturbation" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-explore" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-annotations" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-data" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-fps" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-api" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-help" role="tabpanel"></div>
     </div>
 
@@ -196,7 +523,7 @@
     ></button>
 
     <div id="navControlButtonsDiv"></div>
-    <div id="themeDiv"></div>
+    <div id="legend" class="d-none" aria-label="Legend"></div>
     <div id="info">
       No network loaded yet. Open the <b>File</b> tab to upload a network or
       load an example.
@@ -214,6 +541,8 @@
       <a href="https://www.fleming.gr" target="_blank"
         >Biomedical Sciences Research Center "Alexander Fleming"</a
       >
+      |
+      <a href="#" id="footerPrivacy">Privacy &amp; data</a>
     </footer>
     <script type="module" src="/src/main.ts"></script>
   </body>
