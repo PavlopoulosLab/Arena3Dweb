@@ -186,11 +186,6 @@ test('capture the interface screenshots for the Help pages', async ({
     }
   )
   await page.unroute('**/api/import/reactome/search**')
-  await panel(page, 'Find', '#panel-find', 'find', async () => {
-    await page.locator('#nodeSearchBar').fill('^CDK')
-    await page.locator('#nodeSearchMode').selectOption('regex')
-    await page.locator('#nodeSearchButton').click()
-  })
   // the cards open, their tools listed (sub-sections folded)
   await panel(page, 'Export', '#panel-export', 'export', async () => {
     await page
@@ -382,7 +377,14 @@ test('capture the containers and theme dialog screenshots', async ({
   ] as const) {
     await tick(i)
     await choose('#layerContainer', shape)
-    await page.waitForTimeout(2500) // the 3D layout inside comes back
+    await page.locator('#layer_status').evaluate((el) => (el.textContent = ''))
+    await page
+      .locator('#applyLayerContainer')
+      .evaluate((el) => (el as HTMLButtonElement).click())
+    // the 3D layout inside comes back from the server
+    await expect(page.locator('#layer_status')).toContainText('Layers set to', {
+      timeout: 60_000,
+    })
     await tick(i)
   }
   await tab(page, '3D View')
@@ -405,4 +407,23 @@ test('capture the containers and theme dialog screenshots', async ({
   await page.waitForTimeout(400)
   await dialog.screenshot({ path: `${OUT}/theme_dialog.png` })
   await page.locator('#themeDialogCancel').click()
+})
+
+// Find: matches listed as tables — nodes 10 to 19, and the edges at node 1
+// (find.png). A test of its own, so `--grep "find"` refreshes it alone.
+test('capture the find screenshot', async ({ page }) => {
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await session(page, 'figure2A_export.json')
+  await panel(page, 'Find', '#panel-find', 'find', async () => {
+    await page.locator('#nodeSearchMode').selectOption('regex')
+    await page.locator('#nodeSearchBar').fill('^1\\d$')
+    await page.locator('#nodeSearchButton').click()
+    await expect(page.locator('#nodeSearchResults tbody tr')).not.toHaveCount(0)
+    await page.locator('#edgeSearchBar').fill('1')
+    await page.locator('#edgeSearchButton').click()
+    await expect(page.locator('#edgeSearchResults tbody tr')).not.toHaveCount(0)
+  })
 })
