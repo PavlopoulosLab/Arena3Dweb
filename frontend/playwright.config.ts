@@ -7,6 +7,14 @@ export default defineConfig({
   testDir: './e2e',
   fullyParallel: false,
   retries: process.env.CI ? 2 : 0,
+  // Unset, Playwright defaults to 50% of the runner's reported CPU count —
+  // not tied to CI at all, so the actual concurrency (and therefore how much
+  // load hits the one shared backend) silently depends on whatever fleet
+  // machine GitHub happens to hand out for a given run. Pinned to 2 to match
+  // the backend's LAYOUT_WORKERS=2 compute-pool capacity and everything
+  // already measured/tuned against that figure (CI job/step timeouts,
+  // per-test timeout bumps for the heavier specs).
+  workers: process.env.CI ? 2 : undefined,
   // These drive a WebGL scene, and CI has no GPU — every test renders through
   // software GL and lands in the 15-30s range, so the 30s default was passing
   // on retries alone.

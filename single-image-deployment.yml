@@ -32,9 +32,18 @@ services:
       - ARENA_MAX_EDGES=${ARENA_MAX_EDGES:-10000}
       - ARENA_MAX_NODES=${ARENA_MAX_NODES:-20000}
       - ARENA_MAX_UPLOAD_BYTES=${ARENA_MAX_UPLOAD_BYTES:-20971520}
+      # Compute-pool sizing (app/services/compute_pool.py): each worker is a
+      # full process, busy with igraph/numpy/sklearn, so LAYOUT_WORKERS should
+      # track CPU_LIMIT below rather than be raised on its own — more workers
+      # than CPUs is pure oversubscription (slower jobs, more likely to hit
+      # COMPUTE_SECONDS), not more real throughput.
+      - ARENA_LAYOUT_WORKERS=${ARENA_LAYOUT_WORKERS:-2}
+      - ARENA_COMPUTE_SECONDS=${ARENA_COMPUTE_SECONDS:-300}
     deploy:
       resources:
         limits:
+          # raising this without also raising ARENA_LAYOUT_WORKERS above
+          # leaves the extra CPU unused by the compute pool
           cpus: "${CPU_LIMIT:-2}"
           memory: ${MEM_LIMIT:-1g}
         reservations:

@@ -109,8 +109,16 @@ async function openExample(
   })
 }
 
-for (const [label, layers, channels, first, last, axis] of EXAMPLES) {
-  test(`File → Example opens "${label}"`, async ({ page }) => {
+// One test over all examples rather than one test per example: the assertions
+// below are identical for every example (same app code path, only the fixture
+// data differs), so separate tests would just pay six full page loads/app
+// inits for no extra coverage — matches the pattern already used below for
+// "every node ... sits on its floor".
+test('File → Example opens every neural network correctly', async ({
+  page,
+}) => {
+  test.setTimeout(120_000) // six sessions on software GL
+  for (const [label, layers, channels, first, last, axis] of EXAMPLES) {
     await openExample(page, label)
     const scene = await page.evaluate((axis) => {
       const { ctx } = (window as unknown as Arena).__arena
@@ -123,18 +131,18 @@ for (const [label, layers, channels, first, last, axis] of EXAMPLES) {
         used: [...new Set(ctx.edgeObjects.flatMap((e) => e.channels))],
       }
     }, axis)
-    expect(scene.layers).toHaveLength(layers)
-    expect(scene.layers[0]).toBe(first)
-    expect(scene.layers.at(-1)).toBe(last)
+    expect(scene.layers, label).toHaveLength(layers)
+    expect(scene.layers[0], label).toBe(first)
+    expect(scene.layers.at(-1), label).toBe(last)
     // in order: left to right, or bottom to top
-    expect(scene.at).toEqual([...scene.at].sort((a, b) => a - b))
-    expect(new Set(scene.at).size).toBe(layers)
-    expect(scene.channels).toEqual(channels)
-    expect(scene.used.sort()).toEqual([...channels].sort())
-    expect(scene.nodes).toBeGreaterThan(100)
-    expect(scene.edges).toBeLessThanOrEqual(10_000)
-  })
-}
+    expect(scene.at, label).toEqual([...scene.at].sort((a, b) => a - b))
+    expect(new Set(scene.at).size, label).toBe(layers)
+    expect(scene.channels, label).toEqual(channels)
+    expect(scene.used.sort(), label).toEqual([...channels].sort())
+    expect(scene.nodes, label).toBeGreaterThan(100)
+    expect(scene.edges, label).toBeLessThanOrEqual(10_000)
+  }
+})
 
 // every node whole on its (square) floor: none runs past an edge
 test('every node of every neural network sits on its floor', async ({
