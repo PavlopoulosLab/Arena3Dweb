@@ -114,6 +114,9 @@ export interface RuntimeContext {
   selectedNodeColorFlag: boolean
   showAllNodeLabelsFlag: boolean
   showSelectedNodeLabelsFlag: boolean
+  // Show Labels: Chosen — the pinned labels, and the selection's when ticked
+  showChosenNodeLabelsFlag: boolean
+  chosenLabelsWithSelection: boolean
   renderNodeLabelsFlag: boolean
   showAllLayerLabelsFlag: boolean
   showSelectedLayerLabelsFlag: boolean
@@ -204,6 +207,8 @@ export const ctx: RuntimeContext = {
   selectedNodeColorFlag: true,
   showAllNodeLabelsFlag: false,
   showSelectedNodeLabelsFlag: true,
+  showChosenNodeLabelsFlag: false,
+  chosenLabelsWithSelection: true,
   renderNodeLabelsFlag: false,
   showAllLayerLabelsFlag: true,
   showSelectedLayerLabelsFlag: false,
@@ -257,6 +262,8 @@ export function resetContext(): void {
   ctx.selectedNodeColorFlag = true
   ctx.showAllNodeLabelsFlag = false
   ctx.showSelectedNodeLabelsFlag = true
+  ctx.showChosenNodeLabelsFlag = false
+  ctx.chosenLabelsWithSelection = true
   ctx.renderNodeLabelsFlag = false
   ctx.showAllLayerLabelsFlag = true
   ctx.showSelectedLayerLabelsFlag = false

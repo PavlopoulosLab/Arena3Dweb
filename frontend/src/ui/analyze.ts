@@ -20,7 +20,7 @@ import { PERTURBATION_HTML, initPerturbation } from './perturbation'
 import { ANNOTATIONS_HTML, initEnrichment } from './annotations'
 import { openAnnotationPanel } from './annotation_panel'
 import { PLOTS_HTML, initPlots } from './plots'
-import { openCard } from './sections'
+import { FOLD_ALL_HTML, openCard } from './sections'
 import { showTab } from './tabs'
 
 const analyzeProgress = new ProgressBar('analyzeProgress')
@@ -42,7 +42,7 @@ export const ANALYSIS_PANELS = [
   'annotations',
 ] as const
 
-// (no Expand all / Collapse all row: no panel here has three cards)
+// (an Expand all / Collapse all row only where there are 3+ cards: Perturbation)
 const panel = (body: string) =>
   `<div class="col-md-8 col-lg-6 layout-panel">${body}</div>`
 
@@ -52,7 +52,7 @@ export const LAYERS_NOTE = (id = '') =>
 
 const METRICS_HTML = panel(`
   ${LAYERS_NOTE('analyzeLayers')}
-  <details class="lp-section lp-more" id="analyzeCard_metrics" open>
+  <details class="lp-section lp-more" id="analyzeCard_metrics">
   <summary>Node Metrics</summary>
   <div class="mb-2">
     <label class="form-label" for="topologyScaleMetricChoice">Scale Nodes by Topology Metric:</label>
@@ -90,7 +90,7 @@ const METRICS_HTML = panel(`
 
 const STATISTICS_HTML = panel(`
   ${LAYERS_NOTE()}
-  <details class="lp-section lp-more" id="analyzeCard_network" open>
+  <details class="lp-section lp-more" id="analyzeCard_network">
   <summary>Network</summary>
   <div class="d-flex flex-wrap gap-2">
     <button id="networkStats" class="btn btn-outline-primary" title="Density, components, diameter, clustering, degree distribution… shown in Data Tables">Network Statistics</button>
@@ -101,10 +101,10 @@ const STATISTICS_HTML = panel(`
   </details>
 `)
 
-// what this panel held before the Annotations menu, and a way there
+// what this panel held before View → Annotations, and a way there
 const ANNOTATIONS_MOVED_HTML = `
 <div class="ann-moved mb-3">
-  <div class="small mb-2"><b>Pies, hulls, fog clouds and the group list</b> (colours, a hull switch per group, group tables) are in the <b>Annotations</b> menu of the top bar, next to Clustering.</div>
+  <div class="small mb-2"><b>Pies, hulls, clouds, 3D containers and the group list</b> (colours, a switch per group, group tables) are in <b>View → Annotations</b>.</div>
   <button type="button" id="analyzeOpenAnnotations" class="btn btn-outline-primary btn-sm">Open Annotations…</button>
 </div>`
 
@@ -112,7 +112,7 @@ const PANEL_HTML: Record<(typeof ANALYSIS_PANELS)[number], string> = {
   metrics: METRICS_HTML,
   statistics: STATISTICS_HTML,
   plots: panel(`${LAYERS_NOTE()}${PLOTS_HTML}`),
-  perturbation: panel(`${LAYERS_NOTE()}${PERTURBATION_HTML}`),
+  perturbation: panel(`${FOLD_ALL_HTML}${LAYERS_NOTE()}${PERTURBATION_HTML}`),
   explore: panel(EXPLORE_HTML),
   annotations: panel(`${ANNOTATIONS_MOVED_HTML}${ANNOTATIONS_HTML}`),
 }

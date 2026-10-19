@@ -40,6 +40,7 @@ export function initialSpreadLayers(direction = 1): number {
 
 function updateSelectedLayersStore(): void {
   const names = ctx.layers.filter((l) => l.isSelected).map((l) => l.name)
+  applyLayerCoords() // "Selected" axes follow the selection
   store.update({ selectedLayers: names })
   bus.emit('layers:selected', { names })
 }
@@ -145,8 +146,33 @@ export function setLayerNodeLabels(index: number, show: boolean): void {
 
 // Handlers (v2 Shiny handlers) =====
 
+// Each layer's coordinate system: all, the selected layers (following the
+// selection), none — or 'chosen', each layer's own Axes tick in Layer
+// selection.
+export type LayerCoordsMode = 'all' | 'selected' | 'none' | 'chosen'
+let coordsMode: LayerCoordsMode = 'none'
+export const layerCoordsMode = (): LayerCoordsMode => coordsMode
+
+export function setLayerCoordsMode(mode: LayerCoordsMode): void {
+  coordsMode = mode
+  applyLayerCoords()
+}
+
+export function applyLayerCoords(): void {
+  if (coordsMode === 'chosen') return
+  for (const layer of ctx.layers)
+    layer.toggleCoords(
+      coordsMode === 'all' || (coordsMode === 'selected' && layer.isSelected)
+    )
+}
+
+export function setLayerCoords(index: number, show: boolean): void {
+  coordsMode = 'chosen'
+  ctx.layers[index]?.toggleCoords(show)
+}
+
 export function showLayerCoords(show: boolean): void {
-  for (const layer of ctx.layers) layer.toggleCoords(show)
+  setLayerCoordsMode(show ? 'all' : 'none')
 }
 
 export function setLayerAxesOpacity(opacity: number): void {

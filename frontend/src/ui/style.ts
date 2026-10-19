@@ -5,24 +5,36 @@
 // the property, a new value, and Set / Reset.
 
 import { bus } from '../bus'
+import { nodeLabelState } from '../actions/node'
+import { registerSelectionAction } from '../actions/right_click_menu'
 import { ctx } from '../three'
 import { colorNodesByValues } from '../actions/values'
 import { escapeHtml } from '../utils'
 import {
+  LABEL_LOOK_LABELS,
+  LABEL_POSITION_LABELS,
   NODE_SHAPE_LABELS as SHAPES,
+  labelLookText,
+  type LabelLookStyle,
+  type LabelPosition,
   type NodeGeometryType,
 } from '../three/Node'
 import { LINE_TYPE_LABELS, type LineType } from '../three/Edge'
 import {
   colorBlindMode,
   colorChannelsByPalette,
+  colorLabelsBy,
   colorNodesBy,
+  showLabelsOf,
+  LABEL_PALETTE_LABELS,
   edgeTargets,
   nodeTargets,
   styleEdges,
   styleNodes,
   type ColorBy,
   type EdgeTarget,
+  type LabelColorBy,
+  type LabelPalette,
   type NodeTarget,
 } from '../actions/style'
 import {
@@ -113,6 +125,20 @@ const NODE_PROPS = `
   ${prop('label', 'Label', 'styleNodeLabel', '<input type="text" id="styleNodeLabel" class="form-control form-control-sm" placeholder="Node name" maxlength="200" />', 'styleNodeLabelApply', 'styleNodeLabelReset')}
   ${prop('labelColor', 'Label colour', 'styleNodeLabelColor', '<input type="color" id="styleNodeLabelColor" value="#ffd43b" />', 'styleNodeLabelColorApply', 'styleNodeLabelColorReset')}
   ${prop('labelSize', 'Label font size', 'styleNodeLabelSize', range('styleNodeLabelSize', 6, 40, 1, 16, '16 px', 'Label font size'), 'styleNodeLabelSizeApply', 'styleNodeLabelSizeReset')}
+  ${prop(
+    'labelLook',
+    'Label style',
+    'styleNodeLabelLook',
+    `<select id="styleNodeLabelLook" class="form-select form-select-sm">${opts(LABEL_LOOK_LABELS)}</select>
+    <span class="form-check m-0 small"><input class="form-check-input" type="checkbox" id="styleNodeLabelBold" /><label class="form-check-label" for="styleNodeLabelBold">Bold</label></span>
+    <span class="style-props__look" data-look="halo box shadow"><input type="color" id="styleNodeLabelLookColor" value="#ffffff" title="Halo, box or shadow colour" /><span class="form-check m-0 small"><input class="form-check-input" type="checkbox" id="styleNodeLabelLookAuto" checked /><label class="form-check-label" for="styleNodeLabelLookAuto" title="White around dark text, dark around light text">Auto</label></span></span>
+    <span class="style-props__look" data-look="halo">${range('styleNodeLabelHalo', 0.5, 6, 0.5, 2, '2.0 px', 'Halo width')}</span>
+    <span class="style-props__look" data-look="box">${range('styleNodeLabelBox', 0.1, 1, 0.05, 0.75, '0.75', 'Box opacity')}</span>`,
+    'styleNodeLabelLookApply',
+    'styleNodeLabelLookReset'
+  )}
+  ${prop('labelPosition', 'Label position', 'styleNodeLabelPosition', `<select id="styleNodeLabelPosition" class="form-select form-select-sm">${opts(LABEL_POSITION_LABELS)}</select>`, 'styleNodeLabelPositionApply', 'styleNodeLabelPositionReset')}
+  ${prop('labelShown', 'Label shown', 'styleNodeLabelShownApply', '<span class="small style-props__hint">Kept on screen whatever is selected (Show Labels: Chosen)</span>', 'styleNodeLabelShownApply', 'styleNodeLabelShownReset')}
   ${prop('descr', 'Description', 'styleNodeDescr', '<input type="text" id="styleNodeDescr" class="form-control form-control-sm" placeholder="Shown on hover" maxlength="2000" />', 'styleNodeDescrApply', 'styleNodeDescrReset')}
 </div>`
 
@@ -151,6 +177,14 @@ const STYLE_HTML = `
     <select id="styleCategorical" class="form-select form-select-sm" style="width:auto" aria-label="Categorical palette">${opts(CATEGORICAL_LABELS)}</select>
     <select id="styleSequential" class="form-select form-select-sm d-none" style="width:auto" aria-label="Sequential palette">${opts(SEQUENTIAL_LABELS)}</select>
     <button id="styleColorByApply" class="btn btn-outline-primary btn-sm">Apply Palette</button>
+  </div>
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <label class="form-label m-0" for="styleLabelColorBy">Colour labels by:</label>
+    <select id="styleLabelColorBy" class="form-select form-select-sm" style="width:auto">
+      ${opts({ layer: 'Layer', cluster: 'Cluster', annotation: 'First annotation', match: 'Node colour', contrast: 'Contrast with node' })}
+    </select>
+    <select id="styleLabelPalette" class="form-select form-select-sm" style="width:auto" aria-label="Label palette">${opts(LABEL_PALETTE_LABELS)}</select>
+    <button id="styleLabelColorByApply" class="btn btn-outline-primary btn-sm" title="Colour the labels of the nodes in Apply to; their nodes keep their colours">Colour Labels</button>
   </div>
   </section>
 
@@ -252,6 +286,19 @@ function nodeNow(key: string, i: number): Now {
       return n.labelSize
         ? { text: String(n.labelSize), title: `${n.labelSize} px` }
         : { text: 'auto', title: 'As the label size (Edit → Nodes)' }
+    case 'labelLook':
+      return n.labelLook
+        ? { text: n.labelLook.style, title: labelLookText(n.labelLook) }
+        : { text: 'auto', title: 'As the label style (Edit → Nodes)' }
+    case 'labelShown':
+      return n.labelShown
+        ? { text: 'shown', title: 'Kept on screen (Show Labels: Chosen)' }
+        : { text: '—', title: 'Shown as Show Labels says' }
+    case 'labelPosition':
+      return {
+        text: LABEL_POSITION_LABELS[n.labelPosition],
+        title: `Label: ${LABEL_POSITION_LABELS[n.labelPosition].toLowerCase()}`,
+      }
     default:
       return n.descr
         ? { text: n.descr, title: n.descr }
@@ -385,6 +432,8 @@ const FORMATS: Record<string, (v: number) => string> = {
   styleNodeStretchH: (v) => `${v.toFixed(1)}×`,
   styleNodeStretchD: (v) => `${v.toFixed(1)}×`,
   styleNodeLabelSize: (v) => `${v} px`,
+  styleNodeLabelHalo: (v) => `${v.toFixed(1)} px`,
+  styleNodeLabelBox: (v) => v.toFixed(2),
   styleEdgeWidth: (v) => `${v.toFixed(2)}×`,
   styleEdgeOpacity: (v) => `${v.toFixed(2)}×`,
 }
@@ -508,6 +557,111 @@ export function initStylePanel(): void {
     node({ descr: value('styleNodeDescr').trim() }, 'Descriptions set')
   )
   on('styleNodeDescrReset', () => node({ descr: '' }, 'Descriptions removed'))
+
+  // label style: the colour, halo width and box opacity show when they apply
+  const lookSelect = document.getElementById(
+    'styleNodeLabelLook'
+  ) as HTMLSelectElement
+  lookSelect.value = 'halo'
+  const showLook = () => {
+    for (const el of pane.querySelectorAll<HTMLElement>('[data-look]'))
+      el.hidden = !el.dataset.look!.split(' ').includes(lookSelect.value)
+  }
+  lookSelect.addEventListener('change', showLook)
+  showLook()
+  const checked = (id: string) =>
+    (document.getElementById(id) as HTMLInputElement).checked
+  // picking a colour means that colour, not the automatic one
+  document
+    .getElementById('styleNodeLabelLookColor')
+    ?.addEventListener('input', () => {
+      ;(
+        document.getElementById('styleNodeLabelLookAuto') as HTMLInputElement
+      ).checked = false
+    })
+  on('styleNodeLabelLookApply', () =>
+    node(
+      {
+        labelLook: {
+          style: lookSelect.value as LabelLookStyle,
+          color: checked('styleNodeLabelLookAuto')
+            ? ''
+            : value('styleNodeLabelLookColor'),
+          width: num('styleNodeLabelHalo'),
+          opacity: num('styleNodeLabelBox'),
+          bold: checked('styleNodeLabelBold'),
+        },
+      },
+      'Label style set'
+    )
+  )
+  on('styleNodeLabelLookReset', () =>
+    node({ labelLook: null }, 'Labels follow the label style')
+  )
+  on('styleNodeLabelPositionApply', () =>
+    node(
+      { labelPosition: value('styleNodeLabelPosition') as LabelPosition },
+      'Label position set'
+    )
+  )
+  on('styleNodeLabelPositionReset', () =>
+    node({ labelPosition: 'right' }, 'Labels right of their nodes')
+  )
+
+  // chosen labels: kept on screen whatever the selection (also right-click →
+  // Selected nodes → Show / Hide Their Labels)
+  on('styleNodeLabelShownApply', () => {
+    const n = showLabelsOf(nodeTargets(nodeTarget()))
+    done(n, `Labels kept on screen; Show Labels: ${nodeLabelState().mode}`)
+  })
+  on('styleNodeLabelShownReset', () =>
+    done(
+      showLabelsOf(nodeTargets(nodeTarget()), false),
+      'Labels shown as Show Labels says'
+    )
+  )
+  registerSelectionAction({
+    label: 'Show Their Labels',
+    order: 67,
+    when: (sel) => sel.some((i) => !ctx.nodeObjects[i].labelShown),
+    run: (sel) => void showLabelsOf(sel),
+  })
+  registerSelectionAction({
+    label: 'Hide Their Labels',
+    order: 68,
+    when: (sel) => sel.some((i) => ctx.nodeObjects[i].labelShown),
+    run: (sel) => void showLabelsOf(sel, false),
+  })
+
+  // label colours apart from the nodes': by group and palette, or from the
+  // node's own colour
+  const labelBy = document.getElementById(
+    'styleLabelColorBy'
+  ) as HTMLSelectElement
+  labelBy.addEventListener('change', () =>
+    document
+      .getElementById('styleLabelPalette')!
+      .classList.toggle(
+        'd-none',
+        labelBy.value === 'match' || labelBy.value === 'contrast'
+      )
+  )
+  on('styleLabelColorByApply', () => {
+    const by = labelBy.value as LabelColorBy
+    const groups = colorLabelsBy(
+      nodeTarget(),
+      by,
+      value('styleLabelPalette') as LabelPalette
+    )
+    if (!groups) return status('No labels to colour — check "Apply to".', true)
+    status(
+      by === 'match'
+        ? 'Labels take their node colours (made to read on the background).'
+        : by === 'contrast'
+          ? 'Labels take a colour that reads on their nodes.'
+          : `Labels coloured by ${by} (${groups} group${groups === 1 ? '' : 's'}).`
+    )
+  })
 
   const colorBy = document.getElementById('styleColorBy') as HTMLSelectElement
   const column = document.getElementById(

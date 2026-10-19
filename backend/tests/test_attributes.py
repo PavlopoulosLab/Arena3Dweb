@@ -11,6 +11,9 @@ NO_NODE_STYLE = {
     "label": None,
     "label_color": None,
     "label_size": None,
+    "label_style": None,
+    "label_position": None,
+    "label_shown": None,
 }
 NO_EDGE_STYLE = {"width": None, "opacity": None, "line_type": None, "arrow_color": None}
 
@@ -89,9 +92,11 @@ def test_edge_attributes_without_channel() -> None:
 def test_node_attributes_edit_attributes_columns() -> None:
     # what Edit → Attributes → Export node attributes writes
     tsv = (
-        "Node\tLayer\tColor\tSize\tShape\tOpacity\tLabel\tLabelColor\tLabelSize\tUrl\tDescription\tAnnotation\n"
-        "A\tL1\t#ff0000\t1.5\tCube\t0.4\tHub\t#00ff00\t20\t\tkinase\tGO:1;GO:2\n"
-        "B\tL1\t#00ff00\t1\t\t\t\t\t\t\t\t\n"
+        "Node\tLayer\tColor\tSize\tShape\tOpacity\tLabel\tLabelColor\tLabelSize\t"
+        "LabelStyle\tLabelPosition\tLabelShown\tUrl\tDescription\tAnnotation\n"
+        "A\tL1\t#ff0000\t1.5\tCube\t0.4\tHub\t#00ff00\t20\thalo #ffffff 3 bold\tCentre\tyes\t"
+        "\tkinase\tGO:1;GO:2\n"
+        "B\tL1\t#00ff00\t1\t\t\t\t\t\t\t\t\t\t\t\n"
     )
     r = _post("nodes", tsv)
     assert r.status_code == 200
@@ -99,6 +104,9 @@ def test_node_attributes_edit_attributes_columns() -> None:
     assert a["shape"] == "cube"
     assert a["opacity"] == 0.4
     assert (a["label"], a["label_color"], a["label_size"]) == ("Hub", "#00ff00", 20)
+    # the frontend reads the label look; the position is lower-cased
+    assert (a["label_style"], a["label_position"]) == ("halo #ffffff 3 bold", "centre")
+    assert a["label_shown"] is True
     assert a["annotations"] == ["GO:1", "GO:2"]
     assert {k: b[k] for k in NO_NODE_STYLE} == NO_NODE_STYLE
 

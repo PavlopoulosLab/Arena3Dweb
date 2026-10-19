@@ -21,7 +21,7 @@ import {
 
 const SCENE_HTML = `
 <div class="col-md-6 col-lg-4 layout-panel">
-  <details class="lp-section lp-more" id="sceneCard_axes" open>
+  <details class="lp-section lp-more" id="sceneCard_axes">
   <summary>Axes &amp; rotation</summary>
   <div class="form-check mb-2">
     <input class="form-check-input" type="checkbox" id="toggleSceneCoords" checked />
@@ -38,7 +38,7 @@ const SCENE_HTML = `
     <label class="form-check-label" for="toggleBloom">Node Glow (dark backgrounds)</label>
   </div>
   </details>
-  <details class="lp-section lp-more" id="sceneCard_overlays" open>
+  <details class="lp-section lp-more" id="sceneCard_overlays">
   <summary>Overlays</summary>
   <div class="form-check mb-3">
     <input class="form-check-input" type="checkbox" id="toggleMinimap" checked />
@@ -60,7 +60,7 @@ const SCENE_HTML = `
   </div>`
   ).join('')}
   </details>
-  <details class="lp-section lp-more" id="sceneCard_background" open>
+  <details class="lp-section lp-more" id="sceneCard_background">
   <summary>Background</summary>
   <div id="sceneColorPicker" class="colorPicker">
     <input type="color" id="scene_color" name="scene_color" value="#000000" />

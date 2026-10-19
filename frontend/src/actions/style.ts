@@ -1,12 +1,17 @@
 // Rich editing — PLAN-ROADMAP Phase 24. Style a target set of nodes or edges
 // (colour, size, shape, width, after Cytoscape's Style panel also opacity,
-// border, stretch, label text/colour/size, description, line type and arrow
-// colour) or colour them by a palette; every change is one undoable command
-// and persists in sessions.
+// border, stretch, label text/colour/size/look/position, description, line
+// type and arrow colour) or colour them, or their labels, by a palette; every
+// change is one undoable command and persists in sessions.
 
 import * as THREE from 'three'
 import { ctx } from '../three'
-import type { NodeGeometryType } from '../three/Node'
+import {
+  DEFAULT_LABEL_LOOK,
+  type LabelLook,
+  type LabelPosition,
+  type NodeGeometryType,
+} from '../three/Node'
 import type { LineType } from '../three/Edge'
 import type { Command } from '../commands/base'
 import { history } from '../commands/base'
@@ -20,7 +25,16 @@ import {
   type SequentialPalette,
 } from './palettes'
 import { redrawIntraLayerEdges } from './edge'
-import { restyleNodeLabels } from './labels'
+import { contrastWith, restyleNodeLabels } from './labels'
+import {
+  decideNodeLabelFlags,
+  revealChosenLabels,
+  setNodeLabelMode,
+  type NodeLabelState,
+} from './node'
+import { readableOn, themeChannelColor, themeNodeColor } from './palette'
+import { THEMES } from './theme_presets'
+import { store } from '../store'
 
 // ---------------------------------------------------------------- targets
 export type NodeTarget = 'selected' | 'all' | `layer:${string}`
@@ -59,6 +73,9 @@ export type NodeStyle = {
   label: string
   labelColor: string
   labelSize: number
+  labelLook: LabelLook | null
+  labelPosition: LabelPosition
+  labelShown: boolean
   descr: string
 }
 
@@ -75,6 +92,9 @@ export const nodeStyle = (i: number): NodeStyle => {
     label: n.label,
     labelColor: n.labelColor,
     labelSize: n.labelSize,
+    labelLook: n.labelLook && { ...n.labelLook },
+    labelPosition: n.labelPosition,
+    labelShown: n.labelShown,
     descr: n.descr,
   }
 }
@@ -82,6 +102,8 @@ export const nodeStyle = (i: number): NodeStyle => {
 export class NodeStyleCommand implements Command {
   private readonly before: NodeStyle[]
   private readonly beforePriority = ctx.nodeColorPrioritySource
+  // Show Labels before pinning moved it to Chosen (see execute)
+  private beforeLabels: NodeLabelState | null = null
   constructor(
     public description: string,
     private readonly indices: number[],
@@ -114,24 +136,33 @@ export class NodeStyleCommand implements Command {
       if (s.label !== undefined) n.label = s.label
       if (s.labelColor !== undefined) n.labelColor = s.labelColor
       if (s.labelSize !== undefined) n.labelSize = s.labelSize
+      if (s.labelLook !== undefined)
+        n.labelLook = s.labelLook && { ...s.labelLook }
+      if (s.labelPosition !== undefined) n.labelPosition = s.labelPosition
+      if (s.labelShown !== undefined) n.labelShown = s.labelShown
       if (s.descr !== undefined) n.descr = s.descr
     })
     ctx.nodeColorPrioritySource = priority
     restyleNodeLabels()
-    ctx.renderNodeLabelsFlag = true
+    decideNodeLabelFlags() // pinned labels show or go
   }
 
   execute(): void {
-    const changesColor = this.indices.some(
-      (_, k) => this.after(this.indices[k], k).color
-    )
+    const patches = this.indices.map((i, k) => this.after(i, k))
+    const changesColor = patches.some((p) => p.color)
     this.apply(
-      (k) => this.after(this.indices[k], k),
+      (k) => patches[k],
       changesColor ? 'default' : ctx.nodeColorPrioritySource
     )
+    // a label pinned to stay on screen shows at once
+    if (patches.some((p) => p.labelShown))
+      this.beforeLabels = revealChosenLabels()
   }
   undo(): void {
     this.apply((k) => this.before[k], this.beforePriority)
+    if (this.beforeLabels)
+      setNodeLabelMode(this.beforeLabels.mode, this.beforeLabels.withSelection)
+    this.beforeLabels = null
   }
 }
 
@@ -151,6 +182,74 @@ export function styleNodeIndices(
   if (ids.length)
     history.execute(new NodeStyleCommand(description, ids, () => patch))
   return ids.length
+}
+
+/** Pin (or unpin) the labels of these nodes: pinned labels stay on screen
+ * with Show Labels: Chosen, whatever the selection. One undo step. */
+export function showLabelsOf(ids: number[], shown = true): number {
+  return styleNodeIndices(
+    ids,
+    { labelShown: shown },
+    shown ? 'Show their labels' : 'Hide their labels'
+  )
+}
+
+// The label picker's buttons (Edit → Nodes → Labels to show), on a list of
+// nodes: every label chosen, none, the other way round, or just the selected
+// nodes'. Worked out now, so a redo repeats the same choice. One undo step.
+export type LabelChoice = 'all' | 'none' | 'invert' | 'selected'
+const CHOICE_NAMES: Record<LabelChoice, string> = {
+  all: 'Show every listed label',
+  none: 'Hide every listed label',
+  invert: 'Invert the listed labels',
+  selected: "Show the selected nodes' labels",
+}
+
+/** @return labels chosen among `ids` afterwards */
+export function chooseLabels(ids: number[], how: LabelChoice): number {
+  if (ids.length === 0) return 0
+  const n = (i: number) => ctx.nodeObjects[i]
+  const shown = new Map(
+    ids.map((i) => [
+      i,
+      how === 'all' ||
+        (how === 'invert' && !n(i).labelShown) ||
+        (how === 'selected' && n(i).isSelected),
+    ])
+  )
+  history.execute(
+    new NodeStyleCommand(CHOICE_NAMES[how], ids, (i) => ({
+      labelShown: shown.get(i)!,
+    }))
+  )
+  return ids.filter((i) => shown.get(i)).length
+}
+
+/** Change part of the label look of these nodes (bold, the style …), each
+ * keeping the rest of its own look (or the default halo). One undo step. */
+export function styleLabelLooks(
+  ids: number[],
+  change: Partial<LabelLook>,
+  description = 'Style labels'
+): number {
+  if (ids.length)
+    history.execute(
+      new NodeStyleCommand(description, ids, (i) => ({
+        labelLook: {
+          ...(ctx.nodeObjects[i].labelLook ?? DEFAULT_LABEL_LOOK),
+          ...change,
+        },
+      }))
+    )
+  return ids.length
+}
+
+/** Unpin every label. @return labels unpinned */
+export function clearChosenLabels(): number {
+  return showLabelsOf(
+    ctx.nodeObjects.flatMap((n, i) => (n.labelShown ? [i] : [])),
+    false
+  )
 }
 
 // ---------------------------------------------------------------- edges
@@ -351,6 +450,99 @@ export function colorNodesBy(
   if (record) history.execute(cmd)
   else pending.push(cmd)
   setLegend(legendFor(by, ids, colorOf, ramp))
+  return groups
+}
+
+// ---------------------------------------------------------------- labels
+// Label colours apart from the node colours: one palette colour per group
+// (layer, cluster or first annotation term), the node's own colour (made to
+// read on the background) or a colour that reads on top of the node.
+export type LabelColorBy =
+  'layer' | 'cluster' | 'annotation' | 'match' | 'contrast'
+export type LabelPalette = CategoricalPalette | 'theme' | 'channels'
+export const LABEL_PALETTE_LABELS: Record<LabelPalette, string> = {
+  theme: 'Theme node colours',
+  channels: 'Theme channel colours',
+  distinct: 'Distinct (colour-blind checked)',
+  okabeIto: 'Okabe–Ito (colour-blind safe)',
+  tol: 'Tol bright (colour-blind safe)',
+}
+
+const background = () =>
+  `#${ctx.renderer?.getClearColor(new THREE.Color()).getHexString() ?? '000000'}`
+
+// one colour per key, in first-seen order of `keys`, each made to read on
+// the background the labels sit on
+function paletteColors(
+  keys: string[],
+  palette: LabelPalette
+): Map<string, string> {
+  if (palette !== 'theme' && palette !== 'channels') {
+    const bg = background()
+    const colors = categoricalColors(keys, surface(), palette)
+    for (const [k, c] of colors) colors.set(k, readableOn(c, bg))
+    return colors
+  }
+  const theme = THEMES[store.get().currentTheme] ?? THEMES.dark
+  const out = new Map<string, string>()
+  for (const k of keys)
+    if (!out.has(k))
+      out.set(
+        k,
+        palette === 'theme'
+          ? themeNodeColor(theme, out.size)
+          : themeChannelColor(theme, out.size)
+      )
+  return out
+}
+
+/** Colour the labels of the target nodes. @return groups coloured (or 0) */
+export function colorLabelsBy(
+  target: NodeTarget,
+  by: LabelColorBy,
+  palette: LabelPalette = 'theme'
+): number {
+  return colorLabelIndices(nodeTargets(target), by, palette)
+}
+
+export function colorLabelIndices(
+  ids: number[],
+  by: LabelColorBy,
+  palette: LabelPalette = 'theme'
+): number {
+  if (ids.length === 0) return 0
+  const hex = (c: string) => `#${new THREE.Color(c).getHexString()}`
+  let colorOf: (i: number) => string
+  let groups: number
+  if (by === 'match' || by === 'contrast') {
+    const bg = background()
+    colorOf = (i) => {
+      const c = hex(ctx.nodeObjects[i].getColor())
+      return by === 'match' ? readableOn(c, bg) : contrastWith(c)
+    }
+    groups = new Set(ids.map(colorOf)).size
+  } else {
+    const key = (i: number) => {
+      const n = ctx.nodeObjects[i]
+      if (by === 'layer') return n.layer
+      if (by === 'cluster') return n.cluster || '(none)'
+      return n.annotations[0] ?? '(none)'
+    }
+    // order across the whole network, so a group keeps its colour whichever
+    // nodes are coloured
+    const order =
+      by === 'layer'
+        ? ctx.layers.map((l) => l.name)
+        : ctx.nodeObjects.map((_, i) => key(i))
+    const colors = paletteColors(order, palette)
+    colorOf = (i) => colors.get(key(i))!
+    groups = new Set(ids.map(key)).size
+  }
+  history.execute(
+    new NodeStyleCommand(`Colour labels by ${by}`, ids, (i) => ({
+      labelColor: colorOf(i),
+    }))
+  )
   return groups
 }
 

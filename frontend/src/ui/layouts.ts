@@ -54,7 +54,7 @@ import { PROGRESS_HTML, ProgressBar } from './progress'
 import type { Scope } from '../api/client'
 import { UMAP, umapOptions } from '../actions/umap'
 import { initUmapForm, readUmapChoice, umapFormHtml } from './umap'
-import { FOLD_ALL_HTML } from './sections'
+import { FOLD_ALL_HTML, openCard } from './sections'
 
 // v2 views/layouts.R option lists (Davidson-Harel / GEM / Edge Betweenness
 // were commented out there too).
@@ -89,7 +89,7 @@ const options = (values: string[]) =>
 const LAYOUTS_HTML = `
 <div class="col-md-8 col-lg-6 layout-panel">
   ${FOLD_ALL_HTML}
-  <details class="lp-section lp-more" id="layoutCard_layers" open data-multilayer-only>
+  <details class="lp-section lp-more" id="layoutCard_layers" data-multilayer-only>
     <summary><span class="lp-step">1</span>Layers</summary>
     <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
       <span id="layoutLayerSummary" class="small"></span>
@@ -98,7 +98,7 @@ const LAYOUTS_HTML = `
     <div id="channelColorLayoutDiv" class="channelColorLayoutDiv"></div>
   </details>
 
-  <details class="lp-section lp-more" id="layoutCard_layout" open>
+  <details class="lp-section lp-more" id="layoutCard_layout">
     <summary><span class="lp-step">2</span><span data-multilayer-only>Layout</span><span data-single-only>Layout of the whole network</span></summary>
     <div class="form-text mt-0 mb-2" data-single-only>One graph, as in NORMA: the layout runs on every node at once (in 3D while <i>3D Layout</i> is on); the Groups card below organises it by clusters (the Clustering panel) or annotations.</div>
     <label class="form-label small" for="layoutAlgorithmChoice">Algorithm</label>
@@ -618,6 +618,7 @@ export function initLayoutsPanel(): void {
     ?.addEventListener('click', (e) => {
       e.preventDefault()
       showTab('#panel-clustering')
+      openCard(document.getElementById('runClustering'))
     })
 
   document
@@ -879,6 +880,7 @@ function initGroupLayout(): void {
   el('groupOpenClustering').addEventListener('click', (e) => {
     e.preventDefault()
     showTab('#panel-clustering')
+    openCard(document.getElementById('runClustering'))
   })
   for (const [id, digits] of [
     ['groupForce', 0],

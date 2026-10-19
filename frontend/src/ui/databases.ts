@@ -83,6 +83,7 @@ function card(key: string, title: string, blurb: string, body: string): string {
   <div class="db-card__body">
     <div class="form-text mt-0 mb-2">${blurb}</div>
     ${body}
+    <div id="msg_${key}" class="db-card__msg small" role="alert"></div>
     ${PROGRESS_HTML(`progress_${key}`, `${title} import progress`)}
   </div>
 </details>`
@@ -237,6 +238,37 @@ function status(msg: string, isError = false): void {
   el.className = `small mt-2 ${isError ? 'text-danger' : 'text-success'}`
 }
 
+// A problem with a card's query: said under that card's button (the panel's
+// status line is below every card, out of sight) and in the status line; the
+// field to fill in is outlined and focused until it is edited.
+function warn(card: string, msg: string, field?: string): void {
+  status(msg, true)
+  const line = document.getElementById(`msg_${card}`)
+  if (line) {
+    line.textContent = msg
+    line.className = 'db-card__msg small text-danger mt-2'
+  }
+  const input = field ? document.getElementById(field) : null
+  if (input) {
+    input.classList.add('is-invalid')
+    input.focus()
+    input.addEventListener(
+      'input',
+      () => input.classList.remove('is-invalid'),
+      {
+        once: true,
+      }
+    )
+  }
+}
+function clearWarning(card: string): void {
+  const line = document.getElementById(`msg_${card}`)
+  if (line) {
+    line.textContent = ''
+    line.className = 'db-card__msg small'
+  }
+}
+
 const val = (id: string) =>
   (document.getElementById(id) as HTMLInputElement | HTMLSelectElement).value
 const checked = (selector: string): string[] =>
@@ -277,6 +309,7 @@ async function load<T extends NetworkData>(
 ): Promise<void> {
   const choice = await askImportAs(what, { importer: true })
   if (!choice) return
+  clearWarning(card)
   const progress = barFor(card)
   status(`Fetching from ${what}…`)
   progress.computing(`Fetching from ${what}`)
@@ -299,16 +332,16 @@ async function load<T extends NetworkData>(
     showTab('#panel-main-view')
   } catch (err) {
     progress.hide()
-    status(errorText(err), true)
+    warn(card, errorText(err))
   } finally {
     finishLoader()
   }
 }
 
-function proteins(id: string): string[] | null {
+function proteins(card: string, id: string): string[] | null {
   const ids = splitList(val(id))
   if (ids.length === 0) {
-    status('Type one or more protein names, e.g. TP53.', true)
+    warn(card, 'Type one or more protein names, e.g. TP53.', id)
     return null
   }
   return ids
@@ -375,7 +408,12 @@ function initPicker(key: 'reactome' | 'go'): void {
   const search = async () => {
     const q = val(`${key}_query`).trim()
     if (q.length < 2)
-      return status('Type at least two characters to search.', true)
+      return warn(
+        key,
+        'Type at least two characters to search.',
+        `${key}_query`
+      )
+    clearWarning(key)
     results.innerHTML = '<span class="form-text">Searching…</span>'
     try {
       hits = await api.searchSets(key, q, Number(val(`${key}_species`)))
@@ -383,7 +421,7 @@ function initPicker(key: 'reactome' | 'go'): void {
     } catch (err) {
       hits = []
       results.innerHTML = ''
-      status(errorText(err), true)
+      warn(key, errorText(err))
     }
   }
   document
@@ -431,6 +469,7 @@ export function initDatabasesPanel(): void {
   initStringCard({
     load: (what, request, after) => load('string', what, request, after),
     status,
+    warn: (msg, field) => warn('string', msg, field),
     progress: barFor('string'),
   })
   for (const [button, db, idsId, speciesId, scoreId, onlyId] of [
@@ -452,7 +491,7 @@ export function initDatabasesPanel(): void {
     ],
   ] as const)
     document.getElementById(button)?.addEventListener('click', () => {
-      const ids = proteins(idsId)
+      const ids = proteins(db.toLowerCase(), idsId)
       if (!ids) return
       void load(db.toLowerCase(), db, () =>
         api.importDatabases({
@@ -466,11 +505,11 @@ export function initDatabasesPanel(): void {
       )
     })
   document.getElementById('db_import_layers')?.addEventListener('click', () => {
-    const ids = proteins('cmp_identifiers')
+    const ids = proteins('compare', 'cmp_identifiers')
     if (!ids) return
     const databases = checked('.db_database')
     if (databases.length === 0)
-      return status('Tick at least one database.', true)
+      return warn('compare', 'Tick at least one database.')
     void load('compare', databases.join(', '), () =>
       api.importDatabases({
         identifiers: ids,
@@ -488,9 +527,10 @@ export function initDatabasesPanel(): void {
     ?.addEventListener('click', () => {
       const pathways = lines(val('reactome_ids'))
       if (pathways.length === 0)
-        return status(
+        return warn(
+          'reactome',
           'Add one or more Reactome pathway identifiers (search above).',
-          true
+          'reactome_ids'
         )
       void load('reactome', 'Reactome', () =>
         api.importReactome({
@@ -507,7 +547,11 @@ export function initDatabasesPanel(): void {
   document.getElementById('db_import_go')?.addEventListener('click', () => {
     const terms = lines(val('go_ids'))
     if (terms.length === 0)
-      return status('Add one or more GO term identifiers (search above).', true)
+      return warn(
+        'go',
+        'Add one or more GO term identifiers (search above).',
+        'go_ids'
+      )
     void load('go', 'Gene Ontology', () =>
       api.importGo({
         terms,
@@ -528,7 +572,13 @@ export function initDatabasesPanel(): void {
         // accept a pasted NDEx viewer URL too
         .replace(/^.*\/networks?\//, '')
       if (!/^[0-9a-fA-F-]{36}$/.test(uuid))
-        return status('Paste an NDEx network UUID (36 characters).', true)
+        return warn(
+          'ndex',
+          uuid
+            ? 'That is not an NDEx network UUID (36 characters).'
+            : 'Paste an NDEx network UUID (36 characters), or pick an example.',
+          'ndex_uuid'
+        )
       void load('ndex', 'NDEx', () => api.importNdex(uuid))
     })
   document.querySelectorAll<HTMLElement>('.ndex-example').forEach((b) =>

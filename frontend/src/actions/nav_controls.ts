@@ -205,6 +205,83 @@ function scaleNodes(): void {
   for (const i of selected) ctx.nodeObjects[i].setScale(value)
 }
 
+// --- Single network: spread ----------------------------------------------
+// In single-network mode every layer sits in one shared frame, so scaling
+// each node's distance from the network's centre makes the network take more
+// or less room without changing its layout (node sizes stay). The slider is
+// relative to the positions it started from; any other change — a layout,
+// undo, a drag, a new network or mode — makes the positions then the new 1×.
+
+type Point = { x: number; y: number; z: number }
+let spreadBase: Point[] | null = null
+let spreadCentre: Point = { x: 0, y: 0, z: 0 }
+let spreadBefore: TransformSnapshot | null = null
+let spreadCommitting = false
+
+// the slider is log2 of the factor: -2..2 is 0.25×..4×, 0 is 1×
+const spreadFactor = (v: number): number => 2 ** v
+const spreadLabel = (v: number): string => {
+  const f = spreadFactor(v)
+  return `x${f >= 10 ? f.toFixed(0) : f.toFixed(2).replace(/\.?0+$/, '')}`
+}
+
+function showSpread(v: number): void {
+  const slider = document.getElementById(
+    'networkSpreadSlider'
+  ) as HTMLInputElement | null
+  if (slider) slider.value = String(v)
+  const td = document.getElementById('networkSpreadValue')
+  if (td) td.textContent = spreadLabel(v)
+}
+
+export function spreadNetwork(v: number): void {
+  if (ctx.nodeObjects.length === 0) return
+  if (!spreadBase) {
+    spreadBase = ctx.nodeObjects.map((n) => ({
+      x: n.getPosition('x'),
+      y: n.getPosition('y'),
+      z: n.getPosition('z'),
+    }))
+    const n = spreadBase.length
+    spreadCentre = spreadBase.reduce(
+      (c, p) => ({ x: c.x + p.x / n, y: c.y + p.y / n, z: c.z + p.z / n }),
+      { x: 0, y: 0, z: 0 }
+    )
+  }
+  spreadBefore ??= captureTransforms()
+  const f = spreadFactor(v)
+  const c = spreadCentre
+  ctx.nodeObjects.forEach((node, i) => {
+    const p = spreadBase![i]
+    node.setPosition('x', c.x + (p.x - c.x) * f)
+    node.setPosition('y', c.y + (p.y - c.y) * f)
+    node.setPosition('z', c.z + (p.z - c.z) * f)
+  })
+  showSpread(v)
+  redrawIntraLayerEdges()
+  raiseMovedFlags()
+}
+
+// one undo step per drag (or per key press on the slider)
+function commitSpread(): void {
+  if (!spreadBefore) return
+  spreadCommitting = true
+  try {
+    history.execute(
+      new TransformCommand('Spread network', spreadBefore, captureTransforms())
+    )
+  } finally {
+    spreadCommitting = false
+    spreadBefore = null
+  }
+}
+
+function resetSpread(): void {
+  spreadBase = null
+  spreadBefore = null
+  showSpread(0)
+}
+
 // --- DOM -----------------------------------------------------------------
 
 // One Angle/Step group: value label + slider + the six axis buttons laid out
@@ -233,7 +310,13 @@ function axisRowsHtml(
     <tr>${btn('minusZ')}${btn('plusZ')}</tr>`
 }
 
+// the mouse and keyboard cheat-sheet folds into one line: it starts folded,
+// and the browser remembers whether the user opened it
+const SHORTCUTS_KEY = 'arena3d.navShortcuts'
+
 const INFO_HTML = `
+  <details id="navShortcutsBox" class="nav-shortcuts-box">
+  <summary>Mouse &amp; keyboard</summary>
   <ul id="navShortcuts">
     <li><span>Zoom</span><span><kbd>Wheel</kbd></span></li>
     <li data-multilayer-only><span>Pan</span><span><kbd>Drag</kbd> / <kbd>&#8592;&#8593;&#8594;&#8595;</kbd></span></li>
@@ -257,11 +340,20 @@ const INFO_HTML = `
     </span></li>
     <li><span>Fit View, Unselect All</span><span><kbd>Dbl Click</kbd> Scene</span></li>
   </ul>
+  </details>
   <table id="canvasControls_table"><tbody>
     <tr><td colspan="4"><h5>Scene</h5></td></tr>
     <tr><td colspan="4" class="controlsSubLabel">Rotation Controls</td></tr>
     ${axisRowsHtml('sliderValue1', 'Angle: 5&#730;', 'sceneRotateSlider', { min: 1, max: 15, value: 5, step: 1 }, '')}
     <tr><td colspan="4"><button id="recenterButton">Recenter Network</button></td></tr>
+    <tr data-single-only title="Give the network more or less room: the layout keeps its shape and the nodes their size">
+      <td>Spread</td>
+      <td colspan="2">
+        <input class="canvasSlider" id="networkSpreadSlider" type="range" min="-2" max="2" value="0" step="0.05"
+          aria-label="Spread the network: more or less room, same layout" />
+      </td>
+      <td id="networkSpreadValue">x1</td>
+    </tr>
   </tbody><tbody data-multilayer-only>
     <tr class="border_tr"><td colspan="4"><h5>Layers</h5></td></tr>
     <tr><td colspan="4" class="controlsSubLabel">Rotation Controls</td></tr>
@@ -375,6 +467,26 @@ function attachNavControls(): void {
     })
 
   info.innerHTML = INFO_HTML
+  const shortcuts = info.querySelector<HTMLDetailsElement>('#navShortcutsBox')
+  if (shortcuts) {
+    try {
+      shortcuts.open = localStorage.getItem(SHORTCUTS_KEY) === 'open'
+    } catch {
+      /* private mode: folded */
+    }
+    // e2e/fixtures.ts: specs see every card open (ui/sections.ts)
+    if ((window as unknown as { __arenaOpenCards?: boolean }).__arenaOpenCards)
+      shortcuts.open = true
+    // only the user's clicks are remembered (Enter / Space click too); the
+    // click toggles the box after this listener, so save where it goes
+    shortcuts.querySelector('summary')?.addEventListener('click', () => {
+      try {
+        localStorage.setItem(SHORTCUTS_KEY, shortcuts.open ? 'folded' : 'open')
+      } catch {
+        /* private mode: the choice lasts for this visit */
+      }
+    })
+  }
   // the area Shift + Drag selects: a rectangle or a freehand lasso, and
   // whether it replaces, adds to or takes from the selection
   const switches = [
@@ -520,4 +632,19 @@ function attachNavControls(): void {
       )
     })
   }
+  const spread = document.getElementById(
+    'networkSpreadSlider'
+  ) as HTMLInputElement
+  spread.addEventListener('input', () => spreadNetwork(Number(spread.value)))
+  spread.addEventListener('change', commitSpread)
+  // anything else that moves nodes (or a new network) starts a new 1×
+  bus.on('history:changed', () => {
+    if (!spreadCommitting) resetSpread()
+  })
+  for (const event of [
+    'network:loaded',
+    'layout:applied',
+    'mode:changed',
+  ] as const)
+    bus.on(event, resetSpread)
 }

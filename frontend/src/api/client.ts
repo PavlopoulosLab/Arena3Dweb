@@ -79,7 +79,8 @@ export interface SessionNode {
   shape?: string
   layered_position?: LayoutPosition // 3D-network mode, as [y, z(, x)]
   // Edit → Style, only when set: opacity, outline, stretch along the layer's
-  // z / y / x (width, height, depth), label text / colour / size
+  // z / y / x (width, height, depth), label text / colour / size / look /
+  // position
   opacity?: number
   border_color?: string
   border_width?: number
@@ -87,6 +88,15 @@ export interface SessionNode {
   label?: string
   label_color?: string
   label_size?: number
+  label_style?: {
+    style: 'plain' | 'halo' | 'box' | 'shadow'
+    color: string
+    width: number
+    opacity: number
+    bold: boolean
+  }
+  label_position?: 'centre' | 'above' | 'below'
+  label_shown?: boolean // pinned: shown with Show Labels: Chosen
 }
 
 export interface SessionEdge {
@@ -116,6 +126,11 @@ export interface SessionData {
   interEdgeBundling?: number
   // multi-channel edges (Edit → Edges → Edge Shape)
   edgeShape?: 'parallel' | 'curved' | 'straight'
+  // Edit → Nodes → Show Labels, when saved (older sessions keep the current)
+  nodeLabels?: {
+    mode: 'all' | 'selected' | 'chosen' | 'none'
+    withSelection: boolean
+  } | null
   // the hive plot arrangement, when it was on (three/hive.ts)
   hive?: {
     curved: boolean
@@ -128,14 +143,17 @@ export interface SessionData {
   annotationSet?: string | null
   // how the annotation groups are drawn (Annotations menu)
   annotationView?: AnnotationView | null
+  // the scene theme (actions/theme_presets.ts) and whether its colours were
+  // applied to the network or the network kept its own
+  theme?: { name: string; applied: boolean } | null
   warnings?: string[]
 }
 
-// Annotations menu: Draw around, Draw as, Opacity, Padding, pie charts, and
-// the groups whose hull / fog cloud is switched off (Groups card)
+// View → Annotations: Draw around, Draw as, Opacity, Padding, pie charts,
+// and the groups whose shape is switched off (Groups card)
 export interface AnnotationView {
   source: 'none' | 'cluster' | 'annotation'
-  style: 'hull' | 'fog'
+  style: 'hull' | 'outline' | 'fog' | 'cloud' | 'sphere' | 'ellipsoid' | 'box'
   opacity: number
   padding: number
   pies: boolean
@@ -596,6 +614,9 @@ export interface NodeAttributeRow {
   label?: string | null
   label_color?: string | null
   label_size?: number | null
+  label_style?: string | null // "halo #ffffff 3 bold" (three/Node.ts labelLookFromText)
+  label_position?: string | null // right | centre | above | below
+  label_shown?: boolean | null // pinned: shown with Show Labels: Chosen
 }
 
 // POST /api/attributes/groups — a node and the groups a group file puts it in

@@ -36,7 +36,7 @@ const PRESETS = {
 
 const FPS_HTML = `
 <div class="col-md-8 col-lg-6 layout-panel perf-panel">
-  <details class="lp-section lp-more" id="perfCard_presets" open>
+  <details class="lp-section lp-more" id="perfCard_presets">
     <summary>Presets</summary>
     <div class="d-flex flex-wrap gap-2">
       <button id="perf_quality" class="btn btn-outline-primary btn-sm">Quality</button>
@@ -101,7 +101,7 @@ const FPS_HTML = `
     </select>
   </details>
 
-  <details class="lp-section lp-more" id="perfCard_stats" open>
+  <details class="lp-section lp-more" id="perfCard_stats">
     <summary>Live stats</summary>
     <table class="perf-stats" id="perf_stats">
       <tr><td>Frames per second</td><td id="perf_fps_now">–</td></tr>
@@ -127,9 +127,13 @@ function applyControls(): void {
   )
   ctx.hideLabelsWhileMoving = el<HTMLInputElement>('perf_hideLabels').checked
   ctx.pauseInterWhileMoving = el<HTMLInputElement>('perf_pauseInter').checked
+  // the refresh hides the navigator when Off, and shows it again when turned
+  // back on; other changes leave Scene & Camera's Show Navigator as it is
   const every = Number(el<HTMLSelectElement>('perf_minimap').value)
+  const was = ctx.minimapEvery
   ctx.minimapEvery = every
-  setMinimapVisible(every > 0)
+  if (every <= 0) setMinimapVisible(false)
+  else if (was <= 0) setMinimapVisible(true)
   const checked = document.querySelector<HTMLInputElement>(
     'input[name="fps"]:checked'
   )

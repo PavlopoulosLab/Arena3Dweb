@@ -44,7 +44,7 @@ beforeEach(() => {
   store.update({
     config: {
       max_channels: 2,
-      channel_colors_light: ['#111111', '#222222'],
+      channel_colors_light: ['#8dd3c7', '#ffffb3'],
     } as AppConfig,
   })
 })
@@ -74,7 +74,7 @@ describe('buildNetwork', () => {
     )
     expect(ctx.edgeObjects).toHaveLength(1)
     expect(ctx.edgeObjects[0].channels).toEqual(['ch1', 'ch2'])
-    expect(ctx.edgeObjects[0].colors).toEqual(['#111111', '#222222'])
+    expect(ctx.edgeObjects[0].colors).toEqual(['#8dd3c7', '#ffffb3'])
     expect(ctx.channelVisibility).toEqual({ ch1: true, ch2: true })
     expect(store.get().selectedChannels).toEqual(['ch1', 'ch2'])
   })

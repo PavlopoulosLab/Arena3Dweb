@@ -24,7 +24,7 @@ import {
 } from '../actions/explore'
 
 export const EXPLORE_HTML = `
-<details id="explore_card" class="lp-section lp-more" open>
+<details id="explore_card" class="lp-section lp-more">
   <summary>Explore</summary>
   <div class="mt-2">
     <div class="mb-2">

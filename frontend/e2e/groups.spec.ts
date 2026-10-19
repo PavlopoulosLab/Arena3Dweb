@@ -14,6 +14,7 @@ type Ctx = {
     layer: string
     color: string
     isSelected: boolean
+    faded: boolean
     annotations: string[]
     getScale: () => number
   }[]
@@ -33,6 +34,10 @@ const read = (page: Page) =>
       ),
       colorOf1: c.nodeObjects.find((n) => n.name === '1')?.color.toLowerCase(),
       scales: c.nodeObjects.map((n) => n.getScale()),
+      // the nodes that stand out (the rest fade), by name
+      shown: [
+        ...new Set(c.nodeObjects.filter((n) => !n.faded).map((n) => n.name)),
+      ].sort(),
     }
   })
 
@@ -83,6 +88,32 @@ test('group file → Groups card → hulls, colours, selection, tables, super no
     })
   await page.waitForTimeout(300)
   expect((await read(page)).hulls).toBeLessThan(withHulls)
+  // …and Beta's nodes fade, with every node in no group: only Alpha's
+  // members stand out (3 is in both)
+  expect((await read(page)).shown).toEqual(['1', '2', '3'])
+  // Show: None hides every group, All draws them all again
+  await page.locator('#groupsShowNone').dispatchEvent('click')
+  await expect(
+    page.locator('#groupsList .group-hull input:checked')
+  ).toHaveCount(0)
+  await expect(page.locator('#groups_status')).toHaveText('Hiding 2 groups.')
+  await page.waitForTimeout(300)
+  expect((await read(page)).hulls).toBe(0)
+  expect((await read(page)).shown).toEqual([])
+  await page.locator('#groupsShowAll').dispatchEvent('click')
+  await expect(
+    page.locator('#groupsList .group-hull input:checked')
+  ).toHaveCount(2)
+  await page.waitForTimeout(300)
+  expect((await read(page)).hulls).toBe(withHulls)
+  expect(
+    await page.evaluate(
+      () =>
+        (
+          window as unknown as { __arena: { ctx: Ctx } }
+        ).__arena.ctx.nodeObjects.filter((n) => n.faded).length
+    )
+  ).toBe(0)
   // recolour Alpha → every copy of node 1 changes
   await rows
     .nth(1)

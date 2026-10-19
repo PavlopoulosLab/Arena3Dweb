@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { expect, test, type Page } from './fixtures'
+import { expect, openCard, test, type Page } from './fixtures'
 
 // Refreshes the interface screenshots embedded in the Help pages
 // (public/images/help/ui/*). Skipped in the normal run; after a panel
@@ -174,11 +174,11 @@ test('capture the interface screenshots for the Help pages', async ({
     '#panel-databases',
     'databases',
     async () => {
-      await page.locator('#card_string > summary').click()
+      await openCard(page, '#card_string')
       await page
         .locator('#db_identifiers')
         .fill('TP53 MDM2 CDKN1A ATM CHEK2 BAX')
-      await page.locator('#card_reactome summary').click()
+      await openCard(page, '#card_reactome')
       await page.locator('#reactome_query').fill('apoptosis')
       await page.locator('#reactome_search').click()
       await expect(page.locator('#reactome_results .db-hit')).toHaveCount(3)
@@ -300,6 +300,47 @@ test('capture the interface screenshots for the Help pages', async ({
     async () => {
       await page.locator('#hull_annotation').check()
       await page.locator('#hullStyle_fog').check()
+      // a filtered list, so the whole card fits the shot
+      await page.locator('#groupsFilter').fill('Cluster 1')
     }
   )
+})
+
+// Edit → Style → Label style: bold halos centred on the nodes, on the Light
+// theme (label_styles.png on the Help's Edit → Style page). A test of its own,
+// so `--grep "label style"` refreshes this image alone.
+test('capture the label style screenshot', async ({ page }) => {
+  await page.setViewportSize({ width: 1200, height: 800 })
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await tab(page, 'File')
+  await page
+    .locator('#input_network_file')
+    .setInputFiles(D('figure2A_data.tsv'))
+  await expect(page.locator('#file_status')).toContainText('Loaded network')
+  await page.locator('#themeSelect').selectOption('light')
+  await page.locator('#themeDialogOk').click()
+  await page.evaluate(() => document.getElementById('nodeLabels_all')!.click())
+  await tab(page, 'Style')
+  await page.locator('#styleNodeTarget').selectOption('all')
+  await page.locator('#styleNodeSize').fill('2.2')
+  await page.locator('#styleNodeSizeApply').click()
+  await page.locator('#styleNodeLabelSize').fill('15')
+  await page.locator('#styleNodeLabelSizeApply').click()
+  await page.locator('#styleNodeLabelLook').selectOption('halo')
+  await page.locator('#styleNodeLabelBold').check()
+  await page.locator('#styleNodeLabelLookApply').click()
+  await page.locator('#styleNodeLabelPosition').selectOption('centre')
+  await page.locator('#styleNodeLabelPositionApply').click()
+  await tab(page, '3D View')
+  await page.evaluate(() => {
+    document.getElementById('info')!.style.visibility = 'hidden'
+  })
+  await page.waitForTimeout(1200)
+  await page.screenshot({
+    path: `${OUT}/label_styles.png`,
+    clip: { x: 0, y: 140, width: 760, height: 480 },
+  })
 })

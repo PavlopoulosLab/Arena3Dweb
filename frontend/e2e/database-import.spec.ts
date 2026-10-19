@@ -1,4 +1,4 @@
-import { expect, test } from './fixtures'
+import { expect, openCard, test } from './fixtures'
 
 // PLAN-ROADMAP Phase 3: Import from Databases card. The backend route is
 // intercepted (no internet in CI) — the test checks the request the card
@@ -52,7 +52,7 @@ test('STRING import sends evidence channels and loads the network', async ({
       exact: true,
     })
     .click()
-  await page.locator('#card_string > summary').click()
+  await openCard(page, '#card_string')
   await page.locator('#db_identifiers').fill('TP53, MDM2\nATM')
   await page
     .locator('#card_string summary:has-text("Evidence channels")')
@@ -107,9 +107,9 @@ test('one-layer-per-database importer sends the ticked databases; errors show de
     })
     .click()
   // each source is its own card; proteins typed in one card reach the others
-  await page.locator('#card_string > summary').click()
+  await openCard(page, '#card_string')
   await page.locator('#db_identifiers').fill('TP53 MDM2')
-  await page.locator('#card_compare summary').click()
+  await openCard(page, '#card_compare')
   await expect(page.locator('#db_layer_opts')).toBeVisible()
   await expect(page.locator('#cmp_identifiers')).toHaveValue('TP53 MDM2')
   await page.locator('#db_db_OmniPath').uncheck()
@@ -118,11 +118,64 @@ test('one-layer-per-database importer sends the ticked databases; errors show de
   await expect(page.locator('#db_status')).toHaveText(
     'No interactions found for these identifiers and settings.'
   )
+  // said in the card too, under its button
+  await expect(page.locator('#msg_compare')).toHaveText(
+    'No interactions found for these identifiers and settings.'
+  )
   expect(body).toMatchObject({
     identifiers: ['TP53', 'MDM2'],
     databases: ['STRING', 'IntAct'],
     only_among: true,
   })
+})
+
+test('a query without input says so in its card and outlines the field', async ({
+  page,
+}) => {
+  let requests = 0
+  await page.route('**/api/import/**', (route) => {
+    requests++
+    return route.abort()
+  })
+  await page.route('**/api/sets/**', (route) => {
+    requests++
+    return route.abort()
+  })
+  await page.goto('/')
+  await page
+    .getByRole('tab', {
+      name: 'Database Importers',
+      includeHidden: true,
+      exact: true,
+    })
+    .click()
+  for (const [card, button, field, message] of [
+    ['string', '#db_import_string', '#db_identifiers', 'protein names'],
+    ['intact', '#db_import_intact', '#intact_identifiers', 'protein names'],
+    [
+      'omnipath',
+      '#db_import_omnipath',
+      '#omnipath_identifiers',
+      'protein names',
+    ],
+    ['compare', '#db_import_layers', '#cmp_identifiers', 'protein names'],
+    ['reactome', '#reactome_search', '#reactome_query', 'two characters'],
+    ['reactome', '#db_import_reactome', '#reactome_ids', 'Reactome pathway'],
+    ['go', '#go_search', '#go_query', 'two characters'],
+    ['go', '#db_import_go', '#go_ids', 'GO term'],
+    ['ndex', '#ndex_import_button', '#ndex_uuid', 'NDEx network UUID'],
+  ] as const) {
+    await openCard(page, `#card_${card}`)
+    await page.locator(button).click()
+    await expect(page.locator(`#msg_${card}`)).toContainText(message)
+    await expect(page.locator(`#msg_${card}`)).toHaveClass(/text-danger/)
+    await expect(page.locator(field)).toHaveClass(/is-invalid/)
+    await expect(page.locator(field)).toBeFocused()
+  }
+  // typing clears the outline; nothing was sent
+  await page.locator('#ndex_uuid').fill('x')
+  await expect(page.locator('#ndex_uuid')).not.toHaveClass(/is-invalid/)
+  expect(requests).toBe(0)
 })
 
 test('NDEx examples load with one click; OmniPath offers its organisms only', async ({
@@ -141,7 +194,7 @@ test('NDEx examples load with one click; OmniPath offers its organisms only', as
       exact: true,
     })
     .click()
-  await page.locator('#card_omnipath > summary').click()
+  await openCard(page, '#card_omnipath')
   await expect(page.locator('#omnipath_species option')).toHaveText([
     'Human',
     'Mouse',
@@ -162,7 +215,7 @@ test('NDEx examples load with one click; OmniPath offers its organisms only', as
     await page.mouse.move(0, 0)
     await expect(tip).toHaveCount(0)
   }
-  await page.locator('#card_ndex > summary').click()
+  await openCard(page, '#card_ndex')
   await expect(page.locator('.ndex-example')).toHaveCount(3)
   await page.locator('.ndex-example', { hasText: 'p53 pathway' }).click()
   await expect(page.locator('#db_status')).toContainText('Loaded network')

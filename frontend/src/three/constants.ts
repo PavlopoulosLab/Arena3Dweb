@@ -26,6 +26,12 @@ export const EDGE_WIDTH_MAX = 6
 // rather than rasterised as invisible quads (v2 relied on alphaTest: 0.05).
 export const EDGE_MIN_VISIBLE_OPACITY = 0.05
 
+// Show only the chosen groups (Groups card, Clustering summary): the nodes
+// outside them, and the edges touching those, are drawn this faint (an edge
+// that ends up under EDGE_MIN_VISIBLE_OPACITY is left out)
+export const FADED_NODE = 0.15
+export const FADED_EDGE = 0.15
+
 // Render layer for the things that glow — node spheres, and nothing else.
 // postprocessing.ts renders the bloom source with the camera masked to this
 // layer alone, so edges stay crisp (thick lines glowing all over wash out dark

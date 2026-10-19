@@ -34,6 +34,8 @@ export interface StringCardHooks {
     after: (data: StringImportResponse) => string
   ) => Promise<void>
   status: (msg: string, isError?: boolean) => void
+  // a problem with the query: said in the card, the field outlined
+  warn: (msg: string, field?: string) => void
   progress: ProgressBar // the card's bar
 }
 
@@ -558,18 +560,24 @@ function fetchNetwork(hooks: StringCardHooks): void {
     .split(/[\s,;]+/)
     .filter(Boolean)
   if (identifiers.length === 0)
-    return hooks.status('Type one or more protein names, e.g. TP53.', true)
+    return hooks.warn(
+      'Type one or more protein names, e.g. TP53.',
+      'db_identifiers'
+    )
   const species = taxon()
   if (species === null)
-    return hooks.status('Type the organism’s NCBI taxon ID, e.g. 7955.', true)
+    return hooks.warn(
+      'Type the organism’s NCBI taxon ID, e.g. 7955.',
+      'string_taxon'
+    )
   const channels = ticked('.db_channel')
   if (channels.length === 0)
-    return hooks.status('Tick at least one evidence channel.', true)
+    return hooks.warn('Tick at least one evidence channel.')
   const site = address()
   if (!ADDRESS.test(site))
-    return hooks.status(
+    return hooks.warn(
       'The STRING address must be https://string-db.org or a version address such as https://version-12-0.string-db.org.',
-      true
+      'string_address'
     )
   const groupings = groupingOptions()
   const req: StringImportRequest = {
@@ -605,20 +613,28 @@ function fetchNetwork(hooks: StringCardHooks): void {
 
 async function fetchViewGroupings(hooks: StringCardHooks): Promise<void> {
   const names = [...new Set(ctx.nodeObjects.map((n) => n.name))]
-  if (names.length === 0) return hooks.status('Load a network first.', true)
+  if (names.length === 0)
+    return hooks.warn(
+      'Load a network first: the groupings are fetched for the proteins in the scene.'
+    )
   if (names.length > MAX_VIEW_NAMES)
-    return hooks.status(
-      `Groupings can be fetched for up to ${MAX_VIEW_NAMES} proteins; this network has ${names.length}.`,
-      true
+    return hooks.warn(
+      `Groupings can be fetched for up to ${MAX_VIEW_NAMES} proteins; this network has ${names.length}.`
     )
   const species = taxon()
   if (species === null)
-    return hooks.status('Type the organism’s NCBI taxon ID, e.g. 7955.', true)
+    return hooks.warn(
+      'Type the organism’s NCBI taxon ID, e.g. 7955.',
+      'string_taxon'
+    )
   const opts = groupingOptions()
-  if (!opts) return hooks.status('Tick at least one term collection.', true)
+  if (!opts) return hooks.warn('Tick at least one term collection.')
   const site = address()
   if (!ADDRESS.test(site))
-    return hooks.status('The STRING address must be on string-db.org.', true)
+    return hooks.warn(
+      'The STRING address must be on string-db.org.',
+      'string_address'
+    )
   const button = el<HTMLButtonElement>('string_groupings_button')
   button.disabled = true
   hooks.status(

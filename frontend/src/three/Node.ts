@@ -7,6 +7,7 @@ import {
   CONE_RADIUS,
   CONE_HEIGHT,
   BLOOM_LAYER,
+  FADED_NODE,
 } from './constants'
 import { ctx } from './runtime'
 
@@ -46,6 +47,41 @@ export const NODE_SHAPE_LABELS: Record<NodeGeometryType, string> = {
 }
 export const NODE_SHAPES = Object.keys(NODE_SHAPE_LABELS) as NodeGeometryType[]
 
+// A node's own label look (Edit → Style): plain text, a halo (an outline
+// around the letters), a box behind them or a soft shadow, optionally bold.
+// `color` is the halo, box or shadow colour ('' = picked against the text
+// colour); `width` the halo's px, `opacity` the box's.
+export type LabelLookStyle = 'plain' | 'halo' | 'box' | 'shadow'
+export const LABEL_LOOK_LABELS: Record<LabelLookStyle, string> = {
+  plain: 'Plain',
+  halo: 'Halo (outline)',
+  box: 'Box',
+  shadow: 'Shadow',
+}
+export interface LabelLook {
+  style: LabelLookStyle
+  color: string
+  width: number
+  opacity: number
+  bold: boolean
+}
+export const DEFAULT_LABEL_LOOK: LabelLook = {
+  style: 'halo',
+  color: '',
+  width: 2,
+  opacity: 0.75,
+  bold: false,
+}
+// where the label sits: right of the node (as always), centred on it,
+// above or below it
+export type LabelPosition = 'right' | 'centre' | 'above' | 'below'
+export const LABEL_POSITION_LABELS: Record<LabelPosition, string> = {
+  right: 'Right',
+  centre: 'Centre',
+  above: 'Above',
+  below: 'Below',
+}
+
 // a shape from a file: its key or its label, in any case ('box', 'Cube')
 export function shapeFromText(text: string): NodeGeometryType | null {
   const t = text.trim().toLowerCase()
@@ -54,6 +90,50 @@ export function shapeFromText(text: string): NodeGeometryType | null {
       (s) => s === t || NODE_SHAPE_LABELS[s].toLowerCase() === t
     ) ?? null
   )
+}
+
+// the halo's px and the box's opacity, as the editors keep them
+export const LABEL_HALO_PX = [0.5, 8] as const
+export const LABEL_BOX_OPACITY = [0.05, 1] as const
+const clamp = (v: number, [lo, hi]: readonly [number, number]) =>
+  Math.min(hi, Math.max(lo, v))
+
+// A label look as attribute files write it: the style, then its colour
+// (none: picked against the text), the halo's px or the box's opacity, and
+// "bold" — e.g. "halo #ffffff 3 bold", "box 0.6", "plain". '' = as the label
+// style.
+export function labelLookText(look: LabelLook | null): string {
+  if (!look) return ''
+  const parts: (string | number)[] = [look.style]
+  if (look.color) parts.push(look.color)
+  if (look.style === 'halo') parts.push(Number(look.width.toFixed(3)))
+  if (look.style === 'box') parts.push(Number(look.opacity.toFixed(3)))
+  if (look.bold) parts.push('bold')
+  return parts.join(' ')
+}
+
+/** The look a text names (in any order; null for blank), or undefined when
+ * it is not one. */
+export function labelLookFromText(raw: string): LabelLook | null | undefined {
+  const tokens = raw.trim().toLowerCase().split(/\s+/).filter(Boolean)
+  if (tokens.length === 0) return null
+  const look: LabelLook = { ...DEFAULT_LABEL_LOOK }
+  let style: LabelLookStyle | null = null
+  for (const t of tokens) {
+    const v = /^[0-9.]+$/.test(t) ? Number(t) : NaN
+    if (t in LABEL_LOOK_LABELS) style = t as LabelLookStyle
+    else if (t === 'bold') look.bold = true
+    else if (/^#[0-9a-f]{6}$/.test(t)) look.color = t
+    else if (Number.isFinite(v)) {
+      look.width = clamp(v, LABEL_HALO_PX)
+      look.opacity = clamp(v, LABEL_BOX_OPACITY)
+    } else return undefined
+  }
+  if (!style) return undefined
+  look.style = style
+  if (style !== 'halo') look.width = DEFAULT_LABEL_LOOK.width
+  if (style !== 'box') look.opacity = DEFAULT_LABEL_LOOK.opacity
+  return look
 }
 
 export interface NodeOptions {
@@ -93,6 +173,9 @@ export class Node {
   // stretch along the layer's z / y / x (width, height, depth) on top of the
   // size, and label overrides ('' / 0 = the name / the label style)
   alpha = 1
+  // outside the groups chosen in the Groups card / Clustering summary
+  // (actions/annotations.ts applyGroupFade): drawn faint
+  faded = false
   borderColor = '#ffffff'
   borderWidth = 0
   outline: THREE.Mesh | null = null
@@ -100,6 +183,9 @@ export class Node {
   label = ''
   labelColor = ''
   labelSize = 0
+  labelLook: LabelLook | null = null // null = the label style (Edit → Nodes)
+  labelPosition: LabelPosition = 'right'
+  labelShown = false // pinned: shown with Show Labels: Chosen, whatever the selection
   private size = 1
 
   constructor({
@@ -221,11 +307,10 @@ export class Node {
 
   // hover / lasso feedback: a fraction of the node's own opacity
   setOpacity(value: number): void {
-    ;(this.sphere.material as THREE.MeshStandardMaterial).opacity =
-      value * this.alpha
+    const opacity = value * this.alpha * (this.faded ? FADED_NODE : 1)
+    ;(this.sphere.material as THREE.MeshStandardMaterial).opacity = opacity
     if (this.outline)
-      (this.outline.material as THREE.MeshBasicMaterial).opacity =
-        value * this.alpha
+      (this.outline.material as THREE.MeshBasicMaterial).opacity = opacity
   }
 
   setAlpha(value: number): void {

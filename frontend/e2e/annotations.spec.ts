@@ -42,6 +42,8 @@ async function load(page: Page) {
 test('annotation pies and hulls from a node attribute file', async ({
   page,
 }) => {
+  // seven Draw as shapes on software GL: past the 90s default on a busy machine
+  test.setTimeout(150_000)
   await load(page)
   const names = await page.evaluate(() =>
     (window as unknown as { __arena: { ctx: Ctx } }).__arena.ctx.nodeObjects
@@ -65,7 +67,7 @@ test('annotation pies and hulls from a node attribute file', async ({
       exact: true,
     })
     .dispatchEvent('click')
-  // the Annotations menu opens on its main card
+  // View → Annotations: the main card (the specs see every card open)
   await expect(page.locator('#annCard_show')).toHaveJSProperty('open', true)
   await page.locator('#showPies').check()
   expect((await page.evaluate(counts)).pies).toBe(3)
@@ -160,6 +162,48 @@ test('annotation pies and hulls from a node attribute file', async ({
       exact: true,
     })
     .dispatchEvent('click')
+  // every other Draw as shape: one per group and layer, as the hulls
+  const shapes = () =>
+    page.evaluate(() => {
+      type Obj = {
+        type: string
+        userData: Record<string, unknown>
+        children: Obj[]
+        scale: { x: number; y: number; z: number }
+      }
+      const ctx = (
+        window as unknown as {
+          __arena: { ctx: { layers: { plane: { children: Obj[] } }[] } }
+        }
+      ).__arena.ctx
+      const all = ctx.layers.flatMap((l) =>
+        l.plane.children.filter((c) => c.userData.hullGroup)
+      )
+      return {
+        count: all.length,
+        parts: [
+          ...new Set(all.flatMap((c) => c.children.map((k) => k.type))),
+        ].sort(),
+        // a flat layer: spheres stay round, ellipsoids become lenses
+        round: all.every(
+          (c) => c.scale.x === c.scale.y && c.scale.y === c.scale.z
+        ),
+      }
+    })
+  for (const [style, parts, round] of [
+    ['cloud', ['Sprite'], true],
+    ['sphere', ['LineLoop', 'Mesh'], true],
+    ['ellipsoid', ['LineLoop', 'Mesh'], false],
+    ['box', ['LineSegments', 'Mesh'], true],
+  ] as const) {
+    await page.locator(`#hullStyle_${style}`).check()
+    const drawn = await shapes()
+    expect(drawn.count, style).toBe(hulls)
+    expect(drawn.parts, style).toEqual(parts)
+    expect(drawn.round, style).toBe(round)
+  }
+  await page.locator('#hullStyle_outline').check()
+  expect((await page.evaluate(counts)).hulls).toBe(hulls)
   await page.locator('#hull_none').check()
   expect((await page.evaluate(counts)).hulls).toBe(0)
 })

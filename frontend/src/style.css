@@ -481,11 +481,23 @@ body {
 
 /* Scene theme picker in the top bar (actions/themes.ts), next to Undo/Redo. */
 .nav-theme {
+  position: relative;
   margin-right: 0.5rem;
 }
 
 .nav-theme .form-select {
   min-width: 8.5rem;
+}
+
+/* the chosen theme's channel colours, a thin bar along the picker's foot */
+.nav-theme__swatch {
+  position: absolute;
+  right: 6px;
+  bottom: 2px;
+  left: 6px;
+  height: 3px;
+  border-radius: 2px;
+  pointer-events: none;
 }
 
 #info {
@@ -540,6 +552,40 @@ body {
 .labels,
 .layer-labels {
   pointer-events: none;
+}
+
+/* the cheat-sheet folds into one line (ui: actions/nav_controls.ts) */
+.nav-shortcuts-box > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2px 0;
+  color: var(--arena-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.nav-shortcuts-box > summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav-shortcuts-box > summary::after {
+  content: '▾';
+  margin-left: auto;
+  color: var(--arena-text-muted);
+  transition: transform 0.15s var(--arena-ease);
+}
+
+.nav-shortcuts-box:not([open]) > summary::after {
+  transform: rotate(-90deg);
+}
+
+.nav-shortcuts-box[open] > summary {
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--arena-border);
 }
 
 /* Navigation shortcut cheat-sheet: action left, keys right. */
@@ -3178,6 +3224,42 @@ footer a:hover {
   display: none;
 }
 
+/* Edit menu: themed groups, a one-line hint under each item. The hint sits
+   outside the button (so the item's accessible name stays "Style", "Nodes"…)
+   and lies over its lower edge; clicks pass through to the button. */
+.dropdown-menu .has-hint {
+  position: relative;
+}
+
+.dropdown-menu .has-hint > .dropdown-item {
+  padding-bottom: 1.35rem;
+}
+
+.dropdown-menu .has-hint > .dropdown-hint {
+  position: absolute;
+  left: var(--bs-dropdown-item-padding-x, 1rem);
+  right: var(--bs-dropdown-item-padding-x, 1rem);
+  bottom: 0.35rem;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  color: var(--bs-secondary-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+.dropdown-menu .has-hint:hover > .dropdown-hint,
+.dropdown-menu .has-hint:focus-within > .dropdown-hint,
+.dropdown-menu .has-hint > .dropdown-item.active + .dropdown-hint {
+  color: var(--bs-dropdown-link-hover-color, inherit);
+  opacity: 0.8;
+}
+
+.dropdown-menu[aria-labelledby='menu-edit'] {
+  min-width: 18rem;
+}
+
 /* Network mode (ui/mode.ts): in single-network mode the layer-only controls
    step aside, and the Layout panel's step numbers with them. */
 body.mode-single [data-multilayer-only] {
@@ -3320,6 +3402,13 @@ body.mode-single .layout-panel .lp-step {
 }
 
 /* Groups card (ui/groups.ts) */
+.groups-show {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.25rem;
+}
+
 .groups-list {
   max-height: 40vh;
   overflow: auto;
@@ -3365,14 +3454,29 @@ body.mode-single .layout-panel .lp-step {
   color: var(--arena-text-muted);
 }
 
-/* Analyze → Annotations & Groups: the way to the Annotations menu
-   (ui/analyze.ts), tinted with that menu's hue */
+/* Analyze → Annotations & Groups: the way to View → Annotations
+   (ui/analyze.ts), tinted with the View menu's hue */
 .ann-moved {
   padding: 0.6rem 0.75rem;
-  border: 1px solid color-mix(in srgb, #f08a6c 45%, var(--arena-border));
-  border-left: 4px solid #f08a6c;
+  border: 1px solid color-mix(in srgb, #5b8def 45%, var(--arena-border));
+  border-left: 4px solid #5b8def;
   border-radius: 8px;
-  background-color: color-mix(in srgb, #f08a6c 8%, transparent);
+  background-color: color-mix(in srgb, #5b8def 8%, transparent);
+}
+
+/* View → Annotations, Draw as: the shapes in three columns (ui/annotations.ts) */
+.ann-shapes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 0.75rem;
+}
+
+.ann-shapes__head {
+  margin-bottom: 0.15rem;
+  color: var(--arena-text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 /* Database Importers panel (ui/databases.ts): NORMA-style source cards */
@@ -3718,6 +3822,21 @@ body.mode-single .layout-panel .lp-step {
   font-weight: 500;
 }
 
+/* Find: the matches as a short scrolling table (ui/find.ts) */
+.search-results.data-table-wrap {
+  max-height: 14rem;
+}
+
+.search-results tbody tr {
+  cursor: pointer;
+}
+
+.search-results td .btn {
+  font-size: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+}
+
 /* UpSet plots under the comparison tables (actions/upset.ts) */
 .upset-plot {
   overflow: auto;
@@ -3954,9 +4073,6 @@ body.mode-single .layout-panel .lp-step {
 #navBar .nav-link[data-menu='clustering'] {
   --menu: #36b9c9;
 }
-#navBar .nav-link[data-menu='annotations'] {
-  --menu: #f08a6c;
-}
 #navBar .nav-link[data-menu='edit'] {
   --menu: #2aa198;
 }
@@ -4094,6 +4210,35 @@ body.mode-single .layout-panel .lp-step {
   color: var(--arena-text-muted);
 }
 
+/* the theme switch's question (ui/theme_dialog.ts): the theme in small */
+.theme-dialog__scene {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.7rem;
+  padding: 0.6rem 0.75rem;
+  border: 2px solid;
+  border-radius: 8px;
+}
+
+.theme-dialog__nodes,
+.theme-dialog__channels {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.theme-dialog__nodes i {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+}
+
+.theme-dialog__channels i {
+  flex: 1;
+  height: 0.3rem;
+  border-radius: 2px;
+}
+
 /* Loaded networks (ui/file.ts workspace card) */
 .workspace-row {
   display: flex;
@@ -4211,8 +4356,8 @@ body.mode-single .layout-panel .lp-step {
   .nav-theme .form-select {
     min-width: 6.5rem;
   }
-  /* Undo / Redo show their arrows and the mode switch says Single; the words
-     stay for screen readers and the tooltips say which is which */
+  /* Undo / Redo show their arrows; the words stay for screen readers and
+     the tooltips say which is which */
   #navBar .nav-word {
     position: absolute;
     width: 1px;
@@ -4678,6 +4823,23 @@ body.mode-single .layout-panel .lp-step {
   min-width: 0;
 }
 
+/* label style: the colour, halo width or box opacity, when they apply */
+.style-props__look {
+  display: flex;
+  flex: 1 1 100%;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.style-props__look[hidden] {
+  display: none;
+}
+
+.style-props__hint {
+  color: var(--arena-text-muted);
+}
+
 .style-props__axis abbr {
   width: 0.9rem;
   font-size: 0.75rem;
@@ -4813,8 +4975,9 @@ body.mode-single .layout-panel .lp-step {
 .attr-table--node .attr-row {
   grid-template-columns:
     1.4rem minmax(6.5rem, 1.1fr) minmax(4.5rem, 0.7fr) 3.6rem 7.4rem
-    4.2rem 4.6rem minmax(6rem, 1fr) minmax(7rem, 1.4fr) 1.6rem;
-  min-width: 860px;
+    4.2rem 4.6rem minmax(6rem, 1fr) 5.6rem 5.6rem 5.2rem minmax(7rem, 1.4fr)
+    1.6rem;
+  min-width: 1120px;
 }
 
 .attr-table--edge .attr-row {
@@ -4902,16 +5065,47 @@ body.mode-single .layout-panel .lp-step {
 
 /* no arrow colour of its own: the picker shows the edge's, faded */
 .attr-row:not(.has-arrow) [data-f='arrowColor'],
+.attr-row:not(.has-label-color) [data-f='labelColor'],
 .attr-insp[data-kind='edge']:not(.has-arrow) #inspEdgeArrowColor,
-.attr-insp[data-kind='node']:not(.has-label-color) #inspNodeLabelColor {
+.attr-insp[data-kind='node']:not(.has-label-color) #inspNodeLabelColor,
+.attr-insp[data-kind='node']:not(.has-look-color) #inspNodeLookColor,
+.attr-insp[data-kind='node']:not(.has-look) .attr-insp__look {
   opacity: 0.45;
 }
 
-.attr-row:not(.has-arrow) .attr-reset,
+.attr-row:not(.has-arrow) [data-f='arrowReset'],
+.attr-row:not(.has-label-color) [data-f='labelColorReset'],
 .attr-insp[data-kind='edge']:not(.has-arrow) [data-act='arrowReset'],
-.attr-insp[data-kind='node']:not(.has-label-color)
-  [data-act='labelColorReset'] {
+.attr-insp[data-kind='node']:not(.has-label-color) [data-act='labelColorReset'],
+.attr-insp[data-kind='node']:not(.has-look-color) [data-act='lookColorReset'] {
   visibility: hidden;
+}
+
+/* label style: colour, halo width or box opacity, bold (ui/inspector.ts) */
+.attr-insp__look {
+  flex-wrap: wrap;
+}
+
+.attr-insp__look input[type='number'] {
+  width: 4.4rem;
+}
+
+/* Label shown: the check box in the middle of its column */
+.attr-c--shown {
+  justify-content: center;
+}
+
+/* Label colours by palette, for the ticked rows or the list */
+.attr-labels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.attr-labels .form-select {
+  width: auto;
 }
 
 .attr-reset,

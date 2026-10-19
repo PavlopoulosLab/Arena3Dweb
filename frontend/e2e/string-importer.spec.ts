@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures'
+import { expect, openCard, test, type Page } from './fixtures'
 
 // Database Importers → STRING with NORMA's options. The backend route (and
 // STRING itself, for Connect: Directly) is intercepted — no internet in CI.
@@ -73,7 +73,7 @@ const RESPONSE = {
   ],
 }
 
-async function openCard(page: Page): Promise<void> {
+async function openStringCard(page: Page): Promise<void> {
   await page.goto('/')
   await page.waitForFunction(
     () => '__arena' in (window as unknown as Record<string, unknown>)
@@ -85,9 +85,8 @@ async function openCard(page: Page): Promise<void> {
       exact: true,
     })
     .click()
-  // every importer card starts folded
-  await expect(page.locator('#card_string')).not.toHaveAttribute('open', '')
-  await page.locator('#card_string > summary').click()
+  // folded by default (sections.spec.ts); open here through the fixture
+  await openCard(page, '#card_string')
   await expect(page.locator('#card_string')).toHaveAttribute('open', '')
 }
 
@@ -122,7 +121,7 @@ test('the STRING card shows every NORMA option and sends them', async ({
     body = route.request().postDataJSON() as Body
     await route.fulfill({ json: RESPONSE })
   })
-  await openCard(page)
+  await openStringCard(page)
 
   // the card's sections and choices, as in NORMA
   await expect(page.locator('#string_organism option')).toHaveCount(20)
@@ -200,7 +199,7 @@ test('STRING results: descriptions, links, colours and groupings', async ({
   await page.route('**/api/import/string', (route) =>
     route.fulfill({ json: RESPONSE })
   )
-  await openCard(page)
+  await openStringCard(page)
   await page.locator('#db_identifiers').fill('TP53 MDM2 ATM')
   await page.locator('#db_import_string').click()
 
@@ -272,7 +271,7 @@ test('Connect automatically: the browser asks STRING when the server cannot', as
       headers: { 'Access-Control-Allow-Origin': '*' },
     })
   })
-  await openCard(page)
+  await openStringCard(page)
   await page.locator('#db_identifiers').fill('TP53')
   await page.locator('#db_import_string').click()
 
@@ -311,7 +310,7 @@ test('groupings for the current view use the loaded node names', async ({
       json: { groupings: RESPONSE.groupings.slice(0, 1), warnings: [] },
     })
   })
-  await openCard(page)
+  await openStringCard(page)
   await expect(page.locator('#string_groupings_button')).toBeDisabled()
   await page.locator('#db_identifiers').fill('TP53')
   await page.locator('#db_import_string').click()

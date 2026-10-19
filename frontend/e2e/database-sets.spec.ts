@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures'
+import { expect, openCard, test, type Page } from './fixtures'
 
 // Reactome and Gene Ontology cards: search a set by name, add the hit, import
 // (the backend is mocked: pathways/terms become layers). Cards expand, the
@@ -58,10 +58,8 @@ test('Reactome card: search, add a hit, import pathways as layers', async ({
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
   await tab(page, 'Database Importers')
-  // cards: all folded until clicked
-  await expect(page.locator('#card_string')).not.toHaveAttribute('open', '')
-  await expect(page.locator('#reactome_query')).toBeHidden()
-  await page.locator('#card_reactome summary').click()
+  // (cards start folded: sections.spec.ts)
+  await openCard(page, '#card_reactome')
   await expect(page.locator('#reactome_query')).toBeVisible()
   await page.locator('#reactome_query').fill('apopt')
   await page.locator('#reactome_search').click()
@@ -118,7 +116,7 @@ test('Gene Ontology card imports terms; the ? opens the help page', async ({
     () => '__arena' in (window as unknown as Record<string, unknown>)
   )
   await tab(page, 'Database Importers')
-  await page.locator('#card_go summary').click()
+  await openCard(page, '#card_go')
   await page.locator('#go_ids').fill('GO:0006915\nGO:0006281')
   await expect(page.locator('#go_children')).toBeChecked() // the default
   await page.locator('#db_import_go').click()

@@ -6,7 +6,15 @@
 
 import { bus } from '../bus'
 import { ctx } from '../three'
-import { NODE_SHAPE_LABELS } from '../three/Node'
+import {
+  DEFAULT_LABEL_LOOK,
+  LABEL_LOOK_LABELS,
+  LABEL_POSITION_LABELS,
+  NODE_SHAPE_LABELS,
+  type LabelLook,
+  type LabelLookStyle,
+} from '../three/Node'
+import { contrastWith } from '../actions/labels'
 import { LINE_TYPE_LABELS } from '../three/Edge'
 import { escapeHtml } from '../utils'
 import {
@@ -69,6 +77,11 @@ function nodeHtml(i: number): string {
     ${field('inspNodeLabel', 'Label', `<input type="text" id="inspNodeLabel" data-f="label" class="form-control form-control-sm" maxlength="200" placeholder="${e(n.name)}" />`)}
     ${field('inspNodeLabelColor', 'Label colour', '<input type="color" id="inspNodeLabelColor" data-f="labelColor" /><button type="button" class="attr-reset" data-act="labelColorReset" title="As the label style (Edit → Nodes)" aria-label="Label colour: as the label style">×</button>')}
     ${field('inspNodeLabelSize', 'Label size', num('inspNodeLabelSize', 'labelSize', LIMITS.labelSize, 1, 'placeholder="auto"'))}
+    ${field('inspNodeLook', 'Label style', `<select id="inspNodeLook" data-f="look" class="form-select form-select-sm">${opts({ '': 'Auto', ...LABEL_LOOK_LABELS })}</select>`)}
+    <span class="attr-insp__name"></span>
+    <span class="attr-insp__value attr-insp__look"><input type="color" id="inspNodeLookColor" data-f="lookColor" title="Halo, box or shadow colour" aria-label="Halo, box or shadow colour" /><button type="button" class="attr-reset" data-act="lookColorReset" title="Picked against the text colour" aria-label="Halo, box or shadow colour: automatic">×</button><input type="number" id="inspNodeLookAmount" data-f="look" class="form-control form-control-sm" step="0.25" title="Halo width (px) or box opacity" aria-label="Halo width or box opacity" /><span class="form-check m-0 small"><input class="form-check-input" type="checkbox" id="inspNodeLookBold" data-f="look" /><label class="form-check-label" for="inspNodeLookBold">Bold</label></span></span>
+    ${field('inspNodeLabelShown', 'Label shown', '<span class="form-check m-0 small"><input class="form-check-input" type="checkbox" id="inspNodeLabelShown" data-f="labelShown" /><label class="form-check-label" for="inspNodeLabelShown" title="Edit → Nodes → Show Labels: Chosen">Kept on screen</label></span>')}
+    ${field('inspNodeLabelPosition', 'Label position', `<select id="inspNodeLabelPosition" data-f="labelPosition" class="form-select form-select-sm">${opts(LABEL_POSITION_LABELS)}</select>`)}
     ${field('inspNodeDescr', 'Description', '<input type="text" id="inspNodeDescr" data-f="descr" class="form-control form-control-sm" maxlength="2000" placeholder="Shown on hover" />')}
   </div>
   <div class="attr-insp__foot">
@@ -130,6 +143,26 @@ function fill(): void {
     set('inspNodeLabel', n.label)
     set('inspNodeLabelColor', hex(n.labelColor || ctx.labelColor || '#ffffff'))
     set('inspNodeLabelSize', n.labelSize || '')
+    const look = n.labelLook
+    set('inspNodeLook', look?.style ?? '')
+    set(
+      'inspNodeLookColor',
+      hex(
+        look?.color || contrastWith(n.labelColor || ctx.labelColor || '#ffffff')
+      )
+    )
+    set(
+      'inspNodeLookAmount',
+      look?.style === 'box' ? round(look.opacity) : round(look?.width ?? 2)
+    )
+    ;(document.getElementById('inspNodeLookBold') as HTMLInputElement).checked =
+      !!look?.bold
+    c.classList.toggle('has-look', look !== null && look.style !== 'plain')
+    c.classList.toggle('has-look-color', !!look?.color)
+    set('inspNodeLabelPosition', n.labelPosition)
+    ;(
+      document.getElementById('inspNodeLabelShown') as HTMLInputElement
+    ).checked = n.labelShown
     set('inspNodeDescr', n.descr)
     c.classList.toggle('has-label-color', n.labelColor !== '')
     c.querySelector('[data-act="select"]')!.textContent = n.isSelected
@@ -191,9 +224,47 @@ export function openInspector(kind: 'node' | 'edge', index: number): void {
   c.focus({ preventScroll: true })
 }
 
+// The inspector's label-style controls as one look: Auto = the label style
+// color: the node's own colour kept, the one just picked, or automatic
+function inspectedLook(
+  i: number,
+  color: 'keep' | 'picked' | 'auto' = 'keep'
+): LabelLook | null {
+  const input = (id: string) => document.getElementById(id) as HTMLInputElement
+  const style = input('inspNodeLook').value as LabelLookStyle | ''
+  if (!style) return null
+  const was = ctx.nodeObjects[i].labelLook ?? DEFAULT_LABEL_LOOK
+  const amount = Number(input('inspNodeLookAmount').value)
+  const ok = Number.isFinite(amount) && amount > 0
+  return {
+    style,
+    color:
+      color === 'picked'
+        ? input('inspNodeLookColor').value
+        : color === 'auto'
+          ? ''
+          : was.color,
+    width:
+      style === 'halo' && ok
+        ? Math.min(LIMITS.labelHalo[1], Math.max(LIMITS.labelHalo[0], amount))
+        : was.width,
+    opacity:
+      style === 'box' && ok
+        ? Math.min(LIMITS.labelBox[1], Math.max(LIMITS.labelBox[0], amount))
+        : was.opacity,
+    bold: input('inspNodeLookBold').checked,
+  }
+}
+
 function commit(f: string, value: string): void {
   if (!open) return
   const i = open.index
+  if (open.kind === 'node' && (f === 'look' || f === 'lookColor')) {
+    editNodes([i], {
+      labelLook: inspectedLook(i, f === 'lookColor' ? 'picked' : 'keep'),
+    })
+    return fill()
+  }
   if (open.kind === 'node') {
     const patch =
       f === 'borderColor' || f === 'borderWidth'
@@ -248,7 +319,9 @@ export function initInspector(): void {
 
   c.addEventListener('change', (ev) => {
     const t = ev.target as HTMLInputElement
-    if (t.dataset.f) commit(t.dataset.f, t.value)
+    // a check box (Label shown) gives its state
+    if (t.dataset.f)
+      commit(t.dataset.f, t.type === 'checkbox' ? String(t.checked) : t.value)
   })
   c.addEventListener('keydown', (ev) => {
     const t = ev.target as HTMLElement
@@ -270,7 +343,10 @@ export function initInspector(): void {
     const { kind, index } = open
     if (act === 'close') closeInspector()
     else if (act === 'labelColorReset') commit('labelColor', '')
-    else if (act === 'arrowReset') commit('arrowColor', '')
+    else if (act === 'lookColorReset' && kind === 'node') {
+      editNodes([index], { labelLook: inspectedLook(index, 'auto') })
+      fill()
+    } else if (act === 'arrowReset') commit('arrowColor', '')
     else if (act === 'table') revealRow(kind, index)
     else if (act === 'select') {
       const on =

@@ -23,10 +23,12 @@ export interface BusEvents {
   'layers:selected': { names: string[] } // the ticked layers changed
   'network:stats': GraphStats[]
   'layer:moved': { layerIndex: number }
-  'theme:changed': { theme: string }
+  'theme:changed': { theme: string; recolour?: boolean } // recolour: the user's own colours too
   'history:changed': { canUndo: boolean; canRedo: boolean }
   'mode:changed': { mode: 'multilayer' | 'single' }
   'groups:changed': { source: 'annotation' | 'cluster' | 'all' }
+  // groups shown or hidden (Groups card, Clustering summary); the rest fade
+  'groups:shown': { source: 'annotation' | 'cluster' }
   'workspace:changed': { active: number }
   'legend:changed': { title: string | null }
   'values:loaded': { columns: string[] }

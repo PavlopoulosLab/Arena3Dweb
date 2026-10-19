@@ -128,6 +128,44 @@ def test_node_and_edge_style_kept_clamped_or_dropped() -> None:
     assert "line_type" not in odd["edges"][0]
 
 
+def test_label_look_and_position_kept_or_dropped() -> None:
+    data = _minimal()
+    data["nodes"][0].update(
+        label_style={"style": "halo", "color": "#ffffff", "width": 30, "bold": True},
+        label_position="centre",
+    )
+    data["nodes"][1].update(label_style={"style": "neon"}, label_position="left")
+    a, b = normalize_session(data)["nodes"]
+    assert a["label_style"] == {
+        "style": "halo",
+        "color": "#ffffff",
+        "width": 8.0,  # clamped
+        "opacity": 0.75,  # the default
+        "bold": True,
+    }
+    assert a["label_position"] == "centre"
+    assert "label_style" not in b and "label_position" not in b
+    auto = {**_minimal()}
+    auto["nodes"][0]["label_style"] = {"style": "box", "color": "red", "opacity": "0.5"}
+    look = normalize_session(auto)["nodes"][0]["label_style"]
+    assert (look["color"], look["opacity"], look["bold"]) == ("", 0.5, False)
+
+
+def test_chosen_labels_and_label_mode_kept_or_dropped() -> None:
+    data = _minimal()
+    data["nodes"][0]["label_shown"] = True
+    data["nodes"][1]["label_shown"] = "yes"  # only true counts
+    s = normalize_session({**data, "nodeLabels": {"mode": "chosen", "withSelection": False}})
+    assert s["nodes"][0]["label_shown"] is True
+    assert "label_shown" not in s["nodes"][1]
+    assert s["nodeLabels"] == {"mode": "chosen", "withSelection": False}
+    # a session from before, or an unknown mode: the default on load
+    assert normalize_session(_minimal())["nodeLabels"] is None
+    assert normalize_session({**_minimal(), "nodeLabels": {"mode": "some"}})["nodeLabels"] is None
+    loose = normalize_session({**_minimal(), "nodeLabels": {"mode": "all"}})
+    assert loose["nodeLabels"] == {"mode": "all", "withSelection": True}
+
+
 def test_missing_mandatory_object_raises() -> None:
     with pytest.raises(SessionValidationError):
         normalize_session({"layers": [{"name": "L1"}], "nodes": []})
@@ -312,7 +350,7 @@ def test_annotation_view_kept_clamped_or_absent() -> None:
         "pies": True,
         "hidden": ["TermA", "Cluster 2"],
     }
-    odd = {"source": "layers", "style": "cloud", "opacity": 9, "padding": "x", "pies": "yes"}
+    odd = {"source": "layers", "style": "cylinder", "opacity": 9, "padding": "x", "pies": "yes"}
     assert normalize_session({**_minimal(), "annotationView": odd})["annotationView"] == {
         "source": "none",
         "style": "hull",
@@ -321,6 +359,13 @@ def test_annotation_view_kept_clamped_or_absent() -> None:
         "pies": False,
         "hidden": [],
     }
+
+
+def test_annotation_view_keeps_every_draw_as_shape() -> None:
+    for style in ("hull", "outline", "fog", "cloud", "sphere", "ellipsoid", "box"):
+        view = {"source": "cluster", "style": style}
+        kept = normalize_session({**_minimal(), "annotationView": view})["annotationView"]
+        assert kept["style"] == style
 
 
 def test_annotation_view_survives_the_import_endpoint() -> None:
@@ -337,3 +382,32 @@ def test_annotation_view_survives_the_import_endpoint() -> None:
     )
     assert resp.status_code == 200
     assert resp.json()["annotationView"] == {**view, "hidden": ["Cluster 1"]}
+
+
+def test_theme_kept_or_absent() -> None:
+    # older sessions have no theme: the frontend matches their background
+    assert normalize_session(_minimal())["theme"] is None
+    kept = {"name": "tolMuted", "applied": False}
+    assert normalize_session({**_minimal(), "theme": kept})["theme"] == kept
+    assert normalize_session({**_minimal(), "theme": {"name": "okabe"}})["theme"] == {
+        "name": "okabe",
+        "applied": True,
+    }
+    for odd in ("light", {"name": "<script>"}, {"name": ""}, {"applied": True}):
+        assert normalize_session({**_minimal(), "theme": odd})["theme"] is None
+
+
+def test_theme_survives_the_import_endpoint() -> None:
+    theme = {"name": "universe", "applied": True}
+    resp = client.post(
+        "/api/session/import",
+        files={
+            "file": (
+                "net.json",
+                json.dumps({**_minimal(), "theme": theme}),
+                "application/json",
+            )
+        },
+    )
+    assert resp.status_code == 200
+    assert resp.json()["theme"] == theme

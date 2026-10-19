@@ -9,6 +9,8 @@ import { api, type SessionData } from '../api/client'
 import { store } from '../store'
 import { ctx } from '../three'
 import { annotationView } from './annotations'
+import { themeState } from './themes'
+import { nodeLabelState } from './node'
 import { network3dSessionState } from './modes'
 import { activeSlot } from './workspace'
 import type { Edge } from '../three/Edge'
@@ -26,6 +28,9 @@ function nodeStyleFields(n: Node): Partial<SessionData['nodes'][number]> {
     ...(n.label ? { label: n.label } : {}),
     ...(n.labelColor ? { label_color: n.labelColor } : {}),
     ...(n.labelSize ? { label_size: n.labelSize } : {}),
+    ...(n.labelLook ? { label_style: { ...n.labelLook } } : {}),
+    ...(n.labelPosition !== 'right' ? { label_position: n.labelPosition } : {}),
+    ...(n.labelShown ? { label_shown: true } : {}),
   }
 }
 
@@ -104,6 +109,8 @@ export function collectSession(): SessionData {
     edgeShape: ctx.edgeShape,
     hive: ctx.hive,
     annotationView: annotationView(),
+    theme: themeState(),
+    nodeLabels: nodeLabelState(),
     ...namesOnScreen(),
   }
 }

@@ -79,6 +79,19 @@
                 aria-labelledby="menu-networks"
               ></div>
             </li>
+            <!-- the scene alone (every panel closed): no menu entry, the
+                 drawer handle does this; kept as a tab for showTab() -->
+            <li class="nav-item d-none" role="presentation">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#panel-main-view"
+                type="button"
+                role="tab"
+              >
+                3D View
+              </button>
+            </li>
             <li class="nav-item dropdown" role="presentation">
               <button
                 class="nav-link dropdown-toggle"
@@ -95,22 +108,22 @@
                   <button
                     class="dropdown-item"
                     data-bs-toggle="tab"
-                    data-bs-target="#panel-main-view"
+                    data-bs-target="#panel-scene"
                     type="button"
                     role="tab"
                   >
-                    3D View
+                    Scene &amp; Camera
                   </button>
                 </li>
                 <li role="presentation">
                   <button
                     class="dropdown-item"
                     data-bs-toggle="tab"
-                    data-bs-target="#panel-scene"
+                    data-bs-target="#panel-annotation-view"
                     type="button"
                     role="tab"
                   >
-                    Scene &amp; Camera
+                    Annotations
                   </button>
                 </li>
                 <li role="presentation">
@@ -174,18 +187,6 @@
                 Clustering
               </button>
             </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#panel-annotation-view"
-                data-menu="annotations"
-                type="button"
-                role="tab"
-              >
-                Annotations
-              </button>
-            </li>
             <li class="nav-item dropdown" role="presentation">
               <button
                 class="nav-link dropdown-toggle"
@@ -199,6 +200,41 @@
               </button>
               <ul class="dropdown-menu" aria-labelledby="menu-edit">
                 <li role="presentation">
+                  <h6 class="dropdown-header">Appearance</h6>
+                </li>
+                <li role="presentation" class="has-hint">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-style"
+                    type="button"
+                    role="tab"
+                  >
+                    Style
+                  </button>
+                  <span class="dropdown-hint" aria-hidden="true"
+                    >Colours, sizes, shapes and labels, by property</span
+                  >
+                </li>
+                <li role="presentation" class="has-hint">
+                  <button
+                    class="dropdown-item"
+                    data-bs-toggle="tab"
+                    data-bs-target="#panel-attributes"
+                    type="button"
+                    role="tab"
+                  >
+                    Attributes
+                  </button>
+                  <span class="dropdown-hint" aria-hidden="true"
+                    >Every node and edge in an editable table</span
+                  >
+                </li>
+                <li role="presentation"><hr class="dropdown-divider" /></li>
+                <li role="presentation">
+                  <h6 class="dropdown-header">Network parts</h6>
+                </li>
+                <li role="presentation" class="has-hint">
                   <button
                     class="dropdown-item"
                     data-bs-toggle="tab"
@@ -208,8 +244,11 @@
                   >
                     Nodes
                   </button>
+                  <span class="dropdown-hint" aria-hidden="true"
+                    >Selection, labels, shape and size</span
+                  >
                 </li>
-                <li role="presentation">
+                <li role="presentation" class="has-hint">
                   <button
                     class="dropdown-item"
                     data-bs-toggle="tab"
@@ -219,8 +258,11 @@
                   >
                     Edges
                   </button>
+                  <span class="dropdown-hint" aria-hidden="true"
+                    >Weights, direction, channels and bundling</span
+                  >
                 </li>
-                <li role="presentation">
+                <li role="presentation" class="has-hint" data-multilayer-only>
                   <button
                     class="dropdown-item"
                     data-bs-toggle="tab"
@@ -231,28 +273,9 @@
                   >
                     Layers
                   </button>
-                </li>
-                <li role="presentation">
-                  <button
-                    class="dropdown-item"
-                    data-bs-toggle="tab"
-                    data-bs-target="#panel-style"
-                    type="button"
-                    role="tab"
+                  <span class="dropdown-hint" aria-hidden="true"
+                    >Floors, labels, axes and 3D containers</span
                   >
-                    Style
-                  </button>
-                </li>
-                <li role="presentation">
-                  <button
-                    class="dropdown-item"
-                    data-bs-toggle="tab"
-                    data-bs-target="#panel-attributes"
-                    type="button"
-                    role="tab"
-                  >
-                    Attributes
-                  </button>
                 </li>
               </ul>
             </li>
@@ -394,7 +417,7 @@
               id="modeSingle"
               disabled
             >
-              Single <span class="nav-word">network</span>
+              Single network
             </button>
           </div>
           <div class="nav-theme">
@@ -402,8 +425,7 @@
               id="themeSelect"
               class="form-select form-select-sm"
               aria-label="Scene theme"
-              title="Scene theme (load a network first)"
-              disabled
+              title="Scene theme"
             >
               <option>Theme</option>
             </select>

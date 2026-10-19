@@ -349,31 +349,42 @@ export class ApplyTopologyCommand implements Command {
   }
 }
 
-export class ChangeThemeCommand implements Command {
+export class ChangeThemeCommand<S = unknown> implements Command {
   description: string
   private readonly oldTheme: string
+  private readonly before: S | undefined
 
   // Store-only: the concrete recolour (renderer clear color, floor/edge/label
   // colors) is applied by the Phase 11 themes action listening to theme:changed.
+  // `colours` (actions/themes.ts): whether the user's own node and channel
+  // colours take the theme's palette too, and how to put them back on undo.
   constructor(
     private readonly newTheme: string,
     getTheme: () => string,
-    private readonly setTheme: (t: string) => void
+    private readonly setTheme: (t: string) => void,
+    private readonly colours?: {
+      recolour: boolean
+      snapshot: () => S
+      restore: (s: S) => void
+    }
   ) {
     this.oldTheme = getTheme()
+    this.before = colours?.snapshot()
     this.description = `Change theme to ${newTheme}`
   }
 
-  private apply(theme: string): void {
-    this.setTheme(theme)
-    bus.emit('theme:changed', { theme })
-  }
-
   execute(): void {
-    this.apply(this.newTheme)
+    this.setTheme(this.newTheme)
+    bus.emit('theme:changed', {
+      theme: this.newTheme,
+      recolour: this.colours?.recolour,
+    })
   }
   undo(): void {
-    this.apply(this.oldTheme)
+    this.setTheme(this.oldTheme)
+    bus.emit('theme:changed', { theme: this.oldTheme })
+    if (this.colours && this.before !== undefined)
+      this.colours.restore(this.before)
   }
 }
 

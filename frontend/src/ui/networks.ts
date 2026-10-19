@@ -3,7 +3,7 @@
 // network, a set, or both at once; rename either (✎) or delete either (×).
 // The menu's button says what is on screen at a glance. Everything goes
 // through the workspace actions (the same as File → Loaded networks and
-// the Annotations menu, which use the rename and delete helpers below).
+// View → Annotations, which use the rename and delete helpers below).
 
 import { Collapse, Dropdown } from 'bootstrap'
 import { bus } from '../bus'
@@ -102,7 +102,7 @@ export function networksMenuHtml(rows: SlotRow[]): string {
 }
 
 // ---------------------------------------------------------------- rename, delete
-// shared with File → Loaded networks and the Annotations menu
+// shared with File → Loaded networks and View → Annotations
 
 const rowOf = (id: number) => describeSlots().find((r) => r.id === id)
 

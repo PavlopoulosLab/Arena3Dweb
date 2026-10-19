@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures'
+import { expect, openCard, test, type Page } from './fixtures'
 
 // Edit → Edges → Edge Shape: multi-channel edges are parallel lines side by
 // side by default (as STRING draws them); Bézier curves or one shared
@@ -111,7 +111,7 @@ test('the channel colours line up in columns, and Hide hides a channel', async (
   await page
     .getByRole('tab', { name: 'Edges', includeHidden: true, exact: true })
     .dispatchEvent('click')
-  await page.locator('#edgeCard_colours > summary').click() // starts folded
+  await openCard(page, '#edgeCard_colours')
 
   // every swatch and every Hide box starts at the same x, whatever the name
   const rows = page.locator('#channelColorPicker .channel_subcontainer')

@@ -2,7 +2,9 @@
 // is exercised by the Phase 13 Playwright E2E against the real DOM.
 import { beforeEach, describe, expect, it } from 'vitest'
 import { ctx, Layer, Node, resetContext } from '../three'
+import { labelShift } from './screen'
 import {
+  contrastWith,
   createLabels,
   renderLayerLabels,
   renderNodeLabels,
@@ -66,5 +68,27 @@ describe('setLabelColor', () => {
   it('updates the universal label color', () => {
     setLabelColor('#ff00ff')
     expect(ctx.labelColor).toBe('#ff00ff')
+  })
+})
+
+describe('label looks', () => {
+  it('picks a halo, box or shadow colour that stands out from the text', () => {
+    expect(contrastWith('#000000')).toBe('#ffffff')
+    expect(contrastWith('#ffffff')).toBe('#111111')
+    expect(contrastWith('#e41a1c')).toBe('#ffffff') // red text: white halo
+    expect(contrastWith('#ffd43b')).toBe('#111111') // yellow: dark halo
+  })
+
+  it('moves exported labels as the screen does: centred, above or below', () => {
+    // a 40 x 20 label; its corner usually sits 7px right, 10px up
+    expect(labelShift('right', 40, 20)).toEqual([0, 0])
+    expect(labelShift(undefined, 40, 20)).toEqual([0, 0])
+    // centred: the corner goes to the node centre minus half the label
+    const [cx, cy] = labelShift('centre', 40, 20)
+    expect([7 + cx, -10 + cy]).toEqual([-20, -10])
+    const [, ay] = labelShift('above', 40, 20)
+    const [, by] = labelShift('below', 40, 20)
+    expect(-10 + ay + 20).toBeLessThan(0) // bottom edge above the centre
+    expect(-10 + by).toBeGreaterThan(0) // top edge below the centre
   })
 })

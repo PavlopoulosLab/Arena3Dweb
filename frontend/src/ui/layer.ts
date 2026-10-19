@@ -6,7 +6,10 @@ import type { FloorStyle } from '../three/Layer'
 import { getSelectedLayers } from '../actions/layer'
 import { showLayerLabels, resizeLayerLabels } from '../actions/labels'
 import {
-  showLayerCoords,
+  applyLayerCoords,
+  layerCoordsMode,
+  setLayerCoordsMode,
+  type LayerCoordsMode,
   setLayerAxesOpacity,
   setFloorOpacity,
   setLayerColorPriority,
@@ -35,10 +38,26 @@ import {
 } from '../commands/scene'
 import { FOLD_ALL_HTML } from './sections'
 
+// Edit → Layers' radio and Layer selection's Axes ticks show the same state:
+// no radio is checked while layers are ticked one by one
+export function syncLayerCoordsControls(): void {
+  const mode = layerCoordsMode()
+  for (const radio of document.querySelectorAll<HTMLInputElement>(
+    'input[name="showLayerCoordsRadio"]'
+  ))
+    radio.checked = radio.value === mode
+  ctx.layers.forEach((layer, i) => {
+    const box = document.getElementById(
+      `checkbox4_${i}`
+    ) as HTMLInputElement | null
+    if (box) box.checked = layer.coordsShown
+  })
+}
+
 const LAYER_HTML = `
 <div class="col-md-6 col-lg-4 layout-panel">
   ${FOLD_ALL_HTML}
-  <details class="lp-section lp-more" id="layerCard_labels" open>
+  <details class="lp-section lp-more" id="layerCard_labels">
   <summary>Labels &amp; axes</summary>
   <label class="form-label">Show Labels:</label>
   <div class="mb-3">
@@ -55,9 +74,20 @@ const LAYER_HTML = `
       <label class="form-check-label" for="layerLabels_none">None</label>
     </div>
   </div>
-  <div class="form-check mb-2">
-    <input class="form-check-input" type="checkbox" id="showLayerCoords" />
-    <label class="form-check-label" for="showLayerCoords">Show Layer Coord Systems</label>
+  <label class="form-label" title="Each layer's own X, Y and Z axes; tick single layers under Layer selection → Axes">Layer Coord Systems:</label>
+  <div class="mb-2" id="layerCoordsRadios">
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="showLayerCoordsRadio" id="layerCoords_all" value="all" />
+      <label class="form-check-label" for="layerCoords_all">All</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="showLayerCoordsRadio" id="layerCoords_selected" value="selected" title="The selected layers, following the selection" />
+      <label class="form-check-label" for="layerCoords_selected">Selected</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="showLayerCoordsRadio" id="layerCoords_none" value="none" checked />
+      <label class="form-check-label" for="layerCoords_none">None</label>
+    </div>
   </div>
   <label class="form-label small mb-0" for="layerAxesOpacity">Layer axes opacity: <span id="layerAxesOpacityValue">0.85</span></label>
   <input type="range" class="form-range mb-3" id="layerAxesOpacity" min="0.1" max="1" step="0.05" value="0.85" aria-label="Layer axes opacity" />
@@ -66,7 +96,7 @@ const LAYER_HTML = `
     <input type="range" class="form-range" id="resizeLayerLabels" min="12" max="30" step="1" value="20" />
   </div>
   </details>
-  <details class="lp-section lp-more" id="layerCard_shape" open>
+  <details class="lp-section lp-more" id="layerCard_shape">
   <summary>Shape &amp; container</summary>
   <label class="form-label" for="layerContainer">Layer Shape (selected layers, or all):</label>
   <div class="d-flex gap-2 mb-1">
@@ -94,7 +124,7 @@ const LAYER_HTML = `
     <button id="applyContainerStyle" class="btn btn-outline-primary btn-sm">Apply Look</button>
   </div>
   </details>
-  <details class="lp-section lp-more" id="layerCard_floor" open>
+  <details class="lp-section lp-more" id="layerCard_floor">
   <summary>Floor</summary>
   <label class="form-label">Floor Shape (selected layers, or all):</label>
   <div class="mb-2">
@@ -171,11 +201,20 @@ export function initLayerPanel(): void {
     })
   }
 
-  document
-    .getElementById('showLayerCoords')
-    ?.addEventListener('change', (e) => {
-      showLayerCoords((e.target as HTMLInputElement).checked)
+  for (const radio of document.querySelectorAll<HTMLInputElement>(
+    'input[name="showLayerCoordsRadio"]'
+  ))
+    radio.addEventListener('change', () => {
+      setLayerCoordsMode(radio.value as LayerCoordsMode)
+      syncLayerCoordsControls()
     })
+  // a new network's layers take the mode; each layer's own choice (Layer
+  // selection → Axes) does not carry over to other layers
+  bus.on('network:loaded', () => {
+    if (layerCoordsMode() === 'chosen') setLayerCoordsMode('none')
+    else applyLayerCoords()
+    syncLayerCoordsControls()
+  })
   document
     .getElementById('layerAxesOpacity')
     ?.addEventListener('input', (e) => {

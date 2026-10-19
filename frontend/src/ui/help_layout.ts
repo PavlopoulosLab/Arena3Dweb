@@ -67,7 +67,7 @@ const icon = (id: string) =>
 // a menu, then one or more panel names in title case (a few names go on in
 // lower case: Loaded networks, Other tools, Hive plot, Node attributes)
 const ROOTS =
-  'Home|Getting Started|File|Database Importers|Networks|View|Find|Layer selection|Layout|Clustering|Annotations|Edit|Analyze|Export|Help|Data Tables'
+  'Home|Getting Started|File|Database Importers|Networks|View|Find|Layer selection|Layout|Clustering|Edit|Analyze|Export|Help|Data Tables'
 const WORD = '[A-Z][\\w-]*'
 const SEGMENT = `${WORD}(?:(?: &)? (?:${WORD}|networks|mode|tools|plot|attributes|selection))*`
 const MENU_PATH = new RegExp(`\\b(?:${ROOTS})(?: → ${SEGMENT})+`, 'g')

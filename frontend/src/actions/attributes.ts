@@ -9,7 +9,16 @@
 import { Color } from 'three'
 import { ctx } from '../three'
 import { EDGE_MIN_VISIBLE_OPACITY } from '../three/constants'
-import { NODE_SHAPES, type NodeGeometryType } from '../three/Node'
+import {
+  LABEL_BOX_OPACITY,
+  LABEL_HALO_PX,
+  LABEL_POSITION_LABELS,
+  NODE_SHAPES,
+  labelLookFromText,
+  labelLookText,
+  type LabelPosition,
+  type NodeGeometryType,
+} from '../three/Node'
 import { LINE_TYPE_LABELS, type LineType } from '../three/Edge'
 import { selectEdges, selectNodes } from './search'
 import { listGroups, type GroupSource } from './groups'
@@ -22,7 +31,17 @@ import {
 
 // ---------------------------------------------------------------- cells
 export type NodeColumn =
-  'name' | 'layer' | 'color' | 'shape' | 'scale' | 'alpha' | 'label' | 'descr'
+  | 'name'
+  | 'layer'
+  | 'color'
+  | 'shape'
+  | 'scale'
+  | 'alpha'
+  | 'label'
+  | 'labelColor'
+  | 'labelStyle'
+  | 'labelShown'
+  | 'descr'
 export type EdgeColumn =
   | 'source'
   | 'target'
@@ -57,6 +76,12 @@ export function nodeCell(i: number, col: NodeColumn): string | number {
       return round(n.alpha)
     case 'label':
       return n.label
+    case 'labelColor': // '' = as the label style
+      return n.labelColor ? hex(n.labelColor) : ''
+    case 'labelStyle': // '' = as the label style
+      return n.labelLook?.style ?? ''
+    case 'labelShown': // pinned: shown with Show Labels: Chosen
+      return n.labelShown ? 'yes' : ''
     case 'descr':
       return n.descr
   }
@@ -191,11 +216,17 @@ const number = (raw: string): number | null => {
   return raw.trim() === '' || !Number.isFinite(v) ? null : v
 }
 
+// a pinned label in a typed cell or a file: yes / true / 1, or blank / no
+const SHOWN = ['yes', 'y', 'true', '1', 'x', 'shown']
+const NOT_SHOWN = ['', 'no', 'n', 'false', '0']
+
 export const LIMITS = {
   scale: [0.05, 20],
   alpha: [0.05, 1],
   borderWidth: [0, 10],
   labelSize: [6, 60],
+  labelHalo: LABEL_HALO_PX,
+  labelBox: LABEL_BOX_OPACITY,
   width: [0.1, 10],
   opacity: [0.05, 1],
 } as const
@@ -204,8 +235,8 @@ export const LIMITS = {
 // valid. Numbers are kept within the editor's limits.
 export type NodeField =
   | Exclude<NodeColumn, 'name' | 'layer'>
-  | 'labelColor'
   | 'labelSize'
+  | 'labelPosition'
   | 'borderColor'
   | 'borderWidth'
 
@@ -236,6 +267,24 @@ export function nodePatch(field: NodeField, raw: string): NodePatch | null {
         : v === null
           ? null
           : { labelSize: Math.round(clamp(v, ...LIMITS.labelSize)) }
+    case 'labelStyle': {
+      const look = labelLookFromText(raw)
+      return look === undefined ? null : { labelLook: look }
+    }
+    case 'labelShown': {
+      const t = raw.trim().toLowerCase()
+      return SHOWN.includes(t)
+        ? { labelShown: true }
+        : NOT_SHOWN.includes(t)
+          ? { labelShown: false }
+          : null
+    }
+    case 'labelPosition': // blank = right of the node, as always
+      return raw.trim() === ''
+        ? { labelPosition: 'right' }
+        : raw.trim().toLowerCase() in LABEL_POSITION_LABELS
+          ? { labelPosition: raw.trim().toLowerCase() as LabelPosition }
+          : null
     default:
       return null // the border needs both its colour and width: borderPatch
   }
@@ -290,6 +339,9 @@ const NODE_FIELD_NAMES: Record<keyof NodePatch, string> = {
   label: 'label',
   labelColor: 'label colour',
   labelSize: 'label size',
+  labelLook: 'label style',
+  labelPosition: 'label position',
+  labelShown: 'label shown',
   descr: 'description',
 }
 const EDGE_FIELD_NAMES: Record<keyof EdgePatch, string> = {
@@ -364,6 +416,9 @@ export const NODE_ATTRIBUTE_COLUMNS = [
   'Label',
   'LabelColor',
   'LabelSize',
+  'LabelStyle',
+  'LabelPosition',
+  'LabelShown',
   'Url',
   'Description',
   'Annotation',
@@ -382,6 +437,9 @@ export function nodeAttributesTsv(ids = ctx.nodeObjects.map((_, i) => i)) {
       n.label,
       n.labelColor,
       n.labelSize || '',
+      labelLookText(n.labelLook),
+      n.labelPosition === 'right' ? '' : n.labelPosition,
+      n.labelShown ? 'yes' : '',
       n.url,
       n.descr,
       n.annotations.join(';'),

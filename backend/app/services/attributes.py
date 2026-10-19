@@ -45,6 +45,16 @@ def _number(row: pd.Series, column: str, low: float, high: float) -> float | Non
     return value
 
 
+def _yes_no(cell: str | None) -> bool | None:
+    """yes / true / 1 (or x) -> True, no / false / 0 -> False, else None."""
+    value = (cell or "").strip().lower()
+    if value in ("yes", "y", "true", "1", "x", "shown"):
+        return True
+    if value in ("no", "n", "false", "0"):
+        return False
+    return None
+
+
 def _annotations(cell: str | None) -> list[str] | None:
     if cell is None:
         return None
@@ -78,6 +88,9 @@ def parse_node_attributes_tsv(text: str) -> list[NodeAttributeRow]:
                 label=_cell(row, "Label"),
                 label_color=_cell(row, "LabelColor"),
                 label_size=_number(row, "LabelSize", 1, 200),
+                label_style=(_cell(row, "LabelStyle") or "")[:80] or None,
+                label_position=(_cell(row, "LabelPosition") or "").lower() or None,
+                label_shown=_yes_no(_cell(row, "LabelShown")),
             )
         )
     return rows

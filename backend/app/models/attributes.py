@@ -17,6 +17,9 @@ class NodeAttributeRow(BaseModel):
     label: str | None = None  # text in place of the node name
     label_color: str | None = None
     label_size: float | None = None  # px
+    label_style: str | None = None  # "halo #ffffff 3 bold" — the frontend reads it
+    label_position: str | None = None  # right | centre | above | below
+    label_shown: bool | None = None  # pinned: shown with Show Labels: Chosen
 
 
 class EdgeAttributeRow(BaseModel):

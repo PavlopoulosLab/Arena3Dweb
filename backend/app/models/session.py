@@ -12,7 +12,8 @@ class SessionImportResponse(BaseModel):
     scene: dict[str, Any]
     layers: list[dict[str, Any]]
     # optional per-node style (Edit → Style): opacity, border_color, border_width,
-    # stretch [x, y, z], label, label_color, label_size
+    # stretch [x, y, z], label, label_color, label_size, label_style {style, color,
+    # width, opacity, bold}, label_position
     nodes: list[dict[str, Any]]
     # optional per-edge style: opacity_factor, line_type, arrow_color
     edges: list[dict[str, Any]]
@@ -32,6 +33,11 @@ class SessionImportResponse(BaseModel):
     # how the annotation groups are drawn (Annotations menu): source, style,
     # opacity, padding, pies, hidden (group names), when the session has it
     annotationView: dict[str, Any] | None = None
+    # the scene theme ({name, applied}: whether its colours were applied to the
+    # network), when the session has one
+    theme: dict[str, Any] | None = None
+    # Edit → Nodes → Show Labels {mode, withSelection}, when saved
+    nodeLabels: dict[str, Any] | None = None
     warnings: list[str] = []
 
 

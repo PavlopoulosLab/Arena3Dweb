@@ -178,8 +178,20 @@ def _label(value: Any, limit: int = 200) -> str | None:
 
 # Annotations menu: what the groups are drawn around, and how
 HULL_SOURCES = ("none", "cluster", "annotation")
-HULL_STYLES = ("hull", "fog")
+HULL_STYLES = ("hull", "outline", "fog", "cloud", "sphere", "ellipsoid", "box")
 MAX_HIDDEN_GROUPS = 1000
+
+
+def _theme(value: Any) -> dict[str, Any] | None:
+    """The scene theme a session was saved with: a short id (the frontend
+    knows the names) and whether its colours were applied; None when the
+    session has none or it is unreadable, so older sessions load as before."""
+    if not isinstance(value, dict):
+        return None
+    name = value.get("name")
+    if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,40}", name):
+        return None
+    return {"name": name, "applied": value.get("applied") is not False}
 
 
 def _annotation_view(value: Any) -> dict[str, Any] | None:
@@ -215,6 +227,39 @@ def _hex(value: Any) -> str | None:
 
 # Edge line types (Edit → Style)
 LINE_TYPES = ("solid", "dashed", "dotted")
+# Node label looks and positions (Edit → Style); "right" is the default and
+# is not written
+LABEL_LOOKS = ("plain", "halo", "box", "shadow")
+LABEL_POSITIONS = ("centre", "above", "below")
+
+
+# Edit → Nodes → Show Labels
+LABEL_MODES = ("all", "selected", "chosen", "none")
+
+
+def _node_labels(value: Any) -> dict[str, Any] | None:
+    """Which node labels show (every one, the selection's, the chosen ones —
+    with the selection's when withSelection — or none), or None for a session
+    from before, which loads with the default."""
+    if not isinstance(value, dict) or value.get("mode") not in LABEL_MODES:
+        return None
+    return {"mode": value["mode"], "withSelection": value.get("withSelection") is not False}
+
+
+def _label_look(value: Any) -> dict[str, Any] | None:
+    """A node's label look (style, halo/box/shadow colour or '' for auto,
+    halo px, box opacity, bold), or None when absent or unreadable."""
+    if not isinstance(value, dict) or value.get("style") not in LABEL_LOOKS:
+        return None
+    width = _number(value.get("width", 2), 0.5, 8)
+    opacity = _number(value.get("opacity", 0.75), 0.05, 1)
+    return {
+        "style": value["style"],
+        "color": _hex(value.get("color")) or "",
+        "width": 2.0 if width is None else width,
+        "opacity": 0.75 if opacity is None else opacity,
+        "bold": value.get("bold") is True,
+    }
 
 
 def _node_style(n: dict[str, Any]) -> None:
@@ -235,6 +280,10 @@ def _node_style(n: dict[str, Any]) -> None:
         checks["stretch"] = None
     label = n.get("label")
     checks["label"] = label[:200] if isinstance(label, str) and label.strip() else None
+    checks["label_style"] = _label_look(n.get("label_style"))
+    checks["label_shown"] = True if n.get("label_shown") is True else None
+    position = n.get("label_position")
+    checks["label_position"] = position if position in LABEL_POSITIONS else None
     for key, value in checks.items():
         if value is None:
             n.pop(key, None)
@@ -329,5 +378,7 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
         "name": _label(data.get("name")),
         "annotationSet": _label(data.get("annotationSet")),
         "annotationView": _annotation_view(data.get("annotationView")),
+        "theme": _theme(data.get("theme")),
+        "nodeLabels": _node_labels(data.get("nodeLabels")),
         "warnings": warnings,
     }

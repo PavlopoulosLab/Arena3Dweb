@@ -6,6 +6,7 @@ import {
   EDGE_MIN_VISIBLE_OPACITY,
   EDGE_WIDTH_MAX,
   EDGE_WIDTH_MIN,
+  FADED_EDGE,
   SELECTED_DEFAULT_COLOR,
 } from './constants'
 import { ctx, disposeObject3D, edgeResolution } from './runtime'
@@ -67,6 +68,7 @@ export class Edge {
   isSelected = false
   widthFactor = 1 // per-edge width multiplier (Style panel)
   opacityFactor = 1 // per-edge opacity multiplier (Style panel)
+  faded = false // an end outside the chosen groups (actions/annotations.ts)
   lineType: LineType = 'solid'
   arrowColor = '' // '' = the edge's colour
 
@@ -226,7 +228,7 @@ export class Edge {
       opacity = this.asInter
         ? ctx.interLayerEdgeOpacity
         : ctx.intraLayerEdgeOpacity
-    return opacity * this.opacityFactor
+    return opacity * this.opacityFactor * (this.faded ? FADED_EDGE : 1)
   }
 
   // Mirrors decideOpacity. Weights arrive scaled to [0-1] by the backend, so

@@ -2,10 +2,16 @@
 // divs in #labelDiv, repositioned in the animate loop (flag-gated, as v2).
 // Positioning is set inline so it works before the Phase 13 stylesheet lands.
 
-import { Vector3 } from 'three'
+import { Color, Vector3 } from 'three'
 import { ctx, NODE_LABEL_DEFAULT_SIZE } from '../three'
-import { decideNodeLabelFlags } from './node'
-import { registerAnimateHook } from './screen'
+import { setNodeLabelMode, type NodeLabelMode } from './node'
+import { luminance } from './palette'
+import {
+  DEFAULT_LABEL_LOOK,
+  type LabelLook,
+  type LabelPosition,
+} from '../three/Node'
+import { LABEL_GAP, registerAnimateHook } from './screen'
 
 const VEC3 = new Vector3() // scratch, reused per frame
 
@@ -92,10 +98,8 @@ export function showLayerLabels(mode: 'all' | 'selected' | 'none'): void {
   if (mode !== 'none') ctx.renderLayerLabelsFlag = true
 }
 
-export function showNodeLabels(mode: 'all' | 'selected' | 'none'): void {
-  ctx.showAllNodeLabelsFlag = mode === 'all'
-  ctx.showSelectedNodeLabelsFlag = mode === 'selected'
-  decideNodeLabelFlags()
+export function showNodeLabels(mode: NodeLabelMode): void {
+  setNodeLabelMode(mode)
 }
 
 export function resizeLayerLabels(size: number): void {
@@ -210,30 +214,90 @@ export function applyLabelStyle(
   restyleNodeLabels()
 }
 
+// #rrggbb of any CSS colour three.js reads ('#FFF', 'white', …)
+const hexOf = (color: string) => `#${new Color(color).getHexString()}`
+
+/** A colour that stands out against `color`: near-black on light colours,
+ * white on dark ones — a label's halo, box or shadow by default, or a label's
+ * colour on top of its node (Edit → Style → Contrast with node). */
+export function contrastWith(color: string): string {
+  return luminance(hexOf(color)) > 0.4 ? '#111111' : '#ffffff'
+}
+
+const rgba = (color: string, alpha: number) => {
+  const c = new Color(color)
+  return `rgba(${Math.round(c.r * 255)}, ${Math.round(c.g * 255)}, ${Math.round(c.b * 255)}, ${alpha})`
+}
+
+// The label's top-left corner sits 7px right of and 10px above the node
+// centre (renderNodeLabels); a position moves it from there, in CSS so no
+// label is measured (screen.ts labelShift does the same sums for the export).
+const POSITION_SHIFT: Record<LabelPosition, string> = {
+  right: '',
+  centre: 'translate(calc(-50% - 7px), calc(-50% + 10px))',
+  above: `translate(calc(-50% - 7px), calc(-100% + ${10 - LABEL_GAP}px))`,
+  below: `translate(calc(-50% - 7px), ${10 + LABEL_GAP}px)`,
+}
+
+const DARK_HALO =
+  '0 0 3px rgba(0,0,0,0.95), 0 0 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.8)'
+
+// A node's own look wins over the label style's halo, background and weight.
+// Without either, labels get a halo (DEFAULT_LABEL_LOOK): a rim against the
+// text colour, so they read over nodes, edges and any theme. The halo is a
+// text stroke drawn under the letters (paint-order), twice the outline's
+// width since half of it hides under the fill.
+function applyLook(
+  div: HTMLDivElement,
+  own: LabelLook | null,
+  st: LabelStyle,
+  text: string
+): void {
+  let shadow = st.halo ? DARK_HALO : ''
+  let box = st.background ? 'rgba(0, 0, 0, 0.55)' : ''
+  let stroke = ''
+  const look = own ?? (st.halo || st.background ? null : DEFAULT_LABEL_LOOK)
+  if (look) {
+    const other = look.color || contrastWith(text)
+    shadow =
+      look.style === 'shadow'
+        ? `0 1px 2px ${rgba(other, 0.9)}, 0 2px 6px ${rgba(other, 0.7)}`
+        : ''
+    box = look.style === 'box' ? rgba(other, look.opacity) : ''
+    stroke = look.style === 'halo' ? `${look.width * 2}px ${other}` : ''
+  }
+  div.style.fontWeight = look?.bold ? 'bold' : (st.weight ?? '')
+  div.style.textShadow = shadow
+  div.style.setProperty('-webkit-text-stroke', stroke)
+  div.style.setProperty('paint-order', stroke ? 'stroke fill' : '')
+  div.style.strokeLinejoin = stroke ? 'round' : ''
+  div.style.background = box
+  div.style.padding = box ? '0 0.3em' : ''
+  div.style.borderRadius = box ? '0.4em' : ''
+  // read back by the image export (actions/screen.ts)
+  div.dataset.shadow = shadow
+    ? look?.style === 'shadow'
+      ? look.color || contrastWith(text)
+      : '#000000'
+    : ''
+}
+
 export function restyleNodeLabels(): void {
   nodeLabelsDivs.forEach((div, i) => {
     const node = ctx.nodeObjects[i]
     const layer = ctx.nodeGroups[ctx.nodeLayerNames[i]]
     const st: LabelStyle = { ...labelStyles['*'], ...labelStyles[layer] }
     if (node) div.textContent = node.getLabel()
-    div.style.color = node?.labelColor || (st.color ?? ctx.labelColor)
+    const text = node?.labelColor || (st.color ?? ctx.labelColor)
+    div.style.color = text
     const size = node?.labelSize || st.size
     div.style.fontSize = size ? `${size}px` : NODE_LABEL_DEFAULT_SIZE
-    div.style.fontWeight = st.weight ?? ''
     div.style.fontStyle = st.italic ? 'italic' : ''
     div.style.fontFamily = st.font ? FONTS[st.font] : ''
-    div.style.textShadow = st.halo
-      ? '0 0 3px rgba(0,0,0,0.95), 0 0 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.8)'
-      : ''
-    if (st.background) {
-      div.style.background = 'rgba(0, 0, 0, 0.55)'
-      div.style.padding = '0 0.3em'
-      div.style.borderRadius = '0.4em'
-    } else {
-      div.style.background = ''
-      div.style.padding = ''
-      div.style.borderRadius = ''
-    }
+    applyLook(div, node?.labelLook ?? null, st, text)
+    const position = node?.labelPosition ?? 'right'
+    div.style.transform = POSITION_SHIFT[position]
+    div.dataset.pos = position
     div.style.opacity = st.opacity !== undefined ? String(st.opacity) : ''
   })
 }

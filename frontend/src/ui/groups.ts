@@ -1,11 +1,16 @@
-// "Groups" card of Analyze → Annotations & Groups — NORMA's group list: every annotation
-// term or cluster with its colour, members per layer, a hull switch and a
-// select button; tables of groups and their overlap; the super-node view.
+// "Groups" card of View → Annotations — NORMA's group list: every annotation
+// term or cluster with its colour, members per layer, a switch for its shape
+// and a select button; tables of groups and their overlap; the super-node view.
 
 import { bus } from '../bus'
 import { ctx } from '../three'
 import { escapeHtml } from '../utils'
-import { setGroupColor, setGroupHidden } from '../actions/annotations'
+import {
+  isGroupHidden,
+  setGroupColor,
+  setGroupHidden,
+  setGroupsHidden,
+} from '../actions/annotations'
 import {
   collapseToSuperNodes,
   colorGroup,
@@ -27,7 +32,7 @@ import { showTab } from './tabs'
 const MAX_ROWS = 300
 
 export const GROUPS_HTML = `
-<details id="groups_card" class="lp-section lp-more" open>
+<details id="groups_card" class="lp-section lp-more">
   <summary>Groups (annotations &amp; clusters)</summary>
   <div class="mt-2">
     <div class="d-flex gap-2 mb-2">
@@ -36,6 +41,11 @@ export const GROUPS_HTML = `
         <option value="cluster">Clusters</option>
       </select>
       <input id="groupsFilter" class="form-control form-control-sm" placeholder="Filter groups" aria-label="Filter groups" />
+    </div>
+    <div id="groupsShowAllNone" class="groups-show d-none" role="group" aria-label="Show the groups">
+      <span class="form-text m-0">Show:</span>
+      <button id="groupsShowAll" type="button" class="btn btn-link btn-sm p-0" title="Draw every group in the list (all that match the filter)">All</button>
+      <button id="groupsShowNone" type="button" class="btn btn-link btn-sm p-0" title="Draw none of the groups in the list (all that match the filter)">None</button>
     </div>
     <div id="groupsEmpty" class="form-text">No groups yet — upload a group or attribute file, run an enrichment, or cluster a layout.</div>
     <div id="groupsList" class="groups-list"></div>
@@ -97,6 +107,9 @@ export function renderGroups(): void {
     (g) => !filter || g.name.toLowerCase().includes(filter)
   )
   empty.classList.toggle('d-none', groups.length > 0)
+  document
+    .getElementById('groupsShowAllNone')
+    ?.classList.toggle('d-none', groups.length < 2)
   list.innerHTML =
     groups
       .slice(0, MAX_ROWS)
@@ -106,7 +119,7 @@ export function renderGroups(): void {
       <input type="color" class="group-color" value="${escapeHtml(g.color)}" title="Colour of ${escapeHtml(g.name)}" aria-label="Colour of ${escapeHtml(g.name)}" />
       <span class="group-name" title="${escapeHtml(g.name)}">${escapeHtml(g.name)}</span>
       <span class="group-count" title="${escapeHtml(perLayer(g))}">${g.members.length}</span>
-      <label class="group-hull" title="Draw this group's hull / fog cloud"><input type="checkbox" ${g.hidden ? '' : 'checked'} /> hull</label>
+      <label class="group-hull" title="Draw the shape around this group (Draw as)"><input type="checkbox" ${g.hidden ? '' : 'checked'} /> show</label>
       <button type="button" class="btn btn-link btn-sm p-0 group-select">select</button>
     </div>`
       )
@@ -127,7 +140,7 @@ export function renderGroups(): void {
     row
       .querySelector<HTMLInputElement>('.group-hull input')
       ?.addEventListener('change', (e) =>
-        setGroupHidden(name, !(e.target as HTMLInputElement).checked)
+        setGroupHidden(name, !(e.target as HTMLInputElement).checked, src)
       )
     row.querySelector('.group-select')?.addEventListener('click', () => {
       status(`${selectGroup(name, src)} nodes of ${name} selected.`)
@@ -135,7 +148,31 @@ export function renderGroups(): void {
   })
 }
 
+// Show: All / None — every group matching the filter, not only the rows
+// listed, as one redraw
+function showAllGroups(show: boolean): void {
+  const filter = (
+    document.getElementById('groupsFilter') as HTMLInputElement
+  ).value
+    .trim()
+    .toLowerCase()
+  const names = listGroups(source())
+    .filter((g) => !filter || g.name.toLowerCase().includes(filter))
+    .map((g) => g.name)
+  setGroupsHidden(names, !show, source())
+  renderGroups()
+  status(
+    `${show ? 'Showing' : 'Hiding'} ${names.length} group${names.length === 1 ? '' : 's'}.`
+  )
+}
+
 export function initGroups(): void {
+  document
+    .getElementById('groupsShowAll')
+    ?.addEventListener('click', () => showAllGroups(true))
+  document
+    .getElementById('groupsShowNone')
+    ?.addEventListener('click', () => showAllGroups(false))
   document
     .getElementById('groupsSource')
     ?.addEventListener('change', renderGroups)
@@ -194,4 +231,14 @@ export function initGroups(): void {
   bus.on('groups:changed', renderGroups)
   bus.on('clustering:applied', renderGroups)
   bus.on('network:loaded', renderGroups)
+  // switched here or in the Clustering summary: the ticks follow, in place
+  // (a new render would scroll a long list back to the top)
+  bus.on('groups:shown', () =>
+    document
+      .querySelectorAll<HTMLElement>('#groupsList .group-row')
+      .forEach((row) => {
+        const box = row.querySelector<HTMLInputElement>('.group-hull input')
+        if (box) box.checked = !isGroupHidden(row.dataset.group!)
+      })
+  )
 }

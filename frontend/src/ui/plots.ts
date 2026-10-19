@@ -86,7 +86,7 @@ const KINDS: [string, [string, string][]][] = [
 const DIST = 'histogram density cdf loglog box'
 
 export const PLOTS_HTML = `
-<details class="lp-section lp-more" id="plotsCard" open>
+<details class="lp-section lp-more" id="plotsCard">
   <summary>Plot</summary>
   <div class="lp-grid mb-2">
     <div>

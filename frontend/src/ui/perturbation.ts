@@ -47,12 +47,15 @@ import { askImportAs, placeNetwork } from './import_as'
 import { selectedChannels } from './layouts'
 import { PROGRESS_HTML, ProgressBar } from './progress'
 import { showTab } from './tabs'
+import { openCard } from './sections'
 
 export const PERTURBATION_HTML = `
 <div class="form-text mt-0 mb-2">Knock nodes or edges out and see what changes, or attack the network step by step to see how robust it is: one graph per layer and one for the whole network, undirected, parallel edges merged, distances in hops.</div>
-<details id="perturbation_card" class="lp-section lp-more perturb-card" open>
+<details id="perturbation_card" class="lp-section lp-more perturb-card">
   <summary>Knock out</summary>
   <div class="mt-2">
+    <details class="lp-more lp-sub" id="koSub_nodes">
+      <summary>Nodes<span class="lp-hint">the selected ones, by name or the top k</span></summary>
     <div class="lp-grid mb-2">
       <div>
         <label class="form-label small" for="koNodes">Nodes</label>
@@ -90,7 +93,9 @@ export const PERTURBATION_HTML = `
       <input class="form-check-input" type="checkbox" id="koEveryCopy" />
       <label class="form-check-label small" for="koEveryCopy">Every copy across layers (multiplex knockout)</label>
     </div>
-    <div class="small mb-1">Edges</div>
+    </details>
+    <details class="lp-more lp-sub" id="koSub_edges">
+      <summary>Edges<span class="lp-hint">selected, inter-layer, a channel or a random share</span></summary>
     <div class="d-flex flex-wrap gap-3 mb-2">
       <div class="form-check">
         <input class="form-check-input" type="checkbox" id="koSelectedEdges" />
@@ -110,6 +115,11 @@ export const PERTURBATION_HTML = `
         <label class="form-label small" for="koRandom">A random share of edges (%)</label>
         <input id="koRandom" type="number" min="0" max="100" step="5" value="0" class="form-control form-control-sm" />
       </div>
+    </div>
+    </details>
+    <details class="lp-more lp-sub" id="koSub_propagation">
+      <summary>Propagation<span class="lp-hint">optional: a random walk from chosen nodes</span></summary>
+    <div class="lp-grid mb-2">
       <div>
         <label class="form-label small" for="koPropagate" title="Network propagation: a random walk that goes back to these nodes at each step with the restart probability">Propagate from (optional)</label>
         <input id="koPropagate" class="form-control form-control-sm" placeholder="names, e.g. a drug's targets" />
@@ -119,8 +129,10 @@ export const PERTURBATION_HTML = `
         <input id="koRestart" type="number" min="0.05" max="0.95" step="0.05" value="0.5" class="form-control form-control-sm" />
       </div>
     </div>
+    </details>
+    <details class="lp-more lp-sub" id="koSub_results">
+      <summary>Scene &amp; reports<span class="lp-hint">show, colour, restore, reports</span></summary>
     <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-      <button id="runKnockout" class="btn btn-primary btn-sm">Run Knockout</button>
       <label class="small" for="koShow">Knocked out in the scene:</label>
       <select id="koShow" class="form-select form-select-sm" style="width:auto">
         <option value="fade" selected>faded</option>
@@ -135,6 +147,10 @@ export const PERTURBATION_HTML = `
       <button id="koApply" class="btn btn-outline-primary btn-sm" disabled title="Load the network without the knocked-out nodes and edges, through the Import as popup">Apply as a New Network</button>
       <button id="koReports" class="btn btn-outline-primary btn-sm" disabled>Reports</button>
     </div>
+    </details>
+    <div class="d-flex flex-wrap align-items-center gap-2 mt-2 mb-2">
+      <button id="runKnockout" class="btn btn-primary btn-sm">Run Knockout</button>
+    </div>
     <div class="run-progress">
       ${PROGRESS_HTML('perturbProgress', 'Knockout progress')}
       <button id="koCancel" class="btn btn-sm btn-outline-secondary mt-2 d-none">Cancel</button>
@@ -142,9 +158,11 @@ export const PERTURBATION_HTML = `
     <div id="perturb_status" class="small mb-2" aria-live="polite"></div>
   </div>
 </details>
-<details id="attack_card" class="lp-section lp-more perturb-card" open>
+<details id="attack_card" class="lp-section lp-more perturb-card">
   <summary>Attack and robustness</summary>
   <div class="mt-2">
+    <details class="lp-more lp-sub" id="attackSub_strategy">
+      <summary>Strategy<span class="lp-hint">random failure or a targeted attack</span></summary>
     <div class="lp-grid mb-2">
       <div>
         <label class="form-label small" for="attackStrategy">Remove nodes</label>
@@ -165,6 +183,11 @@ export const PERTURBATION_HTML = `
         <label class="form-label small" for="attackRuns">Random runs to average</label>
         <input id="attackRuns" type="number" min="1" max="20" step="1" value="5" class="form-control form-control-sm" />
       </div>
+    </div>
+    </details>
+    <details class="lp-more lp-sub" id="attackSub_steps">
+      <summary>Steps<span class="lp-hint">how many, how far, global efficiency</span></summary>
+    <div class="lp-grid mb-2">
       <div>
         <label class="form-label small" for="attackSteps">Steps (up to 50)</label>
         <input id="attackSteps" type="number" min="1" max="50" step="1" value="20" class="form-control form-control-sm" />
@@ -180,7 +203,8 @@ export const PERTURBATION_HTML = `
         </div>
       </div>
     </div>
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+    </details>
+    <div class="d-flex flex-wrap align-items-center gap-2 mt-2 mb-2">
       <button id="runAttack" class="btn btn-primary btn-sm">Run Attack</button>
       <div class="form-check mb-0">
         <input class="form-check-input" type="checkbox" id="attackKeep" />
@@ -380,6 +404,7 @@ function enableResults(on: boolean): void {
     'koReports',
   ])
     el<HTMLButtonElement>(id).disabled = !on
+  if (on) openCard(el('koColour')) // Scene & reports, folded by default
 }
 
 async function runKnockout(): Promise<void> {

@@ -28,15 +28,23 @@ function ensureDialog(): HTMLDialogElement {
   return d
 }
 
+// `danger` (the default) is for steps that cannot be undone; a plain choice
+// (danger: false) gets a primary button. Every call sets both labels, as the
+// popup is shared.
 export function confirmDialog(opts: {
   title: string
   text: string
   ok: string
+  cancel?: string
+  danger?: boolean
 }): Promise<boolean> {
   const d = ensureDialog()
   d.querySelector('#confirmDialogTitle')!.textContent = opts.title
   d.querySelector('#confirmDialogText')!.textContent = opts.text
-  d.querySelector('#confirmDialogOk')!.textContent = opts.ok
+  const ok = d.querySelector<HTMLButtonElement>('#confirmDialogOk')!
+  ok.textContent = opts.ok
+  ok.className = `btn ${opts.danger === false ? 'btn-primary' : 'btn-danger'} btn-sm`
+  d.querySelector('#confirmDialogCancel')!.textContent = opts.cancel ?? 'Cancel'
   d.returnValue = ''
   return new Promise((resolve) => {
     d.addEventListener('close', () => resolve(d.returnValue === 'ok'), {

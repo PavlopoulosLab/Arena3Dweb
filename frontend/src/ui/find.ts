@@ -23,7 +23,7 @@ const MODES = `
 
 const FIND_HTML = `
 <div class="col-md-8 col-lg-6 layout-panel find-panel">
-  <details class="lp-section lp-more" id="findCard_nodes" open>
+  <details class="lp-section lp-more" id="findCard_nodes">
     <summary>Nodes</summary>
     <textarea class="form-control mb-2" id="nodeSearchBar" rows="2"
       placeholder="Names (comma-separated) or a regular expression, then Enter" aria-label="Node names"></textarea>
@@ -42,10 +42,10 @@ const FIND_HTML = `
     </div>
     <div class="form-text">Matches replace the selection; click a listed node to focus on it alone.</div>
     <div id="nodeSearchStatus" class="small mt-1"></div>
-    <div id="nodeSearchResults" class="search-results mt-1" style="max-height: 12rem; overflow: auto"></div>
+    <div id="nodeSearchResults" class="search-results mt-1"></div>
   </details>
 
-  <details class="lp-section lp-more" id="findCard_edges" open>
+  <details class="lp-section lp-more" id="findCard_edges">
     <summary>Edges</summary>
     <textarea class="form-control mb-2" id="edgeSearchBar" rows="2"
       placeholder="Node names (comma-separated) or a regular expression, then Enter" aria-label="Edge end names"></textarea>
@@ -71,7 +71,7 @@ const FIND_HTML = `
     </div>
     <div class="form-text">Matches are selected (Analyze → Data Tables → Selected Edges lists them with their weights); click one to focus on its two nodes.</div>
     <div id="edgeSearchStatus" class="small mt-1"></div>
-    <div id="edgeSearchResults" class="search-results mt-1" style="max-height: 12rem; overflow: auto"></div>
+    <div id="edgeSearchResults" class="search-results mt-1"></div>
   </details>
 </div>
 `
@@ -84,6 +84,30 @@ const count = (n: number, what: string) =>
   n
     ? `${n} ${what}${n === 1 ? '' : what === 'match' ? 'es' : 's'}.`
     : 'No matches.'
+// The matches as a table (Data Tables style), first LIST_MAX only; a click
+// on a row (or Enter on its name) focuses the camera on it.
+const LIST_MAX = 200
+function listHits(
+  list: HTMLElement,
+  head: string[],
+  rows: string[],
+  onPick: (row: HTMLTableRowElement) => void
+): void {
+  list.classList.toggle('data-table-wrap', rows.length > 0)
+  list.innerHTML = rows.length
+    ? `<table class="data-table"><thead><tr>${head
+        .map((h) => `<th scope="col">${h}</th>`)
+        .join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>`
+    : ''
+  list
+    .querySelectorAll<HTMLTableRowElement>('tbody tr')
+    .forEach((tr) => tr.addEventListener('click', () => onPick(tr)))
+}
+const shown = (n: number) =>
+  n > LIST_MAX ? ` The first ${LIST_MAX} are listed.` : ''
+// the first cell's name is a button, so a row can be reached by keyboard
+const nameCell = (name: string) =>
+  `<td><button type="button" class="btn btn-link btn-sm p-0 text-start">${escapeHtml(name)}</button></td>`
 const onEnter = (el: HTMLElement, run: () => void) =>
   el.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -117,21 +141,22 @@ function initNodeSearch(): void {
       )
     }
     selectNodes(hits, true)
-    say(statusEl, count(hits.length, 'match'), !hits.length)
-    list.innerHTML = hits
-      .slice(0, 200)
-      .map(
-        (i) =>
-          `<button type="button" class="btn btn-link btn-sm p-0 me-2" data-node="${i}">${escapeHtml(ctx.nodeObjects[i].name)} <small class="text-secondary">${escapeHtml(ctx.nodeObjects[i].layer)}</small></button>`
-      )
-      .join('')
-    list
-      .querySelectorAll<HTMLButtonElement>('[data-node]')
-      .forEach((b) =>
-        b.addEventListener('click', () =>
-          focusOnNodes([Number(b.dataset.node)])
-        )
-      )
+    say(
+      statusEl,
+      count(hits.length, 'match') + shown(hits.length),
+      !hits.length
+    )
+    listHits(
+      list,
+      ['Node', 'Layer'],
+      hits
+        .slice(0, LIST_MAX)
+        .map(
+          (i) =>
+            `<tr data-node="${i}">${nameCell(ctx.nodeObjects[i].name)}<td>${escapeHtml(ctx.nodeObjects[i].layer)}</td></tr>`
+        ),
+      (tr) => focusOnNodes([Number(tr.dataset.node)])
+    )
     if (
       hits.length &&
       (document.getElementById('nodeSearchFocus') as HTMLInputElement).checked
@@ -170,30 +195,30 @@ function initEdgeSearch(): void {
       )
     }
     selectEdges(hits, true)
-    say(statusEl, count(hits.length, 'match'), !hits.length)
+    say(
+      statusEl,
+      count(hits.length, 'match') + shown(hits.length),
+      !hits.length
+    )
     const ends = (i: number) => {
       const e = ctx.edgeObjects[i]
       return [e.sourceNodeIndex, e.targetNodeIndex]
     }
-    list.innerHTML = hits
-      .slice(0, 200)
-      .map((i) => {
+    const listed = hits.slice(0, LIST_MAX)
+    const channels = listed.some((i) => ctx.edgeObjects[i].channels.length)
+    listHits(
+      list,
+      ['Source', 'Target', 'Layer', ...(channels ? ['Channel'] : [])],
+      listed.map((i) => {
         const e = ctx.edgeObjects[i]
         const [s, t] = ends(i)
         const ls = ctx.layers[e.sourceLayerIndex]?.name ?? ''
         const lt = ctx.layers[e.targetLayerIndex]?.name ?? ''
         const where = ls === lt ? ls : `${ls} → ${lt}`
-        const channel = e.channels.length ? ` · ${e.channels.join(', ')}` : ''
-        return `<button type="button" class="btn btn-link btn-sm p-0 me-2" data-edge="${i}">${escapeHtml(ctx.nodeObjects[s]?.name ?? '')} — ${escapeHtml(ctx.nodeObjects[t]?.name ?? '')} <small class="text-secondary">${escapeHtml(where + channel)}</small></button>`
-      })
-      .join('')
-    list
-      .querySelectorAll<HTMLButtonElement>('[data-edge]')
-      .forEach((b) =>
-        b.addEventListener('click', () =>
-          focusOnNodes(ends(Number(b.dataset.edge)))
-        )
-      )
+        return `<tr data-edge="${i}">${nameCell(ctx.nodeObjects[s]?.name ?? '')}<td>${escapeHtml(ctx.nodeObjects[t]?.name ?? '')}</td><td>${escapeHtml(where)}</td>${channels ? `<td>${escapeHtml(e.channels.join(', '))}</td>` : ''}</tr>`
+      }),
+      (tr) => focusOnNodes(ends(Number(tr.dataset.edge)))
+    )
     if (
       hits.length &&
       (document.getElementById('edgeSearchFocus') as HTMLInputElement).checked

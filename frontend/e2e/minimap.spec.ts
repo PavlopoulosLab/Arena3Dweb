@@ -68,4 +68,26 @@ test('minimap shows on load and redraws on rotation', async ({ page }) => {
     .dispatchEvent('click')
   await page.locator('#toggleMinimap').dispatchEvent('click')
   await expect(minimap).toBeHidden()
+
+  // Performance → Navigator refresh Off hides it and unticks the box; ticking
+  // the box shows it again and turns the refresh back on, so it draws
+  const choose = (id: string, value: string) =>
+    page.locator(id).evaluate((el, v) => {
+      ;(el as HTMLSelectElement).value = v
+      el.dispatchEvent(new Event('change', { bubbles: true }))
+    }, value)
+  await page.locator('#toggleMinimap').dispatchEvent('click')
+  await expect(minimap).toBeVisible()
+  await choose('#perf_minimap', '0')
+  await expect(minimap).toBeHidden()
+  await expect(page.locator('#toggleMinimap')).not.toBeChecked()
+  await page.locator('#toggleMinimap').dispatchEvent('click')
+  await expect(minimap).toBeVisible()
+  await expect(page.locator('#perf_minimap')).toHaveValue('1')
+  // another Performance change leaves an unticked navigator hidden
+  await page.locator('#toggleMinimap').dispatchEvent('click')
+  await expect(minimap).toBeHidden()
+  await choose('#perf_minimap', '3')
+  await choose('#perf_detail', 'low')
+  await expect(minimap).toBeHidden()
 })

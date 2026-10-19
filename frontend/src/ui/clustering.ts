@@ -24,6 +24,11 @@ import { selectedChannels } from './layouts'
 import { showTab } from './tabs'
 import { FOLD_ALL_HTML } from './sections'
 import { openAnnotationPanel } from './annotation_panel'
+import {
+  isGroupHidden,
+  setGroupHidden,
+  setGroupsHidden,
+} from '../actions/annotations'
 
 type ClusterScope = 'perLayer' | 'allLayers' | 'coupled'
 
@@ -44,7 +49,7 @@ const LISTED = 12 // communities listed in the summary, largest first
 const HTML = `
 <div class="col-md-8 col-lg-6 layout-panel clustering-panel">
   ${FOLD_ALL_HTML}
-  <details class="lp-section lp-more" id="clusterCard_run" open>
+  <details class="lp-section lp-more" id="clusterCard_run">
     <summary>Clustering</summary>
     <div class="lp-grid mb-2">
       <div>
@@ -74,12 +79,12 @@ const HTML = `
     </details>
   </details>
 
-  <details class="lp-section lp-more" id="clusterCard_communities" open>
+  <details class="lp-section lp-more" id="clusterCard_communities">
     <summary>Communities</summary>
     <div id="clusterSummary" class="small"></div>
     <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
       <button id="clustersToGroupLayout" class="btn btn-outline-primary btn-sm" disabled title="Layout → Group Layout (NORMA-2.0), with the clusters as groups">Lay Out by Cluster…</button>
-      <button id="clustersToHulls" class="btn btn-outline-primary btn-sm" disabled title="Annotations menu: a hull or fog cloud around every cluster, and the cluster list with colours">Draw Around Clusters…</button>
+      <button id="clustersToHulls" class="btn btn-outline-primary btn-sm" disabled title="View → Annotations: a shape around every cluster, and the cluster list with colours">Draw Around Clusters…</button>
     </div>
   </details>
 </div>
@@ -155,20 +160,29 @@ function renderSummary(): void {
     `<div id="clusterCount"><b>${list.length}</b> communit${list.length === 1 ? 'y' : 'ies'}${how}, ` +
     `${clustered} of ${total} nodes; sizes ${sizes[sizes.length - 1]}–${sizes[0]} ` +
     `(median ${sizes[Math.floor(sizes.length / 2)]}).</div>`
+  // a tick per community: the scene shows the ticked ones, the rest fade
   const rows = list
     .slice(0, LISTED)
     .map(
       (c) =>
-        `<tr><td><span style="display:inline-block;width:0.8em;height:0.8em;border-radius:50%;margin-right:0.4em;vertical-align:-0.05em;background:${escapeHtml(c.color)}"></span>Cluster ${escapeHtml(c.id)}</td>` +
+        `<tr><td><input type="checkbox" class="form-check-input cluster-show me-2" data-cluster="${escapeHtml(c.id)}" ${isGroupHidden(`Cluster ${c.id}`) ? '' : 'checked'} aria-label="Show Cluster ${escapeHtml(c.id)}" />` +
+        `<span style="display:inline-block;width:0.8em;height:0.8em;border-radius:50%;margin-right:0.4em;vertical-align:-0.05em;background:${escapeHtml(c.color)}"></span>Cluster ${escapeHtml(c.id)}</td>` +
         `<td class="text-end">${c.size}</td><td class="text-end">${c.layers}</td></tr>`
     )
     .join('')
   const more =
     list.length > LISTED
-      ? `<div class="form-text">… and ${list.length - LISTED} smaller ones — Data Tables → Clustering Data lists every node.</div>`
+      ? `<div class="form-text">… and ${list.length - LISTED} smaller ones — tick them one by one in <a href="#" id="clusterShowMore">View → Annotations → Groups</a>; Data Tables → Clustering Data lists every node.</div>`
+      : ''
+  const all =
+    list.length > 1
+      ? `<div class="groups-show mt-2" role="group" aria-label="Show the communities"><span class="form-text m-0">Show:</span>` +
+        `<button id="clusterShowAll" type="button" class="btn btn-link btn-sm p-0" title="Show every community">All</button>` +
+        `<button id="clusterShowNone" type="button" class="btn btn-link btn-sm p-0" title="Fade every community; then tick the ones to show">None</button></div>`
       : ''
   out.innerHTML =
     head +
+    all +
     `<table class="table table-sm mb-1 mt-2"><thead><tr><th>Community</th><th class="text-end">Nodes</th><th class="text-end">Layers</th></tr></thead>` +
     `<tbody>${rows}</tbody></table>${more}`
 }
@@ -226,11 +240,11 @@ export function initClusteringPanel(): void {
       `${lastRun?.algorithm ?? el<HTMLSelectElement>('clusterAlgorithm').value} clusters`
     )
     status(
-      'The clusters are now an annotation set: the Annotations menu draws them as pies, hulls or fog clouds, and the Group Layout card uses them.'
+      'The clusters are now an annotation set: View → Annotations draws them as pies, hulls, clouds or 3D containers, and the Group Layout card uses them.'
     )
   })
   // Layouts use the clusters: the Group Layout card, with the clusters as groups
-  // the scene draws them: hulls or fog clouds in the Annotations menu
+  // the scene draws them: a shape around each in View → Annotations
   el('clustersToHulls').addEventListener('click', () =>
     openAnnotationPanel('cluster')
   )
@@ -255,5 +269,42 @@ export function initClusteringPanel(): void {
   })
   bus.on('clustering:applied', renderSummary)
   bus.on('history:changed', renderSummary) // undo / redo, sessions
+  // Show: a tick per community, All / None for every one (not only those
+  // listed); the scene shows the ticked communities and fades the rest
+  const summary = el('clusterSummary')
+  summary.addEventListener('change', (e) => {
+    const box = e.target as HTMLInputElement
+    if (box.matches('.cluster-show'))
+      setGroupHidden(`Cluster ${box.dataset.cluster}`, !box.checked, 'cluster')
+  })
+  summary.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    if (target.id === 'clusterShowAll' || target.id === 'clusterShowNone')
+      setGroupsHidden(
+        communities().map((c) => `Cluster ${c.id}`),
+        target.id === 'clusterShowNone',
+        'cluster'
+      )
+    else if (target.id === 'clusterShowMore') {
+      e.preventDefault()
+      openAnnotationPanel()
+      const list = document.getElementById(
+        'groupsSource'
+      ) as HTMLSelectElement | null
+      if (list && list.value !== 'cluster') {
+        list.value = 'cluster'
+        list.dispatchEvent(new Event('change', { bubbles: true }))
+      }
+    }
+  })
+  // switched here or in the Groups card: the ticks follow, in place
+  bus.on('groups:shown', () =>
+    summary
+      .querySelectorAll<HTMLInputElement>('.cluster-show')
+      .forEach(
+        (box) =>
+          (box.checked = !isGroupHidden(`Cluster ${box.dataset.cluster}`))
+      )
+  )
   renderSummary()
 }

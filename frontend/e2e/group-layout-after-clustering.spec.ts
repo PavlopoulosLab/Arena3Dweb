@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures'
+import { expect, openCard, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // The Clustering panel, then the Group Layout card: the card offers only what
@@ -88,7 +88,7 @@ test('after clustering, every offered group layout groups the nodes', async ({
   await findCommunities(page)
   await page.locator('#clustersToAnnotations').dispatchEvent('click')
   const before = await separation(page, true)
-  await page.locator('#groupLayoutCard > summary').dispatchEvent('click')
+  await openCard(page, '#groupLayoutCard')
   await expect(page.locator('#groupLayoutCard')).toHaveAttribute('open', '')
 
   const source = page.locator('#groupSource')

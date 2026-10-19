@@ -135,3 +135,42 @@ test('Redraw lets go of a half-drawn area and a stuck loading veil', async ({
   await expect(page.locator('#loader')).toBeHidden()
   await expect(page.locator('#app')).toHaveCSS('opacity', '1')
 })
+
+test.describe('the shortcut list', () => {
+  // the real default: the other specs see it open (e2e/fixtures.ts)
+  test.use({ openCards: false })
+
+  test('starts folded, opens with a click and is remembered', async ({
+    page,
+  }) => {
+    const open = async () => {
+      await page.goto('/')
+      await page.waitForFunction(
+        () => '__arena' in (window as unknown as Record<string, unknown>)
+      )
+      await page
+        .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+        .dispatchEvent('click')
+      await page
+        .locator('#input_network_file')
+        .setInputFiles('public/data/figure2A_data.tsv')
+      await expect(page.locator('#file_status')).toContainText('Loaded network')
+    }
+    const box = page.locator('#navShortcutsBox')
+    await open()
+    await expect(box.locator('> summary')).toBeVisible()
+    await expect(box).toHaveJSProperty('open', false)
+    await expect(page.locator('#navShortcuts li').first()).toBeHidden()
+    // the scene controls below are not folded with it
+    await expect(page.locator('#recenterButton')).toBeVisible()
+
+    await box.locator('> summary').click()
+    await expect(page.locator('#navShortcuts li').first()).toBeVisible()
+    await open()
+    await expect(box).toHaveJSProperty('open', true)
+    await box.locator('> summary').click()
+    await expect(box).toHaveJSProperty('open', false)
+    await open()
+    await expect(box).toHaveJSProperty('open', false)
+  })
+})

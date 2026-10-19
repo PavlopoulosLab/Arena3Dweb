@@ -1,5 +1,5 @@
-// Annotations — PLAN-ROADMAP Phase 6. The Annotations menu's main card:
-// annotation sets, pie-chart nodes, hulls or fog clouds per cluster/annotation;
+// Annotations — PLAN-ROADMAP Phase 6. View → Annotations' main card:
+// annotation sets, pie-chart nodes, a shape around every cluster/annotation;
 // and the Enrichment card of Analyze → Annotations & Groups: STRING functional
 // enrichment of the selected nodes (results can annotate nodes).
 
@@ -19,7 +19,7 @@ import {
   groupColor,
   HULL_OPACITY,
   resetAnnotationOverlays,
-  setGroupHidden,
+  setGroupsHidden,
   setHullOpacity,
   setHullPadding,
   setHullSource,
@@ -41,13 +41,48 @@ const SPECIES: [number, string][] = [
   [3702, 'Arabidopsis'],
 ]
 
-// The Annotations menu's main card (ui/annotation_panel.ts): which set or
-// clustering the scene shows, and how — hulls or fog clouds, their opacity
-// and padding, pies. The Layout panel's Group Layout card keeps its radios in step.
+// Draw as, in three columns: the shapes around each group (actions/annotations.ts)
+const DRAW_AS: [string, [HullStyle, string, string][]][] = [
+  [
+    'On the floor',
+    [
+      ['hull', 'Hull', 'A translucent area on the floor around the members'],
+      ['outline', 'Outline', 'A band along the edge of that area'],
+    ],
+  ],
+  [
+    'Soft',
+    [
+      [
+        'fog',
+        'Fog cloud',
+        'A haze over the members, following their shape (NORMA)',
+      ],
+      ['cloud', 'Cloud', 'A round cloud of soft puffs holding the members'],
+    ],
+  ],
+  [
+    '3D container',
+    [
+      ['sphere', 'Sphere', 'A translucent sphere holding the members'],
+      [
+        'ellipsoid',
+        'Ellipsoid',
+        'A translucent ellipsoid fitted to the members',
+      ],
+      ['box', 'Box', 'A translucent box around the members'],
+    ],
+  ],
+]
+
+// View → Annotations' main card (ui/annotation_panel.ts): which set or
+// clustering the scene shows, and how — the shape around each group, its
+// opacity and padding, pies. The Layout panel's Group Layout card keeps its
+// radios in step.
 export const ANNOTATION_VIEW_HTML = `
-<details id="annCard_show" class="lp-section lp-more" open>
+<details id="annCard_show" class="lp-section lp-more">
   <summary>Show on the network</summary>
-  <div class="form-text mt-0 mb-2">Draws the groups in the scene: a hull or a fog cloud around every annotation term or cluster on each layer, and pie charts on the annotated nodes.</div>
+  <div class="form-text mt-0 mb-2">Highlights the groups in the scene: a shape around every annotation term or cluster on each layer — on the floor, a soft cloud or a 3D container — and pie charts on the annotated nodes.</div>
   <label class="form-label small" for="annotationSet">Annotation set</label>
   <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
     <select id="annotationSet" class="form-select form-select-sm" style="width:auto" aria-label="Annotation set"><option value="-1">(none)</option></select>
@@ -56,35 +91,40 @@ export const ANNOTATION_VIEW_HTML = `
   </div>
   <div class="form-text mt-0 mb-2">Every attribute or group file, enrichment or cluster run is kept; switch between them.</div>
   <div id="annotationsNote" class="form-text mb-2 d-none">No annotations in this network: upload a node attributes or group file (File), or annotate nodes from an enrichment (Analyze → Annotations &amp; Groups). The annotation options are off until then.</div>
-  <div class="lp-grid mb-2" style="align-items: start">
-    <div role="radiogroup" aria-label="Draw around">
-      <div class="form-label small">Draw around</div>
-      ${(
-        [
-          ['none', 'Nothing'],
-          ['cluster', 'Clusters'],
-          ['annotation', 'Annotations'],
-        ] as const
+  <div role="radiogroup" aria-label="Draw around" class="mb-2">
+    <div class="form-label small mb-1">Draw around</div>
+    ${(
+      [
+        ['none', 'Nothing'],
+        ['cluster', 'Clusters'],
+        ['annotation', 'Annotations'],
+      ] as const
+    )
+      .map(
+        ([v, l]) => `
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="hullSource" id="hull_${v}" value="${v}" ${v === 'none' ? 'checked' : ''} />
+      <label class="form-check-label" for="hull_${v}">${l}</label>
+    </div>`
       )
-        .map(
-          ([v, l]) => `
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="hullSource" id="hull_${v}" value="${v}" ${v === 'none' ? 'checked' : ''} />
-        <label class="form-check-label" for="hull_${v}">${l}</label>
+      .join('')}
+  </div>
+  <div role="radiogroup" aria-label="Draw as" class="mb-2">
+    <div class="form-label small mb-1">Draw as</div>
+    <div class="ann-shapes">${DRAW_AS.map(
+      ([title, shapes]) => `
+      <div>
+        <div class="ann-shapes__head">${title}</div>${shapes
+          .map(
+            ([v, l, hint]) => `
+        <div class="form-check" title="${hint}">
+          <input class="form-check-input" type="radio" name="hullStyle" id="hullStyle_${v}" value="${v}" ${v === 'hull' ? 'checked' : ''} />
+          <label class="form-check-label" for="hullStyle_${v}">${l}</label>
+        </div>`
+          )
+          .join('')}
       </div>`
-        )
-        .join('')}
-    </div>
-    <div role="radiogroup" aria-label="Draw as">
-      <div class="form-label small">Draw as</div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="hullStyle" id="hullStyle_hull" value="hull" checked />
-        <label class="form-check-label" for="hullStyle_hull">Hull</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="hullStyle" id="hullStyle_fog" value="fog" />
-        <label class="form-check-label" for="hullStyle_fog">Fog cloud</label>
-      </div>
+    ).join('')}
     </div>
   </div>
   <div class="lp-grid mb-2">
@@ -107,7 +147,7 @@ export const ANNOTATION_VIEW_HTML = `
 
 // "Enrichment" card of Analyze → Annotations & Groups
 export const ANNOTATIONS_HTML = `
-<details id="annotation_card" class="lp-section lp-more" open>
+<details id="annotation_card" class="lp-section lp-more">
   <summary>Enrichment (STRING)</summary>
   <div class="mt-2">
     <label class="form-label" for="enrichSpecies">Enrichment of Selected Nodes (STRING):</label>
@@ -295,7 +335,11 @@ function restoreAnnotationView(view: AnnotationView): void {
     if (shown) shown.textContent = value.toFixed(2)
   }
   setHullSource('none') // nothing to redraw while the rest is set
-  for (const key of view.hidden) setGroupHidden(key, true)
+  setGroupsHidden(
+    view.hidden,
+    true,
+    view.source === 'cluster' ? 'cluster' : 'annotation'
+  )
   setHullStyle(view.style)
   setHullOpacity(view.opacity)
   setHullPadding(view.padding)

@@ -2,6 +2,7 @@
 // way in (an example, your own file, a database import), then how to cite it.
 
 import { showTab } from './tabs'
+import { openCard } from './sections'
 import { EXAMPLES, exampleOptions, loadExample } from './file'
 import {
   PUBLICATIONS,
@@ -297,6 +298,12 @@ export function initHomePanel(): void {
       showTab(tab)
     })
   go('link_to_fileInput', '#panel-file')
+  // …with its Network card open (every card starts folded)
+  document
+    .getElementById('link_to_fileInput')
+    ?.addEventListener('click', () =>
+      openCard(document.getElementById('input_network_file'))
+    )
   go('homeToDatabases', '#panel-databases')
   go('homeToHelp', '#panel-help')
   document.getElementById('homeHeroExample')?.addEventListener('click', () => {

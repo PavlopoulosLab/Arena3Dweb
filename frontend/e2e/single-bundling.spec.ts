@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures'
+import { expect, openCard, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // Edit → Edges in Single network mode: one Edge Bundling slider bundles every
@@ -60,7 +60,7 @@ test('single network mode bundles every edge as one set', async ({ page }) => {
     timeout: 15000,
   })
   await tab(page, 'Edges')
-  await page.locator('#edgeCard_bundling > summary').click() // starts folded
+  await openCard(page, '#edgeCard_bundling')
   await expect(page.locator('#interBundling')).toBeHidden()
   await expect(page.locator('label[for="intraBundling"]')).toHaveText(
     /^Edge Bundling/,

@@ -46,10 +46,22 @@ export const OKABE_ITO = [
   '#F0E442',
 ]
 
-export type CategoricalPalette = 'distinct' | 'okabeIto'
+// Paul Tol's "bright" qualitative scheme (grey dropped, as for Okabe–Ito),
+// distinct for colour-blind readers too
+export const TOL_BRIGHT = [
+  '#4477AA',
+  '#EE6677',
+  '#228833',
+  '#CCBB44',
+  '#66CCEE',
+  '#AA3377',
+]
+
+export type CategoricalPalette = 'distinct' | 'okabeIto' | 'tol'
 export const CATEGORICAL_LABELS: Record<CategoricalPalette, string> = {
   distinct: 'Distinct (colour-blind checked)',
   okabeIto: 'Okabe–Ito (colour-blind safe)',
+  tol: 'Tol bright (colour-blind safe)',
 }
 export type SequentialPalette = 'blue' | 'cividis'
 export const SEQUENTIAL_LABELS: Record<SequentialPalette, string> = {
@@ -102,7 +114,12 @@ export function categoricalColors(
   surface: Surface,
   palette: CategoricalPalette = 'distinct'
 ): Map<string, string> {
-  const pal = palette === 'okabeIto' ? OKABE_ITO : CATEGORICAL[surface]
+  const pal =
+    palette === 'okabeIto'
+      ? OKABE_ITO
+      : palette === 'tol'
+        ? TOL_BRIGHT
+        : CATEGORICAL[surface]
   const out = new Map<string, string>()
   for (const k of keys)
     if (!out.has(k)) out.set(k, out.size < pal.length ? pal[out.size] : OTHER)

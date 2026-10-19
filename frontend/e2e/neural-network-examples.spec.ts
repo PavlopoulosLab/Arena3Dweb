@@ -8,11 +8,23 @@ import { expect, test } from './fixtures'
 type Arena = {
   __arena: {
     ctx: {
-      layers: { name: string; getPosition(axis: 'x' | 'y'): number }[]
+      layers: {
+        name: string
+        geometry_parameters_width: number
+        getPosition(axis: 'x' | 'y'): number
+      }[]
       nodeObjects: {
         getName(): string
         getLayer(): string
+        getPosition(axis: 'y' | 'z'): number
         annotations: string[]
+        sphere: {
+          scale: { y: number }
+          geometry: {
+            computeBoundingSphere(): void
+            boundingSphere: { radius: number } | null
+          }
+        }
       }[]
       edgeObjects: { channels: string[] }[]
       channelColors: Record<string, string>
@@ -123,6 +135,38 @@ for (const [label, layers, channels, first, last, axis] of EXAMPLES) {
     expect(scene.edges).toBeLessThanOrEqual(10_000)
   })
 }
+
+// every node whole on its (square) floor: none runs past an edge
+test('every node of every neural network sits on its floor', async ({
+  page,
+}) => {
+  test.setTimeout(180_000) // six sessions on software GL
+  for (const [label] of EXAMPLES) {
+    await openExample(page, label)
+    const outside = await page.evaluate(() => {
+      const { ctx } = (window as unknown as Arena).__arena
+      return ctx.nodeObjects
+        .map((n) => {
+          const width = ctx.layers.find(
+            (l) => l.name === n.getLayer()
+          )!.geometry_parameters_width
+          n.sphere.geometry.computeBoundingSphere()
+          const radius =
+            (n.sphere.geometry.boundingSphere?.radius ?? 0) * n.sphere.scale.y
+          const reach =
+            Math.max(
+              Math.abs(n.getPosition('y')),
+              Math.abs(n.getPosition('z'))
+            ) + radius
+          return reach <= width / 2
+            ? null
+            : `${n.getName()} (${n.getLayer()}): ${reach.toFixed(1)} > ${width / 2}`
+        })
+        .filter((s) => s !== null)
+    })
+    expect(outside, label).toEqual([])
+  }
+})
 
 test('the graph neural network is a multiplex with annotated members', async ({
   page,

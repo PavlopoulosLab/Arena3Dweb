@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures'
+import { expect, openCard, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // NORMA-2.0 group layouts: clusters within layers, layers as groups (floors
@@ -70,7 +70,7 @@ async function setup(page: Page) {
   await page.locator('#input_network_file').setInputFiles(FIGURE_2A)
   await expect(page.locator('#file_status')).toContainText('Loaded network')
   await tab(page, 'Layout')
-  await page.locator('#groupLayoutCard > summary').click()
+  await openCard(page, '#groupLayoutCard')
 }
 
 test('clusters as groups, then layers as groups (placed + angled)', async ({

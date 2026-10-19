@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { Edge, Layer, Node, Scene, ctx, resetContext } from '../three'
-import { shapeFromText } from '../three/Node'
+import { labelLookFromText, labelLookText, shapeFromText } from '../three/Node'
 import { history } from '../commands/base'
-import { applyNodeAttributes } from './node'
+import { applyNodeAttributes, nodeLabelState } from './node'
 import { applyEdgeAttributes } from './edge'
 import {
   borderPatch,
@@ -182,6 +182,32 @@ describe('values', () => {
     expect(borderPatch('#ff0000', 'thick')).toBeNull()
   })
 
+  it('turns label styles, colours and positions into patches', () => {
+    expect(nodePatch('labelStyle', 'halo')).toEqual({
+      labelLook: {
+        style: 'halo',
+        color: '',
+        width: 2,
+        opacity: 0.75,
+        bold: false,
+      },
+    })
+    expect(nodePatch('labelStyle', '')).toEqual({ labelLook: null })
+    expect(nodePatch('labelStyle', 'sparkly')).toBeNull()
+    expect(nodePatch('labelColor', '')).toEqual({ labelColor: '' })
+    expect(nodePatch('labelPosition', 'Above')).toEqual({
+      labelPosition: 'above',
+    })
+    expect(nodePatch('labelPosition', '')).toEqual({ labelPosition: 'right' })
+    expect(nodePatch('labelPosition', 'left')).toBeNull()
+    expect(nodePatch('labelShown', 'true')).toEqual({ labelShown: true })
+    expect(nodePatch('labelShown', 'Yes')).toEqual({ labelShown: true })
+    expect(nodePatch('labelShown', 'false')).toEqual({ labelShown: false })
+    expect(nodePatch('labelShown', '')).toEqual({ labelShown: false })
+    expect(nodePatch('labelShown', 'maybe')).toBeNull()
+    expect(nodeCell(0, 'labelStyle')).toBe('')
+  })
+
   it('turns typed edge values into patches', () => {
     expect(edgePatch('color', '#0000ff')).toEqual({ color: '#0000ff' })
     expect(edgePatch('width', '3')).toEqual({ widthFactor: 3 })
@@ -266,10 +292,57 @@ describe('export and reload', () => {
       'Hub',
       '',
       '20',
+      '', // label style: as the label style
+      '', // label position: right, as always
+      '', // label shown: as Show Labels says
       '',
       'tab here',
       'GO:1;GO:2',
     ])
+  })
+
+  it('writes and reads label styles and positions', () => {
+    const n = ctx.nodeObjects[0]
+    n.labelLook = {
+      style: 'halo',
+      color: '#ffffff',
+      width: 3,
+      opacity: 0.75,
+      bold: true,
+    }
+    n.labelPosition = 'centre'
+    n.labelShown = true
+    const lines = nodeAttributesTsv().split('\n')
+    const cols = lines[0].split('\t')
+    const row = lines[1].split('\t')
+    expect(row[cols.indexOf('LabelStyle')]).toBe('halo #ffffff 3 bold')
+    expect(row[cols.indexOf('LabelPosition')]).toBe('centre')
+    expect(row[cols.indexOf('LabelShown')]).toBe('yes')
+    applyNodeAttributes([
+      {
+        node_layer: 'B_L1',
+        color: null,
+        size: null,
+        url: null,
+        description: null,
+        label_style: 'Box 0.5',
+        label_position: 'Below',
+        label_shown: true,
+      },
+    ])
+    const b = ctx.nodeObjects[1]
+    expect(b.labelLook).toEqual({
+      style: 'box',
+      color: '',
+      width: 2,
+      opacity: 0.5,
+      bold: false,
+    })
+    expect(b.labelPosition).toBe('below')
+    // a pinned label from the file shows: Show Labels went to Chosen
+    expect(b.labelShown).toBe(true)
+    expect(nodeLabelState()).toEqual({ mode: 'chosen', withSelection: true })
+    expect(b.showLabel).toBe(true)
   })
 
   it('writes one edge row per channel, in the edge attribute format', () => {
@@ -327,6 +400,23 @@ describe('export and reload', () => {
       'dotted',
       '#ff00ff',
     ])
+  })
+
+  it('reads label looks in any order, and refuses unknown words', () => {
+    expect(labelLookFromText('bold 2.5 HALO')).toEqual({
+      style: 'halo',
+      color: '',
+      width: 2.5,
+      opacity: 0.75,
+      bold: true,
+    })
+    expect(labelLookFromText('shadow #000000')?.color).toBe('#000000')
+    expect(labelLookFromText('halo 99')?.width).toBe(8) // within the limits
+    expect(labelLookFromText('')).toBeNull()
+    expect(labelLookFromText('neon')).toBeUndefined()
+    expect(labelLookFromText('#ffffff')).toBeUndefined() // no style
+    const look = labelLookFromText('box #222222 0.4 bold')!
+    expect(labelLookFromText(labelLookText(look))).toEqual(look)
   })
 
   it('reads shapes by key or label', () => {

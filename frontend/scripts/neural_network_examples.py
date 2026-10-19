@@ -63,6 +63,10 @@ def hexmix(a: str, b: str, t: float) -> str:
     return "#" + "".join(f"{round(x + (y - x) * t):02x}" for x, y in zip(ca, cb, strict=True))
 
 
+NODE_RADIUS = 8  # a node of size 1 (frontend/src/three/constants.ts SPHERE_RADIUS)
+FLOOR_MARGIN = 10  # room left between a node and the edge of its floor
+
+
 class Network:
     """Nodes (per layer, with an in-plane position) and channel-tagged edges."""
 
@@ -118,6 +122,14 @@ class Network:
         assert len(pairs) == len(set(pairs)), "one edge per pair"
         assert len(self.layers) <= 20 and len(self.channels) <= 10
         assert len(self.edges) <= 10_000
+        # every node whole on its (square) floor, a little clear of the edge
+        width = {layer["name"]: layer["width"] for layer in self.layers}
+        for n in self.nodes.values():
+            reach = max(abs(n["u"]), abs(n["v"])) + NODE_RADIUS * n["size"] + FLOOR_MARGIN
+            assert reach <= width[n["layer"]] / 2, (
+                f"{n['name']} sticks out of {n['layer']}: it needs a floor "
+                f"{2 * reach:g} wide, not {width[n['layer']]:g}"
+            )
 
     def write(self, stem: str, session_extras: dict) -> None:
         self.check()
@@ -443,7 +455,7 @@ def build_cnn() -> None:
                     net.edge(c2[m, rc[0], rc[1]], key, 1 if rc == best else 0.25, "Pooling")
 
     # dense: 12 units, all-to-all
-    dense = net.layer("Dense", 200)
+    dense = net.layer("Dense", 340)  # a column of 12, 26 apart
     hidden = []
     for j in range(12):
         key = net.node(
@@ -460,7 +472,7 @@ def build_cnn() -> None:
             net.edge(src, key, abs(rng.uniform(-1, 1)), "Dense")
 
     # output: 10 classes, all-to-all
-    output = net.layer("Output", 200)
+    output = net.layer("Output", 310)  # a column of 10, 28 apart
     for d in range(10):
         key = net.node(
             f"digit {d}",
@@ -593,7 +605,7 @@ def build_transformer() -> None:
         att = net.layer(f"Block {block} · Attention", WIDTH)
         keys, queries = [], []
         for h in range(4):
-            left = -250 + h * 150
+            left = -265 + h * 150  # four key/query pairs, centred
             what = f"Block {block}, head {h + 1} ({HEAD_NAMES[block][h]})"
             keys.append(
                 [

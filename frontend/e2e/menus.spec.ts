@@ -23,7 +23,6 @@ test('grouped menus open their panels', async ({ page }) => {
     ['Export', '#panel-export'],
     ['Layout', '#panel-layouts'],
     ['Clustering', '#panel-clustering'],
-    ['Annotations', '#panel-annotation-view'],
   ] as const) {
     await page.getByRole('tab', { name: item, exact: true }).click()
     await expect(page.locator(pane)).toHaveClass(/show/)
@@ -31,18 +30,8 @@ test('grouped menus open their panels', async ({ page }) => {
       await expect(
         page.locator('#panel-clustering #runClustering')
       ).toBeVisible()
-    if (item === 'Annotations') {
-      // how groups show in the scene: the main card open, then the group list
-      await expect(page.locator('#annCard_show')).toHaveJSProperty('open', true)
-      await expect(
-        page.locator('#panel-annotation-view #hull_cluster')
-      ).toBeVisible()
-      await expect(
-        page.locator('#panel-annotation-view #groups_card')
-      ).toBeVisible()
-    }
     if (item === 'Database Importers') {
-      // one card per source, all folded until clicked
+      // one card per source (folded by default: sections.spec.ts)
       for (const key of [
         'string',
         'reactome',
@@ -55,19 +44,28 @@ test('grouped menus open their panels', async ({ page }) => {
         await expect(
           page.locator(`#panel-databases #card_${key} > summary`)
         ).toBeVisible()
-      await expect(page.locator('#panel-databases details[open]')).toHaveCount(
-        0
-      )
-      await expect(page.locator('#db_import_string')).toBeHidden()
-      await expect(page.locator('#db_import_layers')).toBeHidden()
-      await page.locator('#card_string > summary').click()
       await expect(page.locator('#db_import_string')).toBeVisible()
-      await page.locator('#card_compare summary').click()
       await expect(page.locator('#db_import_layers')).toBeVisible()
     }
   }
   await open('View', 'Scene & Camera', '#panel-scene')
+  // how groups are highlighted in the scene, then the group list; no
+  // top-level Annotations menu any more
+  await open('View', 'Annotations', '#panel-annotation-view')
+  for (const control of ['#hull_cluster', '#hullStyle_sphere', '#groups_card'])
+    await expect(
+      page.locator(`#panel-annotation-view ${control}`)
+    ).toBeVisible()
+  await expect(page.locator('#menu-view')).toHaveClass(/active/)
+  await expect(page.locator('[data-menu="annotations"]')).toHaveCount(0)
   await open('View', 'Performance', '#panel-fps')
+  // no "3D View" entry: the scene is always there, the drawer handle closes
+  // a panel
+  await expect(
+    page.locator('[aria-labelledby="menu-view"] .dropdown-item', {
+      hasText: '3D View',
+    })
+  ).toHaveCount(0)
   await open('Edit', 'Nodes', '#panel-node')
   await open('Edit', 'Style', '#panel-style')
   await open('Edit', 'Attributes', '#panel-attributes')
@@ -86,8 +84,8 @@ test('grouped menus open their panels', async ({ page }) => {
   await expect(page.locator('#panel-layouts #runTopologyScale')).toHaveCount(0)
   // the parent menu shows which group is active
   await expect(page.locator('#menu-analyze')).toHaveClass(/active/)
-  // Analyze → Annotations & Groups keeps the enrichment and a way to the
-  // Annotations menu
+  // Analyze → Annotations & Groups keeps the enrichment and a way to View →
+  // Annotations
   await open('Analyze', 'Annotations & Groups', '#panel-annotations')
   await page.locator('#analyzeOpenAnnotations').click()
   await expect(page.locator('#panel-annotation-view')).toHaveClass(/show/)

@@ -116,7 +116,7 @@ test('About: publications newest first, each with DOI, PubMed and Copy citation'
 
   // related tools, developers, and How to cite scrolls to the papers
   await expect(about.locator('.about-tool')).toHaveCount(3)
-  await expect(about.locator('.about-person')).toHaveCount(4)
+  await expect(about.locator('.about-person')).toHaveCount(3)
   await about.locator('#aboutToPubs').click()
   await expect(about.locator('#aboutPubs')).toBeInViewport()
 })

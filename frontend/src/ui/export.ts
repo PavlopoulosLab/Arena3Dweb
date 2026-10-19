@@ -68,12 +68,31 @@ import {
   flameUrl,
   type FlameMode,
 } from '../actions/flame'
+import {
+  circosjsData,
+  circosjsHtml,
+  goslingEditorLink,
+  goslingSpec,
+  html,
+  jbrowseFiles,
+  jbrowseLink,
+  ngcircosHtml,
+  ngcircosInput,
+  ringNetwork,
+  ringSize,
+  ringWarning,
+  type Ring,
+  type RingTrack,
+} from '../actions/circular_tools'
+import { valueColumns } from '../actions/values'
+import { bus } from '../bus'
 import { FOLD_ALL_HTML } from './sections'
+import { selectedChannels } from './layouts'
 
 const EXPORT_HTML = `
 <div class="col-md-8 col-lg-6 layout-panel export-panel">
   ${FOLD_ALL_HTML}
-  <details class="lp-section lp-more" id="exportCard_image" open>
+  <details class="lp-section lp-more" id="exportCard_image">
     <summary>Image &amp; 3D</summary>
     <div class="d-flex flex-wrap align-items-center gap-2">
       <button id="export_scene_image" class="btn btn-primary btn-sm">PNG (current view)</button>
@@ -185,6 +204,40 @@ const EXPORT_HTML = `
         <button id="export_circos" class="btn btn-outline-primary btn-sm" title="karyotype, links and a circos.conf for the Circos software">Circos files (zip)</button>
       </div>
       <div class="form-text">The chord diagram as an SVG; Circos gets a karyotype, the links and a circos.conf to draw it in the Circos software.</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_gosling">
+      <summary>Gosling.js<span class="lp-hint">interactive circular view with zoom and tooltips</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <button id="open_gosling" class="btn btn-primary btn-sm" title="The node and edge tables hosted on this server for one hour, opened in the Gosling editor with a spec that reads them">Open in Gosling Editor</button>
+        <button id="export_gosling" class="btn btn-outline-primary btn-sm" title="A Gosling JSON spec with the data inside">Gosling spec (JSON)</button>
+      </div>
+      <div class="form-text">Layers as segments, nodes as positions along them with degree bars, edges as arcs within a layer and links between layers, coloured by channel. The ticked layers (all if none) and the channels ticked for layouts.</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_ngcircos">
+      <summary>NGCircos.js<span class="lp-hint">the most Circos-like web library</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <button id="export_ngcircos_html" class="btn btn-outline-primary btn-sm" title="A page that loads NGCircos.js from a CDN and draws the network">NGCircos page (HTML)</button>
+        <button id="export_ngcircos_json" class="btn btn-outline-primary btn-sm" title="The genome, modules and settings for new NGCircos(...modules, genome, settings)">NGCircos modules (JSON)</button>
+        <select id="ngcircos_track" class="form-select form-select-sm ring-track" style="width:auto" aria-label="NGCircos ring track"></select>
+      </div>
+      <div class="form-text">Layers as the genome, nodes as coloured arcs, a histogram or heatmap ring of degree (or a File → Values column) and the edges as links. The page opens in any browser online.</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_circosjs">
+      <summary>CircosJS<span class="lp-hint">D3 chords with heatmap and histogram tracks</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <button id="export_circosjs_html" class="btn btn-outline-primary btn-sm" title="A page that loads CircosJS from a CDN and draws the network">CircosJS page (HTML)</button>
+        <button id="export_circosjs_json" class="btn btn-outline-primary btn-sm" title="Layout, node, track and chord data for CircosJS">CircosJS data (JSON)</button>
+        <select id="circosjs_track" class="form-select form-select-sm ring-track" style="width:auto" aria-label="CircosJS ring track"></select>
+      </div>
+      <div class="form-text">Layers as the layout, nodes as a coloured ring, a histogram or heatmap track of degree (or a File → Values column) and the edges as chords. The page opens in any browser online.</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_jbrowse">
+      <summary>JBrowse 2<span class="lp-hint">the genome browser's circular view</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <button id="open_jbrowse" class="btn btn-primary btn-sm" title="The files hosted on this server for one hour, opened in JBrowse Web's Circular View">Open in JBrowse 2</button>
+        <button id="export_jbrowse" class="btn btn-outline-primary btn-sm" title="config.json, the edges as VCF breakends, the layers as FASTA, and a README">JBrowse 2 files (zip)</button>
+      </div>
+      <div class="form-text">JBrowse reads genomes, so the network stands in for one: each layer a sequence (2 bp per node), each edge a VCF breakend drawn as a chord. The zip loads into JBrowse 2 Web or Desktop.</div>
     </details>
     <details class="lp-more lp-sub" id="exportSub_heatmap">
       <summary>Heatmap &amp; matrix<span class="lp-hint">the adjacency matrix, by layer</span></summary>
@@ -355,6 +408,150 @@ export function initExportPanel(): void {
     () => download(zip(circosFiles()), 'arena3d_circos.zip'),
     'Circos files exported.'
   )
+
+  // Gosling, NGCircos, CircosJS and JBrowse 2 (actions/circular_tools.ts):
+  // the ticked layers and the channels ticked for layouts
+  const ring = (column: string | null = null) =>
+    ringNetwork(selectedChannels(), column)
+  const ringDone = (what: string, r: Ring) =>
+    `${what} exported: ${ringSize(r)}${ringWarning(r)}.`
+  // the ring track choice: "histogram:-1" (degree) or "heatmap:<column index>"
+  const trackOptions = () =>
+    [
+      ...(['histogram', 'heatmap'] as const).flatMap((style) => [
+        [`${style}:-1`, `degree as ${style}`],
+        ...valueColumns().map((c, i) => [
+          `${style}:${i}`,
+          `${html(c)} as ${style}`,
+        ]),
+      ]),
+      ['none:-1', 'no ring track'],
+    ]
+      .map(([v, l]) => `<option value="${v}">${l}</option>`)
+      .join('')
+  const fillTracks = () =>
+    pane
+      .querySelectorAll<HTMLSelectElement>('select.ring-track')
+      .forEach((s) => {
+        const was = s.value
+        s.innerHTML = trackOptions()
+        if ([...s.options].some((o) => o.value === was)) s.value = was
+      })
+  fillTracks()
+  bus.on('values:loaded', fillTracks)
+  const trackOf = (id: string): { track: RingTrack; r: Ring } => {
+    const [style, at] = (
+      document.getElementById(id) as HTMLSelectElement
+    ).value.split(':')
+    const column = valueColumns()[Number(at)] ?? null
+    return { track: style as RingTrack, r: ring(column) }
+  }
+  run(
+    'export_gosling',
+    () => {
+      const r = ring()
+      download(
+        text(JSON.stringify(goslingSpec(r), null, 1), 'application/json'),
+        'arena3d_gosling.json'
+      )
+      return ringDone('Gosling spec', r)
+    },
+    'Gosling spec exported.'
+  )
+  run(
+    'export_ngcircos_html',
+    () => {
+      const { track, r } = trackOf('ngcircos_track')
+      download(
+        text(ngcircosHtml(r, track), 'text/html'),
+        'arena3d_ngcircos.html'
+      )
+      return ringDone('NGCircos page', r)
+    },
+    'NGCircos page exported.'
+  )
+  run(
+    'export_ngcircos_json',
+    () => {
+      const { track, r } = trackOf('ngcircos_track')
+      download(
+        text(
+          JSON.stringify(ngcircosInput(r, track), null, 1),
+          'application/json'
+        ),
+        'arena3d_ngcircos.json'
+      )
+      return ringDone('NGCircos modules', r)
+    },
+    'NGCircos modules exported.'
+  )
+  run(
+    'export_circosjs_html',
+    () => {
+      const { track, r } = trackOf('circosjs_track')
+      download(
+        text(circosjsHtml(r, track), 'text/html'),
+        'arena3d_circosjs.html'
+      )
+      return ringDone('CircosJS page', r)
+    },
+    'CircosJS page exported.'
+  )
+  run(
+    'export_circosjs_json',
+    () => {
+      const { track, r } = trackOf('circosjs_track')
+      download(
+        text(
+          JSON.stringify(circosjsData(r, track), null, 1),
+          'application/json'
+        ),
+        'arena3d_circosjs.json'
+      )
+      return ringDone('CircosJS data', r)
+    },
+    'CircosJS data exported.'
+  )
+  run(
+    'export_jbrowse',
+    () => {
+      const r = ring()
+      download(zip(jbrowseFiles(r)), 'arena3d_jbrowse.zip')
+      return ringDone('JBrowse 2 files', r)
+    },
+    'JBrowse 2 files exported.'
+  )
+  // host the files, then open the tool on them (the tab opens inside the
+  // click, so popup blockers allow it)
+  const openHosted = (
+    id: string,
+    tool: string,
+    link: (r: Ring) => Promise<string>
+  ) =>
+    document.getElementById(id)?.addEventListener('click', () => {
+      let r: Ring
+      try {
+        r = ring()
+      } catch (err) {
+        return status(err instanceof Error ? err.message : String(err), true)
+      }
+      const tab = window.open('', '_blank')
+      status(`Hosting the files for ${tool}…`)
+      link(r)
+        .then((url) => {
+          if (tab) tab.location.href = url
+          else window.open(url, '_blank')
+          status(
+            `Opened in ${tool}: ${ringSize(r)}${ringWarning(r)} (the files are kept for one hour).`
+          )
+        })
+        .catch((err: unknown) => {
+          tab?.close()
+          status(err instanceof Error ? err.message : String(err), true)
+        })
+    })
+  openHosted('open_gosling', 'the Gosling editor', goslingEditorLink)
+  openHosted('open_jbrowse', 'JBrowse 2', jbrowseLink)
   const sankeyLevel = () =>
     (document.getElementById('sankey_level') as HTMLSelectElement)
       .value as SankeyLevel

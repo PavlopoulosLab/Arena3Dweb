@@ -136,3 +136,60 @@ test('a session keeps fog clouds, their opacity and padding, pies and hidden gro
   expect(after.haze).toBeCloseTo(before.haze, 5)
   expect(after.pies).toBe(before.pies)
 })
+
+test('a session keeps a 3D container as the Draw as shape', async ({
+  page,
+}, info) => {
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await tab(page, 'File')
+  await page.locator('#input_network_file').setInputFiles(FIGURE_2A)
+  await expect(page.locator('#file_status')).toContainText('Loaded network')
+  await page.locator('#groups_file').setInputFiles({
+    name: 'groups.tsv',
+    mimeType: 'text/tab-separated-values',
+    buffer: Buffer.from('Alpha\t1, 2, 3\nBeta\t3;4;5;6\n'),
+  })
+  await expect(page.locator('#file_status')).toContainText('2 groups applied')
+  await tab(page, 'Annotations')
+  await page.locator('#hull_annotation').check()
+  await page.locator('#hullStyle_ellipsoid').check()
+
+  await tab(page, 'File')
+  const download = page.waitForEvent('download')
+  await page.locator('#save_network_object').click()
+  const file = info.outputPath('annotation-ellipsoid.json')
+  await (await download).saveAs(file)
+  const saved = JSON.parse(fs.readFileSync(file, 'utf8')) as {
+    annotationView: { style: string }
+  }
+  expect(saved.annotationView.style).toBe('ellipsoid')
+  await page.reload()
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await tab(page, 'File')
+  await page.locator('#load_network_file').setInputFiles(file)
+  await expect(page.locator('#file_status')).toContainText('Session loaded')
+  await tab(page, 'Annotations')
+  await expect(page.locator('#hullStyle_ellipsoid')).toBeChecked()
+  const drawn = await page.evaluate(() => {
+    type Obj = {
+      userData: Record<string, unknown>
+      children: { type: string }[]
+    }
+    const ctx = (
+      window as unknown as {
+        __arena: { ctx: { layers: { plane: { children: Obj[] } }[] } }
+      }
+    ).__arena.ctx
+    return ctx.layers
+      .flatMap((l) => l.plane.children.filter((c) => c.userData.hullGroup))
+      .map((c) => c.children.map((k) => k.type).join(','))
+  })
+  expect(drawn.length).toBeGreaterThan(0)
+  for (const parts of drawn)
+    expect(parts).toBe('Mesh,LineLoop,LineLoop,LineLoop')
+})

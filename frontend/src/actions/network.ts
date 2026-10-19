@@ -17,23 +17,17 @@ import type {
 import { history } from '../commands/base'
 import { LoadNetworkCommand } from '../commands/scene'
 import { store } from '../store'
-import {
-  COLOR_VECTOR_280,
-  ctx,
-  Edge,
-  Layer,
-  Node,
-  resetContext,
-  Scene,
-} from '../three'
+import { ctx, Edge, Layer, Node, resetContext, Scene } from '../three'
 import { DEFAULT_CONTAINER_OPACITY } from '../three/Layer'
 import { stashAnnotationView } from './annotations'
 import { createLabels, setLabelColor } from './labels'
 import type { NodeGeometryType } from '../three/Node'
 import { applyDefaultFloorVisibility, initialSpreadLayers } from './layer'
 import { resetNetworkMode, restoreNetwork3dState } from './modes'
-import { scrambleNodes } from './node'
+import { nodeLabelState, scrambleNodes, setNodeLabelMode } from './node'
 import { setRendererColor } from './screen'
+import { themeChannelColor, themeNodeColor } from './palette'
+import { stashSessionTheme, THEMES } from './themes'
 
 // v2 uploadNetwork(): one undoable step wrapping the full build.
 export function loadNetwork(data: NetworkData): void {
@@ -79,16 +73,19 @@ function initializeLayers(names: string[]): void {
   applyDefaultFloorVisibility()
 }
 
+// the theme on screen: new networks get default colours that read on it
+const currentTheme = () => THEMES[store.get().currentTheme] ?? THEMES.dark
+
 function initializeChannels(channels: string[]): void {
-  const palette = store.get().config?.channel_colors_light ?? []
+  const theme = currentTheme()
   channels.forEach((channel, i) => {
-    ctx.channelColors[channel] =
-      palette[i % palette.length] ?? ctx.edgeDefaultColor
+    ctx.channelColors[channel] = themeChannelColor(theme, i)
     ctx.channelVisibility[channel] = true
   })
 }
 
 function initializeNodes(nodes: NodeModel[]): void {
+  const theme = currentTheme()
   nodes.forEach((n, i) => {
     ctx.nodeLayerNames.push(n.id)
     ctx.nodeGroups[n.id] = n.layer
@@ -98,7 +95,7 @@ function initializeNodes(nodes: NodeModel[]): void {
       name: n.label,
       layer: n.layer,
       nodeLayerName: n.id,
-      color: COLOR_VECTOR_280[layerIndex % COLOR_VECTOR_280.length],
+      color: themeNodeColor(theme, layerIndex),
     })
     ctx.nodeObjects.push(node)
     ctx.layers[layerIndex].addNode(node.sphere)
@@ -160,6 +157,9 @@ function restoreNodeStyle(node: Node, n: SessionNode): void {
   node.label = n.label ?? ''
   node.labelColor = n.label_color ?? ''
   node.labelSize = Number(n.label_size ?? 0)
+  node.labelLook = n.label_style ? { ...n.label_style } : null
+  node.labelPosition = n.label_position ?? 'right'
+  node.labelShown = n.label_shown === true
 }
 
 function restoreEdgeStyle(edge: Edge, e: SessionEdge): void {
@@ -182,6 +182,8 @@ export function buildFromSession(s: SessionData): void {
   ctx.hive = s.hive ?? null
   // how the groups are drawn: applied once the scene is up
   stashAnnotationView(s.annotationView)
+  // the theme it was saved with: the picker shows it once it is on screen
+  stashSessionTheme(s.theme)
 
   // scene from JSON
   const scene = new Scene()
@@ -324,6 +326,10 @@ export function buildFromSession(s: SessionData): void {
 
   // v2 setJSONExtras
   setLabelColor(s.universalLabelColor)
+  // Show Labels as saved; a session from before has the default (Selected,
+  // as resetContext left it) — and the Edit → Nodes radio says so
+  const labels = s.nodeLabels ?? nodeLabelState()
+  setNodeLabelMode(labels.mode, labels.withSelection)
   ctx.isDirectionEnabled = Boolean(s.direction)
   ctx.edgeOpacityByWeight = Boolean(s.edgeOpacityByWeight)
   ctx.edgeWidthByWeight = Boolean(s.edgeWidthByWeight)

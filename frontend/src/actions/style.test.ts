@@ -11,15 +11,21 @@ import {
   CATEGORICAL,
   OKABE_ITO,
   OTHER,
+  TOL_BRIGHT,
   categoricalColors,
   sequentialColor,
   surfaceOf,
 } from './palettes'
+import { contrast } from './palette'
+import { nodeLabelState, setNodeLabelMode } from './node'
 import {
+  clearChosenLabels,
   colorBlindMode,
+  colorLabelsBy,
   colorNodesBy,
   edgeTargets,
   nodeTargets,
+  showLabelsOf,
   styleEdges,
   styleNodes,
 } from './style'
@@ -68,6 +74,9 @@ describe('palettes', () => {
     expect(c.get('g8')).toBe(OTHER)
     expect(categoricalColors(['x'], 'light', 'okabeIto').get('x')).toBe(
       OKABE_ITO[0]
+    )
+    expect(categoricalColors(['x', 'y'], 'dark', 'tol').get('y')).toBe(
+      TOL_BRIGHT[1]
     )
   })
 
@@ -200,6 +209,84 @@ describe('style commands', () => {
       '',
     ])
     expect((e.THREE_Object.children[0] as Line2).material.dashed).toBe(false)
+  })
+
+  it('sets label looks and positions, undoes in one step', () => {
+    const look = {
+      style: 'halo' as const,
+      color: '',
+      width: 3,
+      opacity: 0.75,
+      bold: true,
+    }
+    styleNodes('layer:L1', { labelLook: look, labelPosition: 'centre' })
+    const [a, b, c] = ctx.nodeObjects
+    expect(a.labelLook).toEqual(look)
+    expect(a.labelLook).not.toBe(look) // a copy, so later edits stay apart
+    expect(b.labelPosition).toBe('centre')
+    expect([c.labelLook, c.labelPosition]).toEqual([null, 'right'])
+    history.undo()
+    expect([a.labelLook, a.labelPosition]).toEqual([null, 'right'])
+  })
+
+  it('colours labels by group, from the node or against it, not the nodes', () => {
+    ctx.nodeObjects[2].setColor('#ffff00', true)
+    expect(colorLabelsBy('all', 'layer', 'okabeIto')).toBe(2)
+    const [a, b, c] = ctx.nodeObjects
+    expect(a.labelColor).toBe(b.labelColor) // same layer, same colour
+    expect(a.labelColor).not.toBe(c.labelColor)
+    expect(a.color).toBe('#111111') // the nodes keep theirs
+    // readable on the (black, headless) background
+    expect(contrast(a.labelColor, '#000000')).toBeGreaterThanOrEqual(3)
+    colorLabelsBy('all', 'contrast')
+    expect([a.labelColor, c.labelColor]).toEqual(['#ffffff', '#111111'])
+    colorLabelsBy('layer:L2', 'match')
+    expect(c.labelColor).toBe('#ffff00')
+    history.undo()
+    history.undo()
+    history.undo()
+    expect(ctx.nodeObjects.map((n) => n.labelColor)).toEqual(['', '', ''])
+  })
+
+  it('pinned labels show with Chosen, and the selection with its tick', () => {
+    const [a, b, c] = ctx.nodeObjects
+    b.isSelected = true
+    setNodeLabelMode('chosen', false)
+    showLabelsOf([0])
+    expect([a.showLabel, b.showLabel, c.showLabel]).toEqual([
+      true,
+      false,
+      false,
+    ])
+    setNodeLabelMode('chosen', true) // and the selection's
+    expect([a.showLabel, b.showLabel, c.showLabel]).toEqual([true, true, false])
+    setNodeLabelMode('selected')
+    expect([a.showLabel, b.showLabel]).toEqual([false, true])
+    setNodeLabelMode('none')
+    expect(b.showLabel).toBe(false)
+  })
+
+  it('pinning moves Show Labels to Chosen; undo moves it back', () => {
+    const [a, b] = ctx.nodeObjects
+    b.isSelected = true
+    setNodeLabelMode('selected')
+    showLabelsOf([0])
+    // from Selected: Chosen, keeping the selection's labels
+    expect(nodeLabelState()).toEqual({ mode: 'chosen', withSelection: true })
+    expect([a.labelShown, a.showLabel, b.showLabel]).toEqual([true, true, true])
+    history.undo()
+    expect(nodeLabelState().mode).toBe('selected')
+    expect([a.labelShown, a.showLabel]).toEqual([false, false])
+    // from None: Chosen alone; All stays All
+    setNodeLabelMode('none')
+    showLabelsOf([0, 2])
+    expect(nodeLabelState()).toEqual({ mode: 'chosen', withSelection: false })
+    expect(b.showLabel).toBe(false)
+    expect(clearChosenLabels()).toBe(2)
+    expect(ctx.nodeObjects.some((n) => n.labelShown)).toBe(false)
+    setNodeLabelMode('all')
+    showLabelsOf([1])
+    expect(nodeLabelState().mode).toBe('all')
   })
 
   it('colours by layer with the palette order of the layers', () => {

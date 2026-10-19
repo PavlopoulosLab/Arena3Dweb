@@ -2,6 +2,12 @@
 // Find panel (ui/find.ts).
 
 import { showNodeLabels, resizeNodeLabels } from '../actions/labels'
+import {
+  nodeLabelState,
+  setNodeLabelMode,
+  type NodeLabelMode,
+} from '../actions/node'
+import { clearChosenLabels, nodeTargets, showLabelsOf } from '../actions/style'
 import { bus } from '../bus'
 import { ctx } from '../three'
 import {
@@ -18,11 +24,14 @@ import { getSelectedLayers } from '../actions/layer'
 import { history } from '../commands/base'
 import { ChangeNodeGeometryCommand, LabelStyleCommand } from '../commands/scene'
 import { FOLD_ALL_HTML } from './sections'
+import { confirmDialog } from './confirm'
+import { registerSelectionAction } from '../actions/right_click_menu'
+import { deleteNodes, edgesTouching } from '../actions/delete_nodes'
 
 const NODE_HTML = `
 <div class="col-md-6 col-lg-4 layout-panel">
   ${FOLD_ALL_HTML}
-  <details class="lp-section lp-more" id="nodeCard_labels" open>
+  <details class="lp-section lp-more" id="nodeCard_labels">
   <summary>Selection &amp; labels</summary>
   <div class="form-check mb-3">
     <input class="form-check-input" type="checkbox" id="selectAllNodes" />
@@ -39,10 +48,23 @@ const NODE_HTML = `
       <label class="form-check-label" for="nodeLabels_selected">Selected</label>
     </div>
     <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="showNodeLabelsRadio" id="nodeLabels_chosen" value="chosen" />
+      <label class="form-check-label" for="nodeLabels_chosen" title="The labels chosen to stay on screen">Chosen</label>
+    </div>
+    <div class="form-check form-check-inline">
       <input class="form-check-input" type="radio" name="showNodeLabelsRadio" id="nodeLabels_none" value="none" />
       <label class="form-check-label" for="nodeLabels_none">None</label>
     </div>
   </div>
+  <div class="form-check mb-2">
+    <input class="form-check-input" type="checkbox" id="nodeLabelsWithSelection" checked />
+    <label class="form-check-label" for="nodeLabelsWithSelection">With Chosen: and the selection's labels</label>
+  </div>
+  <div class="d-flex flex-wrap gap-2 mb-1">
+    <button id="pinSelectedLabels" class="btn btn-outline-primary btn-sm" title="Their labels stay on screen whatever is selected later">Show Labels of Selected Nodes</button>
+    <button id="clearChosenLabels" class="btn btn-outline-secondary btn-sm">Clear Chosen Labels</button>
+  </div>
+  <div id="nodeLabelsStatus" class="small mb-3"></div>
   <div>
     <label class="form-label" for="resizeNodeLabels">Resize Labels:</label>
     <input type="range" class="form-range" id="resizeNodeLabels" min="5" max="15" step="1" value="12" />
@@ -97,7 +119,7 @@ const NODE_HTML = `
   </div>
   <div class="form-text">Colour, font, weight, halo, background and opacity of the node labels — for all of them, or for the layers selected in Layout, so each layer can read differently. Labels follow the theme colour until a colour is applied; undoable.</div>
   </details>
-  <details class="lp-section lp-more" id="nodeCard_shape" open>
+  <details class="lp-section lp-more" id="nodeCard_shape">
   <summary>Shape</summary>
   <label class="form-label" for="nodeGeometry">Node Geometry:</label>
   <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
@@ -150,9 +172,43 @@ export function initNodePanel(): void {
     'input[name="showNodeLabelsRadio"]'
   )) {
     radio.addEventListener('change', () => {
-      showNodeLabels(radio.value as 'all' | 'selected' | 'none')
+      showNodeLabels(radio.value as NodeLabelMode)
     })
   }
+
+  // chosen (pinned) labels: they stay on screen whatever the selection
+  const labelsStatus = (msg: string, isError = false) => {
+    const el = document.getElementById('nodeLabelsStatus')!
+    el.textContent = msg
+    el.className = `small mb-3 ${isError ? 'text-danger' : 'text-success'}`
+  }
+  document
+    .getElementById('nodeLabelsWithSelection')
+    ?.addEventListener('change', (e) =>
+      setNodeLabelMode(
+        nodeLabelState().mode,
+        (e.target as HTMLInputElement).checked
+      )
+    )
+  document
+    .getElementById('pinSelectedLabels')
+    ?.addEventListener('click', () => {
+      const n = showLabelsOf(nodeTargets('selected'))
+      if (!n) return labelsStatus('Select nodes first (or use Find).', true)
+      labelsStatus(
+        `${n} label${n === 1 ? '' : 's'} chosen; Show Labels: ${nodeLabelState().mode === 'all' ? 'All shows every label anyway' : 'Chosen'}.`
+      )
+    })
+  document
+    .getElementById('clearChosenLabels')
+    ?.addEventListener('click', () => {
+      const n = clearChosenLabels()
+      labelsStatus(
+        n
+          ? `${n} chosen label${n === 1 ? '' : 's'} cleared.`
+          : 'No label was chosen.'
+      )
+    })
 
   document
     .getElementById('resizeNodeLabels')
@@ -231,6 +287,27 @@ export function initNodePanel(): void {
     ?.addEventListener('change', (e) => {
       setNodeSelectedColorPriority((e.target as HTMLInputElement).checked)
     })
+
+  // right-click → Selected nodes: delete them and their edges, after asking
+  // (not every node: a network needs one)
+  const count = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`
+  registerSelectionAction({
+    label: (sel) => `Delete ${count(sel.length, 'Node')}…`,
+    order: 90,
+    when: (sel) => sel.length < ctx.nodeObjects.length,
+    run: (sel) =>
+      void confirmDialog({
+        title: `Delete ${count(sel.length, 'node')}`,
+        text: `Delete the ${count(sel.length, 'selected node')} and ${count(edgesTouching(sel), 'edge')} touching them from the network? Undo brings them back.`,
+        ok: 'Delete',
+      }).then((yes) => {
+        if (!yes) return
+        deleteNodes(sel)
+        nodeStatus(
+          `${count(sel.length, 'node')} deleted; Undo brings them back.`
+        )
+      }),
+  })
 }
 
 function nodeStatus(msg: string, isError = false): void {

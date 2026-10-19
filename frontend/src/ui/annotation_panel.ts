@@ -1,9 +1,9 @@
-// The Annotations menu (top bar, after Clustering): how annotation groups and
-// clusters show in the scene — the annotation set, hulls or fog clouds with
-// their opacity and padding, pies (ui/annotations.ts), and the group list
-// with colours and a hull switch per group (ui/groups.ts). Analyze →
-// Annotations & Groups (enrichment), the Networks menu and the Clustering
-// panel link here with openAnnotationPanel().
+// View → Annotations: how annotation groups and clusters are highlighted in
+// the scene — the annotation set, the shape around each group (on the floor,
+// soft clouds or 3D containers) with its opacity and padding, pies
+// (ui/annotations.ts), and the group list with colours and a switch per group
+// (ui/groups.ts). Analyze → Annotations & Groups (enrichment), the Networks
+// menu and the Clustering panel link here with openAnnotationPanel().
 
 import { ANNOTATION_VIEW_HTML, initAnnotations } from './annotations'
 import { GROUPS_HTML, initGroups } from './groups'
@@ -17,7 +17,7 @@ const HTML = `
 </div>
 `
 
-/** Shows the Annotations menu; with `around`, draws around those groups. */
+/** Shows View → Annotations; with `around`, draws around those groups. */
 export function openAnnotationPanel(around?: 'cluster' | 'annotation'): void {
   showTab('#panel-annotation-view')
   const card = document.getElementById('annCard_show')

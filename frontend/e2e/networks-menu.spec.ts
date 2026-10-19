@@ -3,7 +3,7 @@ import path from 'node:path'
 
 // The Networks menu in the top bar: it says which network and annotation are
 // on screen, lists every loaded network with its annotation sets, and picks
-// a network, a set, or both — in step with File and the Annotations menu. Networks and
+// a network, a set, or both — in step with File and View → Annotations. Networks and
 // sets are renamed in place and deleted for good, after a question.
 
 const tab = (page: Page, name: string) =>
@@ -124,7 +124,7 @@ test('Networks menu: what is on screen, switch networks and annotation sets', as
   await expect(now).toHaveText('figure2A_data.tsv · alpha-beta.tsv')
   expect((await read(page)).annotated).toBeGreaterThan(0)
 
-  // the Annotations menu shows the same set, and a change there shows here
+  // View → Annotations shows the same set, and a change there shows here
   await tab(page, 'Annotations')
   await expect(page.locator('#annotationSet')).toHaveValue('0')
   await page.locator('#annotationSet').selectOption('-1')
@@ -238,7 +238,7 @@ test('Networks menu: rename and delete networks and annotation sets', async ({
   await expect(now).toHaveText('figure2A_data.tsv · Gamma group')
   await expect.poll(async () => (await read(page)).layers).toEqual(a.layers)
 
-  // the Annotations menu renames and deletes the set shown, too
+  // View → Annotations renames and deletes the set shown, too
   await tab(page, 'Annotations')
   await page.locator('#annotationSetRename').click()
   await box.fill('Gamma')

@@ -224,7 +224,7 @@ export function exampleOptions(): string {
 const FILE_HTML = `
 <div class="col-md-6 col-lg-4 layout-panel">
   ${FOLD_ALL_HTML}
-  <details class="lp-section lp-more" id="fileCard_network" open>
+  <details class="lp-section lp-more" id="fileCard_network">
   <summary>Network</summary>
   <div class="mb-3">
     <label for="input_network_file" class="form-label">Upload Network (TSV, GraphML, GML, SIF, CX2):</label>
@@ -259,7 +259,7 @@ const FILE_HTML = `
     <div class="form-text">Node, then one numeric column per condition; colour nodes by a column in Edit → Style.</div>
   </div>
   </details>
-  <details class="lp-section lp-more" id="fileCard_examples" open>
+  <details class="lp-section lp-more" id="fileCard_examples">
   <summary>Examples</summary>
   <div>
     <label for="exampleChoice" class="form-label">Example:</label>
@@ -268,7 +268,7 @@ const FILE_HTML = `
     </select>
   </div>
   </details>
-  <details class="lp-section lp-more" id="fileCard_networks" open>
+  <details class="lp-section lp-more" id="fileCard_networks">
   <summary>Loaded networks</summary>
   <div class="workspace" id="workspaceCard">
     <div id="workspaceList" class="workspace-list"></div>

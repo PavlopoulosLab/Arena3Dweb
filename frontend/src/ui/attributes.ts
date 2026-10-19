@@ -7,7 +7,19 @@
 
 import { bus } from '../bus'
 import { ctx } from '../three'
-import { NODE_SHAPE_LABELS } from '../three/Node'
+import {
+  DEFAULT_LABEL_LOOK,
+  LABEL_LOOK_LABELS,
+  NODE_SHAPE_LABELS,
+  labelLookText,
+  type LabelLookStyle,
+} from '../three/Node'
+import {
+  colorLabelIndices,
+  LABEL_PALETTE_LABELS,
+  type LabelColorBy,
+  type LabelPalette,
+} from '../actions/style'
 import { LINE_TYPE_LABELS } from '../three/Edge'
 import { escapeHtml } from '../utils'
 import { listGroups } from '../actions/groups'
@@ -22,6 +34,7 @@ import {
   edgePatchName,
   filterEdges,
   filterNodes,
+  hex,
   nodeAttributesTsv,
   nodeCell,
   nodePatch,
@@ -47,6 +60,13 @@ const opts = (o: Record<string, string>) =>
     .join('')
 const SHAPE_OPTIONS = opts(NODE_SHAPE_LABELS)
 const LINE_OPTIONS = opts(LINE_TYPE_LABELS)
+const LOOK_OPTIONS = opts({
+  '': 'Auto',
+  plain: 'Plain',
+  halo: 'Halo',
+  box: 'Box',
+  shadow: 'Shadow',
+})
 
 type Kind = 'node' | 'edge'
 type Column<C> = { key: C | null; name: string; title?: string }
@@ -59,6 +79,22 @@ const NODE_COLUMNS: Column<NodeColumn>[] = [
   { key: 'scale', name: 'Size', title: 'Size (×)' },
   { key: 'alpha', name: 'Opacity' },
   { key: 'label', name: 'Label', title: 'Text in place of the node name' },
+  {
+    key: 'labelColor',
+    name: 'Label colour',
+    title: 'Label colour (faded: as the label style)',
+  },
+  {
+    key: 'labelStyle',
+    name: 'Label style',
+    title: 'Plain, halo (outline), box or shadow (Auto: as the label style)',
+  },
+  {
+    key: 'labelShown',
+    name: 'Label shown',
+    title:
+      'Kept on screen whatever is selected (Edit → Nodes → Show Labels: Chosen)',
+  },
   { key: 'descr', name: 'Description', title: 'Shown on hover' },
 ]
 const EDGE_COLUMNS: Column<EdgeColumn>[] = [
@@ -110,6 +146,14 @@ const ATTRIBUTES_HTML = `
     <span class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" id="attrNodeSelectedOnly" /><label class="form-check-label small" for="attrNodeSelectedOnly">Selected only</label></span>
   </div>
   <div id="attrNodeSummary" class="attr-summary small" aria-live="polite"></div>
+  <div class="attr-labels">
+    <label class="small" for="attrLabelColorBy">Label colours:</label>
+    <select id="attrLabelColorBy" class="form-select form-select-sm">
+      ${opts({ layer: 'By layer', cluster: 'By cluster', annotation: 'By first annotation', match: 'Node colour', contrast: 'Contrast with node' })}
+    </select>
+    <select id="attrLabelPalette" class="form-select form-select-sm" aria-label="Label palette">${opts(LABEL_PALETTE_LABELS)}</select>
+    <button type="button" id="attrLabelColorApply" class="btn btn-outline-primary btn-sm" title="The ticked rows, or every row in the list when none is ticked">Colour labels</button>
+  </div>
   <div id="attrNodeTable" class="attr-table attr-table--node" role="table" aria-label="Node attributes">
     ${head('node', NODE_COLUMNS)}
     <div class="attr-body" role="rowgroup"></div>
@@ -142,6 +186,9 @@ const FIELD_NAMES: Record<string, string> = {
   scale: 'size',
   alpha: 'opacity',
   descr: 'description',
+  labelColor: 'label colour',
+  labelStyle: 'label style',
+  labelShown: 'label shown',
   lineType: 'line type',
   arrowColor: 'arrow colour',
 }
@@ -178,6 +225,9 @@ function nodeRowHtml(i: number): string {
     <span class="attr-c" role="cell"><input type="number" class="form-control form-control-sm" data-f="scale" min="${s0}" max="${s1}" step="0.1" aria-label="Size of ${w}" /></span>
     <span class="attr-c" role="cell"><input type="number" class="form-control form-control-sm" data-f="alpha" min="${a0}" max="${a1}" step="0.05" aria-label="Opacity of ${w}" /></span>
     <span class="attr-c" role="cell"><input type="text" class="form-control form-control-sm" data-f="label" maxlength="200" aria-label="Label of ${w}" /></span>
+    <span class="attr-c attr-c--arrow" role="cell"><input type="color" data-f="labelColor" aria-label="${w}: label colour" /><button type="button" class="attr-reset" data-f="labelColorReset" title="As the label style (Edit → Nodes)" aria-label="${w}: label colour as the label style">×</button></span>
+    <span class="attr-c" role="cell"><select class="form-select form-select-sm" data-f="labelStyle" aria-label="${w}: label style">${LOOK_OPTIONS}</select></span>
+    <span class="attr-c attr-c--shown" role="cell"><input type="checkbox" class="form-check-input" data-f="labelShown" aria-label="${w}: label shown" /></span>
     <span class="attr-c" role="cell"><input type="text" class="form-control form-control-sm" data-f="descr" maxlength="2000" aria-label="Description of ${w}" /></span>
     <span class="attr-c attr-c--more" role="cell"><button type="button" class="attr-inspect" data-f="inspect" title="Inspector: every attribute of this node" aria-label="Inspect ${w}">⋯</button></span>`
 }
@@ -219,9 +269,18 @@ function fillNodeRow(row: HTMLElement, i: number): void {
   row.querySelector<HTMLInputElement>('[data-f="tick"]')!.checked = n.isSelected
   for (const el of row.querySelectorAll<HTMLElement>('[data-f]')) {
     const f = el.dataset.f as NodeColumn
-    if (f === ('tick' as string) || f === ('inspect' as string)) continue
-    setControl(el, nodeCell(i, f))
+    if (['tick', 'inspect', 'labelColorReset'].includes(f)) continue
+    // no label colour of its own: the picker shows the one on screen, faded
+    setControl(
+      el,
+      f === 'labelColor'
+        ? nodeCell(i, f) || hex(ctx.labelColor || '#ffffff')
+        : nodeCell(i, f)
+    )
   }
+  row.classList.toggle('has-label-color', n.labelColor !== '')
+  row.querySelector<HTMLInputElement>('[data-f="labelShown"]')!.checked =
+    n.labelShown
   row
     .querySelector<HTMLInputElement>('[data-f="label"]')!
     .setAttribute('placeholder', n.name)
@@ -411,12 +470,19 @@ class Table {
         this.refresh()
       } else if (t.dataset.f === 'inspect') this.inspect(i)
       else if (t.dataset.f === 'arrowReset') this.commit(i, 'arrowColor', '')
+      else if (t.dataset.f === 'labelColorReset')
+        this.commit(i, 'labelColor', '')
     })
     this.body.addEventListener('change', (ev) => {
       const t = ev.target as HTMLInputElement | HTMLSelectElement
       const row = rowOf(t)
       if (!row || !t.dataset.f || t.dataset.f === 'tick') return
-      this.commit(Number(row.dataset.i), t.dataset.f, t.value)
+      // a check box (Label shown) gives its state
+      const raw =
+        t instanceof HTMLInputElement && t.type === 'checkbox'
+          ? String(t.checked)
+          : t.value
+      this.commit(Number(row.dataset.i), t.dataset.f, raw)
     })
     this.body.addEventListener('keydown', (ev) => {
       const t = ev.target as HTMLInputElement
@@ -580,6 +646,13 @@ function download(text: string, name: string): void {
 
 // a cell's edit: the row, or every ticked row in the list with it
 function commitNode(i: number, field: string, raw: string): void {
+  // a style picked in the table keeps the row's halo / box colour, width,
+  // opacity and bold
+  if (field === 'labelStyle' && raw in LABEL_LOOK_LABELS)
+    raw = labelLookText({
+      ...(ctx.nodeObjects[i].labelLook ?? DEFAULT_LABEL_LOOK),
+      style: raw as LabelLookStyle,
+    })
   const patch = nodePatch(field as NodeField, raw)
   if (!patch) {
     status(`That is not a valid ${fieldName(field)} — nothing changed.`, true)
@@ -682,6 +755,37 @@ export function initAttributesPanel(): void {
     commitEdge,
     inspect('edge')
   )
+
+  // label colours by palette or from the nodes: the ticked rows, or the list
+  const labelBy = document.getElementById(
+    'attrLabelColorBy'
+  ) as HTMLSelectElement
+  labelBy.addEventListener('change', () =>
+    document
+      .getElementById('attrLabelPalette')!
+      .classList.toggle(
+        'd-none',
+        labelBy.value === 'match' || labelBy.value === 'contrast'
+      )
+  )
+  document
+    .getElementById('attrLabelColorApply')!
+    .addEventListener('click', () => {
+      const list = nodes!.list
+      const ticked = list.filter((k) => ctx.nodeObjects[k].isSelected)
+      const ids = ticked.length ? ticked : list
+      if (
+        !colorLabelIndices(
+          ids,
+          labelBy.value as LabelColorBy,
+          value('attrLabelPalette') as LabelPalette
+        )
+      )
+        return status('No node in the list — nothing changed.', true)
+      status(
+        `Coloured the labels of ${plural(ids.length, ticked.length ? 'ticked node' : 'node')} (one undo step).`
+      )
+    })
 
   // filters: typing waits for a pause, so 20,000 rows don't refilter per key
   let typing = 0

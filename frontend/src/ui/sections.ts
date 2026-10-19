@@ -1,9 +1,12 @@
 // Folding cards in the panels — <details class="lp-section lp-more" id=…>
-// (and the Database Importers' db-cards): each card's open state is
-// remembered in this browser once the user opens or folds it, and an
-// Expand all / Collapse all row (FOLD_ALL_HTML) does every card of its panel.
+// (and the Database Importers' db-cards): every card starts folded, except a
+// panel's only card, which starts open; the open state is remembered in this
+// browser once the user opens or folds it, and an Expand all / Collapse all
+// row (FOLD_ALL_HTML) does every card of its panel.
 
-const KEY = 'arena3d.sections'
+// .v2: the cards started open or folded before; begin again from all folded
+const KEY = 'arena3d.sections.v2'
+const OLD_KEYS = ['arena3d.sections']
 const CARDS = 'details.lp-more[id], details.db-card[id]'
 
 function saved(): Record<string, boolean> {
@@ -41,13 +44,33 @@ export function openCard(el: Element | null): void {
 export function initSections(): void {
   const root = document.getElementById('panelContent')
   if (!root) return
+  try {
+    OLD_KEYS.forEach((k) => localStorage.removeItem(k))
+  } catch {
+    /* private mode */
+  }
   const state = saved()
+  // e2e/fixtures.ts sets this so specs reach every control; sections.spec.ts
+  // turns it off to test the folded defaults
+  const openAll =
+    (window as unknown as { __arenaOpenCards?: boolean }).__arenaOpenCards ===
+    true
+  // a panel of a single card shows it: there is nothing else to fold it for
+  const single = new Set<HTMLDetailsElement>()
+  root.querySelectorAll('.tab-pane').forEach((pane) => {
+    const cards = [...pane.querySelectorAll<HTMLDetailsElement>(CARDS)].filter(
+      (d) => !d.parentElement?.closest('details')
+    )
+    if (cards.length === 1) single.add(cards[0])
+  })
   root.querySelectorAll<HTMLDetailsElement>(CARDS).forEach((d) => {
-    if (typeof state[d.id] === 'boolean') d.open = state[d.id]
+    if (openAll) d.open = true
+    else if (typeof state[d.id] === 'boolean') d.open = state[d.id]
+    else if (single.has(d)) d.open = true
   })
   // Only the user's own clicks are remembered (a summary is clicked by mouse
-  // and by Enter / Space alike): a card the app opens to show something, or
-  // one that starts open, keeps following the defaults until then.
+  // and by Enter / Space alike): a card the app opens to show something stays
+  // folded on the next visit until the user opens it.
   root.addEventListener('click', (e) => {
     const target = e.target as Element
     const all = target.closest<HTMLElement>('[data-fold-all]')

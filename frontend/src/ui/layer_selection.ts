@@ -16,7 +16,9 @@ import {
   selectAllLayers,
   setLayerVisibility,
   setLayerNodeLabels,
+  setLayerCoords,
 } from '../actions/layer'
+import { syncLayerCoordsControls } from './layer'
 
 const HTML = `
 <div class="col-md-8 col-lg-6 layout-panel" id="layerSelectionPanel">
@@ -25,7 +27,7 @@ const HTML = `
     <div class="form-text mt-0 mb-2">
       Tick the layers to work on: layouts, alignment, the analyses and the NORMA export run on the selected layers
       (on every layer while none is ticked). <i>Hide</i> takes a layer and its inter-layer edges out of the view;
-      <i>Labels</i> shows the names of its nodes.
+      <i>Labels</i> shows the names of its nodes; <i>Axes</i> draws its own coordinate system.
     </div>
     <div class="d-flex flex-wrap align-items-center gap-3 mb-2">
       <div class="form-check mb-0">
@@ -102,13 +104,19 @@ export function buildLayerCheckboxes(): void {
         <input class="form-check-input hideLayer_checkbox" type="checkbox" id="checkbox2_${i}" ${layer.plane.visible ? '' : 'checked'} />Hide</label>
       <label class="form-check-label layer-row__opt" for="checkbox3_${i}">
         <input class="form-check-input showLayerNodes_checkbox" type="checkbox" id="checkbox3_${i}" />Labels</label>
+      <label class="form-check-label layer-row__opt" for="checkbox4_${i}" title="This layer's own X, Y and Z axes">
+        <input class="form-check-input layerAxes_checkbox" type="checkbox" id="checkbox4_${i}" ${layer.coordsShown ? 'checked' : ''} />Axes</label>
     `
-    const [sel, hide, labels] = row.querySelectorAll('input')
+    const [sel, hide, labels, axes] = row.querySelectorAll('input')
     sel.addEventListener('change', () => selectLayer(i, sel.checked))
     hide.addEventListener('change', () => setLayerVisibility(i, !hide.checked))
     labels.addEventListener('change', () =>
       setLayerNodeLabels(i, labels.checked)
     )
+    axes.addEventListener('change', () => {
+      setLayerCoords(i, axes.checked)
+      syncLayerCoordsControls()
+    })
     container.appendChild(row)
   })
   syncSummary()
@@ -123,6 +131,7 @@ function syncTicks(): void {
     ) as HTMLInputElement | null
     if (box) box.checked = layer.isSelected
   })
+  syncLayerCoordsControls() // "Selected" axes follow the selection
   syncSummary()
 }
 

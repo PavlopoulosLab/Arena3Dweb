@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures'
+import { expect, openCard, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // Layout panel: with 3D Layout on only the algorithms that have a 3D version
@@ -111,13 +111,12 @@ test('incompatible options are disabled, not mixed; single mode shows the NORMA 
   await click('#subgraph_perLayer')
   await expect(page.locator('#alignmentMode')).toBeEnabled()
   // single network: the layer-centric controls step aside; the NORMA card
-  // stays folded like every card until clicked
+  // offers its drawing options (sections.spec.ts checks the folded defaults)
   await page.locator('#modeSingle').dispatchEvent('click')
   await expect(page.locator('body')).toHaveClass(/mode-single/)
   await expect(page.locator('#subgraph_perLayer')).toBeHidden()
   await expect(page.locator('#alignmentCard')).toBeHidden()
-  await expect(page.locator('#groupLayoutCard')).not.toHaveAttribute('open', '')
-  await page.locator('#groupLayoutCard > summary').click()
+  await openCard(page, '#groupLayoutCard')
   await expect(page.locator('#groupDraw')).toBeVisible()
   await expect(page.locator('#groupPies')).toBeVisible()
   // no clusters yet: the card points to the Clustering panel

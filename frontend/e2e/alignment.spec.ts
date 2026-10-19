@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures'
+import { expect, openCard, test, type Page } from './fixtures'
 import path from 'node:path'
 
 // Pseudo-alignment across layers: anchoring/soft alignment lowers the
@@ -44,7 +44,7 @@ test('alignment modes reduce cross-layer misalignment', async ({ page }) => {
     .getByRole('tab', { name: 'Layout', includeHidden: true, exact: true })
     .dispatchEvent('click')
 
-  await page.locator('#alignmentCard summary').click()
+  await openCard(page, '#alignmentCard')
   await page.locator('#alignmentMode').selectOption('anchor')
   await expect(page.locator('#alignmentReference')).toBeVisible()
   await page.locator('#alignmentReference').selectOption('Layer2')

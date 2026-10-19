@@ -77,6 +77,7 @@ export class Layer {
   container: LayerContainer = 'floor'
   volume: THREE.Object3D | null = null // cube/sphere/cloud drawing
   coordSystem: THREE.Object3D[] = []
+  coordsShown = false // Edit → Layers / Layer selection → Axes
   axesOpacity = DEFAULT_AXES_OPACITY
   floorStyle: FloorStyle = 'solid'
   floorOpacity = 0.6
@@ -173,7 +174,7 @@ export class Layer {
       origin: true,
     })
     for (const axis of this.coordSystem) this.plane.add(axis)
-    this.toggleCoords(false)
+    this.toggleCoords(this.coordsShown)
   }
 
   addLabelSphere(width: number, scale: number): void {
@@ -514,6 +515,7 @@ export class Layer {
   }
 
   toggleCoords(layerCoordsSwitch: boolean): void {
+    this.coordsShown = layerCoordsSwitch
     for (const axis of this.coordSystem) axis.visible = layerCoordsSwitch
   }
 

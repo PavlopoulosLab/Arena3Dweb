@@ -37,7 +37,7 @@ import { FOLD_ALL_HTML } from './sections'
 const EDGE_HTML = `
 <div class="col-md-6 col-lg-4 layout-panel">
   ${FOLD_ALL_HTML}
-  <details class="lp-section lp-more" id="edgeCard_weights" open>
+  <details class="lp-section lp-more" id="edgeCard_weights">
   <summary>Weights</summary>
   <div>
     <label class="form-label" for="edgeWeightThreshold">Hide Edges with Weight Below: <span id="edgeWeightThresholdValue">0</span></label>
@@ -58,7 +58,7 @@ const EDGE_HTML = `
     <div id="bundling_status" class="small text-secondary"></div>
   </div>
   </details>
-  <details class="lp-section lp-more" id="edgeCard_direction" open>
+  <details class="lp-section lp-more" id="edgeCard_direction">
   <summary>Direction</summary>
   <div class="form-check mb-2">
     <input class="form-check-input" type="checkbox" id="edgeDirectionToggle" />
@@ -73,7 +73,7 @@ const EDGE_HTML = `
     <input type="range" class="form-range" id="interDirectionArrowSize" min="1" max="10" step="1" value="5" />
   </div>
   </details>
-  <details class="lp-section lp-more" id="edgeCard_appearance" open>
+  <details class="lp-section lp-more" id="edgeCard_appearance">
   <summary>Appearance</summary>
   <label class="form-label">Show Edge Weight As:</label>
   <div class="mb-3">

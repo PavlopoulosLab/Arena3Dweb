@@ -10,7 +10,12 @@ import { store } from '../store'
 import { ctx, SELECTED_DEFAULT_COLOR } from '../three'
 import type { ColorPrioritySource } from '../three'
 import { NODE_DETAIL } from '../three/constants'
-import { shapeFromText } from '../three/Node'
+import {
+  LABEL_POSITION_LABELS,
+  labelLookFromText,
+  shapeFromText,
+  type LabelPosition,
+} from '../three/Node'
 import {
   findIndexByUuid,
   getCaseInsensitiveIndices,
@@ -95,11 +100,60 @@ export function decideNodeLabelFlags(): void {
     if (!layer.isVisible) node.showLabel = false
     else if (ctx.showAllNodeLabelsFlag) node.showLabel = true
     else if (layer.showNodeLabels) node.showLabel = true
-    else if (ctx.showSelectedNodeLabelsFlag && node.isSelected)
+    else if (ctx.showChosenNodeLabelsFlag && node.labelShown)
+      node.showLabel = true
+    else if (
+      (ctx.showSelectedNodeLabelsFlag ||
+        (ctx.showChosenNodeLabelsFlag && ctx.chosenLabelsWithSelection)) &&
+      node.isSelected
+    )
       node.showLabel = true
     else if (i === ctx.lastHoveredNodeIndex) node.showLabel = true
     else node.showLabel = false
   })
+}
+
+// Edit → Nodes → Show Labels: every label, the selection's, the chosen
+// (pinned) ones — and the selection's too when `withSelection` — or none
+export type NodeLabelMode = 'all' | 'selected' | 'chosen' | 'none'
+export type NodeLabelState = { mode: NodeLabelMode; withSelection: boolean }
+
+export function nodeLabelState(): NodeLabelState {
+  const mode: NodeLabelMode = ctx.showAllNodeLabelsFlag
+    ? 'all'
+    : ctx.showSelectedNodeLabelsFlag
+      ? 'selected'
+      : ctx.showChosenNodeLabelsFlag
+        ? 'chosen'
+        : 'none'
+  return { mode, withSelection: ctx.chosenLabelsWithSelection }
+}
+
+export function setNodeLabelMode(
+  mode: NodeLabelMode,
+  withSelection = ctx.chosenLabelsWithSelection
+): void {
+  ctx.showAllNodeLabelsFlag = mode === 'all'
+  ctx.showSelectedNodeLabelsFlag = mode === 'selected'
+  ctx.showChosenNodeLabelsFlag = mode === 'chosen'
+  ctx.chosenLabelsWithSelection = withSelection
+  decideNodeLabelFlags()
+  // the Edit → Nodes controls follow (an undo, a session)
+  if (typeof document === 'undefined') return
+  const radio = document.getElementById(`nodeLabels_${mode}`)
+  if (radio instanceof HTMLInputElement) radio.checked = true
+  const tick = document.getElementById('nodeLabelsWithSelection')
+  if (tick instanceof HTMLInputElement) tick.checked = withSelection
+}
+
+/** Pinned labels must show: Show Labels goes from Selected (keeping the
+ * selection's labels) or None to Chosen. @return the state before, or null
+ * when it already shows them */
+export function revealChosenLabels(): NodeLabelState | null {
+  const before = nodeLabelState()
+  if (before.mode === 'all' || before.mode === 'chosen') return null
+  setNodeLabelMode('chosen', before.mode === 'selected')
+  return before
 }
 
 // @return selected node indexes
@@ -218,8 +272,19 @@ export function applyNodeAttributes(rows: NodeAttributeRow[]): void {
     if (row.label) node.label = row.label
     if (row.label_color) node.labelColor = row.label_color
     if (row.label_size != null) node.labelSize = row.label_size
+    const look = row.label_style
+      ? labelLookFromText(row.label_style)
+      : undefined
+    if (look !== undefined) node.labelLook = look
+    const position = row.label_position?.trim().toLowerCase()
+    if (position && position in LABEL_POSITION_LABELS)
+      node.labelPosition = position as LabelPosition
+    if (row.label_shown != null) node.labelShown = row.label_shown
   }
   restyleNodeLabels()
+  // pinned labels from the file show at once
+  if (rows.some((r) => r.label_shown)) revealChosenLabels()
+  decideNodeLabelFlags()
   bus.emit('groups:changed', { source: 'annotation' })
   setNodeColorPriority('default')
 }

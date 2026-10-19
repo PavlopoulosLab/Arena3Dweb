@@ -202,16 +202,69 @@ function drawExportLabels(
   scale: number
 ): void {
   g.textBaseline = 'top'
+  g.lineJoin = 'round'
   forEachVisibleLabel((div, worldX, worldY, offsetX, offsetY) => {
     const cs = getComputedStyle(div)
-    g.font = `${parseFloat(cs.fontSize) * scale}px ${cs.fontFamily}`
+    const text = div.textContent ?? ''
+    const x = (worldX - camera.left + offsetX) * scale
+    const y = (camera.top - worldY + offsetY) * scale
+    g.save()
+    g.globalAlpha = parseFloat(cs.opacity) || 1
+    // a box (Edit → Style, or the label style's background) behind the text
+    const box = cs.backgroundColor
+    if (box && box !== 'transparent' && !/,\s*0\)$/.test(box)) {
+      g.fillStyle = box
+      g.beginPath()
+      g.roundRect(
+        x,
+        y,
+        div.offsetWidth * scale,
+        div.offsetHeight * scale,
+        parseFloat(cs.borderTopLeftRadius) * scale || 0
+      )
+      g.fill()
+    }
+    g.font = `${cs.fontStyle} ${cs.fontWeight} ${parseFloat(cs.fontSize) * scale}px ${cs.fontFamily}`
+    const tx = x + (parseFloat(cs.paddingLeft) || 0) * scale
+    const ty = y + (parseFloat(cs.paddingTop) || 0) * scale
+    // a halo: the stroke first, so the letters sit on top of it
+    const stroke = parseFloat(cs.getPropertyValue('-webkit-text-stroke-width'))
+    if (stroke > 0) {
+      g.strokeStyle = cs.getPropertyValue('-webkit-text-stroke-color')
+      g.lineWidth = stroke * scale
+      g.strokeText(text, tx, ty)
+    }
+    if (div.dataset.shadow) {
+      g.shadowColor = div.dataset.shadow
+      g.shadowBlur = 4 * scale
+      g.shadowOffsetY = scale
+    }
     g.fillStyle = cs.color
-    g.fillText(
-      div.textContent ?? '',
-      (worldX - camera.left + offsetX) * scale,
-      (camera.top - worldY + offsetY) * scale
-    )
+    g.fillText(text, tx, ty)
+    g.restore()
   })
+}
+
+// px between a node's centre and a label above or below it (actions/labels.ts)
+export const LABEL_GAP = 9
+
+/** The px a node label at `position` (Edit → Style) moves by from its usual
+ * corner, 7px right of and 10px above the node centre; w, h: its size. */
+export function labelShift(
+  position: string | undefined,
+  w: number,
+  h: number
+): [number, number] {
+  switch (position) {
+    case 'centre':
+      return [-7 - w / 2, 10 - h / 2]
+    case 'above':
+      return [-7 - w / 2, 10 - LABEL_GAP - h]
+    case 'below':
+      return [-7 - w / 2, 10 + LABEL_GAP]
+    default:
+      return [0, 0]
+  }
 }
 
 // Iterate the currently visible label divs with their world-space anchor and
@@ -234,7 +287,18 @@ function forEachVisibleLabel(
   container.querySelectorAll<HTMLDivElement>('.labels').forEach((div, i) => {
     const node = ctx.nodeObjects[i]
     if (!node || div.style.display === 'none') return
-    cb(div, node.getWorldPosition('x'), node.getWorldPosition('y'), 7, -10)
+    const [dx, dy] = labelShift(
+      div.dataset.pos,
+      div.offsetWidth,
+      div.offsetHeight
+    )
+    cb(
+      div,
+      node.getWorldPosition('x'),
+      node.getWorldPosition('y'),
+      7 + dx,
+      -10 + dy
+    )
   })
   container
     .querySelectorAll<HTMLDivElement>('.layer-labels')

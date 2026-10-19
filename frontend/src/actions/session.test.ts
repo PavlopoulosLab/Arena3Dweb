@@ -205,6 +205,18 @@ describe('collectSession', () => {
     a.label = 'Hub'
     a.labelColor = '#00ff00'
     a.labelSize = 18
+    a.labelLook = {
+      style: 'box',
+      color: '#222222',
+      width: 2,
+      opacity: 0.6,
+      bold: true,
+    }
+    a.labelPosition = 'above'
+    a.labelShown = true
+    ctx.showSelectedNodeLabelsFlag = false
+    ctx.showChosenNodeLabelsFlag = true
+    ctx.chosenLabelsWithSelection = false
     const e = ctx.edgeObjects[0]
     e.opacityFactor = 0.3
     e.lineType = 'dotted'
@@ -218,8 +230,26 @@ describe('collectSession', () => {
       label: 'Hub',
       label_color: '#00ff00',
       label_size: 18,
+      label_style: {
+        style: 'box',
+        color: '#222222',
+        width: 2,
+        opacity: 0.6,
+        bold: true,
+      },
+      label_position: 'above',
+      label_shown: true,
     })
-    for (const key of ['opacity', 'border_color', 'stretch', 'label'])
+    expect(out.nodeLabels).toEqual({ mode: 'chosen', withSelection: false })
+    for (const key of [
+      'opacity',
+      'border_color',
+      'stretch',
+      'label',
+      'label_style',
+      'label_position',
+      'label_shown',
+    ])
       expect(out.nodes[1]).not.toHaveProperty(key)
     expect(b.getLabel()).toBe('B')
     expect(out.edges[0]).toMatchObject({
@@ -241,7 +271,13 @@ describe('collectSession', () => {
       '#00ff00',
       18,
     ])
+    expect(a2.labelLook).toEqual(a.labelLook)
+    expect(a2.labelPosition).toBe('above')
+    expect([a2.labelShown, b2.labelShown]).toEqual([true, false])
+    expect(ctx.showChosenNodeLabelsFlag).toBe(true)
+    expect(ctx.chosenLabelsWithSelection).toBe(false)
     expect([b2.alpha, b2.outline, b2.getLabel()]).toEqual([1, null, 'B'])
+    expect([b2.labelLook, b2.labelPosition]).toEqual([null, 'right'])
     const e2 = ctx.edgeObjects[0]
     expect([e2.opacityFactor, e2.lineType, e2.arrowColor]).toEqual([
       0.3,

@@ -174,7 +174,6 @@ const TOOLS: [string, string, string, string, [string, string][]][] = [
 
 const DEVELOPERS: [string, string][] = [
   ['Evangelos Karatzas', 'karatzas@fleming.gr'],
-  ['Maria Kokoli', 'mariakokoli94@gmail.com'],
   ['Fotis Baltoumas', 'baltoumas@fleming.gr'],
   ['Georgios A. Pavlopoulos', 'pavlopoulos@fleming.gr'],
 ]

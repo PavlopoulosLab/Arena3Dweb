@@ -81,13 +81,13 @@ const HELP_HTML = `
   <button class="tablinks" data-help-tab="Navigation_tab">3D View &amp; Navigation</button>
   <button class="tablinks" data-help-tab="Layouts_tab">Layout</button>
   <button class="tablinks" data-help-tab="Clustering_tab">Clustering</button>
-  <button class="tablinks" data-help-tab="Annotations_tab">Annotations</button>
   <button class="tablinks" data-help-tab="Scene_tab">Scene &amp; Camera</button>
+  <button class="tablinks" data-help-tab="Annotations_tab">Annotations</button>
+  <button class="tablinks" data-help-tab="Style_tab">Edit → Style</button>
+  <button class="tablinks" data-help-tab="Attributes_tab">Edit → Attributes</button>
   <button class="tablinks" data-help-tab="Node_tab">Edit → Nodes</button>
   <button class="tablinks" data-help-tab="Edge_tab">Edit → Edges</button>
   <button class="tablinks" data-help-tab="Layer_tab">Edit → Layers</button>
-  <button class="tablinks" data-help-tab="Style_tab">Edit → Style</button>
-  <button class="tablinks" data-help-tab="Attributes_tab">Edit → Attributes</button>
   <button class="tablinks" data-help-tab="Analyze_tab">Analyze</button>
   <button class="tablinks" data-help-tab="Export_tab">Export</button>
   <button class="tablinks" data-help-tab="API_tab">API</button>
@@ -98,7 +98,7 @@ const HELP_HTML = `
 <div id="Start_tab" class="tabcontent">
   <h2>Getting Started</h2>
   <p class="help-lead">Arena3D in five steps, then the menus, the Networks menu, undo, network mode and touch screens.</p>
-  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/topbar.png" alt="The top bar: Home, File, Database Importers, Networks, View, Find, Layer selection, Layout, Clustering, Annotations, Edit, Analyze, Export and Help menus, the Multilayered / Single network switch, the theme picker and Undo / Redo" loading="lazy">
+  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/topbar.png" alt="The top bar: Home, File, Database Importers, Networks, View, Find, Layer selection, Layout, Clustering, Edit, Analyze, Export and Help menus, the Multilayered / Single network switch, the theme picker and Undo / Redo" loading="lazy">
   <p>
     Arena3D shows a multilayered network in 3D: every layer is a floor (or a disk, cube, sphere or cloud), a node
     may appear in several layers, and edges run within layers (intra-layer) or between them (inter-layer). Edges can
@@ -121,22 +121,23 @@ const HELP_HTML = `
     The menu bar is grouped by task, and every menu has its own colour (the open or active menu is tinted with
     it). <b>File</b>: load networks, attributes and sessions. <b>Database Importers</b>: fetch from STRING, Reactome,
     OmniPath, NDEx, IntAct and Gene Ontology. <b>Networks</b>: which network and annotation are on screen, and
-    every loaded network with its annotation sets, to switch between them. <b>View</b>: the 3D view, Scene &amp; Camera (background, axes,
-    arrangements, rotation, legend) and Performance (frame rate, resolution, detail). <b>Find</b>: search nodes
+    every loaded network with its annotation sets, to switch between them. <b>View</b>: Scene &amp; Camera (background, axes,
+    arrangements, rotation, legend), Annotations (a hull, cloud or 3D container around every annotation
+    group or cluster, pies, and the group list) and Performance (frame rate, resolution, detail). <b>Find</b>: search nodes
     and edges. <b>Layer selection</b>: the layers the layouts, analyses and exports work on, with a Hide and a
     Labels switch per layer (Multilayered mode). <b>Layout</b>: algorithms, alignment and group
-    layouts. <b>Clustering</b>: communities, a summary of them, and saving them as an annotation set. <b>Annotations</b>: how
-    annotation groups and clusters show in the scene — hulls or fog clouds with their opacity and padding, pies, and
-    the group list with colours and a hull switch per group. <b>Edit</b>: Nodes (labels,
-    shapes), Edges, Layers (floors, shapes, containers, split/merge), Style (colours, sizes, borders, labels, line types, palettes, colour
-    vision) and Attributes (a table of every node and edge, edited one at a time or many at once, and an inspector). <b>Analyze</b>: Metrics, Statistics (with layer
+    layouts. <b>Clustering</b>: communities, a summary of them, and saving them as an annotation set. <b>Edit</b>, in two groups:
+    <i>Appearance</i> — Style (colours, sizes, borders, labels, line types, palettes, colour vision) and Attributes (a table of
+    every node and edge, edited one at a time or many at once, and an inspector) — and <i>Network parts</i> — Nodes (labels,
+    shapes), Edges and Layers (floors, shapes, containers, split/merge); each item has a one-line hint under its name. <b>Analyze</b>: Metrics, Statistics (with layer
     and network comparison), Plots, Perturbation, Explore, Annotations &amp; Groups (enrichment) and Data Tables. <b>Export</b>: images, 3D, video, Cytoscape, visualizations, other tools and the
     session. On phones and narrow windows the menus fold into a drawer.
   </p>
   <p>
-    The panels are made of cards. Click a card's title to fold or open it; the main ones start open (File →
-    Network, Examples and Loaded networks, for example) and the rest start folded. In the long panels (File,
-    Edit → Nodes, Edges and Layers, Layout, Clustering and Export), <i>Expand all</i> and <i>Collapse all</i>
+    The panels are made of cards, and every card starts folded, except the only card of a panel (Analyze → Metrics,
+    for example), which starts open: its title, and the short hint after the title of a sub-section, says what is
+    inside. Click a title to open or fold it. In the long panels (File,
+    Edit → Nodes, Edges and Layers, Layout, Clustering, Analyze → Perturbation and Export), <i>Expand all</i> and <i>Collapse all</i>
     at the top open or fold every card at once. Arena3D remembers in this browser which cards you open or fold.
   </p>
   <h3>Networks menu</h3>
@@ -149,9 +150,9 @@ const HELP_HTML = `
     attribute or group file, enrichment, cluster run or STRING grouping it received, and the annotations a saved
     session brought (<i>Saved with the session</i>) — with the one it shows ticked, and <i>No annotation</i>.
     Click a network to switch to it, or a set to show it; a set of another network switches to that network with
-    that set in one click. <i>Load another network…</i> opens File and <i>Annotation options…</i> opens the
-    Annotations menu (pies, hulls, fog clouds). The menu, File → Loaded networks and the Annotations menu always
-    agree.
+    that set in one click. <i>Load another network…</i> opens File and <i>Annotation options…</i> opens
+    View → Annotations (pies, hulls, clouds, 3D containers). The menu, File → Loaded networks and View → Annotations
+    always agree.
   </p>
   <p>
     <b>Rename and delete.</b> ✎ beside a network or an annotation set renames it in place: type the new name and
@@ -259,10 +260,11 @@ const HELP_HTML = `
     <li>Give nodes groups: a node attribute file with an <i>Annotation</i> column, a NORMA-format group file
       (File → <i>Upload GROUP file</i>), or Analyze → <i>Enrichment of Selected Nodes</i> → <i>Annotate Nodes with
       Top 5 Terms</i>. Clusters come from the <i>Clustering</i> panel.</li>
-    <li><i>Annotations</i> (top bar, after Clustering) → <i>Show on the network</i>: the annotation set; <i>Draw around</i>
-      clusters or annotations, as hulls or fog clouds, with their <i>Opacity</i> and <i>Padding</i>; pies on the nodes.</li>
-    <li>Annotations → Groups: recolour, hide a group's hull, select its members, show them in the legend, open the
-      Groups and Overlap tables, or <i>Collapse into Super Nodes</i>.</li>
+    <li>View → Annotations → <i>Show on the network</i>: the annotation set; <i>Draw around</i> clusters or
+      annotations; <i>Draw as</i> a hull or outline on the floor, a fog cloud or cloud, or a sphere, ellipsoid or box,
+      with its <i>Opacity</i> and <i>Padding</i>; pies on the nodes.</li>
+    <li>View → Annotations → Groups: recolour, hide a group's shape, select its members, show them in the legend, open
+      the Groups and Overlap tables, or <i>Collapse into Super Nodes</i>.</li>
     <li>Layout → <i>Group Layout (NORMA-2.0)</i> pulls the groups apart.</li>
   </ol>
 
@@ -462,7 +464,7 @@ const HELP_HTML = `
     labelled, the instructor (Mr. Hi) and the administrator (the Officer); each round every member takes in its
     friends' values (<i>Message</i>) and its own (<i>Self</i>), as a graph convolution does (here without learned
     weights), and the colours show the two clubs spreading. The output splits the club as it really split, but for
-    member 9. Annotation terms (the Annotations menu) give each member's real club, the prediction and
+    member 9. Annotation terms (View → Annotations) give each member's real club, the prediction and
     <i>misclassified</i>. <br />
     ${nnFiles('The graph neural network', 'gnn_karate')}
   </p>
@@ -545,9 +547,9 @@ const HELP_HTML = `
   <p class="help-lead">Load networks, sessions, attributes, groups and values, and the file formats Arena3D reads.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/file.png" alt="The File panel" loading="lazy">
   <p>
-    The panel has five cards. <i>Network</i> (Upload Network, Load Session), <i>Examples</i> and <i>Loaded
-    networks</i> start open; <i>Node &amp; edge attributes</i> and <i>Groups &amp; values</i> start folded: click a
-    title to open one, or use <i>Expand all</i> at the top.
+    The panel has five cards — <i>Network</i> (Upload Network, Load Session), <i>Node &amp; edge attributes</i>,
+    <i>Groups &amp; values</i>, <i>Examples</i> and <i>Loaded networks</i> — all folded at first: click a title to
+    open one, or use <i>Expand all</i> at the top. <i>Save Session</i> and <i>Load Example</i> sit below the cards.
   </p>
 
   <h3>Upload Network</h3>
@@ -583,7 +585,7 @@ const HELP_HTML = `
   <p>
     <i>Upload GROUP file</i> reads annotation groups in NORMA's format — one group per line: the group name, a TAB,
     then its members separated by commas or semicolons (a <i>Node</i> / <i>Group</i> two-column file works too).
-    Nodes are matched by name in every layer, and the groups appear as pies and hulls and in the Annotations menu.
+    Nodes are matched by name in every layer, and the groups appear as pies and hulls and in View → Annotations.
     <i>Upload node VALUES</i> reads a numeric table — a <i>Node</i> column, then one column per condition or score
     (expression values, say); blank cells are allowed. Edit → Style then colours nodes by any column, with a
     diverging scale when the values cross zero, and the legend shows the range.
@@ -724,7 +726,10 @@ const HELP_HTML = `
     expandable, colour-coded card with its own fields and Import button, and a <b>?</b> that opens this page; the
     cards start folded — click a card's title to open it.
     Proteins, organism and score typed in one card are copied to the other cards that take them. Each card shows a
-    progress bar under its button while it fetches, builds the scene and lays the network out.
+    progress bar under its button while it fetches, builds the scene and lays the network out. A query with
+    something missing — no proteins, no pathways or GO terms picked, a search under two characters, no NDEx UUID —
+    is not sent: the card says what to fill in under its button and outlines the empty field; a failed import is
+    reported there too.
   </p>
   <ul>
     <li><b>STRING</b>: the options of NORMA's STRING importer (see <i>STRING in detail</i> below).
@@ -776,7 +781,7 @@ const HELP_HTML = `
       KEGG, Reactome, WikiPathways, UniProt keywords, Pfam, InterPro and SMART domains, diseases, tissues,
       subcellular localization, Monarch phenotypes, STRING's local network clusters, reference publications — and,
       if ticked, any other collection STRING offers) becomes an annotation set, with one group per term, ready for pies,
-      hulls and the Groups card; switch between the sets in the Annotations menu. <i>Enriched in the network</i>
+      hulls and the Groups card; switch between the sets in View → Annotations. <i>Enriched in the network</i>
       (recommended) keeps the terms enriched among the network's proteins with an FDR at most the given value;
       <i>All annotations of its proteins</i> keeps every term (KEGG pathways come only with enriched terms, because
       STRING does not share full KEGG annotations). <i>Groups per collection</i> keeps the best terms (lowest FDR, or
@@ -808,15 +813,16 @@ const HELP_HTML = `
     Type one or more names (comma-separated) and press Enter. The mode decides how names match: <i>Exact</i>,
     <i>Contains</i>, <i>Starts with</i>, <i>Ends with</i> (suffix) or a <i>Regular expression</i> (for example
     <code>^MDM[24]$</code>); tick <i>Case-sensitive</i> if needed. Matches replace the selection and are listed under
-    the box; with <i>Focus camera</i> the view pans and zooms onto them. Click a listed node to focus on it alone.
+    the box in a table of node and layer (the first 200); with <i>Focus camera</i> the view pans and zooms onto them.
+    Click a row to focus on that node alone.
   </p>
   <h3>Edges</h3>
   <p class="last_p">
     Type node names (comma-separated) or a regular expression and choose what to match: <i>Either end</i>, the
     <i>Source</i> or the <i>Target</i> only, <i>Both ends</i> (each end must match) or the edge <i>Channel</i>; the
     modes are the same as for nodes. Matching edges are selected — Analyze → Data Tables → Selected Edges lists
-    them with their layers, channels and weights — and listed under the box as <i>A — B</i> with their layers;
-    click one to focus on its two nodes, or keep <i>Focus camera</i> ticked to fly to all of them.
+    them with their layers, channels and weights — and listed under the box in a table of source, target,
+    layer and channel; click a row to focus on its two nodes, or keep <i>Focus camera</i> ticked to fly to all of them.
   </p>
 </div>
 
@@ -842,13 +848,17 @@ const HELP_HTML = `
       downstream path through the following layers, and to open its URL or description. With nodes selected, the
       menu (on a node or on the background) also has a <i>Selected nodes</i> group: expand the selection by one hop,
       select its connected component, the shortest path between two selected nodes, highlight the paths between
-      them, focus the camera on them, copy their names, style them (Edit → Style), invert or clear the selection.
+      them, focus the camera on them, copy their names, style them (Edit → Style), invert or clear the selection,
+      or <i>Delete</i> them: after asking, the selected nodes and every edge touching them leave the network, the
+      rest stays where it was, and one Undo brings them back (not offered with every node selected).
       With nothing selected, right-click the background to save the view as an image.</li>
   </ul>
   <h3>Navigation table</h3>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/navcontrols.png" alt="The navigation controls: shortcuts, scene, layer and node controls" loading="lazy">
   <p>
-    <i>Navigation Controls</i> shows or hides the table; <i>Pause Inter-Layer Edges</i> hides inter-layer edges while
+    <i>Navigation Controls</i> shows or hides the table. Its list of mouse and keyboard shortcuts (with <i>Area
+    Shape</i> and <i>Area Mode</i>) is folded under <i>Mouse &amp; keyboard</i> at first: click it to open or fold the
+    list, and the browser remembers. <i>Pause Inter-Layer Edges</i> hides inter-layer edges while
     you work on large networks. <i>Redraw</i> (&#8635;) puts the scene right if something gets stuck: it lets go of a
     drag, a held key or an area outline left half done (say, the mouse was released outside the window), hides a
     loading veil left up by a failed request, and redraws nodes, edges, bundles and labels at the window's size; the
@@ -862,17 +872,34 @@ const HELP_HTML = `
       (as does a double-click on the background).</li>
     <li><b>Single network mode</b> has no layers to drag or turn: the left button rotates the network, the middle
       button (or the arrow keys) pans it, and <kbd>Z</kbd>, <kbd>X</kbd> or <kbd>C</kbd> + drag turns it about one
-      axis; the table lists the controls of the current mode.</li>
+      axis; the table lists the controls of the current mode. Under <i>Recenter Network</i>, <i>Spread</i>
+      (0.25×–4×) gives the network more or less room: every node's distance from the centre scales, so the layout
+      keeps its shape and the nodes their size while crowded nodes move apart (or a sprawling network gathers).
+      Each drag is one undo step; the slider counts from the positions it started from, so after a layout, an
+      undo or a drag it reads 1× again.</li>
     <li><b>Layers</b>: rotate and move the selected layers, scale them (0.2×–5×), and spread out or gather all
       layers along X.</li>
     <li><b>Nodes</b>: spread out or gather the selected nodes in their layers, move them, and scale them
       (0.2×–5×).</li>
   </ul>
-  <p class="last_p">
+  <p>
     The 2D navigator at the bottom right shows the whole network; click or drag in it to pan the 3D view (turn it off
-    in Scene &amp; Camera). The theme picker in the top bar recolours the scene — Dark, Light, Gray, Midnight,
-    Blueprint, Solarized, Forest, Paper, Pastel or High Contrast; menus and panels keep their own colours, so they
-    stay legible with every theme. Theme changes can be undone.
+    in Scene &amp; Camera). The theme picker in the top bar sets the scene's theme, one of 27 in three groups:
+    <i>Dark</i> (Dark, Midnight, Blueprint, Solarized, Forest, High Contrast, and Universe, Marquee and Ripple after
+    Cytoscape's styles), <i>Light</i> (Light, Gray, Paper, Pastel, and Cytoscape, Sample, Directed, Nested, Minimal and
+    Solid after Cytoscape's) and <i>Colour-blind safe</i> (Okabe–Ito; Paul Tol's bright, muted and vibrant schemes;
+    ColorBrewer Set2, Dark2 and Paired; viridis). The thin bar under the picker shows the theme's channel colours.
+    Menus and panels keep their own colours, so they stay legible with every theme.
+  </p>
+  <p class="last_p">
+    Every theme has a background, a floor, edge and label colour, a colour for each layer's nodes and one for each
+    of ten channels, all chosen to stand out from the background and from one another. Pick a theme before loading
+    and the next network takes its colours. With a network on screen, every switch asks first:
+    <i>Keep the current colours</i> changes only the background, the labels and the 3D containers that follow the
+    theme; <i>Apply the theme's colours</i> also recolours the nodes (by layer), the floors, every channel (a distinct
+    colour each) and the edges, and colours set by hand per edge give way to them. The answer you gave last is
+    offered first; <i>Cancel</i> keeps the theme on screen. One Undo takes a switch back, colours and all. A saved
+    session keeps its theme and whether its colours were applied.
   </p>
 </div>
 
@@ -884,12 +911,12 @@ const HELP_HTML = `
   <p>
     The panel follows the order of work: <b>1 · Layers</b> (how many layers are ticked in the <i>Layer selection</i>
     tab, with a button to it), <b>2 · Layout</b> (algorithm, what to apply it to and options), then <i>Run Layout</i> in the bar that stays at the bottom of the
-    panel, with the result and the misalignment score next to it. Every section is a card: click a title to fold or
-    open it, or use <i>Expand all</i> / <i>Collapse all</i> at the top; the browser remembers what you open. The
-    algorithm and <i>Apply to</i> stay in view, while <i>Weights &amp; 3D</i> (its title says what is on, such as
-    <i>2D layout, no edge weights</i>) and <i>Selected nodes</i> (the layout inside them) are folded under them. The
-    optional extras — Layer Arrangement, Cross-Layer Alignment and Group Layout, whose <i>Force &amp; size</i> sliders
-    fold away too — start folded below. In <i>Single network</i> mode (top bar) the panel works the
+    panel, with the result and the misalignment score next to it. Every section is a card, and every card starts
+    folded, the <i>Run Layout</i> bar aside: click a title to open or fold it, or use <i>Expand all</i> /
+    <i>Collapse all</i> at the top; the browser remembers what you open. Inside <i>2 · Layout</i>, under the
+    algorithm and <i>Apply to</i>, <i>Weights &amp; 3D</i> (its title says what is on, such as <i>2D layout, no edge
+    weights</i>) and <i>Selected nodes</i> (the layout inside them) fold too, as do the Group Layout card's
+    <i>Force &amp; size</i> sliders; Layer Arrangement, Cross-Layer Alignment and Group Layout follow below. In <i>Single network</i> mode (top bar) the panel works the
     NORMA way: the layer section, the scope and the alignment are hidden, every layout applies to the whole network,
     and the <i>Groups</i> card — clusters or annotation terms, drawn as fog clouds or hulls, with pie charts for
     nodes in several groups — is the main tool. The Layout panel runs no clustering algorithm: communities are
@@ -1093,7 +1120,7 @@ const HELP_HTML = `
   <h2>Scene &amp; Camera</h2>
   <p class="help-lead">Axes, rotation, overlays, the background, layer arrangements and rendering performance.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/scene.png" alt="The Scene & Camera panel" loading="lazy">
-  <p>Four cards: <i>Axes &amp; rotation</i>, <i>Overlays</i> and <i>Background</i> start open; <i>Layer arrangement</i> (Multilayered mode) starts folded.</p>
+  <p>Four cards, all folded at first: <i>Axes &amp; rotation</i>, <i>Overlays</i>, <i>Layer arrangement</i> (Multilayered mode) and <i>Background</i>.</p>
   <ul>
     <li><i>Show Scene Coord System</i> shows the X (red), Y (green) and Z (blue) axes as arrows with tick marks and
       letters through the centre of the scene; <i>Scene axes opacity</i> fades them.</li>
@@ -1122,8 +1149,7 @@ const HELP_HTML = `
   <h3>Performance</h3>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/performance.png" alt="The Performance panel: presets, rendering, while moving, live stats" loading="lazy">
   <p class="last_p">
-    View → Performance tunes rendering for the network at hand; the <i>Rendering</i> and <i>While moving</i>
-    cards start folded. <i>Presets</i>: <i>Quality</i> (60 FPS, device
+    View → Performance tunes rendering for the network at hand; its four cards start folded. <i>Presets</i>: <i>Quality</i> (60 FPS, device
     resolution, smooth spheres), <i>Balanced</i> and <i>Fast</i> for large networks (15 FPS, 0.75× resolution,
     simple spheres, labels and inter-layer edges hidden while moving, navigator off). The individual options:
     <i>Frame rate</i> (15, 30 or 60 FPS); <i>Render resolution</i>, the pixel ratio the scene is drawn at — fewer
@@ -1139,11 +1165,20 @@ const HELP_HTML = `
   <h2>Edit → Nodes</h2>
   <p class="help-lead">Node labels and their style, node shapes and colour priority.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/nodes.png" alt="The Edit → Nodes panel" loading="lazy">
-  <p>Four cards: <i>Selection &amp; labels</i> and <i>Shape</i> start open, <i>Label style</i> and <i>Colours</i> folded.</p>
+  <p>Four cards, all folded at first: <i>Selection &amp; labels</i>, <i>Label style</i>, <i>Shape</i> and <i>Colours</i>.</p>
   <ul>
     <li><i>Select / Deselect all Nodes</i>. Selected nodes can be moved with the navigation table, laid out locally
       or rescaled by a metric.</li>
-    <li><i>Show Labels</i>: all, selected or none; <i>Resize Labels</i> sets their size.</li>
+    <li><i>Show Labels</i>: all, selected, <i>Chosen</i> or none; <i>Resize Labels</i> sets their size.
+      <i>Chosen</i> shows the labels you chose to keep on screen, whatever is selected later — and the selected
+      nodes' labels too while <i>and the selection's labels</i> is ticked. Choose them without the mouse: select
+      nodes with Find (names, comma-separated, or a regular expression) or a group, then <i>Show Labels of Selected
+      Nodes</i>; or tick <i>Label shown</i> in Edit → Attributes (every ticked row at once), set <i>Label shown</i>
+      in Edit → Style for a layer or all, use right-click → Selected nodes → <i>Show Their Labels</i> / <i>Hide
+      Their Labels</i>, or load a node attribute file with a <i>LabelShown</i> column (yes). Choosing labels while
+      Show Labels is on Selected or None switches it to Chosen (keeping the selection's labels when it was on
+      Selected). <i>Clear Chosen Labels</i> lets them all go. Each change is one undo step; sessions keep the chosen
+      labels and the Show Labels choice.</li>
     <li><i>Label Style</i>: colour, font (system, serif, monospace), bold, italic, a dark halo for light backgrounds,
       a background pill and opacity — applied to all node labels or to the labels of the layers selected in
       Layout, so each layer can read differently; undoable. Labels keep the theme colour until a colour is
@@ -1162,7 +1197,7 @@ const HELP_HTML = `
   <h2>Edit → Edges</h2>
   <p class="help-lead">Edge weights, direction, appearance, channels and edge bundling.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/edges.png" alt="The Edit → Edges panel" loading="lazy">
-  <p>Five cards: <i>Weights</i>, <i>Direction</i> and <i>Appearance</i> start open, <i>Bundling</i> and <i>Colours</i> folded.</p>
+  <p>Five cards, all folded at first: <i>Weights</i>, <i>Bundling</i>, <i>Direction</i>, <i>Appearance</i> and <i>Colours</i>.</p>
   <ul>
     <li><i>Hide Edges with Weight Below</i> filters weak edges (and weak channels of multi-channel edges) out of the
       view.</li>
@@ -1201,11 +1236,11 @@ const HELP_HTML = `
   <h2>Edit → Layers</h2>
   <p class="help-lead">Layer labels and axes, floors, 3D containers and restructuring layers.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/layers.png" alt="The Edit → Layers panel" loading="lazy">
-  <p>Five cards: <i>Labels &amp; axes</i>, <i>Shape &amp; container</i> and <i>Floor</i> start open, <i>Colours</i> and <i>Restructure</i> folded.</p>
+  <p>Five cards, all folded at first: <i>Labels &amp; axes</i>, <i>Shape &amp; container</i>, <i>Floor</i>, <i>Colours</i> and <i>Restructure</i>.</p>
   <ul>
     <li><i>Show Labels</i>: all, selected or no layer labels; <i>Resize Labels</i> sets their size.</li>
-    <li><i>Show Layer Coord Systems</i> shows each layer's own axes (arrows with ticks and letters at the layer's
-      centre, turning with it); <i>Layer axes opacity</i> fades them.</li>
+    <li><i>Layer Coord Systems</i>: <i>All</i>, <i>Selected</i> (the selected layers, following the selection) or <i>None</i> shows each layer's own axes (arrows with ticks and letters at the layer's
+      centre, turning with it); <i>Layer axes opacity</i> fades them. Layer selection → <i>Axes</i> shows or hides one layer's coordinate system at a time (no choice above is then marked); a layer keeps its axes through any change to its floor.</li>
     <li><i>Layer Shape</i> turns the selected layers (or all) into 3D containers — <i>Cube</i>, <i>Sphere</i> or
       <i>Fog cloud</i> (soft puffs of fog filling the volume, no hard boundary, as in NORMA) — or <i>None</i>, or back to a flat <i>Floor</i>. Nodes of a 3D layer
       are laid out in 3D inside it and kept inside spheres and cubes; layers are spaced so volumes don't overlap.</li>
@@ -1248,13 +1283,37 @@ const HELP_HTML = `
     around the node); size; proportions (width, height and depth: stretched along the floor's two sides and out of
     it, on top of the size; <i>Lock width, height and depth</i> keeps the three equal); shape (sphere, cube,
     diamond, cone, cylinder, tetrahedron and more); label (text in place of the node name); label colour and font
-    size (over the label style of Edit → Nodes); and description (shown when the pointer rests on the node, and by
-    right-click → Description). Every Set and Reset is one undo step.
+    size (over the label style of Edit → Nodes); label style; label position; and description (shown when the
+    pointer rests on the node, and by right-click → Description). Every Set and Reset is one undo step.
+  </p>
+  <p>
+    <b>Label style</b> makes labels read over any node, edge or background. <b>Halo is the default</b>: every
+    label has a thin rim against its colour unless it is given another style here (or the label style of Edit →
+    Nodes asks for its dark halo or background), in new networks, every theme and older sessions alike.
+    <i>Halo (outline)</i> draws a rim
+    around the letters (adjustable width), <i>Box</i> a rounded box behind them (adjustable opacity), <i>Shadow</i> a
+    soft shadow; <i>Bold</i> goes with any of them, and <i>Plain</i> is text alone. With <i>Auto</i> ticked the rim,
+    box or shadow takes a colour against the text — white around dark text (light themes), dark around light text
+    (dark themes); pick a colour to use your own. <b>Label position</b> puts the label right of the node (as
+    always), centred on it, above or below it — centred with a halo and bold gives the classic look of a label
+    sitting on its node. <i>Reset</i> hands a label back to the label style of Edit → Nodes. Image exports draw labels
+    with their style and position. Labels show as chosen in Edit → Nodes → <i>Show Labels</i>; <i>Label shown</i>
+    keeps the labels of the nodes in <i>Apply to</i> on screen (Show Labels: <i>Chosen</i>), whatever is selected.
+  </p>
+  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/label_styles.png" alt="Node labels with a bold halo, centred on their nodes, on the Light theme" loading="lazy">
+  <p>
+    <b>Colour labels by</b> colours the labels of the nodes in <i>Apply to</i>, leaving the nodes as they are:
+    one palette colour per layer, cluster or first annotation term (the theme's node or channel colours,
+    <i>Distinct</i>, <i>Okabe–Ito</i> or <i>Tol bright</i>, each made to read on the background), the node's own
+    colour (<i>Node colour</i>, darkened or lightened just enough to read on the background) or a colour that reads
+    on top of the node (<i>Contrast with node</i>: white on dark nodes, near-black on light ones; for centred labels).
+    The <i>Label colour</i> row sets one colour for them all. Each colouring is one undo step.
   </p>
   <p>
     <i>Colour by</i> colours nodes by layer,
     cluster, first annotation or degree, with a palette: <i>Distinct</i> (checked for colour-blind readers),
-    <i>Okabe–Ito</i> (the standard colour-blind-safe set) or, for degree, <i>Blues</i> / <i>Cividis</i> (colour-blind
+    <i>Okabe–Ito</i> (the standard colour-blind-safe set), <i>Tol bright</i> (Paul Tol's colour-blind-safe set) or,
+    for degree, <i>Blues</i> / <i>Cividis</i> (colour-blind
     optimised). Palettes have 8 colours; further groups are grey rather than repeating a colour. <i>Uploaded values</i>
     (after a values file) colours nodes by a column of that file: a sequential ramp, or a diverging blue–pale–red scale
     centred on zero when the column has values on both sides of it. Every colouring updates the legend.
@@ -1283,7 +1342,10 @@ const HELP_HTML = `
   <p>
     <b>Tables.</b> After Cytoscape's Node and Edge Tables: one row per node or per edge (<i>Nodes</i> / <i>Edges</i>
     at the top, with their counts). Nodes show their name, layer, colour, shape, size, opacity, label (text in place of
-    the name; empty shows the name) and description (shown on hover). Edges show their source, target, layers,
+    the name; empty shows the name), label colour (a faded swatch is the label style's colour; × takes a colour of
+    its own away), label style (<i>Auto</i>: the label style of Edit → Nodes; or plain, halo, box, shadow — picked
+    here, it keeps the node's rim colour, width and bold), label shown (kept on screen with Edit → Nodes → Show
+    Labels: <i>Chosen</i>, whatever is selected) and description (shown on hover). Edges show their source, target, layers,
     channels, colour, width (× the edge width of Edit → Edges), opacity (× the edge opacity), line type (solid,
     dashed, dotted) and arrow colour (a faded swatch follows the edge colour; × takes a colour of its own away).
     Every cell but the names, layers and channels is edited in place: pick a colour or a shape, or type a number or
@@ -1307,16 +1369,26 @@ const HELP_HTML = `
   <p>
     <b>Inspector.</b> Right-click a node → <i>Edit Attributes…</i>, Alt (Option) + double-click a node, or ⋯ at the end
     of a row opens a small card beside it with all its attributes: colour, shape, size, opacity, border (colour and
-    width; 0 is none), label, label colour and size (blank: as the label style of Edit → Nodes) and description.
+    width; 0 is none), label, label colour and size (blank: as the label style of Edit → Nodes), label style (with
+    the rim, box or shadow colour — × makes it automatic again —, the halo width or box opacity, and bold), label
+    shown, label position and description.
     Right-click an edge, away from its nodes → <i>Edit Edge Attributes…</i> for its colour, width, opacity, line type
     and arrow colour (<i>Select Edge</i> selects it). Each change is one undo step; drag the card by its title, Esc or
     × closes it, <i>Select</i> selects the node or edge and <i>Show in table</i> opens its row.
   </p>
-  <p class="last_p">
+  <p>
     <b>Export.</b> <i>Export node attributes</i> and <i>Export edge attributes</i> save tab-separated files in the
     node and edge attribute formats of the File tab, every node or edge with all its attributes (edges one row per
     channel); File → Node attributes / Edge attributes loads them back, onto the same network or another with the
-    same names and layers. Edit → Style sets the same properties for a layer, the selection or all, with palettes.
+    same names and layers. Node files carry <i>LabelStyle</i> (e.g. <code>halo #ffffff 3 bold</code>,
+    <code>box 0.6</code>, <code>plain</code>), <i>LabelPosition</i> (right, centre, above, below) and
+    <i>LabelShown</i> (yes for a chosen label) besides
+    <i>LabelColor</i>. Edit → Style sets the same properties for a layer, the selection or all, with palettes.
+  </p>
+  <p class="last_p">
+    <b>Label colours.</b> Above the node table, <i>Label colours</i> colours the labels of the ticked rows (or of
+    every row in the list when none is ticked) by layer, cluster or first annotation with a palette, from the node
+    colour, or against it, as in Edit → Style; one undo step.
   </p>
 </div>
 
@@ -1328,7 +1400,7 @@ const HELP_HTML = `
     <b>Statistics</b> (network statistics, layer and network comparison), <b>Plots</b> (distributions and plots of
     topological features), <b>Perturbation</b> (knockouts, attacks and robustness, propagation), <b>Explore</b>
     (selection tools and paths), <b>Annotations &amp; Groups</b> (STRING enrichment; the annotation sets, pies,
-    hulls and the group list are in the <b>Annotations</b> menu) and <b>Data Tables</b>, where their reports land. Metrics, Statistics, Plots and Perturbation work on
+    hulls, clouds and the group list are in View → Annotations) and <b>Data Tables</b>, where their reports land. Metrics, Statistics, Plots and Perturbation work on
     the layers ticked in Layer selection (every layer while none is), as their first line says.
   </p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/analyze.png" alt="The Metrics panel" loading="lazy">
@@ -1422,7 +1494,10 @@ const HELP_HTML = `
   <h3>Perturbation</h3>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/perturbation.png" alt="The Perturbation panel: a knockout of the top 5 nodes by degree, and the robustness curves of a degree attack and random failure" loading="lazy">
   <p>
-    Analyze → Perturbation has two cards. <i>Knock out</i> removes nodes — the selected nodes, nodes by name (every copy in the analysed layers), or the
+    Analyze → Perturbation has two cards, folded at first. Inside, the options fold too — <i>Knock out</i> into
+    <i>Nodes</i>, <i>Edges</i>, <i>Propagation</i> and <i>Scene &amp; reports</i> (opened for you once a knockout has
+    run), <i>Attack and robustness</i> into <i>Strategy</i> and <i>Steps</i> — while <i>Run Knockout</i> and
+    <i>Run Attack</i> stay in their card, and <i>Expand all</i> at the top opens everything. <i>Knock out</i> removes nodes — the selected nodes, nodes by name (every copy in the analysed layers), or the
     top <i>k</i> by degree, betweenness or PageRank, in the whole network or in each layer — with <i>Every copy
     across layers</i> all their copies too (a multiplex knockout); and edges — the selected edges, a channel, the
     inter-layer edges or a random share of them (the same share on every run). It works on the layers ticked in
@@ -1474,8 +1549,8 @@ const HELP_HTML = `
 
   <h3>Annotations &amp; Groups</h3>
   <p>
-    The annotation sets, pies, hulls, fog clouds and the group list have their own menu, <b>Annotations</b>, in the
-    top bar (see its page); <i>Open Annotations…</i> at the top of this panel goes there. The panel keeps the
+    The annotation sets, pies, hulls, clouds, 3D containers and the group list have their own panel, View →
+    Annotations (see its page); <i>Open Annotations…</i> at the top of this panel goes there. The panel keeps the
     enrichment: <i>Enrichment of Selected Nodes</i> sends the selected names to STRING's enrichment service (GO,
     KEGG, Reactome, WikiPathways) for the chosen organism; click a term to select its genes, or <i>Annotate Nodes
     with Top 5 Terms</i> to turn the results into an annotation set, shown as pies and hulls.
@@ -1516,33 +1591,35 @@ const HELP_HTML = `
     where they are found: <i>Within each layer</i>, over the <i>selected layers as one graph</i>, or <i>shared across
     layers by node name</i> (multiplex Leiden for Leiden, the label-merged graph for the others); it runs on the layers
     ticked in Layer selection, or on every layer while none is. In Single network mode the whole network is one graph.
-    The panel starts with the algorithm, the scope and the buttons in view; <i>How it works</i> under them folds the
-    longer notes away.
+    Both cards start folded; inside <i>Clustering</i>, <i>How it works</i> under the buttons folds the longer notes
+    away.
   </p>
   <p>
     <i>Find Communities</i> colours the nodes by community and fills Data Tables → Clustering Data. Under
     <i>Communities</i> the panel sums the result up — how many communities, over how many nodes, their sizes — and
-    lists the largest with their colour, size and the number of layers they span. <i>Save as Annotation Set</i>
+    lists the largest with their colour, size and the number of layers they span. Untick a community (or
+    <i>Show: None</i>, then tick the ones you want) to show only the chosen communities: the others' nodes and
+    edges fade and their shapes are not drawn; <i>Show: All</i> brings everything back, and the smaller communities
+    have their switches in View → Annotations → Groups. <i>Save as Annotation Set</i>
     turns them into annotation terms (<i>Cluster 1</i>, <i>Cluster 2</i>, …) kept as a set in the Networks menu, so
     pies, hulls, fog clouds, the Groups card and group layouts treat them like an annotation file. <i>Draw Around
-    Clusters…</i> opens the Annotations menu with a hull (or fog cloud) around every cluster and the clusters in its
-    group list. <i>Lay Out by
+    Clusters…</i> opens View → Annotations with a shape (a hull unless another is chosen) around every cluster and
+    the clusters in its group list. <i>Lay Out by
     Cluster…</i> opens Layout → <i>Group Layout (NORMA-2.0)</i> with the clusters as groups; layouts only use the
     communities, they never compute them. Every step is undoable.
   </p>
 </div>
 
 <div id="Annotations_tab" class="tabcontent">
-  <h2>Annotations</h2>
-  <p class="help-lead">Draw annotation groups and clusters in the scene: hulls or fog clouds around them, pies on the nodes, and the group list.</p>
+  <h2>View → Annotations</h2>
+  <p class="help-lead">Highlight annotation groups and clusters in the scene: a hull, outline, cloud or 3D container around each, pies on the nodes, and the group list.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/annotations.png" alt="The Annotations panel" loading="lazy">
   <p>
-    The <i>Annotations</i> menu (top bar, after Clustering) decides how annotation terms and clusters show on the
-    network. Groups come from a node attributes file with an <i>Annotation</i> column, a group file (File), an
+    View → Annotations decides how annotation terms and clusters are highlighted on the network. Groups come from a node attributes file with an <i>Annotation</i> column, a group file (File), an
     enrichment (Analyze → Annotations &amp; Groups), a STRING import, a saved session, or communities from the
-    Clustering panel. The panel has two cards, both open: <i>Show on the network</i> and <i>Groups</i>. Three links lead
+    Clustering panel. The panel has two cards: <i>Show on the network</i> and <i>Groups</i>. Three links lead
     here too: <i>Open Annotations…</i> in Analyze → Annotations &amp; Groups, <i>Annotation options…</i> in the
-    Networks menu, and <i>Draw Around Clusters…</i> in the Clustering panel, which also draws hulls around the clusters.
+    Networks menu, and <i>Draw Around Clusters…</i> in the Clustering panel, which also draws around the clusters.
   </p>
 
   <h3>Show on the network</h3>
@@ -1553,19 +1630,30 @@ const HELP_HTML = `
     bar shows the set on screen, switches, renames and deletes sets too, for any loaded network.
   </p>
   <p>
-    <i>Draw around</i> marks every cluster or annotation term on each layer (or <i>Nothing</i>), drawn as a translucent
-    <i>Hull</i> or, as in NORMA, a soft <i>Fog cloud</i> that follows the group's members (also in 3D layouts and sphere
-    layers). <i>Opacity</i> sets how solid the hulls are (fog clouds stay softer by the same proportion) and
-    <i>Padding</i> how far hulls and clouds reach beyond the members (1× is the usual margin, about three node radii).
-    They follow the nodes when a layout, a drag or an undo moves them. <i>Show Annotations as Pie Charts</i> draws
+    <i>Draw around</i> marks every cluster or annotation term on each layer (or <i>Nothing</i>). <i>Draw as</i>
+    chooses the shape, in the group's colour:
+  </p>
+  <ul>
+    <li><b>On the floor</b> — <i>Hull</i>, a translucent area around the members, or <i>Outline</i>, a band along its
+      edge that leaves the floor inside clear.</li>
+    <li><b>Soft</b> — <i>Fog cloud</i>, as in NORMA, a haze over the members that follows their shape, or
+      <i>Cloud</i>, a round cloud of soft puffs holding them (like a layer's cloud container, one per group).</li>
+    <li><b>3D container</b> — <i>Sphere</i>, <i>Ellipsoid</i> (fitted to the group's extent along each axis: a flat
+      lens on a flat layer) or <i>Box</i>, translucent with their outline drawn, holding every member.</li>
+  </ul>
+  <p>
+    The soft shapes and the 3D containers hold groups whole in 3D layouts and sphere, cube or cloud layers too.
+    <i>Opacity</i> sets how solid the shapes are (clouds and container walls stay softer by the same proportion) and
+    <i>Padding</i> how far they reach beyond the members (1× is the usual margin, about three node radii). They
+    follow the nodes when a layout, a drag or an undo moves them. <i>Show Annotations as Pie Charts</i> draws
     annotated nodes as pies with one slice per term. In Single network mode, the Layout panel's Group Layout card sets
-    the same drawing with <i>Draw groups as</i>. A saved session keeps all of this, and the groups whose hull is
+    the same drawing with <i>Draw groups as</i>. A saved session keeps all of this, and the groups whose shape is
     switched off in the Groups card.
   </p>
   <p>
-    The annotation options (pie charts, annotation hulls and fog clouds, annotations as groups or colours) are
+    The annotation options (pie charts, shapes around annotations, annotations as groups or colours) are
     disabled until the network carries annotations — from a node attributes or group file, a session, or an
-    enrichment's <i>Annotate Nodes with Top 5 Terms</i>; the card says so. Hulls around clusters need communities
+    enrichment's <i>Annotate Nodes with Top 5 Terms</i>; the card says so. Shapes around clusters need communities
     from the Clustering panel. The links under the card lead to Clustering, to the enrichment and to Layout →
     Group Layout, which pulls the groups apart.
   </p>
@@ -1573,9 +1661,11 @@ const HELP_HTML = `
   <h3>Groups</h3>
   <p>
     The <i>Groups</i> card lists every annotation term — from attribute or group files, or an enrichment — or every
-    cluster, as in NORMA: its colour (click the swatch to recolour the group, its pies and hulls), the number of
-    members (hover for the count per layer), a <i>hull</i> switch that draws or hides that group's hull or fog cloud,
-    and <i>select</i>. <i>Legend</i> shows the groups in the on-canvas legend; <i>Groups Table</i> and <i>Overlap
+    cluster, as in NORMA: its colour (click the swatch to recolour the group, its pies and shapes), the number of
+    members (hover for the count per layer), a <i>show</i> switch that draws or hides that group's shape (<i>Show: All</i> / <i>None</i> above the list switches every group that matches the filter at once — handy for the many terms a database import brings), and
+    <i>select</i>. With some groups switched off, the scene shows only the chosen ones: the nodes in none of the
+    groups still shown (and those in no group) fade, with the edges touching them, so <i>None</i> and then a tick or
+    two picks out a few groups. The Clustering panel's list of communities has the same switches, in step. <i>Legend</i> shows the groups in the on-canvas legend; <i>Groups Table</i> and <i>Overlap
     Table</i> (the Jaccard overlap of every pair of groups, with an UpSet plot of the members the groups share)
     open in Data Tables; <i>Collapse into Super Nodes</i>
     turns every group into one node per layer, sized by its members and coloured like the group, with member edges
@@ -1596,10 +1686,11 @@ const HELP_HTML = `
   <p>
     The Export panel (top menu) writes the current view and the network in the formats other tools read. It is
     five cards — <i>Image &amp; 3D</i>, <i>Cytoscape</i>, <i>Other tools</i>, <i>Visualizations</i>,
-    <i>Session</i> — click a title to open or fold one. Only <i>Image &amp; 3D</i> starts open. <i>Other tools</i>
+    <i>Session</i> — all folded at first; click a title to open or fold one. <i>Other tools</i>
     and <i>Visualizations</i> list one folded sub-section per tool, each with a one-line hint after its name:
     <i>GraphML &amp; MuxViz</i>, <i>NORMA</i>, <i>Flame</i>, <i>Cosmograph</i> and <i>UMAP view</i>; <i>Chord
-    diagram &amp; Circos</i>, <i>Heatmap &amp; matrix</i>, <i>Sankey</i> and <i>Gephi Lite &amp; STRING</i>.
+    diagram &amp; Circos</i>, <i>Gosling.js</i>, <i>NGCircos.js</i>, <i>CircosJS</i>, <i>JBrowse 2</i>,
+    <i>Heatmap &amp; matrix</i>, <i>Sankey</i> and <i>Gephi Lite &amp; STRING</i>.
     <i>Expand all</i> opens every card and sub-section, <i>Collapse all</i> folds them, and the browser remembers
     what you open.
   </p>
@@ -1643,6 +1734,39 @@ const HELP_HTML = `
     <a href="https://gephi.org/gephi-lite/" target="_blank">Gephi Lite</a>; <i>Open in STRING</i> shows the selected
     proteins (or all, up to 150) on the <a href="https://string-db.org" target="_blank">STRING</a> website for the
     chosen organism.
+  </p>
+  <p>
+    <b>Interactive circular views</b>, four alternatives to Circos that run in a browser. All four draw the layers
+    ticked in Layer selection (all if none) and the edges of the channels ticked for layouts (Layout page) and shown
+    in the scene, the layers as segments of a ring sized by their node counts, the nodes in order along them and the
+    node, layer and edge colours of the scene; above 3,000 edges the status line warns that the view may be slow,
+    and 20,000 is the limit. Names are escaped wherever a tool shows them as HTML.
+  </p>
+  <ul>
+    <li><b>Gosling.js</b> (<a href="https://gosling-lang.org" target="_blank">gosling-lang.org</a>): a spec of the
+      grammar's circular layout — the layers as a custom assembly, a ring of nodes, their degree as bars and the
+      edges as arcs within a layer and links between layers, coloured by channel, with zoom, tooltips and legends.
+      <i>Gosling spec (JSON)</i> carries the data inside; <i>Open in Gosling Editor</i> hosts the node and edge
+      tables on this server for one hour and opens the online editor with a spec that reads them.</li>
+    <li><b>NGCircos.js</b> (NG-Circos, Cui <i>et al.</i>, 2020): <i>NGCircos page (HTML)</i> loads the library from a
+      CDN and draws the layers as the genome, the nodes as coloured arcs, a histogram or heatmap ring of node degree
+      or of a File → Values column, and the edges as links (one LINK module per edge colour);
+      <i>NGCircos modules (JSON)</i> holds the genome, modules and settings for a page of your own.</li>
+    <li><b>CircosJS</b> (D3): <i>CircosJS page (HTML)</i> draws the layers as the layout, the nodes as a coloured
+      ring, the same choice of histogram or heatmap track and the edges as chords; <i>CircosJS data (JSON)</i> is
+      its layout, track and chord data. Both pages need a connection for the library.</li>
+    <li><b>JBrowse 2</b> (<a href="https://jbrowse.org/jb2/" target="_blank">jbrowse.org</a>): a genome browser,
+      so the network stands in for a genome — each layer a reference sequence of 2 bp per node, each edge a VCF
+      breakend (<code>SVTYPE=BND</code>) from the middle of one node to the other's, which the Circular View draws
+      as a chord in the edge's colour; the names, channel and weight are in the record's INFO. <i>Open in JBrowse
+      2</i> hosts the VCF and a config on this server for one hour and opens JBrowse Web on its Circular View;
+      <i>JBrowse 2 files (zip)</i> holds the config, the VCF, the layers as FASTA with its index and a README, for
+      JBrowse Web or Desktop. Characters a VCF sequence name cannot hold (spaces, <code>:</code>, brackets) become
+      <code>_</code>.</li>
+  </ul>
+  <p>
+    Tools on other sites read the hosted files only if they can reach this server: on a private network, use the
+    downloads instead.
   </p>
   <h3>Other tools</h3>
   <p>
@@ -1889,7 +2013,12 @@ webbrowser.open(r.json()["url"])</pre>
     [
       'annotationView',
       'object',
-      'How the annotation groups are drawn (Annotations menu): <code>source</code> (none, cluster or annotation), <code>style</code> (hull or fog), <code>opacity</code> (0.05–1), <code>padding</code> (0.25–3), <code>pies</code> (boolean) and <code>hidden</code> (the groups whose hull or fog cloud is off).',
+      'How the annotation groups are drawn (View → Annotations): <code>source</code> (none, cluster or annotation), <code>style</code> (hull, outline, fog, cloud, sphere, ellipsoid or box), <code>opacity</code> (0.05–1), <code>padding</code> (0.25–3), <code>pies</code> (boolean) and <code>hidden</code> (the groups whose shape is off).',
+    ],
+    [
+      'theme',
+      'object',
+      'The scene theme: <code>name</code> (a theme id such as <code>light</code> or <code>okabe</code>) and <code>applied</code> (whether its colours were applied to the network or it kept its own). Optional; without it the theme matching the background is shown.',
     ],
   ])}
   ${json({
