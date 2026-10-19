@@ -70,7 +70,7 @@ async function setup(page: Page) {
   await page.locator('#input_network_file').setInputFiles(FIGURE_2A)
   await expect(page.locator('#file_status')).toContainText('Loaded network')
   await tab(page, 'Layout')
-  await page.locator('#groupLayoutCard summary').click()
+  await page.locator('#groupLayoutCard > summary').click()
 }
 
 test('clusters as groups, then layers as groups (placed + angled)', async ({

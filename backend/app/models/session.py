@@ -29,6 +29,9 @@ class SessionImportResponse(BaseModel):
     # the network's name and its annotation set's name (Networks menu), when given
     name: str | None = None
     annotationSet: str | None = None
+    # how the annotation groups are drawn (Annotations menu): source, style,
+    # opacity, padding, pies, hidden (group names), when the session has it
+    annotationView: dict[str, Any] | None = None
     warnings: list[str] = []
 
 

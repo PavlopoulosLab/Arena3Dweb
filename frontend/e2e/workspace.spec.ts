@@ -128,10 +128,7 @@ test('annotation sets, group statistics and the statistics buttons open Data Tab
   await expect(page.locator('#file_status')).toContainText('1 groups applied')
   const gamma = await read(page)
 
-  await tab(page, 'Annotations & Groups')
-  await page
-    .locator('#annotation_card')
-    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
+  await tab(page, 'Annotations')
   await expect(page.locator('#annotationSet option')).toHaveCount(3)
   await expect(page.locator('#annotationSet')).toHaveValue('1')
   await page.locator('#annotationSet').selectOption('0')

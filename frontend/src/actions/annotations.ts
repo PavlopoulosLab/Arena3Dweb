@@ -3,6 +3,7 @@
 // groups, drawn per layer on the floor.
 
 import * as THREE from 'three'
+import type { AnnotationView } from '../api/client'
 import { ctx } from '../three'
 import { COLOR_VECTOR_280, SPHERE_RADIUS } from '../three/constants'
 import { registerAnimateHook } from './screen'
@@ -112,6 +113,10 @@ const hulls: { plane: THREE.Object3D; mesh: THREE.Object3D }[] = []
 let frame = 0
 // clearly wider than a node, so a tightly packed cluster still shows its hull
 const HULL_PAD = SPHERE_RADIUS * 3
+// the Annotations menu's Opacity and Padding (× HULL_PAD) of hulls and clouds
+export const HULL_OPACITY = 0.35
+let hullOpacity = HULL_OPACITY
+let hullPadding = 1
 
 // Andrew's monotone chain; points as [y, z] in the layer plane.
 export function convexHull(points: [number, number][]): [number, number][] {
@@ -235,13 +240,15 @@ function fogCloud(points: THREE.Vector3[], color: string): THREE.Group {
   for (const p of points) centre.add(p)
   centre.divideScalar(points.length)
   const spread = Math.max(...points.map((p) => p.distanceTo(centre)))
+  const pad = HULL_PAD * hullPadding
+  const dim = hullOpacity / HULL_OPACITY
   const puff = (at: THREE.Vector3, size: number, opacity: number) => {
     const sprite = new THREE.Sprite(
       new THREE.SpriteMaterial({
         map,
         color: tint,
         transparent: true,
-        opacity,
+        opacity: Math.min(1, opacity * dim),
         depthWrite: false,
       })
     )
@@ -250,10 +257,9 @@ function fogCloud(points: THREE.Vector3[], color: string): THREE.Group {
     sprite.renderOrder = 2
     group.add(sprite)
   }
-  puff(centre, 2 * spread + HULL_PAD * 4, 0.22)
+  puff(centre, 2 * spread + pad * 4, 0.22)
   const step = Math.max(1, Math.ceil(points.length / FOG_PUFFS))
-  for (let i = 0; i < points.length; i += step)
-    puff(points[i], HULL_PAD * 5, 0.3)
+  for (let i = 0; i < points.length; i += step) puff(points[i], pad * 5, 0.3)
   return group
 }
 
@@ -305,11 +311,11 @@ export function redrawHulls(): void {
         continue
       }
       const mesh = new THREE.Mesh(
-        hullGeometry(points, HULL_PAD),
+        hullGeometry(points, HULL_PAD * hullPadding),
         new THREE.MeshBasicMaterial({
           color: colors.get(key) ?? groupColor(key),
           transparent: true,
-          opacity: 0.35,
+          opacity: hullOpacity,
           side: THREE.DoubleSide,
           depthWrite: false,
         })
@@ -332,7 +338,43 @@ export function setHullStyle(style: HullStyle): void {
   redrawHulls()
 }
 
+// 0–1; a fog cloud scales its own (softer) opacities by the same amount
+export function setHullOpacity(opacity: number): void {
+  hullOpacity = opacity
+  redrawHulls()
+}
+
+// × the default margin around the members
+export function setHullPadding(padding: number): void {
+  hullPadding = padding
+  redrawHulls()
+}
+
 export const hullCount = () => hulls.length
+
+// How the groups are drawn, for the session file (actions/session.ts)
+export function annotationView(): AnnotationView {
+  return {
+    source: hullSource,
+    style: hullStyle,
+    opacity: hullOpacity,
+    padding: hullPadding,
+    pies: piesOn,
+    hidden: [...hiddenGroups],
+  }
+}
+
+// A loading session's drawing settings wait for the new scene: the reset on
+// network:loaded clears the hidden groups (ui/annotations.ts applies them).
+let pendingView: AnnotationView | null = null
+export function stashAnnotationView(view?: AnnotationView | null): void {
+  pendingView = view ?? null
+}
+export function takeAnnotationView(): AnnotationView | null {
+  const view = pendingView
+  pendingView = null
+  return view
+}
 
 // Nodes move (layouts, drags, undo): check a few times a second while on,
 // and rebuild only when positions changed — a fog cloud is hundreds of

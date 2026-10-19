@@ -176,6 +176,38 @@ def _label(value: Any, limit: int = 200) -> str | None:
     return text or None
 
 
+# Annotations menu: what the groups are drawn around, and how
+HULL_SOURCES = ("none", "cluster", "annotation")
+HULL_STYLES = ("hull", "fog")
+MAX_HIDDEN_GROUPS = 1000
+
+
+def _annotation_view(value: Any) -> dict[str, Any] | None:
+    """How the annotation groups are drawn (Draw around, Draw as, Opacity,
+    Padding, pie charts, the groups whose hull is switched off), each part
+    falling back to its default when unreadable; None when the session has no
+    such block, so older sessions load as before."""
+    if not isinstance(value, dict):
+        return None
+    opacity = _number(value.get("opacity"), 0.05, 1)
+    padding = _number(value.get("padding"), 0.25, 3)
+    hidden = value.get("hidden")
+    # names kept as written: they must match the nodes' terms and clusters
+    groups = (
+        [h for h in hidden if isinstance(h, str) and h.strip() and len(h) <= 500]
+        if isinstance(hidden, list)
+        else []
+    )
+    return {
+        "source": value.get("source") if value.get("source") in HULL_SOURCES else "none",
+        "style": value.get("style") if value.get("style") in HULL_STYLES else "hull",
+        "opacity": 0.35 if opacity is None else opacity,
+        "padding": 1.0 if padding is None else padding,
+        "pies": value.get("pies") is True,
+        "hidden": list(dict.fromkeys(groups))[:MAX_HIDDEN_GROUPS],
+    }
+
+
 def _hex(value: Any) -> str | None:
     """A #rrggbb colour, or None."""
     return value if isinstance(value, str) and re.fullmatch(r"#[0-9a-fA-F]{6}", value) else None
@@ -296,5 +328,6 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
         "hive": _hive(data.get("hive")),
         "name": _label(data.get("name")),
         "annotationSet": _label(data.get("annotationSet")),
+        "annotationView": _annotation_view(data.get("annotationView")),
         "warnings": warnings,
     }

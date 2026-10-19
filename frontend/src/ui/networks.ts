@@ -3,7 +3,7 @@
 // network, a set, or both at once; rename either (✎) or delete either (×).
 // The menu's button says what is on screen at a glance. Everything goes
 // through the workspace actions (the same as File → Loaded networks and
-// Analyze → Annotations & Groups, which use the rename and delete helpers below).
+// the Annotations menu, which use the rename and delete helpers below).
 
 import { Collapse, Dropdown } from 'bootstrap'
 import { bus } from '../bus'
@@ -97,12 +97,12 @@ export function networksMenuHtml(rows: SlotRow[]): string {
     ${rows.length ? `<div class="networks-list">${rows.map(rowHtml).join('')}</div>` : ''}
     <div class="networks-foot">
       <button type="button" class="networks-link" data-go="#panel-file">Load another network…</button>
-      ${rows.length ? '<button type="button" class="networks-link" data-go="#panel-annotations">Annotation options…</button>' : ''}
+      ${rows.length ? '<button type="button" class="networks-link" data-go="#panel-annotation-view">Annotation options…</button>' : ''}
     </div>`
 }
 
 // ---------------------------------------------------------------- rename, delete
-// shared with File → Loaded networks and Analyze → Annotations & Groups
+// shared with File → Loaded networks and the Annotations menu
 
 const rowOf = (id: number) => describeSlots().find((r) => r.id === id)
 
@@ -243,8 +243,8 @@ export function initNetworksMenu(): void {
     else if (cls.contains('networks-set')) pick(id, set)
     else if (target.dataset.go) {
       showTab(target.dataset.go)
-      if (target.dataset.go === '#panel-annotations') {
-        const card = document.getElementById('annotation_card')
+      if (target.dataset.go === '#panel-annotation-view') {
+        const card = document.getElementById('annCard_show')
         if (card instanceof HTMLDetailsElement) card.open = true
         card?.scrollIntoView({ block: 'nearest' })
       }

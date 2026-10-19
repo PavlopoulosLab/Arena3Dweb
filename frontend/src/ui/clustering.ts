@@ -22,6 +22,8 @@ import { escapeHtml } from '../utils'
 import { PROGRESS_HTML, ProgressBar } from './progress'
 import { selectedChannels } from './layouts'
 import { showTab } from './tabs'
+import { FOLD_ALL_HTML } from './sections'
+import { openAnnotationPanel } from './annotation_panel'
 
 type ClusterScope = 'perLayer' | 'allLayers' | 'coupled'
 
@@ -41,9 +43,9 @@ const LISTED = 12 // communities listed in the summary, largest first
 
 const HTML = `
 <div class="col-md-8 col-lg-6 layout-panel clustering-panel">
+  ${FOLD_ALL_HTML}
   <details class="lp-section lp-more" id="clusterCard_run" open>
     <summary>Clustering</summary>
-    <div class="form-text mt-0 mb-2">Find communities without moving the nodes: they colour the nodes, fill Data Tables → Clustering Data, and can be saved as an annotation set for pies, hulls, fog clouds and the Layout panel's Group Layout card — like an annotation file.</div>
     <div class="lp-grid mb-2">
       <div>
         <label class="form-label small" for="clusterAlgorithm">Algorithm</label>
@@ -58,7 +60,6 @@ const HTML = `
         </select>
       </div>
     </div>
-    <div class="form-text mt-0 mb-2" data-multilayer-only>Runs on the layers ticked in Layer selection (every layer while none is). Leiden shared across layers is multiplex Leiden.</div>
     <div class="form-text mt-0 mb-2" data-single-only>Runs on the whole network, as one graph.</div>
     <div class="d-flex flex-wrap align-items-center gap-2">
       <button id="runClustering" class="btn btn-primary btn-sm">Find Communities</button>
@@ -66,6 +67,11 @@ const HTML = `
     </div>
     ${PROGRESS_HTML('clusterProgress', 'Clustering progress')}
     <div id="cluster_status" class="small mt-2"></div>
+    <details class="lp-more lp-sub mt-2" id="clusterSub_about">
+      <summary>How it works<span class="lp-hint">layers used, and where communities go</span></summary>
+      <div class="form-text mt-0 mb-2">Finds communities without moving the nodes: they colour the nodes, fill Data Tables → Clustering Data, and can be saved as an annotation set for pies, hulls, fog clouds and the Layout panel's Group Layout card — like an annotation file.</div>
+      <div class="form-text mt-0" data-multilayer-only>Runs on the layers ticked in Layer selection (every layer while none is). Leiden shared across layers is multiplex Leiden.</div>
+    </details>
   </details>
 
   <details class="lp-section lp-more" id="clusterCard_communities" open>
@@ -73,6 +79,7 @@ const HTML = `
     <div id="clusterSummary" class="small"></div>
     <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
       <button id="clustersToGroupLayout" class="btn btn-outline-primary btn-sm" disabled title="Layout → Group Layout (NORMA-2.0), with the clusters as groups">Lay Out by Cluster…</button>
+      <button id="clustersToHulls" class="btn btn-outline-primary btn-sm" disabled title="Annotations menu: a hull or fog cloud around every cluster, and the cluster list with colours">Draw Around Clusters…</button>
     </div>
   </details>
 </div>
@@ -132,6 +139,7 @@ function renderSummary(): void {
   const clustered = list.reduce((s, c) => s + c.size, 0)
   el<HTMLButtonElement>('clustersToAnnotations').disabled = clustered === 0
   el<HTMLButtonElement>('clustersToGroupLayout').disabled = clustered === 0
+  el<HTMLButtonElement>('clustersToHulls').disabled = clustered === 0
   const out = el('clusterSummary')
   if (clustered === 0) {
     out.textContent =
@@ -218,10 +226,14 @@ export function initClusteringPanel(): void {
       `${lastRun?.algorithm ?? el<HTMLSelectElement>('clusterAlgorithm').value} clusters`
     )
     status(
-      'The clusters are now an annotation set: pies, hulls, fog clouds and the Group Layout card use them.'
+      'The clusters are now an annotation set: the Annotations menu draws them as pies, hulls or fog clouds, and the Group Layout card uses them.'
     )
   })
   // Layouts use the clusters: the Group Layout card, with the clusters as groups
+  // the scene draws them: hulls or fog clouds in the Annotations menu
+  el('clustersToHulls').addEventListener('click', () =>
+    openAnnotationPanel('cluster')
+  )
   el('clustersToGroupLayout').addEventListener('click', () => {
     showTab('#panel-layouts')
     const card = document.getElementById(

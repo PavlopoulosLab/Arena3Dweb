@@ -22,10 +22,7 @@ test('pies, annotation hulls and annotation groups follow the data', async ({
     .setInputFiles(path.resolve('public/data/figure2A_data.tsv'))
   await expect(page.locator('#file_status')).toContainText('Loaded network')
 
-  await tab(page, 'Annotations & Groups')
-  await page
-    .locator('#annotation_card')
-    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
+  await tab(page, 'Annotations')
   await expect(page.locator('#showPies')).toBeDisabled()
   await expect(page.locator('#hull_annotation')).toBeDisabled()
   await expect(page.locator('#hull_cluster')).toBeEnabled()
@@ -50,7 +47,7 @@ test('pies, annotation hulls and annotation groups follow the data', async ({
     buffer: Buffer.from('Alpha\t1, 2, 3\nBeta\t3;4;5;6\n'),
   })
   await expect(page.locator('#file_status')).toContainText('2 groups applied')
-  await tab(page, 'Annotations & Groups')
+  await tab(page, 'Annotations')
   await expect(page.locator('#showPies')).toBeEnabled()
   await expect(page.locator('#hull_annotation')).toBeEnabled()
   await expect(page.locator('#annotationsNote')).toBeHidden()
@@ -66,7 +63,7 @@ test('pies, annotation hulls and annotation groups follow the data', async ({
     .locator('#input_network_file')
     .setInputFiles(path.resolve('public/data/figure2B_data.tsv'))
   await expect(page.locator('#file_status')).toContainText('Loaded network')
-  await tab(page, 'Annotations & Groups')
+  await tab(page, 'Annotations')
   await expect(page.locator('#showPies')).toBeDisabled()
   await expect(page.locator('#hull_none')).toBeChecked()
 })

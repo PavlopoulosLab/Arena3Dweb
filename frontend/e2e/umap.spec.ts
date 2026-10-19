@@ -110,9 +110,12 @@ test('Topology UMAP layout (undoable) and the UMAP view in Export → Other tool
   expect(await positions(page)).toEqual(before)
 
   await tab(page, 'Export')
+  // Other tools, and its UMAP view and Cosmograph sub-sections
   await page
-    .locator('#exportCard_tools')
-    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
+    .locator('#exportCard_tools, #exportSub_umap, #exportSub_cosmograph')
+    .evaluateAll((ds) =>
+      ds.forEach((d) => ((d as HTMLDetailsElement).open = true))
+    )
   await expect(page.locator('#umapxMode')).toHaveValue('topology')
   const csv = (
     await readFile(await exportFile(page, '#export_umap_csv'), 'utf8')

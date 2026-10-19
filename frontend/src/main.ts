@@ -31,6 +31,7 @@ import { initAttributesPanel } from './ui/attributes'
 import { initInspector } from './ui/inspector'
 import { initAnalyzePanel } from './ui/analyze'
 import { initClusteringPanel } from './ui/clustering'
+import { initAnnotationPanel } from './ui/annotation_panel'
 import { initFpsPanel } from './ui/fps'
 import { initDataPanel } from './ui/data'
 import { initHelpPanel } from './ui/help'
@@ -89,6 +90,7 @@ async function main(): Promise<void> {
   initInspector()
   initAnalyzePanel()
   initClusteringPanel()
+  initAnnotationPanel()
   initMenuAutoClose()
   initNetworksMenu()
   initFpsPanel()

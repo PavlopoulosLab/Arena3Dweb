@@ -1,6 +1,7 @@
-// "Annotations & Enrichment" card of Analyze → Annotations & Groups — PLAN-ROADMAP
-// Phase 6. Pie-chart nodes, convex hulls per cluster/annotation, and STRING
-// functional enrichment of the selected nodes (results can annotate nodes).
+// Annotations — PLAN-ROADMAP Phase 6. The Annotations menu's main card:
+// annotation sets, pie-chart nodes, hulls or fog clouds per cluster/annotation;
+// and the Enrichment card of Analyze → Annotations & Groups: STRING functional
+// enrichment of the selected nodes (results can annotate nodes).
 
 import { api, type EnrichedTerm } from '../api/client'
 import {
@@ -13,12 +14,18 @@ import { ctx } from '../three'
 import { escapeHtml } from '../utils'
 import { askDeleteSet, renameSet } from './networks'
 import { selectNodesByName, unselectAllNodes } from '../actions/node'
+import type { AnnotationView } from '../api/client'
 import {
   groupColor,
+  HULL_OPACITY,
   resetAnnotationOverlays,
+  setGroupHidden,
+  setHullOpacity,
+  setHullPadding,
   setHullSource,
   setHullStyle,
   showAnnotationPies,
+  takeAnnotationView,
   type HullSource,
   type HullStyle,
 } from '../actions/annotations'
@@ -34,24 +41,24 @@ const SPECIES: [number, string][] = [
   [3702, 'Arabidopsis'],
 ]
 
-export const ANNOTATIONS_HTML = `
-<details id="annotation_card" class="lp-section lp-more" open>
-  <summary>Annotations &amp; Enrichment</summary>
-  <div class="mt-2">
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-      <label class="form-label small m-0" for="annotationSet">Annotation set</label>
-      <select id="annotationSet" class="form-select form-select-sm" style="width:auto" aria-label="Annotation set"><option value="-1">(none)</option></select>
-      <button type="button" id="annotationSetRename" class="btn btn-outline-secondary btn-sm" title="Rename the annotation set shown" disabled>Rename</button>
-      <button type="button" id="annotationSetDelete" class="btn btn-outline-secondary btn-sm" title="Delete the annotation set shown" disabled>Delete</button>
-      <span class="form-text m-0">every attribute or group file, enrichment or cluster run is kept; switch between them</span>
-    </div>
-    <div class="form-check mb-2">
-      <input class="form-check-input" type="checkbox" id="showPies" />
-      <label class="form-check-label" for="showPies">Show Annotations as Pie Charts</label>
-    </div>
-    <div id="annotationsNote" class="form-text mb-2 d-none">No annotations in this network: upload a node attributes or group file (File), or annotate nodes from an enrichment below. The annotation options are off until then.</div>
-    <label class="form-label">Hulls Around:</label>
-    <div class="mb-3">
+// The Annotations menu's main card (ui/annotation_panel.ts): which set or
+// clustering the scene shows, and how — hulls or fog clouds, their opacity
+// and padding, pies. The Layout panel's Group Layout card keeps its radios in step.
+export const ANNOTATION_VIEW_HTML = `
+<details id="annCard_show" class="lp-section lp-more" open>
+  <summary>Show on the network</summary>
+  <div class="form-text mt-0 mb-2">Draws the groups in the scene: a hull or a fog cloud around every annotation term or cluster on each layer, and pie charts on the annotated nodes.</div>
+  <label class="form-label small" for="annotationSet">Annotation set</label>
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+    <select id="annotationSet" class="form-select form-select-sm" style="width:auto" aria-label="Annotation set"><option value="-1">(none)</option></select>
+    <button type="button" id="annotationSetRename" class="btn btn-outline-secondary btn-sm" title="Rename the annotation set shown" disabled>Rename</button>
+    <button type="button" id="annotationSetDelete" class="btn btn-outline-secondary btn-sm" title="Delete the annotation set shown" disabled>Delete</button>
+  </div>
+  <div class="form-text mt-0 mb-2">Every attribute or group file, enrichment or cluster run is kept; switch between them.</div>
+  <div id="annotationsNote" class="form-text mb-2 d-none">No annotations in this network: upload a node attributes or group file (File), or annotate nodes from an enrichment (Analyze → Annotations &amp; Groups). The annotation options are off until then.</div>
+  <div class="lp-grid mb-2" style="align-items: start">
+    <div role="radiogroup" aria-label="Draw around">
+      <div class="form-label small">Draw around</div>
       ${(
         [
           ['none', 'Nothing'],
@@ -61,24 +68,48 @@ export const ANNOTATIONS_HTML = `
       )
         .map(
           ([v, l]) => `
-      <div class="form-check form-check-inline">
+      <div class="form-check">
         <input class="form-check-input" type="radio" name="hullSource" id="hull_${v}" value="${v}" ${v === 'none' ? 'checked' : ''} />
         <label class="form-check-label" for="hull_${v}">${l}</label>
       </div>`
         )
         .join('')}
-      <div class="mt-1">
-        <span class="small me-2">Draw as:</span>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="hullStyle" id="hullStyle_hull" value="hull" checked />
-          <label class="form-check-label" for="hullStyle_hull">Hull</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="hullStyle" id="hullStyle_fog" value="fog" />
-          <label class="form-check-label" for="hullStyle_fog">Fog cloud</label>
-        </div>
+    </div>
+    <div role="radiogroup" aria-label="Draw as">
+      <div class="form-label small">Draw as</div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="hullStyle" id="hullStyle_hull" value="hull" checked />
+        <label class="form-check-label" for="hullStyle_hull">Hull</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="hullStyle" id="hullStyle_fog" value="fog" />
+        <label class="form-check-label" for="hullStyle_fog">Fog cloud</label>
       </div>
     </div>
+  </div>
+  <div class="lp-grid mb-2">
+    <div>
+      <label class="form-label small mb-0" for="hullOpacity">Opacity: <span id="hullOpacityValue">${HULL_OPACITY.toFixed(2)}</span></label>
+      <input type="range" class="form-range" id="hullOpacity" min="0.05" max="1" step="0.05" value="${HULL_OPACITY}" />
+    </div>
+    <div>
+      <label class="form-label small mb-0" for="hullPadding">Padding: <span id="hullPaddingValue">1.00</span>×</label>
+      <input type="range" class="form-range" id="hullPadding" min="0.25" max="3" step="0.25" value="1" />
+    </div>
+  </div>
+  <div class="form-check form-switch mb-2">
+    <input class="form-check-input" type="checkbox" role="switch" id="showPies" />
+    <label class="form-check-label" for="showPies">Show Annotations as Pie Charts</label>
+  </div>
+  <div class="form-text mb-0">Communities come from <a href="#" data-ann-go="#panel-clustering">Clustering</a>, terms from an enrichment in <a href="#" data-ann-go="#panel-annotations">Analyze → Annotations &amp; Groups</a>; <a href="#" data-ann-go="#panel-layouts">Layout → Group Layout</a> pulls the groups apart.</div>
+</details>
+`
+
+// "Enrichment" card of Analyze → Annotations & Groups
+export const ANNOTATIONS_HTML = `
+<details id="annotation_card" class="lp-section lp-more" open>
+  <summary>Enrichment (STRING)</summary>
+  <div class="mt-2">
     <label class="form-label" for="enrichSpecies">Enrichment of Selected Nodes (STRING):</label>
     <div class="d-flex gap-2 mb-2">
       <select id="enrichSpecies" class="form-select form-select-sm">${SPECIES.map(([t, n]) => `<option value="${t}">${n}</option>`).join('')}</select>
@@ -237,6 +268,41 @@ export function syncAnnotationControls(): void {
   }
 }
 
+// A saved session's drawing settings: the controls show them and the scene
+// draws them. Without annotations the annotation choices fall back, as above.
+function restoreAnnotationView(view: AnnotationView): void {
+  const input = (id: string) =>
+    document.getElementById(id) as HTMLInputElement | null
+  const on = hasAnnotations()
+  const source = view.source === 'annotation' && !on ? 'none' : view.source
+  const pies = view.pies && on
+  for (const [id, checked] of [
+    [`hull_${source}`, true],
+    [`hullStyle_${view.style}`, true],
+    ['showPies', pies],
+    ['groupPies', pies],
+  ] as const) {
+    const el = input(id)
+    if (el) el.checked = checked
+  }
+  for (const [id, value] of [
+    ['hullOpacity', view.opacity],
+    ['hullPadding', view.padding],
+  ] as const) {
+    const el = input(id)
+    if (el) el.value = String(value)
+    const shown = document.getElementById(`${id}Value`)
+    if (shown) shown.textContent = value.toFixed(2)
+  }
+  setHullSource('none') // nothing to redraw while the rest is set
+  for (const key of view.hidden) setGroupHidden(key, true)
+  setHullStyle(view.style)
+  setHullOpacity(view.opacity)
+  setHullPadding(view.padding)
+  showAnnotationPies(pies)
+  setHullSource(source)
+}
+
 // the stored annotation sets of the active network, newest first
 function syncAnnotationSets(): void {
   const select = document.getElementById(
@@ -305,6 +371,25 @@ export function initAnnotations(): void {
     radio.addEventListener('change', () =>
       setHullStyle(radio.value as HullStyle)
     )
+  for (const [id, set] of [
+    ['hullOpacity', setHullOpacity],
+    ['hullPadding', setHullPadding],
+  ] as const)
+    document.getElementById(id)?.addEventListener('input', (e) => {
+      const value = Number((e.target as HTMLInputElement).value)
+      const shown = document.getElementById(`${id}Value`)
+      if (shown) shown.textContent = value.toFixed(2)
+      set(value)
+    })
+  bus.on('network:loaded', resetAnnotationOverlays)
+  // after the reset, and before the Groups card lists the hull switches
+  bus.on('network:loaded', () => {
+    const view = takeAnnotationView()
+    if (view) restoreAnnotationView(view)
+  })
+}
+
+export function initEnrichment(): void {
   document.getElementById('runEnrichment')?.addEventListener('click', () => {
     void onRunEnrichment()
   })
@@ -314,6 +399,5 @@ export function initAnnotations(): void {
   bus.on('network:loaded', () => {
     results = []
     renderResults()
-    resetAnnotationOverlays()
   })
 }

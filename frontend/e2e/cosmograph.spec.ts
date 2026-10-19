@@ -42,9 +42,12 @@ test('Cosmograph CSVs and the Open in Cosmograph link', async ({ page }) => {
     return { nodes: a.nodeObjects.length, edges: a.edgeObjects.length }
   })
   await tab(page, 'Export')
+  // Other tools, and its Cosmograph sub-section
   await page
-    .locator('#exportCard_tools')
-    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
+    .locator('#exportCard_tools, #exportSub_cosmograph')
+    .evaluateAll((ds) =>
+      ds.forEach((d) => ((d as HTMLDetailsElement).open = true))
+    )
 
   const links = (
     await readFile(await exportFile(page, '#export_cosmograph_links'), 'utf8')

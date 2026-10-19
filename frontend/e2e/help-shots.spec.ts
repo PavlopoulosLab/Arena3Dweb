@@ -191,9 +191,10 @@ test('capture the interface screenshots for the Help pages', async ({
     await page.locator('#nodeSearchMode').selectOption('regex')
     await page.locator('#nodeSearchButton').click()
   })
+  // the cards open, their tools listed (sub-sections folded)
   await panel(page, 'Export', '#panel-export', 'export', async () => {
     await page
-      .locator('#panel-export details')
+      .locator('#panel-export details.lp-section')
       .evaluateAll((ds) =>
         ds.forEach((d) => ((d as HTMLDetailsElement).open = true))
       )
@@ -216,23 +217,7 @@ test('capture the interface screenshots for the Help pages', async ({
   // untick them again: the 3D view shot shows no selection
   await page.locator('#attrNodeTickAll').uncheck()
   await page.locator('#attrNodeSelectedOnly').uncheck()
-
-  // the navigation controls box (#info) in full, then the 3D view at a
-  // usual window size
-  await tab(page, '3D View')
-  await page.waitForTimeout(1500)
-  await page.locator('#info').screenshot({ path: `${OUT}/navcontrols.png` })
-  await page.setViewportSize({ width: 1440, height: 900 })
-  await page.waitForTimeout(1200)
-  await page.screenshot({ path: `${OUT}/view.jpg`, type: 'jpeg', quality: 90 })
-  await page.setViewportSize({ width: 1440, height: 1500 })
-
-  // a session with annotations fills the Groups card and the tables
-  await session(page, 'covid19_3d_network.json')
-  await expect(page.locator('#panel-main-view')).toHaveClass(/active/)
-  await page.waitForTimeout(3000)
-  await panel(page, 'Metrics', '#panel-metrics', 'analyze')
-  // a degree histogram, each layer overlaid, with its summary table
+  // a degree histogram, the four layers overlaid, with its summary table
   await panel(page, 'Plots', '#panel-plots', 'plots', async () => {
     await page.locator('#plotKind').selectOption('histogram')
     await page.locator('#plotSource').selectOption('metric:Degree')
@@ -242,16 +227,16 @@ test('capture the interface screenshots for the Help pages', async ({
       { timeout: 60_000 }
     )
   })
-  await panel(page, 'Data Tables', '#panel-data', 'data')
-  await panel(page, 'Performance', '#panel-fps', 'performance')
   // the top 5 nodes by degree knocked out, and a degree attack against
-  // random failure on the robustness chart
+  // random failure on the robustness chart; with both cards open the panel
+  // is taller than the window
   await panel(
     page,
     'Perturbation',
     '#panel-perturbation',
     'perturbation',
     async () => {
+      await page.setViewportSize({ width: 1440, height: 1900 })
       await page.locator('#koNodes').selectOption('top')
       await page.locator('#runKnockout').click()
       await expect(page.locator('#perturb_status')).toContainText(
@@ -268,10 +253,29 @@ test('capture the interface screenshots for the Help pages', async ({
       await expect(attack).toContainText('random failure', { timeout: 120_000 })
     }
   )
-  // the nodes as they were, for the Clustering shot
+  await page.setViewportSize({ width: 1440, height: 1500 })
+  // the nodes as they were, for the 3D view shot
   await page.locator('#koRestore').click()
-  // last, as it recolours the nodes: communities found, so the panel shows
-  // its summary
+
+  // the navigation controls box (#info) in full, then the 3D view at a
+  // usual window size
+  await tab(page, '3D View')
+  await page.waitForTimeout(1500)
+  await page.locator('#info').screenshot({ path: `${OUT}/navcontrols.png` })
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.waitForTimeout(1200)
+  await page.screenshot({ path: `${OUT}/view.jpg`, type: 'jpeg', quality: 90 })
+  await page.setViewportSize({ width: 1440, height: 1500 })
+
+  // a session with annotations fills the Groups card and the tables
+  await session(page, 'covid19_3d_network.json')
+  await expect(page.locator('#panel-main-view')).toHaveClass(/active/)
+  await page.waitForTimeout(3000)
+  await panel(page, 'Metrics', '#panel-metrics', 'analyze')
+  await panel(page, 'Data Tables', '#panel-data', 'data')
+  await panel(page, 'Performance', '#panel-fps', 'performance')
+  // at the end, as it recolours the nodes: communities found, so the panel
+  // shows its summary
   await panel(
     page,
     'Clustering',
@@ -283,6 +287,19 @@ test('capture the interface screenshots for the Help pages', async ({
         'nodes coloured by community',
         { timeout: 60_000 }
       )
+    }
+  )
+  // the communities kept as an annotation set, drawn as fog clouds, and the
+  // group list
+  await page.locator('#clustersToAnnotations').dispatchEvent('click')
+  await panel(
+    page,
+    'Annotations',
+    '#panel-annotation-view',
+    'annotations',
+    async () => {
+      await page.locator('#hull_annotation').check()
+      await page.locator('#hullStyle_fog').check()
     }
   )
 })

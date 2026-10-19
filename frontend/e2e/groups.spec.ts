@@ -63,7 +63,7 @@ test('group file → Groups card → hulls, colours, selection, tables, super no
   const before = await read(page)
   expect(before.annotated).toBeGreaterThan(0)
 
-  await tab(page, 'Annotations & Groups')
+  await tab(page, 'Annotations')
   await page
     .locator('#groups_card')
     .evaluate((d) => ((d as HTMLDetailsElement).open = true))
@@ -71,9 +71,6 @@ test('group file → Groups card → hulls, colours, selection, tables, super no
   await expect(rows).toHaveCount(2)
   await expect(rows.first().locator('.group-name')).toHaveText('Beta') // larger first
   // hulls: Beta hidden → fewer hulls
-  await page
-    .locator('#annotation_card')
-    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
   await page.locator('#hull_annotation').dispatchEvent('click')
   await page.waitForTimeout(300)
   const withHulls = (await read(page)).hulls
@@ -105,11 +102,11 @@ test('group file → Groups card → hulls, colours, selection, tables, super no
   await page.locator('#groupsOverlap').dispatchEvent('click')
   await expect(page.locator('#dataPane-groupOverlap table')).toBeVisible()
   await expect(page.locator('#dataPane-groupOverlap tbody tr')).toHaveCount(2)
-  await tab(page, 'Annotations & Groups')
+  await tab(page, 'Annotations')
   await page.locator('#groupsTable').dispatchEvent('click')
   await expect(page.locator('#dataPane-groups tbody tr')).toHaveCount(2)
   // super nodes: Alpha/Beta per layer + ungrouped nodes; undo restores
-  await tab(page, 'Annotations & Groups')
+  await tab(page, 'Annotations')
   await page.locator('#groupsCollapse').dispatchEvent('click')
   await expect(page.locator('#groups_status')).toContainText('super nodes')
   const collapsed = await read(page)

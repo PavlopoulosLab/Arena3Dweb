@@ -81,6 +81,7 @@ const HELP_HTML = `
   <button class="tablinks" data-help-tab="Navigation_tab">3D View &amp; Navigation</button>
   <button class="tablinks" data-help-tab="Layouts_tab">Layout</button>
   <button class="tablinks" data-help-tab="Clustering_tab">Clustering</button>
+  <button class="tablinks" data-help-tab="Annotations_tab">Annotations</button>
   <button class="tablinks" data-help-tab="Scene_tab">Scene &amp; Camera</button>
   <button class="tablinks" data-help-tab="Node_tab">Edit → Nodes</button>
   <button class="tablinks" data-help-tab="Edge_tab">Edit → Edges</button>
@@ -97,7 +98,7 @@ const HELP_HTML = `
 <div id="Start_tab" class="tabcontent">
   <h2>Getting Started</h2>
   <p class="help-lead">Arena3D in five steps, then the menus, the Networks menu, undo, network mode and touch screens.</p>
-  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/topbar.png" alt="The top bar: Home, File, Database Importers, Networks, View, Find, Layer selection, Layout, Clustering, Edit, Analyze, Export and Help menus, the Multilayered / Single network switch, the theme picker and Undo / Redo" loading="lazy">
+  <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/topbar.png" alt="The top bar: Home, File, Database Importers, Networks, View, Find, Layer selection, Layout, Clustering, Annotations, Edit, Analyze, Export and Help menus, the Multilayered / Single network switch, the theme picker and Undo / Redo" loading="lazy">
   <p>
     Arena3D shows a multilayered network in 3D: every layer is a floor (or a disk, cube, sphere or cloud), a node
     may appear in several layers, and edges run within layers (intra-layer) or between them (inter-layer). Edges can
@@ -124,16 +125,18 @@ const HELP_HTML = `
     arrangements, rotation, legend) and Performance (frame rate, resolution, detail). <b>Find</b>: search nodes
     and edges. <b>Layer selection</b>: the layers the layouts, analyses and exports work on, with a Hide and a
     Labels switch per layer (Multilayered mode). <b>Layout</b>: algorithms, alignment and group
-    layouts. <b>Clustering</b>: communities, a summary of them, and saving them as an annotation set. <b>Edit</b>: Nodes (labels,
+    layouts. <b>Clustering</b>: communities, a summary of them, and saving them as an annotation set. <b>Annotations</b>: how
+    annotation groups and clusters show in the scene — hulls or fog clouds with their opacity and padding, pies, and
+    the group list with colours and a hull switch per group. <b>Edit</b>: Nodes (labels,
     shapes), Edges, Layers (floors, shapes, containers, split/merge), Style (colours, sizes, borders, labels, line types, palettes, colour
     vision) and Attributes (a table of every node and edge, edited one at a time or many at once, and an inspector). <b>Analyze</b>: Metrics, Statistics (with layer
-    and network comparison), Plots, Perturbation, Explore, Annotations &amp; Groups (with enrichment) and Data Tables. <b>Export</b>: images, 3D, video, Cytoscape, visualizations, other tools and the
+    and network comparison), Plots, Perturbation, Explore, Annotations &amp; Groups (enrichment) and Data Tables. <b>Export</b>: images, 3D, video, Cytoscape, visualizations, other tools and the
     session. On phones and narrow windows the menus fold into a drawer.
   </p>
   <p>
     The panels are made of cards. Click a card's title to fold or open it; the main ones start open (File →
     Network, Examples and Loaded networks, for example) and the rest start folded. In the long panels (File,
-    Edit → Nodes, Edges and Layers, and Export), <i>Expand all</i> and <i>Collapse all</i>
+    Edit → Nodes, Edges and Layers, Layout, Clustering and Export), <i>Expand all</i> and <i>Collapse all</i>
     at the top open or fold every card at once. Arena3D remembers in this browser which cards you open or fold.
   </p>
   <h3>Networks menu</h3>
@@ -146,8 +149,8 @@ const HELP_HTML = `
     attribute or group file, enrichment, cluster run or STRING grouping it received, and the annotations a saved
     session brought (<i>Saved with the session</i>) — with the one it shows ticked, and <i>No annotation</i>.
     Click a network to switch to it, or a set to show it; a set of another network switches to that network with
-    that set in one click. <i>Load another network…</i> opens File and <i>Annotation options…</i> opens Analyze →
-    Annotations &amp; Groups (pies, hulls). The menu, File → Loaded networks and Analyze → Annotations &amp; Groups always
+    that set in one click. <i>Load another network…</i> opens File and <i>Annotation options…</i> opens the
+    Annotations menu (pies, hulls, fog clouds). The menu, File → Loaded networks and the Annotations menu always
     agree.
   </p>
   <p>
@@ -256,9 +259,9 @@ const HELP_HTML = `
     <li>Give nodes groups: a node attribute file with an <i>Annotation</i> column, a NORMA-format group file
       (File → <i>Upload GROUP file</i>), or Analyze → <i>Enrichment of Selected Nodes</i> → <i>Annotate Nodes with
       Top 5 Terms</i>. Clusters come from the <i>Clustering</i> panel.</li>
-    <li>Analyze → Annotations &amp; Groups → Annotations &amp; Enrichment: pies on the nodes; <i>Hulls Around</i> clusters or annotations, as
-      hulls or fog clouds.</li>
-    <li>Analyze → Annotations &amp; Groups → Groups: recolour, hide a group's hull, select its members, show them in the legend, open the
+    <li><i>Annotations</i> (top bar, after Clustering) → <i>Show on the network</i>: the annotation set; <i>Draw around</i>
+      clusters or annotations, as hulls or fog clouds, with their <i>Opacity</i> and <i>Padding</i>; pies on the nodes.</li>
+    <li>Annotations → Groups: recolour, hide a group's hull, select its members, show them in the legend, open the
       Groups and Overlap tables, or <i>Collapse into Super Nodes</i>.</li>
     <li>Layout → <i>Group Layout (NORMA-2.0)</i> pulls the groups apart.</li>
   </ol>
@@ -459,7 +462,7 @@ const HELP_HTML = `
     labelled, the instructor (Mr. Hi) and the administrator (the Officer); each round every member takes in its
     friends' values (<i>Message</i>) and its own (<i>Self</i>), as a graph convolution does (here without learned
     weights), and the colours show the two clubs spreading. The output splits the club as it really split, but for
-    member 9. Annotation terms (Analyze → Annotations &amp; Groups) give each member's real club, the prediction and
+    member 9. Annotation terms (the Annotations menu) give each member's real club, the prediction and
     <i>misclassified</i>. <br />
     ${nnFiles('The graph neural network', 'gnn_karate')}
   </p>
@@ -580,7 +583,7 @@ const HELP_HTML = `
   <p>
     <i>Upload GROUP file</i> reads annotation groups in NORMA's format — one group per line: the group name, a TAB,
     then its members separated by commas or semicolons (a <i>Node</i> / <i>Group</i> two-column file works too).
-    Nodes are matched by name in every layer, and the groups appear as pies and hulls and in Analyze → Annotations &amp; Groups.
+    Nodes are matched by name in every layer, and the groups appear as pies and hulls and in the Annotations menu.
     <i>Upload node VALUES</i> reads a numeric table — a <i>Node</i> column, then one column per condition or score
     (expression values, say); blank cells are allowed. Edit → Style then colours nodes by any column, with a
     diverging scale when the values cross zero, and the legend shows the range.
@@ -773,7 +776,7 @@ const HELP_HTML = `
       KEGG, Reactome, WikiPathways, UniProt keywords, Pfam, InterPro and SMART domains, diseases, tissues,
       subcellular localization, Monarch phenotypes, STRING's local network clusters, reference publications — and,
       if ticked, any other collection STRING offers) becomes an annotation set, with one group per term, ready for pies,
-      hulls and the Groups card; switch between the sets in the Annotations card. <i>Enriched in the network</i>
+      hulls and the Groups card; switch between the sets in the Annotations menu. <i>Enriched in the network</i>
       (recommended) keeps the terms enriched among the network's proteins with an FDR at most the given value;
       <i>All annotations of its proteins</i> keeps every term (KEGG pathways come only with enriched terms, because
       STRING does not share full KEGG annotations). <i>Groups per collection</i> keeps the best terms (lowest FDR, or
@@ -881,8 +884,12 @@ const HELP_HTML = `
   <p>
     The panel follows the order of work: <b>1 · Layers</b> (how many layers are ticked in the <i>Layer selection</i>
     tab, with a button to it), <b>2 · Layout</b> (algorithm, what to apply it to and options), then <i>Run Layout</i> in the bar that stays at the bottom of the
-    panel, with the result and the misalignment score next to it. The optional extras — Cross-Layer Alignment and Group
-    Layout — are folded below; click a title to open it. In <i>Single network</i> mode (top bar) the panel works the
+    panel, with the result and the misalignment score next to it. Every section is a card: click a title to fold or
+    open it, or use <i>Expand all</i> / <i>Collapse all</i> at the top; the browser remembers what you open. The
+    algorithm and <i>Apply to</i> stay in view, while <i>Weights &amp; 3D</i> (its title says what is on, such as
+    <i>2D layout, no edge weights</i>) and <i>Selected nodes</i> (the layout inside them) are folded under them. The
+    optional extras — Layer Arrangement, Cross-Layer Alignment and Group Layout, whose <i>Force &amp; size</i> sliders
+    fold away too — start folded below. In <i>Single network</i> mode (top bar) the panel works the
     NORMA way: the layer section, the scope and the alignment are hidden, every layout applies to the whole network,
     and the <i>Groups</i> card — clusters or annotation terms, drawn as fog clouds or hulls, with pie charts for
     nodes in several groups — is the main tool. The Layout panel runs no clustering algorithm: communities are
@@ -1315,13 +1322,13 @@ const HELP_HTML = `
 
 <div id="Analyze_tab" class="tabcontent">
   <h2>Analyze</h2>
-  <p class="help-lead">Metrics, statistics, plots, perturbation, exploring, annotations and groups, and the Data Tables.</p>
+  <p class="help-lead">Metrics, statistics, plots, perturbation, exploring, enrichment and the Data Tables.</p>
   <p>
     The Analyze menu holds one panel per kind of analysis: <b>Metrics</b> (node metrics for sizes and colours),
     <b>Statistics</b> (network statistics, layer and network comparison), <b>Plots</b> (distributions and plots of
     topological features), <b>Perturbation</b> (knockouts, attacks and robustness, propagation), <b>Explore</b>
-    (selection tools and paths), <b>Annotations &amp; Groups</b> (annotation sets, enrichment, pies and hulls, the
-    group list) and <b>Data Tables</b>, where their reports land. Metrics, Statistics, Plots and Perturbation work on
+    (selection tools and paths), <b>Annotations &amp; Groups</b> (STRING enrichment; the annotation sets, pies,
+    hulls and the group list are in the <b>Annotations</b> menu) and <b>Data Tables</b>, where their reports land. Metrics, Statistics, Plots and Perturbation work on
     the layers ticked in Layer selection (every layer while none is), as their first line says.
   </p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/analyze.png" alt="The Metrics panel" loading="lazy">
@@ -1353,7 +1360,7 @@ const HELP_HTML = `
   </p>
 
   <h3>Plots</h3>
-  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/plots.png" alt="The Plots panel: a histogram of degree over the whole network, with its summary statistics" loading="lazy">
+  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/plots.png" alt="The Plots panel: a histogram of degree with each layer overlaid, and its summary table per layer" loading="lazy">
   <p>
     <i>Plot</i> picks a chart and shows the options it needs; <i>Graphs</i> draws <i>each layer, overlaid</i> in the
     layer colours with a legend, or <i>the analysed layers as one graph</i> (Single network mode always does). The
@@ -1465,42 +1472,13 @@ const HELP_HTML = `
     returns what it has, saying so.
   </p>
 
-  <h3>Groups</h3>
+  <h3>Annotations &amp; Groups</h3>
   <p>
-    <i>Group Stats</i> reports, per group and as NORMA does, the members, the layers they span, the edges inside
-    the group (intra- and inter-layer), the density, the mean degree inside, the share of the network's edges and
-    the members that belong to other groups too, in Data Tables → Group Statistics. Every table a button produces
-    opens the Data Tables panel on its tab.
-  </p>
-  <p>
-    The <i>Groups</i> card lists every annotation term — from attribute or group files, or an enrichment — or every
-    cluster, as in NORMA: its colour (click the swatch to recolour the group, its pies and hulls), the number of
-    members (hover for the count per layer), a <i>hull</i> switch that draws or hides that group's hull or fog cloud,
-    and <i>select</i>. <i>Legend</i> shows the groups in the on-canvas legend; <i>Groups Table</i> and <i>Overlap
-    Table</i> (the Jaccard overlap of every pair of groups, with an UpSet plot of the members the groups share)
-    open in Data Tables; <i>Collapse into Super Nodes</i>
-    turns every group into one node per layer, sized by its members and coloured like the group, with member edges
-    summed into the edges between them — undo restores the network.
-  </p>
-
-  <h3>Annotations &amp; Enrichment</h3>
-  <p>
-    <i>Annotation set</i> keeps every set of annotations the network received — each attribute or group file, an
-    enrichment, a cluster run — and switches between them (or to none); the newest set is the one shown. <i>Rename</i>
-    and <i>Delete</i> beside it act on the set shown (after asking, for Delete). The <i>Networks</i> menu in the top
-    bar shows the set on screen, switches, renames and deletes sets too, for any loaded network.
-  </p>
-  <p>
-    The annotation options (pie charts, annotation hulls and fog clouds, annotations as groups or colours) are
-    disabled until the network carries annotations — from a node attributes or group file, a session, or
-    <i>Annotate Nodes with Top 5 Terms</i> below; the card says so.
-  </p>
-  <p>
-    <i>Show Annotations as Pie Charts</i> draws annotated nodes as pies with one slice per term. <i>Hulls Around</i>
-    marks every cluster or annotation term on each layer, drawn as a translucent <i>Hull</i> or, as in NORMA, a soft
-    <i>Fog cloud</i> that follows the group's members (also in 3D layouts and sphere layers). <i>Enrichment of Selected Nodes</i> sends the selected
-    names to STRING's enrichment service (GO, KEGG, Reactome, WikiPathways) for the chosen organism; click a term to
-    select its genes, or <i>Annotate Nodes with Top 5 Terms</i> to turn the results into pies and hulls.
+    The annotation sets, pies, hulls, fog clouds and the group list have their own menu, <b>Annotations</b>, in the
+    top bar (see its page); <i>Open Annotations…</i> at the top of this panel goes there. The panel keeps the
+    enrichment: <i>Enrichment of Selected Nodes</i> sends the selected names to STRING's enrichment service (GO,
+    KEGG, Reactome, WikiPathways) for the chosen organism; click a term to select its genes, or <i>Annotate Nodes
+    with Top 5 Terms</i> to turn the results into an annotation set, shown as pies and hulls.
   </p>
 
   <h3>Data Tables</h3>
@@ -1538,15 +1516,76 @@ const HELP_HTML = `
     where they are found: <i>Within each layer</i>, over the <i>selected layers as one graph</i>, or <i>shared across
     layers by node name</i> (multiplex Leiden for Leiden, the label-merged graph for the others); it runs on the layers
     ticked in Layer selection, or on every layer while none is. In Single network mode the whole network is one graph.
+    The panel starts with the algorithm, the scope and the buttons in view; <i>How it works</i> under them folds the
+    longer notes away.
   </p>
   <p>
     <i>Find Communities</i> colours the nodes by community and fills Data Tables → Clustering Data. Under
     <i>Communities</i> the panel sums the result up — how many communities, over how many nodes, their sizes — and
     lists the largest with their colour, size and the number of layers they span. <i>Save as Annotation Set</i>
     turns them into annotation terms (<i>Cluster 1</i>, <i>Cluster 2</i>, …) kept as a set in the Networks menu, so
-    pies, hulls, fog clouds, the Groups card and group layouts treat them like an annotation file. <i>Lay Out by
+    pies, hulls, fog clouds, the Groups card and group layouts treat them like an annotation file. <i>Draw Around
+    Clusters…</i> opens the Annotations menu with a hull (or fog cloud) around every cluster and the clusters in its
+    group list. <i>Lay Out by
     Cluster…</i> opens Layout → <i>Group Layout (NORMA-2.0)</i> with the clusters as groups; layouts only use the
     communities, they never compute them. Every step is undoable.
+  </p>
+</div>
+
+<div id="Annotations_tab" class="tabcontent">
+  <h2>Annotations</h2>
+  <p class="help-lead">Draw annotation groups and clusters in the scene: hulls or fog clouds around them, pies on the nodes, and the group list.</p>
+  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/annotations.png" alt="The Annotations panel" loading="lazy">
+  <p>
+    The <i>Annotations</i> menu (top bar, after Clustering) decides how annotation terms and clusters show on the
+    network. Groups come from a node attributes file with an <i>Annotation</i> column, a group file (File), an
+    enrichment (Analyze → Annotations &amp; Groups), a STRING import, a saved session, or communities from the
+    Clustering panel. The panel has two cards, both open: <i>Show on the network</i> and <i>Groups</i>. Three links lead
+    here too: <i>Open Annotations…</i> in Analyze → Annotations &amp; Groups, <i>Annotation options…</i> in the
+    Networks menu, and <i>Draw Around Clusters…</i> in the Clustering panel, which also draws hulls around the clusters.
+  </p>
+
+  <h3>Show on the network</h3>
+  <p>
+    <i>Annotation set</i> keeps every set of annotations the network received — each attribute or group file, an
+    enrichment, a cluster run — and switches between them (or to none); the newest set is the one shown. <i>Rename</i>
+    and <i>Delete</i> beside it act on the set shown (after asking, for Delete). The <i>Networks</i> menu in the top
+    bar shows the set on screen, switches, renames and deletes sets too, for any loaded network.
+  </p>
+  <p>
+    <i>Draw around</i> marks every cluster or annotation term on each layer (or <i>Nothing</i>), drawn as a translucent
+    <i>Hull</i> or, as in NORMA, a soft <i>Fog cloud</i> that follows the group's members (also in 3D layouts and sphere
+    layers). <i>Opacity</i> sets how solid the hulls are (fog clouds stay softer by the same proportion) and
+    <i>Padding</i> how far hulls and clouds reach beyond the members (1× is the usual margin, about three node radii).
+    They follow the nodes when a layout, a drag or an undo moves them. <i>Show Annotations as Pie Charts</i> draws
+    annotated nodes as pies with one slice per term. In Single network mode, the Layout panel's Group Layout card sets
+    the same drawing with <i>Draw groups as</i>. A saved session keeps all of this, and the groups whose hull is
+    switched off in the Groups card.
+  </p>
+  <p>
+    The annotation options (pie charts, annotation hulls and fog clouds, annotations as groups or colours) are
+    disabled until the network carries annotations — from a node attributes or group file, a session, or an
+    enrichment's <i>Annotate Nodes with Top 5 Terms</i>; the card says so. Hulls around clusters need communities
+    from the Clustering panel. The links under the card lead to Clustering, to the enrichment and to Layout →
+    Group Layout, which pulls the groups apart.
+  </p>
+
+  <h3>Groups</h3>
+  <p>
+    The <i>Groups</i> card lists every annotation term — from attribute or group files, or an enrichment — or every
+    cluster, as in NORMA: its colour (click the swatch to recolour the group, its pies and hulls), the number of
+    members (hover for the count per layer), a <i>hull</i> switch that draws or hides that group's hull or fog cloud,
+    and <i>select</i>. <i>Legend</i> shows the groups in the on-canvas legend; <i>Groups Table</i> and <i>Overlap
+    Table</i> (the Jaccard overlap of every pair of groups, with an UpSet plot of the members the groups share)
+    open in Data Tables; <i>Collapse into Super Nodes</i>
+    turns every group into one node per layer, sized by its members and coloured like the group, with member edges
+    summed into the edges between them — undo restores the network.
+  </p>
+  <p>
+    <i>Group Stats</i> reports, per group and as NORMA does, the members, the layers they span, the edges inside
+    the group (intra- and inter-layer), the density, the mean degree inside, the share of the network's edges and
+    the members that belong to other groups too, in Data Tables → Group Statistics. Every table a button produces
+    opens the Data Tables panel on its tab.
   </p>
 </div>
 
@@ -1557,7 +1596,12 @@ const HELP_HTML = `
   <p>
     The Export panel (top menu) writes the current view and the network in the formats other tools read. It is
     five cards — <i>Image &amp; 3D</i>, <i>Cytoscape</i>, <i>Other tools</i>, <i>Visualizations</i>,
-    <i>Session</i> — click a title to open or fold one.
+    <i>Session</i> — click a title to open or fold one. Only <i>Image &amp; 3D</i> starts open. <i>Other tools</i>
+    and <i>Visualizations</i> list one folded sub-section per tool, each with a one-line hint after its name:
+    <i>GraphML &amp; MuxViz</i>, <i>NORMA</i>, <i>Flame</i>, <i>Cosmograph</i> and <i>UMAP view</i>; <i>Chord
+    diagram &amp; Circos</i>, <i>Heatmap &amp; matrix</i>, <i>Sankey</i> and <i>Gephi Lite &amp; STRING</i>.
+    <i>Expand all</i> opens every card and sub-section, <i>Collapse all</i> folds them, and the browser remembers
+    what you open.
   </p>
   <h3>Image &amp; 3D</h3>
   <p>
@@ -1842,6 +1886,11 @@ webbrowser.open(r.json()["url"])</pre>
     ['universalLabelColor, direction', 'hex, boolean', 'Label colour; arrows.'],
     ['edgeOpacityByWeight, edgeWidthByWeight', 'boolean', 'Weight encodings.'],
     ['intraEdgeBundling, interEdgeBundling', '0–1', 'Edge bundling strengths.'],
+    [
+      'annotationView',
+      'object',
+      'How the annotation groups are drawn (Annotations menu): <code>source</code> (none, cluster or annotation), <code>style</code> (hull or fog), <code>opacity</code> (0.05–1), <code>padding</code> (0.25–3), <code>pies</code> (boolean) and <code>hidden</code> (the groups whose hull or fog cloud is off).',
+    ],
   ])}
   ${json({
     scene: {

@@ -1,9 +1,11 @@
 // The Analyze menu: one panel per kind of analysis — Metrics (node metrics
 // for sizes and colours), Statistics (network statistics, layer and network
 // comparison), Plots (ui/plots.ts), Perturbation (ui/perturbation.ts),
-// Explore (ui/explore.ts) and Annotations & Groups (ui/annotations.ts,
-// ui/groups.ts); Data Tables (ui/data.ts) holds their reports. Layers come
-// from the Layer selection tab's ticks (all layers when none is ticked).
+// Explore (ui/explore.ts) and Annotations & Groups (the enrichment of
+// ui/annotations.ts; pies, hulls and the group list are in the Annotations
+// menu, ui/annotation_panel.ts); Data Tables (ui/data.ts) holds their
+// reports. Layers come from the Layer selection tab's ticks (all layers when
+// none is ticked).
 
 import { api, type TopologyGraph, type TopologyScope } from '../api/client'
 import { bus } from '../bus'
@@ -15,8 +17,8 @@ import { PROGRESS_HTML, ProgressBar } from './progress'
 import { selectedChannels } from './layouts'
 import { EXPLORE_HTML, initExplore } from './explore'
 import { PERTURBATION_HTML, initPerturbation } from './perturbation'
-import { ANNOTATIONS_HTML, initAnnotations } from './annotations'
-import { GROUPS_HTML, initGroups } from './groups'
+import { ANNOTATIONS_HTML, initEnrichment } from './annotations'
+import { openAnnotationPanel } from './annotation_panel'
 import { PLOTS_HTML, initPlots } from './plots'
 import { openCard } from './sections'
 import { showTab } from './tabs'
@@ -99,13 +101,20 @@ const STATISTICS_HTML = panel(`
   </details>
 `)
 
+// what this panel held before the Annotations menu, and a way there
+const ANNOTATIONS_MOVED_HTML = `
+<div class="ann-moved mb-3">
+  <div class="small mb-2"><b>Pies, hulls, fog clouds and the group list</b> (colours, a hull switch per group, group tables) are in the <b>Annotations</b> menu of the top bar, next to Clustering.</div>
+  <button type="button" id="analyzeOpenAnnotations" class="btn btn-outline-primary btn-sm">Open Annotations…</button>
+</div>`
+
 const PANEL_HTML: Record<(typeof ANALYSIS_PANELS)[number], string> = {
   metrics: METRICS_HTML,
   statistics: STATISTICS_HTML,
   plots: panel(`${LAYERS_NOTE()}${PLOTS_HTML}`),
   perturbation: panel(`${LAYERS_NOTE()}${PERTURBATION_HTML}`),
   explore: panel(EXPLORE_HTML),
-  annotations: panel(`${ANNOTATIONS_HTML}${GROUPS_HTML}`),
+  annotations: panel(`${ANNOTATIONS_MOVED_HTML}${ANNOTATIONS_HTML}`),
 }
 
 function say(id: string, msg: string, isError: boolean): void {
@@ -254,8 +263,10 @@ export function initAnalyzePanel(): void {
   initExplore()
   initPerturbation()
   initPlots()
-  initAnnotations()
-  initGroups()
+  initEnrichment()
+  document
+    .getElementById('analyzeOpenAnnotations')
+    ?.addEventListener('click', () => openAnnotationPanel())
   describeLayers()
   bus.on('network:loaded', describeLayers)
   bus.on('layers:selected', describeLayers)

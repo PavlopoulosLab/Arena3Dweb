@@ -83,3 +83,50 @@ test('Expand all and Collapse all do every card of the panel', async ({
   await start(page)
   await expect(page.locator('#panel-edge details[open]')).toHaveCount(0)
 })
+
+test('Export lists its tools in folded sub-sections', async ({ page }) => {
+  await start(page)
+  await tab(page, 'Export', '#panel-export')
+  // only Image & 3D starts open
+  await expect(page.locator('#panel-export details[open]')).toHaveCount(1)
+  await expect(page.locator('#exportCard_image')).toHaveJSProperty('open', true)
+
+  await page.locator('#exportCard_tools > summary').click()
+  await expect(page.locator('#exportSub_flame > summary')).toContainText(
+    'functional enrichment'
+  )
+  await expect(page.locator('#open_flame')).toBeHidden()
+  await page.locator('#exportSub_flame > summary').click()
+  await expect(page.locator('#open_flame')).toBeVisible()
+
+  // Expand all reaches the sub-sections; both levels are remembered
+  await page.locator('#panel-export [data-fold-all="open"]').click()
+  await expect(page.locator('#panel-export details:not([open])')).toHaveCount(0)
+  await start(page)
+  await tab(page, 'Export', '#panel-export')
+  await expect(page.locator('#panel-export details:not([open])')).toHaveCount(0)
+  await expect(page.locator('#export_sankey')).toBeVisible()
+})
+
+test('Layout keeps the algorithm in view and folds the options', async ({
+  page,
+}) => {
+  await start(page)
+  await tab(page, 'Layout', '#panel-layouts')
+  await expect(page.locator('#layoutAlgorithmChoice')).toBeVisible()
+  await expect(page.locator('#subgraph_perLayer')).toBeVisible()
+  await expect(page.locator('#runLayout')).toBeVisible()
+  await expect(page.locator('#layout3dCheckbox')).toBeHidden()
+  // the folded Weights & 3D sub-section says what is on
+  const hint = page.locator('#layoutOptionsHint')
+  await expect(hint).toHaveText('2D layout, no edge weights')
+  await page.locator('#layoutSub_options > summary').click()
+  await page.locator('#layout3dCheckbox').check()
+  await expect(hint).toHaveText('3D layout, no edge weights')
+
+  await page.locator('#panel-layouts [data-fold-all="open"]').click()
+  await expect(page.locator('#panel-layouts details:not([open])')).toHaveCount(
+    0
+  )
+  await expect(page.locator('#groupForce')).toBeVisible()
+})

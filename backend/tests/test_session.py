@@ -290,3 +290,50 @@ def test_names_survive_the_import_endpoint() -> None:
     assert resp.status_code == 200
     assert resp.json()["name"] == "Renamed"
     assert resp.json()["annotationSet"] == "Set A"
+
+
+def test_annotation_view_kept_clamped_or_absent() -> None:
+    # older sessions have no block: nothing changes on load
+    assert normalize_session(_minimal())["annotationView"] is None
+    assert normalize_session({**_minimal(), "annotationView": "fog"})["annotationView"] is None
+    view = {
+        "source": "annotation",
+        "style": "fog",
+        "opacity": 0.6,
+        "padding": "2",
+        "pies": True,
+        "hidden": ["TermA", "Cluster 2", "TermA", "", 7],
+    }
+    assert normalize_session({**_minimal(), "annotationView": view})["annotationView"] == {
+        "source": "annotation",
+        "style": "fog",
+        "opacity": 0.6,
+        "padding": 2.0,
+        "pies": True,
+        "hidden": ["TermA", "Cluster 2"],
+    }
+    odd = {"source": "layers", "style": "cloud", "opacity": 9, "padding": "x", "pies": "yes"}
+    assert normalize_session({**_minimal(), "annotationView": odd})["annotationView"] == {
+        "source": "none",
+        "style": "hull",
+        "opacity": 1.0,
+        "padding": 1.0,
+        "pies": False,
+        "hidden": [],
+    }
+
+
+def test_annotation_view_survives_the_import_endpoint() -> None:
+    view = {"source": "cluster", "style": "fog", "opacity": 0.6, "padding": 1, "pies": False}
+    resp = client.post(
+        "/api/session/import",
+        files={
+            "file": (
+                "net.json",
+                json.dumps({**_minimal(), "annotationView": {**view, "hidden": ["Cluster 1"]}}),
+                "application/json",
+            )
+        },
+    )
+    assert resp.status_code == 200
+    assert resp.json()["annotationView"] == {**view, "hidden": ["Cluster 1"]}

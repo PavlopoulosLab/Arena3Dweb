@@ -8,6 +8,7 @@ import { Color } from 'three'
 import { api, type SessionData } from '../api/client'
 import { store } from '../store'
 import { ctx } from '../three'
+import { annotationView } from './annotations'
 import { network3dSessionState } from './modes'
 import { activeSlot } from './workspace'
 import type { Edge } from '../three/Edge'
@@ -102,6 +103,7 @@ export function collectSession(): SessionData {
     interEdgeBundling: ctx.interEdgeBundling,
     edgeShape: ctx.edgeShape,
     hive: ctx.hive,
+    annotationView: annotationView(),
     ...namesOnScreen(),
   }
 }

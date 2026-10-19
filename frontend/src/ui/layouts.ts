@@ -54,6 +54,7 @@ import { PROGRESS_HTML, ProgressBar } from './progress'
 import type { Scope } from '../api/client'
 import { UMAP, umapOptions } from '../actions/umap'
 import { initUmapForm, readUmapChoice, umapFormHtml } from './umap'
+import { FOLD_ALL_HTML } from './sections'
 
 // v2 views/layouts.R option lists (Davidson-Harel / GEM / Edge Betweenness
 // were commented out there too).
@@ -87,17 +88,18 @@ const options = (values: string[]) =>
 // it (the Run bar stays in view), then the optional extras folded away.
 const LAYOUTS_HTML = `
 <div class="col-md-8 col-lg-6 layout-panel">
-  <section class="lp-section" data-multilayer-only>
-    <h6 class="lp-title"><span class="lp-step">1</span>Layers</h6>
+  ${FOLD_ALL_HTML}
+  <details class="lp-section lp-more" id="layoutCard_layers" open data-multilayer-only>
+    <summary><span class="lp-step">1</span>Layers</summary>
     <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
       <span id="layoutLayerSummary" class="small"></span>
       <button id="openLayerSelection" class="btn btn-outline-primary btn-sm" title="Tick the layers to lay out in the Layer selection tab">Layer selection…</button>
     </div>
     <div id="channelColorLayoutDiv" class="channelColorLayoutDiv"></div>
-  </section>
+  </details>
 
-  <section class="lp-section">
-    <h6 class="lp-title"><span class="lp-step">2</span><span data-multilayer-only>Layout</span><span data-single-only>Layout of the whole network</span></h6>
+  <details class="lp-section lp-more" id="layoutCard_layout" open>
+    <summary><span class="lp-step">2</span><span data-multilayer-only>Layout</span><span data-single-only>Layout of the whole network</span></summary>
     <div class="form-text mt-0 mb-2" data-single-only>One graph, as in NORMA: the layout runs on every node at once (in 3D while <i>3D Layout</i> is on); the Groups card below organises it by clusters (the Clustering panel) or annotations.</div>
     <label class="form-label small" for="layoutAlgorithmChoice">Algorithm</label>
     <select class="form-select form-select-sm mb-3" id="layoutAlgorithmChoice">${options(MAIN_ALGORITHMS)}</select>
@@ -123,6 +125,8 @@ const LAYOUTS_HTML = `
       </div>
     </div>
 
+    <details class="lp-more lp-sub" id="layoutSub_options">
+      <summary>Weights &amp; 3D<span class="lp-hint" id="layoutOptionsHint">2D layout, no edge weights</span></summary>
     <div class="form-check form-switch mb-1">
       <input class="form-check-input" type="checkbox" role="switch" id="useEdgeWeightsCheckbox" />
       <label class="form-check-label" for="useEdgeWeightsCheckbox">Use Edge Weights (and Channel Weights)</label>
@@ -132,17 +136,20 @@ const LAYOUTS_HTML = `
       <input class="form-check-input" type="checkbox" role="switch" id="layout3dCheckbox" />
       <label class="form-check-label" for="layout3dCheckbox">3D Layout</label>
     </div>
-    <div class="form-text mt-0 mb-3">Nodes leave the floor (${MAIN_3D.join(', ')}); best with cube, sphere or fog-cloud layers. A 2D layout flattens them again.</div>
-
+    <div class="form-text mt-0">Nodes leave the floor (${MAIN_3D.join(', ')}); best with cube, sphere or fog-cloud layers. A 2D layout flattens them again.</div>
+    </details>
+    <details class="lp-more lp-sub" id="layoutSub_local">
+      <summary>Selected nodes<span class="lp-hint">with Selected Nodes Only</span></summary>
     <div class="lp-grid">
       <div>
         <label class="form-label small" for="localLayoutAlgorithmChoice">Layout inside the selected nodes</label>
         <select class="form-select form-select-sm" id="localLayoutAlgorithmChoice">${options(LAYOUT_ALGORITHMS)}</select>
       </div>
     </div>
+    </details>
     <div class="form-text mt-2">Communities come from the <a href="#" id="layoutOpenClustering">Clustering</a> panel; the Group Layout card below lays them out.</div>
     <div id="layoutCompat" class="form-text mt-2 d-none"></div>
-  </section>
+  </details>
 
   <div class="lp-runbar">
     <button id="runLayout" class="btn btn-primary">Run Layout</button>
@@ -261,10 +268,13 @@ const LAYOUTS_HTML = `
           </select>
         </div>
       </div>
-      <label class="form-label small" for="groupForce">Force strength: <span id="groupForceValue">10</span></label>
-      <input type="range" class="form-range" id="groupForce" min="1" max="20" step="1" value="10" />
-      <label class="form-label small" for="groupScale">Group size: <span id="groupScaleValue">1.0</span>×</label>
-      <input type="range" class="form-range" id="groupScale" min="0.25" max="4" step="0.25" value="1" />
+      <details class="lp-more lp-sub mb-2" id="groupSub_forces">
+        <summary>Force &amp; size<span class="lp-hint">how hard groups pull, how big they are</span></summary>
+        <label class="form-label small" for="groupForce">Force strength: <span id="groupForceValue">10</span></label>
+        <input type="range" class="form-range" id="groupForce" min="1" max="20" step="1" value="10" />
+        <label class="form-label small" for="groupScale">Group size: <span id="groupScaleValue">1.0</span>×</label>
+        <input type="range" class="form-range" id="groupScale" min="0.25" max="4" step="0.25" value="1" />
+      </details>
       <div class="form-text mb-2">Karatzas et al. 2022 (NORMA-2.0). Uses the layers selected above (all if none). Sphere/cube/cloud layers get 3D layouts inside each group.</div>
       <div id="groupCompat" class="form-text mb-2 d-none"></div>
       <div id="groupNoClusters" class="form-text mb-2 d-none">No clusters yet: find communities in the <a href="#" id="groupOpenClustering">Clustering</a> panel first, or group by annotations.</div>
@@ -412,6 +422,10 @@ function syncCompatibility(): void {
     alignNote.classList.toggle('d-none', alignOk)
   }
   el('umapOptionsBox')?.classList.toggle('d-none', !umap)
+  // the folded Weights & 3D sub-section still says what is on
+  const hint = el('layoutOptionsHint')
+  if (hint)
+    hint.textContent = `${three ? '3D' : '2D'} layout, ${useWeights() ? 'edge weights' : 'no edge weights'}`
   const note = el('layoutCompat')
   if (note) {
     note.textContent = notes.join(' ')

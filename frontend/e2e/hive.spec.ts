@@ -186,10 +186,11 @@ test('hive plot: layers become axes, nodes by degree, curved links, undo', async
   // one undo takes the arrangement and its view back: square floors, straight
   // links
   await page.locator('#undoButton').dispatchEvent('click')
+  // the inter-layer links are rebuilt on the next frame
+  await expect.poll(async () => (await read(page)).inter).toBe(1)
   const back = await read(page)
   expect(back.hive).toBeNull()
   expect(back.layers.every((l) => l.shape === 'square')).toBe(true)
-  expect(back.inter).toBe(1)
 })
 
 test('hive plot by rank, straight links; another arrangement ends it', async ({

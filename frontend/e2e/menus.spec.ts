@@ -23,6 +23,7 @@ test('grouped menus open their panels', async ({ page }) => {
     ['Export', '#panel-export'],
     ['Layout', '#panel-layouts'],
     ['Clustering', '#panel-clustering'],
+    ['Annotations', '#panel-annotation-view'],
   ] as const) {
     await page.getByRole('tab', { name: item, exact: true }).click()
     await expect(page.locator(pane)).toHaveClass(/show/)
@@ -30,6 +31,16 @@ test('grouped menus open their panels', async ({ page }) => {
       await expect(
         page.locator('#panel-clustering #runClustering')
       ).toBeVisible()
+    if (item === 'Annotations') {
+      // how groups show in the scene: the main card open, then the group list
+      await expect(page.locator('#annCard_show')).toHaveJSProperty('open', true)
+      await expect(
+        page.locator('#panel-annotation-view #hull_cluster')
+      ).toBeVisible()
+      await expect(
+        page.locator('#panel-annotation-view #groups_card')
+      ).toBeVisible()
+    }
     if (item === 'Database Importers') {
       // one card per source, all folded until clicked
       for (const key of [
@@ -67,7 +78,7 @@ test('grouped menus open their panels', async ({ page }) => {
     ['Plots', '#panel-plots', '#plotDraw'],
     ['Perturbation', '#panel-perturbation', '#runKnockout'],
     ['Explore', '#panel-explore', '#explore_card'],
-    ['Annotations & Groups', '#panel-annotations', '#groups_card'],
+    ['Annotations & Groups', '#panel-annotations', '#runEnrichment'],
   ] as const) {
     await open('Analyze', item, pane)
     await expect(page.locator(`${pane} ${control}`)).toBeVisible()
@@ -75,6 +86,11 @@ test('grouped menus open their panels', async ({ page }) => {
   await expect(page.locator('#panel-layouts #runTopologyScale')).toHaveCount(0)
   // the parent menu shows which group is active
   await expect(page.locator('#menu-analyze')).toHaveClass(/active/)
+  // Analyze → Annotations & Groups keeps the enrichment and a way to the
+  // Annotations menu
+  await open('Analyze', 'Annotations & Groups', '#panel-annotations')
+  await page.locator('#analyzeOpenAnnotations').click()
+  await expect(page.locator('#panel-annotation-view')).toHaveClass(/show/)
   await open('Analyze', 'Data Tables', '#panel-data')
   // choosing the panel that is already open still closes the menu
   await open('Analyze', 'Data Tables', '#panel-data')

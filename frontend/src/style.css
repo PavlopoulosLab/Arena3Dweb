@@ -3088,6 +3088,34 @@ footer a:hover {
   margin-bottom: 0.6rem;
 }
 
+/* sub-sections inside a card (Export → Other tools, Visualizations): one per
+   tool, a rule between them instead of a box, a one-line hint after the title */
+.layout-panel .lp-sub {
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--arena-border);
+}
+
+.layout-panel .lp-sub:last-of-type {
+  padding-bottom: 0;
+}
+
+.layout-panel .lp-sub > summary {
+  font-size: 0.85rem;
+  white-space: nowrap; /* the title stays whole; the hint is cut short */
+}
+
+.layout-panel .lp-sub[open] > summary {
+  margin-bottom: 0.5rem;
+}
+
+.layout-panel .lp-sub > summary .lp-hint {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 400;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .layout-panel .lp-step {
   display: inline-flex;
   align-items: center;
@@ -3335,6 +3363,16 @@ body.mode-single .layout-panel .lp-step {
   gap: 0.25rem;
   margin: 0;
   color: var(--arena-text-muted);
+}
+
+/* Analyze → Annotations & Groups: the way to the Annotations menu
+   (ui/analyze.ts), tinted with that menu's hue */
+.ann-moved {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid color-mix(in srgb, #f08a6c 45%, var(--arena-border));
+  border-left: 4px solid #f08a6c;
+  border-radius: 8px;
+  background-color: color-mix(in srgb, #f08a6c 8%, transparent);
 }
 
 /* Database Importers panel (ui/databases.ts): NORMA-style source cards */
@@ -3916,6 +3954,9 @@ body.mode-single .layout-panel .lp-step {
 #navBar .nav-link[data-menu='clustering'] {
   --menu: #36b9c9;
 }
+#navBar .nav-link[data-menu='annotations'] {
+  --menu: #f08a6c;
+}
 #navBar .nav-link[data-menu='edit'] {
   --menu: #2aa198;
 }
@@ -4170,8 +4211,8 @@ body.mode-single .layout-panel .lp-step {
   .nav-theme .form-select {
     min-width: 6.5rem;
   }
-  /* Undo / Redo show their arrows; the words stay for screen readers and
-     the tooltips say which is which */
+  /* Undo / Redo show their arrows and the mode switch says Single; the words
+     stay for screen readers and the tooltips say which is which */
   #navBar .nav-word {
     position: absolute;
     width: 1px;
@@ -5043,12 +5084,6 @@ body.mode-single .layout-panel .lp-step {
 
 .umap-features__kind:first-child {
   margin-top: 0;
-}
-
-.umap-export {
-  margin-top: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--bs-border-color);
 }
 
 .umap-export .lp-grid,

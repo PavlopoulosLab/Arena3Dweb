@@ -126,7 +126,20 @@ export interface SessionData {
   // the network's name and its annotation set's name (Networks menu)
   name?: string | null
   annotationSet?: string | null
+  // how the annotation groups are drawn (Annotations menu)
+  annotationView?: AnnotationView | null
   warnings?: string[]
+}
+
+// Annotations menu: Draw around, Draw as, Opacity, Padding, pie charts, and
+// the groups whose hull / fog cloud is switched off (Groups card)
+export interface AnnotationView {
+  source: 'none' | 'cluster' | 'annotation'
+  style: 'hull' | 'fog'
+  opacity: number
+  padding: number
+  pies: boolean
+  hidden: string[]
 }
 
 export type TopologyScope = 'perLayer' | 'allLayers' | 'nodesPerLayers'

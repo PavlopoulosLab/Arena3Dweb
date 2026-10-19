@@ -27,6 +27,8 @@ const ICONS: Record<string, string> = {
     '<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="m8.3 7 7.4.5M7.3 8.2l3.6 7.6M16.8 9.2l-3.7 6.7"/>',
   Clustering_tab:
     '<circle cx="7.5" cy="8.5" r="3.5"/><circle cx="16.5" cy="8.5" r="3.5"/><circle cx="12" cy="16" r="3.5"/>',
+  Annotations_tab:
+    '<path d="M12 3a9 9 0 1 0 9 9h-9V3Z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15V3.5Z"/>',
   Scene_tab:
     '<path d="M4 8h3l2-3h6l2 3h3v11H4V8Z"/><circle cx="12" cy="13" r="3.5"/>',
   Node_tab:
@@ -65,7 +67,7 @@ const icon = (id: string) =>
 // a menu, then one or more panel names in title case (a few names go on in
 // lower case: Loaded networks, Other tools, Hive plot, Node attributes)
 const ROOTS =
-  'Home|Getting Started|File|Database Importers|Networks|View|Find|Layer selection|Layout|Clustering|Edit|Analyze|Export|Help|Data Tables'
+  'Home|Getting Started|File|Database Importers|Networks|View|Find|Layer selection|Layout|Clustering|Annotations|Edit|Analyze|Export|Help|Data Tables'
 const WORD = '[A-Z][\\w-]*'
 const SEGMENT = `${WORD}(?:(?: &)? (?:${WORD}|networks|mode|tools|plot|attributes|selection))*`
 const MENU_PATH = new RegExp(`\\b(?:${ROOTS})(?: → ${SEGMENT})+`, 'g')

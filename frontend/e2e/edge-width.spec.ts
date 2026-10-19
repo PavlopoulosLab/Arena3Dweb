@@ -178,6 +178,9 @@ test('the radio reflects whichever flag combination a session carries', async ({
     await page
       .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
       .dispatchEvent('click')
+    // clear the previous load's "Session loaded", or the wait below passes
+    // before this session is in (and its switch to the 3D view lands later)
+    await page.locator('#file_status').evaluate((el) => (el.textContent = ''))
     await page.locator('#load_network_file').setInputFiles({
       name: 'session.json',
       mimeType: 'application/json',

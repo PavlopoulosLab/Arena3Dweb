@@ -11,6 +11,7 @@ const tab = (page: Page, name: string) =>
     .dispatchEvent('click')
 
 type Ctx = {
+  layers: { plane: { children: { userData: Record<string, unknown> }[] } }[]
   nodeObjects: {
     cluster: string
     annotations: string[]
@@ -26,6 +27,11 @@ const read = (page: Page) =>
       annotated: c.nodeObjects.filter((n) => n.annotations.length > 0).length,
       firstAnnotation: c.nodeObjects[0]?.annotations[0] ?? '',
       y0: c.nodeObjects[0]?.getPosition('y'),
+      hulls: c.layers.reduce(
+        (n, l) =>
+          n + l.plane.children.filter((o) => o.userData.hullGroup).length,
+        0
+      ),
     }
   })
 
@@ -79,10 +85,12 @@ test('find communities, then use them as annotations; both undoable', async ({
   const annotated = await read(page)
   expect(annotated.annotated).toBe(annotated.clustered)
   expect(annotated.firstAnnotation).toMatch(/^Cluster \d+$/)
-  await tab(page, 'Annotations & Groups')
-  await page
-    .locator('#annotation_card')
-    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
+  // Draw Around Clusters… opens the Annotations menu with cluster hulls on
+  await page.locator('#clustersToHulls').click()
+  await expect(page.locator('#panel-annotation-view')).toHaveClass(/show/)
+  await expect(page.locator('#hull_cluster')).toBeChecked()
+  await expect(page.locator('#groupsSource')).toHaveValue('cluster')
+  expect((await read(page)).hulls).toBeGreaterThan(0)
   await expect(page.locator('#showPies')).toBeEnabled()
 
   await page.locator('#undoButton').dispatchEvent('click')

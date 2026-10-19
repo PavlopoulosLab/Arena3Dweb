@@ -60,19 +60,50 @@ test('annotation pies and hulls from a node attribute file', async ({
 
   await page
     .getByRole('tab', {
-      name: 'Annotations & Groups',
+      name: 'Annotations',
       includeHidden: true,
       exact: true,
     })
     .dispatchEvent('click')
-  await page
-    .locator('#annotation_card')
-    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
+  // the Annotations menu opens on its main card
+  await expect(page.locator('#annCard_show')).toHaveJSProperty('open', true)
   await page.locator('#showPies').check()
   expect((await page.evaluate(counts)).pies).toBe(3)
   await page.locator('#hull_annotation').check()
   const hulls = (await page.evaluate(counts)).hulls
   expect(hulls).toBeGreaterThanOrEqual(3) // TermA/B/C (per layer they occur in)
+  // Opacity and Padding reshape every hull
+  const look = () =>
+    page.evaluate(() => {
+      type Hull = {
+        userData: Record<string, unknown>
+        material: { opacity: number }
+        geometry: {
+          computeBoundingBox(): void
+          boundingBox: { min: { y: number }; max: { y: number } }
+        }
+      }
+      const ctx = (
+        window as unknown as {
+          __arena: { ctx: { layers: { plane: { children: Hull[] } }[] } }
+        }
+      ).__arena.ctx
+      const hull = ctx.layers
+        .flatMap((l) => l.plane.children)
+        .find((c) => c.userData.hullGroup)!
+      hull.geometry.computeBoundingBox()
+      const box = hull.geometry.boundingBox
+      return { opacity: hull.material.opacity, width: box.max.y - box.min.y }
+    })
+  const plain = await look()
+  expect(plain.opacity).toBeCloseTo(0.35)
+  await page.locator('#hullOpacity').fill('0.8')
+  await page.locator('#hullPadding').fill('2')
+  await expect(page.locator('#hullOpacityValue')).toHaveText('0.80')
+  await expect(page.locator('#hullPaddingValue')).toHaveText('2.00')
+  const shaped = await look()
+  expect(shaped.opacity).toBeCloseTo(0.8)
+  expect(shaped.width).toBeGreaterThan(plain.width)
   await page
     .getByRole('tab', { name: '3D View', includeHidden: true, exact: true })
     .dispatchEvent('click')
@@ -80,7 +111,7 @@ test('annotation pies and hulls from a node attribute file', async ({
   await page.screenshot({ path: 'test-results/annotation-hulls.png' })
   await page
     .getByRole('tab', {
-      name: 'Annotations & Groups',
+      name: 'Annotations',
       includeHidden: true,
       exact: true,
     })
@@ -124,7 +155,7 @@ test('annotation pies and hulls from a node attribute file', async ({
   await page.screenshot({ path: 'test-results/annotation-fog.png' })
   await page
     .getByRole('tab', {
-      name: 'Annotations & Groups',
+      name: 'Annotations',
       includeHidden: true,
       exact: true,
     })

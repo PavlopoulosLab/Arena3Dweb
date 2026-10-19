@@ -27,6 +27,7 @@ import {
   Scene,
 } from '../three'
 import { DEFAULT_CONTAINER_OPACITY } from '../three/Layer'
+import { stashAnnotationView } from './annotations'
 import { createLabels, setLabelColor } from './labels'
 import type { NodeGeometryType } from '../three/Node'
 import { applyDefaultFloorVisibility, initialSpreadLayers } from './layer'
@@ -179,6 +180,8 @@ export function buildFromSession(s: SessionData): void {
   // drawing settings first: the edges are built with them
   if (s.edgeShape) ctx.edgeShape = s.edgeShape
   ctx.hive = s.hive ?? null
+  // how the groups are drawn: applied once the scene is up
+  stashAnnotationView(s.annotationView)
 
   // scene from JSON
   const scene = new Scene()

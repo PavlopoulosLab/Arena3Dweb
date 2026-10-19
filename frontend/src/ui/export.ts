@@ -73,7 +73,7 @@ import { FOLD_ALL_HTML } from './sections'
 const EXPORT_HTML = `
 <div class="col-md-8 col-lg-6 layout-panel export-panel">
   ${FOLD_ALL_HTML}
-  <details class="lp-section lp-more" id="exportCard_image">
+  <details class="lp-section lp-more" id="exportCard_image" open>
     <summary>Image &amp; 3D</summary>
     <div class="d-flex flex-wrap align-items-center gap-2">
       <button id="export_scene_image" class="btn btn-primary btn-sm">PNG (current view)</button>
@@ -106,97 +106,126 @@ const EXPORT_HTML = `
 
   <details class="lp-section lp-more" id="exportCard_tools">
     <summary>Other tools</summary>
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-      <button id="export_graphml" class="btn btn-outline-primary btn-sm" title="Gephi, igraph, NetworkX, yEd">GraphML</button>
-      <button id="export_muxviz" class="btn btn-outline-primary btn-sm">MuxViz (zip)</button>
-    </div>
-    <label class="form-label small mb-1" for="norma_server">Send to NORMA (each layer becomes a group):</label>
-    <div class="d-flex flex-wrap gap-2">
-      <input id="norma_server" class="form-control form-control-sm" style="max-width: 16rem" value="${NORMA_DEFAULT_SERVER}" aria-label="NORMA server address" />
-      <button id="export_norma" class="btn btn-primary btn-sm" title="Store the network on the NORMA server and open it there">Open in NORMA</button>
-      <button id="export_norma_link" class="btn btn-outline-primary btn-sm" title="A link carrying the network itself — no server storage; small networks">Copy NORMA Link</button>
-      <button id="export_norma_json" class="btn btn-outline-primary btn-sm">NORMA JSON</button>
-    </div>
-    <div class="form-text">The layers ticked in the Layer selection tab (all if none). Copies of a node become one NORMA node in several groups.</div>
-    <label class="form-label small mt-2 mb-1" for="flame_server">Send to Flame (functional enrichment of the gene names):</label>
-    <div class="d-flex flex-wrap align-items-center gap-2">
-      <input id="flame_server" class="form-control form-control-sm" style="max-width: 16rem" value="${FLAME_DEFAULT_SERVER}" aria-label="Flame server address" />
-      <select id="flame_mode" class="form-select form-select-sm" style="width:auto" aria-label="Gene lists for Flame">
-        <option value="perLayer">one gene list per layer</option>
-        <option value="combined">selected layers as one list</option>
-      </select>
-      <button id="open_flame" class="btn btn-primary btn-sm" title="Opens Flame with the gene lists in the link (its url_genes API)">Open in Flame</button>
-      <button id="copy_flame" class="btn btn-outline-primary btn-sm" title="The gene lists as text, to paste into Flame">Copy Gene Lists</button>
-    </div>
-    <div class="form-text">Node names are taken as gene symbols or identifiers: the layers ticked in Layer selection (all if none), one list per layer (Flame keeps up to ten) or combined into one. Large lists go through <i>Copy Gene Lists</i>.</div>
-    <label class="form-label small mt-2 mb-1" for="open_cosmograph">Send to Cosmograph (GPU viewer for large networks):</label>
-    <div class="d-flex flex-wrap align-items-center gap-2">
-      <button id="open_cosmograph" class="btn btn-primary btn-sm" title="The two CSV files hosted on this server for one hour and opened in cosmograph.app by link">Open in Cosmograph</button>
-      <button id="export_cosmograph_links" class="btn btn-outline-primary btn-sm" title="source, target, weight, channel, source_layer, target_layer">Cosmograph links (CSV)</button>
-      <button id="export_cosmograph_nodes" class="btn btn-outline-primary btn-sm" title="id, label, layer, color, size, cluster, annotations, values, metrics, UMAP x/y">Cosmograph nodes (CSV)</button>
-    </div>
-    <div class="form-text">The whole network; nodes are named node_layer, so copies in different layers stay apart. Without a link to this server, download both files and drop them on cosmograph.app.</div>
-    <div id="umapExport" class="umap-export">
-      <label class="form-label small mt-2 mb-1" for="umapxPoints">UMAP view (a 2D map of the nodes by connectivity, features or both):</label>
-      <div class="lp-grid mb-2">
-        <div>
-          <label class="form-label small" for="umapxPoints">Points</label>
-          <select id="umapxPoints" class="form-select form-select-sm">
-            <option value="copies">one per node copy (layers as one network)</option>
-            <option value="names">one per node name (copies merged)</option>
-          </select>
-        </div>
-        <div>
-          <label class="form-label small" for="umapxColour">Colour by</label>
-          <select id="umapxColour" class="form-select form-select-sm">
-            ${UMAP_COLOURS.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
-          </select>
-        </div>
+    <details class="lp-more lp-sub" id="exportSub_formats">
+      <summary>GraphML &amp; MuxViz<span class="lp-hint">files for other network software</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <button id="export_graphml" class="btn btn-outline-primary btn-sm" title="Gephi, igraph, NetworkX, yEd">GraphML</button>
+        <button id="export_muxviz" class="btn btn-outline-primary btn-sm">MuxViz (zip)</button>
       </div>
-      ${umapFormHtml('umapx')}
-      <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
-        <button id="export_umap_svg" class="btn btn-outline-primary btn-sm" title="A 2D scatter of the nodes, coloured as chosen, with a legend">UMAP scatter (SVG)</button>
-        <button id="export_umap_png" class="btn btn-outline-primary btn-sm">UMAP scatter (PNG)</button>
-        <button id="export_umap_csv" class="btn btn-outline-primary btn-sm" title="node_id, node, layer, umap_1, umap_2, cluster, annotation: for Python, R or a spreadsheet">UMAP coordinates (CSV)</button>
-        <button id="open_umap_vega" class="btn btn-primary btn-sm" title="Interactive scatter in the Vega editor; the chart travels in the link, nothing is uploaded">UMAP in Vega Editor</button>
+      <div class="form-text">GraphML opens in Gephi, igraph, NetworkX and yEd; MuxViz gets its files in one zip.</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_norma">
+      <summary>NORMA<span class="lp-hint">each layer becomes a group</span></summary>
+      <div class="d-flex flex-wrap gap-2">
+        <input id="norma_server" class="form-control form-control-sm" style="max-width: 16rem" value="${NORMA_DEFAULT_SERVER}" aria-label="NORMA server address" />
+        <button id="export_norma" class="btn btn-primary btn-sm" title="Store the network on the NORMA server and open it there">Open in NORMA</button>
+        <button id="export_norma_link" class="btn btn-outline-primary btn-sm" title="A link carrying the network itself — no server storage; small networks">Copy NORMA Link</button>
+        <button id="export_norma_json" class="btn btn-outline-primary btn-sm">NORMA JSON</button>
       </div>
-      <div class="form-text">The layers ticked in Layer selection (all if none), computed on the server once per set of options. The same modes as the UMAP layout (Layout panel), without moving the nodes.</div>
-    </div>
+      <div class="form-text">The layers ticked in the Layer selection tab (all if none). Copies of a node become one NORMA node in several groups.</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_flame">
+      <summary>Flame<span class="lp-hint">functional enrichment of the gene names</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <input id="flame_server" class="form-control form-control-sm" style="max-width: 16rem" value="${FLAME_DEFAULT_SERVER}" aria-label="Flame server address" />
+        <select id="flame_mode" class="form-select form-select-sm" style="width:auto" aria-label="Gene lists for Flame">
+          <option value="perLayer">one gene list per layer</option>
+          <option value="combined">selected layers as one list</option>
+        </select>
+        <button id="open_flame" class="btn btn-primary btn-sm" title="Opens Flame with the gene lists in the link (its url_genes API)">Open in Flame</button>
+        <button id="copy_flame" class="btn btn-outline-primary btn-sm" title="The gene lists as text, to paste into Flame">Copy Gene Lists</button>
+      </div>
+      <div class="form-text">Node names are taken as gene symbols or identifiers: the layers ticked in Layer selection (all if none), one list per layer (Flame keeps up to ten) or combined into one. Large lists go through <i>Copy Gene Lists</i>.</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_cosmograph">
+      <summary>Cosmograph<span class="lp-hint">GPU viewer for large networks</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <button id="open_cosmograph" class="btn btn-primary btn-sm" title="The two CSV files hosted on this server for one hour and opened in cosmograph.app by link">Open in Cosmograph</button>
+        <button id="export_cosmograph_links" class="btn btn-outline-primary btn-sm" title="source, target, weight, channel, source_layer, target_layer">Cosmograph links (CSV)</button>
+        <button id="export_cosmograph_nodes" class="btn btn-outline-primary btn-sm" title="id, label, layer, color, size, cluster, annotations, values, metrics, UMAP x/y">Cosmograph nodes (CSV)</button>
+      </div>
+      <div class="form-text">The whole network; nodes are named node_layer, so copies in different layers stay apart. Without a link to this server, download both files and drop them on cosmograph.app.</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_umap">
+      <summary>UMAP view<span class="lp-hint">the nodes as a 2D map</span></summary>
+      <div id="umapExport" class="umap-export">
+        <div class="lp-grid mb-2">
+          <div>
+            <label class="form-label small" for="umapxPoints">Points</label>
+            <select id="umapxPoints" class="form-select form-select-sm">
+              <option value="copies">one per node copy (layers as one network)</option>
+              <option value="names">one per node name (copies merged)</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label small" for="umapxColour">Colour by</label>
+            <select id="umapxColour" class="form-select form-select-sm">
+              ${UMAP_COLOURS.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        ${umapFormHtml('umapx')}
+        <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+          <button id="export_umap_svg" class="btn btn-outline-primary btn-sm" title="A 2D scatter of the nodes, coloured as chosen, with a legend">UMAP scatter (SVG)</button>
+          <button id="export_umap_png" class="btn btn-outline-primary btn-sm">UMAP scatter (PNG)</button>
+          <button id="export_umap_csv" class="btn btn-outline-primary btn-sm" title="node_id, node, layer, umap_1, umap_2, cluster, annotation: for Python, R or a spreadsheet">UMAP coordinates (CSV)</button>
+          <button id="open_umap_vega" class="btn btn-primary btn-sm" title="Interactive scatter in the Vega editor; the chart travels in the link, nothing is uploaded">UMAP in Vega Editor</button>
+        </div>
+        <div class="form-text">The layers ticked in Layer selection (all if none), computed on the server once per set of options. The same modes as the UMAP layout (Layout panel), without moving the nodes.</div>
+      </div>
+    </details>
   </details>
 
   <details class="lp-section lp-more" id="exportCard_visualizations">
     <summary>Visualizations</summary>
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-      <button id="export_chord" class="btn btn-outline-primary btn-sm" title="Layers as arcs, nodes along them, edges as chords">Chord diagram (SVG)</button>
-      <button id="export_heatmap" class="btn btn-outline-primary btn-sm" title="Adjacency matrix with the nodes grouped by layer">Heatmap (SVG)</button>
-      <button id="export_matrix" class="btn btn-outline-primary btn-sm" title="Adjacency matrix for R, Python or Morpheus">Matrix (CSV)</button>
-      <button id="export_circos" class="btn btn-outline-primary btn-sm" title="karyotype, links and a circos.conf for the Circos software">Circos files (zip)</button>
-    </div>
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-      <button id="export_sankey" class="btn btn-outline-primary btn-sm" title="Layers as columns, inter-layer edges as flows">Sankey (SVG)</button>
-      <button id="export_sankey_matic" class="btn btn-outline-primary btn-sm" title="Source [amount] Target lines for sankeymatic.com">SankeyMATIC (text)</button>
-      <button id="export_sankey_plotly" class="btn btn-outline-primary btn-sm" title="A Plotly figure: plotly.js, Python, Chart Studio">Plotly Sankey (JSON)</button>
-      <select id="sankey_level" class="form-select form-select-sm" style="width:auto" aria-label="Sankey bands">
-        ${SANKEY_LEVELS.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
-      </select>
-    </div>
-    <div class="d-flex flex-wrap align-items-center gap-2">
-      <button id="open_vega" class="btn btn-primary btn-sm" title="Interactive heatmap in the Vega editor; the chart travels in the link, nothing is uploaded">Heatmap in Vega Editor</button>
-      <button id="open_gephi" class="btn btn-primary btn-sm" title="The network as GraphML in Gephi Lite, hosted on this server for one hour">Open in Gephi Lite</button>
-      <button id="open_string" class="btn btn-primary btn-sm" title="The selected proteins (or all) on the STRING website">Open in STRING</button>
-      <select id="string_species" class="form-select form-select-sm" style="width:auto" aria-label="Organism for STRING">
-        <option value="9606">Human</option>
-        <option value="10090">Mouse</option>
-        <option value="10116">Rat</option>
-        <option value="7227">Fruit fly</option>
-        <option value="6239">C. elegans</option>
-        <option value="7955">Zebrafish</option>
-        <option value="4932">Yeast</option>
-        <option value="3702">Arabidopsis</option>
-        <option value="511145">E. coli K-12</option>
-      </select>
-    </div>
-    <div class="form-text">Chord, heatmap and Sankey views of the same network (the Sankey flows along the inter-layer edges, per node, group or layer) and Circos input files; one-click hand-offs to the Vega editor, Gephi Lite and STRING.</div>
+    <details class="lp-more lp-sub" id="exportSub_chord">
+      <summary>Chord diagram &amp; Circos<span class="lp-hint">layers as arcs, edges as chords</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <button id="export_chord" class="btn btn-outline-primary btn-sm" title="Layers as arcs, nodes along them, edges as chords">Chord diagram (SVG)</button>
+        <button id="export_circos" class="btn btn-outline-primary btn-sm" title="karyotype, links and a circos.conf for the Circos software">Circos files (zip)</button>
+      </div>
+      <div class="form-text">The chord diagram as an SVG; Circos gets a karyotype, the links and a circos.conf to draw it in the Circos software.</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_heatmap">
+      <summary>Heatmap &amp; matrix<span class="lp-hint">the adjacency matrix, by layer</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <button id="export_heatmap" class="btn btn-outline-primary btn-sm" title="Adjacency matrix with the nodes grouped by layer">Heatmap (SVG)</button>
+        <button id="export_matrix" class="btn btn-outline-primary btn-sm" title="Adjacency matrix for R, Python or Morpheus">Matrix (CSV)</button>
+        <button id="open_vega" class="btn btn-primary btn-sm" title="Interactive heatmap in the Vega editor; the chart travels in the link, nothing is uploaded">Heatmap in Vega Editor</button>
+      </div>
+      <div class="form-text">An SVG, a CSV for R, Python or Morpheus, or an interactive heatmap in the Vega editor (the chart travels in the link; nothing is uploaded).</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_sankey">
+      <summary>Sankey<span class="lp-hint">inter-layer edges as flows</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <button id="export_sankey" class="btn btn-outline-primary btn-sm" title="Layers as columns, inter-layer edges as flows">Sankey (SVG)</button>
+        <button id="export_sankey_matic" class="btn btn-outline-primary btn-sm" title="Source [amount] Target lines for sankeymatic.com">SankeyMATIC (text)</button>
+        <button id="export_sankey_plotly" class="btn btn-outline-primary btn-sm" title="A Plotly figure: plotly.js, Python, Chart Studio">Plotly Sankey (JSON)</button>
+        <select id="sankey_level" class="form-select form-select-sm" style="width:auto" aria-label="Sankey bands">
+          ${SANKEY_LEVELS.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-text">Layers as columns and the inter-layer edges as flows, banded per node, group or layer: an SVG, text for sankeymatic.com or a Plotly figure (plotly.js, Python, Chart Studio).</div>
+    </details>
+    <details class="lp-more lp-sub" id="exportSub_web">
+      <summary>Gephi Lite &amp; STRING<span class="lp-hint">open the network on their websites</span></summary>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <button id="open_gephi" class="btn btn-primary btn-sm" title="The network as GraphML in Gephi Lite, hosted on this server for one hour">Open in Gephi Lite</button>
+        <button id="open_string" class="btn btn-primary btn-sm" title="The selected proteins (or all) on the STRING website">Open in STRING</button>
+        <select id="string_species" class="form-select form-select-sm" style="width:auto" aria-label="Organism for STRING">
+          <option value="9606">Human</option>
+          <option value="10090">Mouse</option>
+          <option value="10116">Rat</option>
+          <option value="7227">Fruit fly</option>
+          <option value="6239">C. elegans</option>
+          <option value="7955">Zebrafish</option>
+          <option value="4932">Yeast</option>
+          <option value="3702">Arabidopsis</option>
+          <option value="511145">E. coli K-12</option>
+        </select>
+      </div>
+      <div class="form-text">Gephi Lite gets the network as GraphML, hosted on this server for one hour; STRING shows the selected proteins (or all) for the organism chosen.</div>
+    </details>
   </details>
 
   <details class="lp-section lp-more" id="exportCard_session">

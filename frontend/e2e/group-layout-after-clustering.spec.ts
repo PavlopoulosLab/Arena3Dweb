@@ -88,7 +88,7 @@ test('after clustering, every offered group layout groups the nodes', async ({
   await findCommunities(page)
   await page.locator('#clustersToAnnotations').dispatchEvent('click')
   const before = await separation(page, true)
-  await page.locator('#groupLayoutCard summary').dispatchEvent('click')
+  await page.locator('#groupLayoutCard > summary').dispatchEvent('click')
   await expect(page.locator('#groupLayoutCard')).toHaveAttribute('open', '')
 
   const source = page.locator('#groupSource')
