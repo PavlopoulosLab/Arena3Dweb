@@ -1,5 +1,6 @@
 """POST /api/import/string and /api/import/databases — PPI database importers."""
 
+import asyncio
 from collections.abc import Callable
 from functools import partial
 from typing import Annotated, Any, TypeVar
@@ -8,6 +9,8 @@ from fastapi import APIRouter, HTTPException, Query
 from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, StringConstraints
 
+from app import config
+from app.models import examples as ex
 from app.models.databases import (
     DatabaseImportRequest,
     GoImportRequest,
@@ -91,11 +94,16 @@ async def import_databases(req: DatabaseImportRequest) -> NetworkModel:
 
 T = TypeVar("T")
 
+# Each import holds a thread for up to DB_TOTAL_SECONDS: a handful at a time,
+# so a burst of imports cannot take every thread from the other endpoints.
+_db_slots = asyncio.Semaphore(config.DB_CONCURRENCY)
+
 
 async def _run(fn: Callable[..., T], *args: Any) -> T:
     try:
         # urllib is blocking — keep it off the event loop
-        result: T = await run_in_threadpool(fn, *args)
+        async with _db_slots:
+            result: T = await run_in_threadpool(fn, *args)
     except (db.DatabaseError, NetworkValidationError) as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except db.UpstreamError as e:
@@ -104,6 +112,8 @@ async def _run(fn: Callable[..., T], *args: Any) -> T:
 
 
 class NdexImportRequest(BaseModel):
+    model_config = ex.config(ex.NDEX_IMPORT)
+
     uuid: Annotated[str, StringConstraints(pattern=r"^[0-9a-fA-F-]{36}$")]
 
 
@@ -177,7 +187,8 @@ async def search_go(q: str = Query(min_length=2, max_length=100)) -> list[SetSea
 
 async def _run_list(fn: Callable[..., list[dict[str, str]]], *args: Any) -> list[dict[str, str]]:
     try:
-        result: list[dict[str, str]] = await run_in_threadpool(fn, *args)
+        async with _db_slots:
+            result: list[dict[str, str]] = await run_in_threadpool(fn, *args)
     except db.DatabaseError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except db.UpstreamError as e:

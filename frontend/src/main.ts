@@ -35,6 +35,7 @@ import { initAnnotationPanel } from './ui/annotation_panel'
 import { initFpsPanel } from './ui/fps'
 import { initDataPanel } from './ui/data'
 import { initHelpPanel } from './ui/help'
+import { initApiPanel } from './ui/api'
 import { initSections } from './ui/sections'
 import { initMinimap } from './ui/minimap'
 import { registerDrawerToggle } from './ui/drawer_toggle'
@@ -98,6 +99,7 @@ async function main(): Promise<void> {
   initLegend()
   initDataPanel()
   initHelpPanel()
+  initApiPanel()
   initSections() // after every panel has its cards
   initMinimap()
   registerDrawerToggle()

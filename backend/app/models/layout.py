@@ -5,6 +5,8 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app import config
+from app.models import examples as ex
+from app.models.limits import ChannelNames, GroupMap, LayerNames, NodeIds
 from app.models.network import EdgeModel, NodeModel
 
 # "coupled": one layout on the selected layers merged by node label, applied to
@@ -49,6 +51,8 @@ class UmapOptions(BaseModel):
 
 
 class LayoutRequest(BaseModel):
+    model_config = ex.config(ex.LAYOUT)
+
     # Unauthenticated DoS fix: this endpoint is reachable directly (not just via
     # the TSV-upload flow), so the MAX_EDGES/MAX_NODES cap must be enforced here
     # too, or a caller can force an O(V*E) layout algorithm over an arbitrarily
@@ -57,9 +61,9 @@ class LayoutRequest(BaseModel):
     edges: list[EdgeModel] = Field(max_length=config.MAX_EDGES)
     algorithm: str
     scope: Scope = "perLayer"
-    selected_layers: list[str]
-    selected_nodes: list[str] | None = None  # Node_Layer ids, for nodesPerLayers
-    selected_channels: list[str] | None = None
+    selected_layers: LayerNames
+    selected_nodes: NodeIds | None = None  # Node_Layer ids, for nodesPerLayers
+    selected_channels: ChannelNames | None = None
     clustering: ClusteringOptions | None = None
     seed: int = 123  # v2 uses set.seed(123)
     # Weighted layouts (off by default = v2 behaviour). When on, edge weights
@@ -76,7 +80,7 @@ class LayoutRequest(BaseModel):
     # NORMA-2.0 group layouts (services/group_layouts.py): `groups` maps a
     # Node_Layer id to its groups (clusters, annotations or its layer)
     group_strategy: Literal["none", "virtual", "gravity", "supernodes"] = "none"
-    groups: dict[str, list[str]] | None = Field(default=None, max_length=config.MAX_NODES)
+    groups: GroupMap | None = None
     group_local: str = "keep"  # a layout name, or "keep" (virtual/gravity only)
     group_force: float = Field(default=10, ge=1, le=20)
     group_scale: float = Field(default=1, ge=0.25, le=4)
@@ -100,6 +104,8 @@ class LayoutResponse(BaseModel):
 class ClusteringRequest(BaseModel):
     """POST /api/clustering: communities only, positions untouched."""
 
+    model_config = ex.config(ex.CLUSTERING)
+
     nodes: list[NodeModel] = Field(max_length=config.MAX_NODES)
     edges: list[EdgeModel] = Field(max_length=config.MAX_EDGES)
     algorithm: str  # Louvain | Walktrap | Fast Greedy | Label Propagation | Leiden
@@ -107,8 +113,8 @@ class ClusteringRequest(BaseModel):
     # the selected layers; coupled: shared across layers by node name
     # (multiplex Leiden, or the other algorithms on the label-merged graph)
     scope: Literal["perLayer", "allLayers", "coupled"] = "perLayer"
-    selected_layers: list[str]
-    selected_channels: list[str] | None = None
+    selected_layers: LayerNames
+    selected_channels: ChannelNames | None = None
     seed: int = 123
 
 

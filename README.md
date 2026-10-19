@@ -152,7 +152,7 @@ Every Arena3D server documents its API at `/api/docs` (OpenAPI at `/api/openapi.
 **Open a network from any tool** — `POST /api/open` takes a list of edges (or the text of an Arena3D TSV file), lays it out on the server and returns a link that opens it in Arena3D:
 
 ```bash
-curl -X POST https://arena3d.org/api/open -H "Content-Type: application/json" \
+curl -X POST https://www.arena3d.org/api/open -H "Content-Type: application/json" \
   -d '{"edges": [{"source": "TP53", "target": "MDM2", "source_layer": "PPI"},
                  {"source": "TP53", "target": "BAX", "source_layer": "Regulation"},
                  {"source": "TP53", "target": "TP53", "source_layer": "PPI", "target_layer": "Regulation"}],
@@ -171,7 +171,7 @@ Other endpoints:
 | `POST /api/import/string`, `/api/import/databases`, `/api/import/ndex` | Database import                                                     |
 | `GET /api/config`                                                      | Server limits and defaults                                          |
 
-Links returned by `/api/open` and `/api/external` are valid for one hour; set `ARENA_PUBLIC_URL` (e.g. `https://arena3d.org`) so they carry the public host.
+Links returned by `/api/open` and `/api/external` are valid for one hour; set `ARENA_PUBLIC_URL` (e.g. `https://www.arena3d.org`) so they carry the public host.
 
 --- | --- |
 | `POST /api/layout` | Layouts, clustering, alignment and group layouts |

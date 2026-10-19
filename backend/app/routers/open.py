@@ -16,6 +16,7 @@ from app.models.layout import LayoutRequest
 from app.models.network import NetworkModel
 from app.models.open import OpenNode, OpenRequest, OpenResponse
 from app.routers.external import store_session
+from app.services.compute_pool import ComputeCrashed, run_isolated
 from app.services.layouts import LAYOUTS, LayoutError, compute_layout
 from app.services.parser import NetworkValidationError, parse_network_tsv
 
@@ -61,13 +62,10 @@ def _tsv(req: OpenRequest) -> str:
 
 def _positions(net: NetworkModel, layout: str | None) -> dict[str, tuple[float, float]]:
     """Per-layer layout, fitted into the floor (layer-local y/z); empty = random."""
+    # runs in a worker process: the router checks the layout name, and a
+    # LayoutError (a plain exception) comes back to it
     if layout is None:
         return {}
-    if layout not in LAYOUTS:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Unknown layout '{layout}'. Available: {', '.join(LAYOUTS)}.",
-        )
     req = LayoutRequest(
         nodes=net.nodes,
         edges=net.edges,
@@ -75,10 +73,7 @@ def _positions(net: NetworkModel, layout: str | None) -> dict[str, tuple[float, 
         scope="perLayer",
         selected_layers=net.layers,
     )
-    try:
-        raw, _ = compute_layout(req)
-    except LayoutError as e:
-        raise HTTPException(status_code=400, detail=str(e)) from e
+    raw, _ = compute_layout(req)
     half = config.FLOOR_DEFAULT_WIDTH / 2 * FIT
     by_layer: dict[str, list[str]] = {}
     for n in net.nodes:
@@ -155,10 +150,22 @@ async def open_network(req: OpenRequest) -> OpenResponse:
     return a link that opens it. The link is valid for one hour. Limits are
     those of file uploads (see GET /api/config)."""
     try:
-        net = parse_network_tsv(_tsv(req))
+        net = await run_in_threadpool(parse_network_tsv, _tsv(req))
     except NetworkValidationError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
-    positions = await run_in_threadpool(_positions, net, req.layout)
+    if req.layout is not None and req.layout not in LAYOUTS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unknown layout '{req.layout}'. Available: {', '.join(LAYOUTS)}.",
+        )
+    try:
+        # in a worker process, like /api/layout: an igraph abort or a very
+        # long layout cannot take the server with it
+        positions = await run_isolated(_positions, net, req.layout)
+    except LayoutError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    except ComputeCrashed as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
     stored = store_session(_session(req, net, positions))
     return OpenResponse(
         token=stored.token,

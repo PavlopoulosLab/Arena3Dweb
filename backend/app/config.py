@@ -124,6 +124,8 @@ MAX_UMAP_NODES = int(os.environ.get("ARENA_MAX_UMAP_NODES", "5000"))
 MAX_UMAP_FEATURES = 500
 # the whole of a database import, every upstream call together
 DB_TOTAL_SECONDS = float(os.environ.get("ARENA_DB_TOTAL_SECONDS", "150"))
+# database imports running at once; more wait for a free slot
+DB_CONCURRENCY = int(os.environ.get("ARENA_DB_CONCURRENCY", "8"))
 
 # Perturbation analysis (services/perturbation.py). A robustness curve has at
 # most MAX_ATTACK_STEPS steps and averages at most MAX_ATTACK_RUNS random runs;
@@ -134,4 +136,10 @@ DB_TOTAL_SECONDS = float(os.environ.get("ARENA_DB_TOTAL_SECONDS", "150"))
 MAX_ATTACK_STEPS = 50
 MAX_ATTACK_RUNS = 20
 PERTURBATION_TIME_BUDGET = float(os.environ.get("ARENA_PERTURBATION_SECONDS", "30"))
+# A layout, clustering or metric in the worker pool that runs longer than this
+# is stopped (its workers restarted), so no request holds a worker for ever.
+COMPUTE_SECONDS = float(os.environ.get("ARENA_COMPUTE_SECONDS", "300"))
+# Stored sessions and hosted exports (backend/tmp): at most this many bytes on
+# disk; the oldest go first.
+MAX_STORE_BYTES = int(os.environ.get("ARENA_MAX_STORE_BYTES", str(1024 * 1024 * 1024)))
 BETWEENNESS_SAMPLE = 200

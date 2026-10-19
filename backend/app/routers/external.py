@@ -11,11 +11,12 @@ import os
 import re
 import secrets
 import time
-from typing import Any
+from typing import Annotated, Any
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, Body, HTTPException, Response
 
 from app import config
+from app.models import examples as ex
 from app.models.session import (
     ExternalCreateResponse,
     SessionImportResponse,
@@ -69,6 +70,18 @@ def _sweep() -> None:
             continue
 
 
+def _fresh(path: str) -> bool:
+    """True while a stored file is within the TTL. An expired one is deleted here,
+    so a link stops working after an hour even when no new upload has swept since."""
+    try:
+        if time.time() - os.path.getmtime(path) < TTL_SECONDS:
+            return True
+        os.remove(path)
+    except OSError:
+        pass
+    return False
+
+
 def _enforce_cap() -> None:
     """DoS guard (H2): before a new write, evict oldest sessions so at most
     MAX_TOKENS-1 remain. Evict (not reject) so an attacker can't deny the
@@ -78,18 +91,23 @@ def _enforce_cap() -> None:
     concurrency count; the bound is MAX_TOKENS + in-flight, which is fine.
     """
     paths = _session_files()
-    if len(paths) < MAX_TOKENS:
-        return
-    dated: list[tuple[float, str]] = []
+    dated: list[tuple[float, int, str]] = []
     for path in paths:
         try:
-            dated.append((os.path.getmtime(path), path))
+            st = os.stat(path)
+            dated.append((st.st_mtime, st.st_size, path))
         except OSError:
             continue
     dated.sort()  # oldest first
-    for _, path in dated[: len(dated) - MAX_TOKENS + 1]:
+    # by count, and by the bytes on disk (MAX_STORE_BYTES): a burst of large
+    # sessions cannot fill the disk either
+    total = sum(size for _, size, _ in dated)
+    for i, (_, size, path) in enumerate(dated):
+        if len(dated) - i < MAX_TOKENS and total < config.MAX_STORE_BYTES:
+            break
         try:
             os.remove(path)
+            total -= size
         except OSError:
             continue
 
@@ -122,7 +140,19 @@ def store_session(session: dict[str, Any]) -> ExternalCreateResponse:
     summary="Hand off a complete session and get a link",
     tags=["Sharing"],
 )
-async def create_external(session: dict[str, Any]) -> ExternalCreateResponse:
+async def create_external(
+    session: Annotated[
+        dict[str, Any],
+        Body(
+            openapi_examples={
+                "two layers": {
+                    "summary": "A two-layer gene network (positions are optional)",
+                    "value": ex.SESSION,
+                }
+            }
+        ),
+    ],
+) -> ExternalCreateResponse:
     """Store a full Arena3D session (the File → Save Session format: scene, layers,
     nodes with positions and colours, edges) and return a link that opens it, valid
     for one hour. For a plain network without positions use POST /api/open."""
@@ -141,7 +171,7 @@ async def resolve_external(token: str) -> SessionImportResponse:
     if not token.isalnum() and not all(c.isalnum() or c in "-_" for c in token):
         raise HTTPException(status_code=400, detail="Invalid token.")
     path = _tmp_path(token, ".json")
-    if not os.path.isfile(path):
+    if not os.path.isfile(path) or not _fresh(path):
         raise HTTPException(status_code=404, detail="Session not found or expired.")
     with open(path) as fh:
         data = json.load(fh)
@@ -196,9 +226,11 @@ async def create_share(req: ShareRequest) -> ShareResponse:
     response_class=Response,
 )
 async def resolve_share(token: str) -> Response:
-    if not _TOKEN.match(token):
+    if not _TOKEN.fullmatch(token):
         raise HTTPException(status_code=404, detail="Unknown share link.")
     path = _tmp_path(token, ".share.json")
+    if not _fresh(path):
+        raise HTTPException(status_code=404, detail="This share link has expired.")
     try:
         with open(path) as fh:
             data = json.load(fh)

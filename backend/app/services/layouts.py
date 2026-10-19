@@ -117,6 +117,14 @@ def compute_layout(
             )
         if req.clustering:
             raise LayoutError("3D layouts cannot be combined with clustering")
+        # igraph's C core can abort on weighted 3D Kamada-Kawai (see
+        # group_layouts.UNSAFE_3D_LOCAL_LAYOUTS); an abort ends the worker and
+        # every other request running in it, so the combination is refused
+        if req.algorithm == "Kamada-Kawai" and req.use_weights:
+            raise LayoutError(
+                "3D Kamada-Kawai cannot use edge weights; untick Use Edge Weights "
+                "or use Fruchterman-Reingold in 3D."
+            )
     random.seed(req.seed)  # v2 set.seed(123)
     edges = g.filter_edges(req.edges, req.selected_channels)
     selected = set(req.selected_layers)

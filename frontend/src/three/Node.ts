@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { safeColor } from '../utils'
 import {
   SPHERE_RADIUS,
   NODE_DETAIL,
@@ -201,6 +202,7 @@ export class Node {
     url = '',
     descr = '',
   }: NodeOptions) {
+    color = safeColor(color, '#FFFFFF') // from a file or session (utils.ts)
     this.id = id
     this.name = name
     this.layer = layer
@@ -442,7 +444,9 @@ export class Node {
     this.shape = type
   }
 
-  setColor(hexColor: string, importMode = false, clusterMode = false): void {
+  setColor(color: string, importMode = false, clusterMode = false): void {
+    // a colour from a file or session: CSS colour forms only (utils.ts)
+    const hexColor = safeColor(color)
     ;(this.sphere.material as THREE.MeshStandardMaterial).color =
       new THREE.Color(hexColor)
     this.color = hexColor

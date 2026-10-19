@@ -6,6 +6,7 @@
 // a key (data-key, class ch-hit) that the panel turns into nodes to select.
 
 import { kde, quantile, summary } from './plot_math'
+import { safeColor } from '../utils'
 
 export type Scale = 'linear' | 'log'
 
@@ -47,6 +48,8 @@ export const esc = (s: string) =>
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
+// a colour from a file or session: a CSS colour only, escaped
+const col = (c: string | undefined) => esc(safeColor(c))
 
 /** A short number: 3 significant digits, exponents for the very large or small. */
 export function fmtNum(v: number): string {
@@ -166,8 +169,8 @@ function legendRows(
     .map((e, k) => {
       const y = y0 + 18 * k
       const sw = e.square
-        ? `<rect x="${x + 8}" y="${y - 5}" width="10" height="10" rx="2" fill="${e.color}"/>`
-        : `<line x1="${x}" x2="${x + 26}" y1="${y}" y2="${y}" stroke="${e.color}" stroke-width="${e.width ?? 2}"${e.dash ? ` stroke-dasharray="${e.dash}"` : ''}/>`
+        ? `<rect x="${x + 8}" y="${y - 5}" width="10" height="10" rx="2" fill="${col(e.color)}"/>`
+        : `<line x1="${x}" x2="${x + 26}" y1="${y}" y2="${y}" stroke="${col(e.color)}" stroke-width="${e.width ?? 2}"${e.dash ? ` stroke-dasharray="${e.dash}"` : ''}/>`
       return `${sw}<text x="${x + 34}" y="${y + 4}" ${t.text}>${esc(e.text)}</text>`
     })
     .join('')
@@ -228,7 +231,7 @@ export function xyChart(
     const ok = (i: number) => X.ok(s.x[i]) && Y.ok(s.y[i])
     const px = (i: number) => X.at(s.x[i]).toFixed(1)
     const py = (i: number) => Y.at(s.y[i]).toFixed(1)
-    const stroke = `stroke="${s.color}" stroke-width="${s.width ?? 2}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}`
+    const stroke = `stroke="${col(s.color)}" stroke-width="${s.width ?? 2}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}`
     const idx = s.x.map((_, i) => i).filter(ok)
     if (s.band) {
       const { lo, hi } = s.band
@@ -240,7 +243,7 @@ export function xyChart(
         .reverse()
       if (up.length > 1)
         parts.push(
-          `<path d="M${[...up, ...down].join(' L')} Z" fill="${s.color}" fill-opacity="0.15" stroke="none"/>`
+          `<path d="M${[...up, ...down].join(' L')} Z" fill="${col(s.color)}" fill-opacity="0.15" stroke="none"/>`
         )
     }
     if (s.kind === 'line' && idx.length)
@@ -266,7 +269,7 @@ export function xyChart(
           .filter(Boolean)
           .join(' ')
         parts.push(
-          `<circle${cls ? ` class="${cls}"` : ''}${key !== undefined ? ` data-key="${esc(key)}"` : ''} cx="${px(i)}" cy="${py(i)}" r="${s.kind === 'points' ? (many ? 2 : 3) : 2.5}" fill="${s.color}"${s.kind === 'points' ? ' fill-opacity="0.75"' : ''}>${title(s.tips?.[i])}</circle>`
+          `<circle${cls ? ` class="${cls}"` : ''}${key !== undefined ? ` data-key="${esc(key)}"` : ''} cx="${px(i)}" cy="${py(i)}" r="${s.kind === 'points' ? (many ? 2 : 3) : 2.5}" fill="${col(s.color)}"${s.kind === 'points' ? ' fill-opacity="0.75"' : ''}>${title(s.tips?.[i])}</circle>`
         )
       }
     if (s.kind === 'bars')
@@ -277,7 +280,7 @@ export function xyChart(
         const bottom = yAxis.scale === 'log' ? base : Math.min(base, Y.at(0))
         const w = Math.max(1, x1 - x0 - (x1 - x0 > 4 ? 1 : 0))
         parts.push(
-          `<rect${hit(s.keys?.[i])} x="${x0.toFixed(1)}" y="${Math.min(top, bottom).toFixed(1)}" width="${w.toFixed(1)}" height="${Math.abs(bottom - top).toFixed(1)}" fill="${s.color}"${overlay ? ' fill-opacity="0.55"' : ''}>${title(s.tips?.[i])}</rect>`
+          `<rect${hit(s.keys?.[i])} x="${x0.toFixed(1)}" y="${Math.min(top, bottom).toFixed(1)}" width="${w.toFixed(1)}" height="${Math.abs(bottom - top).toFixed(1)}" fill="${col(s.color)}"${overlay ? ' fill-opacity="0.55"' : ''}>${title(s.tips?.[i])}</rect>`
         )
       }
   }
@@ -413,22 +416,22 @@ export function boxViolinSvg(
           )
           .reverse()
         parts.push(
-          `<path d="M${[...right, ...left].join(' L')} Z" fill="${g.color}" fill-opacity="0.25" stroke="${g.color}" stroke-opacity="0.6"/>`
+          `<path d="M${[...right, ...left].join(' L')} Z" fill="${col(g.color)}" fill-opacity="0.25" stroke="${col(g.color)}" stroke-opacity="0.6"/>`
         )
       }
     }
     const bw = Math.min(16, half * 0.5)
     const tip = `${g.label}: n ${st.n}, median ${fmtNum(st.median)}, quartiles ${fmtNum(q1)}–${fmtNum(q3)}, range ${fmtNum(st.min)}–${fmtNum(st.max)}`
     parts.push(
-      `<line x1="${cx}" x2="${cx}" y1="${Y.at(loW).toFixed(1)}" y2="${Y.at(hiW).toFixed(1)}" stroke="${g.color}"/>`,
-      `<rect${hit(g.key)} x="${(cx - bw).toFixed(1)}" y="${Y.at(q3).toFixed(1)}" width="${(2 * bw).toFixed(1)}" height="${Math.max(1, Y.at(q1) - Y.at(q3)).toFixed(1)}" fill="${g.color}" fill-opacity="0.8"><title>${esc(tip)}</title></rect>`,
+      `<line x1="${cx}" x2="${cx}" y1="${Y.at(loW).toFixed(1)}" y2="${Y.at(hiW).toFixed(1)}" stroke="${col(g.color)}"/>`,
+      `<rect${hit(g.key)} x="${(cx - bw).toFixed(1)}" y="${Y.at(q3).toFixed(1)}" width="${(2 * bw).toFixed(1)}" height="${Math.max(1, Y.at(q1) - Y.at(q3)).toFixed(1)}" fill="${col(g.color)}" fill-opacity="0.8"><title>${esc(tip)}</title></rect>`,
       `<line x1="${(cx - bw).toFixed(1)}" x2="${(cx + bw).toFixed(1)}" y1="${Y.at(st.median).toFixed(1)}" y2="${Y.at(st.median).toFixed(1)}" stroke="${opts.standalone ? '#000' : '#fff'}" stroke-width="2"/>`
     )
     s.filter((v) => v < loW || v > hiW)
       .slice(0, 200)
       .forEach((v) =>
         parts.push(
-          `<circle cx="${cx}" cy="${Y.at(v).toFixed(1)}" r="2" fill="${g.color}"/>`
+          `<circle cx="${cx}" cy="${Y.at(v).toFixed(1)}" r="2" fill="${col(g.color)}"/>`
         )
       )
     parts.push(
@@ -489,7 +492,7 @@ export function rankingSvg(
     for (const m of r.marks)
       if (m.rank !== null)
         parts.push(
-          `<circle cx="${rx(Math.min(m.rank, maxRank)).toFixed(1)}" cy="${y + rowH / 2}" r="4" fill="${m.color}"><title>${esc(`${r.label} in ${m.label}: rank ${m.rank}`)}</title></circle>`
+          `<circle cx="${rx(Math.min(m.rank, maxRank)).toFixed(1)}" cy="${y + rowH / 2}" r="4" fill="${col(m.color)}"><title>${esc(`${r.label} in ${m.label}: rank ${m.rank}`)}</title></circle>`
         )
   })
   parts.push(
@@ -544,7 +547,7 @@ export function smallMultiplesSvg(
       if (b.value === null || !Number.isFinite(b.value)) return
       const top = y(b.value)
       parts.push(
-        `<rect x="${(x0 + bw * i + 2).toFixed(1)}" y="${Math.min(top, y(0)).toFixed(1)}" width="${Math.max(1, bw - 4).toFixed(1)}" height="${Math.max(1, Math.abs(y(0) - top)).toFixed(1)}" fill="${b.color}"><title>${esc(`${b.label} — ${p.title}: ${fmtNum(b.value)}`)}</title></rect>`
+        `<rect x="${(x0 + bw * i + 2).toFixed(1)}" y="${Math.min(top, y(0)).toFixed(1)}" width="${Math.max(1, bw - 4).toFixed(1)}" height="${Math.max(1, Math.abs(y(0) - top)).toFixed(1)}" fill="${col(b.color)}"><title>${esc(`${b.label} — ${p.title}: ${fmtNum(b.value)}`)}</title></rect>`
       )
       if (bw >= 38)
         parts.push(

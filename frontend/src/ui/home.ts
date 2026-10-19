@@ -3,6 +3,7 @@
 
 import { showTab } from './tabs'
 import { openCard } from './sections'
+import { openHelpPage } from './help'
 import { EXAMPLES, exampleOptions, loadExample } from './file'
 import {
   PUBLICATIONS,
@@ -190,7 +191,7 @@ const HOME_HTML = `
   <section class="home-hero">
     <div class="home-hero__text">
       <div id="logo1" role="img" aria-label="Arena3D"></div>
-      <p class="home-eyebrow">Free and open source · runs in your browser</p>
+      <p class="home-eyebrow">Free and open to all users · no login required</p>
       <h1 class="home-title">Multilayered networks, <span class="home-title__accent">in three dimensions.</span></h1>
       <p class="home-lead">
         Arena3D stacks networks as layers in one 3D scene — proteins, pathways, drugs, diseases or anything
@@ -201,6 +202,10 @@ const HOME_HTML = `
         <a href="#" id="link_to_fileInput" class="btn btn-lg home-cta home-cta--ghost">Upload your network</a>
       </div>
       <a href="#" id="homeToDatabases" class="home-textlink">Or import from STRING, Reactome, IntAct and more →</a>
+      <p class="home-terms">
+        Open source under the <a href="https://github.com/Pavlopoulos-Lab/Arena3D/blob/main/LICENSE" target="_blank" rel="noopener">GNU AGPL v3</a>
+        licence · no cookies, no tracking · <a href="#" id="homeToPrivacy">Privacy &amp; data</a>
+      </p>
     </div>
     <div class="home-hero__visual" aria-hidden="true">${heroSvg()}</div>
   </section>
@@ -306,6 +311,10 @@ export function initHomePanel(): void {
     )
   go('homeToDatabases', '#panel-databases')
   go('homeToHelp', '#panel-help')
+  document.getElementById('homeToPrivacy')?.addEventListener('click', (e) => {
+    e.preventDefault()
+    openHelpPage('Privacy_tab')
+  })
   document.getElementById('homeHeroExample')?.addEventListener('click', () => {
     void loadExample(Math.max(0, exampleIndex(FEATURED[0][0])))
   })

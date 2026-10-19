@@ -71,6 +71,12 @@ def _validate(df: pd.DataFrame) -> None:
 
 
 def parse_network_tsv(text: str) -> NetworkModel:
+    # rows before pandas reads them (duplicates are dropped later, so allow
+    # some): a huge file is refused without being parsed
+    if text.count("\n") > 2 * config.MAX_EDGES + 1:
+        raise NetworkValidationError(
+            f"The network must contain no more than {config.MAX_EDGES} edges."
+        )
     """Parse a raw TSV string into a validated NetworkModel."""
     try:
         df = pd.read_csv(StringIO(text), sep="\t", dtype=str)

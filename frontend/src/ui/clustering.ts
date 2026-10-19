@@ -18,7 +18,7 @@ import { registerAnnotationSet } from '../actions/workspace'
 import { startLoader, finishLoader } from '../actions/screen'
 import { bus } from '../bus'
 import { ctx } from '../three'
-import { escapeHtml } from '../utils'
+import { escapeHtml, safeColor } from '../utils'
 import { PROGRESS_HTML, ProgressBar } from './progress'
 import { selectedChannels } from './layouts'
 import { showTab } from './tabs'
@@ -166,7 +166,7 @@ function renderSummary(): void {
     .map(
       (c) =>
         `<tr><td><input type="checkbox" class="form-check-input cluster-show me-2" data-cluster="${escapeHtml(c.id)}" ${isGroupHidden(`Cluster ${c.id}`) ? '' : 'checked'} aria-label="Show Cluster ${escapeHtml(c.id)}" />` +
-        `<span style="display:inline-block;width:0.8em;height:0.8em;border-radius:50%;margin-right:0.4em;vertical-align:-0.05em;background:${escapeHtml(c.color)}"></span>Cluster ${escapeHtml(c.id)}</td>` +
+        `<span style="display:inline-block;width:0.8em;height:0.8em;border-radius:50%;margin-right:0.4em;vertical-align:-0.05em;background:${escapeHtml(safeColor(c.color))}"></span>Cluster ${escapeHtml(c.id)}</td>` +
         `<td class="text-end">${c.size}</td><td class="text-end">${c.layers}</td></tr>`
     )
     .join('')

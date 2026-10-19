@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arena3D</title>
+    <meta
+      name="description"
+      content="Arena3D: interactive 3D visualization and analysis of multilayered networks in the browser. Free and open to all users, no login required."
+    />
   </head>
   <body>
     <nav class="navbar navbar-expand-xl bg-body-tertiary fixed-top" id="navBar">
@@ -388,6 +392,19 @@
               <button
                 class="nav-link"
                 data-bs-toggle="tab"
+                data-bs-target="#panel-api"
+                data-menu="api"
+                type="button"
+                role="tab"
+                title="Arena3D's REST API: quick start, code and the interactive reference"
+              >
+                API
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                data-bs-toggle="tab"
                 data-bs-target="#panel-help"
                 data-menu="help"
                 type="button"
@@ -493,6 +510,7 @@
       <div class="tab-pane fade" id="panel-annotations" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-data" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-fps" role="tabpanel"></div>
+      <div class="tab-pane fade" id="panel-api" role="tabpanel"></div>
       <div class="tab-pane fade" id="panel-help" role="tabpanel"></div>
     </div>
 
@@ -523,6 +541,8 @@
       <a href="https://www.fleming.gr" target="_blank"
         >Biomedical Sciences Research Center "Alexander Fleming"</a
       >
+      |
+      <a href="#" id="footerPrivacy">Privacy &amp; data</a>
     </footer>
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -46,6 +46,10 @@ STRATEGIES = ("virtual", "gravity", "supernodes")
 UNSAFE_3D_LOCAL_LAYOUTS = {"Kamada-Kawai"}
 
 
+# as layouts.QUADRATIC_LAYOUTS (that module imports this one)
+QUADRATIC = {"Kamada-Kawai", "Multidimensional Scaling", "Graphopt", "Sugiyama"}
+
+
 class GroupLayoutError(ValueError):
     pass
 
@@ -74,6 +78,13 @@ def _layout(
         return {}
     if len(ids) == 1:
         return {ids[0]: (0.0,) * dim}
+    # the group hubs and super nodes count too: a quadratic layout over them
+    # is held to the same size as any other (layouts.check_layout_size)
+    if algorithm in QUADRATIC and len(ids) > config.MAX_QUADRATIC_NODES:
+        raise GroupLayoutError(
+            f"{algorithm} is limited to {config.MAX_QUADRATIC_NODES} nodes per layout "
+            f"(this one has {len(ids)} with the groups); use Fruchterman-Reingold or DrL."
+        )
     index = {n: i for i, n in enumerate(ids)}
     best: dict[tuple[int, int], float] = {}
     for a, b, w in edges:

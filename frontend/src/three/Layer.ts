@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { safeColor } from '../utils'
 import {
   PLANE_WIDTHSEGMENTS,
   PLANE_HEIGHTSEGMENTS,
@@ -180,6 +181,8 @@ export class Layer {
     this.name = name
     this.last_layer_scale = last_layer_scale
     this.geometry_parameters_width = geometry_parameters_width
+    // from a file or session: CSS colour forms only (utils.ts)
+    floor_current_color = safeColor(floor_current_color, LAYER_DEFAULT_COLOR)
     this.importedColor = floor_current_color
     this.color = floor_current_color
 
@@ -717,7 +720,8 @@ export class Layer {
     this.setVolumeTint(color)
   }
 
-  setColor(color: string): void {
+  setColor(value: string): void {
+    const color = safeColor(value) // CSS colour forms only (utils.ts)
     this.color = color
     // repaintLayers gives a selected layer the selection colour
     this.setVolumeTint(this.isSelected ? color : null)

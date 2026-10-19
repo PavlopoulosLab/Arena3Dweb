@@ -130,7 +130,7 @@ def _get(
     if params:
         url = f"{url}?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(
-        url, headers={"Accept": accept, "User-Agent": "Arena3D (https://arena3d.org)"}
+        url, headers={"Accept": accept, "User-Agent": "Arena3D (https://www.arena3d.org)"}
     )
     return _read(req, url)
 
@@ -144,7 +144,7 @@ def _post(url: str, params: dict[str, str], *, accept: str = "application/json")
         headers={
             "Accept": accept,
             "Content-Type": "application/x-www-form-urlencoded",
-            "User-Agent": "Arena3D (https://arena3d.org)",
+            "User-Agent": "Arena3D (https://www.arena3d.org)",
         },
     )
     return _read(req, url)
@@ -513,7 +513,7 @@ def fetch_intact(
     ids = " OR ".join(f'"{i}"' if any(c in i for c in " ():") else i for i in identifiers)
     miql = f"identifier:({ids}) AND taxidA:{species} AND taxidB:{species}"
     text = _get(
-        f"{config.INTACT_PSICQUIC}/query/{urllib.parse.quote(miql)}",
+        f"{config.INTACT_PSICQUIC}/query/{urllib.parse.quote(miql, safe='')}",
         {"format": "tab25", "firstResult": "0", "maxResults": str(max_rows)},
         accept="text/plain",
     )
@@ -664,6 +664,9 @@ def import_string(
     Directly) and nothing is fetched here.
     """
     fields = _string_fields(channels)
+    # checked even when the browser fetched (raw): the address is echoed
+    # into every node's STRING link
+    string_api(address)
     site = (address or STRING_SITE).rstrip("/")
     client = None if raw else _StringClient(address)
     notes: list[str] = []

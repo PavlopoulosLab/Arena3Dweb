@@ -319,7 +319,8 @@ body {
 /* Home and Help are full-width reading surfaces, not scene controls.
    Selector carries two ids to out-specify the base .tab-pane drawer rule. */
 #panelContent #panel-home,
-#panelContent #panel-help {
+#panelContent #panel-help,
+#panelContent #panel-api {
   left: 0;
   width: auto;
   background-color: var(--bs-body-bg);
@@ -338,7 +339,9 @@ body {
 
 /* Inside a drawer the old responsive column wrappers would shrink content to a
    fraction of the (already narrow) drawer — let panel content use full width. */
-#panelContent > .tab-pane:not(#panel-home):not(#panel-help) [class*='col-'] {
+#panelContent
+  > .tab-pane:not(#panel-home):not(#panel-help):not(#panel-api)
+  [class*='col-'] {
   flex: 0 0 100%;
   max-width: 100%;
   width: 100%;
@@ -972,6 +975,21 @@ footer a:hover {
   text-decoration: underline;
 }
 
+/* an open drawer covers the footer's right end: centre it in the space left */
+body:has(
+    #panelContent
+      > .tab-pane.show:not(#panel-home):not(#panel-help):not(#panel-api):not(
+        #panel-main-view
+      )
+  )
+  footer {
+  padding-right: min(440px, 94vw);
+}
+
+body:has(#panelContent > #panel-data.show) footer {
+  padding-right: min(760px, 96vw);
+}
+
 #logo1 {
   background-image: url(/images/logo_dark.webp);
   background-repeat: no-repeat;
@@ -1100,6 +1118,23 @@ footer a:hover {
 }
 
 .home-textlink:hover {
+  color: var(--arena-accent-hover);
+}
+
+/* licence, no tracking, Privacy & data: under the calls to action */
+.home-terms {
+  margin: 1rem 0 0;
+  color: var(--arena-text-muted);
+  font-size: 0.8rem;
+}
+
+.home-terms a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.home-terms a:hover {
   color: var(--arena-accent-hover);
 }
 
@@ -2362,7 +2397,10 @@ footer a:hover {
 
 .about-facts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(240px, 1fr)
+  ); /* six facts: 3 × 2 */
   gap: 0.6rem;
   margin: 1.4rem 0 0;
   padding: 0;
@@ -2402,6 +2440,9 @@ footer a:hover {
 }
 .about-facts li:nth-child(5) .about-fact {
   --fact: var(--about-coral);
+}
+.about-facts li:nth-child(6) .about-fact {
+  --fact: var(--arena-accent);
 }
 
 .about-fact:hover {
@@ -3012,9 +3053,10 @@ footer a:hover {
   #panelContent #panel-data {
     width: 100%;
   }
-  /* Home and Help stay full-screen reading panes */
+  /* Home, API and Help stay full-screen reading panes */
   #panelContent #panel-home,
-  #panelContent #panel-help {
+  #panelContent #panel-help,
+  #panelContent #panel-api {
     top: 56px;
     height: auto;
     border-radius: 0;
@@ -4219,6 +4261,9 @@ body.mode-single .layout-panel .lp-step {
 }
 #navBar .nav-link[data-menu='export'] {
   --menu: #4f9ddc;
+}
+#navBar .nav-link[data-menu='api'] {
+  --menu: #7fb069;
 }
 #navBar .nav-link[data-menu='help'] {
   --menu: #c48ce2;
@@ -5655,4 +5700,125 @@ body.mode-single .layout-panel .lp-step {
 .container-look__value .form-range {
   flex: 1 1 8rem;
   width: auto;
+}
+
+/* API panel (ui/api.ts): the REST API at a glance, code, and Swagger UI */
+.api-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.api-kicker {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7fb069;
+}
+
+.api-head h2 {
+  margin: 0 0 0.5rem;
+}
+
+.api-lead {
+  max-width: 62rem;
+  color: var(--bs-secondary-color);
+}
+
+.api-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+}
+
+.api-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.api-fact__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+}
+
+.api-card {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.api-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.api-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.88rem;
+  color: var(--bs-secondary-color);
+}
+
+.api-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.api-tab,
+.api-copy {
+  padding: 0.2rem 0.7rem;
+  font-size: 0.82rem;
+  color: var(--arena-text);
+  background: transparent;
+  border: 1px solid var(--arena-border);
+  border-radius: 999px;
+}
+
+.api-tab.is-active {
+  border-color: #7fb069;
+  background: color-mix(in srgb, #7fb069 22%, transparent);
+}
+
+.api-copy {
+  margin-left: auto;
+}
+
+.api-code {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  max-height: 24rem;
+  overflow: auto;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  border-radius: var(--arena-radius-sm);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--arena-border);
+}
+
+/* Swagger UI keeps its own light look, on a sheet of its own */
+.api-swagger {
+  color-scheme: light;
+  padding: 0.25rem 0.5rem 0.75rem;
+  border-radius: var(--arena-radius-sm);
+  background: #ffffff;
+  color: #3b4151;
+}
+
+.api-swagger .swagger-ui .info {
+  display: none; /* the panel above says it */
 }

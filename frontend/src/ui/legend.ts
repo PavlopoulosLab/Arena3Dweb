@@ -4,7 +4,7 @@
 
 import { bus } from '../bus'
 import { ctx } from '../three'
-import { escapeHtml } from '../utils'
+import { escapeHtml, safeColor } from '../utils'
 import {
   layerLegend,
   legend,
@@ -53,7 +53,7 @@ export function renderLegend(): void {
   }
   for (const e of l.entries ?? [])
     parts.push(
-      `<span class="legend-entry" data-label="${escapeHtml(e.label)}" title="Select ${escapeHtml(e.label)}"><span class="legend-swatch" style="background:${escapeHtml(e.color)}"></span>${escapeHtml(e.label)}${e.count !== undefined ? ` <span class="legend-count">${e.count}</span>` : ''}</span>`
+      `<span class="legend-entry" data-label="${escapeHtml(e.label)}" title="Select ${escapeHtml(e.label)}"><span class="legend-swatch" style="background:${escapeHtml(safeColor(e.color))}"></span>${escapeHtml(e.label)}${e.count !== undefined ? ` <span class="legend-count">${e.count}</span>` : ''}</span>`
     )
   el.innerHTML = parts.join('')
   el.querySelectorAll<HTMLElement>('.legend-entry').forEach((span) => {

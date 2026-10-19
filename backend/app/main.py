@@ -1,7 +1,8 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from typing import Any
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -30,9 +31,13 @@ them in the application from other tools.
 * The analysis endpoints take and return JSON, so scripts can run layouts, metrics, statistics,
   enrichment and database imports without the browser.
 
-No key is needed. Bodies are limited to the upload size, networks to the limits reported by
-GET /api/config. Errors are JSON with a `detail` message: 400 for bad input, 413 for oversized
-bodies, 422 for a body that does not match the schema.
+No key is needed. Every request below has a worked example (a small two-layer gene network)
+that runs as it is: open an endpoint, *Try it out*, *Execute*. **GET /api/config** lists the
+limits and the names the endpoints accept (layouts, 3D layouts, clustering algorithms, node
+metrics). Bodies are limited to the upload size, networks to those limits, and a computation
+to `compute_seconds`. Errors are JSON with a `detail` message: 400 for bad input, 413 for
+oversized bodies, 422 for a body that does not match the schema, 500 when a computation
+crashed or ran out of time.
 """
 
 TAGS = [
@@ -65,7 +70,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 # docs live under /api/ so the production proxy (nginx: location /api/) reaches them
 app = FastAPI(
     title="Arena3D API",
-    version="3.0.0",
+    version=config_router.API_VERSION,
     description=DESCRIPTION,
     openapi_tags=TAGS,
     docs_url="/api/docs",
@@ -95,22 +100,49 @@ app.include_router(enrichment_router.router)
 # Defense-in-depth: JSON body endpoints (layout/topology/external) validate
 # node/edge counts only *after* Starlette buffers + Pydantic parses the full
 # body, so an oversized payload is fully read into memory before rejection.
-# Reject early using the declared Content-Length. This is a backstop for
-# direct/non-nginx exposure (e.g. docker-compose dev) — the prod deploy's
-# nginx client_max_body_size already enforces this at the edge. A request
-# without Content-Length (chunked transfer) isn't caught here; it still hits
-# the per-endpoint UploadFile checks for the file-upload routes.
-@app.middleware("http")
-async def limit_body_size(request: Request, call_next):  # type: ignore[no-untyped-def]
-    content_length = request.headers.get("content-length")
-    if content_length is not None:
-        try:
-            too_large = int(content_length) > config.MAX_UPLOAD_BYTES
-        except ValueError:
-            too_large = False  # malformed header — let normal parsing reject it
-        if too_large:
-            return JSONResponse(status_code=413, content={"detail": "Payload too large."})
-    return await call_next(request)
+# Reject early using the declared Content-Length, and count a chunked body as
+# it streams in. This is a backstop for direct/non-nginx exposure (e.g.
+# docker-compose dev) — the prod deploy's nginx client_max_body_size already
+# enforces this at the edge.
+class BodyLimit:
+    """MAX_UPLOAD_BYTES for every request: a declared Content-Length over it is
+    refused before any of the body is read, and a chunked body (no
+    Content-Length) is counted as it arrives, so it cannot stream past either.
+    Pure ASGI (not @app.middleware) so the 413 HTTPException raised mid-read
+    reaches FastAPI as is, rather than inside a task group."""
+
+    def __init__(self, inner: Any) -> None:
+        self.inner = inner
+
+    async def __call__(self, scope: Any, receive: Any, send: Any) -> None:
+        if scope["type"] != "http":
+            await self.inner(scope, receive, send)
+            return
+        length = dict(scope.get("headers") or []).get(b"content-length")
+        if length is not None:
+            try:
+                too_large = int(length) > config.MAX_UPLOAD_BYTES
+            except ValueError:
+                too_large = False  # malformed header — let normal parsing reject it
+            if too_large:
+                response = JSONResponse(status_code=413, content={"detail": "Payload too large."})
+                await response(scope, receive, send)
+                return
+        seen = 0
+
+        async def counted() -> Any:
+            nonlocal seen
+            message = await receive()
+            if message["type"] == "http.request":
+                seen += len(message.get("body", b""))
+                if seen > config.MAX_UPLOAD_BYTES:
+                    raise HTTPException(status_code=413, detail="Payload too large.")
+            return message
+
+        await self.inner(scope, counted, send)
+
+
+app.add_middleware(BodyLimit)
 
 
 @app.get("/api/health", summary="Health check", tags=["Configuration"])

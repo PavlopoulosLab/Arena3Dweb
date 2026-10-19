@@ -64,3 +64,35 @@ test('each citation copies to the clipboard', async ({ page, context }) => {
   expect(text).toContain('NAR Genomics and Bioinformatics')
   expect(text).toContain('Arena3Dweb')
 })
+
+test('free and open to all with no login, the licence, and Privacy & data from Home and the footer', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await expect(page.locator('.home-eyebrow')).toHaveText(
+    'Free and open to all users · no login required'
+  )
+  await expect(page.locator('.home-terms a[href$="/LICENSE"]')).toHaveText(
+    'GNU AGPL v3'
+  )
+  await page.locator('#homeToPrivacy').click()
+  await expect(page.locator('#panel-help')).toHaveClass(/show/)
+  const privacy = page.locator('#Privacy_tab')
+  await expect(privacy).toBeVisible()
+  await expect(privacy).toContainText('no login, no registration')
+  await expect(privacy).toContainText('deleted after one hour')
+  await expect(privacy).toContainText('sets no cookies')
+
+  // the footer opens the same page, its link clear of an open drawer (Home
+  // covers the footer)
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  await expect(page.locator('#panel-file')).toHaveClass(/show/)
+  await expect(privacy).toBeHidden()
+  await page.locator('#footerPrivacy').click()
+  await expect(privacy).toBeVisible()
+})

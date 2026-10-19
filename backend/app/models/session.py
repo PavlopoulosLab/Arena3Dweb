@@ -5,6 +5,8 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from app.models import examples as ex
+
 
 class SessionImportResponse(BaseModel):
     """Normalized session returned to the frontend (ports parseUploadedJSON output)."""
@@ -49,9 +51,11 @@ class ExternalCreateResponse(BaseModel):
 class ShareRequest(BaseModel):
     """A file to host for another web tool (Gephi Lite, Morpheus, …) for one hour."""
 
+    model_config = ex.config(ex.SHARE)
+
     content: str = Field(min_length=1)
     media_type: str = Field(pattern=r"^[a-z]+/[a-z0-9.+-]+$")
-    name: str = Field(default="arena3d", min_length=1, max_length=80, pattern=r"^[\w.-]+$")
+    name: str = Field(default="arena3d", min_length=1, max_length=80, pattern=r"^[A-Za-z0-9_.-]+$")
 
 
 class ShareResponse(BaseModel):

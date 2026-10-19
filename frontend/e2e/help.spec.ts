@@ -195,3 +195,45 @@ test('Help layout: grouped navigation, page headers, figures, contents, callouts
   await covid.locator('.help-example__open').click()
   await expect(page.locator('#file_status')).toContainText('Session loaded')
 })
+
+test('Privacy & Data and browser support: a Help page, an About card and Getting Started', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await page
+    .getByRole('tab', { name: 'Help', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  const help = page.locator('#helpDiv')
+  await expect(
+    help.locator('#Start_tab h3', { hasText: 'Browsers' })
+  ).toHaveCount(1)
+  await expect(help.locator('#Start_tab')).toContainText(
+    'Chrome, Edge, Firefox and Safari'
+  )
+
+  // About: a fact card says it is free, and opens the Privacy & Data page
+  await help.locator('[data-help-tab="About_tab"]').dispatchEvent('click')
+  await expect(help.locator('#About_tab .about-eyebrow')).toContainText(
+    'no login required'
+  )
+  await expect(help.locator('#About_tab .about-fact')).toHaveCount(6)
+  await help.locator('#aboutToPrivacy').click()
+  const privacy = help.locator('#Privacy_tab')
+  await expect(privacy).toBeVisible()
+  await expect(help.locator('[data-help-tab="Privacy_tab"]')).toHaveClass(
+    /active/
+  )
+  await expect(privacy.locator('.help-head h2')).toHaveText('Privacy & Data')
+  await expect(privacy.locator('h3')).toHaveText([
+    'Free and open to all',
+    'Your data',
+    'No cookies, no tracking',
+    'Other services, only when you ask',
+    'Running it yourself',
+  ])
+  for (const service of ['STRING', 'NORMA', 'Gephi Lite', 'Cytoscape'])
+    await expect(privacy).toContainText(service)
+})

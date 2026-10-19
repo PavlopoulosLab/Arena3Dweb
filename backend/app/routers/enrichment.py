@@ -7,6 +7,7 @@ from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field, StringConstraints
 
 from app import config
+from app.models import examples as ex
 from app.services import databases as db
 from app.services.enrichment import EnrichedTerm, enrich
 
@@ -16,6 +17,8 @@ Gene = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max
 
 
 class EnrichmentRequest(BaseModel):
+    model_config = ex.config(ex.ENRICHMENT)
+
     genes: list[Gene] = Field(min_length=1, max_length=config.MAX_DB_IDENTIFIERS)
     species: int = 9606
     max_terms: int = Field(default=50, ge=1, le=500)

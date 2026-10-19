@@ -13,6 +13,7 @@ from app.models.topology import (
     TopologyRequest,
     TopologyResponse,
 )
+from app.services.compute_pool import ComputeCrashed, run_isolated
 from app.services.multilayer import layer_similarity
 from app.services.stats import GraphStats, network_stats
 from app.services.topology import TopologyError, compute_topology
@@ -28,9 +29,13 @@ router = APIRouter()
 )
 async def run_topology(req: TopologyRequest) -> TopologyResponse:
     try:
-        scales, raw = await run_in_threadpool(compute_topology, req)
+        # in a worker process: igraph holds the GIL, so a thread would still
+        # freeze every other request while betweenness runs
+        scales, raw = await run_isolated(compute_topology, req)
     except TopologyError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+    except ComputeCrashed as e:
+        raise HTTPException(status_code=500, detail=str(e)) from e
     return TopologyResponse(scales=scales, raw=raw)
 
 

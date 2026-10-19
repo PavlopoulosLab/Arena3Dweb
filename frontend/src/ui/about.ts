@@ -122,6 +122,8 @@ const ICONS: Record<string, string> = {
   link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/>',
   book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M4 19a2 2 0 0 1 2-2h13"/>',
+  shield:
+    '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z"/><path d="m9 12 2 2 4-4"/>',
 }
 const icon = (name: string, size = 18) =>
   `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`
@@ -140,6 +142,7 @@ const FACTS: [string, string, string, string][] = [
     'pavlopoulos@fleming.gr',
     'mailto:pavlopoulos@fleming.gr',
   ],
+  ['shield', 'Privacy &amp; data', 'Free for all, no login', '#aboutToPrivacy'],
 ]
 
 const TOOLS: [string, string, string, string, [string, string][]][] = [
@@ -214,7 +217,7 @@ export const ABOUT_HTML = `
 <div id="About_tab" class="tabcontent about">
   <section class="about-hero">
     <img class="about-logo" src="${BASE}images/logo_dark.webp" alt="Arena3D" width="220" height="67">
-    <p class="about-eyebrow">Arena3D 3.0 · free and open source</p>
+    <p class="about-eyebrow">Arena3D 3.0 · free and open to all users, no login required</p>
     <h2 class="about-title">Multilayered networks in 3D, <span class="about-title__accent">from the Pavlopoulos Lab</span></h2>
     <p class="about-lead">
       Arena3D shows multilayered networks in one 3D scene — every layer a floor, a disk, a cube, a sphere or a
@@ -318,7 +321,7 @@ export const ABOUT_HTML = `
 </div>
 `
 
-// wire Copy citation and How to cite
+// wire Copy citation, How to cite and Privacy & data
 export function initAbout(pane: HTMLElement): void {
   pane
     .querySelectorAll<HTMLElement>('.about-copy')
@@ -333,5 +336,10 @@ export function initAbout(pane: HTMLElement): void {
       pane
         .querySelector('#aboutPubs')
         ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    )
+  pane
+    .querySelector('#aboutToPrivacy')
+    ?.addEventListener('click', () =>
+      pane.querySelector<HTMLElement>('[data-help-tab="Privacy_tab"]')?.click()
     )
 }

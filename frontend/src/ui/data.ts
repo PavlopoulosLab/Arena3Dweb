@@ -84,7 +84,15 @@ const DATA_HTML = `
 
 function toCsv(columns: string[], rows: (string | number)[][]): string {
   const q = (v: string | number) => {
-    const s = String(v)
+    let s = String(v)
+    // a name starting = + - @ would run as a spreadsheet formula: quote it
+    // with ' (numbers stay numbers)
+    if (
+      typeof v === 'string' &&
+      /^[=+\-@\t\r]/.test(s) &&
+      !Number.isFinite(Number(s))
+    )
+      s = `'${s}`
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
   }
   return [columns, ...rows].map((r) => r.map(q).join(',')).join('\n')

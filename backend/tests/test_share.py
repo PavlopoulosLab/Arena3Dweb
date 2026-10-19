@@ -1,6 +1,7 @@
 """Export → Open in Gephi Lite: a file hosted for one hour behind a token."""
 
 import os
+import time
 
 import pytest
 from fastapi import HTTPException
@@ -80,3 +81,26 @@ def test_share_hosts_cosmograph_csvs() -> None:
         assert got.headers["content-length"] == str(len(content.encode()))
         assert got.headers["content-disposition"].startswith("attachment")
         assert got.headers["x-content-type-options"] == "nosniff"
+
+
+def test_links_expire_after_the_ttl_without_a_new_upload(tmp_path, monkeypatch) -> None:
+    """A shared link and a hosted file stop working an hour after they were made,
+    and are deleted then, even when no later upload has run the sweep."""
+    from app.routers import external
+
+    monkeypatch.setattr("app.routers.external.config.TMP_PATH", str(tmp_path) + "/")
+    hosted = client.post("/api/share", json={"content": "a\tb\n", "media_type": "text/plain"})
+    session = {"layers": [{"name": "L1"}], "nodes": [{"name": "A", "layer": "L1"}], "edges": []}
+    shared = client.post("/api/external", json=session)
+    assert hosted.status_code == 200 and shared.status_code == 200, shared.text
+    share_url = f"/api/share/{hosted.json()['token']}"
+    external_url = f"/api/external/{shared.json()['token']}"
+    assert client.get(share_url).status_code == 200
+    assert client.get(external_url).status_code == 200
+
+    old = time.time() - external.TTL_SECONDS - 1
+    for f in tmp_path.glob("*.json"):
+        os.utime(f, (old, old))
+    assert client.get(share_url).status_code == 404
+    assert client.get(external_url).status_code == 404
+    assert list(tmp_path.glob("*.json")) == []

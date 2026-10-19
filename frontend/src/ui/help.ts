@@ -2,6 +2,7 @@
 
 import { ABOUT_HTML, initAbout } from './about'
 import { decorateHelp } from './help_layout'
+import { showTab } from './tabs'
 
 // Tab-separated examples as tables: real tabs render as uneven gaps once
 // names differ in length, so columns are shown as cells and the caption
@@ -92,6 +93,7 @@ const HELP_HTML = `
   <button class="tablinks" data-help-tab="Export_tab">Export</button>
   <button class="tablinks" data-help-tab="API_tab">API</button>
   <button class="tablinks" data-help-tab="Cytoscape_tab">Cytoscape App</button>
+  <button class="tablinks" data-help-tab="Privacy_tab">Privacy &amp; Data</button>
   <button class="tablinks" data-help-tab="About_tab">About</button>
 </div>
 
@@ -199,11 +201,18 @@ const HELP_HTML = `
     layers exactly as they were, and sessions remember the mode.
   </p>
   <h3>Phones and tablets</h3>
-  <p class="last_p">
+  <p>
     On a touch screen, drag with one finger to orbit the scene, pinch with two fingers to zoom (around your fingers)
     and move them together to pan, double-tap a node or a layer to select it, and long-press a node for its menu (a
     tap elsewhere closes it). Panels open as a sheet over the lower part of the screen, so the network stays visible
     above; the navigation table starts closed and the 2D navigator is hidden to leave room for the scene.
+  </p>
+  <h3>Browsers</h3>
+  <p class="last_p">
+    Arena3D runs in current versions of Chrome, Edge, Firefox and Safari, on Windows, macOS and Linux and on phones
+    and tablets, with nothing to install. The 3D view needs WebGL 2, which these browsers have on by default: if the
+    scene stays empty, turn on hardware acceleration in the browser's settings. Large networks are smoothest on a
+    computer with a graphics card; View → Performance trades detail for speed.
   </p>
 </div>
 
@@ -1887,8 +1896,16 @@ const HELP_HTML = `
   <p>
     Arena3D's server is a plain HTTPS/JSON API, open to any application: no key, and cross-origin requests are
     allowed. Interactive documentation of every endpoint — schemas, examples and a "Try it out" button — is served at
-    <i>/api/docs</i> on every Arena3D server (<a href="https://arena3d.org/api/docs" target="_blank">arena3d.org/api/docs</a>);
+    <i>/api/docs</i> on every Arena3D server (<a href="https://www.arena3d.org/api/docs" target="_blank">www.arena3d.org/api/docs</a>);
     the OpenAPI description is at <i>/api/openapi.json</i>.
+  </p>
+  <p>
+    Inside the app, <b>API</b> in the top bar (before Help) shows the same reference: the base URL, the version and
+    the server's limits, code to copy in curl, Python, R and JavaScript, and the interactive reference, where every
+    request comes with a worked example — a small two-layer gene network — that runs as it is (open an endpoint,
+    <i>Try it out</i>, <i>Execute</i>). <b>GET /api/config</b> tells a script what it may send: the version, the
+    limits (nodes, edges, layers, channels, upload size, seconds per computation) and the names of the layout, 3D
+    layout and clustering algorithms and node metrics.
   </p>
 
   <h3>Open a network from your application</h3>
@@ -1952,7 +1969,7 @@ const HELP_HTML = `
     ['directed', 'boolean', 'Draw arrows.'],
   ])}
   <p>An example request and its answer:</p>
-  <pre class="help-code">curl -X POST https://arena3d.org/api/open -H "Content-Type: application/json" -d @network.json</pre>
+  <pre class="help-code">curl -X POST https://www.arena3d.org/api/open -H "Content-Type: application/json" -d @network.json</pre>
   ${json({
     edges: [
       { source: 'TP53', target: 'MDM2', source_layer: 'PPI' },
@@ -1976,7 +1993,7 @@ const HELP_HTML = `
     layout: 'Fruchterman-Reingold',
     directed: false,
   })}
-  ${json({ token: '…', url: 'https://arena3d.org/?session=…', layers: 2, nodes: 5, edges: 4, channels: [], warnings: [] })}
+  ${json({ token: '…', url: 'https://www.arena3d.org/?session=…', layers: 2, nodes: 5, edges: 4, channels: [], warnings: [] })}
   ${fields([
     ['token', 'string', 'The stored network; valid for one hour.'],
     [
@@ -1999,7 +2016,7 @@ const HELP_HTML = `
   <pre class="help-code">import requests, webbrowser
 
 edges = [{"source": s, "target": t, "source_layer": layer} for s, t, layer in my_edges]
-r = requests.post("https://arena3d.org/api/open", json={"edges": edges, "directed": True})
+r = requests.post("https://www.arena3d.org/api/open", json={"edges": edges, "directed": True})
 r.raise_for_status()
 webbrowser.open(r.json()["url"])</pre>
 
@@ -2218,6 +2235,66 @@ webbrowser.open(r.json()["url"])</pre>
   </p>
 </div>
 
+<div id="Privacy_tab" class="tabcontent">
+  <h2>Privacy &amp; Data</h2>
+  <p class="help-lead">Free and open to all users, with no login: what happens to your data, how long anything is kept and when other services are contacted.</p>
+  <h3>Free and open to all</h3>
+  <p>
+    Arena3D is free and open to all users. There is no login, no registration and no e-mail address to give, and
+    nothing to install. The source code is open under the GNU AGPL v3 licence, so you can also run the whole
+    application on your own computer (see <i>Running it yourself</i> below).
+  </p>
+  <h3>Your data</h3>
+  <ul>
+    <li><b>In your browser</b>: the networks you open, with their layouts, styles and annotations, live in the
+      browser tab. Closing or reloading the tab discards them; File → Save Session writes them to a file on your
+      computer.</li>
+    <li><b>Processed, not stored</b>: to read a file, lay out a network, find communities or compute metrics,
+      statistics, plots and perturbations, the browser sends the data to the Arena3D server, which computes the
+      answer and sends it back. Nothing is written to disk and no copy is kept, so no one else can see your data.</li>
+    <li><b>Links, for one hour</b>: something is stored only when you ask for a link — the files behind <i>Open in
+      Gephi Lite</i>, <i>Open in Gosling Editor</i>, <i>Open in JBrowse 2</i> and <i>Cosmograph</i>, and the links a
+      program gets from <i>POST /api/open</i> or <i>/api/external</i> (API page). Each is kept under a random,
+      unguessable address and deleted after one hour. Anyone with the address can open it during that hour, so share
+      it only with people you trust; the addresses are not listed anywhere.</li>
+    <li><b>Server logs</b>: like any web server, the server logs each request — its time, the address asked for,
+      the answer's status and the IP address it came from — to keep the service running and secure. The contents of
+      your files are not logged.</li>
+  </ul>
+  <h3>No cookies, no tracking</h3>
+  <p>
+    Arena3D sets no cookies and uses no analytics, tracking or advertising, and the page loads nothing from other
+    sites. The browser's local storage keeps a few interface preferences on your computer — which cards are open,
+    the selection shape, whether the shortcuts list is folded — and they are never sent anywhere.
+  </p>
+  <h3>Other services, only when you ask</h3>
+  <p>Arena3D contacts another service only when you click for it, and sends it only what that step needs:</p>
+  <ul>
+    <li><b>Database Importers</b>: the server sends your search (names or identifiers, organism, options) to
+      STRING, IntAct, OmniPath, NDEx, Reactome or Gene Ontology (QuickGO) and builds the network from the answer;
+      with <i>Connect: Directly</i>, the STRING card asks STRING from your browser.</li>
+    <li><b>Enrichment</b> (Analyze → Annotations &amp; Groups): the node names of the chosen layers or groups go to
+      STRING's enrichment service, through the server.</li>
+    <li><b>Hand-offs</b> (Export and File): <i>Send to NORMA</i> sends the network to NORMA's server; <i>Send to
+      Flame</i> and <i>Open in STRING</i> put the node names in the link they open; <i>Heatmap in Vega Editor</i>
+      carries the chart in its link; <i>Open in Gephi Lite</i>, <i>Gosling Editor</i>, <i>JBrowse 2</i> and
+      <i>Cosmograph</i> let that site read the files hosted here for an hour; <i>Send to Cytoscape</i> talks only to
+      Cytoscape on your own computer.</li>
+    <li><b>Links in the data</b>: a node's URL, and the database links in the tables, open the other site in a new
+      tab.</li>
+  </ul>
+  <p>
+    Each of those sites has its own privacy policy. Downloaded NGCircos and CircosJS pages load their libraries from
+    a public CDN when you open them.
+  </p>
+  <h3>Running it yourself</h3>
+  <p class="last_p">
+    For confidential data, run Arena3D on your own computer or server with Docker (the image is
+    <i>pavlopouloslab/arena3dweb</i>; the README on <a href="https://github.com/Pavlopoulos-Lab/Arena3D" target="_blank" rel="noopener">GitHub</a>
+    explains how): everything then stays on your machine, apart from the database imports and hand-offs you choose.
+  </p>
+</div>
+
 ${ABOUT_HTML}
 </div>
 `
@@ -2254,4 +2331,16 @@ export function initHelpPanel(): void {
   // open Getting Started
   const first = buttons[0]
   if (first?.dataset.helpTab) openHelpTab(pane, first.dataset.helpTab, first)
+  document.getElementById('footerPrivacy')?.addEventListener('click', (e) => {
+    e.preventDefault()
+    openHelpPage('Privacy_tab')
+  })
+}
+
+// open one Help page from elsewhere (Home, the footer)
+export function openHelpPage(tabName: string): void {
+  showTab('#panel-help')
+  document
+    .querySelector<HTMLElement>(`#helpDiv [data-help-tab="${tabName}"]`)
+    ?.click()
 }

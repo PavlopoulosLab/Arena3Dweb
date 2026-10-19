@@ -8,7 +8,7 @@
 
 import { bus } from '../bus'
 import { ctx } from '../three'
-import { escapeHtml } from '../utils'
+import { escapeHtml, safeColor } from '../utils'
 import { showTab } from './tabs'
 import { layerSwatchColor } from '../actions/legend'
 import {
@@ -97,7 +97,7 @@ export function buildLayerCheckboxes(): void {
     const nodes = nodesOf.get(layer.name) ?? 0
     row.innerHTML = `
       <input class="form-check-input layer_checkbox" type="checkbox" id="checkbox_${i}" ${layer.isSelected ? 'checked' : ''} />
-      <span class="layer-row__swatch" style="background:${color}" aria-hidden="true"></span>
+      <span class="layer-row__swatch" style="background:${escapeHtml(safeColor(color))}" aria-hidden="true"></span>
       <label class="form-check-label layer_label layer-row__name" for="checkbox_${i}">${escapeHtml(layer.name)}</label>
       <span class="layer-row__count">${nodes} node${nodes === 1 ? '' : 's'}</span>
       <label class="form-check-label layer-row__opt" for="checkbox2_${i}">

@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app import config
+from app.models import examples as ex
 from app.models.perturbation import AnalysedRequest
 
 PlotScope = Literal["perLayer", "combined"]
@@ -12,6 +13,8 @@ Extra = Literal["components", "paths", "clustering_by_degree", "neighbour_degree
 
 
 class PlotRequest(AnalysedRequest):
+    model_config = ex.config(ex.PLOTS)
+
     # each analysed layer (intra-layer edges) or the analysed layers as one graph
     scope: PlotScope = "perLayer"
     # node metrics by name, as in GET /api/config topology_metrics

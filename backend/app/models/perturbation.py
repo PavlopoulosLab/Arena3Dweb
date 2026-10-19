@@ -5,6 +5,8 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app import config
+from app.models import examples as ex
+from app.models.limits import ChannelNames
 from app.models.network import EdgeModel, NodeModel
 
 RankMetric = Literal["degree", "betweenness", "pagerank"]
@@ -35,10 +37,12 @@ class AnalysedRequest(BaseModel):
     # the analysed layers; the whole network is these layers with the
     # inter-layer edges among them
     layers: list[str] = Field(min_length=1, max_length=config.MAX_LAYERS)
-    selected_channels: list[str] | None = None
+    selected_channels: ChannelNames | None = None
 
 
 class KnockoutRequest(AnalysedRequest):
+    model_config = ex.config(ex.KNOCKOUT)
+
     # nodes: Node_Layer ids, names (every copy in the analysed layers, any
     # case) and the top k by a metric
     remove_nodes: list[str] = Field(default=[], max_length=config.MAX_NODES)
@@ -105,6 +109,8 @@ class KnockoutResponse(BaseModel):
 
 
 class AttackRequest(AnalysedRequest):
+    model_config = ex.config(ex.ATTACK)
+
     strategy: AttackStrategy = "random"
     # targeted: rank again after each step (adaptive) or once at the start
     recalculate: bool = True

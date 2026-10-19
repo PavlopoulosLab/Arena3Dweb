@@ -61,8 +61,12 @@ def _partners(
     """Node_Layer id -> linked ids in other layers (copies + inter-layer edges)."""
     out: dict[str, list[str]] = defaultdict(list)
     copies: dict[str, list[str]] = defaultdict(list)
+    # one copy per layer and label: a label repeated within a layer (only a
+    # malformed request) must not make pairs of every one with every other
+    seen: set[tuple[str, str]] = set()
     for n in nodes:
-        if n.layer in selected:
+        if n.layer in selected and (n.label, n.layer) not in seen:
+            seen.add((n.label, n.layer))
             copies[n.label].append(n.id)
     for ids in copies.values():
         for a in ids:

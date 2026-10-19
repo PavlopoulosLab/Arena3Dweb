@@ -42,6 +42,10 @@ class ComputeCrashed(RuntimeError):
     """A worker process died while running this request."""
 
 
+class ComputeTimeout(ComputeCrashed):
+    """The request ran past config.COMPUTE_SECONDS and was stopped."""
+
+
 def start() -> None:
     global _pool
     _pool = ProcessPoolExecutor(
@@ -66,17 +70,34 @@ async def _ensure_pool() -> ProcessPoolExecutor:
     return _pool
 
 
+async def _replace(pool: ProcessPoolExecutor, kill: bool = False) -> None:
+    async with _lock:
+        if _pool is pool:  # nobody else already replaced it
+            if kill:  # a running job cannot be cancelled: end its process
+                for proc in list(getattr(pool, "_processes", {}).values()):
+                    proc.terminate()
+            pool.shutdown(wait=False, cancel_futures=True)
+            start()
+
+
 async def run_isolated(fn: Callable[..., T], *args: object) -> T:
-    """Run `fn(*args)` in the worker pool; survives a worker crash."""
+    """Run `fn(*args)` in the worker pool; survives a worker crash, and stops
+    a job that runs past config.COMPUTE_SECONDS."""
     pool = await _ensure_pool()
     loop = asyncio.get_running_loop()
     try:
-        return await loop.run_in_executor(pool, fn, *args)
+        return await asyncio.wait_for(
+            loop.run_in_executor(pool, fn, *args), timeout=config.COMPUTE_SECONDS
+        )
+    except TimeoutError as e:
+        await _replace(pool, kill=True)
+        logger.error("Compute job stopped after %.0f s", config.COMPUTE_SECONDS)
+        raise ComputeTimeout(
+            f"The computation took longer than {config.COMPUTE_SECONDS:.0f} s and was "
+            "stopped; try fewer layers, a smaller network or a faster algorithm."
+        ) from e
     except BrokenProcessPool as e:
-        async with _lock:
-            if _pool is pool:  # nobody else already replaced it
-                pool.shutdown(wait=False)
-                start()
+        await _replace(pool)
         logger.error("Compute worker crashed: %s", e)
         raise ComputeCrashed(
             "The server's layout engine crashed on this request (likely an "

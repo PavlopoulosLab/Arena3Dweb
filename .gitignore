@@ -45,6 +45,8 @@ __pycache__/
 *.pyc
 .mypy_cache/
 .ruff_cache/
+# shared links and hosted exports (one-hour TTL), never committed
+backend/tmp/
 
 # Node
 frontend/node_modules/

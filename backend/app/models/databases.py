@@ -5,6 +5,7 @@ from typing import Annotated, Any, Literal
 from pydantic import BaseModel, Field, StringConstraints
 
 from app import config
+from app.models import examples as ex
 from app.models.network import NetworkModel
 
 Identifier = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=100)]
@@ -51,6 +52,8 @@ class StringRaw(BaseModel):
 
 
 class StringImportRequest(BaseModel):
+    model_config = ex.config(ex.STRING_IMPORT)
+
     identifiers: list[Identifier] = Field(min_length=1, max_length=config.MAX_DB_IDENTIFIERS)
     species: int = Field(default=9606, ge=1)  # NCBI taxon; 9606 = human
     network_type: Literal["functional", "physical"] = "functional"
@@ -68,6 +71,8 @@ class StringImportRequest(BaseModel):
 
 class StringGroupingsRequest(BaseModel):
     """Groupings for the network on screen (its node names)."""
+
+    model_config = ex.config(ex.STRING_GROUPINGS)
 
     identifiers: list[Identifier] = Field(min_length=1, max_length=config.MAX_GROUPING_IDENTIFIERS)
     species: int = Field(default=9606, ge=1)
@@ -111,6 +116,8 @@ class StringGroupingsResponse(BaseModel):
 
 
 class DatabaseImportRequest(BaseModel):
+    model_config = ex.config(ex.DATABASES_IMPORT)
+
     identifiers: list[Identifier] = Field(min_length=1, max_length=config.MAX_DB_IDENTIFIERS)
     species: int = 9606
     databases: list[str] = Field(min_length=1, max_length=3)  # STRING | IntAct | OmniPath
@@ -126,6 +133,8 @@ SetId = Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, ma
 class ReactomeImportRequest(BaseModel):
     """Reactome pathways as layers: each pathway's proteins with STRING edges among them."""
 
+    model_config = ex.config(ex.REACTOME_IMPORT)
+
     pathways: list[SetId] = Field(min_length=1, max_length=config.MAX_LAYERS)
     species: int = 9606
     required_score: float = Field(default=0.4, ge=0, le=1)
@@ -134,6 +143,8 @@ class ReactomeImportRequest(BaseModel):
 
 class GoImportRequest(BaseModel):
     """Gene Ontology terms as layers: each term's genes with STRING edges among them."""
+
+    model_config = ex.config(ex.GO_IMPORT)
 
     terms: list[SetId] = Field(min_length=1, max_length=config.MAX_LAYERS)
     taxon: int = 9606

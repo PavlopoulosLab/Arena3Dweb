@@ -201,6 +201,10 @@ def _from_sif(text: str) -> str:
         source, relation, *targets = parts
         layer = config.DEFAULT_LAYER_NAME
         rows += [(source, layer, t, layer, None, relation) for t in targets]
+        if len(rows) > 2 * config.MAX_EDGES:  # refused before it is built
+            raise NetworkValidationError(
+                f"The network must contain no more than {config.MAX_EDGES} edges."
+            )
     return _rows_to_tsv(rows)
 
 
@@ -242,6 +246,14 @@ def _from_cx2(data: Any) -> str:
 
 def parse_network_file(text: str, filename: str) -> NetworkModel:
     """Dispatch on the file extension; anything else is the Arena3D TSV."""
+    try:
+        return _parse_network_file(text, filename)
+    except (RecursionError, TypeError, KeyError, AttributeError) as e:
+        # a deeply nested GML or CX2, or a CX2 with odd ids: refused, not a 500
+        raise NetworkValidationError("Could not read this file: it is malformed.") from e
+
+
+def _parse_network_file(text: str, filename: str) -> NetworkModel:
     fmt = EXTENSIONS.get(os.path.splitext(filename.lower())[1])
     if fmt == "graphml":
         return parse_network_tsv(_from_graphml(text))

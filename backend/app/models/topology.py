@@ -5,6 +5,8 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app import config
+from app.models import examples as ex
+from app.models.limits import ChannelNames, LayerNames, NodeIds
 from app.models.network import EdgeModel, NodeModel
 
 Scope = Literal["perLayer", "allLayers", "nodesPerLayers"]
@@ -15,15 +17,17 @@ GraphMode = Literal["undirected", "directed", "multi"]
 
 
 class TopologyRequest(BaseModel):
+    model_config = ex.config(ex.TOPOLOGY)
+
     # Same unauthenticated-DoS fix as LayoutRequest — Betweenness Centrality is
     # O(V*E) and this endpoint had no size limit of its own.
     nodes: list[NodeModel] = Field(max_length=config.MAX_NODES)
     edges: list[EdgeModel] = Field(max_length=config.MAX_EDGES)
     metric: str  # Degree | Clustering Coefficient | Betweenness Centrality
     scope: Scope = "perLayer"
-    selected_layers: list[str]
-    selected_nodes: list[str] | None = None
-    selected_channels: list[str] | None = None
+    selected_layers: LayerNames
+    selected_nodes: NodeIds | None = None
+    selected_channels: ChannelNames | None = None
     directed: bool = False  # v2 edgeDirectionToggle (affects betweenness)
     graph: GraphMode = Field(
         default="undirected",
@@ -39,6 +43,8 @@ class TopologyResponse(BaseModel):
 
 
 class LayerSimilarityRequest(BaseModel):
+    model_config = ex.config(ex.ANALYSED)
+
     nodes: list[NodeModel] = Field(max_length=config.MAX_NODES)
     edges: list[EdgeModel] = Field(max_length=config.MAX_EDGES)
     layers: list[str] = Field(min_length=1, max_length=config.MAX_LAYERS)

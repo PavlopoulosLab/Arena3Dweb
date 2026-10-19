@@ -536,11 +536,12 @@ export function initExportPanel(): void {
         return status(err instanceof Error ? err.message : String(err), true)
       }
       const tab = window.open('', '_blank')
+      if (tab) tab.opener = null // the site opened cannot steer this tab
       status(`Hosting the files for ${tool}…`)
       link(r)
         .then((url) => {
           if (tab) tab.location.href = url
-          else window.open(url, '_blank')
+          else window.open(url, '_blank', 'noopener,noreferrer')
           status(
             `Opened in ${tool}: ${ringSize(r)}${ringWarning(r)} (the files are kept for one hour).`
           )
@@ -610,11 +611,12 @@ export function initExportPanel(): void {
   document.getElementById('open_cosmograph')?.addEventListener('click', () => {
     // open the tab inside the click, so popup blockers allow it
     const tab = window.open('', '_blank')
+    if (tab) tab.opener = null // the site opened cannot steer this tab
     status('Hosting the CSV files for Cosmograph…')
     cosmographLink()
       .then((url) => {
         if (tab) tab.location.href = url
-        else window.open(url, '_blank')
+        else window.open(url, '_blank', 'noopener,noreferrer')
         status(
           `Opened in Cosmograph: ${ctx.nodeObjects.length} nodes, ${ctx.edgeObjects.length} edges (the files are kept for one hour).`
         )
@@ -673,11 +675,12 @@ export function initExportPanel(): void {
   document.getElementById('open_umap_vega')?.addEventListener('click', () => {
     // open the tab inside the click, so popup blockers allow it
     const tab = window.open('', '_blank')
+    if (tab) tab.opener = null // the site opened cannot steer this tab
     umapView()
       .then((v) => {
         const url = vegaUmapUrl(v.pts, v.title, v.colour)
         if (tab) tab.location.href = url
-        else window.open(url, '_blank')
+        else window.open(url, '_blank', 'noopener,noreferrer')
         status(
           `Opened the UMAP scatter in the Vega editor: ${v.pts.length} points.`
         )
@@ -689,7 +692,7 @@ export function initExportPanel(): void {
   })
   document.getElementById('open_vega')?.addEventListener('click', () => {
     try {
-      window.open(vegaEditorUrl(), '_blank')
+      window.open(vegaEditorUrl(), '_blank', 'noopener,noreferrer')
       status('Opened the heatmap in the Vega editor.')
     } catch (err) {
       status(err instanceof Error ? err.message : String(err), true)
@@ -698,12 +701,13 @@ export function initExportPanel(): void {
   document.getElementById('open_gephi')?.addEventListener('click', () => {
     // open the tab now (inside the click) so popup blockers allow it
     const tab = window.open('', '_blank')
+    if (tab) tab.opener = null // the site opened cannot steer this tab
     status('Hosting the GraphML for Gephi Lite…')
     hostGraphml()
       .then((url) => {
         const target = gephiLiteUrl(url)
         if (tab) tab.location.href = target
-        else window.open(target, '_blank')
+        else window.open(target, '_blank', 'noopener,noreferrer')
         status(
           `Opened in Gephi Lite: ${ctx.nodeObjects.length} nodes, ${ctx.edgeObjects.length} edges (the file is kept for one hour).`
         )
@@ -718,7 +722,7 @@ export function initExportPanel(): void {
       const species = Number(
         (document.getElementById('string_species') as HTMLSelectElement).value
       )
-      window.open(stringUrl(species), '_blank')
+      window.open(stringUrl(species), '_blank', 'noopener,noreferrer')
       status('Opened the proteins in STRING.')
     } catch (err) {
       status(err instanceof Error ? err.message : String(err), true)
@@ -756,11 +760,12 @@ export function initExportPanel(): void {
     }
     // open the tab now (inside the click) so popup blockers allow it
     const tab = window.open('', '_blank')
+    if (tab) tab.opener = null // the site opened cannot steer this tab
     status('Sending to NORMA…')
     sendToNorma(normaServer(), data)
       .then(({ url, expiresInHours }) => {
         if (tab) tab.location.href = url
-        else window.open(url, '_blank')
+        else window.open(url, '_blank', 'noopener,noreferrer')
         status(
           `Opened in NORMA (${Object.keys(data.groups).length} groups, ${data.edges.length} edges)` +
             (expiresInHours
@@ -783,8 +788,10 @@ export function initExportPanel(): void {
     () => {
       const lists = flameLists(flameMode())
       const url = flameUrl(flameServer(), lists)
-      if (!window.open(url, '_blank'))
+      const tab = window.open(url, '_blank')
+      if (!tab)
         throw new ExportError('The browser blocked the Flame tab (pop-ups).')
+      tab.opener = null // Flame cannot steer this tab
       const genes = lists.reduce((a, l) => a + l.genes.length, 0)
       return `Opened in Flame: ${lists.length} gene list${lists.length === 1 ? '' : 's'}, ${genes} genes.`
     },

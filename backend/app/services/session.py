@@ -34,6 +34,20 @@ def _default(value: Any, default: Any = "0") -> Any:
     return default if _empty(value) else value
 
 
+# colours go into the page's style attributes and SVG: CSS colour forms only
+# (as frontend/src/utils.ts safeColor)
+_CSS_COLOUR = re.compile(
+    r"^(#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})|(rgb|hsl)a?\([\d\s.,%/+-]{1,60}\)|[a-z]{3,20})$",
+    re.I,
+)
+_SAFE_URL = re.compile(r"^(https?://|mailto:)", re.I)
+
+
+def _colour(value: Any, default: str) -> str:
+    v = _default(value, default)
+    return v.strip() if isinstance(v, str) and _CSS_COLOUR.match(v.strip()) else default
+
+
 def _validate(data: dict[str, Any]) -> None:
     if not set(config.MANDATORY_JSON_OBJECTS).issubset(data):
         raise SessionValidationError(
@@ -46,6 +60,15 @@ def _validate(data: dict[str, Any]) -> None:
         value = data[key]
         if not isinstance(value, list) or not all(isinstance(x, dict) for x in value):
             raise SessionValidationError(f"JSON '{key}' must be a list of objects.")
+    # names are text or numbers: a list or object as a name is unhashable and
+    # broke the checks below with a 500
+    named = (("layers", ("name",)), ("nodes", ("name", "layer")), ("edges", ("src", "trg")))
+    for key, fields in named:
+        for row in data[key]:
+            for f in fields:
+                v = row.get(f)
+                if v is not None and (isinstance(v, bool) or not isinstance(v, str | int | float)):
+                    raise SessionValidationError(f"JSON {key} '{f}' must be text.")
     layers = data["layers"]
     if not layers or any(_empty(row.get("name")) for row in layers):
         raise SessionValidationError("JSON layers must each have a non-empty name.")
@@ -349,7 +372,7 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
             row[f"position_{a}"] = _default(row.get(f"position_{a}"))
             row[f"rotation_{a}"] = _default(row.get(f"rotation_{a}"))
         row["last_layer_scale"] = _default(row.get("last_layer_scale"), "1")
-        row["floor_current_color"] = _default(
+        row["floor_current_color"] = _colour(
             row.get("floor_current_color"), config.FLOOR_DEFAULT_COLOR
         )
         row["geometry_parameters_width"] = _default(
@@ -364,10 +387,12 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
         for a in "xyz":
             n[f"position_{a}"] = _default(n.get(f"position_{a}"))
         n["scale"] = _default(n.get("scale"), 1)
-        if _empty(n.get("color")):
+        if _empty(n.get("color")) or not _CSS_COLOUR.match(str(n.get("color")).strip()):
             i = layer_names.index(n["layer"]) if n["layer"] in layer_names else 0
             n["color"] = config.NODE_COLORS[i % len(config.NODE_COLORS)]
-        n["url"] = _default(n.get("url"), "")
+        # a node's link opens on a click: web and mail links only
+        url = _default(n.get("url"), "")
+        n["url"] = url if isinstance(url, str) and _SAFE_URL.match(url.strip()) else ""
         n["descr"] = _default(n.get("descr"), "")
         # optional (Phase 6): list of annotation terms; anything else is dropped
         terms = n.get("annotations")
@@ -381,7 +406,7 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
     edges = _dedup_edges(edges)
     for e in edges:
         e["opacity"] = _default(e.get("opacity"), 1)
-        e["color"] = _default(e.get("color"), config.EDGE_DEFAULT_COLOR)
+        e["color"] = _colour(e.get("color"), config.EDGE_DEFAULT_COLOR)
         _edge_style(e)
 
     return {
