@@ -19,7 +19,9 @@ test.use({
   viewport: { width: 1440, height: 1500 },
   deviceScaleFactor: 2,
 })
-test.setTimeout(300_000)
+// some twenty panels at 2×, with a knockout and two attacks: minutes on a busy
+// machine
+test.setTimeout(900_000)
 
 const tab = (page: Page, name: string) =>
   page
@@ -230,8 +232,44 @@ test('capture the interface screenshots for the Help pages', async ({
   await expect(page.locator('#panel-main-view')).toHaveClass(/active/)
   await page.waitForTimeout(3000)
   await panel(page, 'Metrics', '#panel-metrics', 'analyze')
+  // a degree histogram, each layer overlaid, with its summary table
+  await panel(page, 'Plots', '#panel-plots', 'plots', async () => {
+    await page.locator('#plotKind').selectOption('histogram')
+    await page.locator('#plotSource').selectOption('metric:Degree')
+    await page.locator('#plotDraw').click()
+    await expect(page.locator('#plot_status')).toContainText(
+      'Drawn: Histogram',
+      { timeout: 60_000 }
+    )
+  })
   await panel(page, 'Data Tables', '#panel-data', 'data')
   await panel(page, 'Performance', '#panel-fps', 'performance')
+  // the top 5 nodes by degree knocked out, and a degree attack against
+  // random failure on the robustness chart
+  await panel(
+    page,
+    'Perturbation',
+    '#panel-perturbation',
+    'perturbation',
+    async () => {
+      await page.locator('#koNodes').selectOption('top')
+      await page.locator('#runKnockout').click()
+      await expect(page.locator('#perturb_status')).toContainText(
+        'Knocked out 5 nodes',
+        { timeout: 60_000 }
+      )
+      await page.locator('#attackStrategy').selectOption('degree')
+      await page.locator('#runAttack').click()
+      const attack = page.locator('#attack_status')
+      await expect(attack).toContainText('robustness R =', { timeout: 120_000 })
+      await page.locator('#attackKeep').check()
+      await page.locator('#attackStrategy').selectOption('random')
+      await page.locator('#runAttack').click()
+      await expect(attack).toContainText('random failure', { timeout: 120_000 })
+    }
+  )
+  // the nodes as they were, for the Clustering shot
+  await page.locator('#koRestore').click()
   // last, as it recolours the nodes: communities found, so the panel shows
   // its summary
   await panel(

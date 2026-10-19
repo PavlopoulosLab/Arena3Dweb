@@ -217,7 +217,8 @@ function colorOf(name: string): string {
 // per network, layers and channels: each graph's metrics and curves so far
 let cache: { key: string; scopes: Map<PlotScope, PlotScopeData[]> } | null =
   null
-let richRandom = -1 // what the cached rich-club curves were normalised by
+// per scope: how many rewired graphs the cached rich-club curves used
+const richRandom = new Map<PlotScope, number>()
 
 // where each extra comes back
 const FIELD: Record<PlotExtra, keyof PlotScopeData> = {
@@ -232,7 +233,7 @@ function cacheFor(): Map<PlotScope, PlotScopeData[]> {
   const key = JSON.stringify([analysedLayers(), selectedChannels()])
   if (!cache || cache.key !== key) {
     cache = { key, scopes: new Map() }
-    richRandom = -1
+    richRandom.clear()
   }
   return cache.scopes
 }
@@ -252,7 +253,7 @@ async function scopesWith(
     (x) =>
       !have?.length ||
       have[0][FIELD[x]] == null ||
-      (x === 'rich_club' && rich !== richRandom)
+      (x === 'rich_club' && rich !== richRandom.get(scope))
   )
   if (have && !missingMetrics.length && !missingExtras.length) return have
   abort?.abort()
@@ -273,7 +274,7 @@ async function scopesWith(
       },
       mine.signal
     )
-    if (missingExtras.includes('rich_club')) richRandom = rich
+    if (missingExtras.includes('rich_club')) richRandom.set(scope, rich)
     const merged = res.scopes.map((s) => {
       const old = have?.find((o) => o.name === s.name)
       if (!old) return s

@@ -18,7 +18,7 @@ import { PERTURBATION_HTML, initPerturbation } from './perturbation'
 import { ANNOTATIONS_HTML, initAnnotations } from './annotations'
 import { GROUPS_HTML, initGroups } from './groups'
 import { PLOTS_HTML, initPlots } from './plots'
-import { FOLD_ALL_HTML, openCard } from './sections'
+import { openCard } from './sections'
 import { showTab } from './tabs'
 
 const analyzeProgress = new ProgressBar('analyzeProgress')
@@ -40,8 +40,9 @@ export const ANALYSIS_PANELS = [
   'annotations',
 ] as const
 
-const panel = (body: string, fold = false) =>
-  `<div class="col-md-8 col-lg-6 layout-panel">${fold ? FOLD_ALL_HTML : ''}${body}</div>`
+// (no Expand all / Collapse all row: no panel here has three cards)
+const panel = (body: string) =>
+  `<div class="col-md-8 col-lg-6 layout-panel">${body}</div>`
 
 // which layers an analysis covers (describeLayers fills every one)
 export const LAYERS_NOTE = (id = '') =>
@@ -102,9 +103,9 @@ const PANEL_HTML: Record<(typeof ANALYSIS_PANELS)[number], string> = {
   metrics: METRICS_HTML,
   statistics: STATISTICS_HTML,
   plots: panel(`${LAYERS_NOTE()}${PLOTS_HTML}`),
-  perturbation: panel(`${LAYERS_NOTE()}${PERTURBATION_HTML}`, true),
+  perturbation: panel(`${LAYERS_NOTE()}${PERTURBATION_HTML}`),
   explore: panel(EXPLORE_HTML),
-  annotations: panel(`${ANNOTATIONS_HTML}${GROUPS_HTML}`, true),
+  annotations: panel(`${ANNOTATIONS_HTML}${GROUPS_HTML}`),
 }
 
 function say(id: string, msg: string, isError: boolean): void {

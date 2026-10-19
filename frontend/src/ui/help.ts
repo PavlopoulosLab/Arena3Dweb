@@ -133,7 +133,7 @@ const HELP_HTML = `
   <p>
     The panels are made of cards. Click a card's title to fold or open it; the main ones start open (File →
     Network, Examples and Loaded networks, for example) and the rest start folded. In the long panels (File,
-    Edit → Nodes, Edges and Layers, Export and some of the Analyze panels), <i>Expand all</i> and <i>Collapse all</i>
+    Edit → Nodes, Edges and Layers, and Export), <i>Expand all</i> and <i>Collapse all</i>
     at the top open or fold every card at once. Arena3D remembers in this browser which cards you open or fold.
   </p>
   <h3>Networks menu</h3>
@@ -1353,6 +1353,7 @@ const HELP_HTML = `
   </p>
 
   <h3>Plots</h3>
+  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/plots.png" alt="The Plots panel: a histogram of degree over the whole network, with its summary statistics" loading="lazy">
   <p>
     <i>Plot</i> picks a chart and shows the options it needs; <i>Graphs</i> draws <i>each layer, overlaid</i> in the
     layer colours with a legend, or <i>the analysed layers as one graph</i> (Single network mode always does). The
@@ -1412,6 +1413,7 @@ const HELP_HTML = `
   </p>
 
   <h3>Perturbation</h3>
+  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/perturbation.png" alt="The Perturbation panel: a knockout of the top 5 nodes by degree, and the robustness curves of a degree attack and random failure" loading="lazy">
   <p>
     Analyze → Perturbation has two cards. <i>Knock out</i> removes nodes — the selected nodes, nodes by name (every copy in the analysed layers), or the
     top <i>k</i> by degree, betweenness or PageRank, in the whole network or in each layer — with <i>Every copy
