@@ -59,7 +59,10 @@ test('layers are ticked in the Layer selection tab', async ({ page }) => {
   for (const [name, pane] of [
     ['Layout…', '#panel-layouts'],
     ['Clustering…', '#panel-clustering'],
-    ['Analysis…', '#panel-analyze'],
+    ['Metrics…', '#panel-metrics'],
+    ['Statistics…', '#panel-statistics'],
+    ['Plots…', '#panel-plots'],
+    ['Perturbation…', '#panel-perturbation'],
     ['Export…', '#panel-export'],
   ] as const) {
     await page
@@ -70,8 +73,8 @@ test('layers are ticked in the Layer selection tab', async ({ page }) => {
     await tab(page, 'Layer selection')
   }
 
-  // the Analysis panel follows the ticks too
-  await tab(page, 'Analysis')
+  // the Analyze panels follow the ticks too
+  await tab(page, 'Metrics')
   await expect(page.locator('#analyzeLayers')).toContainText(
     '1 layer(s) ticked in Layer selection'
   )

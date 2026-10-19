@@ -20,8 +20,9 @@ import {
 } from '../actions/layout'
 
 const SCENE_HTML = `
-<div class="col-md-6 col-lg-4">
-  <h6>Axes &amp; rotation</h6>
+<div class="col-md-6 col-lg-4 layout-panel">
+  <details class="lp-section lp-more" id="sceneCard_axes" open>
+  <summary>Axes &amp; rotation</summary>
   <div class="form-check mb-2">
     <input class="form-check-input" type="checkbox" id="toggleSceneCoords" checked />
     <label class="form-check-label" for="toggleSceneCoords">Show Scene Coord System</label>
@@ -32,21 +33,24 @@ const SCENE_HTML = `
     <input class="form-check-input" type="checkbox" id="autoRotateScene" />
     <label class="form-check-label" for="autoRotateScene">Enable Scene Auto Rotate</label>
   </div>
-  <div class="form-check mb-2">
+  <div class="form-check">
     <input class="form-check-input" type="checkbox" id="toggleBloom" />
     <label class="form-check-label" for="toggleBloom">Node Glow (dark backgrounds)</label>
   </div>
-  <h6>Overlays</h6>
+  </details>
+  <details class="lp-section lp-more" id="sceneCard_overlays" open>
+  <summary>Overlays</summary>
   <div class="form-check mb-3">
     <input class="form-check-input" type="checkbox" id="toggleMinimap" checked />
     <label class="form-check-label" for="toggleMinimap">Show Navigator (2D)</label>
   </div>
-  <div class="form-check mb-3">
+  <div class="form-check">
     <input class="form-check-input" type="checkbox" id="toggleLegend" checked />
     <label class="form-check-label" for="toggleLegend">Show Legend</label>
   </div>
-  <div data-multilayer-only>
-  <h6>Layer arrangement</h6>
+  </details>
+  <details class="lp-section lp-more" id="sceneCard_arrangement" data-multilayer-only>
+  <summary>Layer arrangement</summary>
   <label class="form-label">Select Predefined Layout:</label>
   ${PREDEFINED_LAYOUTS.map(
     ([value, label]) => `
@@ -55,12 +59,14 @@ const SCENE_HTML = `
     <label class="form-check-label" for="predef_${value}">${label}</label>
   </div>`
   ).join('')}
-  </div>
-  <h6>Background</h6>
-  <div id="sceneColorPicker" class="colorPicker mt-3">
+  </details>
+  <details class="lp-section lp-more" id="sceneCard_background" open>
+  <summary>Background</summary>
+  <div id="sceneColorPicker" class="colorPicker">
     <input type="color" id="scene_color" name="scene_color" value="#000000" />
     <label for="scene_color">Background Color</label>
   </div>
+  </details>
 </div>
 `
 

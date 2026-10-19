@@ -20,10 +20,10 @@ test('network statistics and new node metrics', async ({ page }) => {
 
   // analysis lives under Analyze → Analysis (all layers when none selected)
   await page
-    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .getByRole('tab', { name: 'Statistics', includeHidden: true, exact: true })
     .dispatchEvent('click')
   await page.locator('#networkStats').click()
-  await expect(page.locator('#analyze_status')).toContainText(
+  await expect(page.locator('#stats_status')).toContainText(
     'Network Statistics'
   )
 
@@ -41,7 +41,7 @@ test('network statistics and new node metrics', async ({ page }) => {
     .screenshot({ path: 'test-results/degree-chart.png' })
 
   await page
-    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .getByRole('tab', { name: 'Metrics', includeHidden: true, exact: true })
     .dispatchEvent('click')
   await page
     .locator('#topologyScaleMetricChoice')

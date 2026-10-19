@@ -32,17 +32,22 @@ import {
   resetBundles,
   setEdgeBundling,
 } from '../actions/bundling'
+import { FOLD_ALL_HTML } from './sections'
 
 const EDGE_HTML = `
-<div class="col-md-6 col-lg-4">
-  <h6>Weights</h6>
-  <div class="mb-3">
+<div class="col-md-6 col-lg-4 layout-panel">
+  ${FOLD_ALL_HTML}
+  <details class="lp-section lp-more" id="edgeCard_weights" open>
+  <summary>Weights</summary>
+  <div>
     <label class="form-label" for="edgeWeightThreshold">Hide Edges with Weight Below: <span id="edgeWeightThresholdValue">0</span></label>
     <input type="range" class="form-range" id="edgeWeightThreshold" min="0" max="1" step="0.05" value="0" />
     <div class="form-text">Weights are scaled to 0.1–1 on upload; per channel for multi-channel edges.</div>
   </div>
-  <h6>Bundling</h6>
-  <div class="mb-3" id="bundlingBox">
+  </details>
+  <details class="lp-section lp-more" id="edgeCard_bundling">
+  <summary>Bundling</summary>
+  <div id="bundlingBox">
     <label class="form-label" for="intraBundling"><span data-multilayer-only>Intra-Layer </span>Edge Bundling: <span id="intraBundlingValue">0.00</span></label>
     <input type="range" class="form-range" id="intraBundling" min="0" max="1" step="0.05" value="0" />
     <div data-multilayer-only>
@@ -52,7 +57,9 @@ const EDGE_HTML = `
     <div class="form-text">Similar edges merge into shared bundles (force-directed edge bundling), so busy networks read as flows. 0 = straight edges; strengths are saved in sessions.<span data-single-only> In Single network mode the whole graph is one space, so every edge bundles in one set, the former inter-layer edges included.</span></div>
     <div id="bundling_status" class="small text-secondary"></div>
   </div>
-  <h6>Direction</h6>
+  </details>
+  <details class="lp-section lp-more" id="edgeCard_direction" open>
+  <summary>Direction</summary>
   <div class="form-check mb-2">
     <input class="form-check-input" type="checkbox" id="edgeDirectionToggle" />
     <label class="form-check-label" for="edgeDirectionToggle">Enable Edge Direction</label>
@@ -65,7 +72,9 @@ const EDGE_HTML = `
     <label class="form-label" for="interDirectionArrowSize">Inter-Layer Direction Arrow Size:</label>
     <input type="range" class="form-range" id="interDirectionArrowSize" min="1" max="10" step="1" value="5" />
   </div>
-  <h6>Appearance</h6>
+  </details>
+  <details class="lp-section lp-more" id="edgeCard_appearance" open>
+  <summary>Appearance</summary>
   <label class="form-label">Show Edge Weight As:</label>
   <div class="mb-3">
     <div class="form-check form-check-inline">
@@ -117,7 +126,9 @@ const EDGE_HTML = `
     <label class="form-label" for="interChannelCurvature">Inter-Layer Channel Curvature:</label>
     <input type="range" class="form-range" id="interChannelCurvature" min="1" max="30" step="1" value="5" />
   </div>
-  <h6>Colours</h6>
+  </details>
+  <details class="lp-section lp-more" id="edgeCard_colours">
+  <summary>Colours</summary>
   <div class="form-check mb-2">
     <input class="form-check-input" type="checkbox" id="edgeSelectedColorPriority" checked />
     <label class="form-check-label" for="edgeSelectedColorPriority">Highlight Selected Edges in Color</label>
@@ -127,6 +138,7 @@ const EDGE_HTML = `
     <label class="form-check-label" for="edgeFileColorPriority">Priority on Loaded Edge Color</label>
   </div>
   <div id="channelColorPicker" class="channelColorPicker"></div>
+  </details>
 </div>
 `
 

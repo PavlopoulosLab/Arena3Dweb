@@ -42,6 +42,9 @@ const TABS = [
   { id: 'groups', label: 'Groups' },
   { id: 'groupOverlap', label: 'Group Overlap' },
   { id: 'values', label: 'Node Values' },
+  { id: 'knockout', label: 'Knockout' },
+  { id: 'knockoutNodes', label: 'Knockout Nodes' },
+  { id: 'robustness', label: 'Robustness' },
 ] as const
 
 // v2 renderMetricTable keyed output ids by metric (init.R TOPOLOGY_METRICS)
@@ -608,6 +611,29 @@ export function renderValuesTable(
     'nodeValues',
     false
   )
+}
+
+// Analyze → Perturbation (ui/perturbation.ts): a knockout's global measures
+// and its nodes, most affected first; the robustness curves' points
+export function renderKnockoutTables(
+  measures: { columns: string[]; rows: (string | number)[][] },
+  nodes: { columns: string[]; rows: (string | number)[][] }
+): void {
+  renderTable(
+    'knockoutNodes',
+    nodes.columns,
+    nodes.rows,
+    'knockout_nodes',
+    false
+  )
+  renderTable('knockout', measures.columns, measures.rows, 'knockout')
+}
+
+export function renderRobustnessTable(table: {
+  columns: string[]
+  rows: (string | number)[][]
+}): void {
+  renderTable('robustness', table.columns, table.rows, 'robustness')
 }
 
 export function initDataPanel(): void {

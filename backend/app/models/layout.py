@@ -2,7 +2,7 @@
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app import config
 from app.models.network import EdgeModel, NodeModel
@@ -20,6 +20,32 @@ MAX_CHANNEL_WEIGHT = 10.0
 class ClusteringOptions(BaseModel):
     algorithm: str  # Louvain | Walktrap | Fast Greedy | Label Propagation
     local_layout: str  # layout name for members within a cluster
+
+
+class UmapOptions(BaseModel):
+    """algorithm "UMAP" (services/umap_layout.py)."""
+
+    mode: Literal["topology", "attributes", "hybrid"] = "topology"
+    n_neighbors: int = Field(default=15, ge=2, le=200)
+    min_dist: float = Field(default=0.1, ge=0, le=1)
+    metric: Literal["euclidean", "cosine"] = "euclidean"
+    # hybrid: 0 = topology only .. 1 = attributes only
+    balance: float = Field(default=0.5, ge=0, le=1)
+    # attribute columns assembled by the client (File → Values, one-hot
+    # annotation terms): Node_Layer id -> one value per name, null = missing
+    feature_names: list[str] = Field(default=[], max_length=config.MAX_UMAP_FEATURES)
+    features: (
+        dict[str, Annotated[list[float | None], Field(max_length=config.MAX_UMAP_FEATURES)]] | None
+    ) = Field(default=None, max_length=config.MAX_NODES)
+    # node metrics (topology METRICS names) computed on each scope's graph
+    metrics: list[str] = Field(default=[], max_length=20)
+
+    @model_validator(mode="after")
+    def _rows_match_names(self) -> "UmapOptions":
+        width = len(self.feature_names)
+        if any(len(row) != width for row in (self.features or {}).values()):
+            raise ValueError(f"every feature row needs {width} values, one per feature name")
+        return self
 
 
 class LayoutRequest(BaseModel):
@@ -57,6 +83,7 @@ class LayoutRequest(BaseModel):
     channel_weights: (
         dict[str, Annotated[float, Field(ge=MIN_CHANNEL_WEIGHT, le=MAX_CHANNEL_WEIGHT)]] | None
     ) = Field(default=None, max_length=config.MAX_CHANNELS)
+    umap: UmapOptions | None = None  # algorithm "UMAP" only
 
 
 class LayoutResponse(BaseModel):

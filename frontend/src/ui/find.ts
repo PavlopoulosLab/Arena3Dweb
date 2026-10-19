@@ -23,8 +23,8 @@ const MODES = `
 
 const FIND_HTML = `
 <div class="col-md-8 col-lg-6 layout-panel find-panel">
-  <div class="lp-section">
-    <div class="lp-title">Nodes</div>
+  <details class="lp-section lp-more" id="findCard_nodes" open>
+    <summary>Nodes</summary>
     <textarea class="form-control mb-2" id="nodeSearchBar" rows="2"
       placeholder="Names (comma-separated) or a regular expression, then Enter" aria-label="Node names"></textarea>
     <div class="d-flex flex-wrap align-items-center gap-2">
@@ -43,10 +43,10 @@ const FIND_HTML = `
     <div class="form-text">Matches replace the selection; click a listed node to focus on it alone.</div>
     <div id="nodeSearchStatus" class="small mt-1"></div>
     <div id="nodeSearchResults" class="search-results mt-1" style="max-height: 12rem; overflow: auto"></div>
-  </div>
+  </details>
 
-  <div class="lp-section">
-    <div class="lp-title">Edges</div>
+  <details class="lp-section lp-more" id="findCard_edges" open>
+    <summary>Edges</summary>
     <textarea class="form-control mb-2" id="edgeSearchBar" rows="2"
       placeholder="Node names (comma-separated) or a regular expression, then Enter" aria-label="Edge end names"></textarea>
     <div class="d-flex flex-wrap align-items-center gap-2">
@@ -72,7 +72,7 @@ const FIND_HTML = `
     <div class="form-text">Matches are selected (Analyze → Data Tables → Selected Edges lists them with their weights); click one to focus on its two nodes.</div>
     <div id="edgeSearchStatus" class="small mt-1"></div>
     <div id="edgeSearchResults" class="search-results mt-1" style="max-height: 12rem; overflow: auto"></div>
-  </div>
+  </details>
 </div>
 `
 

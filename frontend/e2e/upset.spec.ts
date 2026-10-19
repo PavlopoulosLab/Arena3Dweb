@@ -91,12 +91,10 @@ test('UpSet plot: pick bars and sets, select them, load them as a network', asyn
   await expect(page.locator('#file_status')).toContainText('Loaded network')
 
   await page
-    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .getByRole('tab', { name: 'Statistics', includeHidden: true, exact: true })
     .dispatchEvent('click')
   await page.locator('#compareLayers').dispatchEvent('click')
-  await expect(page.locator('#analyze_status')).toContainText(
-    'Layer Similarity'
-  )
+  await expect(page.locator('#stats_status')).toContainText('Layer Similarity')
   await page
     .getByRole('tab', { name: 'Data Tables', includeHidden: true, exact: true })
     .dispatchEvent('click')

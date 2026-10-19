@@ -34,9 +34,11 @@ test('expand, shortest path, attribute search, weight filter', async ({
     ctx.nodeObjects.find((n) => n.name === 'aspirin')!.isSelected = true
   })
   await page
-    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .getByRole('tab', { name: 'Explore', includeHidden: true, exact: true })
     .dispatchEvent('click')
-  await page.locator('#explore_card summary').click()
+  await page
+    .locator('#explore_card')
+    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
   await page.locator('#walk_across').check()
   await page.locator('#expand1').click()
   await expect(page.locator('#explore_status')).toContainText('Added')
@@ -99,9 +101,11 @@ test('whole-selection tools and the live path highlight', async ({ page }) => {
   await page.locator('#input_network_file').setInputFiles(ASPIRIN)
   await expect(page.locator('#file_status')).toContainText('Loaded network')
   await page
-    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .getByRole('tab', { name: 'Explore', includeHidden: true, exact: true })
     .dispatchEvent('click')
-  await page.locator('#explore_card summary').click()
+  await page
+    .locator('#explore_card')
+    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
   await page.locator('#walk_across').check()
   const total = await page.evaluate(
     () =>

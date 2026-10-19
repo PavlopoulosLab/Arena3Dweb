@@ -1,5 +1,8 @@
 // Help panel: one page per menu panel. Static HTML fragment + inner tab switching.
 
+import { ABOUT_HTML, initAbout } from './about'
+import { decorateHelp } from './help_layout'
+
 // Tab-separated examples as tables: real tabs render as uneven gaps once
 // names differ in length, so columns are shown as cells and the caption
 // reminds that the file itself is tab-separated.
@@ -59,6 +62,13 @@ function tsv(
   return `<div class="help-tsv-note">${opts.note ?? 'Tab-separated columns, shown as a table'}</div><table class="help-tsv">${head}<tbody>${body}</tbody></table>`
 }
 
+// the files of a neural network example (scripts/neural_network_examples.py)
+function nnFiles(what: string, stem: string): string {
+  const link = (file: string, text: string) =>
+    `<a href="${import.meta.env.BASE_URL}data/${file}" download>${text}</a>`
+  return `${what}: ${link(`${stem}.tsv`, 'network file')}, ${link(`${stem}_node_attributes.tsv`, 'node attributes file')} and ${link(`${stem}.json`, 'session')}. <br />`
+}
+
 const HELP_HTML = `
 <div id="helpDiv">
 <div class="tab">
@@ -86,6 +96,7 @@ const HELP_HTML = `
 
 <div id="Start_tab" class="tabcontent">
   <h2>Getting Started</h2>
+  <p class="help-lead">Arena3D in five steps, then the menus, the Networks menu, undo, network mode and touch screens.</p>
   <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/topbar.png" alt="The top bar: Home, File, Database Importers, Networks, View, Find, Layer selection, Layout, Clustering, Edit, Analyze, Export and Help menus, the Multilayered / Single network switch, the theme picker and Undo / Redo" loading="lazy">
   <p>
     Arena3D shows a multilayered network in 3D: every layer is a floor (or a disk, cube, sphere or cloud), a node
@@ -98,12 +109,12 @@ const HELP_HTML = `
     <li><b>Lay it out</b> — Layer selection → tick the layers to work on; Layout → an algorithm; optionally align
       layers or run a group layout, with communities from the Clustering panel.</li>
     <li><b>Explore</b> — search nodes, expand neighbourhoods, follow paths, hide weak edges.</li>
-    <li><b>Analyse</b> — Analyze → node metrics, network statistics, layer comparison, enrichment.</li>
+    <li><b>Analyse</b> — Analyze → metrics, statistics, plots, knockouts and robustness, enrichment.</li>
     <li><b>Style and export</b> — Edit → Style for colours, sizes, shapes, borders, labels, line types and colour-blind tools;
       Edit → Attributes to set them node by node and edge by edge (or for a selection) in a table; File for images,
       3D models, video, other formats or NORMA.</li>
   </ol>
-  <p>Step-by-step recipes for the usual tasks are on the <i>How to…</i> page.</p>
+  <p class="help-tip">Step-by-step recipes for the usual tasks are on the <i>How to…</i> page.</p>
   <h3>Menus</h3>
   <p>
     The menu bar is grouped by task, and every menu has its own colour (the open or active menu is tinted with
@@ -115,9 +126,15 @@ const HELP_HTML = `
     Labels switch per layer (Multilayered mode). <b>Layout</b>: algorithms, alignment and group
     layouts. <b>Clustering</b>: communities, a summary of them, and saving them as an annotation set. <b>Edit</b>: Nodes (labels,
     shapes), Edges, Layers (floors, shapes, containers, split/merge), Style (colours, sizes, borders, labels, line types, palettes, colour
-    vision) and Attributes (a table of every node and edge, edited one at a time or many at once, and an inspector). <b>Analyze</b>: Analysis (metrics, statistics, layer comparison, explore, annotations, enrichment,
-    groups) and Data Tables. <b>Export</b>: images, 3D, video, Cytoscape, visualizations, other tools and the
+    vision) and Attributes (a table of every node and edge, edited one at a time or many at once, and an inspector). <b>Analyze</b>: Metrics, Statistics (with layer
+    and network comparison), Plots, Perturbation, Explore, Annotations &amp; Groups (with enrichment) and Data Tables. <b>Export</b>: images, 3D, video, Cytoscape, visualizations, other tools and the
     session. On phones and narrow windows the menus fold into a drawer.
+  </p>
+  <p>
+    The panels are made of cards. Click a card's title to fold or open it; the main ones start open (File →
+    Network, Examples and Loaded networks, for example) and the rest start folded. In the long panels (File,
+    Edit → Nodes, Edges and Layers, Export and some of the Analyze panels), <i>Expand all</i> and <i>Collapse all</i>
+    at the top open or fold every card at once. Arena3D remembers in this browser which cards you open or fold.
   </p>
   <h3>Networks menu</h3>
   <p>
@@ -130,7 +147,7 @@ const HELP_HTML = `
     session brought (<i>Saved with the session</i>) — with the one it shows ticked, and <i>No annotation</i>.
     Click a network to switch to it, or a set to show it; a set of another network switches to that network with
     that set in one click. <i>Load another network…</i> opens File and <i>Annotation options…</i> opens Analyze →
-    Annotations &amp; Enrichment (pies, hulls). The menu, File → Loaded networks and Analyze → Annotations always
+    Annotations &amp; Groups (pies, hulls). The menu, File → Loaded networks and Analyze → Annotations &amp; Groups always
     agree.
   </p>
   <p>
@@ -188,7 +205,7 @@ const HELP_HTML = `
 
 <div id="Howto_tab" class="tabcontent">
   <h2>How to…</h2>
-  <p>
+  <p class="help-lead">
     Short recipes for common tasks. Panel names are those of the menu bar (View, File, Database Importers, Layout, Clustering, Edit,
     Analyze); every step can be undone with Undo in the top bar.
   </p>
@@ -239,9 +256,9 @@ const HELP_HTML = `
     <li>Give nodes groups: a node attribute file with an <i>Annotation</i> column, a NORMA-format group file
       (File → <i>Upload GROUP file</i>), or Analyze → <i>Enrichment of Selected Nodes</i> → <i>Annotate Nodes with
       Top 5 Terms</i>. Clusters come from the <i>Clustering</i> panel.</li>
-    <li>Analyze → Annotations &amp; Enrichment: pies on the nodes; <i>Hulls Around</i> clusters or annotations, as
+    <li>Analyze → Annotations &amp; Groups → Annotations &amp; Enrichment: pies on the nodes; <i>Hulls Around</i> clusters or annotations, as
       hulls or fog clouds.</li>
-    <li>Analyze → Groups: recolour, hide a group's hull, select its members, show them in the legend, open the
+    <li>Analyze → Annotations &amp; Groups → Groups: recolour, hide a group's hull, select its members, show them in the legend, open the
       Groups and Overlap tables, or <i>Collapse into Super Nodes</i>.</li>
     <li>Layout → <i>Group Layout (NORMA-2.0)</i> pulls the groups apart.</li>
   </ol>
@@ -316,58 +333,15 @@ const HELP_HTML = `
 
 <div id="Examples_tab" class="tabcontent">
   <h2>Example Data</h2>
+  <p class="help-lead">Ready-made networks to open with one click, and every file behind them to download.</p>
   <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/home.jpg" alt="The Home page: six featured examples that open with one click, and the All examples picker" loading="lazy">
   <p>
     Click a card under <i>Start from an example</i> on the Home page to open it at once, or pick any example from
-    <i>All examples</i> there (or in File → <i>Example</i>) and press <i>Load Example</i>: every network below is listed, opened as its saved session where there is one — among
-    them a network without layers, a 3D network with the layers ignored, layers drawn as spheres and two neural
-    network architectures. Every file can also be downloaded below.
+    <i>All examples</i> there (or in File → <i>Example</i>) and press <i>Load Example</i>. Both pickers list the
+    examples by category, in the order of the sections below; each opens as its saved session where there is one, and
+    every file can be downloaded here.
   </p>
-  <p>
-    <b>Network without layers (SARS-CoV-2 interactome): </b> <br />
-    A <a href="${import.meta.env.BASE_URL}data/covid19_no_layers.tsv" download>2-column edgelist</a> of the COVID-19 network below: no
-    layer columns, so all nodes share one layer and no floor is drawn. Try Layout → <i>3D Layout</i> to lift it into
-    3D. <br />
-  </p>
-  <hr>
-  <p>
-    <b>3D network, layers ignored (SARS-CoV-2): </b> <br />
-    A <a href="${import.meta.env.BASE_URL}data/covid19_3d_network.json" download>session</a> saved in <i>Single network</i>
-    mode: virus proteins, host proteins, drugs, complexes and processes share one 3D space and keep
-    their layer colours. Untick the option to get the five layers back. <br />
-  </p>
-  <hr>
-  <p>
-    <b>Layers as spheres (GPCR signalling): </b> <br />
-    A <a href="${import.meta.env.BASE_URL}data/GPCRs_spheres.json" download>session</a> in which the GPCR, G-protein, GRK and effector
-    layers are spheres (Edit → Layers → <i>Layer Shape</i>) with a 3D layout inside each. <br />
-  </p>
-  <hr>
-  <p>
-    <b>Minimal 2-column edgelist (single default layer): </b> <br />
-    A <a href="${import.meta.env.BASE_URL}data/edgelist_2columns.tsv" download>minimal edgelist</a> with only SourceNode and TargetNode columns. <br />
-  </p>
-  <hr>
-  <p>
-    <b>Random networks with different topologies mapped in 6 layers: </b> <br />
-    The <a href="${import.meta.env.BASE_URL}data/figure1_data.tsv" download>network file</a>. <br />
-    An <a href="${import.meta.env.BASE_URL}data/figure1_export.json" download>exported session</a> of this example. <br />
-  </p>
-  <hr>
-  <p>
-    <b>Weighted network with 4 layers (the Load Example network): </b> <br />
-    The <a href="${import.meta.env.BASE_URL}data/figure2A_data.tsv" download>network file</a>. <br />
-    An <a href="${import.meta.env.BASE_URL}data/figure2A_export.json" download>exported session</a> of this example forming a cube in 3D space. <br />
-  </p>
-  <hr>
-  <p>
-    <b>Network with 4 layers, with node and edge attribute files: </b> <br />
-    The <a href="${import.meta.env.BASE_URL}data/figure2B_data.tsv" download>network file</a>. <br />
-    <a href="${import.meta.env.BASE_URL}data/figure2B_data_node_attributes.tsv" download>Node attributes file</a>.<br />
-    <a href="${import.meta.env.BASE_URL}data/figure2B_data_edge_attributes.tsv" download>Edge attributes file</a>. <br />
-    An <a href="${import.meta.env.BASE_URL}data/figure2B_export.json" download>exported session</a> of this example. <br />
-  </p>
-  <hr>
+  <h3>Biological networks</h3>
   <p>
     <b>SARS-CoV-2 example: </b> <br />
     A <a href="${import.meta.env.BASE_URL}data/covid19_data.tsv" download>COVID-19 network</a> (virus proteins, host proteins, drugs,
@@ -403,37 +377,139 @@ const HELP_HTML = `
     The <a href="${import.meta.env.BASE_URL}data/StringApp_aspirin.cys" download>network file</a> in Cytoscape format. <br />
     An <a href="${import.meta.env.BASE_URL}data/Arena3DApp_aspirin.json" download>exported session</a> of this example. <br />
   </p>
+  <h3>Layer geometry and 3D</h3>
+  <p>
+    <b>Four layers forming a cube (session): </b> <br />
+    An <a href="${import.meta.env.BASE_URL}data/figure2A_export.json" download>exported session</a> of the weighted
+    four-layer network (under <i>Small examples and file formats</i>) with its layers turned to form a cube in 3D
+    space. <br />
+  </p>
   <hr>
   <p>
-    <b>Neural network architectures (illustrative, not trained models): </b> <br />
-    Two neural networks drawn as multilayer networks: each network layer is an Arena3D layer, and the kind of each
-    link is its channel. The filters and attention patterns are written by hand to show how these networks work, and
-    the other weights are random, so neither network has learned anything. <br />
-    <i>Convolutional network (LeNet-like, 7 layers):</i> a 10×10 drawing of the digit 7 goes through four 3×3 edge
+    <b>3D network, layers ignored (SARS-CoV-2): </b> <br />
+    A <a href="${import.meta.env.BASE_URL}data/covid19_3d_network.json" download>session</a> saved in <i>Single network</i>
+    mode: virus proteins, host proteins, drugs, complexes and processes share one 3D space and keep
+    their layer colours. Untick the option to get the five layers back. <br />
+  </p>
+  <hr>
+  <p>
+    <b>Layers as spheres (GPCR signalling): </b> <br />
+    A <a href="${import.meta.env.BASE_URL}data/GPCRs_spheres.json" download>session</a> in which the GPCR, G-protein, GRK and effector
+    layers are spheres (Edit → Layers → <i>Layer Shape</i>) with a 3D layout inside each. <br />
+  </p>
+  <h3>Hive plots</h3>
+  <p>
+    <b>Hive plots, layers as axes: </b> <br />
+    Six examples open as hive plots (Layout → Layer Arrangement → <i>Hive plot</i>; Krzywinski et al., 2012): every
+    layer becomes an axis and every node sits on its axis by degree. In a plane: PREGO (three axes, by rank, as most of
+    its nodes have one or two links), GPCR signalling (four axes) and the SARS-CoV-2 host–virus network (five). With the
+    axes spread in 3D, so that every two of them are neighbours: GPCR signalling as a tetrahedron, the SARS-CoV-2
+    network with five axes on a sphere, and the six random layers along ±X, ±Y and ±Z. They use the network files of
+    those examples, found in the other sections. <br />
+  </p>
+  <h3>Neural networks</h3>
+  <p class="help-note">
+    <b>Illustrative, not trained models.</b> Six neural networks drawn as multilayer networks: each network layer is an Arena3D layer, and the kind of each
+    link is its channel. Filters and attention patterns are written by hand to show how these networks work, and
+    the other weights are random, so none of them has learned anything.
+  </p>
+  <p>
+    <b>Convolutional network (LeNet-like, 7 layers):</b> <br />
+    A 10×10 drawing of the digit 7 goes through four 3×3 edge
     filters (Conv 1), 2×2 max-pooling, six 3×3 filters that each read two pooled maps (Conv 2, as in LeNet-5), a
     second pooling, a dense layer and ten output classes. Each unit links to its receptive field (channels
     <i>Convolution</i>, <i>Pooling</i>, <i>Dense</i>; the link weights are the filter weights, and the strongest link
     of a pooling window is the one that wins), and node sizes show how strongly each unit responds to the 7, up to
     Max-pool 2. <br />
-    <i>Transformer (decoder-only, LLM-like, 10 layers):</i> nine tokens through two blocks of attention, MLP and
+    ${nnFiles('The convolutional network', 'cnn_lenet')}
+  </p>
+  <p>
+    <b>Transformer (decoder-only, LLM-like, 10 layers):</b> <br />
+    Nine tokens through two blocks of attention, MLP and
     Add &amp; Norm, then next-token predictions. In each attention layer, every one of four heads is a column of keys
     and a column of queries linked by attention weights; a token attends only to itself and earlier tokens (the causal
     mask). Block 1 has previous-token, attention-sink, local and broad heads. Block 2 has an induction head: the second
     "draws" looks at "networks", the token after the first "draws", so the output predicts "networks" next. The MLP
     acts on each token on its own, and the Add &amp; Norm layers carry the residual stream (channels
     <i>Projection</i>, <i>Residual</i>, <i>Feed-forward</i>, <i>Attention</i>). <br />
-    The convolutional network: <a href="${import.meta.env.BASE_URL}data/cnn_lenet.tsv" download>network file</a>,
-    <a href="${import.meta.env.BASE_URL}data/cnn_lenet_node_attributes.tsv" download>node attributes file</a> and
-    <a href="${import.meta.env.BASE_URL}data/cnn_lenet.json" download>session</a>. <br />
-    The transformer: <a href="${import.meta.env.BASE_URL}data/transformer_tiny.tsv" download>network file</a>,
-    <a href="${import.meta.env.BASE_URL}data/transformer_tiny_node_attributes.tsv" download>node attributes file</a> and
-    <a href="${import.meta.env.BASE_URL}data/transformer_tiny.json" download>session</a>. <br />
+    ${nnFiles('The transformer', 'transformer_tiny')}
+  </p>
+  <p>
+    <b>LSTM unrolled over time (6 layers):</b> <br />
+    One layer per time step of the sentence "Arena draws networks in 3D
+    space", each holding the input, the four gates of four memory cells, the cells and the hidden state. The gates are
+    the channels (<i>Forget gate</i>, <i>Input gate</i>, <i>Candidate</i>, <i>Output gate</i>), with <i>Input</i>,
+    <i>Recurrent</i> (the previous hidden state into this step's gates) and <i>Cell state</i>, the line each memory
+    cell runs along from step to step. A real forward pass with random weights gives the gate values: they are the
+    weights of the gates' links and set the node sizes. <br />
+    ${nnFiles('The LSTM', 'lstm_unrolled')}
+  </p>
+  <p>
+    <b>U-Net encoder–decoder (7 layers):</b> <br />
+    A noisy 8×8 image of a blob goes down through two stride-2 convolutions
+    to a 2×2 bottleneck and back up through two up-sampling steps to a segmentation mask; the layers are placed as a
+    U, and the <i>Skip connection</i> channel copies each encoder map across to the decoder of the same size. The
+    output mask is drawn as a trained U-Net should return it, not computed. <br />
+    ${nnFiles('The U-Net', 'unet')}
+  </p>
+  <p>
+    <b>Graph neural network on the karate club (5 layers):</b> <br />
+    The same 34 members of Zachary's karate club (1977) in
+    every layer — a multiplex, its floors stacked upwards, one per round of message passing. Two members start
+    labelled, the instructor (Mr. Hi) and the administrator (the Officer); each round every member takes in its
+    friends' values (<i>Message</i>) and its own (<i>Self</i>), as a graph convolution does (here without learned
+    weights), and the colours show the two clubs spreading. The output splits the club as it really split, but for
+    member 9. Annotation terms (Analyze → Annotations &amp; Groups) give each member's real club, the prediction and
+    <i>misclassified</i>. <br />
+    ${nnFiles('The graph neural network', 'gnn_karate')}
+  </p>
+  <p>
+    <b>Variational autoencoder (8 layers):</b> <br />
+    A 6×6 drawing of the digit 3 is squeezed through two encoder layers into
+    the mean and log-variance of three latent dimensions, sampled as z = μ + σ·ε (with random noise ε, the
+    reparameterisation trick) and decoded back to 6×6 — an hourglass with the bottleneck in the middle (channels
+    <i>Encoder</i>, <i>Mean</i>, <i>Log-variance</i>, <i>Sampling</i>, <i>Noise</i>, <i>Decoder</i>). The
+    reconstruction is drawn as a blurred copy of the input, not computed. <br />
+    ${nnFiles('The variational autoencoder', 'vae')}
+  </p>
+  <p>
     A script in the <a href="https://github.com/Pavlopoulos-Lab/Arena3D" target="_blank" rel="noopener">source code</a>,
     <code>frontend/scripts/neural_network_examples.py</code>, writes these files. <br />
   </p>
+  <h3>Small examples and file formats</h3>
+  <p>
+    <b>Weighted network with 4 layers (the Load Example network): </b> <br />
+    The <a href="${import.meta.env.BASE_URL}data/figure2A_data.tsv" download>network file</a>. A session of it with the
+    layers forming a cube is under <i>Layer geometry and 3D</i>. <br />
+  </p>
   <hr>
   <p>
-    <b>Scripts: </b> <br />
+    <b>Random networks with different topologies mapped in 6 layers: </b> <br />
+    The <a href="${import.meta.env.BASE_URL}data/figure1_data.tsv" download>network file</a>. <br />
+    An <a href="${import.meta.env.BASE_URL}data/figure1_export.json" download>exported session</a> of this example. <br />
+  </p>
+  <hr>
+  <p>
+    <b>Network with 4 layers, with node and edge attribute files: </b> <br />
+    The <a href="${import.meta.env.BASE_URL}data/figure2B_data.tsv" download>network file</a>. <br />
+    <a href="${import.meta.env.BASE_URL}data/figure2B_data_node_attributes.tsv" download>Node attributes file</a>.<br />
+    <a href="${import.meta.env.BASE_URL}data/figure2B_data_edge_attributes.tsv" download>Edge attributes file</a>. <br />
+    An <a href="${import.meta.env.BASE_URL}data/figure2B_export.json" download>exported session</a> of this example. <br />
+  </p>
+  <hr>
+  <p>
+    <b>Network without layers (SARS-CoV-2 interactome): </b> <br />
+    A <a href="${import.meta.env.BASE_URL}data/covid19_no_layers.tsv" download>2-column edgelist</a> of the SARS-CoV-2 network (under <i>Biological networks</i>): no
+    layer columns, so all nodes share one layer and no floor is drawn. Try Layout → <i>3D Layout</i> to lift it into
+    3D. <br />
+  </p>
+  <hr>
+  <p>
+    <b>Minimal 2-column edgelist (single default layer): </b> <br />
+    A <a href="${import.meta.env.BASE_URL}data/edgelist_2columns.tsv" download>minimal edgelist</a> with only SourceNode and TargetNode columns. <br />
+  </p>
+  <h3>Scripts</h3>
+  <p>
     A <a href="${import.meta.env.BASE_URL}data/transpose.py" download>Python script</a> that turns grouped lists into one pair per line.
     This input:
   </p>
@@ -463,7 +539,13 @@ const HELP_HTML = `
 
 <div id="File_tab" class="tabcontent">
   <h2>File</h2>
+  <p class="help-lead">Load networks, sessions, attributes, groups and values, and the file formats Arena3D reads.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/file.png" alt="The File panel" loading="lazy">
+  <p>
+    The panel has five cards. <i>Network</i> (Upload Network, Load Session), <i>Examples</i> and <i>Loaded
+    networks</i> start open; <i>Node &amp; edge attributes</i> and <i>Groups &amp; values</i> start folded: click a
+    title to open one, or use <i>Expand all</i> at the top.
+  </p>
 
   <h3>Upload Network</h3>
   <p>
@@ -479,7 +561,7 @@ const HELP_HTML = `
     (otherwise everything lands in one layer); edge attributes <i>weight</i> and <i>channel</i>/<i>interaction</i>
     become weights and channels (SIF relation types become channels).
   </p>
-  <p>
+  <p class="help-note">
     The online version accepts up to 10,000 edges, 20 layers and 10 channels. Running Arena3D locally (see About),
     the edge and node limits are set with the <i>ARENA_MAX_EDGES</i> and <i>ARENA_MAX_NODES</i> environment
     variables.
@@ -498,7 +580,7 @@ const HELP_HTML = `
   <p>
     <i>Upload GROUP file</i> reads annotation groups in NORMA's format — one group per line: the group name, a TAB,
     then its members separated by commas or semicolons (a <i>Node</i> / <i>Group</i> two-column file works too).
-    Nodes are matched by name in every layer, and the groups appear as pies and hulls and in Analyze → Groups.
+    Nodes are matched by name in every layer, and the groups appear as pies and hulls and in Analyze → Annotations &amp; Groups.
     <i>Upload node VALUES</i> reads a numeric table — a <i>Node</i> column, then one column per condition or score
     (expression values, say); blank cells are allowed. Edit → Style then colours nodes by any column, with a
     diverging scale when the values cross zero, and the legend shows the range.
@@ -627,11 +709,12 @@ const HELP_HTML = `
     }
   )}
 
-  <p class="last_p">The session JSON format is described in the <i>API</i> tab.</p>
+  <p class="help-tip last_p">The session JSON format is described in the <i>API</i> tab.</p>
 </div>
 
 <div id="Databases_tab" class="tabcontent">
   <h2>Database Importers</h2>
+  <p class="help-lead">Fetch networks from STRING, Reactome, OmniPath, NDEx, IntAct and Gene Ontology without leaving the app.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/databases.png" alt="The Database Importers panel: one card per source" loading="lazy">
   <p>
     The Database Importers panel (top menu) fetches networks straight from public resources. As in NORMA, every source is an
@@ -704,7 +787,7 @@ const HELP_HTML = `
       <i>Fetch protein descriptions</i> puts STRING's description of every protein on its node (right-click a node →
       Description; Find searches it too), and every node links to its STRING page (right-click → Link).</li>
   </ul>
-  <p>STRING asks callers to wait a second between requests and to identify themselves; both are respected.</p>
+  <p class="help-note">STRING asks callers to wait a second between requests and to identify themselves; both are respected.</p>
   <p class="last_p">
     Imports use the same size limits as uploaded files and can be undone. The API equivalents are
     <i>POST /api/import/string</i> (with <i>/api/import/string/groupings</i> for the groupings of a list of names), <i>/api/import/reactome</i>, <i>/api/import/go</i>, <i>/api/import/databases</i>
@@ -715,8 +798,8 @@ const HELP_HTML = `
 
 <div id="Find_tab" class="tabcontent">
   <h2>Find</h2>
+  <p class="help-lead">The Find panel (top menu) searches nodes and edges by name and selects what it finds.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/find.png" alt="The Find panel: node and edge search" loading="lazy">
-  <p>The Find panel (top menu) searches nodes and edges by name and selects what it finds.</p>
   <h3>Nodes</h3>
   <p>
     Type one or more names (comma-separated) and press Enter. The mode decides how names match: <i>Exact</i>,
@@ -736,6 +819,7 @@ const HELP_HTML = `
 
 <div id="Navigation_tab" class="tabcontent">
   <h2>3D View &amp; Navigation</h2>
+  <p class="help-lead">Zoom, pan, orbit and select with the mouse, the keyboard or touch, and move layers and nodes with the navigation table.</p>
   <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/view.jpg" alt="The 3D view with the navigation controls, the legend and the navigator" loading="lazy">
   <p>The legend at the top of the navigation table lists the mouse and keyboard controls:</p>
   <ul>
@@ -791,6 +875,7 @@ const HELP_HTML = `
 
 <div id="Layouts_tab" class="tabcontent">
   <h2>Layout</h2>
+  <p class="help-lead">Place the nodes on their layers: algorithms, scopes, UMAP, cross-layer alignment, 3D layouts, layer arrangements, hive plots and group layouts.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/layout.png" alt="The Layout panel" loading="lazy">
 
   <p>
@@ -811,7 +896,8 @@ const HELP_HTML = `
     layer while none is ticked. Each row shows the floor colour and the node count, and can also hide the layer
     with its inter-layer edges or show its node labels; <i>Select/Deselect All Layers</i> and <i>Invert</i> act on
     the whole list, and the count under them says what is selected. Below the list, <i>Layout…</i>,
-    <i>Clustering…</i>, <i>Analysis…</i> and <i>Export…</i> open the panels that work on the selection.
+    <i>Clustering…</i>, <i>Metrics…</i>, <i>Statistics…</i>, <i>Plots…</i>, <i>Perturbation…</i> and <i>Export…</i>
+    open the panels that work on the selection.
   </p>
   <h3>1 · Layers</h3>
   <p>
@@ -841,6 +927,37 @@ const HELP_HTML = `
   </ul>
   <img src="${import.meta.env.BASE_URL}images/help/layouts_figure.png" alt="Examples of layout algorithms" style="max-width:100%;" loading="lazy">
 
+  <h3>UMAP</h3>
+  <p>
+    <b>UMAP</b> (McInnes, Healy &amp; Melville, 2018), last in the algorithm list, places nodes with similar profiles
+    together. It is computed on the server (umap-learn), in 2D or 3D, on any scope. The <i>UMAP mode</i> says what a
+    node's profile is:
+  </p>
+  <ul>
+    <li><b>Topology UMAP</b>: its connections, as its row of the random-walk matrix one and two steps out (with
+      <i>Use Edge Weights</i>, heavier edges count more). Nodes that share neighbours land together, even without an
+      edge between them.</li>
+    <li><b>Attribute UMAP</b>: the features ticked under the mode, whatever the edges: the numeric columns of
+      File → <i>Values</i> (matched by node name, so every copy alike; ticked as they load), annotation sets and the
+      current clusters (one 0/1 column per term; a set's 50 most frequent terms), and node metrics (degree,
+      clustering coefficient, betweenness, closeness, eigenvector centrality, PageRank, coreness and eccentricity,
+      computed on the server on the graph being laid out). Numeric columns are standardised (z-scores), 0/1 columns
+      stay 0/1, a missing value takes its column's mean, and a column that is the same for every node counts for
+      nothing.</li>
+    <li><b>Hybrid UMAP</b>: both side by side. <i>Balance</i> runs from 0 (topology only) to 1 (attributes only);
+      each part is scaled so that the balance is its share of the distance between two nodes.</li>
+  </ul>
+  <p>
+    The parameters are UMAP's own: <i>Neighbours</i> (n_neighbors, default 15; fewer keep local detail, more show
+    the broader structure), <i>Minimum distance</i> (min_dist, 0.1; how tightly points may pack), <i>Distance</i>
+    (Euclidean or cosine) and <i>Random seed</i> (42; the same options and seed give the same layout, another seed
+    another run). With <i>Align Nodes Across Selected Layers</i> every node name is embedded once and its copies
+    share the spot (their features averaged); <i>Selected Nodes Only</i> embeds just the selected nodes. UMAP runs
+    without alignment or group layouts, on up to 5,000 nodes per layout; the first UMAP after the server starts
+    takes about 20 seconds while UMAP gets ready. Like every layout it is one undo step, and sessions keep the
+    positions. Export → Other tools draws the same embedding as a scatter or a table (<i>UMAP view</i>).
+  </p>
+
   <h3>Clusters in layouts</h3>
   <p>
     Communities are found in their own panel, <i>Clustering</i> in the top bar (see its page). To lay them out, open the
@@ -850,7 +967,7 @@ const HELP_HTML = `
   <h3>Weighted layouts</h3>
   <p>
     <i>Use Edge Weights (and Channel Weights)</i> lets heavier edges pull their nodes closer (Fruchterman-Reingold,
-    Kamada-Kawai and DrL). In multi-channel networks each channel then gets a weight (0.1–10,
+    Kamada-Kawai, DrL and UMAP). In multi-channel networks each channel then gets a weight (0.1–10,
     default 1) that multiplies its edges' weights, so a network can be laid out mainly by one evidence type.
     Unchecking a channel leaves its edges out of the layout.
   </p>
@@ -871,7 +988,7 @@ const HELP_HTML = `
 
   <h3>3D Layout</h3>
   <p>
-    <i>3D Layout</i> lets Fruchterman-Reingold, Kamada-Kawai, DrL, Random, Grid or Circle place nodes in 3D, off the
+    <i>3D Layout</i> lets Fruchterman-Reingold, Kamada-Kawai, DrL, Random, Grid, Circle or UMAP place nodes in 3D, off the
     floor — per layer or across the selected layers. A 2D layout afterwards flattens them again. Cube, sphere and
     cloud layers (Edit → Layers) always get 3D layouts inside their volume.
   </p>
@@ -928,16 +1045,16 @@ const HELP_HTML = `
     ±X, ±Y and ±Z.
   </p>
   <h3>What goes together</h3>
-  <p>
+  <p class="help-note">
     The panel never offers a combination the layout service would refuse: as soon as a choice rules another out, the
     other control is disabled and a note under the section says why.
   </p>
   <ul>
     <li><i>Layout inside the selected nodes</i> only applies with the <i>Selected Nodes Only</i> scope.</li>
-    <li><i>Use Edge Weights</i> works with Fruchterman-Reingold, Kamada-Kawai and DrL on the <i>Per Layer</i> or
+    <li><i>Use Edge Weights</i> works with Fruchterman-Reingold, Kamada-Kawai, DrL and UMAP on the <i>Per Layer</i> or
       <i>All Selected Layers</i> scope, without alignment.</li>
     <li><i>Cross-Layer Alignment</i> needs the <i>Per Layer</i> scope and a 2D layout (and layers to
-      align, so not in Single network mode).</li>
+      align, so not in Single network mode); UMAP runs without it.</li>
     <li>Group layouts run without alignment on the <i>Per Layer</i> or <i>All Selected Layers</i>
       scope. In the Group Layout card, <i>Group gravity</i> runs Fruchterman-Reingold, Kamada-Kawai or DrL (it works
       through edge weights, which the other algorithms ignore), <i>Virtual node per group</i> any algorithm that reads
@@ -967,7 +1084,9 @@ const HELP_HTML = `
 
 <div id="Scene_tab" class="tabcontent">
   <h2>Scene &amp; Camera</h2>
+  <p class="help-lead">Axes, rotation, overlays, the background, layer arrangements and rendering performance.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/scene.png" alt="The Scene & Camera panel" loading="lazy">
+  <p>Four cards: <i>Axes &amp; rotation</i>, <i>Overlays</i> and <i>Background</i> start open; <i>Layer arrangement</i> (Multilayered mode) starts folded.</p>
   <ul>
     <li><i>Show Scene Coord System</i> shows the X (red), Y (green) and Z (blue) axes as arrows with tick marks and
       letters through the centre of the scene; <i>Scene axes opacity</i> fades them.</li>
@@ -996,7 +1115,8 @@ const HELP_HTML = `
   <h3>Performance</h3>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/performance.png" alt="The Performance panel: presets, rendering, while moving, live stats" loading="lazy">
   <p class="last_p">
-    View → Performance tunes rendering for the network at hand. <i>Presets</i>: <i>Quality</i> (60 FPS, device
+    View → Performance tunes rendering for the network at hand; the <i>Rendering</i> and <i>While moving</i>
+    cards start folded. <i>Presets</i>: <i>Quality</i> (60 FPS, device
     resolution, smooth spheres), <i>Balanced</i> and <i>Fast</i> for large networks (15 FPS, 0.75× resolution,
     simple spheres, labels and inter-layer edges hidden while moving, navigator off). The individual options:
     <i>Frame rate</i> (15, 30 or 60 FPS); <i>Render resolution</i>, the pixel ratio the scene is drawn at — fewer
@@ -1010,7 +1130,9 @@ const HELP_HTML = `
 
 <div id="Node_tab" class="tabcontent">
   <h2>Edit → Nodes</h2>
+  <p class="help-lead">Node labels and their style, node shapes and colour priority.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/nodes.png" alt="The Edit → Nodes panel" loading="lazy">
+  <p>Four cards: <i>Selection &amp; labels</i> and <i>Shape</i> start open, <i>Label style</i> and <i>Colours</i> folded.</p>
   <ul>
     <li><i>Select / Deselect all Nodes</i>. Selected nodes can be moved with the navigation table, laid out locally
       or rescaled by a metric.</li>
@@ -1031,7 +1153,9 @@ const HELP_HTML = `
 
 <div id="Edge_tab" class="tabcontent">
   <h2>Edit → Edges</h2>
+  <p class="help-lead">Edge weights, direction, appearance, channels and edge bundling.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/edges.png" alt="The Edit → Edges panel" loading="lazy">
+  <p>Five cards: <i>Weights</i>, <i>Direction</i> and <i>Appearance</i> start open, <i>Bundling</i> and <i>Colours</i> folded.</p>
   <ul>
     <li><i>Hide Edges with Weight Below</i> filters weak edges (and weak channels of multi-channel edges) out of the
       view.</li>
@@ -1068,7 +1192,9 @@ const HELP_HTML = `
 
 <div id="Layer_tab" class="tabcontent">
   <h2>Edit → Layers</h2>
+  <p class="help-lead">Layer labels and axes, floors, 3D containers and restructuring layers.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/layers.png" alt="The Edit → Layers panel" loading="lazy">
+  <p>Five cards: <i>Labels &amp; axes</i>, <i>Shape &amp; container</i> and <i>Floor</i> start open, <i>Colours</i> and <i>Restructure</i> folded.</p>
   <ul>
     <li><i>Show Labels</i>: all, selected or no layer labels; <i>Resize Labels</i> sets their size.</li>
     <li><i>Show Layer Coord Systems</i> shows each layer's own axes (arrows with ticks and letters at the layer's
@@ -1085,8 +1211,9 @@ const HELP_HTML = `
       <i>Wireframe</i>, a <i>Grid</i> or <i>Dotted grid</i> over a faint plane, or the <i>Outline</i> only; saved in
       sessions and undoable. <i>Show Layer Floors</i> hides or shows them (single-layer networks load without
       one).</li>
-    <li><i>Floor Opacity</i>, <i>Floor Color</i> and <i>Color Priority</i> (colours from a session, or from the
-      theme and colour picker).</li>
+    <li><i>Floor Opacity</i> fades the floors.</li>
+    <li><i>Colours</i>: <i>Color Priority</i> (colours from a session, or from the theme and colour picker) and
+      <i>Floor Color</i>.</li>
   </ul>
   <h3>Restructure Layers</h3>
   <p class="last_p">
@@ -1100,6 +1227,7 @@ const HELP_HTML = `
 
 <div id="Style_tab" class="tabcontent">
   <h2>Edit → Style</h2>
+  <p class="help-lead">Colours, sizes, borders, shapes, labels and line types of nodes and edges, palettes and colour vision tools.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/style.png" alt="The Edit → Style panel" loading="lazy">
   <p>
     The <i>Nodes</i> and <i>Edges</i> buttons at the top switch between the two tables (each with its total), as
@@ -1136,13 +1264,14 @@ const HELP_HTML = `
     alone. <i>Preview as</i> simulates protanopia, deuteranopia, tritanopia or achromatopsia on the view, to check a
     figure before publishing. Everything set in this panel is saved in sessions.
   </p>
-  <p class="last_p">
+  <p class="help-tip last_p">
     To set these node by node or edge by edge, or for the rows ticked in a table, use <i>Edit → Attributes</i>.
   </p>
 </div>
 
 <div id="Attributes_tab" class="tabcontent">
   <h2>Edit → Attributes</h2>
+  <p class="help-lead">Every node and edge in a table: edit one or many at once, or inspect a single node or edge.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/attributes.png" alt="The Edit → Attributes panel: the node table, with ticked rows" loading="lazy">
   <p>
     <b>Tables.</b> After Cytoscape's Node and Edge Tables: one row per node or per edge (<i>Nodes</i> / <i>Edges</i>
@@ -1186,9 +1315,18 @@ const HELP_HTML = `
 
 <div id="Analyze_tab" class="tabcontent">
   <h2>Analyze</h2>
-  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/analyze.png" alt="The Analysis panel" loading="lazy">
+  <p class="help-lead">Metrics, statistics, plots, perturbation, exploring, annotations and groups, and the Data Tables.</p>
+  <p>
+    The Analyze menu holds one panel per kind of analysis: <b>Metrics</b> (node metrics for sizes and colours),
+    <b>Statistics</b> (network statistics, layer and network comparison), <b>Plots</b> (distributions and plots of
+    topological features), <b>Perturbation</b> (knockouts, attacks and robustness, propagation), <b>Explore</b>
+    (selection tools and paths), <b>Annotations &amp; Groups</b> (annotation sets, enrichment, pies and hulls, the
+    group list) and <b>Data Tables</b>, where their reports land. Metrics, Statistics, Plots and Perturbation work on
+    the layers ticked in Layer selection (every layer while none is), as their first line says.
+  </p>
+  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/analyze.png" alt="The Metrics panel" loading="lazy">
 
-  <h3>Node Metrics</h3>
+  <h3>Metrics</h3>
   <p>
     <i>Scale Nodes by Topology Metric</i> sizes nodes by Degree, Clustering Coefficient, Betweenness, Closeness or
     Eigenvector Centrality, PageRank, Coreness (k-core) or Eccentricity — per layer or across the selected layers —
@@ -1202,7 +1340,7 @@ const HELP_HTML = `
     Metric</i> colours them from blue (low) to red (high).
   </p>
 
-  <h3>Network</h3>
+  <h3>Statistics</h3>
   <p>
     <i>Network Statistics</i> reports, for each selected layer (or every layer) and the whole network: nodes, edges,
     density, average and maximum degree, connected components and the largest one, diameter and average path length,
@@ -1210,7 +1348,45 @@ const HELP_HTML = `
     Layers</i> shows how many nodes and edges each pair of layers shares (Jaccard index) as heatmaps, and an
     <i>UpSet plot</i> of the layers' node sets: one bar per combination, so a bar with one dot holds the nodes only
     that layer has and a bar with several dots the nodes exactly those layers share. The plot is interactive (see
-    Data Tables below) and downloads as SVG.
+    Data Tables below) and downloads as SVG. <i>Compare Networks</i> (File → Loaded networks) sets two loaded
+    networks side by side.
+  </p>
+
+  <h3>Plots</h3>
+  <p>
+    <i>Plot</i> picks a chart and shows the options it needs; <i>Graphs</i> draws <i>each layer, overlaid</i> in the
+    layer colours with a legend, or <i>the analysed layers as one graph</i> (Single network mode always does). The
+    server computes what a chart needs once per network, so other charts of the same measures come at once; a
+    progress bar shows the computing, with <i>Cancel</i>.
+  </p>
+  <p>
+    <b>Distributions</b> of one measure — any node metric of the Metrics panel (the same values), the edge weights
+    (one series per channel), a column of node values (File → Values), the component sizes or the shortest-path
+    lengths: a <i>Histogram</i> (a number of bins or a bin width; the layers side by side in each bin), a
+    <i>Density</i> curve (a Gaussian kernel, Silverman's bandwidth), the <i>Cumulative distribution</i> (CDF, or the
+    complementary CCDF, P(X ≥ x), optionally on log axes), a <i>Log–log distribution</i> with an optional power-law
+    fit (the exponent γ above k_min by maximum likelihood, after Clauset, Shalizi &amp; Newman 2009: a simple fit
+    without a goodness-of-fit test, and a straight line on log–log axes is no proof of a power law) and <i>Box and
+    violin per layer</i>, to compare layers side by side. A table under the chart gives n, mean, median, standard
+    deviation, minimum and maximum per series.
+  </p>
+  <p>
+    <b>Topological features together</b>: a <i>Scatter</i> of one metric (or node value) against another, every
+    node a point (hover for its name), with Pearson's r and Spearman's ρ in the corner; the <i>Metric correlation
+    matrix</i>, the Spearman correlation of every pair of metrics as a heatmap; <i>C(k)</i>, the mean clustering
+    coefficient of the nodes of degree k, and <i>knn(k)</i>, their neighbours' mean degree (rising for an
+    assortative network, falling for a disassortative one), both usually read on log axes; the <i>Rich-club
+    coefficient</i> φ(k), the density of links among the nodes of degree above k (Zhou &amp; Mondragón 2004),
+    by default divided by its mean on three random graphs with the same degrees, so values above 1 mean the hubs
+    link to each other more than chance (Colizza et al. 2006); the <i>k-core shells</i>, the number of nodes per
+    coreness; the <i>Centrality ranking</i>, the top nodes by a metric as bars with their rank in every layer as
+    coloured dots (who is a hub where); and the <i>Layer profiles</i>, the layers and the whole network over density,
+    degree, clustering, transitivity, path length, diameter, components and assortativity as small charts.
+  </p>
+  <p>
+    A click on a bar, a box or a point selects its nodes in the scene (Shift adds to the selection); on a scatter,
+    drag a box to select the points in it. Every chart downloads as SVG or PNG (light, with a white background) and
+    its numbers as CSV.
   </p>
 
   <h3>Explore</h3>
@@ -1233,6 +1409,58 @@ const HELP_HTML = `
     changes; <i>Also select the nodes along the paths</i> selects the nodes in between too. The highlight never
     treats its own nodes as path ends, and switching it off takes back only what it added. To keep a path,
     use <i>Shortest Path Between 2 Selected</i>.
+  </p>
+
+  <h3>Perturbation</h3>
+  <p>
+    Analyze → Perturbation has two cards. <i>Knock out</i> removes nodes — the selected nodes, nodes by name (every copy in the analysed layers), or the
+    top <i>k</i> by degree, betweenness or PageRank, in the whole network or in each layer — with <i>Every copy
+    across layers</i> all their copies too (a multiplex knockout); and edges — the selected edges, a channel, the
+    inter-layer edges or a random share of them (the same share on every run). It works on the layers ticked in
+    Layer selection (every layer while none is): each layer's own graph and the whole network (those layers with the
+    inter-layer edges among them), undirected, parallel edges merged, distances in hops. With nodes selected,
+    right-click → <i>Selected nodes</i> → <i>Knock Out the N Nodes…</i> runs it on them.
+  </p>
+  <p>
+    Data Tables → <i>Knockout</i> compares each graph before and after: nodes, edges, connected components, the
+    largest component, density, average path length and diameter (of the largest component), global efficiency
+    (the mean of 1/distance over all pairs of nodes, 0 for pairs no longer joined) and the nodes cut off from the
+    largest component. <i>Knockout Nodes</i> lists every node's degree, betweenness and closeness in the whole
+    network before and after, with the change, most affected first, and marks the nodes knocked out or cut off.
+    Closeness here is the harmonic closeness (the mean of 1/distance to the other nodes), so a node that is cut off
+    loses closeness rather than gaining it. Above 2,000 nodes, betweenness and closeness are estimated from 200
+    sampled nodes, the same ones before and after.
+  </p>
+  <p>
+    In the scene the knocked-out nodes and their edges are <i>faded</i>, <i>hidden</i> or left <i>as they are</i>
+    (an edge drawn for several channels fades once all of them are removed). <i>Colour by Change</i> colours the
+    nodes by their change in degree, betweenness, closeness or propagation: blue lost, red gained, pale unchanged,
+    knocked-out nodes grey, with the scale in the legend. <i>Restore</i> brings back how the nodes and edges looked
+    before the knockout; each of these is one undo step. <i>Apply as a New Network</i> loads the network without the
+    knocked-out nodes and edges through the Import as popup, as a network of its own in the Networks menu.
+  </p>
+  <p>
+    <i>Propagate from</i> (optional) runs a network propagation from the named seed nodes, before and after the
+    knockout: a random walk with restart (personalised PageRank) that goes back to the seeds at each step with the
+    <i>Restart probability</i>, so a node's score is the share of the signal that reaches it. With a drug's targets
+    as seeds and a gene knocked out, <i>Knockout Nodes</i> and <i>Colour by Change</i> show which nodes lose or gain
+    the signal.
+  </p>
+  <p>
+    <i>Attack and robustness</i> removes nodes step by step and follows the largest component (the share of the
+    starting nodes still in it), the number of components and, if ticked, the global efficiency (relative to the
+    start; graphs up to 2,000 nodes). <i>At random</i> is a failure, averaged over several runs, with their spread
+    as a band; <i>By degree</i> and <i>By betweenness</i> are targeted attacks on the highest-ranked nodes first,
+    the ranking <i>Recalculated after each step</i> (an adaptive attack) or <i>Computed once</i> at the start (above
+    2,000 nodes, betweenness is estimated from 200 sampled nodes). Up to 50 steps, one node a step for smaller
+    graphs; one curve per layer and one for the whole network, with the robustness <i>R</i> in the legend: the area
+    under the largest-component curve (Schneider et al. 2011), lower for a network that falls apart sooner.
+    Scale-free networks typically shrug off random failure yet break quickly under a targeted attack (Albert, Jeong
+    &amp; Barabási 2000). <i>Keep earlier runs on the chart</i> puts strategies side by side; the chart downloads as
+    SVG and its points as CSV, and the points fill Data Tables → <i>Robustness</i>. Each curve is computed on its own
+    (the whole network first), so the progress bar counts the curves and <i>Cancel</i> stops after the current one,
+    keeping those done; a knockout shows its seconds and can be cancelled too. A curve stops after 30 seconds and
+    returns what it has, saying so.
   </p>
 
   <h3>Groups</h3>
@@ -1277,8 +1505,8 @@ const HELP_HTML = `
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/data.png" alt="The Data Tables panel" loading="lazy">
   <p>
     Analyze → Data Tables holds every report as a tab — the network on loading, the selected edges, the clusters,
-    every computed metric, layer similarity, network statistics, group statistics and overlap, the network comparison
-    and the node values — each drawn as a table with a header that stays put while the rows scroll, numbers
+    every computed metric, layer similarity, network statistics, group statistics and overlap, the network comparison,
+    the node values, a knockout's networks and nodes, and the robustness curves — each drawn as a table with a header that stays put while the rows scroll, numbers
     right-aligned, the row count and a CSV download. Click a column title to sort the report by it (numbers largest
     first, text A→Z) and click again to turn the order round; the order is kept while the report refreshes and the
     CSV follows it. The comparison tabs add an UpSet plot of the sets they compare.
@@ -1300,6 +1528,7 @@ const HELP_HTML = `
 
 <div id="Clustering_tab" class="tabcontent">
   <h2>Clustering</h2>
+  <p class="help-lead">Find communities within layers, across them or by node name, and use them for colours, layouts and annotation sets.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/clustering.png" alt="The Clustering panel" loading="lazy">
   <p>
     The <i>Clustering</i> panel (top bar, next to Layout) finds communities without moving the nodes, with <b>Louvain</b>, <b>Walktrap</b>,
@@ -1321,6 +1550,7 @@ const HELP_HTML = `
 
 <div id="Export_tab" class="tabcontent">
   <h2>Export</h2>
+  <p class="help-lead">Images, 3D models and video, Cytoscape and other tools, other views of the network, and the session.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/export.png" alt="The Export panel" loading="lazy">
   <p>
     The Export panel (top menu) writes the current view and the network in the formats other tools read. It is
@@ -1389,6 +1619,29 @@ const HELP_HTML = `
     organism and the enrichment tools are chosen there); lists too long for a link, or any list, can be taken over
     with <i>Copy Gene Lists</i> and pasted into Flame. The server address can be changed for a local Flame.
   </p>
+  <p>
+    <b>Send to Cosmograph</b> opens the network in <a href="https://cosmograph.app" target="_blank">Cosmograph</a>,
+    the GPU graph viewer for large networks. <i>Cosmograph links (CSV)</i> has one row per edge: <code>source</code>
+    and <code>target</code> (nodes named node_layer, so the copies of a node in different layers stay apart),
+    <code>weight</code>, <code>channel</code>, <code>source_layer</code> and <code>target_layer</code>.
+    <i>Cosmograph nodes (CSV)</i> has one row per node: <code>id</code>, <code>label</code> (the plain name),
+    <code>layer</code>, <code>color</code>, <code>size</code>, <code>cluster</code> and <code>annotations</code>
+    (the shown annotation set's terms), then the File → Values columns, the node metrics applied so far and, once a
+    UMAP view has been computed (below), <code>umap_x</code> and <code>umap_y</code>. <i>Open in Cosmograph</i> hosts
+    both files on this server for one hour (like the Gephi Lite hand-off: served as downloads, readable by
+    Cosmograph's page) and opens Cosmograph with them by link, nodes coloured, sized and labelled as here. If
+    Cosmograph cannot reach this server (a private network), download the two files and drop them on cosmograph.app.
+  </p>
+  <p>
+    <b>UMAP view</b> draws the nodes as a 2D UMAP map without moving them in the scene, with the modes, features and
+    parameters of the UMAP layout (Layout page): the layers ticked in Layer selection (all if none), <i>one point per
+    node copy</i> (the layers as one network) or <i>one per node name</i> (copies merged), coloured by the scene
+    colours, layer, cluster or annotation term. <i>UMAP scatter</i> downloads it as SVG or PNG with a legend;
+    <i>UMAP coordinates (CSV)</i> writes node_id, node, layer, umap_1, umap_2, cluster and annotation for Python, R
+    or a spreadsheet; <i>UMAP in Vega Editor</i> opens an interactive scatter (zoom, tooltips) in the
+    <a href="https://vega.github.io/editor/" target="_blank">Vega editor</a>, the chart travelling in the link (up to
+    3,000 points). The embedding is computed once per set of options, so the downloads after the first are instant.
+  </p>
 
   <h3>Session</h3>
   <p class="last_p">
@@ -1400,6 +1653,7 @@ const HELP_HTML = `
 
 <div id="API_tab" class="tabcontent">
   <h2>API</h2>
+  <p class="help-lead">Open networks and sessions in Arena3D from your own code, and run analyses without the browser.</p>
   <p>
     Arena3D's server is a plain HTTPS/JSON API, open to any application: no key, and cross-origin requests are
     allowed. Interactive documentation of every endpoint — schemas, examples and a "Try it out" button — is served at
@@ -1685,7 +1939,9 @@ webbrowser.open(r.json()["url"])</pre>
     The endpoints the panels use take JSON and return JSON, so a script can run them on its own data: <b>POST
     /api/network</b> parses an uploaded file (TSV, GraphML, GML, SIF, CX2) into nodes, edges and layers;
     <b>/api/layout</b> computes layouts, clustering, cross-layer alignment and group layouts; <b>/api/topology</b>
-    node metrics; <b>/api/network-stats</b> and <b>/api/layer-similarity</b> statistics; <b>/api/enrichment</b>
+    node metrics; <b>/api/network-stats</b> and <b>/api/layer-similarity</b> statistics;
+    <b>/api/perturbation/knockout</b> and <b>/api/perturbation/attack</b> knockouts and robustness curves;
+    <b>/api/plots</b> node metrics, distances, C(k), knn(k) and the rich-club coefficient for plotting; <b>/api/enrichment</b>
     STRING enrichment; <b>/api/import/string</b>, <b>/api/import/databases</b> and <b>/api/import/ndex</b> fetch a
     network ready for <i>/api/layout</i>; <b>GET /api/config</b> reports the server's limits. Errors are JSON with a
     <i>detail</i> message: 400 for bad input, 413 for an oversized body, 422 for a body that does not match the
@@ -1700,8 +1956,9 @@ webbrowser.open(r.json()["url"])</pre>
 
 <div id="Cytoscape_tab" class="tabcontent">
   <h2>Cytoscape App</h2>
+  <p class="help-lead">Send a network from Cytoscape to Arena3D with the Cytoscape app, and back again.</p>
   <p>
-    <a href="https://apps.cytoscape.org/apps/arena3DApp" target="_blank">Arena3DApp</a> in the
+    <a href="https://apps.cytoscape.org/apps/arena3dwebapp" target="_blank">Arena3DApp</a> in the
     <a href="https://apps.cytoscape.org/" target="_blank">Cytoscape App Store</a> sends a 2D
     <a href="https://cytoscape.org/download.html" target="_blank">Cytoscape</a> network straight to Arena3D. Take this
     aspirin network, built in Cytoscape with the StringApp:
@@ -1721,48 +1978,7 @@ webbrowser.open(r.json()["url"])</pre>
   </p>
 </div>
 
-<div id="About_tab" class="tabcontent">
-  <h2>Developers</h2>
-  <p>
-    &#8226; Evangelos Karatzas, email: karatzas@fleming.gr<br />
-    &#8226; Maria Kokoli, email: mariakokoli94@gmail.com <br />
-    &#8226; Fotis Baltoumas, email: baltoumas@fleming.gr <br />
-    &#8226; Georgios A. Pavlopoulos, email: pavlopoulos@fleming.gr <br />
-  </p>
-
-  <h2>Install Arena3D</h2>
-  <p>
-    Arena3D is open source (GNU AGPL v3). Run it locally with Docker or from source — see the README on
-    <a href="https://github.com/pavlopoulos-lab/arena3d" target="_blank">GitHub</a>, or pull the image from
-    <a href="https://hub.docker.com/r/pavlopouloslab/arena3dweb" target="_blank">DockerHub</a>.
-  </p>
-
-  <h2>Related Software</h2>
-  <p>
-    &#8226; <a href="https://normaviz.org" target="_blank">NORMA: The NetwORk Makeup Artist</a><br />
-  </p>
-
-  <h2>Related Literature</h2>
-  <p>
-    &#8226; <a href="https://www.frontiersin.org/articles/10.3389/fbioe.2020.00034/full" target="_blank">A Guide to
-    Conquer the Biological Network Era Using Graph Theory</a><br />
-  </p>
-
-  <h2>Cite Arena3D</h2>
-  <p class="last_p">
-   - Kokoli, M., Karatzas, E., Baltoumas, F.A., Schneider, R., Pafilis, E., Paragkamian, S., Doncheva, N.T., Jensen, L.J.
-    and Pavlopoulos, G.A., 2023. <br />
-      Arena3D<sup>web</sup>: interactive 3D visualization of multilayered networks
-      supporting multiple directional information channels, clustering analysis and application integration,<br>
-    NAR Genomics and Bioinformatics, 5(2), p.lqad053. <br />
-   <b>doi:</b> <a href="https://doi.org/10.1093/nargab/lqad053" target="_blank">10.1093/nargab/lqad053</a>; <b>PubMed:</b> <a href="https://pubmed.ncbi.nlm.nih.gov/37260509/" target="_blank">37260509</a>
-   <br><br>
-   - Karatzas, E., Baltoumas, F.A., Panayiotou, N.A., Schneider, R. and Pavlopoulos, G.A., 2021. <br />
-   Arena3D<sup>web</sup>: interactive 3D visualization of multilayered networks,<br>
-   Nucleic Acids Research, 49(W1), pp.W36-W45. <br />
-    <b>doi:</b> <a href="https://doi.org/10.1093/nar/gkab278" target="_blank">10.1093/nar/gkab278</a>; <b>PubMed:</b> <a href="https://pubmed.ncbi.nlm.nih.gov/33885790/" target="_blank">33885790</a>
-  </p>
-</div>
+${ABOUT_HTML}
 </div>
 `
 
@@ -1786,6 +2002,8 @@ export function initHelpPanel(): void {
   const pane = document.getElementById('panel-help')
   if (!pane) return
   pane.innerHTML = HELP_HTML
+  initAbout(pane)
+  decorateHelp(pane)
   const buttons = pane.querySelectorAll<HTMLElement>('.tablinks')
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {

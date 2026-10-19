@@ -125,8 +125,10 @@ test('Networks menu: what is on screen, switch networks and annotation sets', as
   expect((await read(page)).annotated).toBeGreaterThan(0)
 
   // Analyze → Annotations shows the same set, and a change there shows here
-  await tab(page, 'Analysis')
-  await page.locator('#annotation_card summary').dispatchEvent('click')
+  await tab(page, 'Annotations & Groups')
+  await page
+    .locator('#annotation_card')
+    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
   await expect(page.locator('#annotationSet')).toHaveValue('0')
   await page.locator('#annotationSet').selectOption('-1')
   await expect(now).toHaveText('figure2A_data.tsv · no annotation')
@@ -240,8 +242,10 @@ test('Networks menu: rename and delete networks and annotation sets', async ({
   await expect.poll(async () => (await read(page)).layers).toEqual(a.layers)
 
   // Analyze → Annotations renames and deletes the set shown, too
-  await tab(page, 'Analysis')
-  await page.locator('#annotation_card summary').dispatchEvent('click')
+  await tab(page, 'Annotations & Groups')
+  await page
+    .locator('#annotation_card')
+    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
   await page.locator('#annotationSetRename').click()
   await box.fill('Gamma')
   await box.press('Enter')

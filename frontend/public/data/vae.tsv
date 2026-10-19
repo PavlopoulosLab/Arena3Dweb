@@ -1,0 +1,1490 @@
+SourceNode	SourceLayer	TargetNode	TargetLayer	Weight	Channel
+pixel 1,1	Input	unit 1	Encoder 1	0.074	Encoder
+pixel 1,2	Input	unit 1	Encoder 1	0.2534	Encoder
+pixel 1,3	Input	unit 1	Encoder 1	0.7229	Encoder
+pixel 1,4	Input	unit 1	Encoder 1	0.7331	Encoder
+pixel 1,5	Input	unit 1	Encoder 1	0.9871	Encoder
+pixel 1,6	Input	unit 1	Encoder 1	0.0056	Encoder
+pixel 2,1	Input	unit 1	Encoder 1	0.7966	Encoder
+pixel 2,2	Input	unit 1	Encoder 1	0.8384	Encoder
+pixel 2,3	Input	unit 1	Encoder 1	0.1085	Encoder
+pixel 2,4	Input	unit 1	Encoder 1	0.2333	Encoder
+pixel 2,5	Input	unit 1	Encoder 1	0.9182	Encoder
+pixel 2,6	Input	unit 1	Encoder 1	0.242	Encoder
+pixel 3,1	Input	unit 1	Encoder 1	0.407	Encoder
+pixel 3,2	Input	unit 1	Encoder 1	0.096	Encoder
+pixel 3,3	Input	unit 1	Encoder 1	0.4501	Encoder
+pixel 3,4	Input	unit 1	Encoder 1	0.6857	Encoder
+pixel 3,5	Input	unit 1	Encoder 1	0.524	Encoder
+pixel 3,6	Input	unit 1	Encoder 1	0.7781	Encoder
+pixel 4,1	Input	unit 1	Encoder 1	0.0125	Encoder
+pixel 4,2	Input	unit 1	Encoder 1	0.8477	Encoder
+pixel 4,3	Input	unit 1	Encoder 1	0.1809	Encoder
+pixel 4,4	Input	unit 1	Encoder 1	0.5484	Encoder
+pixel 4,5	Input	unit 1	Encoder 1	0.2327	Encoder
+pixel 4,6	Input	unit 1	Encoder 1	0.4922	Encoder
+pixel 5,1	Input	unit 1	Encoder 1	0.7967	Encoder
+pixel 5,2	Input	unit 1	Encoder 1	0.4176	Encoder
+pixel 5,3	Input	unit 1	Encoder 1	0.3485	Encoder
+pixel 5,4	Input	unit 1	Encoder 1	0.4514	Encoder
+pixel 5,5	Input	unit 1	Encoder 1	0.1565	Encoder
+pixel 5,6	Input	unit 1	Encoder 1	0.8246	Encoder
+pixel 6,1	Input	unit 1	Encoder 1	0.4665	Encoder
+pixel 6,2	Input	unit 1	Encoder 1	0.5802	Encoder
+pixel 6,3	Input	unit 1	Encoder 1	0.4376	Encoder
+pixel 6,4	Input	unit 1	Encoder 1	0.619	Encoder
+pixel 6,5	Input	unit 1	Encoder 1	0.601	Encoder
+pixel 6,6	Input	unit 1	Encoder 1	0.7728	Encoder
+pixel 1,1	Input	unit 2	Encoder 1	0.7587	Encoder
+pixel 1,2	Input	unit 2	Encoder 1	0.8904	Encoder
+pixel 1,3	Input	unit 2	Encoder 1	0.2424	Encoder
+pixel 1,4	Input	unit 2	Encoder 1	0.0166	Encoder
+pixel 1,5	Input	unit 2	Encoder 1	0.953	Encoder
+pixel 1,6	Input	unit 2	Encoder 1	0.1505	Encoder
+pixel 2,1	Input	unit 2	Encoder 1	0.8128	Encoder
+pixel 2,2	Input	unit 2	Encoder 1	0.7759	Encoder
+pixel 2,3	Input	unit 2	Encoder 1	0.1937	Encoder
+pixel 2,4	Input	unit 2	Encoder 1	0.7575	Encoder
+pixel 2,5	Input	unit 2	Encoder 1	0.1574	Encoder
+pixel 2,6	Input	unit 2	Encoder 1	0.7906	Encoder
+pixel 3,1	Input	unit 2	Encoder 1	0.5939	Encoder
+pixel 3,2	Input	unit 2	Encoder 1	0.9835	Encoder
+pixel 3,3	Input	unit 2	Encoder 1	0.833	Encoder
+pixel 3,4	Input	unit 2	Encoder 1	0.0795	Encoder
+pixel 3,5	Input	unit 2	Encoder 1	0.9651	Encoder
+pixel 3,6	Input	unit 2	Encoder 1	0.8303	Encoder
+pixel 4,1	Input	unit 2	Encoder 1	0.0065	Encoder
+pixel 4,2	Input	unit 2	Encoder 1	0.8419	Encoder
+pixel 4,3	Input	unit 2	Encoder 1	0.1598	Encoder
+pixel 4,4	Input	unit 2	Encoder 1	0.2037	Encoder
+pixel 4,5	Input	unit 2	Encoder 1	0.2774	Encoder
+pixel 4,6	Input	unit 2	Encoder 1	0.8132	Encoder
+pixel 5,1	Input	unit 2	Encoder 1	0.1596	Encoder
+pixel 5,2	Input	unit 2	Encoder 1	0.6549	Encoder
+pixel 5,3	Input	unit 2	Encoder 1	0.2178	Encoder
+pixel 5,4	Input	unit 2	Encoder 1	0.9167	Encoder
+pixel 5,5	Input	unit 2	Encoder 1	0.8917	Encoder
+pixel 5,6	Input	unit 2	Encoder 1	0.1101	Encoder
+pixel 6,1	Input	unit 2	Encoder 1	0.2128	Encoder
+pixel 6,2	Input	unit 2	Encoder 1	0.7014	Encoder
+pixel 6,3	Input	unit 2	Encoder 1	0.4634	Encoder
+pixel 6,4	Input	unit 2	Encoder 1	0.9898	Encoder
+pixel 6,5	Input	unit 2	Encoder 1	0.9959	Encoder
+pixel 6,6	Input	unit 2	Encoder 1	0.7573	Encoder
+pixel 1,1	Input	unit 3	Encoder 1	0.4109	Encoder
+pixel 1,2	Input	unit 3	Encoder 1	0.9018	Encoder
+pixel 1,3	Input	unit 3	Encoder 1	0.5264	Encoder
+pixel 1,4	Input	unit 3	Encoder 1	0.2223	Encoder
+pixel 1,5	Input	unit 3	Encoder 1	0.9139	Encoder
+pixel 1,6	Input	unit 3	Encoder 1	0.2681	Encoder
+pixel 2,1	Input	unit 3	Encoder 1	0.3482	Encoder
+pixel 2,2	Input	unit 3	Encoder 1	0.1805	Encoder
+pixel 2,3	Input	unit 3	Encoder 1	0.5493	Encoder
+pixel 2,4	Input	unit 3	Encoder 1	0.8265	Encoder
+pixel 2,5	Input	unit 3	Encoder 1	0.3056	Encoder
+pixel 2,6	Input	unit 3	Encoder 1	0.7281	Encoder
+pixel 3,1	Input	unit 3	Encoder 1	0.1683	Encoder
+pixel 3,2	Input	unit 3	Encoder 1	0.0974	Encoder
+pixel 3,3	Input	unit 3	Encoder 1	0.1957	Encoder
+pixel 3,4	Input	unit 3	Encoder 1	0.9721	Encoder
+pixel 3,5	Input	unit 3	Encoder 1	0.1489	Encoder
+pixel 3,6	Input	unit 3	Encoder 1	0.9633	Encoder
+pixel 4,1	Input	unit 3	Encoder 1	0.5987	Encoder
+pixel 4,2	Input	unit 3	Encoder 1	0.3426	Encoder
+pixel 4,3	Input	unit 3	Encoder 1	0.1329	Encoder
+pixel 4,4	Input	unit 3	Encoder 1	0.5731	Encoder
+pixel 4,5	Input	unit 3	Encoder 1	0.112	Encoder
+pixel 4,6	Input	unit 3	Encoder 1	0.3506	Encoder
+pixel 5,1	Input	unit 3	Encoder 1	0.8224	Encoder
+pixel 5,2	Input	unit 3	Encoder 1	0.259	Encoder
+pixel 5,3	Input	unit 3	Encoder 1	0.7939	Encoder
+pixel 5,4	Input	unit 3	Encoder 1	0.5682	Encoder
+pixel 5,5	Input	unit 3	Encoder 1	0.9492	Encoder
+pixel 5,6	Input	unit 3	Encoder 1	0.5614	Encoder
+pixel 6,1	Input	unit 3	Encoder 1	0.6151	Encoder
+pixel 6,2	Input	unit 3	Encoder 1	0.0053	Encoder
+pixel 6,3	Input	unit 3	Encoder 1	0.4189	Encoder
+pixel 6,4	Input	unit 3	Encoder 1	0.5035	Encoder
+pixel 6,5	Input	unit 3	Encoder 1	0.4752	Encoder
+pixel 6,6	Input	unit 3	Encoder 1	0.15	Encoder
+pixel 1,1	Input	unit 4	Encoder 1	0.5381	Encoder
+pixel 1,2	Input	unit 4	Encoder 1	0.9281	Encoder
+pixel 1,3	Input	unit 4	Encoder 1	0.1982	Encoder
+pixel 1,4	Input	unit 4	Encoder 1	0.2541	Encoder
+pixel 1,5	Input	unit 4	Encoder 1	0.7198	Encoder
+pixel 1,6	Input	unit 4	Encoder 1	0.2613	Encoder
+pixel 2,1	Input	unit 4	Encoder 1	0.335	Encoder
+pixel 2,2	Input	unit 4	Encoder 1	0.6579	Encoder
+pixel 2,3	Input	unit 4	Encoder 1	0.6865	Encoder
+pixel 2,4	Input	unit 4	Encoder 1	0.4822	Encoder
+pixel 2,5	Input	unit 4	Encoder 1	0.899	Encoder
+pixel 2,6	Input	unit 4	Encoder 1	0.9505	Encoder
+pixel 3,1	Input	unit 4	Encoder 1	0.6545	Encoder
+pixel 3,2	Input	unit 4	Encoder 1	0.893	Encoder
+pixel 3,3	Input	unit 4	Encoder 1	0.9723	Encoder
+pixel 3,4	Input	unit 4	Encoder 1	0.2131	Encoder
+pixel 3,5	Input	unit 4	Encoder 1	0.9763	Encoder
+pixel 3,6	Input	unit 4	Encoder 1	0.8782	Encoder
+pixel 4,1	Input	unit 4	Encoder 1	0.5828	Encoder
+pixel 4,2	Input	unit 4	Encoder 1	0.2222	Encoder
+pixel 4,3	Input	unit 4	Encoder 1	0.2231	Encoder
+pixel 4,4	Input	unit 4	Encoder 1	0.9329	Encoder
+pixel 4,5	Input	unit 4	Encoder 1	0.2909	Encoder
+pixel 4,6	Input	unit 4	Encoder 1	0.7187	Encoder
+pixel 5,1	Input	unit 4	Encoder 1	0.1239	Encoder
+pixel 5,2	Input	unit 4	Encoder 1	0.7254	Encoder
+pixel 5,3	Input	unit 4	Encoder 1	0.8268	Encoder
+pixel 5,4	Input	unit 4	Encoder 1	0.1119	Encoder
+pixel 5,5	Input	unit 4	Encoder 1	0.392	Encoder
+pixel 5,6	Input	unit 4	Encoder 1	0.8688	Encoder
+pixel 6,1	Input	unit 4	Encoder 1	0.0972	Encoder
+pixel 6,2	Input	unit 4	Encoder 1	0.4077	Encoder
+pixel 6,3	Input	unit 4	Encoder 1	0.5283	Encoder
+pixel 6,4	Input	unit 4	Encoder 1	0.234	Encoder
+pixel 6,5	Input	unit 4	Encoder 1	0.7744	Encoder
+pixel 6,6	Input	unit 4	Encoder 1	0.6618	Encoder
+pixel 1,1	Input	unit 5	Encoder 1	0.4309	Encoder
+pixel 1,2	Input	unit 5	Encoder 1	0.5434	Encoder
+pixel 1,3	Input	unit 5	Encoder 1	0.7605	Encoder
+pixel 1,4	Input	unit 5	Encoder 1	0.0111	Encoder
+pixel 1,5	Input	unit 5	Encoder 1	0.8015	Encoder
+pixel 1,6	Input	unit 5	Encoder 1	0.9031	Encoder
+pixel 2,1	Input	unit 5	Encoder 1	0.0577	Encoder
+pixel 2,2	Input	unit 5	Encoder 1	0.6533	Encoder
+pixel 2,3	Input	unit 5	Encoder 1	0.2594	Encoder
+pixel 2,4	Input	unit 5	Encoder 1	0.8315	Encoder
+pixel 2,5	Input	unit 5	Encoder 1	0.5603	Encoder
+pixel 2,6	Input	unit 5	Encoder 1	0.5552	Encoder
+pixel 3,1	Input	unit 5	Encoder 1	0.974	Encoder
+pixel 3,2	Input	unit 5	Encoder 1	0.6483	Encoder
+pixel 3,3	Input	unit 5	Encoder 1	0.0866	Encoder
+pixel 3,4	Input	unit 5	Encoder 1	0.1185	Encoder
+pixel 3,5	Input	unit 5	Encoder 1	0.2234	Encoder
+pixel 3,6	Input	unit 5	Encoder 1	0.6539	Encoder
+pixel 4,1	Input	unit 5	Encoder 1	0.0359	Encoder
+pixel 4,2	Input	unit 5	Encoder 1	0.8929	Encoder
+pixel 4,3	Input	unit 5	Encoder 1	0.0709	Encoder
+pixel 4,4	Input	unit 5	Encoder 1	0.8826	Encoder
+pixel 4,5	Input	unit 5	Encoder 1	0.9425	Encoder
+pixel 4,6	Input	unit 5	Encoder 1	0.9863	Encoder
+pixel 5,1	Input	unit 5	Encoder 1	0.778	Encoder
+pixel 5,2	Input	unit 5	Encoder 1	0.0887	Encoder
+pixel 5,3	Input	unit 5	Encoder 1	0.047	Encoder
+pixel 5,4	Input	unit 5	Encoder 1	0.0742	Encoder
+pixel 5,5	Input	unit 5	Encoder 1	0.8191	Encoder
+pixel 5,6	Input	unit 5	Encoder 1	0.8688	Encoder
+pixel 6,1	Input	unit 5	Encoder 1	0.2856	Encoder
+pixel 6,2	Input	unit 5	Encoder 1	0.0843	Encoder
+pixel 6,3	Input	unit 5	Encoder 1	0.3994	Encoder
+pixel 6,4	Input	unit 5	Encoder 1	0.4499	Encoder
+pixel 6,5	Input	unit 5	Encoder 1	0.4414	Encoder
+pixel 6,6	Input	unit 5	Encoder 1	0.7936	Encoder
+pixel 1,1	Input	unit 6	Encoder 1	0.399	Encoder
+pixel 1,2	Input	unit 6	Encoder 1	0.0929	Encoder
+pixel 1,3	Input	unit 6	Encoder 1	0.0196	Encoder
+pixel 1,4	Input	unit 6	Encoder 1	0.2735	Encoder
+pixel 1,5	Input	unit 6	Encoder 1	0.8941	Encoder
+pixel 1,6	Input	unit 6	Encoder 1	0.2058	Encoder
+pixel 2,1	Input	unit 6	Encoder 1	0.2537	Encoder
+pixel 2,2	Input	unit 6	Encoder 1	0.7575	Encoder
+pixel 2,3	Input	unit 6	Encoder 1	0.5378	Encoder
+pixel 2,4	Input	unit 6	Encoder 1	0.6462	Encoder
+pixel 2,5	Input	unit 6	Encoder 1	0.4592	Encoder
+pixel 2,6	Input	unit 6	Encoder 1	0.25	Encoder
+pixel 3,1	Input	unit 6	Encoder 1	0.7517	Encoder
+pixel 3,2	Input	unit 6	Encoder 1	0.928	Encoder
+pixel 3,3	Input	unit 6	Encoder 1	0.1939	Encoder
+pixel 3,4	Input	unit 6	Encoder 1	0.2265	Encoder
+pixel 3,5	Input	unit 6	Encoder 1	0.3561	Encoder
+pixel 3,6	Input	unit 6	Encoder 1	0.1866	Encoder
+pixel 4,1	Input	unit 6	Encoder 1	0.8621	Encoder
+pixel 4,2	Input	unit 6	Encoder 1	0.6218	Encoder
+pixel 4,3	Input	unit 6	Encoder 1	0.2162	Encoder
+pixel 4,4	Input	unit 6	Encoder 1	0.6374	Encoder
+pixel 4,5	Input	unit 6	Encoder 1	0.8702	Encoder
+pixel 4,6	Input	unit 6	Encoder 1	0.2904	Encoder
+pixel 5,1	Input	unit 6	Encoder 1	0.0595	Encoder
+pixel 5,2	Input	unit 6	Encoder 1	0.0711	Encoder
+pixel 5,3	Input	unit 6	Encoder 1	0.9481	Encoder
+pixel 5,4	Input	unit 6	Encoder 1	0.5511	Encoder
+pixel 5,5	Input	unit 6	Encoder 1	0.3323	Encoder
+pixel 5,6	Input	unit 6	Encoder 1	0.5656	Encoder
+pixel 6,1	Input	unit 6	Encoder 1	0.9829	Encoder
+pixel 6,2	Input	unit 6	Encoder 1	0.9081	Encoder
+pixel 6,3	Input	unit 6	Encoder 1	0.1805	Encoder
+pixel 6,4	Input	unit 6	Encoder 1	0.9527	Encoder
+pixel 6,5	Input	unit 6	Encoder 1	0.9726	Encoder
+pixel 6,6	Input	unit 6	Encoder 1	0.6656	Encoder
+pixel 1,1	Input	unit 7	Encoder 1	0.7875	Encoder
+pixel 1,2	Input	unit 7	Encoder 1	0.3025	Encoder
+pixel 1,3	Input	unit 7	Encoder 1	0.5374	Encoder
+pixel 1,4	Input	unit 7	Encoder 1	0.56	Encoder
+pixel 1,5	Input	unit 7	Encoder 1	0.6157	Encoder
+pixel 1,6	Input	unit 7	Encoder 1	0.5577	Encoder
+pixel 2,1	Input	unit 7	Encoder 1	0.7788	Encoder
+pixel 2,2	Input	unit 7	Encoder 1	0.7598	Encoder
+pixel 2,3	Input	unit 7	Encoder 1	0.8763	Encoder
+pixel 2,4	Input	unit 7	Encoder 1	0.9524	Encoder
+pixel 2,5	Input	unit 7	Encoder 1	0.2551	Encoder
+pixel 2,6	Input	unit 7	Encoder 1	0.4821	Encoder
+pixel 3,1	Input	unit 7	Encoder 1	0.065	Encoder
+pixel 3,2	Input	unit 7	Encoder 1	0.044	Encoder
+pixel 3,3	Input	unit 7	Encoder 1	0.261	Encoder
+pixel 3,4	Input	unit 7	Encoder 1	0.2694	Encoder
+pixel 3,5	Input	unit 7	Encoder 1	0.5277	Encoder
+pixel 3,6	Input	unit 7	Encoder 1	0.4873	Encoder
+pixel 4,1	Input	unit 7	Encoder 1	0.0357	Encoder
+pixel 4,2	Input	unit 7	Encoder 1	0.6053	Encoder
+pixel 4,3	Input	unit 7	Encoder 1	0.1215	Encoder
+pixel 4,4	Input	unit 7	Encoder 1	0.8878	Encoder
+pixel 4,5	Input	unit 7	Encoder 1	0.9555	Encoder
+pixel 4,6	Input	unit 7	Encoder 1	0.7935	Encoder
+pixel 5,1	Input	unit 7	Encoder 1	0.5999	Encoder
+pixel 5,2	Input	unit 7	Encoder 1	0.8844	Encoder
+pixel 5,3	Input	unit 7	Encoder 1	0.4975	Encoder
+pixel 5,4	Input	unit 7	Encoder 1	0.7033	Encoder
+pixel 5,5	Input	unit 7	Encoder 1	0.2105	Encoder
+pixel 5,6	Input	unit 7	Encoder 1	0.5586	Encoder
+pixel 6,1	Input	unit 7	Encoder 1	0.8828	Encoder
+pixel 6,2	Input	unit 7	Encoder 1	0.4496	Encoder
+pixel 6,3	Input	unit 7	Encoder 1	0.3997	Encoder
+pixel 6,4	Input	unit 7	Encoder 1	0.6006	Encoder
+pixel 6,5	Input	unit 7	Encoder 1	0.9511	Encoder
+pixel 6,6	Input	unit 7	Encoder 1	0.5726	Encoder
+pixel 1,1	Input	unit 8	Encoder 1	0.8035	Encoder
+pixel 1,2	Input	unit 8	Encoder 1	0.8614	Encoder
+pixel 1,3	Input	unit 8	Encoder 1	0.7532	Encoder
+pixel 1,4	Input	unit 8	Encoder 1	0.8399	Encoder
+pixel 1,5	Input	unit 8	Encoder 1	0.9351	Encoder
+pixel 1,6	Input	unit 8	Encoder 1	0.8112	Encoder
+pixel 2,1	Input	unit 8	Encoder 1	0.3646	Encoder
+pixel 2,2	Input	unit 8	Encoder 1	0.5056	Encoder
+pixel 2,3	Input	unit 8	Encoder 1	0.2083	Encoder
+pixel 2,4	Input	unit 8	Encoder 1	0.0166	Encoder
+pixel 2,5	Input	unit 8	Encoder 1	0.3061	Encoder
+pixel 2,6	Input	unit 8	Encoder 1	0.6742	Encoder
+pixel 3,1	Input	unit 8	Encoder 1	0.2018	Encoder
+pixel 3,2	Input	unit 8	Encoder 1	0.5821	Encoder
+pixel 3,3	Input	unit 8	Encoder 1	0.4472	Encoder
+pixel 3,4	Input	unit 8	Encoder 1	0.0765	Encoder
+pixel 3,5	Input	unit 8	Encoder 1	0.2209	Encoder
+pixel 3,6	Input	unit 8	Encoder 1	0.1369	Encoder
+pixel 4,1	Input	unit 8	Encoder 1	0.1201	Encoder
+pixel 4,2	Input	unit 8	Encoder 1	0.6273	Encoder
+pixel 4,3	Input	unit 8	Encoder 1	0.1957	Encoder
+pixel 4,4	Input	unit 8	Encoder 1	0.35	Encoder
+pixel 4,5	Input	unit 8	Encoder 1	0.6589	Encoder
+pixel 4,6	Input	unit 8	Encoder 1	0.0878	Encoder
+pixel 5,1	Input	unit 8	Encoder 1	0.6229	Encoder
+pixel 5,2	Input	unit 8	Encoder 1	0.4232	Encoder
+pixel 5,3	Input	unit 8	Encoder 1	0.3175	Encoder
+pixel 5,4	Input	unit 8	Encoder 1	0.7246	Encoder
+pixel 5,5	Input	unit 8	Encoder 1	0.2507	Encoder
+pixel 5,6	Input	unit 8	Encoder 1	0.3243	Encoder
+pixel 6,1	Input	unit 8	Encoder 1	0.1058	Encoder
+pixel 6,2	Input	unit 8	Encoder 1	0.2131	Encoder
+pixel 6,3	Input	unit 8	Encoder 1	0.5232	Encoder
+pixel 6,4	Input	unit 8	Encoder 1	0.7671	Encoder
+pixel 6,5	Input	unit 8	Encoder 1	0.4671	Encoder
+pixel 6,6	Input	unit 8	Encoder 1	0.5775	Encoder
+pixel 1,1	Input	unit 9	Encoder 1	0.0839	Encoder
+pixel 1,2	Input	unit 9	Encoder 1	0.3293	Encoder
+pixel 1,3	Input	unit 9	Encoder 1	0.9618	Encoder
+pixel 1,4	Input	unit 9	Encoder 1	0.1049	Encoder
+pixel 1,5	Input	unit 9	Encoder 1	0.0588	Encoder
+pixel 1,6	Input	unit 9	Encoder 1	0.7338	Encoder
+pixel 2,1	Input	unit 9	Encoder 1	0.3526	Encoder
+pixel 2,2	Input	unit 9	Encoder 1	0.6671	Encoder
+pixel 2,3	Input	unit 9	Encoder 1	0.0283	Encoder
+pixel 2,4	Input	unit 9	Encoder 1	0.8018	Encoder
+pixel 2,5	Input	unit 9	Encoder 1	0.4338	Encoder
+pixel 2,6	Input	unit 9	Encoder 1	0.4307	Encoder
+pixel 3,1	Input	unit 9	Encoder 1	0.067	Encoder
+pixel 3,2	Input	unit 9	Encoder 1	0.8571	Encoder
+pixel 3,3	Input	unit 9	Encoder 1	0.9784	Encoder
+pixel 3,4	Input	unit 9	Encoder 1	0.842	Encoder
+pixel 3,5	Input	unit 9	Encoder 1	0.916	Encoder
+pixel 3,6	Input	unit 9	Encoder 1	0.7018	Encoder
+pixel 4,1	Input	unit 9	Encoder 1	0.6734	Encoder
+pixel 4,2	Input	unit 9	Encoder 1	0.8079	Encoder
+pixel 4,3	Input	unit 9	Encoder 1	0.6481	Encoder
+pixel 4,4	Input	unit 9	Encoder 1	0.9905	Encoder
+pixel 4,5	Input	unit 9	Encoder 1	0.2984	Encoder
+pixel 4,6	Input	unit 9	Encoder 1	0.2091	Encoder
+pixel 5,1	Input	unit 9	Encoder 1	0.7769	Encoder
+pixel 5,2	Input	unit 9	Encoder 1	0.0124	Encoder
+pixel 5,3	Input	unit 9	Encoder 1	0.7303	Encoder
+pixel 5,4	Input	unit 9	Encoder 1	0.3804	Encoder
+pixel 5,5	Input	unit 9	Encoder 1	0.282	Encoder
+pixel 5,6	Input	unit 9	Encoder 1	0.4602	Encoder
+pixel 6,1	Input	unit 9	Encoder 1	0.3591	Encoder
+pixel 6,2	Input	unit 9	Encoder 1	0.2299	Encoder
+pixel 6,3	Input	unit 9	Encoder 1	0.6351	Encoder
+pixel 6,4	Input	unit 9	Encoder 1	0.225	Encoder
+pixel 6,5	Input	unit 9	Encoder 1	0.7368	Encoder
+pixel 6,6	Input	unit 9	Encoder 1	0.1415	Encoder
+pixel 1,1	Input	unit 10	Encoder 1	0.9811	Encoder
+pixel 1,2	Input	unit 10	Encoder 1	0.3684	Encoder
+pixel 1,3	Input	unit 10	Encoder 1	0.9598	Encoder
+pixel 1,4	Input	unit 10	Encoder 1	0.0424	Encoder
+pixel 1,5	Input	unit 10	Encoder 1	0.7315	Encoder
+pixel 1,6	Input	unit 10	Encoder 1	0.3543	Encoder
+pixel 2,1	Input	unit 10	Encoder 1	0.8164	Encoder
+pixel 2,2	Input	unit 10	Encoder 1	0.5093	Encoder
+pixel 2,3	Input	unit 10	Encoder 1	0.4544	Encoder
+pixel 2,4	Input	unit 10	Encoder 1	0.7126	Encoder
+pixel 2,5	Input	unit 10	Encoder 1	0.097	Encoder
+pixel 2,6	Input	unit 10	Encoder 1	0.3596	Encoder
+pixel 3,1	Input	unit 10	Encoder 1	0.5359	Encoder
+pixel 3,2	Input	unit 10	Encoder 1	0.3379	Encoder
+pixel 3,3	Input	unit 10	Encoder 1	0.4962	Encoder
+pixel 3,4	Input	unit 10	Encoder 1	0.3047	Encoder
+pixel 3,5	Input	unit 10	Encoder 1	0.2018	Encoder
+pixel 3,6	Input	unit 10	Encoder 1	0.0908	Encoder
+pixel 4,1	Input	unit 10	Encoder 1	0.8577	Encoder
+pixel 4,2	Input	unit 10	Encoder 1	0.9475	Encoder
+pixel 4,3	Input	unit 10	Encoder 1	0.6272	Encoder
+pixel 4,4	Input	unit 10	Encoder 1	0.5571	Encoder
+pixel 4,5	Input	unit 10	Encoder 1	0.3382	Encoder
+pixel 4,6	Input	unit 10	Encoder 1	0.8069	Encoder
+pixel 5,1	Input	unit 10	Encoder 1	0.7309	Encoder
+pixel 5,2	Input	unit 10	Encoder 1	0.5784	Encoder
+pixel 5,3	Input	unit 10	Encoder 1	0.0863	Encoder
+pixel 5,4	Input	unit 10	Encoder 1	0.8047	Encoder
+pixel 5,5	Input	unit 10	Encoder 1	0.5668	Encoder
+pixel 5,6	Input	unit 10	Encoder 1	0.5944	Encoder
+pixel 6,1	Input	unit 10	Encoder 1	0.3716	Encoder
+pixel 6,2	Input	unit 10	Encoder 1	0.1538	Encoder
+pixel 6,3	Input	unit 10	Encoder 1	0.6934	Encoder
+pixel 6,4	Input	unit 10	Encoder 1	0.998	Encoder
+pixel 6,5	Input	unit 10	Encoder 1	0.8723	Encoder
+pixel 6,6	Input	unit 10	Encoder 1	0.4313	Encoder
+pixel 1,1	Input	unit 11	Encoder 1	0.0076	Encoder
+pixel 1,2	Input	unit 11	Encoder 1	0.8782	Encoder
+pixel 1,3	Input	unit 11	Encoder 1	0.6163	Encoder
+pixel 1,4	Input	unit 11	Encoder 1	0.2029	Encoder
+pixel 1,5	Input	unit 11	Encoder 1	0.0728	Encoder
+pixel 1,6	Input	unit 11	Encoder 1	0.2643	Encoder
+pixel 2,1	Input	unit 11	Encoder 1	0.9281	Encoder
+pixel 2,2	Input	unit 11	Encoder 1	0.112	Encoder
+pixel 2,3	Input	unit 11	Encoder 1	0.8358	Encoder
+pixel 2,4	Input	unit 11	Encoder 1	0.9283	Encoder
+pixel 2,5	Input	unit 11	Encoder 1	0.8302	Encoder
+pixel 2,6	Input	unit 11	Encoder 1	0.2907	Encoder
+pixel 3,1	Input	unit 11	Encoder 1	0.777	Encoder
+pixel 3,2	Input	unit 11	Encoder 1	0.5348	Encoder
+pixel 3,3	Input	unit 11	Encoder 1	0.9382	Encoder
+pixel 3,4	Input	unit 11	Encoder 1	0.6273	Encoder
+pixel 3,5	Input	unit 11	Encoder 1	0.0623	Encoder
+pixel 3,6	Input	unit 11	Encoder 1	0.8657	Encoder
+pixel 4,1	Input	unit 11	Encoder 1	0.0796	Encoder
+pixel 4,2	Input	unit 11	Encoder 1	0.3408	Encoder
+pixel 4,3	Input	unit 11	Encoder 1	0.9498	Encoder
+pixel 4,4	Input	unit 11	Encoder 1	0.6534	Encoder
+pixel 4,5	Input	unit 11	Encoder 1	0.887	Encoder
+pixel 4,6	Input	unit 11	Encoder 1	0.7077	Encoder
+pixel 5,1	Input	unit 11	Encoder 1	0.1621	Encoder
+pixel 5,2	Input	unit 11	Encoder 1	0.5993	Encoder
+pixel 5,3	Input	unit 11	Encoder 1	0.6646	Encoder
+pixel 5,4	Input	unit 11	Encoder 1	0.433	Encoder
+pixel 5,5	Input	unit 11	Encoder 1	0.7405	Encoder
+pixel 5,6	Input	unit 11	Encoder 1	0.4047	Encoder
+pixel 6,1	Input	unit 11	Encoder 1	0.9279	Encoder
+pixel 6,2	Input	unit 11	Encoder 1	0.1884	Encoder
+pixel 6,3	Input	unit 11	Encoder 1	0.5591	Encoder
+pixel 6,4	Input	unit 11	Encoder 1	0.0919	Encoder
+pixel 6,5	Input	unit 11	Encoder 1	0.9292	Encoder
+pixel 6,6	Input	unit 11	Encoder 1	0.9162	Encoder
+pixel 1,1	Input	unit 12	Encoder 1	0.6539	Encoder
+pixel 1,2	Input	unit 12	Encoder 1	0.7124	Encoder
+pixel 1,3	Input	unit 12	Encoder 1	0.1489	Encoder
+pixel 1,4	Input	unit 12	Encoder 1	0.6007	Encoder
+pixel 1,5	Input	unit 12	Encoder 1	0.3345	Encoder
+pixel 1,6	Input	unit 12	Encoder 1	0.0464	Encoder
+pixel 2,1	Input	unit 12	Encoder 1	0.1617	Encoder
+pixel 2,2	Input	unit 12	Encoder 1	0.69	Encoder
+pixel 2,3	Input	unit 12	Encoder 1	0.5797	Encoder
+pixel 2,4	Input	unit 12	Encoder 1	0.8447	Encoder
+pixel 2,5	Input	unit 12	Encoder 1	0.6958	Encoder
+pixel 2,6	Input	unit 12	Encoder 1	0.2415	Encoder
+pixel 3,1	Input	unit 12	Encoder 1	0.9208	Encoder
+pixel 3,2	Input	unit 12	Encoder 1	0.2064	Encoder
+pixel 3,3	Input	unit 12	Encoder 1	0.4289	Encoder
+pixel 3,4	Input	unit 12	Encoder 1	0.0364	Encoder
+pixel 3,5	Input	unit 12	Encoder 1	0.6382	Encoder
+pixel 3,6	Input	unit 12	Encoder 1	0.6967	Encoder
+pixel 4,1	Input	unit 12	Encoder 1	0.272	Encoder
+pixel 4,2	Input	unit 12	Encoder 1	0.8109	Encoder
+pixel 4,3	Input	unit 12	Encoder 1	0.9285	Encoder
+pixel 4,4	Input	unit 12	Encoder 1	0.0408	Encoder
+pixel 4,5	Input	unit 12	Encoder 1	0.4926	Encoder
+pixel 4,6	Input	unit 12	Encoder 1	0.2253	Encoder
+pixel 5,1	Input	unit 12	Encoder 1	0.8992	Encoder
+pixel 5,2	Input	unit 12	Encoder 1	0.3063	Encoder
+pixel 5,3	Input	unit 12	Encoder 1	0.9721	Encoder
+pixel 5,4	Input	unit 12	Encoder 1	0.6046	Encoder
+pixel 5,5	Input	unit 12	Encoder 1	0.8827	Encoder
+pixel 5,6	Input	unit 12	Encoder 1	0.0572	Encoder
+pixel 6,1	Input	unit 12	Encoder 1	0.377	Encoder
+pixel 6,2	Input	unit 12	Encoder 1	0.7031	Encoder
+pixel 6,3	Input	unit 12	Encoder 1	0.5876	Encoder
+pixel 6,4	Input	unit 12	Encoder 1	0.9698	Encoder
+pixel 6,5	Input	unit 12	Encoder 1	0.0707	Encoder
+pixel 6,6	Input	unit 12	Encoder 1	0.7533	Encoder
+pixel 1,1	Input	unit 13	Encoder 1	0.3791	Encoder
+pixel 1,2	Input	unit 13	Encoder 1	0.549	Encoder
+pixel 1,3	Input	unit 13	Encoder 1	0.6436	Encoder
+pixel 1,4	Input	unit 13	Encoder 1	0.2724	Encoder
+pixel 1,5	Input	unit 13	Encoder 1	0.8724	Encoder
+pixel 1,6	Input	unit 13	Encoder 1	0.2598	Encoder
+pixel 2,1	Input	unit 13	Encoder 1	0.2771	Encoder
+pixel 2,2	Input	unit 13	Encoder 1	0.3537	Encoder
+pixel 2,3	Input	unit 13	Encoder 1	0.8301	Encoder
+pixel 2,4	Input	unit 13	Encoder 1	0.1058	Encoder
+pixel 2,5	Input	unit 13	Encoder 1	0.9414	Encoder
+pixel 2,6	Input	unit 13	Encoder 1	0.4836	Encoder
+pixel 3,1	Input	unit 13	Encoder 1	0.5802	Encoder
+pixel 3,2	Input	unit 13	Encoder 1	0.9062	Encoder
+pixel 3,3	Input	unit 13	Encoder 1	0.9613	Encoder
+pixel 3,4	Input	unit 13	Encoder 1	0.6805	Encoder
+pixel 3,5	Input	unit 13	Encoder 1	0.4197	Encoder
+pixel 3,6	Input	unit 13	Encoder 1	0.2839	Encoder
+pixel 4,1	Input	unit 13	Encoder 1	0.1152	Encoder
+pixel 4,2	Input	unit 13	Encoder 1	0.4108	Encoder
+pixel 4,3	Input	unit 13	Encoder 1	0.849	Encoder
+pixel 4,4	Input	unit 13	Encoder 1	0.4116	Encoder
+pixel 4,5	Input	unit 13	Encoder 1	0.4175	Encoder
+pixel 4,6	Input	unit 13	Encoder 1	0.8847	Encoder
+pixel 5,1	Input	unit 13	Encoder 1	0.8818	Encoder
+pixel 5,2	Input	unit 13	Encoder 1	0.1448	Encoder
+pixel 5,3	Input	unit 13	Encoder 1	0.0165	Encoder
+pixel 5,4	Input	unit 13	Encoder 1	0.6923	Encoder
+pixel 5,5	Input	unit 13	Encoder 1	0.2718	Encoder
+pixel 5,6	Input	unit 13	Encoder 1	0.3249	Encoder
+pixel 6,1	Input	unit 13	Encoder 1	0.7941	Encoder
+pixel 6,2	Input	unit 13	Encoder 1	0.3024	Encoder
+pixel 6,3	Input	unit 13	Encoder 1	0.0308	Encoder
+pixel 6,4	Input	unit 13	Encoder 1	0.7871	Encoder
+pixel 6,5	Input	unit 13	Encoder 1	0.9318	Encoder
+pixel 6,6	Input	unit 13	Encoder 1	0.9481	Encoder
+pixel 1,1	Input	unit 14	Encoder 1	0.374	Encoder
+pixel 1,2	Input	unit 14	Encoder 1	0.0853	Encoder
+pixel 1,3	Input	unit 14	Encoder 1	0.4247	Encoder
+pixel 1,4	Input	unit 14	Encoder 1	0.5954	Encoder
+pixel 1,5	Input	unit 14	Encoder 1	0.0653	Encoder
+pixel 1,6	Input	unit 14	Encoder 1	0.4955	Encoder
+pixel 2,1	Input	unit 14	Encoder 1	0.7923	Encoder
+pixel 2,2	Input	unit 14	Encoder 1	0.7608	Encoder
+pixel 2,3	Input	unit 14	Encoder 1	0.6417	Encoder
+pixel 2,4	Input	unit 14	Encoder 1	0.3606	Encoder
+pixel 2,5	Input	unit 14	Encoder 1	0.5544	Encoder
+pixel 2,6	Input	unit 14	Encoder 1	0.4808	Encoder
+pixel 3,1	Input	unit 14	Encoder 1	0.0959	Encoder
+pixel 3,2	Input	unit 14	Encoder 1	0.8698	Encoder
+pixel 3,3	Input	unit 14	Encoder 1	0.9071	Encoder
+pixel 3,4	Input	unit 14	Encoder 1	0.1844	Encoder
+pixel 3,5	Input	unit 14	Encoder 1	0.9067	Encoder
+pixel 3,6	Input	unit 14	Encoder 1	0.6342	Encoder
+pixel 4,1	Input	unit 14	Encoder 1	0.2961	Encoder
+pixel 4,2	Input	unit 14	Encoder 1	0.5975	Encoder
+pixel 4,3	Input	unit 14	Encoder 1	0.289	Encoder
+pixel 4,4	Input	unit 14	Encoder 1	0.1538	Encoder
+pixel 4,5	Input	unit 14	Encoder 1	0.9617	Encoder
+pixel 4,6	Input	unit 14	Encoder 1	0.129	Encoder
+pixel 5,1	Input	unit 14	Encoder 1	0.2198	Encoder
+pixel 5,2	Input	unit 14	Encoder 1	0.89	Encoder
+pixel 5,3	Input	unit 14	Encoder 1	0.9472	Encoder
+pixel 5,4	Input	unit 14	Encoder 1	0.9137	Encoder
+pixel 5,5	Input	unit 14	Encoder 1	0.9603	Encoder
+pixel 5,6	Input	unit 14	Encoder 1	0.6622	Encoder
+pixel 6,1	Input	unit 14	Encoder 1	0.9407	Encoder
+pixel 6,2	Input	unit 14	Encoder 1	0.4158	Encoder
+pixel 6,3	Input	unit 14	Encoder 1	0.9842	Encoder
+pixel 6,4	Input	unit 14	Encoder 1	0.7623	Encoder
+pixel 6,5	Input	unit 14	Encoder 1	0.1544	Encoder
+pixel 6,6	Input	unit 14	Encoder 1	0.5982	Encoder
+pixel 1,1	Input	unit 15	Encoder 1	0.2215	Encoder
+pixel 1,2	Input	unit 15	Encoder 1	0.2387	Encoder
+pixel 1,3	Input	unit 15	Encoder 1	0.4518	Encoder
+pixel 1,4	Input	unit 15	Encoder 1	0.9386	Encoder
+pixel 1,5	Input	unit 15	Encoder 1	0.6275	Encoder
+pixel 1,6	Input	unit 15	Encoder 1	0.7647	Encoder
+pixel 2,1	Input	unit 15	Encoder 1	0.0537	Encoder
+pixel 2,2	Input	unit 15	Encoder 1	0.3259	Encoder
+pixel 2,3	Input	unit 15	Encoder 1	0.712	Encoder
+pixel 2,4	Input	unit 15	Encoder 1	0.4899	Encoder
+pixel 2,5	Input	unit 15	Encoder 1	0.7791	Encoder
+pixel 2,6	Input	unit 15	Encoder 1	0.6038	Encoder
+pixel 3,1	Input	unit 15	Encoder 1	0.0544	Encoder
+pixel 3,2	Input	unit 15	Encoder 1	0.3066	Encoder
+pixel 3,3	Input	unit 15	Encoder 1	0.0506	Encoder
+pixel 3,4	Input	unit 15	Encoder 1	0.504	Encoder
+pixel 3,5	Input	unit 15	Encoder 1	0.2886	Encoder
+pixel 3,6	Input	unit 15	Encoder 1	0.372	Encoder
+pixel 4,1	Input	unit 15	Encoder 1	0.3621	Encoder
+pixel 4,2	Input	unit 15	Encoder 1	0.5462	Encoder
+pixel 4,3	Input	unit 15	Encoder 1	0.0732	Encoder
+pixel 4,4	Input	unit 15	Encoder 1	0.1807	Encoder
+pixel 4,5	Input	unit 15	Encoder 1	0.2693	Encoder
+pixel 4,6	Input	unit 15	Encoder 1	0.0463	Encoder
+pixel 5,1	Input	unit 15	Encoder 1	0.8224	Encoder
+pixel 5,2	Input	unit 15	Encoder 1	0.1846	Encoder
+pixel 5,3	Input	unit 15	Encoder 1	0.556	Encoder
+pixel 5,4	Input	unit 15	Encoder 1	0.4479	Encoder
+pixel 5,5	Input	unit 15	Encoder 1	0.8516	Encoder
+pixel 5,6	Input	unit 15	Encoder 1	0.0439	Encoder
+pixel 6,1	Input	unit 15	Encoder 1	0.1755	Encoder
+pixel 6,2	Input	unit 15	Encoder 1	0.0658	Encoder
+pixel 6,3	Input	unit 15	Encoder 1	0.7004	Encoder
+pixel 6,4	Input	unit 15	Encoder 1	0.2934	Encoder
+pixel 6,5	Input	unit 15	Encoder 1	0.3947	Encoder
+pixel 6,6	Input	unit 15	Encoder 1	0.0714	Encoder
+pixel 1,1	Input	unit 16	Encoder 1	0.8792	Encoder
+pixel 1,2	Input	unit 16	Encoder 1	0.1552	Encoder
+pixel 1,3	Input	unit 16	Encoder 1	0.9754	Encoder
+pixel 1,4	Input	unit 16	Encoder 1	0.4303	Encoder
+pixel 1,5	Input	unit 16	Encoder 1	0.4041	Encoder
+pixel 1,6	Input	unit 16	Encoder 1	0.8404	Encoder
+pixel 2,1	Input	unit 16	Encoder 1	0.93	Encoder
+pixel 2,2	Input	unit 16	Encoder 1	0.3981	Encoder
+pixel 2,3	Input	unit 16	Encoder 1	0.53	Encoder
+pixel 2,4	Input	unit 16	Encoder 1	0.6602	Encoder
+pixel 2,5	Input	unit 16	Encoder 1	0.9865	Encoder
+pixel 2,6	Input	unit 16	Encoder 1	0.7461	Encoder
+pixel 3,1	Input	unit 16	Encoder 1	0.022	Encoder
+pixel 3,2	Input	unit 16	Encoder 1	0.1159	Encoder
+pixel 3,3	Input	unit 16	Encoder 1	0.0366	Encoder
+pixel 3,4	Input	unit 16	Encoder 1	0.5364	Encoder
+pixel 3,5	Input	unit 16	Encoder 1	0.255	Encoder
+pixel 3,6	Input	unit 16	Encoder 1	0.5455	Encoder
+pixel 4,1	Input	unit 16	Encoder 1	0.6762	Encoder
+pixel 4,2	Input	unit 16	Encoder 1	0.9606	Encoder
+pixel 4,3	Input	unit 16	Encoder 1	0.3918	Encoder
+pixel 4,4	Input	unit 16	Encoder 1	0.3629	Encoder
+pixel 4,5	Input	unit 16	Encoder 1	0.0458	Encoder
+pixel 4,6	Input	unit 16	Encoder 1	0.7627	Encoder
+pixel 5,1	Input	unit 16	Encoder 1	0.3488	Encoder
+pixel 5,2	Input	unit 16	Encoder 1	0.3981	Encoder
+pixel 5,3	Input	unit 16	Encoder 1	0.8185	Encoder
+pixel 5,4	Input	unit 16	Encoder 1	0.9213	Encoder
+pixel 5,5	Input	unit 16	Encoder 1	0.4885	Encoder
+pixel 5,6	Input	unit 16	Encoder 1	0.5895	Encoder
+pixel 6,1	Input	unit 16	Encoder 1	0.2173	Encoder
+pixel 6,2	Input	unit 16	Encoder 1	0.6171	Encoder
+pixel 6,3	Input	unit 16	Encoder 1	0.861	Encoder
+pixel 6,4	Input	unit 16	Encoder 1	0.174	Encoder
+pixel 6,5	Input	unit 16	Encoder 1	0.0969	Encoder
+pixel 6,6	Input	unit 16	Encoder 1	0.6291	Encoder
+unit 1	Encoder 1	unit 1	Encoder 2	0.0959	Encoder
+unit 2	Encoder 1	unit 1	Encoder 2	0.916	Encoder
+unit 3	Encoder 1	unit 1	Encoder 2	0.5816	Encoder
+unit 4	Encoder 1	unit 1	Encoder 2	0.6631	Encoder
+unit 5	Encoder 1	unit 1	Encoder 2	0.7657	Encoder
+unit 6	Encoder 1	unit 1	Encoder 2	0.1476	Encoder
+unit 7	Encoder 1	unit 1	Encoder 2	0.8404	Encoder
+unit 8	Encoder 1	unit 1	Encoder 2	0.5463	Encoder
+unit 9	Encoder 1	unit 1	Encoder 2	0.7324	Encoder
+unit 10	Encoder 1	unit 1	Encoder 2	0.4257	Encoder
+unit 11	Encoder 1	unit 1	Encoder 2	0.0363	Encoder
+unit 12	Encoder 1	unit 1	Encoder 2	0.4186	Encoder
+unit 13	Encoder 1	unit 1	Encoder 2	0.8931	Encoder
+unit 14	Encoder 1	unit 1	Encoder 2	0.4677	Encoder
+unit 15	Encoder 1	unit 1	Encoder 2	0.6821	Encoder
+unit 16	Encoder 1	unit 1	Encoder 2	0.8259	Encoder
+unit 1	Encoder 1	unit 2	Encoder 2	0.8188	Encoder
+unit 2	Encoder 1	unit 2	Encoder 2	0.8073	Encoder
+unit 3	Encoder 1	unit 2	Encoder 2	0.5195	Encoder
+unit 4	Encoder 1	unit 2	Encoder 2	0.6301	Encoder
+unit 5	Encoder 1	unit 2	Encoder 2	0.4985	Encoder
+unit 6	Encoder 1	unit 2	Encoder 2	0.2556	Encoder
+unit 7	Encoder 1	unit 2	Encoder 2	0.5541	Encoder
+unit 8	Encoder 1	unit 2	Encoder 2	0.4162	Encoder
+unit 9	Encoder 1	unit 2	Encoder 2	0.9472	Encoder
+unit 10	Encoder 1	unit 2	Encoder 2	0.488	Encoder
+unit 11	Encoder 1	unit 2	Encoder 2	0.0139	Encoder
+unit 12	Encoder 1	unit 2	Encoder 2	0.0748	Encoder
+unit 13	Encoder 1	unit 2	Encoder 2	0.184	Encoder
+unit 14	Encoder 1	unit 2	Encoder 2	0.4288	Encoder
+unit 15	Encoder 1	unit 2	Encoder 2	0.4612	Encoder
+unit 16	Encoder 1	unit 2	Encoder 2	0.5092	Encoder
+unit 1	Encoder 1	unit 3	Encoder 2	0.3926	Encoder
+unit 2	Encoder 1	unit 3	Encoder 2	0.4901	Encoder
+unit 3	Encoder 1	unit 3	Encoder 2	0.9767	Encoder
+unit 4	Encoder 1	unit 3	Encoder 2	0.4544	Encoder
+unit 5	Encoder 1	unit 3	Encoder 2	0.6322	Encoder
+unit 6	Encoder 1	unit 3	Encoder 2	0.9573	Encoder
+unit 7	Encoder 1	unit 3	Encoder 2	0.1962	Encoder
+unit 8	Encoder 1	unit 3	Encoder 2	0.732	Encoder
+unit 9	Encoder 1	unit 3	Encoder 2	0.0001	Encoder
+unit 10	Encoder 1	unit 3	Encoder 2	0.2003	Encoder
+unit 11	Encoder 1	unit 3	Encoder 2	0.617	Encoder
+unit 12	Encoder 1	unit 3	Encoder 2	0.2238	Encoder
+unit 13	Encoder 1	unit 3	Encoder 2	0.0921	Encoder
+unit 14	Encoder 1	unit 3	Encoder 2	0.629	Encoder
+unit 15	Encoder 1	unit 3	Encoder 2	0.7306	Encoder
+unit 16	Encoder 1	unit 3	Encoder 2	0.3281	Encoder
+unit 1	Encoder 1	unit 4	Encoder 2	0.6174	Encoder
+unit 2	Encoder 1	unit 4	Encoder 2	0.2838	Encoder
+unit 3	Encoder 1	unit 4	Encoder 2	0.8607	Encoder
+unit 4	Encoder 1	unit 4	Encoder 2	0.832	Encoder
+unit 5	Encoder 1	unit 4	Encoder 2	0.8301	Encoder
+unit 6	Encoder 1	unit 4	Encoder 2	0.2736	Encoder
+unit 7	Encoder 1	unit 4	Encoder 2	0.0719	Encoder
+unit 8	Encoder 1	unit 4	Encoder 2	0.2648	Encoder
+unit 9	Encoder 1	unit 4	Encoder 2	0.5589	Encoder
+unit 10	Encoder 1	unit 4	Encoder 2	0.1043	Encoder
+unit 11	Encoder 1	unit 4	Encoder 2	0.7882	Encoder
+unit 12	Encoder 1	unit 4	Encoder 2	0.8753	Encoder
+unit 13	Encoder 1	unit 4	Encoder 2	0.2522	Encoder
+unit 14	Encoder 1	unit 4	Encoder 2	0.4868	Encoder
+unit 15	Encoder 1	unit 4	Encoder 2	0.1649	Encoder
+unit 16	Encoder 1	unit 4	Encoder 2	0.685	Encoder
+unit 1	Encoder 1	unit 5	Encoder 2	0.8744	Encoder
+unit 2	Encoder 1	unit 5	Encoder 2	0.59	Encoder
+unit 3	Encoder 1	unit 5	Encoder 2	0.466	Encoder
+unit 4	Encoder 1	unit 5	Encoder 2	0.6786	Encoder
+unit 5	Encoder 1	unit 5	Encoder 2	0.6396	Encoder
+unit 6	Encoder 1	unit 5	Encoder 2	0.7552	Encoder
+unit 7	Encoder 1	unit 5	Encoder 2	0.527	Encoder
+unit 8	Encoder 1	unit 5	Encoder 2	0.6966	Encoder
+unit 9	Encoder 1	unit 5	Encoder 2	0.7848	Encoder
+unit 10	Encoder 1	unit 5	Encoder 2	0.3632	Encoder
+unit 11	Encoder 1	unit 5	Encoder 2	0.638	Encoder
+unit 12	Encoder 1	unit 5	Encoder 2	0.8561	Encoder
+unit 13	Encoder 1	unit 5	Encoder 2	0.8138	Encoder
+unit 14	Encoder 1	unit 5	Encoder 2	0.7431	Encoder
+unit 15	Encoder 1	unit 5	Encoder 2	0.4292	Encoder
+unit 16	Encoder 1	unit 5	Encoder 2	0.3802	Encoder
+unit 1	Encoder 1	unit 6	Encoder 2	0.1763	Encoder
+unit 2	Encoder 1	unit 6	Encoder 2	0.0421	Encoder
+unit 3	Encoder 1	unit 6	Encoder 2	0.1686	Encoder
+unit 4	Encoder 1	unit 6	Encoder 2	0.4377	Encoder
+unit 5	Encoder 1	unit 6	Encoder 2	0.2931	Encoder
+unit 6	Encoder 1	unit 6	Encoder 2	0.6986	Encoder
+unit 7	Encoder 1	unit 6	Encoder 2	0.0462	Encoder
+unit 8	Encoder 1	unit 6	Encoder 2	0.4796	Encoder
+unit 9	Encoder 1	unit 6	Encoder 2	0.2645	Encoder
+unit 10	Encoder 1	unit 6	Encoder 2	0.7817	Encoder
+unit 11	Encoder 1	unit 6	Encoder 2	0.1347	Encoder
+unit 12	Encoder 1	unit 6	Encoder 2	0.2907	Encoder
+unit 13	Encoder 1	unit 6	Encoder 2	0.2947	Encoder
+unit 14	Encoder 1	unit 6	Encoder 2	0.9972	Encoder
+unit 15	Encoder 1	unit 6	Encoder 2	0.5661	Encoder
+unit 16	Encoder 1	unit 6	Encoder 2	0.7499	Encoder
+unit 1	Encoder 1	unit 7	Encoder 2	0.4923	Encoder
+unit 2	Encoder 1	unit 7	Encoder 2	0.0447	Encoder
+unit 3	Encoder 1	unit 7	Encoder 2	0.6915	Encoder
+unit 4	Encoder 1	unit 7	Encoder 2	0.8883	Encoder
+unit 5	Encoder 1	unit 7	Encoder 2	0.4464	Encoder
+unit 6	Encoder 1	unit 7	Encoder 2	0.6718	Encoder
+unit 7	Encoder 1	unit 7	Encoder 2	0.3249	Encoder
+unit 8	Encoder 1	unit 7	Encoder 2	0.9636	Encoder
+unit 9	Encoder 1	unit 7	Encoder 2	0.5297	Encoder
+unit 10	Encoder 1	unit 7	Encoder 2	0.8348	Encoder
+unit 11	Encoder 1	unit 7	Encoder 2	0.9826	Encoder
+unit 12	Encoder 1	unit 7	Encoder 2	0.2004	Encoder
+unit 13	Encoder 1	unit 7	Encoder 2	0.9877	Encoder
+unit 14	Encoder 1	unit 7	Encoder 2	0.0386	Encoder
+unit 15	Encoder 1	unit 7	Encoder 2	0.7012	Encoder
+unit 16	Encoder 1	unit 7	Encoder 2	0.4261	Encoder
+unit 1	Encoder 1	unit 8	Encoder 2	0.8956	Encoder
+unit 2	Encoder 1	unit 8	Encoder 2	0.4559	Encoder
+unit 3	Encoder 1	unit 8	Encoder 2	0.6197	Encoder
+unit 4	Encoder 1	unit 8	Encoder 2	0.6117	Encoder
+unit 5	Encoder 1	unit 8	Encoder 2	0.2877	Encoder
+unit 6	Encoder 1	unit 8	Encoder 2	0.0884	Encoder
+unit 7	Encoder 1	unit 8	Encoder 2	0.128	Encoder
+unit 8	Encoder 1	unit 8	Encoder 2	0.961	Encoder
+unit 9	Encoder 1	unit 8	Encoder 2	0.5801	Encoder
+unit 10	Encoder 1	unit 8	Encoder 2	0.7971	Encoder
+unit 11	Encoder 1	unit 8	Encoder 2	0.5904	Encoder
+unit 12	Encoder 1	unit 8	Encoder 2	0.812	Encoder
+unit 13	Encoder 1	unit 8	Encoder 2	0.5685	Encoder
+unit 14	Encoder 1	unit 8	Encoder 2	0.9255	Encoder
+unit 15	Encoder 1	unit 8	Encoder 2	0.6615	Encoder
+unit 16	Encoder 1	unit 8	Encoder 2	0.6303	Encoder
+unit 1	Encoder 2	μ 1	Latent μ, log σ²	0.49	Mean
+unit 2	Encoder 2	μ 1	Latent μ, log σ²	0.9184	Mean
+unit 3	Encoder 2	μ 1	Latent μ, log σ²	0.7047	Mean
+unit 4	Encoder 2	μ 1	Latent μ, log σ²	0.3945	Mean
+unit 5	Encoder 2	μ 1	Latent μ, log σ²	0.8525	Mean
+unit 6	Encoder 2	μ 1	Latent μ, log σ²	0.6455	Mean
+unit 7	Encoder 2	μ 1	Latent μ, log σ²	0.146	Mean
+unit 8	Encoder 2	μ 1	Latent μ, log σ²	0.3022	Mean
+unit 1	Encoder 2	μ 2	Latent μ, log σ²	0.6131	Mean
+unit 2	Encoder 2	μ 2	Latent μ, log σ²	0.4653	Mean
+unit 3	Encoder 2	μ 2	Latent μ, log σ²	0.0658	Mean
+unit 4	Encoder 2	μ 2	Latent μ, log σ²	0.4578	Mean
+unit 5	Encoder 2	μ 2	Latent μ, log σ²	0.0113	Mean
+unit 6	Encoder 2	μ 2	Latent μ, log σ²	0.9939	Mean
+unit 7	Encoder 2	μ 2	Latent μ, log σ²	0.0576	Mean
+unit 8	Encoder 2	μ 2	Latent μ, log σ²	0.1041	Mean
+unit 1	Encoder 2	μ 3	Latent μ, log σ²	0.1498	Mean
+unit 2	Encoder 2	μ 3	Latent μ, log σ²	0.3301	Mean
+unit 3	Encoder 2	μ 3	Latent μ, log σ²	0.3404	Mean
+unit 4	Encoder 2	μ 3	Latent μ, log σ²	0.6459	Mean
+unit 5	Encoder 2	μ 3	Latent μ, log σ²	0.4847	Mean
+unit 6	Encoder 2	μ 3	Latent μ, log σ²	0.7617	Mean
+unit 7	Encoder 2	μ 3	Latent μ, log σ²	0.1743	Mean
+unit 8	Encoder 2	μ 3	Latent μ, log σ²	0.9377	Mean
+unit 1	Encoder 2	log σ² 1	Latent μ, log σ²	0.7128	Log-variance
+unit 2	Encoder 2	log σ² 1	Latent μ, log σ²	0.3897	Log-variance
+unit 3	Encoder 2	log σ² 1	Latent μ, log σ²	0.5303	Log-variance
+unit 4	Encoder 2	log σ² 1	Latent μ, log σ²	0.8615	Log-variance
+unit 5	Encoder 2	log σ² 1	Latent μ, log σ²	0.1344	Log-variance
+unit 6	Encoder 2	log σ² 1	Latent μ, log σ²	0.1585	Log-variance
+unit 7	Encoder 2	log σ² 1	Latent μ, log σ²	0.4168	Log-variance
+unit 8	Encoder 2	log σ² 1	Latent μ, log σ²	0.8548	Log-variance
+unit 1	Encoder 2	log σ² 2	Latent μ, log σ²	0.7152	Log-variance
+unit 2	Encoder 2	log σ² 2	Latent μ, log σ²	0.3767	Log-variance
+unit 3	Encoder 2	log σ² 2	Latent μ, log σ²	0.3644	Log-variance
+unit 4	Encoder 2	log σ² 2	Latent μ, log σ²	0.105	Log-variance
+unit 5	Encoder 2	log σ² 2	Latent μ, log σ²	0.6068	Log-variance
+unit 6	Encoder 2	log σ² 2	Latent μ, log σ²	0.1149	Log-variance
+unit 7	Encoder 2	log σ² 2	Latent μ, log σ²	0.5844	Log-variance
+unit 8	Encoder 2	log σ² 2	Latent μ, log σ²	0.0584	Log-variance
+unit 1	Encoder 2	log σ² 3	Latent μ, log σ²	0.4881	Log-variance
+unit 2	Encoder 2	log σ² 3	Latent μ, log σ²	0.2458	Log-variance
+unit 3	Encoder 2	log σ² 3	Latent μ, log σ²	0.7295	Log-variance
+unit 4	Encoder 2	log σ² 3	Latent μ, log σ²	0.8598	Log-variance
+unit 5	Encoder 2	log σ² 3	Latent μ, log σ²	0.6624	Log-variance
+unit 6	Encoder 2	log σ² 3	Latent μ, log σ²	0.4483	Log-variance
+unit 7	Encoder 2	log σ² 3	Latent μ, log σ²	0.8915	Log-variance
+unit 8	Encoder 2	log σ² 3	Latent μ, log σ²	0.5644	Log-variance
+μ 1	Latent μ, log σ²	z 1	Sample z	1	Sampling
+log σ² 1	Latent μ, log σ²	z 1	Sample z	0.8072	Sampling
+μ 2	Latent μ, log σ²	z 2	Sample z	1	Sampling
+log σ² 2	Latent μ, log σ²	z 2	Sample z	0.6372	Sampling
+μ 3	Latent μ, log σ²	z 3	Sample z	1	Sampling
+log σ² 3	Latent μ, log σ²	z 3	Sample z	0.4805	Sampling
+ε 1	Sample z	z 1	Sample z	0.4766	Noise
+ε 2	Sample z	z 2	Sample z	0.5823	Noise
+ε 3	Sample z	z 3	Sample z	0.3463	Noise
+z 1	Sample z	unit 1	Decoder 1	0.6953	Decoder
+z 2	Sample z	unit 1	Decoder 1	0.8604	Decoder
+z 3	Sample z	unit 1	Decoder 1	0.9107	Decoder
+z 1	Sample z	unit 2	Decoder 1	0.9041	Decoder
+z 2	Sample z	unit 2	Decoder 1	0.4482	Decoder
+z 3	Sample z	unit 2	Decoder 1	0.1822	Decoder
+z 1	Sample z	unit 3	Decoder 1	0.8655	Decoder
+z 2	Sample z	unit 3	Decoder 1	0.8731	Decoder
+z 3	Sample z	unit 3	Decoder 1	0.9715	Decoder
+z 1	Sample z	unit 4	Decoder 1	0.1706	Decoder
+z 2	Sample z	unit 4	Decoder 1	0.2756	Decoder
+z 3	Sample z	unit 4	Decoder 1	0.751	Decoder
+z 1	Sample z	unit 5	Decoder 1	0.3307	Decoder
+z 2	Sample z	unit 5	Decoder 1	0.4902	Decoder
+z 3	Sample z	unit 5	Decoder 1	0.6351	Decoder
+z 1	Sample z	unit 6	Decoder 1	0.4573	Decoder
+z 2	Sample z	unit 6	Decoder 1	0.1152	Decoder
+z 3	Sample z	unit 6	Decoder 1	0.8892	Decoder
+z 1	Sample z	unit 7	Decoder 1	0.904	Decoder
+z 2	Sample z	unit 7	Decoder 1	0.4713	Decoder
+z 3	Sample z	unit 7	Decoder 1	0.5313	Decoder
+z 1	Sample z	unit 8	Decoder 1	0.4631	Decoder
+z 2	Sample z	unit 8	Decoder 1	0.8232	Decoder
+z 3	Sample z	unit 8	Decoder 1	0.2053	Decoder
+unit 1	Decoder 1	unit 1	Decoder 2	0.5841	Decoder
+unit 2	Decoder 1	unit 1	Decoder 2	0.7904	Decoder
+unit 3	Decoder 1	unit 1	Decoder 2	0.8885	Decoder
+unit 4	Decoder 1	unit 1	Decoder 2	0.1886	Decoder
+unit 5	Decoder 1	unit 1	Decoder 2	0.1591	Decoder
+unit 6	Decoder 1	unit 1	Decoder 2	0.8415	Decoder
+unit 7	Decoder 1	unit 1	Decoder 2	0.0331	Decoder
+unit 8	Decoder 1	unit 1	Decoder 2	0.3111	Decoder
+unit 1	Decoder 1	unit 2	Decoder 2	0.9618	Decoder
+unit 2	Decoder 1	unit 2	Decoder 2	0.0522	Decoder
+unit 3	Decoder 1	unit 2	Decoder 2	0.6849	Decoder
+unit 4	Decoder 1	unit 2	Decoder 2	0.6393	Decoder
+unit 5	Decoder 1	unit 2	Decoder 2	0.5041	Decoder
+unit 6	Decoder 1	unit 2	Decoder 2	0.1428	Decoder
+unit 7	Decoder 1	unit 2	Decoder 2	0.2861	Decoder
+unit 8	Decoder 1	unit 2	Decoder 2	0.1092	Decoder
+unit 1	Decoder 1	unit 3	Decoder 2	0.4677	Decoder
+unit 2	Decoder 1	unit 3	Decoder 2	0.2543	Decoder
+unit 3	Decoder 1	unit 3	Decoder 2	0.8989	Decoder
+unit 4	Decoder 1	unit 3	Decoder 2	0.4312	Decoder
+unit 5	Decoder 1	unit 3	Decoder 2	0.3177	Decoder
+unit 6	Decoder 1	unit 3	Decoder 2	0.9066	Decoder
+unit 7	Decoder 1	unit 3	Decoder 2	0.9686	Decoder
+unit 8	Decoder 1	unit 3	Decoder 2	0.6239	Decoder
+unit 1	Decoder 1	unit 4	Decoder 2	0.7568	Decoder
+unit 2	Decoder 1	unit 4	Decoder 2	0.2368	Decoder
+unit 3	Decoder 1	unit 4	Decoder 2	0.2925	Decoder
+unit 4	Decoder 1	unit 4	Decoder 2	0.2217	Decoder
+unit 5	Decoder 1	unit 4	Decoder 2	0.2656	Decoder
+unit 6	Decoder 1	unit 4	Decoder 2	0.3044	Decoder
+unit 7	Decoder 1	unit 4	Decoder 2	0.0343	Decoder
+unit 8	Decoder 1	unit 4	Decoder 2	0.3544	Decoder
+unit 1	Decoder 1	unit 5	Decoder 2	0.8524	Decoder
+unit 2	Decoder 1	unit 5	Decoder 2	0.9145	Decoder
+unit 3	Decoder 1	unit 5	Decoder 2	0.263	Decoder
+unit 4	Decoder 1	unit 5	Decoder 2	0.2299	Decoder
+unit 5	Decoder 1	unit 5	Decoder 2	0.9826	Decoder
+unit 6	Decoder 1	unit 5	Decoder 2	0.6795	Decoder
+unit 7	Decoder 1	unit 5	Decoder 2	0.755	Decoder
+unit 8	Decoder 1	unit 5	Decoder 2	0.7709	Decoder
+unit 1	Decoder 1	unit 6	Decoder 2	0.421	Decoder
+unit 2	Decoder 1	unit 6	Decoder 2	0.1511	Decoder
+unit 3	Decoder 1	unit 6	Decoder 2	0.3819	Decoder
+unit 4	Decoder 1	unit 6	Decoder 2	0.0728	Decoder
+unit 5	Decoder 1	unit 6	Decoder 2	0.888	Decoder
+unit 6	Decoder 1	unit 6	Decoder 2	0.2245	Decoder
+unit 7	Decoder 1	unit 6	Decoder 2	0.0118	Decoder
+unit 8	Decoder 1	unit 6	Decoder 2	0.3527	Decoder
+unit 1	Decoder 1	unit 7	Decoder 2	0.1776	Decoder
+unit 2	Decoder 1	unit 7	Decoder 2	0.0907	Decoder
+unit 3	Decoder 1	unit 7	Decoder 2	0.6364	Decoder
+unit 4	Decoder 1	unit 7	Decoder 2	0.881	Decoder
+unit 5	Decoder 1	unit 7	Decoder 2	0.5046	Decoder
+unit 6	Decoder 1	unit 7	Decoder 2	0.6612	Decoder
+unit 7	Decoder 1	unit 7	Decoder 2	0.3233	Decoder
+unit 8	Decoder 1	unit 7	Decoder 2	0.601	Decoder
+unit 1	Decoder 1	unit 8	Decoder 2	0.7973	Decoder
+unit 2	Decoder 1	unit 8	Decoder 2	0.2461	Decoder
+unit 3	Decoder 1	unit 8	Decoder 2	0.1573	Decoder
+unit 4	Decoder 1	unit 8	Decoder 2	0.8709	Decoder
+unit 5	Decoder 1	unit 8	Decoder 2	0.3558	Decoder
+unit 6	Decoder 1	unit 8	Decoder 2	0.1467	Decoder
+unit 7	Decoder 1	unit 8	Decoder 2	0.1885	Decoder
+unit 8	Decoder 1	unit 8	Decoder 2	0.8184	Decoder
+unit 1	Decoder 1	unit 9	Decoder 2	0.8409	Decoder
+unit 2	Decoder 1	unit 9	Decoder 2	0.6644	Decoder
+unit 3	Decoder 1	unit 9	Decoder 2	0.7555	Decoder
+unit 4	Decoder 1	unit 9	Decoder 2	0.7436	Decoder
+unit 5	Decoder 1	unit 9	Decoder 2	0.9748	Decoder
+unit 6	Decoder 1	unit 9	Decoder 2	0.7028	Decoder
+unit 7	Decoder 1	unit 9	Decoder 2	0.9263	Decoder
+unit 8	Decoder 1	unit 9	Decoder 2	0.0014	Decoder
+unit 1	Decoder 1	unit 10	Decoder 2	0.5205	Decoder
+unit 2	Decoder 1	unit 10	Decoder 2	0.3246	Decoder
+unit 3	Decoder 1	unit 10	Decoder 2	0.3122	Decoder
+unit 4	Decoder 1	unit 10	Decoder 2	0.2146	Decoder
+unit 5	Decoder 1	unit 10	Decoder 2	0.9144	Decoder
+unit 6	Decoder 1	unit 10	Decoder 2	0.385	Decoder
+unit 7	Decoder 1	unit 10	Decoder 2	0.7997	Decoder
+unit 8	Decoder 1	unit 10	Decoder 2	0.8943	Decoder
+unit 1	Decoder 1	unit 11	Decoder 2	0.576	Decoder
+unit 2	Decoder 1	unit 11	Decoder 2	0.5604	Decoder
+unit 3	Decoder 1	unit 11	Decoder 2	0.7056	Decoder
+unit 4	Decoder 1	unit 11	Decoder 2	0.5989	Decoder
+unit 5	Decoder 1	unit 11	Decoder 2	0.5475	Decoder
+unit 6	Decoder 1	unit 11	Decoder 2	0.2734	Decoder
+unit 7	Decoder 1	unit 11	Decoder 2	0.439	Decoder
+unit 8	Decoder 1	unit 11	Decoder 2	0.7293	Decoder
+unit 1	Decoder 1	unit 12	Decoder 2	0.9961	Decoder
+unit 2	Decoder 1	unit 12	Decoder 2	0.3898	Decoder
+unit 3	Decoder 1	unit 12	Decoder 2	0.3066	Decoder
+unit 4	Decoder 1	unit 12	Decoder 2	0.2741	Decoder
+unit 5	Decoder 1	unit 12	Decoder 2	0.9942	Decoder
+unit 6	Decoder 1	unit 12	Decoder 2	0.7747	Decoder
+unit 7	Decoder 1	unit 12	Decoder 2	0.6626	Decoder
+unit 8	Decoder 1	unit 12	Decoder 2	0.5614	Decoder
+unit 1	Decoder 1	unit 13	Decoder 2	0.0233	Decoder
+unit 2	Decoder 1	unit 13	Decoder 2	0.9386	Decoder
+unit 3	Decoder 1	unit 13	Decoder 2	0.6551	Decoder
+unit 4	Decoder 1	unit 13	Decoder 2	0.0687	Decoder
+unit 5	Decoder 1	unit 13	Decoder 2	0.3044	Decoder
+unit 6	Decoder 1	unit 13	Decoder 2	0.2763	Decoder
+unit 7	Decoder 1	unit 13	Decoder 2	0.6963	Decoder
+unit 8	Decoder 1	unit 13	Decoder 2	0.7921	Decoder
+unit 1	Decoder 1	unit 14	Decoder 2	0.7333	Decoder
+unit 2	Decoder 1	unit 14	Decoder 2	0.5066	Decoder
+unit 3	Decoder 1	unit 14	Decoder 2	0.0284	Decoder
+unit 4	Decoder 1	unit 14	Decoder 2	0.1251	Decoder
+unit 5	Decoder 1	unit 14	Decoder 2	0.3445	Decoder
+unit 6	Decoder 1	unit 14	Decoder 2	0.0849	Decoder
+unit 7	Decoder 1	unit 14	Decoder 2	0.4395	Decoder
+unit 8	Decoder 1	unit 14	Decoder 2	0.8981	Decoder
+unit 1	Decoder 1	unit 15	Decoder 2	0.0693	Decoder
+unit 2	Decoder 1	unit 15	Decoder 2	0.0013	Decoder
+unit 3	Decoder 1	unit 15	Decoder 2	0.2392	Decoder
+unit 4	Decoder 1	unit 15	Decoder 2	0.7863	Decoder
+unit 5	Decoder 1	unit 15	Decoder 2	0.4151	Decoder
+unit 6	Decoder 1	unit 15	Decoder 2	0.8367	Decoder
+unit 7	Decoder 1	unit 15	Decoder 2	0.9068	Decoder
+unit 8	Decoder 1	unit 15	Decoder 2	0.8961	Decoder
+unit 1	Decoder 1	unit 16	Decoder 2	0.9576	Decoder
+unit 2	Decoder 1	unit 16	Decoder 2	0.676	Decoder
+unit 3	Decoder 1	unit 16	Decoder 2	0.3684	Decoder
+unit 4	Decoder 1	unit 16	Decoder 2	0.888	Decoder
+unit 5	Decoder 1	unit 16	Decoder 2	0.2108	Decoder
+unit 6	Decoder 1	unit 16	Decoder 2	0.5649	Decoder
+unit 7	Decoder 1	unit 16	Decoder 2	0.1984	Decoder
+unit 8	Decoder 1	unit 16	Decoder 2	0.477	Decoder
+unit 1	Decoder 2	pixel 1,1	Output	0.3534	Decoder
+unit 2	Decoder 2	pixel 1,1	Output	0.0813	Decoder
+unit 3	Decoder 2	pixel 1,1	Output	0.435	Decoder
+unit 4	Decoder 2	pixel 1,1	Output	0.9959	Decoder
+unit 5	Decoder 2	pixel 1,1	Output	0.8912	Decoder
+unit 6	Decoder 2	pixel 1,1	Output	0.5259	Decoder
+unit 7	Decoder 2	pixel 1,1	Output	0.096	Decoder
+unit 8	Decoder 2	pixel 1,1	Output	0.5273	Decoder
+unit 9	Decoder 2	pixel 1,1	Output	0.9474	Decoder
+unit 10	Decoder 2	pixel 1,1	Output	0.5885	Decoder
+unit 11	Decoder 2	pixel 1,1	Output	0.0491	Decoder
+unit 12	Decoder 2	pixel 1,1	Output	0.3506	Decoder
+unit 13	Decoder 2	pixel 1,1	Output	0.8353	Decoder
+unit 14	Decoder 2	pixel 1,1	Output	0.4334	Decoder
+unit 15	Decoder 2	pixel 1,1	Output	0.9478	Decoder
+unit 16	Decoder 2	pixel 1,1	Output	0.9709	Decoder
+unit 1	Decoder 2	pixel 1,2	Output	0.6798	Decoder
+unit 2	Decoder 2	pixel 1,2	Output	0.3686	Decoder
+unit 3	Decoder 2	pixel 1,2	Output	0.4317	Decoder
+unit 4	Decoder 2	pixel 1,2	Output	0.5079	Decoder
+unit 5	Decoder 2	pixel 1,2	Output	0.4791	Decoder
+unit 6	Decoder 2	pixel 1,2	Output	0.7661	Decoder
+unit 7	Decoder 2	pixel 1,2	Output	0.9647	Decoder
+unit 8	Decoder 2	pixel 1,2	Output	0.2053	Decoder
+unit 9	Decoder 2	pixel 1,2	Output	0.8165	Decoder
+unit 10	Decoder 2	pixel 1,2	Output	0.5385	Decoder
+unit 11	Decoder 2	pixel 1,2	Output	0.7573	Decoder
+unit 12	Decoder 2	pixel 1,2	Output	0.4607	Decoder
+unit 13	Decoder 2	pixel 1,2	Output	0.5096	Decoder
+unit 14	Decoder 2	pixel 1,2	Output	0.6797	Decoder
+unit 15	Decoder 2	pixel 1,2	Output	0.3157	Decoder
+unit 16	Decoder 2	pixel 1,2	Output	0.2469	Decoder
+unit 1	Decoder 2	pixel 1,3	Output	0.601	Decoder
+unit 2	Decoder 2	pixel 1,3	Output	0.6403	Decoder
+unit 3	Decoder 2	pixel 1,3	Output	0.714	Decoder
+unit 4	Decoder 2	pixel 1,3	Output	0.8509	Decoder
+unit 5	Decoder 2	pixel 1,3	Output	0.0568	Decoder
+unit 6	Decoder 2	pixel 1,3	Output	0.1769	Decoder
+unit 7	Decoder 2	pixel 1,3	Output	0.9839	Decoder
+unit 8	Decoder 2	pixel 1,3	Output	0.0349	Decoder
+unit 9	Decoder 2	pixel 1,3	Output	0.8757	Decoder
+unit 10	Decoder 2	pixel 1,3	Output	0.3347	Decoder
+unit 11	Decoder 2	pixel 1,3	Output	0.0102	Decoder
+unit 12	Decoder 2	pixel 1,3	Output	0.8748	Decoder
+unit 13	Decoder 2	pixel 1,3	Output	0.7476	Decoder
+unit 14	Decoder 2	pixel 1,3	Output	0.905	Decoder
+unit 15	Decoder 2	pixel 1,3	Output	0.8185	Decoder
+unit 16	Decoder 2	pixel 1,3	Output	0.9996	Decoder
+unit 1	Decoder 2	pixel 1,4	Output	0.337	Decoder
+unit 2	Decoder 2	pixel 1,4	Output	0.2804	Decoder
+unit 3	Decoder 2	pixel 1,4	Output	0.6303	Decoder
+unit 4	Decoder 2	pixel 1,4	Output	0.6129	Decoder
+unit 5	Decoder 2	pixel 1,4	Output	0.1776	Decoder
+unit 6	Decoder 2	pixel 1,4	Output	0.0832	Decoder
+unit 7	Decoder 2	pixel 1,4	Output	0.0093	Decoder
+unit 8	Decoder 2	pixel 1,4	Output	0.0261	Decoder
+unit 9	Decoder 2	pixel 1,4	Output	0.1653	Decoder
+unit 10	Decoder 2	pixel 1,4	Output	0.6968	Decoder
+unit 11	Decoder 2	pixel 1,4	Output	0.4388	Decoder
+unit 12	Decoder 2	pixel 1,4	Output	0.4753	Decoder
+unit 13	Decoder 2	pixel 1,4	Output	0.9589	Decoder
+unit 14	Decoder 2	pixel 1,4	Output	0.9149	Decoder
+unit 15	Decoder 2	pixel 1,4	Output	0.8039	Decoder
+unit 16	Decoder 2	pixel 1,4	Output	0.6033	Decoder
+unit 1	Decoder 2	pixel 1,5	Output	0.5342	Decoder
+unit 2	Decoder 2	pixel 1,5	Output	0.1432	Decoder
+unit 3	Decoder 2	pixel 1,5	Output	0.2186	Decoder
+unit 4	Decoder 2	pixel 1,5	Output	0.517	Decoder
+unit 5	Decoder 2	pixel 1,5	Output	0.5682	Decoder
+unit 6	Decoder 2	pixel 1,5	Output	0.767	Decoder
+unit 7	Decoder 2	pixel 1,5	Output	0.4989	Decoder
+unit 8	Decoder 2	pixel 1,5	Output	0.5363	Decoder
+unit 9	Decoder 2	pixel 1,5	Output	0.0841	Decoder
+unit 10	Decoder 2	pixel 1,5	Output	0.9297	Decoder
+unit 11	Decoder 2	pixel 1,5	Output	0.5468	Decoder
+unit 12	Decoder 2	pixel 1,5	Output	0.9185	Decoder
+unit 13	Decoder 2	pixel 1,5	Output	0.3646	Decoder
+unit 14	Decoder 2	pixel 1,5	Output	0.251	Decoder
+unit 15	Decoder 2	pixel 1,5	Output	0.7048	Decoder
+unit 16	Decoder 2	pixel 1,5	Output	0.9233	Decoder
+unit 1	Decoder 2	pixel 1,6	Output	0.4198	Decoder
+unit 2	Decoder 2	pixel 1,6	Output	0.8735	Decoder
+unit 3	Decoder 2	pixel 1,6	Output	0.4013	Decoder
+unit 4	Decoder 2	pixel 1,6	Output	0.3519	Decoder
+unit 5	Decoder 2	pixel 1,6	Output	0.1281	Decoder
+unit 6	Decoder 2	pixel 1,6	Output	0.17	Decoder
+unit 7	Decoder 2	pixel 1,6	Output	0.8636	Decoder
+unit 8	Decoder 2	pixel 1,6	Output	0.3638	Decoder
+unit 9	Decoder 2	pixel 1,6	Output	0.0536	Decoder
+unit 10	Decoder 2	pixel 1,6	Output	0.9365	Decoder
+unit 11	Decoder 2	pixel 1,6	Output	0.2765	Decoder
+unit 12	Decoder 2	pixel 1,6	Output	0.5521	Decoder
+unit 13	Decoder 2	pixel 1,6	Output	0.1115	Decoder
+unit 14	Decoder 2	pixel 1,6	Output	0.5135	Decoder
+unit 15	Decoder 2	pixel 1,6	Output	0.5474	Decoder
+unit 16	Decoder 2	pixel 1,6	Output	0.0013	Decoder
+unit 1	Decoder 2	pixel 2,1	Output	0.0703	Decoder
+unit 2	Decoder 2	pixel 2,1	Output	0.6037	Decoder
+unit 3	Decoder 2	pixel 2,1	Output	0.3052	Decoder
+unit 4	Decoder 2	pixel 2,1	Output	0.4542	Decoder
+unit 5	Decoder 2	pixel 2,1	Output	0.1784	Decoder
+unit 6	Decoder 2	pixel 2,1	Output	0.8673	Decoder
+unit 7	Decoder 2	pixel 2,1	Output	0.4111	Decoder
+unit 8	Decoder 2	pixel 2,1	Output	0.2953	Decoder
+unit 9	Decoder 2	pixel 2,1	Output	0.2949	Decoder
+unit 10	Decoder 2	pixel 2,1	Output	0.6949	Decoder
+unit 11	Decoder 2	pixel 2,1	Output	0.7717	Decoder
+unit 12	Decoder 2	pixel 2,1	Output	0.4566	Decoder
+unit 13	Decoder 2	pixel 2,1	Output	0.6006	Decoder
+unit 14	Decoder 2	pixel 2,1	Output	0.7044	Decoder
+unit 15	Decoder 2	pixel 2,1	Output	0.4572	Decoder
+unit 16	Decoder 2	pixel 2,1	Output	0.0661	Decoder
+unit 1	Decoder 2	pixel 2,2	Output	0.9888	Decoder
+unit 2	Decoder 2	pixel 2,2	Output	0.9466	Decoder
+unit 3	Decoder 2	pixel 2,2	Output	0.6512	Decoder
+unit 4	Decoder 2	pixel 2,2	Output	0.6975	Decoder
+unit 5	Decoder 2	pixel 2,2	Output	0.5902	Decoder
+unit 6	Decoder 2	pixel 2,2	Output	0.5283	Decoder
+unit 7	Decoder 2	pixel 2,2	Output	0.1496	Decoder
+unit 8	Decoder 2	pixel 2,2	Output	0.3027	Decoder
+unit 9	Decoder 2	pixel 2,2	Output	0.5939	Decoder
+unit 10	Decoder 2	pixel 2,2	Output	0.9003	Decoder
+unit 11	Decoder 2	pixel 2,2	Output	0.4065	Decoder
+unit 12	Decoder 2	pixel 2,2	Output	0.7503	Decoder
+unit 13	Decoder 2	pixel 2,2	Output	0.6165	Decoder
+unit 14	Decoder 2	pixel 2,2	Output	0.7933	Decoder
+unit 15	Decoder 2	pixel 2,2	Output	0.3312	Decoder
+unit 16	Decoder 2	pixel 2,2	Output	0.0948	Decoder
+unit 1	Decoder 2	pixel 2,3	Output	0.9342	Decoder
+unit 2	Decoder 2	pixel 2,3	Output	0.7681	Decoder
+unit 3	Decoder 2	pixel 2,3	Output	0.6564	Decoder
+unit 4	Decoder 2	pixel 2,3	Output	0.9383	Decoder
+unit 5	Decoder 2	pixel 2,3	Output	0.8303	Decoder
+unit 6	Decoder 2	pixel 2,3	Output	0.6748	Decoder
+unit 7	Decoder 2	pixel 2,3	Output	0.4048	Decoder
+unit 8	Decoder 2	pixel 2,3	Output	0.3042	Decoder
+unit 9	Decoder 2	pixel 2,3	Output	0.7463	Decoder
+unit 10	Decoder 2	pixel 2,3	Output	0.9839	Decoder
+unit 11	Decoder 2	pixel 2,3	Output	0.8531	Decoder
+unit 12	Decoder 2	pixel 2,3	Output	0.9738	Decoder
+unit 13	Decoder 2	pixel 2,3	Output	0.8175	Decoder
+unit 14	Decoder 2	pixel 2,3	Output	0.8162	Decoder
+unit 15	Decoder 2	pixel 2,3	Output	0.2405	Decoder
+unit 16	Decoder 2	pixel 2,3	Output	0.5115	Decoder
+unit 1	Decoder 2	pixel 2,4	Output	0.2476	Decoder
+unit 2	Decoder 2	pixel 2,4	Output	0.7645	Decoder
+unit 3	Decoder 2	pixel 2,4	Output	0.2954	Decoder
+unit 4	Decoder 2	pixel 2,4	Output	0.7511	Decoder
+unit 5	Decoder 2	pixel 2,4	Output	0.6429	Decoder
+unit 6	Decoder 2	pixel 2,4	Output	0.307	Decoder
+unit 7	Decoder 2	pixel 2,4	Output	0.6508	Decoder
+unit 8	Decoder 2	pixel 2,4	Output	0.0038	Decoder
+unit 9	Decoder 2	pixel 2,4	Output	0.7231	Decoder
+unit 10	Decoder 2	pixel 2,4	Output	0.0982	Decoder
+unit 11	Decoder 2	pixel 2,4	Output	0.2936	Decoder
+unit 12	Decoder 2	pixel 2,4	Output	0.9822	Decoder
+unit 13	Decoder 2	pixel 2,4	Output	0.9622	Decoder
+unit 14	Decoder 2	pixel 2,4	Output	0.0942	Decoder
+unit 15	Decoder 2	pixel 2,4	Output	0.045	Decoder
+unit 16	Decoder 2	pixel 2,4	Output	0.2062	Decoder
+unit 1	Decoder 2	pixel 2,5	Output	0.3507	Decoder
+unit 2	Decoder 2	pixel 2,5	Output	0.4573	Decoder
+unit 3	Decoder 2	pixel 2,5	Output	0.861	Decoder
+unit 4	Decoder 2	pixel 2,5	Output	0.1584	Decoder
+unit 5	Decoder 2	pixel 2,5	Output	0.9937	Decoder
+unit 6	Decoder 2	pixel 2,5	Output	0.147	Decoder
+unit 7	Decoder 2	pixel 2,5	Output	0.8341	Decoder
+unit 8	Decoder 2	pixel 2,5	Output	0.8429	Decoder
+unit 9	Decoder 2	pixel 2,5	Output	0.4497	Decoder
+unit 10	Decoder 2	pixel 2,5	Output	0.931	Decoder
+unit 11	Decoder 2	pixel 2,5	Output	0.1607	Decoder
+unit 12	Decoder 2	pixel 2,5	Output	0.1486	Decoder
+unit 13	Decoder 2	pixel 2,5	Output	0.3262	Decoder
+unit 14	Decoder 2	pixel 2,5	Output	0.2927	Decoder
+unit 15	Decoder 2	pixel 2,5	Output	0.4523	Decoder
+unit 16	Decoder 2	pixel 2,5	Output	0.8142	Decoder
+unit 1	Decoder 2	pixel 2,6	Output	0.0823	Decoder
+unit 2	Decoder 2	pixel 2,6	Output	0.0448	Decoder
+unit 3	Decoder 2	pixel 2,6	Output	0.125	Decoder
+unit 4	Decoder 2	pixel 2,6	Output	0.6903	Decoder
+unit 5	Decoder 2	pixel 2,6	Output	0.1279	Decoder
+unit 6	Decoder 2	pixel 2,6	Output	0.5073	Decoder
+unit 7	Decoder 2	pixel 2,6	Output	0.5091	Decoder
+unit 8	Decoder 2	pixel 2,6	Output	0.0124	Decoder
+unit 9	Decoder 2	pixel 2,6	Output	0.07	Decoder
+unit 10	Decoder 2	pixel 2,6	Output	0.5315	Decoder
+unit 11	Decoder 2	pixel 2,6	Output	0.3722	Decoder
+unit 12	Decoder 2	pixel 2,6	Output	0.7341	Decoder
+unit 13	Decoder 2	pixel 2,6	Output	0.942	Decoder
+unit 14	Decoder 2	pixel 2,6	Output	0.6031	Decoder
+unit 15	Decoder 2	pixel 2,6	Output	0.9373	Decoder
+unit 16	Decoder 2	pixel 2,6	Output	0.1673	Decoder
+unit 1	Decoder 2	pixel 3,1	Output	0.0959	Decoder
+unit 2	Decoder 2	pixel 3,1	Output	0.9639	Decoder
+unit 3	Decoder 2	pixel 3,1	Output	0.3433	Decoder
+unit 4	Decoder 2	pixel 3,1	Output	0.8583	Decoder
+unit 5	Decoder 2	pixel 3,1	Output	0.7081	Decoder
+unit 6	Decoder 2	pixel 3,1	Output	0.1903	Decoder
+unit 7	Decoder 2	pixel 3,1	Output	0.7115	Decoder
+unit 8	Decoder 2	pixel 3,1	Output	0.1878	Decoder
+unit 9	Decoder 2	pixel 3,1	Output	0.2638	Decoder
+unit 10	Decoder 2	pixel 3,1	Output	0.1938	Decoder
+unit 11	Decoder 2	pixel 3,1	Output	0.2288	Decoder
+unit 12	Decoder 2	pixel 3,1	Output	0.7634	Decoder
+unit 13	Decoder 2	pixel 3,1	Output	0.2108	Decoder
+unit 14	Decoder 2	pixel 3,1	Output	0.3469	Decoder
+unit 15	Decoder 2	pixel 3,1	Output	0.8798	Decoder
+unit 16	Decoder 2	pixel 3,1	Output	0.8229	Decoder
+unit 1	Decoder 2	pixel 3,2	Output	0.7126	Decoder
+unit 2	Decoder 2	pixel 3,2	Output	0.3815	Decoder
+unit 3	Decoder 2	pixel 3,2	Output	0.1195	Decoder
+unit 4	Decoder 2	pixel 3,2	Output	0.9232	Decoder
+unit 5	Decoder 2	pixel 3,2	Output	0.0114	Decoder
+unit 6	Decoder 2	pixel 3,2	Output	0.6692	Decoder
+unit 7	Decoder 2	pixel 3,2	Output	0.6105	Decoder
+unit 8	Decoder 2	pixel 3,2	Output	0.0098	Decoder
+unit 9	Decoder 2	pixel 3,2	Output	0.2537	Decoder
+unit 10	Decoder 2	pixel 3,2	Output	0.864	Decoder
+unit 11	Decoder 2	pixel 3,2	Output	0.2611	Decoder
+unit 12	Decoder 2	pixel 3,2	Output	0.5352	Decoder
+unit 13	Decoder 2	pixel 3,2	Output	0.092	Decoder
+unit 14	Decoder 2	pixel 3,2	Output	0.9492	Decoder
+unit 15	Decoder 2	pixel 3,2	Output	0.3409	Decoder
+unit 16	Decoder 2	pixel 3,2	Output	0.7636	Decoder
+unit 1	Decoder 2	pixel 3,3	Output	0.2108	Decoder
+unit 2	Decoder 2	pixel 3,3	Output	0.3918	Decoder
+unit 3	Decoder 2	pixel 3,3	Output	0.2216	Decoder
+unit 4	Decoder 2	pixel 3,3	Output	0.3262	Decoder
+unit 5	Decoder 2	pixel 3,3	Output	0.91	Decoder
+unit 6	Decoder 2	pixel 3,3	Output	0.5455	Decoder
+unit 7	Decoder 2	pixel 3,3	Output	0.8658	Decoder
+unit 8	Decoder 2	pixel 3,3	Output	0.1005	Decoder
+unit 9	Decoder 2	pixel 3,3	Output	0.3263	Decoder
+unit 10	Decoder 2	pixel 3,3	Output	0.0797	Decoder
+unit 11	Decoder 2	pixel 3,3	Output	0.0766	Decoder
+unit 12	Decoder 2	pixel 3,3	Output	0.3659	Decoder
+unit 13	Decoder 2	pixel 3,3	Output	0.8112	Decoder
+unit 14	Decoder 2	pixel 3,3	Output	0.2632	Decoder
+unit 15	Decoder 2	pixel 3,3	Output	0.5772	Decoder
+unit 16	Decoder 2	pixel 3,3	Output	0.3015	Decoder
+unit 1	Decoder 2	pixel 3,4	Output	0.4469	Decoder
+unit 2	Decoder 2	pixel 3,4	Output	0.9791	Decoder
+unit 3	Decoder 2	pixel 3,4	Output	0.0681	Decoder
+unit 4	Decoder 2	pixel 3,4	Output	0.8748	Decoder
+unit 5	Decoder 2	pixel 3,4	Output	0.4631	Decoder
+unit 6	Decoder 2	pixel 3,4	Output	0.0754	Decoder
+unit 7	Decoder 2	pixel 3,4	Output	0.2537	Decoder
+unit 8	Decoder 2	pixel 3,4	Output	0.5841	Decoder
+unit 9	Decoder 2	pixel 3,4	Output	0.1596	Decoder
+unit 10	Decoder 2	pixel 3,4	Output	0.8371	Decoder
+unit 11	Decoder 2	pixel 3,4	Output	0.1242	Decoder
+unit 12	Decoder 2	pixel 3,4	Output	0.3245	Decoder
+unit 13	Decoder 2	pixel 3,4	Output	0.998	Decoder
+unit 14	Decoder 2	pixel 3,4	Output	0.2808	Decoder
+unit 15	Decoder 2	pixel 3,4	Output	0.9028	Decoder
+unit 16	Decoder 2	pixel 3,4	Output	0.3906	Decoder
+unit 1	Decoder 2	pixel 3,5	Output	0.6182	Decoder
+unit 2	Decoder 2	pixel 3,5	Output	0.2161	Decoder
+unit 3	Decoder 2	pixel 3,5	Output	0.9984	Decoder
+unit 4	Decoder 2	pixel 3,5	Output	0.0988	Decoder
+unit 5	Decoder 2	pixel 3,5	Output	0.3266	Decoder
+unit 6	Decoder 2	pixel 3,5	Output	0.3095	Decoder
+unit 7	Decoder 2	pixel 3,5	Output	0.8132	Decoder
+unit 8	Decoder 2	pixel 3,5	Output	0.1504	Decoder
+unit 9	Decoder 2	pixel 3,5	Output	0.8841	Decoder
+unit 10	Decoder 2	pixel 3,5	Output	0.7095	Decoder
+unit 11	Decoder 2	pixel 3,5	Output	0.1826	Decoder
+unit 12	Decoder 2	pixel 3,5	Output	0.393	Decoder
+unit 13	Decoder 2	pixel 3,5	Output	0.2356	Decoder
+unit 14	Decoder 2	pixel 3,5	Output	0.7085	Decoder
+unit 15	Decoder 2	pixel 3,5	Output	0.358	Decoder
+unit 16	Decoder 2	pixel 3,5	Output	0.1374	Decoder
+unit 1	Decoder 2	pixel 3,6	Output	0.9381	Decoder
+unit 2	Decoder 2	pixel 3,6	Output	0.5222	Decoder
+unit 3	Decoder 2	pixel 3,6	Output	0.1609	Decoder
+unit 4	Decoder 2	pixel 3,6	Output	0.2795	Decoder
+unit 5	Decoder 2	pixel 3,6	Output	0.7576	Decoder
+unit 6	Decoder 2	pixel 3,6	Output	0.7749	Decoder
+unit 7	Decoder 2	pixel 3,6	Output	0.0179	Decoder
+unit 8	Decoder 2	pixel 3,6	Output	0.4786	Decoder
+unit 9	Decoder 2	pixel 3,6	Output	0.6445	Decoder
+unit 10	Decoder 2	pixel 3,6	Output	0.6925	Decoder
+unit 11	Decoder 2	pixel 3,6	Output	0.585	Decoder
+unit 12	Decoder 2	pixel 3,6	Output	0.335	Decoder
+unit 13	Decoder 2	pixel 3,6	Output	0.2616	Decoder
+unit 14	Decoder 2	pixel 3,6	Output	0.2129	Decoder
+unit 15	Decoder 2	pixel 3,6	Output	0.1426	Decoder
+unit 16	Decoder 2	pixel 3,6	Output	0.2645	Decoder
+unit 1	Decoder 2	pixel 4,1	Output	0.4087	Decoder
+unit 2	Decoder 2	pixel 4,1	Output	0.7568	Decoder
+unit 3	Decoder 2	pixel 4,1	Output	0.3947	Decoder
+unit 4	Decoder 2	pixel 4,1	Output	0.471	Decoder
+unit 5	Decoder 2	pixel 4,1	Output	0.7964	Decoder
+unit 6	Decoder 2	pixel 4,1	Output	0.8232	Decoder
+unit 7	Decoder 2	pixel 4,1	Output	0.6221	Decoder
+unit 8	Decoder 2	pixel 4,1	Output	0.4199	Decoder
+unit 9	Decoder 2	pixel 4,1	Output	0.1321	Decoder
+unit 10	Decoder 2	pixel 4,1	Output	0.2224	Decoder
+unit 11	Decoder 2	pixel 4,1	Output	0.8114	Decoder
+unit 12	Decoder 2	pixel 4,1	Output	0.8919	Decoder
+unit 13	Decoder 2	pixel 4,1	Output	0.7322	Decoder
+unit 14	Decoder 2	pixel 4,1	Output	0.5195	Decoder
+unit 15	Decoder 2	pixel 4,1	Output	0.3973	Decoder
+unit 16	Decoder 2	pixel 4,1	Output	0.0647	Decoder
+unit 1	Decoder 2	pixel 4,2	Output	0.1099	Decoder
+unit 2	Decoder 2	pixel 4,2	Output	0.141	Decoder
+unit 3	Decoder 2	pixel 4,2	Output	0.935	Decoder
+unit 4	Decoder 2	pixel 4,2	Output	0.1892	Decoder
+unit 5	Decoder 2	pixel 4,2	Output	0.9159	Decoder
+unit 6	Decoder 2	pixel 4,2	Output	0.6749	Decoder
+unit 7	Decoder 2	pixel 4,2	Output	0.4367	Decoder
+unit 8	Decoder 2	pixel 4,2	Output	0.0243	Decoder
+unit 9	Decoder 2	pixel 4,2	Output	0.458	Decoder
+unit 10	Decoder 2	pixel 4,2	Output	0.933	Decoder
+unit 11	Decoder 2	pixel 4,2	Output	0.9395	Decoder
+unit 12	Decoder 2	pixel 4,2	Output	0.1756	Decoder
+unit 13	Decoder 2	pixel 4,2	Output	0.5412	Decoder
+unit 14	Decoder 2	pixel 4,2	Output	0.4322	Decoder
+unit 15	Decoder 2	pixel 4,2	Output	0.6264	Decoder
+unit 16	Decoder 2	pixel 4,2	Output	0.8096	Decoder
+unit 1	Decoder 2	pixel 4,3	Output	0.9735	Decoder
+unit 2	Decoder 2	pixel 4,3	Output	0.9241	Decoder
+unit 3	Decoder 2	pixel 4,3	Output	0.5207	Decoder
+unit 4	Decoder 2	pixel 4,3	Output	0.1336	Decoder
+unit 5	Decoder 2	pixel 4,3	Output	0.7398	Decoder
+unit 6	Decoder 2	pixel 4,3	Output	0.0888	Decoder
+unit 7	Decoder 2	pixel 4,3	Output	0.4003	Decoder
+unit 8	Decoder 2	pixel 4,3	Output	0.2654	Decoder
+unit 9	Decoder 2	pixel 4,3	Output	0.9638	Decoder
+unit 10	Decoder 2	pixel 4,3	Output	0.2487	Decoder
+unit 11	Decoder 2	pixel 4,3	Output	0.1515	Decoder
+unit 12	Decoder 2	pixel 4,3	Output	0.8026	Decoder
+unit 13	Decoder 2	pixel 4,3	Output	0.5973	Decoder
+unit 14	Decoder 2	pixel 4,3	Output	0.6289	Decoder
+unit 15	Decoder 2	pixel 4,3	Output	0.2098	Decoder
+unit 16	Decoder 2	pixel 4,3	Output	0.5491	Decoder
+unit 1	Decoder 2	pixel 4,4	Output	0.8808	Decoder
+unit 2	Decoder 2	pixel 4,4	Output	0.6314	Decoder
+unit 3	Decoder 2	pixel 4,4	Output	0.7893	Decoder
+unit 4	Decoder 2	pixel 4,4	Output	0.2957	Decoder
+unit 5	Decoder 2	pixel 4,4	Output	0.7625	Decoder
+unit 6	Decoder 2	pixel 4,4	Output	0.1042	Decoder
+unit 7	Decoder 2	pixel 4,4	Output	0.692	Decoder
+unit 8	Decoder 2	pixel 4,4	Output	0.7775	Decoder
+unit 9	Decoder 2	pixel 4,4	Output	0.5	Decoder
+unit 10	Decoder 2	pixel 4,4	Output	0.8982	Decoder
+unit 11	Decoder 2	pixel 4,4	Output	0.0981	Decoder
+unit 12	Decoder 2	pixel 4,4	Output	0.5252	Decoder
+unit 13	Decoder 2	pixel 4,4	Output	0.7255	Decoder
+unit 14	Decoder 2	pixel 4,4	Output	0.6428	Decoder
+unit 15	Decoder 2	pixel 4,4	Output	0.7609	Decoder
+unit 16	Decoder 2	pixel 4,4	Output	0.2526	Decoder
+unit 1	Decoder 2	pixel 4,5	Output	0.1194	Decoder
+unit 2	Decoder 2	pixel 4,5	Output	0.0802	Decoder
+unit 3	Decoder 2	pixel 4,5	Output	0.9238	Decoder
+unit 4	Decoder 2	pixel 4,5	Output	0.2037	Decoder
+unit 5	Decoder 2	pixel 4,5	Output	0.75	Decoder
+unit 6	Decoder 2	pixel 4,5	Output	0.7375	Decoder
+unit 7	Decoder 2	pixel 4,5	Output	0.0369	Decoder
+unit 8	Decoder 2	pixel 4,5	Output	0.7805	Decoder
+unit 9	Decoder 2	pixel 4,5	Output	0.6711	Decoder
+unit 10	Decoder 2	pixel 4,5	Output	0.2836	Decoder
+unit 11	Decoder 2	pixel 4,5	Output	0.8241	Decoder
+unit 12	Decoder 2	pixel 4,5	Output	0.9978	Decoder
+unit 13	Decoder 2	pixel 4,5	Output	0.2803	Decoder
+unit 14	Decoder 2	pixel 4,5	Output	0.329	Decoder
+unit 15	Decoder 2	pixel 4,5	Output	0.8012	Decoder
+unit 16	Decoder 2	pixel 4,5	Output	0.803	Decoder
+unit 1	Decoder 2	pixel 4,6	Output	0.1714	Decoder
+unit 2	Decoder 2	pixel 4,6	Output	0.5808	Decoder
+unit 3	Decoder 2	pixel 4,6	Output	0.5108	Decoder
+unit 4	Decoder 2	pixel 4,6	Output	0.2271	Decoder
+unit 5	Decoder 2	pixel 4,6	Output	0.4888	Decoder
+unit 6	Decoder 2	pixel 4,6	Output	0.1513	Decoder
+unit 7	Decoder 2	pixel 4,6	Output	0.1118	Decoder
+unit 8	Decoder 2	pixel 4,6	Output	0.5023	Decoder
+unit 9	Decoder 2	pixel 4,6	Output	0.7462	Decoder
+unit 10	Decoder 2	pixel 4,6	Output	0.8895	Decoder
+unit 11	Decoder 2	pixel 4,6	Output	0.8237	Decoder
+unit 12	Decoder 2	pixel 4,6	Output	0.5543	Decoder
+unit 13	Decoder 2	pixel 4,6	Output	0.9105	Decoder
+unit 14	Decoder 2	pixel 4,6	Output	0.6051	Decoder
+unit 15	Decoder 2	pixel 4,6	Output	0.3408	Decoder
+unit 16	Decoder 2	pixel 4,6	Output	0.1065	Decoder
+unit 1	Decoder 2	pixel 5,1	Output	0.4481	Decoder
+unit 2	Decoder 2	pixel 5,1	Output	0.043	Decoder
+unit 3	Decoder 2	pixel 5,1	Output	0.1961	Decoder
+unit 4	Decoder 2	pixel 5,1	Output	0.6611	Decoder
+unit 5	Decoder 2	pixel 5,1	Output	0.9228	Decoder
+unit 6	Decoder 2	pixel 5,1	Output	0.1943	Decoder
+unit 7	Decoder 2	pixel 5,1	Output	0.4479	Decoder
+unit 8	Decoder 2	pixel 5,1	Output	0.4595	Decoder
+unit 9	Decoder 2	pixel 5,1	Output	0.8442	Decoder
+unit 10	Decoder 2	pixel 5,1	Output	0.9398	Decoder
+unit 11	Decoder 2	pixel 5,1	Output	0.9595	Decoder
+unit 12	Decoder 2	pixel 5,1	Output	0.5887	Decoder
+unit 13	Decoder 2	pixel 5,1	Output	0.659	Decoder
+unit 14	Decoder 2	pixel 5,1	Output	0.0563	Decoder
+unit 15	Decoder 2	pixel 5,1	Output	0.3876	Decoder
+unit 16	Decoder 2	pixel 5,1	Output	0.5712	Decoder
+unit 1	Decoder 2	pixel 5,2	Output	0.9916	Decoder
+unit 2	Decoder 2	pixel 5,2	Output	0.5296	Decoder
+unit 3	Decoder 2	pixel 5,2	Output	0.5314	Decoder
+unit 4	Decoder 2	pixel 5,2	Output	0.5732	Decoder
+unit 5	Decoder 2	pixel 5,2	Output	0.7563	Decoder
+unit 6	Decoder 2	pixel 5,2	Output	0.2613	Decoder
+unit 7	Decoder 2	pixel 5,2	Output	0.0262	Decoder
+unit 8	Decoder 2	pixel 5,2	Output	0.9667	Decoder
+unit 9	Decoder 2	pixel 5,2	Output	0.754	Decoder
+unit 10	Decoder 2	pixel 5,2	Output	0.1572	Decoder
+unit 11	Decoder 2	pixel 5,2	Output	0.7172	Decoder
+unit 12	Decoder 2	pixel 5,2	Output	0.3191	Decoder
+unit 13	Decoder 2	pixel 5,2	Output	0.2266	Decoder
+unit 14	Decoder 2	pixel 5,2	Output	0.0498	Decoder
+unit 15	Decoder 2	pixel 5,2	Output	0.3899	Decoder
+unit 16	Decoder 2	pixel 5,2	Output	0.4687	Decoder
+unit 1	Decoder 2	pixel 5,3	Output	0.0453	Decoder
+unit 2	Decoder 2	pixel 5,3	Output	0.5096	Decoder
+unit 3	Decoder 2	pixel 5,3	Output	0.0596	Decoder
+unit 4	Decoder 2	pixel 5,3	Output	0.1091	Decoder
+unit 5	Decoder 2	pixel 5,3	Output	0.2341	Decoder
+unit 6	Decoder 2	pixel 5,3	Output	0.8762	Decoder
+unit 7	Decoder 2	pixel 5,3	Output	0.5215	Decoder
+unit 8	Decoder 2	pixel 5,3	Output	0.3825	Decoder
+unit 9	Decoder 2	pixel 5,3	Output	0.8832	Decoder
+unit 10	Decoder 2	pixel 5,3	Output	0.524	Decoder
+unit 11	Decoder 2	pixel 5,3	Output	0.133	Decoder
+unit 12	Decoder 2	pixel 5,3	Output	0.3882	Decoder
+unit 13	Decoder 2	pixel 5,3	Output	0.0613	Decoder
+unit 14	Decoder 2	pixel 5,3	Output	0.8368	Decoder
+unit 15	Decoder 2	pixel 5,3	Output	0.0931	Decoder
+unit 16	Decoder 2	pixel 5,3	Output	0.4542	Decoder
+unit 1	Decoder 2	pixel 5,4	Output	0.6602	Decoder
+unit 2	Decoder 2	pixel 5,4	Output	0.2278	Decoder
+unit 3	Decoder 2	pixel 5,4	Output	0.4609	Decoder
+unit 4	Decoder 2	pixel 5,4	Output	0.9778	Decoder
+unit 5	Decoder 2	pixel 5,4	Output	0.9044	Decoder
+unit 6	Decoder 2	pixel 5,4	Output	0.2195	Decoder
+unit 7	Decoder 2	pixel 5,4	Output	0.5046	Decoder
+unit 8	Decoder 2	pixel 5,4	Output	0.6454	Decoder
+unit 9	Decoder 2	pixel 5,4	Output	0.3417	Decoder
+unit 10	Decoder 2	pixel 5,4	Output	0.5689	Decoder
+unit 11	Decoder 2	pixel 5,4	Output	0.0269	Decoder
+unit 12	Decoder 2	pixel 5,4	Output	0.1466	Decoder
+unit 13	Decoder 2	pixel 5,4	Output	0.8065	Decoder
+unit 14	Decoder 2	pixel 5,4	Output	0.5233	Decoder
+unit 15	Decoder 2	pixel 5,4	Output	0.787	Decoder
+unit 16	Decoder 2	pixel 5,4	Output	0.3552	Decoder
+unit 1	Decoder 2	pixel 5,5	Output	0.4416	Decoder
+unit 2	Decoder 2	pixel 5,5	Output	0.8396	Decoder
+unit 3	Decoder 2	pixel 5,5	Output	0.6817	Decoder
+unit 4	Decoder 2	pixel 5,5	Output	0.1967	Decoder
+unit 5	Decoder 2	pixel 5,5	Output	0.0765	Decoder
+unit 6	Decoder 2	pixel 5,5	Output	0.061	Decoder
+unit 7	Decoder 2	pixel 5,5	Output	0.9722	Decoder
+unit 8	Decoder 2	pixel 5,5	Output	0.5275	Decoder
+unit 9	Decoder 2	pixel 5,5	Output	0.4586	Decoder
+unit 10	Decoder 2	pixel 5,5	Output	0.5542	Decoder
+unit 11	Decoder 2	pixel 5,5	Output	0.5867	Decoder
+unit 12	Decoder 2	pixel 5,5	Output	0.3567	Decoder
+unit 13	Decoder 2	pixel 5,5	Output	0.8936	Decoder
+unit 14	Decoder 2	pixel 5,5	Output	0.0047	Decoder
+unit 15	Decoder 2	pixel 5,5	Output	0.1239	Decoder
+unit 16	Decoder 2	pixel 5,5	Output	0.7155	Decoder
+unit 1	Decoder 2	pixel 5,6	Output	0.1472	Decoder
+unit 2	Decoder 2	pixel 5,6	Output	0.0875	Decoder
+unit 3	Decoder 2	pixel 5,6	Output	0.5616	Decoder
+unit 4	Decoder 2	pixel 5,6	Output	0.3266	Decoder
+unit 5	Decoder 2	pixel 5,6	Output	0.253	Decoder
+unit 6	Decoder 2	pixel 5,6	Output	0.9647	Decoder
+unit 7	Decoder 2	pixel 5,6	Output	0.4142	Decoder
+unit 8	Decoder 2	pixel 5,6	Output	0.121	Decoder
+unit 9	Decoder 2	pixel 5,6	Output	0.0843	Decoder
+unit 10	Decoder 2	pixel 5,6	Output	0.0821	Decoder
+unit 11	Decoder 2	pixel 5,6	Output	0.5624	Decoder
+unit 12	Decoder 2	pixel 5,6	Output	0.6736	Decoder
+unit 13	Decoder 2	pixel 5,6	Output	0.7494	Decoder
+unit 14	Decoder 2	pixel 5,6	Output	0.7169	Decoder
+unit 15	Decoder 2	pixel 5,6	Output	0.6411	Decoder
+unit 16	Decoder 2	pixel 5,6	Output	0.6907	Decoder
+unit 1	Decoder 2	pixel 6,1	Output	0.9291	Decoder
+unit 2	Decoder 2	pixel 6,1	Output	0.1016	Decoder
+unit 3	Decoder 2	pixel 6,1	Output	0.6435	Decoder
+unit 4	Decoder 2	pixel 6,1	Output	0.3681	Decoder
+unit 5	Decoder 2	pixel 6,1	Output	0.6929	Decoder
+unit 6	Decoder 2	pixel 6,1	Output	0.883	Decoder
+unit 7	Decoder 2	pixel 6,1	Output	0.5589	Decoder
+unit 8	Decoder 2	pixel 6,1	Output	0.9879	Decoder
+unit 9	Decoder 2	pixel 6,1	Output	0.3174	Decoder
+unit 10	Decoder 2	pixel 6,1	Output	0.8882	Decoder
+unit 11	Decoder 2	pixel 6,1	Output	0.112	Decoder
+unit 12	Decoder 2	pixel 6,1	Output	0.8457	Decoder
+unit 13	Decoder 2	pixel 6,1	Output	0.5352	Decoder
+unit 14	Decoder 2	pixel 6,1	Output	0.2203	Decoder
+unit 15	Decoder 2	pixel 6,1	Output	0.9779	Decoder
+unit 16	Decoder 2	pixel 6,1	Output	0.5424	Decoder
+unit 1	Decoder 2	pixel 6,2	Output	0.2634	Decoder
+unit 2	Decoder 2	pixel 6,2	Output	0.7895	Decoder
+unit 3	Decoder 2	pixel 6,2	Output	0.887	Decoder
+unit 4	Decoder 2	pixel 6,2	Output	0.0379	Decoder
+unit 5	Decoder 2	pixel 6,2	Output	0.2731	Decoder
+unit 6	Decoder 2	pixel 6,2	Output	0.2712	Decoder
+unit 7	Decoder 2	pixel 6,2	Output	0.7797	Decoder
+unit 8	Decoder 2	pixel 6,2	Output	0.2055	Decoder
+unit 9	Decoder 2	pixel 6,2	Output	0.3351	Decoder
+unit 10	Decoder 2	pixel 6,2	Output	0.4932	Decoder
+unit 11	Decoder 2	pixel 6,2	Output	0.7254	Decoder
+unit 12	Decoder 2	pixel 6,2	Output	0.7287	Decoder
+unit 13	Decoder 2	pixel 6,2	Output	0.2543	Decoder
+unit 14	Decoder 2	pixel 6,2	Output	0.5393	Decoder
+unit 15	Decoder 2	pixel 6,2	Output	0.8168	Decoder
+unit 16	Decoder 2	pixel 6,2	Output	0.3881	Decoder
+unit 1	Decoder 2	pixel 6,3	Output	0.2868	Decoder
+unit 2	Decoder 2	pixel 6,3	Output	0.7783	Decoder
+unit 3	Decoder 2	pixel 6,3	Output	0.44	Decoder
+unit 4	Decoder 2	pixel 6,3	Output	0.7732	Decoder
+unit 5	Decoder 2	pixel 6,3	Output	0.9413	Decoder
+unit 6	Decoder 2	pixel 6,3	Output	0.2552	Decoder
+unit 7	Decoder 2	pixel 6,3	Output	0.5578	Decoder
+unit 8	Decoder 2	pixel 6,3	Output	0.4787	Decoder
+unit 9	Decoder 2	pixel 6,3	Output	0.4535	Decoder
+unit 10	Decoder 2	pixel 6,3	Output	0.2478	Decoder
+unit 11	Decoder 2	pixel 6,3	Output	0.8308	Decoder
+unit 12	Decoder 2	pixel 6,3	Output	0.5584	Decoder
+unit 13	Decoder 2	pixel 6,3	Output	0.1593	Decoder
+unit 14	Decoder 2	pixel 6,3	Output	0.7892	Decoder
+unit 15	Decoder 2	pixel 6,3	Output	0.3176	Decoder
+unit 16	Decoder 2	pixel 6,3	Output	0.3282	Decoder
+unit 1	Decoder 2	pixel 6,4	Output	0.8733	Decoder
+unit 2	Decoder 2	pixel 6,4	Output	0.4274	Decoder
+unit 3	Decoder 2	pixel 6,4	Output	0.5703	Decoder
+unit 4	Decoder 2	pixel 6,4	Output	0.336	Decoder
+unit 5	Decoder 2	pixel 6,4	Output	0.867	Decoder
+unit 6	Decoder 2	pixel 6,4	Output	0.9691	Decoder
+unit 7	Decoder 2	pixel 6,4	Output	0.0147	Decoder
+unit 8	Decoder 2	pixel 6,4	Output	0.2703	Decoder
+unit 9	Decoder 2	pixel 6,4	Output	0.6463	Decoder
+unit 10	Decoder 2	pixel 6,4	Output	0.1226	Decoder
+unit 11	Decoder 2	pixel 6,4	Output	0.3727	Decoder
+unit 12	Decoder 2	pixel 6,4	Output	0.4502	Decoder
+unit 13	Decoder 2	pixel 6,4	Output	0.652	Decoder
+unit 14	Decoder 2	pixel 6,4	Output	0.4039	Decoder
+unit 15	Decoder 2	pixel 6,4	Output	0.7741	Decoder
+unit 16	Decoder 2	pixel 6,4	Output	0.9911	Decoder
+unit 1	Decoder 2	pixel 6,5	Output	0.6115	Decoder
+unit 2	Decoder 2	pixel 6,5	Output	0.0546	Decoder
+unit 3	Decoder 2	pixel 6,5	Output	0.0062	Decoder
+unit 4	Decoder 2	pixel 6,5	Output	0.8394	Decoder
+unit 5	Decoder 2	pixel 6,5	Output	0.0463	Decoder
+unit 6	Decoder 2	pixel 6,5	Output	0.7983	Decoder
+unit 7	Decoder 2	pixel 6,5	Output	0.5855	Decoder
+unit 8	Decoder 2	pixel 6,5	Output	0.8591	Decoder
+unit 9	Decoder 2	pixel 6,5	Output	0.7363	Decoder
+unit 10	Decoder 2	pixel 6,5	Output	0.3815	Decoder
+unit 11	Decoder 2	pixel 6,5	Output	0.0767	Decoder
+unit 12	Decoder 2	pixel 6,5	Output	0.0182	Decoder
+unit 13	Decoder 2	pixel 6,5	Output	0.2571	Decoder
+unit 14	Decoder 2	pixel 6,5	Output	0.8687	Decoder
+unit 15	Decoder 2	pixel 6,5	Output	0.0462	Decoder
+unit 16	Decoder 2	pixel 6,5	Output	0.3331	Decoder
+unit 1	Decoder 2	pixel 6,6	Output	0.4307	Decoder
+unit 2	Decoder 2	pixel 6,6	Output	0.5769	Decoder
+unit 3	Decoder 2	pixel 6,6	Output	0.0281	Decoder
+unit 4	Decoder 2	pixel 6,6	Output	0.0921	Decoder
+unit 5	Decoder 2	pixel 6,6	Output	0.6244	Decoder
+unit 6	Decoder 2	pixel 6,6	Output	0.6725	Decoder
+unit 7	Decoder 2	pixel 6,6	Output	0.2899	Decoder
+unit 8	Decoder 2	pixel 6,6	Output	0.041	Decoder
+unit 9	Decoder 2	pixel 6,6	Output	0.8653	Decoder
+unit 10	Decoder 2	pixel 6,6	Output	0.3805	Decoder
+unit 11	Decoder 2	pixel 6,6	Output	0.6763	Decoder
+unit 12	Decoder 2	pixel 6,6	Output	0.525	Decoder
+unit 13	Decoder 2	pixel 6,6	Output	0.8372	Decoder
+unit 14	Decoder 2	pixel 6,6	Output	0.9373	Decoder
+unit 15	Decoder 2	pixel 6,6	Output	0.8636	Decoder
+unit 16	Decoder 2	pixel 6,6	Output	0.6093	Decoder

@@ -41,8 +41,8 @@ const LISTED = 12 // communities listed in the summary, largest first
 
 const HTML = `
 <div class="col-md-8 col-lg-6 layout-panel clustering-panel">
-  <section class="lp-section">
-    <h6 class="lp-title">Clustering</h6>
+  <details class="lp-section lp-more" id="clusterCard_run" open>
+    <summary>Clustering</summary>
     <div class="form-text mt-0 mb-2">Find communities without moving the nodes: they colour the nodes, fill Data Tables → Clustering Data, and can be saved as an annotation set for pies, hulls, fog clouds and the Layout panel's Group Layout card — like an annotation file.</div>
     <div class="lp-grid mb-2">
       <div>
@@ -66,15 +66,15 @@ const HTML = `
     </div>
     ${PROGRESS_HTML('clusterProgress', 'Clustering progress')}
     <div id="cluster_status" class="small mt-2"></div>
-  </section>
+  </details>
 
-  <section class="lp-section">
-    <h6 class="lp-title">Communities</h6>
+  <details class="lp-section lp-more" id="clusterCard_communities" open>
+    <summary>Communities</summary>
     <div id="clusterSummary" class="small"></div>
     <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
       <button id="clustersToGroupLayout" class="btn btn-outline-primary btn-sm" disabled title="Layout → Group Layout (NORMA-2.0), with the clusters as groups">Lay Out by Cluster…</button>
     </div>
-  </section>
+  </details>
 </div>
 `
 

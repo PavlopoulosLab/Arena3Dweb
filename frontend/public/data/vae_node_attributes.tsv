@@ -1,0 +1,133 @@
+Node	Layer	Color	Size	Description
+pixel 1,1	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (1, 1); intensity 0.00.
+pixel 1,2	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (1, 2); intensity 1.00.
+pixel 1,3	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (1, 3); intensity 1.00.
+pixel 1,4	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (1, 4); intensity 1.00.
+pixel 1,5	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (1, 5); intensity 1.00.
+pixel 1,6	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (1, 6); intensity 0.00.
+pixel 2,1	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (2, 1); intensity 0.00.
+pixel 2,2	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (2, 2); intensity 0.00.
+pixel 2,3	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (2, 3); intensity 0.00.
+pixel 2,4	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (2, 4); intensity 0.00.
+pixel 2,5	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (2, 5); intensity 1.00.
+pixel 2,6	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (2, 6); intensity 1.00.
+pixel 3,1	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (3, 1); intensity 0.00.
+pixel 3,2	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (3, 2); intensity 0.00.
+pixel 3,3	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (3, 3); intensity 1.00.
+pixel 3,4	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (3, 4); intensity 1.00.
+pixel 3,5	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (3, 5); intensity 1.00.
+pixel 3,6	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (3, 6); intensity 0.00.
+pixel 4,1	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (4, 1); intensity 0.00.
+pixel 4,2	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (4, 2); intensity 0.00.
+pixel 4,3	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (4, 3); intensity 0.00.
+pixel 4,4	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (4, 4); intensity 0.00.
+pixel 4,5	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (4, 5); intensity 1.00.
+pixel 4,6	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (4, 6); intensity 1.00.
+pixel 5,1	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (5, 1); intensity 0.00.
+pixel 5,2	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (5, 2); intensity 1.00.
+pixel 5,3	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (5, 3); intensity 1.00.
+pixel 5,4	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (5, 4); intensity 1.00.
+pixel 5,5	Input	#ffffff	1.2	Input: a 6×6 drawing of the digit 3, pixel (5, 5); intensity 1.00.
+pixel 5,6	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (5, 6); intensity 0.00.
+pixel 6,1	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (6, 1); intensity 0.00.
+pixel 6,2	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (6, 2); intensity 0.00.
+pixel 6,3	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (6, 3); intensity 0.00.
+pixel 6,4	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (6, 4); intensity 0.00.
+pixel 6,5	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (6, 5); intensity 0.00.
+pixel 6,6	Input	#3b4a5c	0.5	Input: a 6×6 drawing of the digit 3, pixel (6, 6); intensity 0.00.
+unit 1	Encoder 1	#66c2a5	0.8	Encoder unit 1 of 16.
+unit 2	Encoder 1	#66c2a5	0.8	Encoder unit 2 of 16.
+unit 3	Encoder 1	#66c2a5	0.8	Encoder unit 3 of 16.
+unit 4	Encoder 1	#66c2a5	0.8	Encoder unit 4 of 16.
+unit 5	Encoder 1	#66c2a5	0.8	Encoder unit 5 of 16.
+unit 6	Encoder 1	#66c2a5	0.8	Encoder unit 6 of 16.
+unit 7	Encoder 1	#66c2a5	0.8	Encoder unit 7 of 16.
+unit 8	Encoder 1	#66c2a5	0.8	Encoder unit 8 of 16.
+unit 9	Encoder 1	#66c2a5	0.8	Encoder unit 9 of 16.
+unit 10	Encoder 1	#66c2a5	0.8	Encoder unit 10 of 16.
+unit 11	Encoder 1	#66c2a5	0.8	Encoder unit 11 of 16.
+unit 12	Encoder 1	#66c2a5	0.8	Encoder unit 12 of 16.
+unit 13	Encoder 1	#66c2a5	0.8	Encoder unit 13 of 16.
+unit 14	Encoder 1	#66c2a5	0.8	Encoder unit 14 of 16.
+unit 15	Encoder 1	#66c2a5	0.8	Encoder unit 15 of 16.
+unit 16	Encoder 1	#66c2a5	0.8	Encoder unit 16 of 16.
+unit 1	Encoder 2	#66c2a5	0.8	Encoder unit 1 of 8.
+unit 2	Encoder 2	#66c2a5	0.8	Encoder unit 2 of 8.
+unit 3	Encoder 2	#66c2a5	0.8	Encoder unit 3 of 8.
+unit 4	Encoder 2	#66c2a5	0.8	Encoder unit 4 of 8.
+unit 5	Encoder 2	#66c2a5	0.8	Encoder unit 5 of 8.
+unit 6	Encoder 2	#66c2a5	0.8	Encoder unit 6 of 8.
+unit 7	Encoder 2	#66c2a5	0.8	Encoder unit 7 of 8.
+unit 8	Encoder 2	#66c2a5	0.8	Encoder unit 8 of 8.
+μ 1	Latent μ, log σ²	#fc8d62	0.489	Mean of latent dimension 1: +0.22.
+μ 2	Latent μ, log σ²	#fc8d62	0.779	Mean of latent dimension 2: -0.68.
+μ 3	Latent μ, log σ²	#fc8d62	0.619	Mean of latent dimension 3: -0.42.
+log σ² 1	Latent μ, log σ²	#e78ac3	0.8	Log-variance of latent dimension 1: -0.43 (σ = 0.81).
+log σ² 2	Latent μ, log σ²	#e78ac3	0.8	Log-variance of latent dimension 2: -0.90 (σ = 0.64).
+log σ² 3	Latent μ, log σ²	#e78ac3	0.8	Log-variance of latent dimension 3: -1.47 (σ = 0.48).
+ε 1	Sample z	#b3b3b3	0.6	Random noise ε for latent dimension 1: -1.19, drawn from N(0, 1).
+z 1	Sample z	#ffd92f	1	Latent code z1 = μ + σ·ε = -0.74 (the reparameterisation trick).
+ε 2	Sample z	#b3b3b3	0.6	Random noise ε for latent dimension 2: -1.46, drawn from N(0, 1).
+z 2	Sample z	#ffd92f	1	Latent code z2 = μ + σ·ε = -1.60 (the reparameterisation trick).
+ε 3	Sample z	#b3b3b3	0.6	Random noise ε for latent dimension 3: -0.87, drawn from N(0, 1).
+z 3	Sample z	#ffd92f	1	Latent code z3 = μ + σ·ε = -0.84 (the reparameterisation trick).
+unit 1	Decoder 1	#8da0cb	0.8	Decoder unit 1 of 8.
+unit 2	Decoder 1	#8da0cb	0.8	Decoder unit 2 of 8.
+unit 3	Decoder 1	#8da0cb	0.8	Decoder unit 3 of 8.
+unit 4	Decoder 1	#8da0cb	0.8	Decoder unit 4 of 8.
+unit 5	Decoder 1	#8da0cb	0.8	Decoder unit 5 of 8.
+unit 6	Decoder 1	#8da0cb	0.8	Decoder unit 6 of 8.
+unit 7	Decoder 1	#8da0cb	0.8	Decoder unit 7 of 8.
+unit 8	Decoder 1	#8da0cb	0.8	Decoder unit 8 of 8.
+unit 1	Decoder 2	#8da0cb	0.8	Decoder unit 1 of 16.
+unit 2	Decoder 2	#8da0cb	0.8	Decoder unit 2 of 16.
+unit 3	Decoder 2	#8da0cb	0.8	Decoder unit 3 of 16.
+unit 4	Decoder 2	#8da0cb	0.8	Decoder unit 4 of 16.
+unit 5	Decoder 2	#8da0cb	0.8	Decoder unit 5 of 16.
+unit 6	Decoder 2	#8da0cb	0.8	Decoder unit 6 of 16.
+unit 7	Decoder 2	#8da0cb	0.8	Decoder unit 7 of 16.
+unit 8	Decoder 2	#8da0cb	0.8	Decoder unit 8 of 16.
+unit 9	Decoder 2	#8da0cb	0.8	Decoder unit 9 of 16.
+unit 10	Decoder 2	#8da0cb	0.8	Decoder unit 10 of 16.
+unit 11	Decoder 2	#8da0cb	0.8	Decoder unit 11 of 16.
+unit 12	Decoder 2	#8da0cb	0.8	Decoder unit 12 of 16.
+unit 13	Decoder 2	#8da0cb	0.8	Decoder unit 13 of 16.
+unit 14	Decoder 2	#8da0cb	0.8	Decoder unit 14 of 16.
+unit 15	Decoder 2	#8da0cb	0.8	Decoder unit 15 of 16.
+unit 16	Decoder 2	#8da0cb	0.8	Decoder unit 16 of 16.
+pixel 1,1	Output	#576473	0.6	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (1, 1); intensity 0.14.
+pixel 1,2	Output	#737e8b	0.7	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (1, 2); intensity 0.29.
+pixel 1,3	Output	#8f98a2	0.8	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (1, 3); intensity 0.43.
+pixel 1,4	Output	#abb1b9	0.9	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (1, 4); intensity 0.57.
+pixel 1,5	Output	#abb1b9	0.9	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (1, 5); intensity 0.57.
+pixel 1,6	Output	#8f98a2	0.8	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (1, 6); intensity 0.43.
+pixel 2,1	Output	#576473	0.6	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (2, 1); intensity 0.14.
+pixel 2,2	Output	#8f98a2	0.8	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (2, 2); intensity 0.43.
+pixel 2,3	Output	#c7cbd0	1	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (2, 3); intensity 0.71.
+pixel 2,4	Output	#ffffff	1.2	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (2, 4); intensity 1.00.
+pixel 2,5	Output	#e3e5e8	1.1	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (2, 5); intensity 0.86.
+pixel 2,6	Output	#abb1b9	0.9	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (2, 6); intensity 0.57.
+pixel 3,1	Output	#3b4a5c	0.5	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (3, 1); intensity 0.00.
+pixel 3,2	Output	#576473	0.6	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (3, 2); intensity 0.14.
+pixel 3,3	Output	#737e8b	0.7	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (3, 3); intensity 0.29.
+pixel 3,4	Output	#c7cbd0	1	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (3, 4); intensity 0.71.
+pixel 3,5	Output	#e3e5e8	1.1	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (3, 5); intensity 0.86.
+pixel 3,6	Output	#c7cbd0	1	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (3, 6); intensity 0.71.
+pixel 4,1	Output	#576473	0.6	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (4, 1); intensity 0.14.
+pixel 4,2	Output	#8f98a2	0.8	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (4, 2); intensity 0.43.
+pixel 4,3	Output	#c7cbd0	1	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (4, 3); intensity 0.71.
+pixel 4,4	Output	#ffffff	1.2	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (4, 4); intensity 1.00.
+pixel 4,5	Output	#e3e5e8	1.1	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (4, 5); intensity 0.86.
+pixel 4,6	Output	#abb1b9	0.9	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (4, 6); intensity 0.57.
+pixel 5,1	Output	#576473	0.6	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (5, 1); intensity 0.14.
+pixel 5,2	Output	#737e8b	0.7	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (5, 2); intensity 0.29.
+pixel 5,3	Output	#8f98a2	0.8	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (5, 3); intensity 0.43.
+pixel 5,4	Output	#abb1b9	0.9	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (5, 4); intensity 0.57.
+pixel 5,5	Output	#abb1b9	0.9	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (5, 5); intensity 0.57.
+pixel 5,6	Output	#8f98a2	0.8	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (5, 6); intensity 0.43.
+pixel 6,1	Output	#576473	0.6	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (6, 1); intensity 0.14.
+pixel 6,2	Output	#737e8b	0.7	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (6, 2); intensity 0.29.
+pixel 6,3	Output	#8f98a2	0.8	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (6, 3); intensity 0.43.
+pixel 6,4	Output	#8f98a2	0.8	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (6, 4); intensity 0.43.
+pixel 6,5	Output	#737e8b	0.7	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (6, 5); intensity 0.29.
+pixel 6,6	Output	#576473	0.6	Reconstruction (drawn as a blurred copy of the input, not computed): pixel (6, 6); intensity 0.14.

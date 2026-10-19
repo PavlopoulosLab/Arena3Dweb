@@ -45,6 +45,7 @@ test('resolution, node detail, presets and live stats', async ({ page }) => {
     .dispatchEvent('click')
   await expect(page.locator('#panel-fps')).toHaveClass(/show/)
 
+  await page.locator('#perfCard_rendering > summary').click() // starts folded
   await page.locator('#perf_scale').selectOption('0.5')
   await expect.poll(async () => (await read(page)).ratio).toBe(0.5)
   await page.locator('#perf_detail').selectOption('high')

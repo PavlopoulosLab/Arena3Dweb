@@ -170,6 +170,20 @@ export interface LayoutRequest {
   alignment_strength?: number
   reference_layer?: string | null
   channel_weights?: Record<string, number> | null
+  umap?: UmapOptions | null // algorithm 'UMAP' only
+}
+
+// backend models/layout.py UmapOptions (services/umap_layout.py)
+export type UmapMode = 'topology' | 'attributes' | 'hybrid'
+export interface UmapOptions {
+  mode: UmapMode
+  n_neighbors?: number
+  min_dist?: number
+  metric?: 'euclidean' | 'cosine'
+  balance?: number // hybrid: 0 = topology .. 1 = attributes
+  feature_names?: string[]
+  features?: Record<string, (number | null)[]> | null // Node_Layer id -> row
+  metrics?: string[] // node metrics computed on the server
 }
 
 // [y, z] in the layer plane; a 3D layout (dimensions: 3) adds x = depth
@@ -222,11 +236,16 @@ export async function errorMessage(res: Response): Promise<string> {
   return text.trim() || `Server error ${res.status}.`
 }
 
-async function post<T>(path: string, body: unknown): Promise<T> {
+async function post<T>(
+  path: string,
+  body: unknown,
+  signal?: AbortSignal
+): Promise<T> {
   const res = await fetch(path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
+    signal,
   })
   if (!res.ok) throw new Error(await errorMessage(res))
   return res.json() as Promise<T>
@@ -237,11 +256,15 @@ async function post<T>(path: string, body: unknown): Promise<T> {
 function postJson<T>(
   path: string,
   body: unknown,
-  onProgress?: UploadProgress
+  onProgress?: UploadProgress,
+  signal?: AbortSignal
 ): Promise<T> {
-  if (!onProgress) return post<T>(path, body)
+  if (!onProgress) return post<T>(path, body, signal)
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
+    // Cancel: the request stops here (the server finishes its own run)
+    signal?.addEventListener('abort', () => xhr.abort())
+    xhr.onabort = () => reject(new DOMException('Cancelled', 'AbortError'))
     xhr.open('POST', path)
     xhr.setRequestHeader('Content-Type', 'application/json')
     xhr.upload.onprogress = (e) => {
@@ -335,6 +358,134 @@ export interface GraphStats {
   transitivity: number
   assortativity: number | null
   degree_distribution: Record<string, number>
+}
+
+// POST /api/perturbation/knockout and /attack (backend models/perturbation.py)
+export type RankMetric = 'degree' | 'betweenness' | 'pagerank'
+export type AttackStrategy = 'random' | 'degree' | 'betweenness'
+
+interface PerturbationBase {
+  nodes: NodeModel[]
+  edges: EdgeModel[]
+  layers: string[]
+  selected_channels?: string[] | null
+}
+
+export interface KnockoutRequest extends PerturbationBase {
+  remove_nodes?: string[] // Node_Layer ids
+  remove_names?: string[] // every analysed copy, any case
+  top_k?: { metric: RankMetric; k: number; per_layer?: boolean } | null
+  every_copy?: boolean
+  remove_edges?: { src: string; trg: string }[] // every channel of the pair
+  remove_channels?: string[]
+  remove_inter_layer?: boolean
+  random_edge_fraction?: number
+  seed?: number
+  propagation_seeds?: string[]
+  restart?: number
+}
+
+export interface GlobalMeasures {
+  name: string
+  nodes: number
+  edges: number
+  components: number
+  largest_component: number
+  density: number
+  average_path_length: number
+  diameter: number
+  efficiency: number
+  cut_off: number
+}
+
+export interface NodeChange {
+  id: string
+  label: string
+  layer: string
+  removed: boolean
+  cut_off_layer: boolean
+  cut_off_whole: boolean
+  degree: number
+  degree_after: number | null
+  betweenness: number
+  betweenness_after: number | null
+  closeness: number
+  closeness_after: number | null
+  propagation: number | null
+  propagation_after: number | null
+}
+
+export interface KnockoutResponse {
+  removed_nodes: string[]
+  removed_edges: number[] // indices into the request's edges
+  before: GlobalMeasures[]
+  after: GlobalMeasures[]
+  nodes: NodeChange[]
+  warnings: string[]
+}
+
+export interface AttackRequest extends PerturbationBase {
+  strategy: AttackStrategy
+  recalculate?: boolean
+  runs?: number
+  steps?: number
+  max_fraction?: number
+  efficiency?: boolean
+  seed?: number
+  whole_only?: boolean // only the whole network's curve
+}
+
+export interface Curve {
+  name: string
+  nodes: number
+  fraction: number[]
+  largest: number[]
+  largest_sd: number[] | null
+  components: number[]
+  efficiency: number[] | null
+  robustness: number
+  complete: boolean
+}
+
+export interface AttackResponse {
+  strategy: AttackStrategy
+  recalculate: boolean
+  curves: Curve[]
+  warnings: string[]
+}
+
+// POST /api/plots (backend models/plots.py)
+export type PlotScope = 'perLayer' | 'combined'
+export type PlotExtra =
+  | 'components'
+  | 'paths'
+  | 'clustering_by_degree'
+  | 'neighbour_degree'
+  | 'rich_club'
+
+export interface PlotRequest extends PerturbationBase {
+  scope: PlotScope
+  metrics?: string[]
+  extras?: PlotExtra[]
+  rich_club_random?: number // rewired graphs to normalise by (0 = raw)
+  seed?: number
+}
+
+export interface PlotScopeData {
+  name: string
+  nodes: string[]
+  metrics: Record<string, number[]> // in `nodes` order
+  components: number[] | null
+  path_lengths: Record<string, number> | null // hops -> pairs
+  unconnected: number | null
+  clustering_by_degree: [number, number][] | null
+  neighbour_degree: [number, number][] | null
+  rich_club: { k: number; phi: number; phi_random: number | null }[] | null
+}
+
+export interface PlotResponse {
+  scopes: PlotScopeData[]
+  warnings: string[]
 }
 
 export interface LayerSimilarityResponse {
@@ -487,6 +638,21 @@ export const api = {
     max_terms?: number
     categories?: string[] | null
   }) => post<EnrichedTerm[]>('/api/enrichment', req),
+  knockout: (
+    req: KnockoutRequest,
+    onProgress?: UploadProgress,
+    signal?: AbortSignal
+  ) =>
+    postJson<KnockoutResponse>(
+      '/api/perturbation/knockout',
+      req,
+      onProgress,
+      signal
+    ),
+  plots: (req: PlotRequest, signal?: AbortSignal) =>
+    post<PlotResponse>('/api/plots', req, signal),
+  attack: (req: AttackRequest, signal?: AbortSignal) =>
+    post<AttackResponse>('/api/perturbation/attack', req, signal),
   networkStats: (req: {
     nodes: NodeModel[]
     edges: EdgeModel[]

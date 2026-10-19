@@ -2,7 +2,14 @@
 // way in (an example, your own file, a database import), then how to cite it.
 
 import { showTab } from './tabs'
-import { EXAMPLES, loadExample } from './file'
+import { EXAMPLES, exampleOptions, loadExample } from './file'
+import {
+  PUBLICATIONS,
+  citationText,
+  copyCitation,
+  reference,
+  webName,
+} from './about'
 
 const IMG = `${import.meta.env.BASE_URL}images/help`
 
@@ -172,20 +179,7 @@ const STEPS: [string, string][] = [
   ],
 ]
 
-const CITATIONS: [string, string, string, string][] = [
-  [
-    'Kokoli M, Karatzas E, Baltoumas FA, Schneider R, Pafilis E, Paragkamian S, Doncheva NT, Jensen LJ, Pavlopoulos GA (2023). Arena3Dweb: interactive 3D visualization of multilayered networks supporting multiple directional information channels, clustering analysis and application integration. NAR Genomics and Bioinformatics 5(2):lqad053.',
-    'NAR Genomics and Bioinformatics, 2023',
-    '10.1093/nargab/lqad053',
-    '37260509',
-  ],
-  [
-    'Karatzas E, Baltoumas FA, Panayiotou NA, Schneider R, Pavlopoulos GA (2021). Arena3Dweb: interactive 3D visualization of multilayered networks. Nucleic Acids Research 49(W1):W36–W45.',
-    'Nucleic Acids Research, 2021',
-    '10.1093/nar/gkab278',
-    '33885790',
-  ],
-]
+const CITATIONS = PUBLICATIONS.filter((p) => p.cite)
 
 const exampleIndex = (file: string) =>
   EXAMPLES.findIndex((e) => e.file === file)
@@ -262,7 +256,7 @@ const HOME_HTML = `
     <div class="home-allexamples">
       <label class="home-allexamples__label" for="homeExampleChoice">All examples</label>
       <select id="homeExampleChoice" class="form-select form-select-sm">
-        ${EXAMPLES.map((e, i) => `<option value="${i}">${e.label}</option>`).join('')}
+        ${exampleOptions()}
       </select>
       <button id="homeLoadExample" class="btn btn-outline-primary btn-sm text-nowrap">Load Example</button>
     </div>
@@ -272,13 +266,13 @@ const HOME_HTML = `
     <h2 class="home-h2">Please cite Arena3D</h2>
     <div class="home-cite__grid">
       ${CITATIONS.map(
-        ([text, venue, doi, pmid], k) => `
+        (p, k) => `
       <article class="home-cite__card">
-        <span class="home-cite__venue">${venue}</span>
-        <p class="home-cite__text" id="homeCite${k}">${text.replace('Arena3Dweb', 'Arena3D<sup>web</sup>')}</p>
+        <span class="home-cite__venue">${p.journal}, ${p.year}</span>
+        <p class="home-cite__text" id="homeCite${k}">${webName(reference(p))}</p>
         <div class="home-cite__links">
-          <a href="https://doi.org/${doi}" target="_blank" rel="noopener">doi:${doi}</a>
-          <a href="https://pubmed.ncbi.nlm.nih.gov/${pmid}/" target="_blank" rel="noopener">PubMed ${pmid}</a>
+          <a href="https://doi.org/${p.doi}" target="_blank" rel="noopener">doi:${p.doi}</a>
+          <a href="https://pubmed.ncbi.nlm.nih.gov/${p.pmid}/" target="_blank" rel="noopener">PubMed ${p.pmid}</a>
           <button type="button" class="home-cite__copy" data-cite="${k}">Copy citation</button>
         </div>
       </article>`
@@ -319,17 +313,11 @@ export function initHomePanel(): void {
     ) as HTMLSelectElement
     void loadExample(Number(choice.value))
   })
-  pane.querySelectorAll<HTMLButtonElement>('.home-cite__copy').forEach((b) =>
-    b.addEventListener('click', () => {
-      const text = CITATIONS[Number(b.dataset.cite)][0]
-      const done = (msg: string) => {
-        b.textContent = msg
-        setTimeout(() => (b.textContent = 'Copy citation'), 1800)
-      }
-      navigator.clipboard
-        .writeText(text)
-        .then(() => done('Copied'))
-        .catch(() => done('Copy failed'))
-    })
-  )
+  pane
+    .querySelectorAll<HTMLButtonElement>('.home-cite__copy')
+    .forEach((b) =>
+      b.addEventListener('click', () =>
+        copyCitation(b, citationText(CITATIONS[Number(b.dataset.cite)]))
+      )
+    )
 }

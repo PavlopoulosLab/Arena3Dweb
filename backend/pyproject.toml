@@ -10,6 +10,7 @@ dependencies = [
     "pydantic>=2.8.0",
     "python-multipart>=0.0.9",
     "leidenalg>=0.12.0",
+    "umap-learn>=0.5.12",
 ]
 
 [dependency-groups]
@@ -36,7 +37,7 @@ python_version = "3.12"  # numpy/pandas stubs require 3.12+ type syntax
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["igraph.*", "leidenalg.*"]
+module = ["igraph.*", "leidenalg.*", "scipy.*", "umap.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

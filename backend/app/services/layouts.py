@@ -14,8 +14,8 @@ from collections.abc import Callable
 import igraph as ig
 
 from app import config
-from app.models.layout import ClusteringRequest, LayoutRequest
-from app.models.network import EdgeModel
+from app.models.layout import ClusteringRequest, LayoutRequest, UmapOptions
+from app.models.network import EdgeModel, NodeModel
 from app.services import graph as g
 from app.services.alignment import AlignmentError, aligned_layout
 from app.services.clustering import (
@@ -26,6 +26,7 @@ from app.services.clustering import (
 )
 from app.services.group_layouts import GroupLayoutError, group_layout
 from app.services.multilayer import multiplex_membership
+from app.services.umap_layout import UmapError, embed
 
 # [y, z] in the layer plane, or [y, z, x] when dimensions=3 (x = depth)
 Position = tuple[float, float] | tuple[float, float, float]
@@ -91,9 +92,18 @@ def check_layout_size(algorithm: str, vcount: int) -> None:
         )
 
 
+# Not an igraph layout: services/umap_layout.py, in 2D or 3D, every scope
+UMAP = "UMAP"
+
+
 def compute_layout(
     req: LayoutRequest,
 ) -> tuple[dict[str, Position], dict[str, int] | None]:
+    if req.algorithm == UMAP:
+        try:
+            return _umap_layout(req), None
+        except UmapError as e:
+            raise LayoutError(str(e)) from e
     if req.algorithm not in LAYOUTS:
         raise LayoutError(f"Unknown layout algorithm: {req.algorithm}")
     if req.clustering and req.clustering.local_layout not in LAYOUTS:
@@ -158,6 +168,80 @@ def compute_layout(
         clusters.update(clu)
 
     return positions, (clusters if req.clustering else None)
+
+
+def _umap_layout(req: LayoutRequest) -> dict[str, Position]:
+    """UMAP per layer, over the selected layers as one graph, on the selected
+    nodes, or once on the label-merged graph with every copy at its label's spot."""
+    if req.clustering or req.alignment != "none" or req.group_strategy != "none":
+        raise LayoutError("UMAP runs without clustering, alignment or group layouts.")
+    opts = req.umap or UmapOptions()
+    features = opts.features or {}
+    edges = g.filter_edges(req.edges, req.selected_channels)
+    selected = set(req.selected_layers)
+
+    def run(
+        scoped: list[EdgeModel], ids: list[str], feats: dict[str, list[float | None]]
+    ) -> dict[str, tuple[float, ...]]:
+        graph = g.build_graph(
+            scoped,
+            remove_multiple=True,
+            extra_vertices=ids,
+            channel_weights=req.channel_weights if req.use_weights else None,
+        )
+        if graph.vcount() == 0:
+            return {}
+        return embed(
+            graph,
+            feats,
+            opts,
+            use_weights=req.use_weights,
+            dim=req.dimensions,
+            seed=req.seed,
+        )
+
+    if req.scope == "coupled":
+        members = [n for n in req.nodes if n.layer in selected]
+        labels = list(dict.fromkeys(n.label for n in members))
+        merged = g.merge_by_label(g.within_layers_edges(edges, selected))
+        pos = run(merged, labels, _features_by_label(members, features))
+        return {n.id: _position(pos[n.label]) for n in members if n.label in pos}
+
+    if req.scope == "nodesPerLayers":
+        chosen = set(req.selected_nodes or [])
+        edges = [e for e in edges if e.src in chosen and e.trg in chosen]
+    positions: dict[str, Position] = {}
+    scopes = [selected] if req.scope == "allLayers" else [{layer} for layer in req.selected_layers]
+    for layers in scopes:
+        scoped = (
+            g.within_layers_edges(edges, layers)
+            if req.scope == "allLayers"
+            else g.intra_layer_edges(edges, next(iter(layers)))
+        )
+        for name, p in run(scoped, _layer_nodes(req, layers), features).items():
+            positions[name] = _position(p)
+    return positions
+
+
+def _position(p: tuple[float, ...]) -> Position:
+    return (p[0], p[1]) if len(p) == 2 else (p[0], p[1], p[2])
+
+
+def _features_by_label(
+    members: list[NodeModel], features: dict[str, list[float | None]]
+) -> dict[str, list[float | None]]:
+    """The copies of a node share one point: their features are averaged."""
+    rows: dict[str, list[list[float | None]]] = {}
+    for n in members:
+        if n.id in features:
+            rows.setdefault(n.label, []).append(features[n.id])
+    out: dict[str, list[float | None]] = {}
+    for label, copies in rows.items():
+        out[label] = []
+        for column in zip(*copies, strict=True):
+            known = [v for v in column if v is not None]
+            out[label].append(sum(known) / len(known) if known else None)
+    return out
 
 
 def _group_layouts(req: LayoutRequest, edges: list[EdgeModel]) -> dict[str, Position]:

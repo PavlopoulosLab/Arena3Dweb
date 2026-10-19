@@ -59,9 +59,15 @@ test('annotation pies and hulls from a node attribute file', async ({
   await expect(page.locator('#file_status')).toContainText('attributes')
 
   await page
-    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .getByRole('tab', {
+      name: 'Annotations & Groups',
+      includeHidden: true,
+      exact: true,
+    })
     .dispatchEvent('click')
-  await page.locator('#annotation_card summary').click()
+  await page
+    .locator('#annotation_card')
+    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
   await page.locator('#showPies').check()
   expect((await page.evaluate(counts)).pies).toBe(3)
   await page.locator('#hull_annotation').check()
@@ -73,7 +79,11 @@ test('annotation pies and hulls from a node attribute file', async ({
   await page.waitForTimeout(400)
   await page.screenshot({ path: 'test-results/annotation-hulls.png' })
   await page
-    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .getByRole('tab', {
+      name: 'Annotations & Groups',
+      includeHidden: true,
+      exact: true,
+    })
     .dispatchEvent('click')
   // NORMA-style fog clouds: one cloud (of soft sprites) per group
   await page.locator('#hullStyle_fog').check()
@@ -113,7 +123,11 @@ test('annotation pies and hulls from a node attribute file', async ({
   await page.waitForTimeout(400)
   await page.screenshot({ path: 'test-results/annotation-fog.png' })
   await page
-    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .getByRole('tab', {
+      name: 'Annotations & Groups',
+      includeHidden: true,
+      exact: true,
+    })
     .dispatchEvent('click')
   await page.locator('#hull_none').check()
   expect((await page.evaluate(counts)).hulls).toBe(0)
@@ -152,9 +166,15 @@ test('enrichment of selected nodes annotates them', async ({ page }) => {
   })
 
   await page
-    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .getByRole('tab', {
+      name: 'Annotations & Groups',
+      includeHidden: true,
+      exact: true,
+    })
     .dispatchEvent('click')
-  await page.locator('#annotation_card summary').click()
+  await page
+    .locator('#annotation_card')
+    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
   await page.locator('#runEnrichment').click()
   await expect(page.locator('#enrich_status')).toContainText(
     'Select some nodes'

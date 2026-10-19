@@ -79,8 +79,10 @@ test('find communities, then use them as annotations; both undoable', async ({
   const annotated = await read(page)
   expect(annotated.annotated).toBe(annotated.clustered)
   expect(annotated.firstAnnotation).toMatch(/^Cluster \d+$/)
-  await tab(page, 'Analysis')
-  await page.locator('#annotation_card summary').dispatchEvent('click')
+  await tab(page, 'Annotations & Groups')
+  await page
+    .locator('#annotation_card')
+    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
   await expect(page.locator('#showPies')).toBeEnabled()
 
   await page.locator('#undoButton').dispatchEvent('click')

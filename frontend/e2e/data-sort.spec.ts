@@ -79,7 +79,7 @@ test('reports sort by a column, largest first, then the other way', async ({
     buffer: Buffer.from('Alpha\t1, 2, 3\nBeta\t3;4;5;6;7;8\nGamma\t9\n'),
   })
   await expect(page.locator('#file_status')).toContainText('3 groups applied')
-  await tab(page, 'Analysis')
+  await tab(page, 'Annotations & Groups')
   await page.locator('#groupsStats').dispatchEvent('click')
   await expect(page.locator('#panel-data')).toHaveClass(/active/)
   const stats = '#dataPane-groupStats'

@@ -1,5 +1,5 @@
 import { ctx } from '../three'
-// "Explore" card of the Analysis panel — PLAN-ROADMAP Phase 7, with the
+// Analyze → Explore — PLAN-ROADMAP Phase 7, with the
 // whole-selection tools and the live highlight of paths between selected nodes.
 
 import { bus } from '../bus'
@@ -24,8 +24,8 @@ import {
 } from '../actions/explore'
 
 export const EXPLORE_HTML = `
-<details id="explore_card" class="mb-3">
-  <summary class="form-label">Explore</summary>
+<details id="explore_card" class="lp-section lp-more" open>
+  <summary>Explore</summary>
   <div class="mt-2">
     <div class="mb-2">
       <div class="form-check form-check-inline" data-multilayer-only>

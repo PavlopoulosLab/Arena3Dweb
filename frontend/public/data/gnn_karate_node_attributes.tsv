@@ -1,0 +1,171 @@
+Node	Layer	Color	Size	Description	Annotation
+member 1	Input	#e41a1c	1.35	Member 1 (the instructor, Mr. Hi): labelled Mr. Hi.	Mr. Hi's club;labelled
+member 2	Input	#8a8a8a	0.45	Member 2: no label.	Mr. Hi's club
+member 3	Input	#8a8a8a	0.45	Member 3: no label.	Mr. Hi's club
+member 4	Input	#8a8a8a	0.45	Member 4: no label.	Mr. Hi's club
+member 5	Input	#8a8a8a	0.45	Member 5: no label.	Mr. Hi's club
+member 6	Input	#8a8a8a	0.45	Member 6: no label.	Mr. Hi's club
+member 7	Input	#8a8a8a	0.45	Member 7: no label.	Mr. Hi's club
+member 8	Input	#8a8a8a	0.45	Member 8: no label.	Mr. Hi's club
+member 9	Input	#8a8a8a	0.45	Member 9: no label.	Mr. Hi's club
+member 10	Input	#8a8a8a	0.45	Member 10: no label.	Officer's club
+member 11	Input	#8a8a8a	0.45	Member 11: no label.	Mr. Hi's club
+member 12	Input	#8a8a8a	0.45	Member 12: no label.	Mr. Hi's club
+member 13	Input	#8a8a8a	0.45	Member 13: no label.	Mr. Hi's club
+member 14	Input	#8a8a8a	0.45	Member 14: no label.	Mr. Hi's club
+member 15	Input	#8a8a8a	0.45	Member 15: no label.	Officer's club
+member 16	Input	#8a8a8a	0.45	Member 16: no label.	Officer's club
+member 17	Input	#8a8a8a	0.45	Member 17: no label.	Mr. Hi's club
+member 18	Input	#8a8a8a	0.45	Member 18: no label.	Mr. Hi's club
+member 19	Input	#8a8a8a	0.45	Member 19: no label.	Officer's club
+member 20	Input	#8a8a8a	0.45	Member 20: no label.	Mr. Hi's club
+member 21	Input	#8a8a8a	0.45	Member 21: no label.	Officer's club
+member 22	Input	#8a8a8a	0.45	Member 22: no label.	Mr. Hi's club
+member 23	Input	#8a8a8a	0.45	Member 23: no label.	Officer's club
+member 24	Input	#8a8a8a	0.45	Member 24: no label.	Officer's club
+member 25	Input	#8a8a8a	0.45	Member 25: no label.	Officer's club
+member 26	Input	#8a8a8a	0.45	Member 26: no label.	Officer's club
+member 27	Input	#8a8a8a	0.45	Member 27: no label.	Officer's club
+member 28	Input	#8a8a8a	0.45	Member 28: no label.	Officer's club
+member 29	Input	#8a8a8a	0.45	Member 29: no label.	Officer's club
+member 30	Input	#8a8a8a	0.45	Member 30: no label.	Officer's club
+member 31	Input	#8a8a8a	0.45	Member 31: no label.	Officer's club
+member 32	Input	#8a8a8a	0.45	Member 32: no label.	Officer's club
+member 33	Input	#8a8a8a	0.45	Member 33: no label.	Officer's club
+member 34	Input	#377eb8	1.35	Member 34 (the administrator, the Officer): labelled Officer.	Officer's club;labelled
+member 1	GCN layer 1	#e41a1c	0.896	Member 1 (the instructor, Mr. Hi) after 1 round(s) of message passing: Mr. Hi 0.059, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 2	GCN layer 1	#e41a1c	0.96	Member 2 after 1 round(s) of message passing: Mr. Hi 0.077, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 3	GCN layer 1	#e41a1c	0.948	Member 3 after 1 round(s) of message passing: Mr. Hi 0.073, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 4	GCN layer 1	#e41a1c	1.007	Member 4 after 1 round(s) of message passing: Mr. Hi 0.092, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 5	GCN layer 1	#e41a1c	1.091	Member 5 after 1 round(s) of message passing: Mr. Hi 0.121, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 6	GCN layer 1	#e41a1c	1.056	Member 6 after 1 round(s) of message passing: Mr. Hi 0.108, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 7	GCN layer 1	#e41a1c	1.056	Member 7 after 1 round(s) of message passing: Mr. Hi 0.108, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 8	GCN layer 1	#e41a1c	1.056	Member 8 after 1 round(s) of message passing: Mr. Hi 0.108, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 9	GCN layer 1	#8f4b69	1.263	Member 9 after 1 round(s) of message passing: Mr. Hi 0.099, Officer 0.096 (51% Mr. Hi).	Mr. Hi's club
+member 10	GCN layer 1	#377eb8	1.129	Member 10 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.136 (0% Mr. Hi).	Officer's club
+member 11	GCN layer 1	#e41a1c	1.091	Member 11 after 1 round(s) of message passing: Mr. Hi 0.121, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 12	GCN layer 1	#e41a1c	1.212	Member 12 after 1 round(s) of message passing: Mr. Hi 0.171, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 13	GCN layer 1	#e41a1c	1.139	Member 13 after 1 round(s) of message passing: Mr. Hi 0.140, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 14	GCN layer 1	#8f4b69	1.263	Member 14 after 1 round(s) of message passing: Mr. Hi 0.099, Officer 0.096 (51% Mr. Hi).	Mr. Hi's club
+member 15	GCN layer 1	#377eb8	1.129	Member 15 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.136 (0% Mr. Hi).	Officer's club
+member 16	GCN layer 1	#377eb8	1.129	Member 16 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.136 (0% Mr. Hi).	Officer's club
+member 17	GCN layer 1	#8a8a8a	0.45	Member 17 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.000.	Mr. Hi's club
+member 18	GCN layer 1	#e41a1c	1.139	Member 18 after 1 round(s) of message passing: Mr. Hi 0.140, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 19	GCN layer 1	#377eb8	1.129	Member 19 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.136 (0% Mr. Hi).	Officer's club
+member 20	GCN layer 1	#8f4b69	1.35	Member 20 after 1 round(s) of message passing: Mr. Hi 0.121, Officer 0.118 (51% Mr. Hi).	Mr. Hi's club
+member 21	GCN layer 1	#377eb8	1.129	Member 21 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.136 (0% Mr. Hi).	Officer's club
+member 22	GCN layer 1	#e41a1c	1.139	Member 22 after 1 round(s) of message passing: Mr. Hi 0.140, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 23	GCN layer 1	#377eb8	1.129	Member 23 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.136 (0% Mr. Hi).	Officer's club
+member 24	GCN layer 1	#377eb8	1.021	Member 24 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.096 (0% Mr. Hi).	Officer's club
+member 25	GCN layer 1	#8a8a8a	0.45	Member 25 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.000.	Officer's club
+member 26	GCN layer 1	#8a8a8a	0.45	Member 26 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.000.	Officer's club
+member 27	GCN layer 1	#377eb8	1.129	Member 27 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.136 (0% Mr. Hi).	Officer's club
+member 28	GCN layer 1	#377eb8	1.048	Member 28 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.105 (0% Mr. Hi).	Officer's club
+member 29	GCN layer 1	#377eb8	1.082	Member 29 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.118 (0% Mr. Hi).	Officer's club
+member 30	GCN layer 1	#377eb8	1.048	Member 30 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.105 (0% Mr. Hi).	Officer's club
+member 31	GCN layer 1	#377eb8	1.048	Member 31 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.105 (0% Mr. Hi).	Officer's club
+member 32	GCN layer 1	#8f4b69	1.232	Member 32 after 1 round(s) of message passing: Mr. Hi 0.092, Officer 0.089 (51% Mr. Hi).	Officer's club
+member 33	GCN layer 1	#377eb8	0.921	Member 33 after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.065 (0% Mr. Hi).	Officer's club
+member 34	GCN layer 1	#377eb8	0.884	Member 34 (the administrator, the Officer) after 1 round(s) of message passing: Mr. Hi 0.000, Officer 0.056 (0% Mr. Hi).	Officer's club
+member 1	GCN layer 2	#c82a35	1.325	Member 1 (the instructor, Mr. Hi) after 2 round(s) of message passing: Mr. Hi 0.219, Officer 0.042 (84% Mr. Hi).	Mr. Hi's club
+member 2	GCN layer 2	#b63445	1.166	Member 2 after 2 round(s) of message passing: Mr. Hi 0.129, Officer 0.046 (74% Mr. Hi).	Mr. Hi's club
+member 3	GCN layer 2	#845273	1.12	Member 3 after 2 round(s) of message passing: Mr. Hi 0.068, Officer 0.085 (44% Mr. Hi).	Mr. Hi's club
+member 4	GCN layer 2	#ce2730	1.032	Member 4 after 2 round(s) of message passing: Mr. Hi 0.100, Officer 0.015 (87% Mr. Hi).	Mr. Hi's club
+member 5	GCN layer 2	#e41a1c	0.97	Member 5 after 2 round(s) of message passing: Mr. Hi 0.092, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 6	GCN layer 2	#e41a1c	0.926	Member 6 after 2 round(s) of message passing: Mr. Hi 0.077, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 7	GCN layer 2	#e41a1c	0.926	Member 7 after 2 round(s) of message passing: Mr. Hi 0.077, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 8	GCN layer 2	#e41a1c	0.885	Member 8 after 2 round(s) of message passing: Mr. Hi 0.064, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 9	GCN layer 2	#7b577a	0.933	Member 9 after 2 round(s) of message passing: Mr. Hi 0.031, Officer 0.048 (39% Mr. Hi).	Mr. Hi's club
+member 10	GCN layer 2	#596b9a	0.889	Member 10 after 2 round(s) of message passing: Mr. Hi 0.013, Officer 0.053 (19% Mr. Hi).	Officer's club
+member 11	GCN layer 2	#e41a1c	0.97	Member 11 after 2 round(s) of message passing: Mr. Hi 0.092, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 12	GCN layer 2	#e41a1c	0.981	Member 12 after 2 round(s) of message passing: Mr. Hi 0.096, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 13	GCN layer 2	#e41a1c	0.919	Member 13 after 2 round(s) of message passing: Mr. Hi 0.075, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 14	GCN layer 2	#b43647	0.925	Member 14 after 2 round(s) of message passing: Mr. Hi 0.055, Officer 0.021 (72% Mr. Hi).	Mr. Hi's club
+member 15	GCN layer 2	#377eb8	0.882	Member 15 after 2 round(s) of message passing: Mr. Hi 0.000, Officer 0.063 (0% Mr. Hi).	Officer's club
+member 16	GCN layer 2	#377eb8	0.882	Member 16 after 2 round(s) of message passing: Mr. Hi 0.000, Officer 0.063 (0% Mr. Hi).	Officer's club
+member 17	GCN layer 2	#e41a1c	0.856	Member 17 after 2 round(s) of message passing: Mr. Hi 0.056, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 18	GCN layer 2	#e41a1c	0.9	Member 18 after 2 round(s) of message passing: Mr. Hi 0.069, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 19	GCN layer 2	#377eb8	0.882	Member 19 after 2 round(s) of message passing: Mr. Hi 0.000, Officer 0.063 (0% Mr. Hi).	Officer's club
+member 20	GCN layer 2	#9b445e	0.952	Member 20 after 2 round(s) of message passing: Mr. Hi 0.050, Officer 0.036 (58% Mr. Hi).	Mr. Hi's club
+member 21	GCN layer 2	#377eb8	0.882	Member 21 after 2 round(s) of message passing: Mr. Hi 0.000, Officer 0.063 (0% Mr. Hi).	Officer's club
+member 22	GCN layer 2	#e41a1c	0.9	Member 22 after 2 round(s) of message passing: Mr. Hi 0.069, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 23	GCN layer 2	#377eb8	0.882	Member 23 after 2 round(s) of message passing: Mr. Hi 0.000, Officer 0.063 (0% Mr. Hi).	Officer's club
+member 24	GCN layer 2	#377eb8	0.895	Member 24 after 2 round(s) of message passing: Mr. Hi 0.000, Officer 0.067 (0% Mr. Hi).	Officer's club
+member 25	GCN layer 2	#6b6089	0.862	Member 25 after 2 round(s) of message passing: Mr. Hi 0.017, Officer 0.040 (30% Mr. Hi).	Officer's club
+member 26	GCN layer 2	#6f5e86	0.848	Member 26 after 2 round(s) of message passing: Mr. Hi 0.017, Officer 0.036 (32% Mr. Hi).	Officer's club
+member 27	GCN layer 2	#377eb8	0.936	Member 27 after 2 round(s) of message passing: Mr. Hi 0.000, Officer 0.080 (0% Mr. Hi).	Officer's club
+member 28	GCN layer 2	#566c9c	0.85	Member 28 after 2 round(s) of message passing: Mr. Hi 0.010, Officer 0.045 (18% Mr. Hi).	Officer's club
+member 29	GCN layer 2	#735b82	0.939	Member 29 after 2 round(s) of message passing: Mr. Hi 0.028, Officer 0.053 (35% Mr. Hi).	Officer's club
+member 30	GCN layer 2	#377eb8	0.958	Member 30 after 2 round(s) of message passing: Mr. Hi 0.000, Officer 0.088 (0% Mr. Hi).	Officer's club
+member 31	GCN layer 2	#745b81	0.94	Member 31 after 2 round(s) of message passing: Mr. Hi 0.029, Officer 0.053 (35% Mr. Hi).	Officer's club
+member 32	GCN layer 2	#68628c	0.888	Member 32 after 2 round(s) of message passing: Mr. Hi 0.018, Officer 0.047 (28% Mr. Hi).	Officer's club
+member 33	GCN layer 2	#4e71a3	1.221	Member 33 after 2 round(s) of message passing: Mr. Hi 0.027, Officer 0.175 (13% Mr. Hi).	Officer's club
+member 34	GCN layer 2	#516fa0	1.35	Member 34 (the administrator, the Officer) after 2 round(s) of message passing: Mr. Hi 0.042, Officer 0.234 (15% Mr. Hi).	Officer's club
+member 1	GCN layer 3	#c72b36	1.35	Member 1 (the instructor, Mr. Hi) after 3 round(s) of message passing: Mr. Hi 0.145, Officer 0.029 (83% Mr. Hi).	Mr. Hi's club
+member 2	GCN layer 3	#b93343	1.242	Member 2 after 3 round(s) of message passing: Mr. Hi 0.101, Officer 0.034 (75% Mr. Hi).	Mr. Hi's club
+member 3	GCN layer 3	#954863	1.252	Member 3 after 3 round(s) of message passing: Mr. Hi 0.075, Officer 0.063 (54% Mr. Hi).	Mr. Hi's club
+member 4	GCN layer 3	#c02f3c	1.189	Member 4 after 3 round(s) of message passing: Mr. Hi 0.093, Officer 0.024 (79% Mr. Hi).	Mr. Hi's club
+member 5	GCN layer 3	#db1f24	1.113	Member 5 after 3 round(s) of message passing: Mr. Hi 0.090, Officer 0.005 (95% Mr. Hi).	Mr. Hi's club
+member 6	GCN layer 3	#dc1f23	1.111	Member 6 after 3 round(s) of message passing: Mr. Hi 0.090, Officer 0.005 (95% Mr. Hi).	Mr. Hi's club
+member 7	GCN layer 3	#dc1f23	1.111	Member 7 after 3 round(s) of message passing: Mr. Hi 0.090, Officer 0.005 (95% Mr. Hi).	Mr. Hi's club
+member 8	GCN layer 3	#bb3241	1.151	Member 8 after 3 round(s) of message passing: Mr. Hi 0.081, Officer 0.025 (76% Mr. Hi).	Mr. Hi's club
+member 9	GCN layer 3	#7a577b	1.203	Member 9 after 3 round(s) of message passing: Mr. Hi 0.048, Officer 0.074 (39% Mr. Hi).	Mr. Hi's club
+member 10	GCN layer 3	#636591	1.082	Member 10 after 3 round(s) of message passing: Mr. Hi 0.022, Officer 0.064 (25% Mr. Hi).	Officer's club
+member 11	GCN layer 3	#db1f24	1.113	Member 11 after 3 round(s) of message passing: Mr. Hi 0.090, Officer 0.005 (95% Mr. Hi).	Mr. Hi's club
+member 12	GCN layer 3	#d72228	1.106	Member 12 after 3 round(s) of message passing: Mr. Hi 0.085, Officer 0.007 (92% Mr. Hi).	Mr. Hi's club
+member 13	GCN layer 3	#d2242c	1.084	Member 13 after 3 round(s) of message passing: Mr. Hi 0.077, Officer 0.009 (90% Mr. Hi).	Mr. Hi's club
+member 14	GCN layer 3	#a04159	1.209	Member 14 after 3 round(s) of message passing: Mr. Hi 0.075, Officer 0.049 (61% Mr. Hi).	Mr. Hi's club
+member 15	GCN layer 3	#4a73a7	1.1	Member 15 after 3 round(s) of message passing: Mr. Hi 0.010, Officer 0.081 (11% Mr. Hi).	Officer's club
+member 16	GCN layer 3	#4a73a7	1.1	Member 16 after 3 round(s) of message passing: Mr. Hi 0.010, Officer 0.081 (11% Mr. Hi).	Officer's club
+member 17	GCN layer 3	#e41a1c	0.971	Member 17 after 3 round(s) of message passing: Mr. Hi 0.058, Officer 0.000 (100% Mr. Hi).	Mr. Hi's club
+member 18	GCN layer 3	#c92a34	1.101	Member 18 after 3 round(s) of message passing: Mr. Hi 0.077, Officer 0.014 (84% Mr. Hi).	Mr. Hi's club
+member 19	GCN layer 3	#4a73a7	1.1	Member 19 after 3 round(s) of message passing: Mr. Hi 0.010, Officer 0.081 (11% Mr. Hi).	Officer's club
+member 20	GCN layer 3	#99455f	1.174	Member 20 after 3 round(s) of message passing: Mr. Hi 0.064, Officer 0.049 (57% Mr. Hi).	Mr. Hi's club
+member 21	GCN layer 3	#4a73a7	1.1	Member 21 after 3 round(s) of message passing: Mr. Hi 0.010, Officer 0.081 (11% Mr. Hi).	Officer's club
+member 22	GCN layer 3	#c92a34	1.101	Member 22 after 3 round(s) of message passing: Mr. Hi 0.077, Officer 0.014 (84% Mr. Hi).	Mr. Hi's club
+member 23	GCN layer 3	#4a73a7	1.1	Member 23 after 3 round(s) of message passing: Mr. Hi 0.010, Officer 0.081 (11% Mr. Hi).	Officer's club
+member 24	GCN layer 3	#4d71a4	1.123	Member 24 after 3 round(s) of message passing: Mr. Hi 0.012, Officer 0.085 (13% Mr. Hi).	Officer's club
+member 25	GCN layer 3	#66638d	0.943	Member 25 after 3 round(s) of message passing: Mr. Hi 0.014, Officer 0.038 (27% Mr. Hi).	Officer's club
+member 26	GCN layer 3	#5e6795	0.951	Member 26 after 3 round(s) of message passing: Mr. Hi 0.012, Officer 0.042 (23% Mr. Hi).	Officer's club
+member 27	GCN layer 3	#4277ae	1.085	Member 27 after 3 round(s) of message passing: Mr. Hi 0.006, Officer 0.081 (7% Mr. Hi).	Officer's club
+member 28	GCN layer 3	#5e6795	1.081	Member 28 after 3 round(s) of message passing: Mr. Hi 0.019, Officer 0.066 (23% Mr. Hi).	Officer's club
+member 29	GCN layer 3	#69618b	1.09	Member 29 after 3 round(s) of message passing: Mr. Hi 0.026, Officer 0.062 (29% Mr. Hi).	Officer's club
+member 30	GCN layer 3	#4477ac	1.147	Member 30 after 3 round(s) of message passing: Mr. Hi 0.008, Officer 0.097 (7% Mr. Hi).	Officer's club
+member 31	GCN layer 3	#725c83	1.163	Member 31 after 3 round(s) of message passing: Mr. Hi 0.037, Officer 0.072 (34% Mr. Hi).	Officer's club
+member 32	GCN layer 3	#755a80	1.182	Member 32 after 3 round(s) of message passing: Mr. Hi 0.041, Officer 0.074 (36% Mr. Hi).	Officer's club
+member 33	GCN layer 3	#4f70a2	1.261	Member 33 after 3 round(s) of message passing: Mr. Hi 0.020, Officer 0.122 (14% Mr. Hi).	Officer's club
+member 34	GCN layer 3	#566c9c	1.317	Member 34 (the administrator, the Officer) after 3 round(s) of message passing: Mr. Hi 0.029, Officer 0.133 (18% Mr. Hi).	Officer's club
+member 1	Output	#e41a1c	1.1	Member 1 (the instructor, Mr. Hi): predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 2	Output	#e41a1c	1.1	Member 2: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 3	Output	#e41a1c	1.1	Member 3: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 4	Output	#e41a1c	1.1	Member 4: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 5	Output	#e41a1c	1.1	Member 5: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 6	Output	#e41a1c	1.1	Member 6: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 7	Output	#e41a1c	1.1	Member 7: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 8	Output	#e41a1c	1.1	Member 8: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 9	Output	#377eb8	1.1	Member 9: predicted Officer, joined Mr. Hi's club after the split — misclassified.	Mr. Hi's club;predicted Officer;misclassified
+member 10	Output	#377eb8	1.1	Member 10: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 11	Output	#e41a1c	1.1	Member 11: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 12	Output	#e41a1c	1.1	Member 12: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 13	Output	#e41a1c	1.1	Member 13: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 14	Output	#e41a1c	1.1	Member 14: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 15	Output	#377eb8	1.1	Member 15: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 16	Output	#377eb8	1.1	Member 16: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 17	Output	#e41a1c	1.1	Member 17: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 18	Output	#e41a1c	1.1	Member 18: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 19	Output	#377eb8	1.1	Member 19: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 20	Output	#e41a1c	1.1	Member 20: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 21	Output	#377eb8	1.1	Member 21: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 22	Output	#e41a1c	1.1	Member 22: predicted Mr. Hi, joined Mr. Hi's club after the split.	Mr. Hi's club;predicted Mr. Hi
+member 23	Output	#377eb8	1.1	Member 23: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 24	Output	#377eb8	1.1	Member 24: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 25	Output	#377eb8	1.1	Member 25: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 26	Output	#377eb8	1.1	Member 26: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 27	Output	#377eb8	1.1	Member 27: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 28	Output	#377eb8	1.1	Member 28: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 29	Output	#377eb8	1.1	Member 29: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 30	Output	#377eb8	1.1	Member 30: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 31	Output	#377eb8	1.1	Member 31: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 32	Output	#377eb8	1.1	Member 32: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 33	Output	#377eb8	1.1	Member 33: predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer
+member 34	Output	#377eb8	1.1	Member 34 (the administrator, the Officer): predicted Officer, joined Officer's club after the split.	Officer's club;predicted Officer

@@ -1,7 +1,7 @@
 import { expect, test } from './fixtures'
 
 // Grouped menus: View / Edit / Analyze dropdowns open their panels with real
-// clicks; the Analysis panel holds the moved analysis tools.
+// clicks; Analyze holds one panel per kind of analysis.
 
 test('grouped menus open their panels', async ({ page }) => {
   // ~15 sequential menu/tab interactions plus a Databases-card sweep — already
@@ -61,9 +61,17 @@ test('grouped menus open their panels', async ({ page }) => {
   await open('Edit', 'Style', '#panel-style')
   await open('Edit', 'Attributes', '#panel-attributes')
   await expect(page.locator('#panel-attributes #attrNodeTable')).toBeVisible()
-  await open('Analyze', 'Analysis', '#panel-analyze')
-  await expect(page.locator('#panel-analyze #networkStats')).toBeVisible()
-  await expect(page.locator('#panel-analyze #explore_card')).toBeVisible()
+  for (const [item, pane, control] of [
+    ['Metrics', '#panel-metrics', '#runTopologyScale'],
+    ['Statistics', '#panel-statistics', '#networkStats'],
+    ['Plots', '#panel-plots', '#plotDraw'],
+    ['Perturbation', '#panel-perturbation', '#runKnockout'],
+    ['Explore', '#panel-explore', '#explore_card'],
+    ['Annotations & Groups', '#panel-annotations', '#groups_card'],
+  ] as const) {
+    await open('Analyze', item, pane)
+    await expect(page.locator(`${pane} ${control}`)).toBeVisible()
+  }
   await expect(page.locator('#panel-layouts #runTopologyScale')).toHaveCount(0)
   // the parent menu shows which group is active
   await expect(page.locator('#menu-analyze')).toHaveClass(/active/)

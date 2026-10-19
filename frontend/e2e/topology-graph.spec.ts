@@ -34,7 +34,7 @@ test('metrics count the channels only on a multi-edged graph', async ({
     .locator('#input_network_file')
     .setInputFiles(path.resolve('public/data/aspirin_3channels.tsv'))
   await expect(page.locator('#file_status')).toContainText('Loaded network')
-  await tab(page, 'Analysis')
+  await tab(page, 'Metrics')
   // the channels of this network run between its two layers: count them
   // across layers
   await page.locator('#analysisScope_allLayers').dispatchEvent('click')

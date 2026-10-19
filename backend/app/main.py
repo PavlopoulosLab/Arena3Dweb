@@ -14,6 +14,8 @@ from app.routers import external as external_router
 from app.routers import layout as layout_router
 from app.routers import network as network_router
 from app.routers import open as open_router
+from app.routers import perturbation as perturbation_router
+from app.routers import plots as plots_router
 from app.routers import session as session_router
 from app.routers import topology as topology_router
 from app.services import compute_pool
@@ -42,7 +44,8 @@ TAGS = [
     },
     {
         "name": "Analysis",
-        "description": "Node metrics, network statistics, layer similarity, enrichment.",
+        "description": "Node metrics, network statistics, layer similarity, plots, "
+        "perturbation, enrichment.",
     },
     {"name": "Import", "description": "Live import from STRING, IntAct, OmniPath and NDEx."},
     {"name": "Sessions", "description": "Session files (File → Save / Load Session)."},
@@ -79,6 +82,8 @@ app.include_router(config_router.router)
 app.include_router(network_router.router)
 app.include_router(layout_router.router)
 app.include_router(topology_router.router)
+app.include_router(perturbation_router.router)
+app.include_router(plots_router.router)
 app.include_router(session_router.router)
 app.include_router(external_router.router)
 app.include_router(open_router.router)

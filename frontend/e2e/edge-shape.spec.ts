@@ -111,6 +111,7 @@ test('the channel colours line up in columns, and Hide hides a channel', async (
   await page
     .getByRole('tab', { name: 'Edges', includeHidden: true, exact: true })
     .dispatchEvent('click')
+  await page.locator('#edgeCard_colours > summary').click() // starts folded
 
   // every swatch and every Hide box starts at the same x, whatever the name
   const rows = page.locator('#channelColorPicker .channel_subcontainer')

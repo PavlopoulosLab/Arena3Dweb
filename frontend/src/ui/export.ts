@@ -44,15 +44,35 @@ import {
   zip,
 } from '../actions/export'
 import {
+  svgToPng,
+  umapCsv,
+  umapEmbedding,
+  umapPoints,
+  umapScatterSvg,
+  umapTitle,
+  UMAP_COLOURS,
+  vegaUmapUrl,
+  type UmapColour,
+  type UmapPoints,
+} from '../actions/umap'
+import { initUmapForm, readUmapChoice, umapFormHtml } from './umap'
+import {
+  cosmographLink,
+  cosmographLinksCsv,
+  cosmographNodesCsv,
+} from '../actions/cosmograph'
+import {
   FLAME_DEFAULT_SERVER,
   flameLists,
   flameText,
   flameUrl,
   type FlameMode,
 } from '../actions/flame'
+import { FOLD_ALL_HTML } from './sections'
 
 const EXPORT_HTML = `
 <div class="col-md-8 col-lg-6 layout-panel export-panel">
+  ${FOLD_ALL_HTML}
   <details class="lp-section lp-more" id="exportCard_image">
     <summary>Image &amp; 3D</summary>
     <div class="d-flex flex-wrap align-items-center gap-2">
@@ -109,6 +129,39 @@ const EXPORT_HTML = `
       <button id="copy_flame" class="btn btn-outline-primary btn-sm" title="The gene lists as text, to paste into Flame">Copy Gene Lists</button>
     </div>
     <div class="form-text">Node names are taken as gene symbols or identifiers: the layers ticked in Layer selection (all if none), one list per layer (Flame keeps up to ten) or combined into one. Large lists go through <i>Copy Gene Lists</i>.</div>
+    <label class="form-label small mt-2 mb-1" for="open_cosmograph">Send to Cosmograph (GPU viewer for large networks):</label>
+    <div class="d-flex flex-wrap align-items-center gap-2">
+      <button id="open_cosmograph" class="btn btn-primary btn-sm" title="The two CSV files hosted on this server for one hour and opened in cosmograph.app by link">Open in Cosmograph</button>
+      <button id="export_cosmograph_links" class="btn btn-outline-primary btn-sm" title="source, target, weight, channel, source_layer, target_layer">Cosmograph links (CSV)</button>
+      <button id="export_cosmograph_nodes" class="btn btn-outline-primary btn-sm" title="id, label, layer, color, size, cluster, annotations, values, metrics, UMAP x/y">Cosmograph nodes (CSV)</button>
+    </div>
+    <div class="form-text">The whole network; nodes are named node_layer, so copies in different layers stay apart. Without a link to this server, download both files and drop them on cosmograph.app.</div>
+    <div id="umapExport" class="umap-export">
+      <label class="form-label small mt-2 mb-1" for="umapxPoints">UMAP view (a 2D map of the nodes by connectivity, features or both):</label>
+      <div class="lp-grid mb-2">
+        <div>
+          <label class="form-label small" for="umapxPoints">Points</label>
+          <select id="umapxPoints" class="form-select form-select-sm">
+            <option value="copies">one per node copy (layers as one network)</option>
+            <option value="names">one per node name (copies merged)</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label small" for="umapxColour">Colour by</label>
+          <select id="umapxColour" class="form-select form-select-sm">
+            ${UMAP_COLOURS.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      ${umapFormHtml('umapx')}
+      <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+        <button id="export_umap_svg" class="btn btn-outline-primary btn-sm" title="A 2D scatter of the nodes, coloured as chosen, with a legend">UMAP scatter (SVG)</button>
+        <button id="export_umap_png" class="btn btn-outline-primary btn-sm">UMAP scatter (PNG)</button>
+        <button id="export_umap_csv" class="btn btn-outline-primary btn-sm" title="node_id, node, layer, umap_1, umap_2, cluster, annotation: for Python, R or a spreadsheet">UMAP coordinates (CSV)</button>
+        <button id="open_umap_vega" class="btn btn-primary btn-sm" title="Interactive scatter in the Vega editor; the chart travels in the link, nothing is uploaded">UMAP in Vega Editor</button>
+      </div>
+      <div class="form-text">The layers ticked in Layer selection (all if none), computed on the server once per set of options. The same modes as the UMAP layout (Layout panel), without moving the nodes.</div>
+    </div>
   </details>
 
   <details class="lp-section lp-more" id="exportCard_visualizations">
@@ -307,6 +360,107 @@ export function initExportPanel(): void {
     },
     'Plotly Sankey exported.'
   )
+  // Cosmograph (actions/cosmograph.ts)
+  run(
+    'export_cosmograph_links',
+    () => {
+      download(
+        text(cosmographLinksCsv(), 'text/csv'),
+        'arena3d_cosmograph_links.csv'
+      )
+    },
+    'Cosmograph links exported.'
+  )
+  run(
+    'export_cosmograph_nodes',
+    () => {
+      download(
+        text(cosmographNodesCsv(), 'text/csv'),
+        'arena3d_cosmograph_nodes.csv'
+      )
+    },
+    'Cosmograph nodes exported.'
+  )
+  document.getElementById('open_cosmograph')?.addEventListener('click', () => {
+    // open the tab inside the click, so popup blockers allow it
+    const tab = window.open('', '_blank')
+    status('Hosting the CSV files for Cosmograph…')
+    cosmographLink()
+      .then((url) => {
+        if (tab) tab.location.href = url
+        else window.open(url, '_blank')
+        status(
+          `Opened in Cosmograph: ${ctx.nodeObjects.length} nodes, ${ctx.edgeObjects.length} edges (the files are kept for one hour).`
+        )
+      })
+      .catch((err: unknown) => {
+        tab?.close()
+        status(err instanceof Error ? err.message : String(err), true)
+      })
+  })
+
+  // UMAP view: computed once per network and options (actions/umap.ts)
+  initUmapForm('umapx')
+  const umapView = async () => {
+    const choice = readUmapChoice('umapx')
+    const pick = (id: string) =>
+      (document.getElementById(id) as HTMLSelectElement).value
+    const points = pick('umapxPoints') as UmapPoints
+    const colour = pick('umapxColour') as UmapColour
+    status('Computing the UMAP view on the server…')
+    const positions = await umapEmbedding(choice, points)
+    const pts = umapPoints(positions, colour, points)
+    return { pts, colour, title: `Arena3D ${umapTitle(choice)}` }
+  }
+  const umapDone = (what: string, n: number) => `${what} exported: ${n} points.`
+  run(
+    'export_umap_svg',
+    async () => {
+      const v = await umapView()
+      const svg = umapScatterSvg(v.pts, v.title, v.colour)
+      download(text(svg, 'image/svg+xml'), 'arena3d_umap.svg')
+      return umapDone('UMAP scatter', v.pts.length)
+    },
+    'UMAP scatter exported.'
+  )
+  run(
+    'export_umap_png',
+    async () => {
+      const v = await umapView()
+      download(
+        await svgToPng(umapScatterSvg(v.pts, v.title, v.colour)),
+        'arena3d_umap.png'
+      )
+      return umapDone('UMAP scatter', v.pts.length)
+    },
+    'UMAP scatter exported.'
+  )
+  run(
+    'export_umap_csv',
+    async () => {
+      const v = await umapView()
+      download(text(umapCsv(v.pts), 'text/csv'), 'arena3d_umap.csv')
+      return umapDone('UMAP coordinates', v.pts.length)
+    },
+    'UMAP coordinates exported.'
+  )
+  document.getElementById('open_umap_vega')?.addEventListener('click', () => {
+    // open the tab inside the click, so popup blockers allow it
+    const tab = window.open('', '_blank')
+    umapView()
+      .then((v) => {
+        const url = vegaUmapUrl(v.pts, v.title, v.colour)
+        if (tab) tab.location.href = url
+        else window.open(url, '_blank')
+        status(
+          `Opened the UMAP scatter in the Vega editor: ${v.pts.length} points.`
+        )
+      })
+      .catch((err: unknown) => {
+        tab?.close()
+        status(err instanceof Error ? err.message : String(err), true)
+      })
+  })
   document.getElementById('open_vega')?.addEventListener('click', () => {
     try {
       window.open(vegaEditorUrl(), '_blank')

@@ -33,10 +33,13 @@ import {
   ChangeContainerStyleCommand,
   ApplyLayoutCommand,
 } from '../commands/scene'
+import { FOLD_ALL_HTML } from './sections'
 
 const LAYER_HTML = `
-<div class="col-md-6 col-lg-4">
-  <h6>Labels &amp; axes</h6>
+<div class="col-md-6 col-lg-4 layout-panel">
+  ${FOLD_ALL_HTML}
+  <details class="lp-section lp-more" id="layerCard_labels" open>
+  <summary>Labels &amp; axes</summary>
   <label class="form-label">Show Labels:</label>
   <div class="mb-3">
     <div class="form-check form-check-inline">
@@ -58,11 +61,13 @@ const LAYER_HTML = `
   </div>
   <label class="form-label small mb-0" for="layerAxesOpacity">Layer axes opacity: <span id="layerAxesOpacityValue">0.85</span></label>
   <input type="range" class="form-range mb-3" id="layerAxesOpacity" min="0.1" max="1" step="0.05" value="0.85" aria-label="Layer axes opacity" />
-  <div class="mb-3">
+  <div>
     <label class="form-label" for="resizeLayerLabels">Resize Labels:</label>
     <input type="range" class="form-range" id="resizeLayerLabels" min="12" max="30" step="1" value="20" />
   </div>
-  <h6>Shape &amp; container</h6>
+  </details>
+  <details class="lp-section lp-more" id="layerCard_shape" open>
+  <summary>Shape &amp; container</summary>
   <label class="form-label" for="layerContainer">Layer Shape (selected layers, or all):</label>
   <div class="d-flex gap-2 mb-1">
     <select id="layerContainer" class="form-select form-select-sm" style="width:auto">
@@ -75,7 +80,7 @@ const LAYER_HTML = `
     <button id="applyLayerContainer" class="btn btn-outline-primary btn-sm">Apply</button>
   </div>
   <div class="form-text mb-2">3D shapes lay their nodes out in 3D inside the volume; use Layouts with "3D Layout" for other algorithms.</div>
-  <div id="containerStyle" class="mb-3">
+  <div id="containerStyle">
     <label class="form-label small mb-1">3D Container Look (selected layers, or all):</label>
     <div class="d-flex align-items-center gap-2 flex-wrap">
       <input type="color" id="containerColor" class="form-control form-control-color form-control-sm" value="#5b8def" title="Container colour" aria-label="Container colour" />
@@ -88,7 +93,9 @@ const LAYER_HTML = `
     <input type="range" class="form-range" id="containerOpacity" min="0" max="1" step="0.05" value="0.3" />
     <button id="applyContainerStyle" class="btn btn-outline-primary btn-sm">Apply Look</button>
   </div>
-  <h6>Floor</h6>
+  </details>
+  <details class="lp-section lp-more" id="layerCard_floor" open>
+  <summary>Floor</summary>
   <label class="form-label">Floor Shape (selected layers, or all):</label>
   <div class="mb-2">
     <div class="form-check form-check-inline">
@@ -112,11 +119,13 @@ const LAYER_HTML = `
     <option value="dots">Dotted grid</option>
     <option value="outline">Outline only</option>
   </select>
-  <div class="mb-3">
+  <div>
     <label class="form-label" for="layerOpacity">Floor Opacity:</label>
     <input type="range" class="form-range" id="layerOpacity" min="0" max="1" step="0.05" value="0.6" />
   </div>
-  <h6>Colours</h6>
+  </details>
+  <details class="lp-section lp-more" id="layerCard_colours">
+  <summary>Colours</summary>
   <label class="form-label">Color Priority:</label>
   <div class="mb-3">
     <div class="form-check form-check-inline">
@@ -128,7 +137,13 @@ const LAYER_HTML = `
       <label class="form-check-label" for="layerPriority_picker">Theme / Colorpicker</label>
     </div>
   </div>
-  <h6>Restructure</h6>
+  <div id="floorColorPicker" class="colorPicker">
+    <input type="color" id="floor_color" name="floor_color" value="${LAYER_DEFAULT_COLOR}" />
+    <label for="floor_color">Floor Color</label>
+  </div>
+  </details>
+  <details class="lp-section lp-more" id="layerCard_restructure">
+  <summary>Restructure</summary>
   <label class="form-label">Restructure Layers:</label>
   <div class="d-flex flex-wrap gap-2 mb-2">
     <button id="splitLayerByCluster" class="btn btn-outline-primary btn-sm" title="Each cluster of the selected layer becomes its own layer (run a clustered layout first)">Split Selected Layer by Cluster</button>
@@ -138,11 +153,8 @@ const LAYER_HTML = `
     <button id="liftNodesByDegree" class="btn btn-outline-primary btn-sm">Lift Nodes by Degree</button>
     <input id="liftHeight" class="form-control form-control-sm" style="width:5.5rem" type="number" min="10" max="1000" step="10" value="150" aria-label="Maximum lift height" />
   </div>
-  <div id="layer_status" class="small mb-3"></div>
-  <div id="floorColorPicker" class="colorPicker">
-    <input type="color" id="floor_color" name="floor_color" value="${LAYER_DEFAULT_COLOR}" />
-    <label for="floor_color">Floor Color</label>
-  </div>
+  </details>
+  <div id="layer_status" class="small"></div>
 </div>
 `
 

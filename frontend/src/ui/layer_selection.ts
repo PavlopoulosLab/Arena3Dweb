@@ -44,7 +44,10 @@ const HTML = `
     <div id="layerSelectionNext" class="d-flex flex-wrap gap-2">
       <button class="btn btn-outline-primary btn-sm" data-goto="#panel-layouts">Layout…</button>
       <button class="btn btn-outline-primary btn-sm" data-goto="#panel-clustering">Clustering…</button>
-      <button class="btn btn-outline-primary btn-sm" data-goto="#panel-analyze">Analysis…</button>
+      <button class="btn btn-outline-primary btn-sm" data-goto="#panel-metrics">Metrics…</button>
+      <button class="btn btn-outline-primary btn-sm" data-goto="#panel-statistics">Statistics…</button>
+      <button class="btn btn-outline-primary btn-sm" data-goto="#panel-plots">Plots…</button>
+      <button class="btn btn-outline-primary btn-sm" data-goto="#panel-perturbation">Perturbation…</button>
       <button class="btn btn-outline-primary btn-sm" data-goto="#panel-export">Export…</button>
     </div>
   </section>

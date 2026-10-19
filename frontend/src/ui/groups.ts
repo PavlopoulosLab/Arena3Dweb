@@ -1,4 +1,4 @@
-// "Groups" card of the Analysis panel — NORMA's group list: every annotation
+// "Groups" card of Analyze → Annotations & Groups — NORMA's group list: every annotation
 // term or cluster with its colour, members per layer, a hull switch and a
 // select button; tables of groups and their overlap; the super-node view.
 
@@ -27,8 +27,8 @@ import { showTab } from './tabs'
 const MAX_ROWS = 300
 
 export const GROUPS_HTML = `
-<details id="groups_card" class="mb-3">
-  <summary class="form-label">Groups (annotations &amp; clusters)</summary>
+<details id="groups_card" class="lp-section lp-more" open>
+  <summary>Groups (annotations &amp; clusters)</summary>
   <div class="mt-2">
     <div class="d-flex gap-2 mb-2">
       <select id="groupsSource" class="form-select form-select-sm" style="width:auto" aria-label="Group source">

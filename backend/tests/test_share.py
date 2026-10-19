@@ -43,3 +43,24 @@ def test_share_size_cap() -> None:
         "/api/share", json={"content": "x" * (5 * 1024 * 1024 + 1), "media_type": "text/plain"}
     )
     assert r.status_code == 413
+
+
+def test_share_hosts_cosmograph_csvs() -> None:
+    """Export → Open in Cosmograph: the links and nodes CSVs, fetched by
+    cosmograph.app (another origin), which reads the whole file by its length."""
+    links = "source,target,weight,channel,source_layer,target_layer\nA_L1,B_L1,1,,L1,L1\n"
+    nodes = "id,label,layer,color,size,cluster,annotations\nA_L1,A,L1,#ff0000,1,,\n"
+    for content, name in ((links, "arena3d_cosmograph_links.csv"), (nodes, "x_nodes.csv")):
+        r = client.post(
+            "/api/share", json={"content": content, "media_type": "text/csv", "name": name}
+        )
+        assert r.status_code == 200, r.text
+        got = client.get(
+            f"/api/share/{r.json()['token']}", headers={"Origin": "https://cosmograph.app"}
+        )
+        assert got.text == content
+        assert got.headers["content-type"].startswith("text/csv")
+        assert got.headers["access-control-allow-origin"] == "*"
+        assert got.headers["content-length"] == str(len(content.encode()))
+        assert got.headers["content-disposition"].startswith("attachment")
+        assert got.headers["x-content-type-options"] == "nosniff"

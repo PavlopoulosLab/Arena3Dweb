@@ -1,27 +1,33 @@
 import { expect, test } from './fixtures'
 
-// The two neural network examples (scripts/neural_network_examples.py) open
-// from File → Example as sessions: every network layer an Arena3D layer, the
-// kinds of link as channels, the layers side by side in order.
+// The neural network examples (scripts/neural_network_examples.py) open from
+// File → Example as sessions: every network layer an Arena3D layer, the kinds
+// of link as channels, the layers in order — side by side along x, or for the
+// graph neural network flat floors stacked up y.
 
 type Arena = {
   __arena: {
     ctx: {
-      layers: { name: string; getPosition(axis: 'x'): number }[]
-      nodeObjects: unknown[]
+      layers: { name: string; getPosition(axis: 'x' | 'y'): number }[]
+      nodeObjects: {
+        getName(): string
+        getLayer(): string
+        annotations: string[]
+      }[]
       edgeObjects: { channels: string[] }[]
       channelColors: Record<string, string>
     }
   }
 }
 
-for (const [label, layers, channels, first, last] of [
+const EXAMPLES = [
   [
     'Neural network: convolutional (LeNet-like), 7 layers',
     7,
     ['Convolution', 'Pooling', 'Dense'],
     'Input',
     'Output',
+    'x',
   ],
   [
     'Neural network: transformer (LLM-like), 10 layers',
@@ -29,37 +35,88 @@ for (const [label, layers, channels, first, last] of [
     ['Projection', 'Residual', 'Feed-forward', 'Attention'],
     'Embedding',
     'Output',
+    'x',
   ],
-] as const) {
+  [
+    'Neural network: LSTM unrolled over 6 time steps',
+    6,
+    [
+      'Input',
+      'Recurrent',
+      'Cell state',
+      'Forget gate',
+      'Candidate',
+      'Output gate',
+      'Input gate',
+    ],
+    'Step 1 · Arena',
+    'Step 6 · space',
+    'x',
+  ],
+  [
+    'Neural network: U-Net encoder–decoder, 7 layers',
+    7,
+    ['Convolution', 'Down-sampling', 'Up-sampling', 'Skip connection'],
+    'Input',
+    'Output mask',
+    'x',
+  ],
+  [
+    'Neural network: graph neural network on the karate club',
+    5,
+    ['Graph edge', 'Message', 'Self'],
+    'Input',
+    'Output',
+    'y',
+  ],
+  [
+    'Neural network: variational autoencoder, 8 layers',
+    8,
+    ['Encoder', 'Mean', 'Log-variance', 'Sampling', 'Noise', 'Decoder'],
+    'Input',
+    'Output',
+    'x',
+  ],
+] as const
+
+async function openExample(
+  page: import('@playwright/test').Page,
+  label: string
+) {
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .dispatchEvent('click')
+  await page.locator('#exampleChoice').selectOption({ label })
+  await page.locator('#exampleButton').click()
+  await expect(page.locator('#file_status')).toContainText('Session loaded', {
+    timeout: 30_000,
+  })
+}
+
+for (const [label, layers, channels, first, last, axis] of EXAMPLES) {
   test(`File → Example opens "${label}"`, async ({ page }) => {
-    await page.goto('/')
-    await page.waitForFunction(
-      () => '__arena' in (window as unknown as Record<string, unknown>)
-    )
-    await page
-      .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
-      .dispatchEvent('click')
-    await page.locator('#exampleChoice').selectOption({ label })
-    await page.locator('#exampleButton').click()
-    await expect(page.locator('#file_status')).toContainText('Session loaded', {
-      timeout: 30_000,
-    })
-    const scene = await page.evaluate(() => {
+    await openExample(page, label)
+    const scene = await page.evaluate((axis) => {
       const { ctx } = (window as unknown as Arena).__arena
       return {
         layers: ctx.layers.map((l) => l.name),
-        xs: ctx.layers.map((l) => l.getPosition('x')),
+        at: ctx.layers.map((l) => l.getPosition(axis)),
         nodes: ctx.nodeObjects.length,
         edges: ctx.edgeObjects.length,
         channels: Object.keys(ctx.channelColors),
         used: [...new Set(ctx.edgeObjects.flatMap((e) => e.channels))],
       }
-    })
+    }, axis)
     expect(scene.layers).toHaveLength(layers)
     expect(scene.layers[0]).toBe(first)
     expect(scene.layers.at(-1)).toBe(last)
-    // side by side, in order, left to right
-    expect(scene.xs).toEqual([...scene.xs].sort((a, b) => a - b))
+    // in order: left to right, or bottom to top
+    expect(scene.at).toEqual([...scene.at].sort((a, b) => a - b))
+    expect(new Set(scene.at).size).toBe(layers)
     expect(scene.channels).toEqual(channels)
     expect(scene.used.sort()).toEqual([...channels].sort())
     expect(scene.nodes).toBeGreaterThan(100)
@@ -67,7 +124,41 @@ for (const [label, layers, channels, first, last] of [
   })
 }
 
-test('the Home page features both neural networks', async ({ page }) => {
+test('the graph neural network is a multiplex with annotated members', async ({
+  page,
+}) => {
+  await openExample(
+    page,
+    'Neural network: graph neural network on the karate club'
+  )
+  const nodes = await page.evaluate(() =>
+    (window as unknown as Arena).__arena.ctx.nodeObjects.map((n) => ({
+      name: n.getName(),
+      layer: n.getLayer(),
+      terms: n.annotations,
+    }))
+  )
+  // the same 34 members in every layer
+  const byLayer = new Map<string, string[]>()
+  for (const n of nodes)
+    byLayer.set(n.layer, [...(byLayer.get(n.layer) ?? []), n.name])
+  const members = [...byLayer.values()].map((names) => names.sort().join())
+  expect(byLayer.size).toBe(5)
+  expect(new Set(members).size).toBe(1)
+  expect(byLayer.get('Input')).toHaveLength(34)
+  // annotation terms: the real club everywhere, the prediction in the output
+  const output = nodes.filter((n) => n.layer === 'Output')
+  expect(output.every((n) => n.terms.some((t) => t.endsWith("'s club")))).toBe(
+    true
+  )
+  expect(
+    output.filter((n) => n.terms.includes('misclassified')).map((n) => n.name)
+  ).toEqual(['member 9'])
+})
+
+test('the Home page features neural networks and lists them all', async ({
+  page,
+}) => {
   await page.goto('/')
   await page.waitForFunction(
     () => '__arena' in (window as unknown as Record<string, unknown>)
@@ -76,6 +167,10 @@ test('the Home page features both neural networks', async ({ page }) => {
     await expect(
       page.locator('.home-example', { hasText: title })
     ).toBeVisible()
+  const listed = await page
+    .locator('#homeExampleChoice option')
+    .allTextContents()
+  for (const [label] of EXAMPLES) expect(listed).toContain(label)
   await page
     .locator('.home-example', { hasText: 'LLM-like transformer' })
     .click()

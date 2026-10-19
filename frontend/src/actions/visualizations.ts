@@ -489,15 +489,18 @@ export function vegaEditorUrl(): string {
 // ---------------------------------------------------------------- Gephi Lite
 export const GEPHI_LITE = 'https://gephi.org/gephi-lite/'
 
-// Host the GraphML on this server (one hour) and return its absolute URL
-export async function hostGraphml(): Promise<string> {
-  const { url } = await api.share(
-    graphmlText(),
-    'application/graphml+xml',
-    'arena3d_network.graphml'
-  )
+// Host an export on this server (one hour) and return its absolute URL
+export async function hostFile(
+  content: string,
+  mediaType: string,
+  name: string
+): Promise<string> {
+  const { url } = await api.share(content, mediaType, name)
   return url.startsWith('/') ? `${window.location.origin}${url}` : url
 }
+
+export const hostGraphml = (): Promise<string> =>
+  hostFile(graphmlText(), 'application/graphml+xml', 'arena3d_network.graphml')
 
 export const gephiLiteUrl = (fileUrl: string): string =>
   `${GEPHI_LITE}?file=${encodeURIComponent(fileUrl)}`

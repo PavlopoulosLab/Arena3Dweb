@@ -69,6 +69,10 @@ async function panel(
       /^(SELECT|BUTTON|TEXTAREA|svg|SUMMARY|LABEL)$/.test(c.tagName)
     for (const c of el.querySelectorAll<HTMLElement>('*')) {
       if (!leaf(c)) continue
+      // a folded card's contents still have boxes: only its title shows
+      const shut = c.closest('details:not([open])')
+      if (shut && !(c.tagName === 'SUMMARY' && c.parentElement === shut))
+        continue
       const b = c.getBoundingClientRect()
       if (b.height <= 0 || b.width <= 0) continue
       let limit = b.bottom
@@ -225,7 +229,7 @@ test('capture the interface screenshots for the Help pages', async ({
   await session(page, 'covid19_3d_network.json')
   await expect(page.locator('#panel-main-view')).toHaveClass(/active/)
   await page.waitForTimeout(3000)
-  await panel(page, 'Analysis', '#panel-analyze', 'analyze')
+  await panel(page, 'Metrics', '#panel-metrics', 'analyze')
   await panel(page, 'Data Tables', '#panel-data', 'data')
   await panel(page, 'Performance', '#panel-fps', 'performance')
   // last, as it recolours the nodes: communities found, so the panel shows

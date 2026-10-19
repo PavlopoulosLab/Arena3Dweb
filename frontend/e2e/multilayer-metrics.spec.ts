@@ -65,7 +65,7 @@ test('multilayer metric colours nodes; layers compare in View Data', async ({
 
   // participation coefficient, coloured — in Analyze → Analysis
   await page
-    .getByRole('tab', { name: 'Analysis', includeHidden: true, exact: true })
+    .getByRole('tab', { name: 'Metrics', includeHidden: true, exact: true })
     .dispatchEvent('click')
   const before = await page.evaluate(nodeColors)
   await select(page, '#topologyScaleMetricChoice', 'Participation Coefficient')
@@ -79,9 +79,7 @@ test('multilayer metric colours nodes; layers compare in View Data', async ({
   expect(new Set(after).size).toBeGreaterThan(1)
 
   await page.locator('#compareLayers').dispatchEvent('click')
-  await expect(page.locator('#analyze_status')).toContainText(
-    'Layer Similarity'
-  )
+  await expect(page.locator('#stats_status')).toContainText('Layer Similarity')
   await page
     .getByRole('tab', { name: 'Data Tables', includeHidden: true, exact: true })
     .dispatchEvent('click')

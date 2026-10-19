@@ -52,6 +52,8 @@ import { showTab } from './tabs'
 import { escapeHtml } from '../utils'
 import { PROGRESS_HTML, ProgressBar } from './progress'
 import type { Scope } from '../api/client'
+import { UMAP, umapOptions } from '../actions/umap'
+import { initUmapForm, readUmapChoice, umapFormHtml } from './umap'
 
 // v2 views/layouts.R option lists (Davidson-Harel / GEM / Edge Betweenness
 // were commented out there too).
@@ -69,6 +71,11 @@ const LAYOUT_ALGORITHMS = [
   'Multidimensional Scaling',
   'Sugiyama',
 ]
+// the main algorithm list adds UMAP (backend services/umap_layout.py), which
+// runs in 2D and 3D and reads edge weights; group and local layouts don't offer it
+const MAIN_ALGORITHMS = [...LAYOUT_ALGORITHMS, UMAP]
+const MAIN_3D = [...LAYOUTS_3D, UMAP]
+const MAIN_WEIGHTED = [...WEIGHTED_ALGORITHMS, UMAP]
 // backend models/layout.py MIN_/MAX_CHANNEL_WEIGHT
 const MIN_CHANNEL_WEIGHT = 0.1
 const MAX_CHANNEL_WEIGHT = 10
@@ -93,7 +100,8 @@ const LAYOUTS_HTML = `
     <h6 class="lp-title"><span class="lp-step">2</span><span data-multilayer-only>Layout</span><span data-single-only>Layout of the whole network</span></h6>
     <div class="form-text mt-0 mb-2" data-single-only>One graph, as in NORMA: the layout runs on every node at once (in 3D while <i>3D Layout</i> is on); the Groups card below organises it by clusters (the Clustering panel) or annotations.</div>
     <label class="form-label small" for="layoutAlgorithmChoice">Algorithm</label>
-    <select class="form-select form-select-sm mb-3" id="layoutAlgorithmChoice">${options(LAYOUT_ALGORITHMS)}</select>
+    <select class="form-select form-select-sm mb-3" id="layoutAlgorithmChoice">${options(MAIN_ALGORITHMS)}</select>
+    <div id="umapOptionsBox" class="lp-umap mb-3 d-none">${umapFormHtml('umap')}</div>
 
     <label class="form-label small" data-multilayer-only>Apply to</label>
     <div class="lp-choices mb-3" data-multilayer-only>
@@ -119,12 +127,12 @@ const LAYOUTS_HTML = `
       <input class="form-check-input" type="checkbox" role="switch" id="useEdgeWeightsCheckbox" />
       <label class="form-check-label" for="useEdgeWeightsCheckbox">Use Edge Weights (and Channel Weights)</label>
     </div>
-    <div class="form-text mt-0 mb-2">Heavier edges pull nodes closer: ${WEIGHTED_ALGORITHMS.join(', ')}.</div>
+    <div class="form-text mt-0 mb-2">Heavier edges pull nodes closer: ${MAIN_WEIGHTED.join(', ')}.</div>
     <div class="form-check form-switch mb-1">
       <input class="form-check-input" type="checkbox" role="switch" id="layout3dCheckbox" />
       <label class="form-check-label" for="layout3dCheckbox">3D Layout</label>
     </div>
-    <div class="form-text mt-0 mb-3">Nodes leave the floor (${LAYOUTS_3D.join(', ')}); best with cube, sphere or fog-cloud layers. A 2D layout flattens them again.</div>
+    <div class="form-text mt-0 mb-3">Nodes leave the floor (${MAIN_3D.join(', ')}); best with cube, sphere or fog-cloud layers. A 2D layout flattens them again.</div>
 
     <div class="lp-grid">
       <div>
@@ -294,12 +302,11 @@ function syncAlgorithmOptions(): void {
     'layoutAlgorithmChoice'
   ) as HTMLSelectElement
   for (const option of select.options) {
-    const ok =
-      !three || option.value === '-' || LAYOUTS_3D.includes(option.value)
+    const ok = !three || option.value === '-' || MAIN_3D.includes(option.value)
     option.hidden = !ok
     option.disabled = !ok
   }
-  if (three && select.value !== '-' && !LAYOUTS_3D.includes(select.value)) {
+  if (three && select.value !== '-' && !MAIN_3D.includes(select.value)) {
     select.value = 'Fruchterman-Reingold'
     select.dispatchEvent(new Event('change', { bubbles: true }))
   }
@@ -380,16 +387,16 @@ function syncCompatibility(): void {
   // no algorithm chosen yet: the switch stays usable (weights count once a
   // weighted algorithm runs)
   const weightsOk =
-    (algorithm.value === '-' ||
-      WEIGHTED_ALGORITHMS.includes(algorithm.value)) &&
+    (algorithm.value === '-' || MAIN_WEIGHTED.includes(algorithm.value)) &&
     (scope === 'perLayer' || scope === 'allLayers') &&
     (align.disabled || align.value === 'none')
   weights.disabled = !weightsOk
   if (!weightsOk && weights.checked)
     notes.push(
-      `Edge weights are left out here: they work with ${WEIGHTED_ALGORITHMS.join(', ')} on the Per Layer or All Selected Layers scope, without alignment.`
+      `Edge weights are left out here: they work with ${MAIN_WEIGHTED.join(', ')} on the Per Layer or All Selected Layers scope, without alignment.`
     )
-  const alignOk = !single && scope === 'perLayer' && !three
+  const umap = algorithm.value === UMAP
+  const alignOk = !single && scope === 'perLayer' && !three && !umap
   align.disabled = !alignOk
   const reference = el<HTMLSelectElement>('alignmentReference')
   const strength = el<HTMLInputElement>('alignmentStrength')
@@ -399,9 +406,12 @@ function syncCompatibility(): void {
   if (alignNote) {
     alignNote.textContent = alignOk
       ? ''
-      : 'Alignment needs the Per Layer scope and a 2D layout.'
+      : umap
+        ? 'UMAP places the nodes by itself: alignment works with the other algorithms.'
+        : 'Alignment needs the Per Layer scope and a 2D layout.'
     alignNote.classList.toggle('d-none', alignOk)
   }
+  el('umapOptionsBox')?.classList.toggle('d-none', !umap)
   const note = el('layoutCompat')
   if (note) {
     note.textContent = notes.join(' ')
@@ -436,7 +446,7 @@ function channelWeights(): Record<string, number> | null {
   return out
 }
 
-// also read by the Analysis panel (same channel filter as layouts)
+// also read by the Analyze panels (same channel filter as layouts)
 export function selectedChannels(): string[] | null {
   const boxes = document.querySelectorAll<HTMLInputElement>(
     '#channelColorLayoutDiv .channel_checkbox'
@@ -521,10 +531,21 @@ async function onRunLayout(): Promise<void> {
 
   const is3d = (document.getElementById('layout3dCheckbox') as HTMLInputElement)
     .checked
-  if (is3d && !LAYOUTS_3D.includes(algorithm))
+  if (is3d && !MAIN_3D.includes(algorithm))
     return status(`${algorithm} has no 3D version.`, true)
   const align = document.getElementById('alignmentMode') as HTMLSelectElement
+  const umap = algorithm === UMAP
+  let umapFields = {}
+  try {
+    if (umap) {
+      const choice = readUmapChoice('umap')
+      umapFields = { umap: umapOptions(choice, layers), seed: choice.seed }
+    }
+  } catch (err) {
+    return status(err instanceof Error ? err.message : String(err), true)
+  }
   if (
+    !umap &&
     !align.disabled &&
     align.value !== 'none' &&
     (scope !== 'perLayer' || is3d)
@@ -551,11 +572,16 @@ async function onRunLayout(): Promise<void> {
         selected_channels: selectedChannels(),
         use_weights: useWeights(),
         dimensions: is3d ? 3 : 2,
-        ...(align.disabled ? {} : alignmentFields(scope)),
+        ...(align.disabled || umap ? {} : alignmentFields(scope)),
         channel_weights: useWeights() ? channelWeights() : null,
+        ...umapFields,
       },
       false,
-      layoutProgress.upload(`Computing ${algorithm} on the server`)
+      layoutProgress.upload(
+        umap
+          ? 'Computing UMAP on the server (the first run after a server start takes about 20 s)'
+          : `Computing ${algorithm} on the server`
+      )
     )
     layoutProgress.done('Layout applied')
     status('Layout applied.')
@@ -604,6 +630,7 @@ export function initLayoutsPanel(): void {
   ))
     radio.addEventListener('change', syncCompatibility)
   bus.on('network:loaded', syncCompatibility)
+  initUmapForm('umap')
   syncCompatibility()
   bus.on('mode:changed', ({ mode }) => {
     const box = document.getElementById('layout3dCheckbox') as HTMLInputElement

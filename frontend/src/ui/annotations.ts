@@ -1,4 +1,4 @@
-// "Annotations & Enrichment" card of the Analysis panel — PLAN-ROADMAP
+// "Annotations & Enrichment" card of Analyze → Annotations & Groups — PLAN-ROADMAP
 // Phase 6. Pie-chart nodes, convex hulls per cluster/annotation, and STRING
 // functional enrichment of the selected nodes (results can annotate nodes).
 
@@ -35,8 +35,8 @@ const SPECIES: [number, string][] = [
 ]
 
 export const ANNOTATIONS_HTML = `
-<details id="annotation_card" class="mb-3">
-  <summary class="form-label">Annotations &amp; Enrichment</summary>
+<details id="annotation_card" class="lp-section lp-more" open>
+  <summary>Annotations &amp; Enrichment</summary>
   <div class="mt-2">
     <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
       <label class="form-label small m-0" for="annotationSet">Annotation set</label>

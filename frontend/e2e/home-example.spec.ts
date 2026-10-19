@@ -48,3 +48,55 @@ test('the SARS-CoV-2 example opens undirected: no arrows', async ({ page }) => {
   )
   expect(directed).toBe(false)
 })
+
+// Both example pickers (File → Example and the Home page's) group the
+// examples by category, in one order, and keep the four weighted layers as
+// the default choice; Help → Examples has a section per category.
+test('the example pickers and Help list the examples by category', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  const categories = [
+    'Biological networks',
+    'Layer geometry and 3D',
+    'Hive plots',
+    'Neural networks',
+    'Small examples and file formats',
+  ]
+  const pickers = await page.evaluate(() =>
+    ['#exampleChoice', '#homeExampleChoice'].map((id) => {
+      const select = document.querySelector<HTMLSelectElement>(id)!
+      return {
+        groups: [...select.querySelectorAll('optgroup')].map((g) => ({
+          label: g.label,
+          options: [...g.querySelectorAll('option')].map((o) => o.text),
+        })),
+        options: select.options.length,
+        chosen: select.selectedOptions[0]?.text,
+      }
+    })
+  )
+  const [file, home] = pickers
+  expect(file.groups.map((g) => g.label)).toEqual(categories)
+  expect(home.groups).toEqual(file.groups)
+  expect(file.groups.every((g) => g.options.length > 0)).toBe(true)
+  // every option sits in a group
+  expect(file.groups.flatMap((g) => g.options)).toHaveLength(file.options)
+  expect(file.chosen).toBe('Four weighted layers')
+  expect(home.chosen).toBe('Four weighted layers')
+  expect(
+    file.groups.find((g) => g.label === 'Hive plots')!.options
+  ).toHaveLength(6)
+  expect(
+    file.groups
+      .find((g) => g.label === 'Neural networks')!
+      .options.every((o) => o.startsWith('Neural network:'))
+  ).toBe(true)
+  const sections = await page
+    .locator('#Examples_tab h3')
+    .evaluateAll((hs) => hs.map((h) => h.textContent))
+  expect(sections).toEqual([...categories, 'Scripts'])
+})

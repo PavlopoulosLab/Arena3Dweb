@@ -128,8 +128,10 @@ test('annotation sets, group statistics and the statistics buttons open Data Tab
   await expect(page.locator('#file_status')).toContainText('1 groups applied')
   const gamma = await read(page)
 
-  await tab(page, 'Analysis')
-  await page.locator('#annotation_card summary').dispatchEvent('click')
+  await tab(page, 'Annotations & Groups')
+  await page
+    .locator('#annotation_card')
+    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
   await expect(page.locator('#annotationSet option')).toHaveCount(3)
   await expect(page.locator('#annotationSet')).toHaveValue('1')
   await page.locator('#annotationSet').selectOption('0')
@@ -140,7 +142,9 @@ test('annotation sets, group statistics and the statistics buttons open Data Tab
   await page.locator('#annotationSet').selectOption('0')
 
   // group statistics
-  await page.locator('#groups_card summary').dispatchEvent('click')
+  await page
+    .locator('#groups_card')
+    .evaluate((d) => ((d as HTMLDetailsElement).open = true))
   await page.locator('#groupsStats').dispatchEvent('click')
   await expect(page.locator('#panel-data')).toHaveClass(/show/)
   await expect(page.locator('#dataPane-groupStats')).toContainText('Alpha')
@@ -151,7 +155,7 @@ test('annotation sets, group statistics and the statistics buttons open Data Tab
   expect(Number(beta[6])).toBeGreaterThanOrEqual(0) // density
 
   // network statistics open the panel too
-  await tab(page, 'Analysis')
+  await tab(page, 'Statistics')
   await page.locator('#networkStats').dispatchEvent('click')
   await expect(page.locator('#panel-data')).toHaveClass(/show/, {
     timeout: 30_000,

@@ -9,6 +9,8 @@ export const PROGRESS_HTML = (id: string, label: string) =>
 
 export class ProgressBar {
   private timer: ReturnType<typeof setInterval> | null = null
+  // done()/fail() hide the bar later; a new run showing it again cancels that
+  private hideTimer: ReturnType<typeof setTimeout> | null = null
   private started = 0
   constructor(private readonly id: string) {}
 
@@ -18,16 +20,19 @@ export class ProgressBar {
     return wrap && bar ? [wrap, bar] : null
   }
 
-  // fraction null = indeterminate (striped, animated)
-  set(label: string, fraction: number | null): void {
+  // fraction null = indeterminate; `busy`: striped and animated (still working)
+  set(label: string, fraction: number | null, busy = fraction === null): void {
     const el = this.bar
     if (!el) return
     const [wrap, bar] = el
+    if (this.hideTimer) clearTimeout(this.hideTimer)
+    this.hideTimer = null
     wrap.classList.remove('d-none')
     bar.textContent = label
     bar.style.width = `${Math.round((fraction ?? 1) * 100)}%`
-    bar.classList.toggle('progress-bar-striped', fraction === null)
-    bar.classList.toggle('progress-bar-animated', fraction === null)
+    bar.classList.toggle('progress-bar-striped', busy)
+    bar.classList.toggle('progress-bar-animated', busy)
+    bar.classList.remove('bg-success', 'bg-danger')
     wrap.setAttribute(
       'aria-valuenow',
       String(Math.round((fraction ?? 1) * 100))
@@ -46,6 +51,18 @@ export class ProgressBar {
     this.timer = setInterval(tick, 1000)
   }
 
+  // "Curve 2 of 5 (7 s)": a known share done, still working, the seconds
+  // since `since` ticking until done() or fail()
+  working(what: string, fraction: number, since = performance.now()): void {
+    this.stopTicking()
+    const tick = () => {
+      const s = Math.round((performance.now() - since) / 1000)
+      this.set(`${what} (${s} s)`, fraction, true)
+    }
+    tick()
+    this.timer = setInterval(tick, 1000)
+  }
+
   // Upload stage from the API client: 0–1 sent, then computing
   upload(what: string): UploadProgress {
     return (stage, f) =>
@@ -59,7 +76,16 @@ export class ProgressBar {
     this.set(label, 1)
     const el = this.bar
     if (el) el[1].classList.add('bg-success')
-    setTimeout(() => this.hide(), hideAfterMs)
+    this.hideTimer = setTimeout(() => this.hide(), hideAfterMs)
+  }
+
+  // red, with what went wrong
+  fail(label: string, hideAfterMs = 6000): void {
+    this.stopTicking()
+    this.set(label, 1)
+    const el = this.bar
+    if (el) el[1].classList.add('bg-danger')
+    this.hideTimer = setTimeout(() => this.hide(), hideAfterMs)
   }
 
   hide(): void {
@@ -67,7 +93,7 @@ export class ProgressBar {
     const el = this.bar
     if (!el) return
     el[0].classList.add('d-none')
-    el[1].classList.remove('bg-success')
+    el[1].classList.remove('bg-success', 'bg-danger')
   }
 
   private stopTicking(): void {

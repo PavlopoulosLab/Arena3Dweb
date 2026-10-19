@@ -34,6 +34,7 @@ import { initClusteringPanel } from './ui/clustering'
 import { initFpsPanel } from './ui/fps'
 import { initDataPanel } from './ui/data'
 import { initHelpPanel } from './ui/help'
+import { initSections } from './ui/sections'
 import { initMinimap } from './ui/minimap'
 import { registerDrawerToggle } from './ui/drawer_toggle'
 import { store } from './store'
@@ -95,6 +96,7 @@ async function main(): Promise<void> {
   initLegend()
   initDataPanel()
   initHelpPanel()
+  initSections() // after every panel has its cards
   initMinimap()
   registerDrawerToggle()
   registerGlobalListeners()

@@ -36,18 +36,18 @@ const PRESETS = {
 
 const FPS_HTML = `
 <div class="col-md-8 col-lg-6 layout-panel perf-panel">
-  <div class="lp-section">
-    <div class="lp-title">Presets</div>
+  <details class="lp-section lp-more" id="perfCard_presets" open>
+    <summary>Presets</summary>
     <div class="d-flex flex-wrap gap-2">
       <button id="perf_quality" class="btn btn-outline-primary btn-sm">Quality</button>
       <button id="perf_balanced" class="btn btn-outline-primary btn-sm">Balanced</button>
       <button id="perf_fast" class="btn btn-outline-primary btn-sm">Fast (large networks)</button>
     </div>
     <div class="form-text">Quality: 60 FPS, full resolution, smooth spheres. Fast: 15 FPS, 0.75× resolution, simple spheres, labels and inter-layer edges hidden while moving, navigator off.</div>
-  </div>
+  </details>
 
-  <div class="lp-section">
-    <div class="lp-title">Rendering</div>
+  <details class="lp-section lp-more" id="perfCard_rendering">
+    <summary>Rendering</summary>
     <label class="form-label small mb-1">Frame rate</label>
     <div class="mb-2">
       ${[15, 30, 60]
@@ -80,10 +80,10 @@ const FPS_HTML = `
       </div>
     </div>
     <div class="form-text">Resolution is the pixel ratio the scene is drawn at — fewer pixels on 4K and retina screens is the biggest saving; node detail is the sphere's mesh.</div>
-  </div>
+  </details>
 
-  <div class="lp-section">
-    <div class="lp-title">While moving</div>
+  <details class="lp-section lp-more" id="perfCard_moving">
+    <summary>While moving</summary>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="perf_hideLabels" />
       <label class="form-check-label" for="perf_hideLabels">Hide labels while panning, orbiting or dragging</label>
@@ -99,10 +99,10 @@ const FPS_HTML = `
       <option value="10">Every 10th frame</option>
       <option value="0">Off</option>
     </select>
-  </div>
+  </details>
 
-  <div class="lp-section">
-    <div class="lp-title">Live stats</div>
+  <details class="lp-section lp-more" id="perfCard_stats" open>
+    <summary>Live stats</summary>
     <table class="perf-stats" id="perf_stats">
       <tr><td>Frames per second</td><td id="perf_fps_now">–</td></tr>
       <tr><td>Draw calls / frame</td><td id="perf_calls">–</td></tr>
@@ -112,7 +112,7 @@ const FPS_HTML = `
       <tr><td>Geometries · textures in memory</td><td id="perf_memory">–</td></tr>
       <tr><td>Pixel ratio</td><td id="perf_ratio">–</td></tr>
     </table>
-  </div>
+  </details>
 </div>
 `
 

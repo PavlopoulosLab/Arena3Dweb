@@ -17,10 +17,13 @@ import {
 import { getSelectedLayers } from '../actions/layer'
 import { history } from '../commands/base'
 import { ChangeNodeGeometryCommand, LabelStyleCommand } from '../commands/scene'
+import { FOLD_ALL_HTML } from './sections'
 
 const NODE_HTML = `
-<div class="col-md-6 col-lg-4">
-  <h6>Selection &amp; labels</h6>
+<div class="col-md-6 col-lg-4 layout-panel">
+  ${FOLD_ALL_HTML}
+  <details class="lp-section lp-more" id="nodeCard_labels" open>
+  <summary>Selection &amp; labels</summary>
   <div class="form-check mb-3">
     <input class="form-check-input" type="checkbox" id="selectAllNodes" />
     <label class="form-check-label" for="selectAllNodes">Select / Deselect all Nodes</label>
@@ -40,11 +43,13 @@ const NODE_HTML = `
       <label class="form-check-label" for="nodeLabels_none">None</label>
     </div>
   </div>
-  <div class="mb-3">
+  <div>
     <label class="form-label" for="resizeNodeLabels">Resize Labels:</label>
     <input type="range" class="form-range" id="resizeNodeLabels" min="5" max="15" step="1" value="12" />
   </div>
-  <h6>Label style</h6>
+  </details>
+  <details class="lp-section lp-more" id="nodeCard_labelStyle">
+  <summary>Label style</summary>
   <div class="lp-grid mb-2">
     <div>
       <label class="form-label small" for="labelColor">Colour</label>
@@ -90,8 +95,10 @@ const NODE_HTML = `
     </div>
     <button id="applyLabelStyle" class="btn btn-outline-primary btn-sm">Apply Label Style</button>
   </div>
-  <div class="form-text mb-3">Colour, font, weight, halo, background and opacity of the node labels — for all of them, or for the layers selected in Layout, so each layer can read differently. Labels follow the theme colour until a colour is applied; undoable.</div>
-  <h6>Shape</h6>
+  <div class="form-text">Colour, font, weight, halo, background and opacity of the node labels — for all of them, or for the layers selected in Layout, so each layer can read differently. Labels follow the theme colour until a colour is applied; undoable.</div>
+  </details>
+  <details class="lp-section lp-more" id="nodeCard_shape" open>
+  <summary>Shape</summary>
   <label class="form-label" for="nodeGeometry">Node Geometry:</label>
   <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
     <select id="nodeGeometry" class="form-select form-select-sm" style="width:auto" aria-label="Node geometry">
@@ -106,9 +113,10 @@ const NODE_HTML = `
       <label class="form-check-label" for="nodeGeomTarget_layers">Selected layers</label>
     </div>
   </div>
-  <div class="form-text mb-2">Each layer can have its own shape: tick layers in the Layer selection tab, pick <i>Selected layers</i>, then a shape.</div>
-  <div id="node_status" class="small mb-3"></div>
-  <h6>Colours</h6>
+  <div class="form-text">Each layer can have its own shape: tick layers in the Layer selection tab, pick <i>Selected layers</i>, then a shape.</div>
+  </details>
+  <details class="lp-section lp-more" id="nodeCard_colours">
+  <summary>Colours</summary>
   <label class="form-label">Color Priority:</label>
   <div class="mb-3">
     <div class="form-check form-check-inline">
@@ -120,10 +128,12 @@ const NODE_HTML = `
       <label class="form-check-label" for="nodePriority_cluster">Clustering</label>
     </div>
   </div>
-  <div class="form-check mb-3">
+  <div class="form-check">
     <input class="form-check-input" type="checkbox" id="nodeSelectedColorPriority" checked />
     <label class="form-check-label" for="nodeSelectedColorPriority">Highlight Selected Nodes</label>
   </div>
+  </details>
+  <div id="node_status" class="small"></div>
 </div>
 `
 

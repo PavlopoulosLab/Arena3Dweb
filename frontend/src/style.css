@@ -1571,92 +1571,1337 @@ footer a:hover {
   }
 }
 
-/* Help panel — inner tab bar + content, themed to match the dark chrome. */
+/* Help panel (ui/help.ts, ui/help_layout.ts) — the pages as documentation in
+   the app's style: a side navigation of the pages, grouped, an icon each (a
+   strip that scrolls sideways on narrow screens), and one page beside it — a
+   header with the page's group, title and summary, framed screenshots with
+   captions, "On this page" links, options as definition lists, Tip and Note
+   callouts, keys and menu paths as chips, tables in the Data Tables style and
+   the examples as cards. Boxes beside a floated screenshot are flow roots, so
+   they stop at its edge instead of running under it. */
 #helpDiv {
-  max-width: 1080px;
+  --help-teal: #39d0b4;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  align-items: start;
+  gap: 0 2.6rem;
+  max-width: 1240px;
   margin: 0 auto;
 }
 
+/* navigation */
 #helpDiv .tab {
+  position: sticky;
+  top: 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  width: 100%;
-  padding-bottom: 1.25rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--arena-border);
+  flex-direction: column;
+  gap: 2px;
+  max-height: calc(100vh - 56px - 3.2rem);
+  padding: 0 0.7rem 1rem 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--arena-border);
+  scrollbar-width: thin;
+}
+
+.help-nav__group {
+  margin: 0.85rem 0 0.25rem 0.75rem;
+  color: var(--arena-text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.help-nav__group:first-child {
+  margin-top: 0.15rem;
 }
 
 #helpDiv .tab button {
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--arena-border);
-  border-radius: 999px;
-  outline: none;
-  cursor: pointer;
-  padding: 0.4rem 0.9rem;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.32rem 0.75rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--arena-text-muted);
   font-size: 0.88rem;
   font-weight: 500;
-  color: var(--arena-text-muted);
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
   transition:
     color 0.15s var(--arena-ease),
-    background-color 0.15s var(--arena-ease),
-    border-color 0.15s var(--arena-ease);
+    background-color 0.15s var(--arena-ease);
+}
+
+#helpDiv .tab button .help-icon {
+  flex: none;
+  opacity: 0.75;
 }
 
 #helpDiv .tab button:hover {
   color: var(--arena-text);
-  border-color: var(--arena-border-strong);
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 #helpDiv .tab button.active {
-  color: #06101f;
-  background-color: var(--arena-accent);
-  border-color: var(--arena-accent);
+  color: var(--arena-text);
+  background-color: rgba(var(--arena-accent-rgb), 0.14);
+  box-shadow: inset 2px 0 0 var(--arena-accent);
 }
 
+#helpDiv .tab button.active .help-icon {
+  color: var(--arena-accent-hover);
+  opacity: 1;
+}
+
+#helpDiv .tab button:focus-visible,
+#helpDiv .help-page button:focus-visible,
+#helpDiv .help-page a:focus-visible {
+  outline: 2px solid var(--arena-accent);
+  outline-offset: 2px;
+}
+
+/* a page */
 #helpDiv .tabcontent {
   display: none;
+  grid-row: 1;
+  grid-column: 2;
   width: 100%;
-  max-width: 78ch;
-  line-height: 1.65;
-  word-break: break-word;
+  min-width: 0;
+  max-width: 800px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  overflow-wrap: break-word;
 }
 
-#helpDiv .tabcontent h2,
-#helpDiv .tabcontent h3 {
-  font-weight: 600;
+#helpDiv .tabcontent::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+#helpDiv .help-page a {
+  color: var(--arena-accent-hover);
+  text-underline-offset: 2px;
+}
+
+.help-head {
+  margin: 0 0 1.5rem;
+}
+
+.help-head__group {
+  margin: 0 0 0.35rem;
+  color: var(--help-teal);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+#helpDiv .help-head h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.4vw, 2.05rem);
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+#helpDiv .help-head .help-lead {
+  max-width: 64ch;
+  margin: 0.55rem 0 0;
+  color: var(--arena-text-muted);
+  font-size: 1.04rem;
+  line-height: 1.55;
+}
+
+#helpDiv .help-page h3 {
+  margin: 2.4rem 0 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 650;
   letter-spacing: -0.01em;
-  margin-top: 1.75rem;
+  scroll-margin-top: 1rem;
 }
 
-#helpDiv .tabcontent img {
-  max-width: 100%;
-  border: 1px solid var(--arena-border);
-  border-radius: var(--arena-radius-sm);
+#helpDiv .help-page h3::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 3px;
+  margin-right: 0.6rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--help-teal), var(--arena-accent));
+  vertical-align: middle;
 }
 
-#helpDiv pre {
-  overflow-x: auto;
-  padding: 0.85rem 1rem;
+/* On this page */
+.help-toc {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 1.6rem;
+  padding: 0.65rem 0.8rem;
   border: 1px solid var(--arena-border);
-  border-radius: var(--arena-radius-sm);
-  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.help-toc__label {
+  margin-right: 0.35rem;
+  color: var(--arena-text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.help-toc button {
+  padding: 0.12rem 0.65rem;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--arena-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  transition:
+    color 0.15s var(--arena-ease),
+    border-color 0.15s var(--arena-ease);
+}
+
+.help-toc button:hover {
+  border-color: var(--arena-accent);
   color: var(--arena-text);
 }
 
-#helpDiv .numbering {
-  color: var(--arena-accent);
-  font-weight: 700;
-  font-size: 1.05rem;
+/* screenshots and figures, framed, the alt text as the caption */
+.help-figure {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0.3rem 0 1.5rem;
+  padding: 0.45rem 0.45rem 0.55rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
 }
 
-#helpDiv .indent {
-  margin-left: 20px;
+#helpDiv .help-figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border: 1px solid var(--arena-border);
+  border-radius: 9px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.help-figure figcaption {
+  margin: 0.5rem 0.3rem 0;
+  color: var(--arena-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.help-figure--panel {
+  float: right;
+  width: min(100%, 320px);
+  margin: 0.2rem 0 1.2rem 1.8rem;
+}
+
+#helpDiv .help-figure--panel img {
+  width: 100%;
+}
+
+/* lists: numbered steps, and options as definition lists */
+#helpDiv .help-page ul {
+  padding-left: 1.3rem;
+}
+
+#helpDiv .help-page li {
+  margin-bottom: 0.35rem;
+}
+
+#helpDiv .help-page ul > li::marker {
+  color: var(--arena-accent);
+}
+
+#helpDiv .help-page ol {
+  display: flow-root;
+  margin: 0.8rem 0 1.4rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: help-step;
+}
+
+#helpDiv .help-page ol > li {
+  position: relative;
+  margin-bottom: 0.6rem;
+  padding-left: 2.3rem;
+  counter-increment: help-step;
+}
+
+#helpDiv .help-page ol > li::before {
+  content: counter(help-step);
+  position: absolute;
+  top: 0.12rem;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  border: 1px solid rgba(var(--arena-accent-rgb), 0.35);
+  border-radius: 50%;
+  background: rgba(var(--arena-accent-rgb), 0.14);
+  color: var(--arena-accent-hover);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+#helpDiv .help-page ul.help-defs {
+  display: flow-root;
+  margin: 0.8rem 0 1.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+#helpDiv .help-defs > li {
+  margin: 0 0 0.45rem;
+  padding: 0.55rem 0.85rem 0.6rem;
+  border: 1px solid var(--arena-border);
+  border-left: 3px solid rgba(var(--arena-accent-rgb), 0.55);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+#helpDiv .help-defs .help-term {
+  color: var(--arena-text);
+  font-weight: 650;
+}
+
+/* Tip and Note callouts */
+#helpDiv .help-note,
+#helpDiv .help-tip {
+  --callout: var(--arena-accent-hover);
+  display: flow-root;
+  margin: 1rem 0 1.4rem;
+  padding: 0.65rem 1rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--callout) 32%, transparent);
+  border-left-width: 3px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--callout) 8%, transparent);
+}
+
+#helpDiv .help-tip {
+  --callout: var(--help-teal);
+}
+
+#helpDiv .help-note::before,
+#helpDiv .help-tip::before {
+  content: 'Note';
+  display: block;
+  margin-bottom: 0.1rem;
+  color: var(--callout);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+#helpDiv .help-tip::before {
+  content: 'Tip';
 }
 
 #helpDiv .last_p {
   margin-bottom: 100px;
+}
+
+/* keys, menu paths, code */
+#helpDiv kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0.05rem 0.42rem;
+  border: 1px solid var(--arena-border-strong);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: var(--arena-elevated);
+  box-shadow: none;
+  color: var(--arena-text);
+  font:
+    600 0.78em/1.45 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  text-align: center;
+  vertical-align: 0.08em;
+}
+
+.help-path {
+  padding: 0.06rem 0.45rem;
+  border: 1px solid rgba(var(--arena-accent-rgb), 0.28);
+  border-radius: 6px;
+  background: rgba(var(--arena-accent-rgb), 0.1);
+  color: var(--arena-text);
+  font-size: 0.9em;
+  font-weight: 500;
+  white-space: nowrap;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.help-path__sep {
+  color: var(--arena-accent-hover);
+  font-weight: 400;
+}
+
+#helpDiv .help-page code {
+  padding: 0.05rem 0.35rem;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.86em;
+}
+
+#helpDiv pre {
+  overflow-x: auto;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.28);
+  color: var(--arena-text);
+}
+
+#helpDiv pre code {
+  padding: 0;
+  background: none;
+}
+
+#helpDiv .help-page hr {
+  border-color: var(--arena-border);
+  opacity: 1;
+}
+
+/* download links carry a small arrow */
+#helpDiv .help-page a[download]::before {
+  content: '';
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-right: 0.22em;
+  background-color: currentColor;
+  vertical-align: -0.06em;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11M7 10l5 5 5-5M5 20h14'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11M7 10l5 5 5-5M5 20h14'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+/* tables (file formats, API fields), as in Data Tables */
+#helpDiv .help-tsv {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 0.35rem 0 1.3rem;
+  overflow-x: auto;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: var(--arena-radius-sm);
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(0, 0, 0, 0.18);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.82rem;
+}
+
+#helpDiv .help-tsv.help-fields {
+  display: table;
+  width: 100%;
+  font-family: inherit;
+}
+
+#helpDiv .help-tsv-note {
+  margin: 0.7rem 0 0.25rem;
+  color: var(--arena-text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+#helpDiv .help-tsv th,
+#helpDiv .help-tsv td {
+  padding: 0.32rem 0.65rem;
+  border-right: 1px solid var(--arena-border);
+  border-bottom: 1px solid var(--arena-border);
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+#helpDiv .help-fields td {
+  white-space: normal;
+}
+
+#helpDiv .help-tsv th {
+  border-bottom: 2px solid var(--arena-border-strong);
+  background: var(--arena-surface-solid);
+  color: var(--arena-text);
+  font-weight: 600;
+}
+
+#helpDiv .help-tsv tr > :last-child {
+  border-right: 0;
+}
+
+#helpDiv .help-tsv tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+#helpDiv .help-tsv tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+#helpDiv .help-tsv tbody tr:hover td {
+  background: rgba(var(--arena-accent-rgb), 0.1);
+}
+
+#helpDiv .help-tsv .help-empty {
+  color: var(--arena-text-muted);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+/* the examples page: a card per example, as on the Home page */
+.help-examples {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.8rem;
+  margin: 0.9rem 0 1.6rem;
+}
+
+.help-example {
+  --tone: var(--help-teal);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem 1.1rem 1.05rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 14px;
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--tone) 15%, transparent),
+    color-mix(in srgb, var(--tone) 2%, transparent)
+  );
+  transition:
+    border-color 0.2s var(--arena-ease),
+    transform 0.2s var(--arena-ease);
+}
+
+.help-example:hover {
+  border-color: var(--arena-border-strong);
+  transform: translateY(-2px);
+}
+
+.help-example--1 {
+  --tone: #ff7a6b;
+}
+.help-example--2 {
+  --tone: var(--arena-accent);
+}
+.help-example--3 {
+  --tone: #a78bfa;
+}
+.help-example--4 {
+  --tone: #f5b14c;
+}
+.help-example--5 {
+  --tone: #f472b6;
+}
+
+#helpDiv .help-example__title {
+  margin: 0;
+  color: var(--arena-text);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+#helpDiv .help-example__title a {
+  color: inherit;
+}
+
+#helpDiv .help-example__body {
+  margin: 0;
+  color: var(--arena-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.help-example__open {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--tone) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  color: var(--arena-text);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.help-example__open:hover {
+  border-color: var(--tone);
+}
+
+/* narrow windows: the navigation becomes a strip across the top that scrolls
+   sideways and stays in view; phones: screenshots go full width */
+@media (max-width: 991.98px) {
+  #helpDiv {
+    display: block;
+  }
+  /* sticky offsets count from inside the panel's padding */
+  #helpDiv .tab {
+    top: -1.6rem;
+    z-index: 2;
+    flex-direction: row;
+    gap: 0.35rem;
+    max-height: none;
+    margin: -1.6rem -2rem 1.4rem;
+    padding: 0.7rem 2rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-right: 0;
+    border-bottom: 1px solid var(--arena-border);
+    background: var(--bs-body-bg);
+    scrollbar-width: none;
+  }
+  .help-nav__group {
+    display: none;
+  }
+  #helpDiv .tab button {
+    width: auto;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--arena-border);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.03);
+    white-space: nowrap;
+  }
+  #helpDiv .tab button.active {
+    border-color: rgba(var(--arena-accent-rgb), 0.55);
+    box-shadow: none;
+  }
+  #helpDiv .tabcontent {
+    margin: 0 auto;
+  }
+  #helpDiv .help-page h3 {
+    scroll-margin-top: 4.5rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  #helpDiv .tab {
+    top: -1rem;
+    margin: -1rem -1rem 1.2rem;
+    padding: 0.6rem 1rem;
+  }
+  .help-figure--panel {
+    float: none;
+    width: min(100%, 280px);
+    margin: 0.3rem auto 1.4rem;
+  }
+  .help-path {
+    white-space: normal;
+  }
+  /* field tables wrap their names too, and scroll sideways if still wide */
+  #helpDiv .help-tsv.help-fields {
+    display: block;
+  }
+  #helpDiv .help-tsv.help-fields td:first-child {
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .help-example {
+    transition: none;
+  }
+}
+
+/* Help → About (ui/about.ts): the project and the lab, the publications as
+   cards on a release timeline, related tools and the developers, in the Home
+   page's style. Rules carry .about to outrank the generic #helpDiv ones. */
+#helpDiv .tabcontent.about {
+  --about-teal: #39d0b4;
+  --about-coral: #ff7a6b;
+  --about-violet: #a78bfa;
+  --about-amber: #f5b14c;
+  max-width: 980px;
+}
+
+#helpDiv .about h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.2rem;
+}
+
+#helpDiv .about a:focus-visible,
+#helpDiv .about button:focus-visible {
+  outline: 2px solid var(--arena-accent);
+  outline-offset: 2px;
+}
+
+/* intro */
+#helpDiv .about .about-hero {
+  position: relative;
+  padding: 1.6rem 1.7rem 1.5rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      circle at 88% 0%,
+      rgba(var(--arena-accent-rgb), 0.18),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 0% 100%,
+      rgba(57, 208, 180, 0.1),
+      transparent 50%
+    ),
+    rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+
+#helpDiv .about .about-logo {
+  display: block;
+  width: 200px;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+}
+
+.about-eyebrow {
+  margin: 1.1rem 0 0.45rem;
+  color: var(--about-teal);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+#helpDiv .about .about-title {
+  margin: 0 0 0.7rem;
+  font-size: clamp(1.4rem, 2.4vw, 1.95rem);
+  font-weight: 750;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.about-title__accent {
+  background: linear-gradient(
+    90deg,
+    var(--about-teal),
+    var(--arena-accent) 55%,
+    var(--about-violet)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.about-lead {
+  max-width: 76ch;
+  margin: 0;
+  color: var(--arena-text-muted);
+  font-size: 0.97rem;
+}
+
+.about-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.6rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-fact {
+  --fact: var(--about-teal);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.65rem;
+  width: 100%;
+  height: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--arena-text);
+  font: inherit;
+  line-height: 1.35;
+  text-align: left;
+  text-decoration: none;
+  transition:
+    border-color 0.2s var(--arena-ease),
+    transform 0.2s var(--arena-ease);
+}
+
+.about-facts li:nth-child(2) .about-fact {
+  --fact: var(--arena-accent);
+}
+.about-facts li:nth-child(3) .about-fact {
+  --fact: var(--about-violet);
+}
+.about-facts li:nth-child(4) .about-fact {
+  --fact: var(--about-amber);
+}
+.about-facts li:nth-child(5) .about-fact {
+  --fact: var(--about-coral);
+}
+
+.about-fact:hover {
+  border-color: color-mix(in srgb, var(--fact) 55%, transparent);
+  color: var(--arena-text);
+  transform: translateY(-2px);
+}
+
+.about-fact__icon {
+  display: inline-flex;
+  grid-row: span 2;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid color-mix(in srgb, var(--fact) 30%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--fact) 12%, transparent);
+  color: var(--fact);
+}
+
+.about-fact__label {
+  color: var(--arena-text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.about-fact__value {
+  font-size: 0.87rem;
+  font-weight: 600;
+  overflow-wrap: break-word;
+}
+
+/* install */
+#helpDiv .about .about-install {
+  margin-top: 1.1rem;
+  padding: 1.1rem 1.3rem 1.2rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: inset 3px 0 0 var(--arena-accent);
+}
+
+#helpDiv .about .about-install h3 {
+  font-size: 1.05rem;
+}
+
+.about-install p {
+  margin: 0;
+  color: var(--arena-text-muted);
+  font-size: 0.92rem;
+}
+
+.about-install__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.about-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem 1rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.about-btn--ghost {
+  border: 1px solid var(--arena-border-strong);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--arena-text);
+}
+
+.about-btn--ghost:hover {
+  border-color: var(--arena-accent);
+  color: var(--arena-text);
+}
+
+/* sections */
+#helpDiv .about .about-section {
+  margin-top: 2.4rem;
+  scroll-margin-top: 1rem;
+}
+
+#helpDiv .about .about-section > h3::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 3px;
+  margin-right: 0.6rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--about-teal), var(--arena-accent));
+  vertical-align: middle;
+}
+
+.about-sub {
+  max-width: 72ch;
+  margin: 0;
+  color: var(--arena-text-muted);
+  font-size: 0.92rem;
+}
+
+/* publications on a release timeline, newest first */
+#helpDiv .about .about-timeline {
+  position: relative;
+  margin: 1.2rem 0 0;
+  padding: 0 0 0 1.75rem;
+  list-style: none;
+}
+
+#helpDiv .about .about-pub {
+  position: relative;
+  margin: 0 0 0.9rem;
+}
+
+/* the dot on the timeline, and the line down to the next one */
+.about-pub::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 1.25rem;
+  left: calc(-1.3rem - 5px);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--tone);
+  box-shadow:
+    0 0 0 4px var(--bs-body-bg),
+    0 0 14px var(--tone);
+}
+
+.about-pub:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: calc(1.25rem + 6px);
+  bottom: calc(-0.9rem - 1.25rem - 6px);
+  left: -1.3rem;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tone) 70%, transparent),
+    color-mix(in srgb, var(--tone) 25%, transparent)
+  );
+}
+
+.about-pub--now::before {
+  animation: about-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes about-pulse {
+  50% {
+    box-shadow:
+      0 0 0 4px var(--bs-body-bg),
+      0 0 0 9px rgba(var(--arena-accent-rgb), 0.25),
+      0 0 18px var(--tone);
+  }
+}
+
+.about-pub__card {
+  padding: 1rem 1.2rem 1.05rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 14px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.035),
+    rgba(255, 255, 255, 0.01)
+  );
+  box-shadow: inset 3px 0 0 var(--tone);
+  transition:
+    border-color 0.2s var(--arena-ease),
+    transform 0.2s var(--arena-ease);
+}
+
+.about-pub--cite .about-pub__card,
+.about-pub__card--now {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--tone) 12%, transparent),
+    rgba(255, 255, 255, 0.015) 60%
+  );
+}
+
+.about-pub__card:hover {
+  border-color: color-mix(in srgb, var(--tone) 45%, transparent);
+  transform: translateY(-2px);
+}
+
+.about-pub__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+}
+
+.about-tag {
+  display: inline-block;
+  padding: 0.12rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--tone) 38%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  color: var(--tone);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.about-tag sup {
+  top: -0.35em;
+}
+
+.about-pub__year {
+  color: var(--arena-text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.about-pub__cite {
+  margin-left: auto;
+  color: var(--arena-text);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.about-pub__cite::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  background: var(--tone);
+  vertical-align: middle;
+}
+
+#helpDiv .about .about-pub__title {
+  margin: 0.6rem 0 0.35rem;
+  font-size: 1.02rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.about-pub__authors,
+.about-pub__venue {
+  margin: 0;
+  color: var(--arena-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.about-pub__venue {
+  color: var(--arena-text);
+  opacity: 0.85;
+}
+
+.about-pub__new {
+  margin: 0.65rem 0 0;
+  padding: 0.45rem 0.75rem;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--arena-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.about-pub__card--now .about-pub__new {
+  padding: 0;
+  background: none;
+}
+
+.about-pub__new b {
+  color: var(--tone);
+  font-weight: 600;
+}
+
+.about-pub__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+
+.about-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.7rem;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--arena-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 0.15s var(--arena-ease);
+}
+
+.about-chip:hover {
+  border-color: var(--tone);
+  color: var(--arena-text);
+}
+
+/* Copy citation sits at the end of the row, as on the Home page's cards */
+.about-copy {
+  margin-left: auto;
+  font-weight: 500;
+}
+
+.about-chip__id {
+  color: var(--arena-text-muted);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+/* related software and literature */
+.about-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.8rem;
+  margin: 0.9rem 0 2rem;
+}
+
+.about-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 14px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.035),
+    rgba(255, 255, 255, 0.01)
+  );
+  transition:
+    border-color 0.2s var(--arena-ease),
+    transform 0.2s var(--arena-ease);
+}
+
+.about-tool:hover {
+  border-color: rgba(var(--arena-accent-rgb), 0.45);
+  transform: translateY(-2px);
+}
+
+#helpDiv .about .about-tool__name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.about-tool__text {
+  margin: 0;
+  color: var(--arena-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.about-tool__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: auto;
+  padding-top: 0.45rem;
+  font-size: 0.84rem;
+}
+
+.about-tool__go {
+  color: var(--arena-accent-hover);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.about-tool__go:hover {
+  text-decoration: underline;
+}
+
+.about-tool__papers {
+  color: var(--arena-text-muted);
+  font-size: 0.78rem;
+}
+
+.about-tool__papers a {
+  margin-left: 0.4rem;
+  color: var(--arena-text-muted);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.about-tool__papers a:hover {
+  color: var(--arena-accent-hover);
+}
+
+.about-read {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 0.8rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--arena-text);
+  text-decoration: none;
+  transition: border-color 0.2s var(--arena-ease);
+}
+
+.about-read:hover {
+  border-color: rgba(167, 139, 250, 0.5);
+  color: var(--arena-text);
+}
+
+.about-read__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 11px;
+  background: rgba(167, 139, 250, 0.12);
+  color: var(--about-violet);
+}
+
+.about-read__title {
+  display: block;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.about-read__venue {
+  display: block;
+  color: var(--arena-text-muted);
+  font-size: 0.84rem;
+}
+
+/* developers and the lab */
+#helpDiv .about .about-team {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-person {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.about-person__avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--about-teal), var(--arena-accent));
+  color: #06101f;
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.about-person:nth-child(2) .about-person__avatar {
+  background: linear-gradient(135deg, var(--about-coral), var(--about-violet));
+}
+.about-person:nth-child(3) .about-person__avatar {
+  background: linear-gradient(135deg, var(--about-violet), var(--arena-accent));
+}
+.about-person:nth-child(4) .about-person__avatar {
+  background: linear-gradient(135deg, var(--about-amber), var(--about-coral));
+}
+
+.about-person__text {
+  min-width: 0;
+}
+
+.about-person__name {
+  display: block;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.about-person__email {
+  display: block;
+  color: var(--arena-accent-hover);
+  font-size: 0.84rem;
+  overflow-wrap: break-word;
+  text-decoration: none;
+}
+
+.about-person__email:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+  #helpDiv .about .about-hero {
+    padding: 1.2rem 1.1rem;
+  }
+  #helpDiv .about .about-logo {
+    width: 170px;
+  }
+  #helpDiv .about .about-timeline {
+    padding-left: 1.35rem;
+  }
+  .about-pub::before {
+    left: calc(-1.05rem - 5px);
+  }
+  .about-pub:not(:last-child)::after {
+    left: -1.05rem;
+  }
+  .about-pub__card {
+    padding: 0.9rem 0.95rem;
+  }
+  .about-chip__id {
+    display: none;
+  }
+  #helpDiv .about .about-team {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-pub--now::before {
+    animation: none;
+  }
+  .about-fact,
+  .about-pub__card,
+  .about-tool {
+    transition: none;
+  }
 }
 
 /* 2D navigator (satellite view): fixed bottom-right thumbnail of the network's
@@ -1836,6 +3081,11 @@ footer a:hover {
 
 .layout-panel .lp-more:not([open]) > summary::after {
   transform: rotate(-90deg);
+}
+
+/* the same gap under an open card's title as under a section title */
+.layout-panel .lp-more[open] > summary {
+  margin-bottom: 0.6rem;
 }
 
 .layout-panel .lp-step {
@@ -2087,48 +3337,6 @@ body.mode-single .layout-panel .lp-step {
   color: var(--arena-text-muted);
 }
 
-/* Help: tab-separated file examples as tables (ui/help.ts tsv()) */
-#helpDiv .help-tsv {
-  border-collapse: collapse;
-  margin: 0.3rem 0 1.1rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.82rem;
-}
-
-#helpDiv .help-tsv-note {
-  margin-top: 0.3rem;
-  font-size: 0.8rem;
-  color: var(--arena-text-muted);
-}
-
-#helpDiv .help-tsv th,
-#helpDiv .help-tsv td {
-  border: 1px solid var(--arena-border);
-  padding: 0.15rem 0.55rem;
-  text-align: left;
-  vertical-align: top;
-  white-space: nowrap;
-}
-
-#helpDiv .help-tsv th {
-  background-color: rgba(255, 255, 255, 0.06);
-  font-weight: 600;
-}
-
-#helpDiv .help-tsv .help-empty {
-  color: var(--arena-text-muted);
-  font-style: italic;
-  font-size: 0.75rem;
-}
-
-#helpDiv .tabcontent ol {
-  padding-left: 1.3rem;
-}
-
-#helpDiv .tabcontent ol li {
-  margin-bottom: 0.3rem;
-}
-
 /* Database Importers panel (ui/databases.ts): NORMA-style source cards */
 .db-card {
   --db: #8a8a86;
@@ -2346,41 +3554,6 @@ body.mode-single .layout-panel .lp-step {
 .db-hit__detail {
   color: var(--arena-text-muted);
   font-size: 0.75rem;
-}
-
-/* Help pages: interface screenshots (public/images/help/ui, refreshed with
-   `npm run help:shots`). Panel shots float beside the text on wide screens. */
-#helpDiv .help-shot {
-  display: block;
-  max-width: 100%;
-  border: 1px solid var(--arena-border);
-  border-radius: 10px;
-  box-shadow: var(--arena-shadow);
-  margin: 0.4rem 0 1.2rem;
-}
-
-#helpDiv .help-shot--panel {
-  float: right;
-  width: min(100%, 340px);
-  margin: 0 0 1rem 1.6rem;
-}
-
-#helpDiv .help-shot--small {
-  width: min(100%, 420px);
-}
-
-#helpDiv .tabcontent::after {
-  content: '';
-  display: block;
-  clear: both;
-}
-
-@media (max-width: 767.98px) {
-  #helpDiv .help-shot--panel {
-    float: none;
-    width: 100%;
-    margin: 0.4rem 0 1.2rem;
-  }
 }
 
 /* Data Tables (ui/data.ts): a tab strip that scrolls sideways when the
@@ -2669,8 +3842,8 @@ body.mode-single .layout-panel .lp-step {
   user-select: text;
 }
 
-/* Section titles inside the Edit, File, Scene, Style and Analyze panels: a
-   thin rule above each, so the controls read as groups (ui/*.ts). */
+/* Plain section titles inside the panels (Edit → Style, Data Tables): a thin
+   rule above each, so the controls read as groups (ui/*.ts). */
 #panelContent .tab-pane h6:not(.lp-title) {
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -3841,4 +5014,116 @@ body.mode-single .layout-panel .lp-step {
   justify-content: flex-end;
   gap: 0.4rem;
   margin-top: 0.6rem;
+}
+
+/* ---------------------------------------------------------------- UMAP
+   The UMAP options form (ui/umap.ts): under the Layout panel's algorithm
+   (.lp-umap) and in Export → Other tools (.umap-export). */
+.lp-umap {
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 6px;
+}
+
+.umap-features {
+  max-height: 11rem;
+  overflow-y: auto;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.umap-features__kind {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.umap-features__kind:first-child {
+  margin-top: 0;
+}
+
+.umap-export {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.umap-export .lp-grid,
+.umap-form .lp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 0.75rem;
+  align-items: end;
+}
+
+/* Charts of the Analyze panels (actions/chart.ts): lines and bars in the
+   series colours; text, axes and grid recessive, as in the degree chart. A
+   line's points show on hover; what a click selects shows a pointer. */
+.robustness-box,
+.plot-box {
+  padding: 0.5rem;
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius-sm);
+}
+
+.arena-chart .ch-text {
+  fill: var(--bs-secondary-color, #9aa4b2);
+}
+
+.arena-chart .ch-axis {
+  stroke: var(--bs-border-color, #4b5563);
+  stroke-width: 1;
+}
+
+.arena-chart .ch-grid {
+  stroke: var(--arena-border);
+  stroke-width: 1;
+}
+
+.arena-chart .ch-dot {
+  opacity: 0;
+}
+
+.arena-chart .ch-dot:hover {
+  opacity: 1;
+}
+
+.arena-chart .ch-hit {
+  cursor: pointer;
+}
+
+.arena-chart .ch-hit:hover {
+  stroke: var(--arena-text, #fff);
+  stroke-width: 1.5;
+}
+
+/* a progress bar with its Cancel button (Analyze → Perturbation, Plots) */
+.run-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.run-progress .progress {
+  flex: 1;
+}
+
+/* Analyze → Plots: the box dragged to select points, the summary table */
+.arena-chart .ch-brush {
+  fill: var(--arena-accent, #4f8fe6);
+  fill-opacity: 0.12;
+  stroke: var(--arena-accent, #4f8fe6);
+  stroke-dasharray: 4 3;
+}
+
+.plot-stats {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.plot-stats td {
+  text-align: right;
 }

@@ -204,4 +204,26 @@ test('phone/tablet: menu, bottom sheet, touch gestures', async ({
     await expect(page.locator('#panel-style')).toHaveClass(/show/)
   }
   await page.screenshot({ path: `test-results/${info.project.name}-sheet.png` })
+
+  // the ☰ menu lists every Analyze panel
+  if (phone) {
+    await page.locator('.navbar-toggler').tap()
+    await expect(page.locator('#navbarTabs')).toHaveClass(/\bshow\b/)
+    await expect(page.locator('#navbarTabs')).not.toHaveClass(/collapsing/)
+    await page.getByRole('button', { name: 'Analyze', exact: true }).tap()
+    for (const item of [
+      'Metrics',
+      'Statistics',
+      'Plots',
+      'Perturbation',
+      'Explore',
+      'Annotations & Groups',
+      'Data Tables',
+    ])
+      await expect(
+        page.getByRole('tab', { name: item, exact: true })
+      ).toBeVisible()
+    await page.getByRole('tab', { name: 'Perturbation', exact: true }).tap()
+    await expect(page.locator('#panel-perturbation')).toHaveClass(/show/)
+  }
 })

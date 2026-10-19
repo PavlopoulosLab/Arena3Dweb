@@ -1,0 +1,163 @@
+Node	Layer	Color	Size	Description
+x 1	Step 1 · Arena	#ffd92f	0.9	Step 1 ('Arena'): input embedding value 1 of 'Arena' (+0.25).
+x 2	Step 1 · Arena	#ffd92f	0.9	Step 1 ('Arena'): input embedding value 2 of 'Arena' (+0.48).
+x 3	Step 1 · Arena	#ffd92f	0.9	Step 1 ('Arena'): input embedding value 3 of 'Arena' (+0.59).
+forget 1	Step 1 · Arena	#e41a1c	1.133	Step 1 ('Arena'), forget gate of memory cell 1: 0.82 — how much of the old cell value to keep.
+forget 2	Step 1 · Arena	#e41a1c	0.99	Step 1 ('Arena'), forget gate of memory cell 2: 0.67 — how much of the old cell value to keep.
+forget 3	Step 1 · Arena	#e41a1c	0.872	Step 1 ('Arena'), forget gate of memory cell 3: 0.55 — how much of the old cell value to keep.
+forget 4	Step 1 · Arena	#e41a1c	0.965	Step 1 ('Arena'), forget gate of memory cell 4: 0.65 — how much of the old cell value to keep.
+input 1	Step 1 · Arena	#4daf4a	0.899	Step 1 ('Arena'), input gate of memory cell 1: 0.58 — how much of the candidate to write into the cell.
+input 2	Step 1 · Arena	#4daf4a	0.925	Step 1 ('Arena'), input gate of memory cell 2: 0.61 — how much of the candidate to write into the cell.
+input 3	Step 1 · Arena	#4daf4a	0.931	Step 1 ('Arena'), input gate of memory cell 3: 0.61 — how much of the candidate to write into the cell.
+input 4	Step 1 · Arena	#4daf4a	0.904	Step 1 ('Arena'), input gate of memory cell 4: 0.58 — how much of the candidate to write into the cell.
+candidate 1	Step 1 · Arena	#377eb8	0.941	Step 1 ('Arena'), candidate gate of memory cell 1: -0.62 — the new value proposed for the cell (tanh).
+candidate 2	Step 1 · Arena	#377eb8	0.588	Step 1 ('Arena'), candidate gate of memory cell 2: -0.25 — the new value proposed for the cell (tanh).
+candidate 3	Step 1 · Arena	#377eb8	0.571	Step 1 ('Arena'), candidate gate of memory cell 3: -0.23 — the new value proposed for the cell (tanh).
+candidate 4	Step 1 · Arena	#377eb8	0.512	Step 1 ('Arena'), candidate gate of memory cell 4: 0.17 — the new value proposed for the cell (tanh).
+output 1	Step 1 · Arena	#ff7f00	0.853	Step 1 ('Arena'), output gate of memory cell 1: 0.53 — how much of the cell to show as the hidden state.
+output 2	Step 1 · Arena	#ff7f00	0.757	Step 1 ('Arena'), output gate of memory cell 2: 0.43 — how much of the cell to show as the hidden state.
+output 3	Step 1 · Arena	#ff7f00	0.801	Step 1 ('Arena'), output gate of memory cell 3: 0.47 — how much of the cell to show as the hidden state.
+output 4	Step 1 · Arena	#ff7f00	0.847	Step 1 ('Arena'), output gate of memory cell 4: 0.52 — how much of the cell to show as the hidden state.
+cell 1	Step 1 · Arena	#bc80bd	0.763	Step 1 ('Arena'), memory cell 1: c = -0.36 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 2	Step 1 · Arena	#bc80bd	0.524	Step 1 ('Arena'), memory cell 2: c = -0.15 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 3	Step 1 · Arena	#bc80bd	0.513	Step 1 ('Arena'), memory cell 3: c = -0.14 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 4	Step 1 · Arena	#bc80bd	0.464	Step 1 ('Arena'), memory cell 4: c = +0.10 — the forget gate times the previous cell, plus the input gate times the candidate.
+hidden 1	Step 1 · Arena	#f0f0f0	0.792	Step 1 ('Arena'), hidden state 1: h = -0.18 — the output gate times tanh(c); the next step's gates read it.
+hidden 2	Step 1 · Arena	#f0f0f0	0.506	Step 1 ('Arena'), hidden state 2: h = -0.06 — the output gate times tanh(c); the next step's gates read it.
+hidden 3	Step 1 · Arena	#f0f0f0	0.513	Step 1 ('Arena'), hidden state 3: h = -0.07 — the output gate times tanh(c); the next step's gates read it.
+hidden 4	Step 1 · Arena	#f0f0f0	0.476	Step 1 ('Arena'), hidden state 4: h = +0.05 — the output gate times tanh(c); the next step's gates read it.
+x 1	Step 2 · draws	#ffd92f	0.9	Step 2 ('draws'): input embedding value 1 of 'draws' (+0.88).
+x 2	Step 2 · draws	#ffd92f	0.9	Step 2 ('draws'): input embedding value 2 of 'draws' (+0.48).
+x 3	Step 2 · draws	#ffd92f	0.9	Step 2 ('draws'): input embedding value 3 of 'draws' (+0.84).
+forget 1	Step 2 · draws	#e41a1c	1.154	Step 2 ('draws'), forget gate of memory cell 1: 0.85 — how much of the old cell value to keep.
+forget 2	Step 2 · draws	#e41a1c	0.878	Step 2 ('draws'), forget gate of memory cell 2: 0.56 — how much of the old cell value to keep.
+forget 3	Step 2 · draws	#e41a1c	0.872	Step 2 ('draws'), forget gate of memory cell 3: 0.55 — how much of the old cell value to keep.
+forget 4	Step 2 · draws	#e41a1c	1.046	Step 2 ('draws'), forget gate of memory cell 4: 0.73 — how much of the old cell value to keep.
+input 1	Step 2 · draws	#4daf4a	1.026	Step 2 ('draws'), input gate of memory cell 1: 0.71 — how much of the candidate to write into the cell.
+input 2	Step 2 · draws	#4daf4a	1.047	Step 2 ('draws'), input gate of memory cell 2: 0.73 — how much of the candidate to write into the cell.
+input 3	Step 2 · draws	#4daf4a	0.872	Step 2 ('draws'), input gate of memory cell 3: 0.55 — how much of the candidate to write into the cell.
+input 4	Step 2 · draws	#4daf4a	1.041	Step 2 ('draws'), input gate of memory cell 4: 0.73 — how much of the candidate to write into the cell.
+candidate 1	Step 2 · draws	#377eb8	1.049	Step 2 ('draws'), candidate gate of memory cell 1: -0.74 — the new value proposed for the cell (tanh).
+candidate 2	Step 2 · draws	#377eb8	0.878	Step 2 ('draws'), candidate gate of memory cell 2: -0.56 — the new value proposed for the cell (tanh).
+candidate 3	Step 2 · draws	#377eb8	0.963	Step 2 ('draws'), candidate gate of memory cell 3: -0.65 — the new value proposed for the cell (tanh).
+candidate 4	Step 2 · draws	#377eb8	0.371	Step 2 ('draws'), candidate gate of memory cell 4: 0.02 — the new value proposed for the cell (tanh).
+output 1	Step 2 · draws	#ff7f00	0.798	Step 2 ('draws'), output gate of memory cell 1: 0.47 — how much of the cell to show as the hidden state.
+output 2	Step 2 · draws	#ff7f00	0.643	Step 2 ('draws'), output gate of memory cell 2: 0.31 — how much of the cell to show as the hidden state.
+output 3	Step 2 · draws	#ff7f00	0.827	Step 2 ('draws'), output gate of memory cell 3: 0.50 — how much of the cell to show as the hidden state.
+output 4	Step 2 · draws	#ff7f00	0.904	Step 2 ('draws'), output gate of memory cell 4: 0.58 — how much of the cell to show as the hidden state.
+cell 1	Step 2 · draws	#bc80bd	1.3	Step 2 ('draws'), memory cell 1: c = -0.83 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 2	Step 2 · draws	#bc80bd	0.915	Step 2 ('draws'), memory cell 2: c = -0.49 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 3	Step 2 · draws	#bc80bd	0.847	Step 2 ('draws'), memory cell 3: c = -0.43 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 4	Step 2 · draws	#bc80bd	0.452	Step 2 ('draws'), memory cell 4: c = +0.09 — the forget gate times the previous cell, plus the input gate times the candidate.
+hidden 1	Step 2 · draws	#f0f0f0	1.125	Step 2 ('draws'), hidden state 1: h = -0.32 — the output gate times tanh(c); the next step's gates read it.
+hidden 2	Step 2 · draws	#f0f0f0	0.69	Step 2 ('draws'), hidden state 2: h = -0.14 — the output gate times tanh(c); the next step's gates read it.
+hidden 3	Step 2 · draws	#f0f0f0	0.846	Step 2 ('draws'), hidden state 3: h = -0.20 — the output gate times tanh(c); the next step's gates read it.
+hidden 4	Step 2 · draws	#f0f0f0	0.475	Step 2 ('draws'), hidden state 4: h = +0.05 — the output gate times tanh(c); the next step's gates read it.
+x 1	Step 3 · networks	#ffd92f	0.9	Step 3 ('networks'): input embedding value 1 of 'networks' (-0.94).
+x 2	Step 3 · networks	#ffd92f	0.9	Step 3 ('networks'): input embedding value 2 of 'networks' (-0.07).
+x 3	Step 3 · networks	#ffd92f	0.9	Step 3 ('networks'): input embedding value 3 of 'networks' (+0.89).
+forget 1	Step 3 · networks	#e41a1c	1.214	Step 3 ('networks'), forget gate of memory cell 1: 0.91 — how much of the old cell value to keep.
+forget 2	Step 3 · networks	#e41a1c	1.036	Step 3 ('networks'), forget gate of memory cell 2: 0.72 — how much of the old cell value to keep.
+forget 3	Step 3 · networks	#e41a1c	0.871	Step 3 ('networks'), forget gate of memory cell 3: 0.55 — how much of the old cell value to keep.
+forget 4	Step 3 · networks	#e41a1c	0.834	Step 3 ('networks'), forget gate of memory cell 4: 0.51 — how much of the old cell value to keep.
+input 1	Step 3 · networks	#4daf4a	0.623	Step 3 ('networks'), input gate of memory cell 1: 0.29 — how much of the candidate to write into the cell.
+input 2	Step 3 · networks	#4daf4a	0.692	Step 3 ('networks'), input gate of memory cell 2: 0.36 — how much of the candidate to write into the cell.
+input 3	Step 3 · networks	#4daf4a	1.007	Step 3 ('networks'), input gate of memory cell 3: 0.69 — how much of the candidate to write into the cell.
+input 4	Step 3 · networks	#4daf4a	0.634	Step 3 ('networks'), input gate of memory cell 4: 0.30 — how much of the candidate to write into the cell.
+candidate 1	Step 3 · networks	#377eb8	0.497	Step 3 ('networks'), candidate gate of memory cell 1: -0.15 — the new value proposed for the cell (tanh).
+candidate 2	Step 3 · networks	#377eb8	1.09	Step 3 ('networks'), candidate gate of memory cell 2: 0.78 — the new value proposed for the cell (tanh).
+candidate 3	Step 3 · networks	#377eb8	0.986	Step 3 ('networks'), candidate gate of memory cell 3: 0.67 — the new value proposed for the cell (tanh).
+candidate 4	Step 3 · networks	#377eb8	0.681	Step 3 ('networks'), candidate gate of memory cell 4: 0.35 — the new value proposed for the cell (tanh).
+output 1	Step 3 · networks	#ff7f00	0.913	Step 3 ('networks'), output gate of memory cell 1: 0.59 — how much of the cell to show as the hidden state.
+output 2	Step 3 · networks	#ff7f00	0.904	Step 3 ('networks'), output gate of memory cell 2: 0.58 — how much of the cell to show as the hidden state.
+output 3	Step 3 · networks	#ff7f00	0.56	Step 3 ('networks'), output gate of memory cell 3: 0.22 — how much of the cell to show as the hidden state.
+output 4	Step 3 · networks	#ff7f00	0.69	Step 3 ('networks'), output gate of memory cell 4: 0.36 — how much of the cell to show as the hidden state.
+cell 1	Step 3 · networks	#bc80bd	1.265	Step 3 ('networks'), memory cell 1: c = -0.80 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 2	Step 3 · networks	#bc80bd	0.436	Step 3 ('networks'), memory cell 2: c = -0.07 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 3	Step 3 · networks	#bc80bd	0.609	Step 3 ('networks'), memory cell 3: c = +0.23 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 4	Step 3 · networks	#bc80bd	0.522	Step 3 ('networks'), memory cell 4: c = +0.15 — the forget gate times the previous cell, plus the input gate times the candidate.
+hidden 1	Step 3 · networks	#f0f0f0	1.3	Step 3 ('networks'), hidden state 1: h = -0.39 — the output gate times tanh(c); the next step's gates read it.
+hidden 2	Step 3 · networks	#f0f0f0	0.456	Step 3 ('networks'), hidden state 2: h = -0.04 — the output gate times tanh(c); the next step's gates read it.
+hidden 3	Step 3 · networks	#f0f0f0	0.469	Step 3 ('networks'), hidden state 3: h = +0.05 — the output gate times tanh(c); the next step's gates read it.
+hidden 4	Step 3 · networks	#f0f0f0	0.479	Step 3 ('networks'), hidden state 4: h = +0.05 — the output gate times tanh(c); the next step's gates read it.
+x 1	Step 4 · in	#ffd92f	0.9	Step 4 ('in'): input embedding value 1 of 'in' (+0.30).
+x 2	Step 4 · in	#ffd92f	0.9	Step 4 ('in'): input embedding value 2 of 'in' (+0.80).
+x 3	Step 4 · in	#ffd92f	0.9	Step 4 ('in'): input embedding value 3 of 'in' (-0.77).
+forget 1	Step 4 · in	#e41a1c	1.128	Step 4 ('in'), forget gate of memory cell 1: 0.82 — how much of the old cell value to keep.
+forget 2	Step 4 · in	#e41a1c	1.189	Step 4 ('in'), forget gate of memory cell 2: 0.88 — how much of the old cell value to keep.
+forget 3	Step 4 · in	#e41a1c	1.107	Step 4 ('in'), forget gate of memory cell 3: 0.80 — how much of the old cell value to keep.
+forget 4	Step 4 · in	#e41a1c	1.126	Step 4 ('in'), forget gate of memory cell 4: 0.82 — how much of the old cell value to keep.
+input 1	Step 4 · in	#4daf4a	1.101	Step 4 ('in'), input gate of memory cell 1: 0.79 — how much of the candidate to write into the cell.
+input 2	Step 4 · in	#4daf4a	0.818	Step 4 ('in'), input gate of memory cell 2: 0.49 — how much of the candidate to write into the cell.
+input 3	Step 4 · in	#4daf4a	0.86	Step 4 ('in'), input gate of memory cell 3: 0.54 — how much of the candidate to write into the cell.
+input 4	Step 4 · in	#4daf4a	1.125	Step 4 ('in'), input gate of memory cell 4: 0.82 — how much of the candidate to write into the cell.
+candidate 1	Step 4 · in	#377eb8	0.589	Step 4 ('in'), candidate gate of memory cell 1: 0.25 — the new value proposed for the cell (tanh).
+candidate 2	Step 4 · in	#377eb8	0.816	Step 4 ('in'), candidate gate of memory cell 2: -0.49 — the new value proposed for the cell (tanh).
+candidate 3	Step 4 · in	#377eb8	0.586	Step 4 ('in'), candidate gate of memory cell 3: 0.25 — the new value proposed for the cell (tanh).
+candidate 4	Step 4 · in	#377eb8	0.93	Step 4 ('in'), candidate gate of memory cell 4: 0.61 — the new value proposed for the cell (tanh).
+output 1	Step 4 · in	#ff7f00	0.693	Step 4 ('in'), output gate of memory cell 1: 0.36 — how much of the cell to show as the hidden state.
+output 2	Step 4 · in	#ff7f00	1.112	Step 4 ('in'), output gate of memory cell 2: 0.80 — how much of the cell to show as the hidden state.
+output 3	Step 4 · in	#ff7f00	1.131	Step 4 ('in'), output gate of memory cell 3: 0.82 — how much of the cell to show as the hidden state.
+output 4	Step 4 · in	#ff7f00	0.718	Step 4 ('in'), output gate of memory cell 4: 0.39 — how much of the cell to show as the hidden state.
+cell 1	Step 4 · in	#bc80bd	0.871	Step 4 ('in'), memory cell 1: c = -0.45 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 2	Step 4 · in	#bc80bd	0.703	Step 4 ('in'), memory cell 2: c = -0.31 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 3	Step 4 · in	#bc80bd	0.71	Step 4 ('in'), memory cell 3: c = +0.31 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 4	Step 4 · in	#bc80bd	1.062	Step 4 ('in'), memory cell 4: c = +0.62 — the forget gate times the previous cell, plus the input gate times the candidate.
+hidden 1	Step 4 · in	#f0f0f0	0.722	Step 4 ('in'), hidden state 1: h = -0.15 — the output gate times tanh(c); the next step's gates read it.
+hidden 2	Step 4 · in	#f0f0f0	0.93	Step 4 ('in'), hidden state 2: h = -0.24 — the output gate times tanh(c); the next step's gates read it.
+hidden 3	Step 4 · in	#f0f0f0	0.954	Step 4 ('in'), hidden state 3: h = +0.25 — the output gate times tanh(c); the next step's gates read it.
+hidden 4	Step 4 · in	#f0f0f0	0.867	Step 4 ('in'), hidden state 4: h = +0.21 — the output gate times tanh(c); the next step's gates read it.
+x 1	Step 5 · 3D	#ffd92f	0.9	Step 5 ('3D'): input embedding value 1 of '3D' (-0.06).
+x 2	Step 5 · 3D	#ffd92f	0.9	Step 5 ('3D'): input embedding value 2 of '3D' (-0.51).
+x 3	Step 5 · 3D	#ffd92f	0.9	Step 5 ('3D'): input embedding value 3 of '3D' (+0.09).
+forget 1	Step 5 · 3D	#e41a1c	1.054	Step 5 ('3D'), forget gate of memory cell 1: 0.74 — how much of the old cell value to keep.
+forget 2	Step 5 · 3D	#e41a1c	1.053	Step 5 ('3D'), forget gate of memory cell 2: 0.74 — how much of the old cell value to keep.
+forget 3	Step 5 · 3D	#e41a1c	1.123	Step 5 ('3D'), forget gate of memory cell 3: 0.81 — how much of the old cell value to keep.
+forget 4	Step 5 · 3D	#e41a1c	1.12	Step 5 ('3D'), forget gate of memory cell 4: 0.81 — how much of the old cell value to keep.
+input 1	Step 5 · 3D	#4daf4a	0.658	Step 5 ('3D'), input gate of memory cell 1: 0.32 — how much of the candidate to write into the cell.
+input 2	Step 5 · 3D	#4daf4a	0.783	Step 5 ('3D'), input gate of memory cell 2: 0.46 — how much of the candidate to write into the cell.
+input 3	Step 5 · 3D	#4daf4a	0.714	Step 5 ('3D'), input gate of memory cell 3: 0.38 — how much of the candidate to write into the cell.
+input 4	Step 5 · 3D	#4daf4a	0.849	Step 5 ('3D'), input gate of memory cell 4: 0.53 — how much of the candidate to write into the cell.
+candidate 1	Step 5 · 3D	#377eb8	0.972	Step 5 ('3D'), candidate gate of memory cell 1: 0.65 — the new value proposed for the cell (tanh).
+candidate 2	Step 5 · 3D	#377eb8	0.827	Step 5 ('3D'), candidate gate of memory cell 2: 0.50 — the new value proposed for the cell (tanh).
+candidate 3	Step 5 · 3D	#377eb8	0.469	Step 5 ('3D'), candidate gate of memory cell 3: -0.13 — the new value proposed for the cell (tanh).
+candidate 4	Step 5 · 3D	#377eb8	0.473	Step 5 ('3D'), candidate gate of memory cell 4: -0.13 — the new value proposed for the cell (tanh).
+output 1	Step 5 · 3D	#ff7f00	0.821	Step 5 ('3D'), output gate of memory cell 1: 0.50 — how much of the cell to show as the hidden state.
+output 2	Step 5 · 3D	#ff7f00	0.743	Step 5 ('3D'), output gate of memory cell 2: 0.41 — how much of the cell to show as the hidden state.
+output 3	Step 5 · 3D	#ff7f00	0.829	Step 5 ('3D'), output gate of memory cell 3: 0.50 — how much of the cell to show as the hidden state.
+output 4	Step 5 · 3D	#ff7f00	0.843	Step 5 ('3D'), output gate of memory cell 4: 0.52 — how much of the cell to show as the hidden state.
+cell 1	Step 5 · 3D	#bc80bd	0.492	Step 5 ('3D'), memory cell 1: c = -0.12 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 2	Step 5 · 3D	#bc80bd	0.351	Step 5 ('3D'), memory cell 2: c = +0.00 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 3	Step 5 · 3D	#bc80bd	0.587	Step 5 ('3D'), memory cell 3: c = +0.21 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 4	Step 5 · 3D	#bc80bd	0.848	Step 5 ('3D'), memory cell 4: c = +0.43 — the forget gate times the previous cell, plus the input gate times the candidate.
+hidden 1	Step 5 · 3D	#f0f0f0	0.498	Step 5 ('3D'), hidden state 1: h = -0.06 — the output gate times tanh(c); the next step's gates read it.
+hidden 2	Step 5 · 3D	#f0f0f0	0.351	Step 5 ('3D'), hidden state 2: h = +0.00 — the output gate times tanh(c); the next step's gates read it.
+hidden 3	Step 5 · 3D	#f0f0f0	0.599	Step 5 ('3D'), hidden state 3: h = +0.10 — the output gate times tanh(c); the next step's gates read it.
+hidden 4	Step 5 · 3D	#f0f0f0	0.863	Step 5 ('3D'), hidden state 4: h = +0.21 — the output gate times tanh(c); the next step's gates read it.
+x 1	Step 6 · space	#ffd92f	0.9	Step 6 ('space'): input embedding value 1 of 'space' (+0.15).
+x 2	Step 6 · space	#ffd92f	0.9	Step 6 ('space'): input embedding value 2 of 'space' (-0.97).
+x 3	Step 6 · space	#ffd92f	0.9	Step 6 ('space'): input embedding value 3 of 'space' (-0.57).
+forget 1	Step 6 · space	#e41a1c	0.851	Step 6 ('space'), forget gate of memory cell 1: 0.53 — how much of the old cell value to keep.
+forget 2	Step 6 · space	#e41a1c	1.052	Step 6 ('space'), forget gate of memory cell 2: 0.74 — how much of the old cell value to keep.
+forget 3	Step 6 · space	#e41a1c	1.215	Step 6 ('space'), forget gate of memory cell 3: 0.91 — how much of the old cell value to keep.
+forget 4	Step 6 · space	#e41a1c	1.199	Step 6 ('space'), forget gate of memory cell 4: 0.89 — how much of the old cell value to keep.
+input 1	Step 6 · space	#4daf4a	0.732	Step 6 ('space'), input gate of memory cell 1: 0.40 — how much of the candidate to write into the cell.
+input 2	Step 6 · space	#4daf4a	0.823	Step 6 ('space'), input gate of memory cell 2: 0.50 — how much of the candidate to write into the cell.
+input 3	Step 6 · space	#4daf4a	0.569	Step 6 ('space'), input gate of memory cell 3: 0.23 — how much of the candidate to write into the cell.
+input 4	Step 6 · space	#4daf4a	0.804	Step 6 ('space'), input gate of memory cell 4: 0.48 — how much of the candidate to write into the cell.
+candidate 1	Step 6 · space	#377eb8	1.093	Step 6 ('space'), candidate gate of memory cell 1: 0.78 — the new value proposed for the cell (tanh).
+candidate 2	Step 6 · space	#377eb8	0.609	Step 6 ('space'), candidate gate of memory cell 2: 0.27 — the new value proposed for the cell (tanh).
+candidate 3	Step 6 · space	#377eb8	0.535	Step 6 ('space'), candidate gate of memory cell 3: -0.19 — the new value proposed for the cell (tanh).
+candidate 4	Step 6 · space	#377eb8	0.871	Step 6 ('space'), candidate gate of memory cell 4: -0.55 — the new value proposed for the cell (tanh).
+output 1	Step 6 · space	#ff7f00	0.797	Step 6 ('space'), output gate of memory cell 1: 0.47 — how much of the cell to show as the hidden state.
+output 2	Step 6 · space	#ff7f00	0.742	Step 6 ('space'), output gate of memory cell 2: 0.41 — how much of the cell to show as the hidden state.
+output 3	Step 6 · space	#ff7f00	0.873	Step 6 ('space'), output gate of memory cell 3: 0.55 — how much of the cell to show as the hidden state.
+output 4	Step 6 · space	#ff7f00	0.887	Step 6 ('space'), output gate of memory cell 4: 0.57 — how much of the cell to show as the hidden state.
+cell 1	Step 6 · space	#bc80bd	0.636	Step 6 ('space'), memory cell 1: c = +0.25 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 2	Step 6 · space	#bc80bd	0.506	Step 6 ('space'), memory cell 2: c = +0.14 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 3	Step 6 · space	#bc80bd	0.515	Step 6 ('space'), memory cell 3: c = +0.14 — the forget gate times the previous cell, plus the input gate times the candidate.
+cell 4	Step 6 · space	#bc80bd	0.495	Step 6 ('space'), memory cell 4: c = +0.13 — the forget gate times the previous cell, plus the input gate times the candidate.
+hidden 1	Step 6 · space	#f0f0f0	0.629	Step 6 ('space'), hidden state 1: h = +0.12 — the output gate times tanh(c); the next step's gates read it.
+hidden 2	Step 6 · space	#f0f0f0	0.485	Step 6 ('space'), hidden state 2: h = +0.06 — the output gate times tanh(c); the next step's gates read it.
+hidden 3	Step 6 · space	#f0f0f0	0.54	Step 6 ('space'), hidden state 3: h = +0.08 — the output gate times tanh(c); the next step's gates read it.
+hidden 4	Step 6 · space	#f0f0f0	0.522	Step 6 ('space'), hidden state 4: h = +0.07 — the output gate times tanh(c); the next step's gates read it.

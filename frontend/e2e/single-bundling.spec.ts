@@ -60,6 +60,7 @@ test('single network mode bundles every edge as one set', async ({ page }) => {
     timeout: 15000,
   })
   await tab(page, 'Edges')
+  await page.locator('#edgeCard_bundling > summary').click() // starts folded
   await expect(page.locator('#interBundling')).toBeHidden()
   await expect(page.locator('label[for="intraBundling"]')).toHaveText(
     /^Edge Bundling/,

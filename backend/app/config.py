@@ -118,5 +118,20 @@ TMP_PATH = "tmp/"
 # Kamada-Kawai, MDS, Graphopt and Sugiyama build n×n structures; the cap keeps one
 # request from exhausting the memory or the CPU of the whole service.
 MAX_QUADRATIC_NODES = int(os.environ.get("ARENA_MAX_QUADRATIC_NODES", "2000"))
+# UMAP layouts (services/umap_layout.py): ~10–20 s for 5000 nodes once its numba
+# kernels are compiled; the feature cap bounds the request body.
+MAX_UMAP_NODES = int(os.environ.get("ARENA_MAX_UMAP_NODES", "5000"))
+MAX_UMAP_FEATURES = 500
 # the whole of a database import, every upstream call together
 DB_TOTAL_SECONDS = float(os.environ.get("ARENA_DB_TOTAL_SECONDS", "150"))
+
+# Perturbation analysis (services/perturbation.py). A robustness curve has at
+# most MAX_ATTACK_STEPS steps and averages at most MAX_ATTACK_RUNS random runs;
+# a request stops after PERTURBATION_TIME_BUDGET seconds and returns what it
+# has, with a warning. Graphs above MAX_QUADRATIC_NODES nodes rank by a
+# betweenness estimated from BETWEENNESS_SAMPLE source nodes, and their
+# robustness curves skip the global efficiency.
+MAX_ATTACK_STEPS = 50
+MAX_ATTACK_RUNS = 20
+PERTURBATION_TIME_BUDGET = float(os.environ.get("ARENA_PERTURBATION_SECONDS", "30"))
+BETWEENNESS_SAMPLE = 200

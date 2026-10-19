@@ -48,137 +48,229 @@ import {
   type HiveScale,
 } from '../actions/hive'
 import { fitViewNow } from '../actions/search'
+import { FOLD_ALL_HTML } from './sections'
 
-// Load Example choices (public/data); .json files load as sessions
+// Load Example choices (public/data); .json files load as sessions. Both
+// pickers (here and on the Home page) list them by category, in this order.
+export const EXAMPLE_CATEGORIES = [
+  'Biological networks',
+  'Layer geometry and 3D',
+  'Hive plots',
+  'Neural networks',
+  'Small examples and file formats',
+] as const
+type ExampleCategory = (typeof EXAMPLE_CATEGORIES)[number]
+
+const BIO = 'Biological networks'
+const GEOMETRY = 'Layer geometry and 3D'
+const HIVE = 'Hive plots'
+const NEURAL = 'Neural networks'
+const SMALL = 'Small examples and file formats'
+
+// The first entry is the default choice (and the Load Example network).
 export const EXAMPLES = [
-  { file: 'figure2A_data.tsv', label: 'Four weighted layers' },
+  { file: 'figure2A_data.tsv', label: 'Four weighted layers', category: SMALL },
   {
     file: 'figure2A_export.json',
     label: 'Four layers forming a cube (session)',
+    category: GEOMETRY,
   },
   {
     file: 'figure1_export.json',
     label: 'Six layers with different random topologies',
+    category: SMALL,
   },
   {
     file: 'figure2B_export.json',
     label: 'Four layers with node and edge attributes',
+    category: SMALL,
   },
   {
     file: 'covid19_export.json',
     label: 'SARS-CoV-2 host–virus network (5 layers)',
+    category: BIO,
   },
   {
     file: 'covid19_no_layers.tsv',
     label: 'SARS-CoV-2 network without layers (edgelist)',
+    category: SMALL,
   },
   {
     file: 'covid19_3d_network.json',
     label: 'SARS-CoV-2 as one 3D network (layers ignored)',
+    category: GEOMETRY,
   },
-  { file: 'GPCRs_export.json', label: 'GPCR signalling (4 layers)' },
-  { file: 'GPCRs_spheres.json', label: 'GPCR signalling, layers as spheres' },
+  {
+    file: 'GPCRs_export.json',
+    label: 'GPCR signalling (4 layers)',
+    category: BIO,
+  },
+  {
+    file: 'GPCRs_spheres.json',
+    label: 'GPCR signalling, layers as spheres',
+    category: GEOMETRY,
+  },
   {
     file: 'aspirin_3channels_directed.json',
     label: 'Aspirin, three channels, directed',
+    category: BIO,
   },
   {
     file: 'Arena3DApp_aspirin.json',
     label: 'Aspirin from Cytoscape (Arena3DApp)',
+    category: BIO,
   },
   {
     file: 'prego.json',
     label: 'PREGO anaerobic ammonium oxidation, three channels',
+    category: BIO,
   },
   // neural network architectures, one network layer per Arena3D layer
   // (scripts/neural_network_examples.py writes them)
   {
     file: 'cnn_lenet.json',
     label: 'Neural network: convolutional (LeNet-like), 7 layers',
+    category: NEURAL,
   },
   {
     file: 'transformer_tiny.json',
     label: 'Neural network: transformer (LLM-like), 10 layers',
+    category: NEURAL,
   },
-  { file: 'edgelist_2columns.tsv', label: 'Minimal two-column edgelist' },
+  {
+    file: 'lstm_unrolled.json',
+    label: 'Neural network: LSTM unrolled over 6 time steps',
+    category: NEURAL,
+  },
+  {
+    file: 'unet.json',
+    label: 'Neural network: U-Net encoder–decoder, 7 layers',
+    category: NEURAL,
+  },
+  {
+    file: 'gnn_karate.json',
+    label: 'Neural network: graph neural network on the karate club',
+    category: NEURAL,
+  },
+  {
+    file: 'vae.json',
+    label: 'Neural network: variational autoencoder, 8 layers',
+    category: NEURAL,
+  },
+  {
+    file: 'edgelist_2columns.tsv',
+    label: 'Minimal two-column edgelist',
+    category: SMALL,
+  },
   // hive plots (Krzywinski et al. 2012): the layers become the axes, nodes
   // placed by degree — by rank where most nodes share one or two links
   {
     file: 'prego.tsv',
     label: 'Hive plot: PREGO, three layers as three axes',
+    category: HIVE,
     hive: { scale: 'rank', axes: 'flat' },
   },
   {
     file: 'GPCRs_data.tsv',
     label: 'Hive plot: GPCR signalling, four axes',
+    category: HIVE,
     hive: { scale: 'axis', axes: 'flat' },
   },
   {
     file: 'covid19_data.tsv',
     label: 'Hive plot: SARS-CoV-2 host–virus network, five axes',
+    category: HIVE,
     hive: { scale: 'axis', axes: 'flat' },
   },
   // …and with the axes spread in 3D: every two axes neighbours
   {
     file: 'GPCRs_data.tsv',
     label: '3D hive plot: GPCR signalling, four axes as a tetrahedron',
+    category: HIVE,
     hive: { scale: 'axis', axes: '3d' },
   },
   {
     file: 'covid19_data.tsv',
     label: '3D hive plot: SARS-CoV-2 host–virus network, five axes on a sphere',
+    category: HIVE,
     hive: { scale: 'axis', axes: '3d' },
   },
   {
     file: 'figure1_data.tsv',
     label: '3D hive plot: six layers along ±X, ±Y and ±Z',
+    category: HIVE,
     hive: { scale: 'rank', axes: '3d' },
   },
 ] satisfies {
   file: string
   label: string
+  category: ExampleCategory
   hive?: { scale: HiveScale; axes: HiveAxes }
 }[]
 
+// The <option>s of an example picker: grouped by category, each valued by its
+// index in EXAMPLES, with the first entry chosen
+export function exampleOptions(): string {
+  return EXAMPLE_CATEGORIES.map((category) => {
+    const options = EXAMPLES.map((e, i) =>
+      e.category === category
+        ? `<option value="${i}"${i === 0 ? ' selected' : ''}>${e.label}</option>`
+        : ''
+    ).join('')
+    return `<optgroup label="${category}">${options}</optgroup>`
+  }).join('')
+}
+
 const FILE_HTML = `
-<div class="col-md-6 col-lg-4">
-  <h6>Network</h6>
+<div class="col-md-6 col-lg-4 layout-panel">
+  ${FOLD_ALL_HTML}
+  <details class="lp-section lp-more" id="fileCard_network" open>
+  <summary>Network</summary>
   <div class="mb-3">
     <label for="input_network_file" class="form-label">Upload Network (TSV, GraphML, GML, SIF, CX2):</label>
     <input class="form-control" type="file" id="input_network_file" accept=".tsv,.txt,.graphml,.xml,.gml,.sif,.cx2,.cx" />
   </div>
-  <div class="mb-3">
+  <div>
     <label for="load_network_file" class="form-label">Load Session:</label>
     <input class="form-control" type="file" id="load_network_file" accept=".json" />
   </div>
-  <h6>Attributes</h6>
+  </details>
+  <details class="lp-section lp-more" id="fileCard_attributes">
+  <summary>Node &amp; edge attributes</summary>
   <div class="mb-3">
     <label for="node_attributes_file" class="form-label">Upload NODE attributes:</label>
     <input class="form-control" type="file" id="node_attributes_file" accept=".tsv,.txt" />
   </div>
-  <div class="mb-3">
+  <div>
     <label for="edge_attributes_file" class="form-label">Upload EDGE attributes:</label>
     <input class="form-control" type="file" id="edge_attributes_file" accept=".tsv,.txt" />
   </div>
+  </details>
+  <details class="lp-section lp-more" id="fileCard_groups">
+  <summary>Groups &amp; values</summary>
   <div class="mb-3">
     <label for="groups_file" class="form-label">Upload GROUP file (annotations, NORMA format):</label>
     <input class="form-control" type="file" id="groups_file" accept=".tsv,.txt" />
     <div class="form-text">One group per line: name, TAB, its members (comma-separated). Nodes are matched by name in every layer.</div>
   </div>
-  <div class="mb-3">
+  <div>
     <label for="values_file" class="form-label">Upload node VALUES (expression, scores):</label>
     <input class="form-control" type="file" id="values_file" accept=".tsv,.txt" />
     <div class="form-text">Node, then one numeric column per condition; colour nodes by a column in Edit → Style.</div>
   </div>
-  <h6>Examples</h6>
-  <div class="mb-2">
+  </details>
+  <details class="lp-section lp-more" id="fileCard_examples" open>
+  <summary>Examples</summary>
+  <div>
     <label for="exampleChoice" class="form-label">Example:</label>
     <select class="form-select form-select-sm" id="exampleChoice">
-      ${EXAMPLES.map((e, i) => `<option value="${i}">${e.label}</option>`).join('')}
+      ${exampleOptions()}
     </select>
   </div>
-  <h6>Loaded networks</h6>
-  <div class="workspace mb-3" id="workspaceCard">
+  </details>
+  <details class="lp-section lp-more" id="fileCard_networks" open>
+  <summary>Loaded networks</summary>
+  <div class="workspace" id="workspaceCard">
     <div id="workspaceList" class="workspace-list"></div>
     <div class="form-text">Every load adds a network here; switching keeps each one as it was (layout, colours, shapes, annotations, mode). Compare the active network with another in Data Tables.</div>
     <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
@@ -186,6 +278,7 @@ const FILE_HTML = `
       <button id="compareNetworks" class="btn btn-outline-primary btn-sm">Compare Networks</button>
     </div>
   </div>
+  </details>
   <div class="file-actions">
     <button id="save_network_object" class="btn btn-primary file-action">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 2.2h8.4L13.2 4.6v9.2a1 1 0 0 1-1 1H2.8a1 1 0 0 1-1-1V3.2a1 1 0 0 1 1-1Z"/><path d="M4.6 2.2v3.6h5.4V2.2"/><path d="M4.9 9.4h6.2v4.4H4.9Z"/></svg>
@@ -410,7 +503,7 @@ async function onUploadGroups(file: File): Promise<void> {
     const groups = new Set(rows.flatMap((r) => r.groups)).size
     status(
       n
-        ? `${groups} groups applied to ${n} nodes — see Analyze → Groups.`
+        ? `${groups} groups applied to ${n} nodes — see Analyze → Annotations & Groups.`
         : 'No node of the network is named in that file.',
       !n
     )

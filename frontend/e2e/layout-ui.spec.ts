@@ -31,7 +31,7 @@ test('3D layout filters the algorithm list; runs show a progress bar', async ({
           .filter((o) => !(o as HTMLOptionElement).disabled)
           .map((o) => (o as HTMLOptionElement).value)
       )
-  expect((await enabled()).length).toBe(12) // '-' + 11 algorithms
+  expect((await enabled()).length).toBe(13) // '-' + 11 algorithms + UMAP
   await page.locator('#layoutAlgorithmChoice').selectOption('Sugiyama')
   await page
     .locator('#layout3dCheckbox')
@@ -44,6 +44,7 @@ test('3D layout filters the algorithm list; runs show a progress bar', async ({
     'Random',
     'DrL',
     'Kamada-Kawai',
+    'UMAP',
   ])
   await expect(page.locator('#layoutAlgorithmChoice')).toHaveValue(
     'Fruchterman-Reingold'
@@ -51,7 +52,7 @@ test('3D layout filters the algorithm list; runs show a progress bar', async ({
   await page
     .locator('#layout3dCheckbox')
     .evaluate((el) => (el as HTMLInputElement).click())
-  expect((await enabled()).length).toBe(12)
+  expect((await enabled()).length).toBe(13)
 
   // the run reports progress, ends on "applied", then hides the bar
   await page
