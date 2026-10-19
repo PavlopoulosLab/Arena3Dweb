@@ -235,7 +235,9 @@ def fake_http(monkeypatch):
 
     def fake_post(url, params, *, accept="application/json"):
         calls.append(f"POST {url}?{urllib.parse.urlencode(params)}")
-        if url.startswith(config.STRING_API) or "string-db.org" in url:
+        host = urllib.parse.urlsplit(url).hostname or ""
+        string_host = host == "string-db.org" or host.endswith(".string-db.org")
+        if url.startswith(config.STRING_API) or string_host:
             return string_answer(url, params)
         raise AssertionError(url)
 

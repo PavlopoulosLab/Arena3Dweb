@@ -111,7 +111,7 @@ function renderResults(): void {
               t,
               i
             ) => `<tr data-term="${i}" style="cursor:pointer" title="${escapeHtml(t.term)} — click to select its genes">
-              <td><span class="badge me-1" style="background:${groupColor(t.description)}">&nbsp;</span>${escapeHtml(t.description)} <small class="text-secondary">${escapeHtml(t.category)}</small></td>
+              <td><span class="badge me-1" style="background:${escapeHtml(groupColor(t.description))}">&nbsp;</span>${escapeHtml(t.description)} <small class="text-secondary">${escapeHtml(t.category)}</small></td>
               <td>${t.fdr.toExponential(1)}</td>
               <td>${t.genes.length}</td>
             </tr>`

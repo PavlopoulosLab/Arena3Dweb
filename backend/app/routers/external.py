@@ -36,12 +36,16 @@ MAX_TOKENS = 1000
 
 def _tmp_path(token: str, suffix: str) -> str:
     """Join a token-derived filename under TMP_PATH. Callers validate `token`
-    against a safe charset before this (no `/` or `.` possible either way), but
-    os.path.basename() strips any directory component outright — the
-    unambiguous sanitizer static analysis (e.g. CodeQL) looks for at a
-    filesystem sink fed by request input.
+    against a safe charset before this (no `/` or `.` possible either way);
+    the normalised path is also checked to sit directly in TMP_PATH — the
+    normalise-then-prefix check static analysis (CodeQL py/path-injection)
+    recognises at a filesystem sink fed by request input.
     """
-    return os.path.join(config.TMP_PATH, os.path.basename(f"{token}{suffix}"))
+    base = os.path.abspath(config.TMP_PATH)
+    path = os.path.normpath(os.path.join(base, f"{token}{suffix}"))
+    if not path.startswith(base + os.sep) or os.sep in path[len(base) + 1 :]:
+        raise HTTPException(status_code=400, detail="Invalid token.")
+    return path
 
 
 def _session_files() -> list[str]:

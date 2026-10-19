@@ -1,8 +1,14 @@
 """Export → Open in Gephi Lite: a file hosted for one hour behind a token."""
 
+import os
+
+import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
+from app import config
 from app.main import app
+from app.routers.external import _tmp_path
 
 client = TestClient(app)
 
@@ -36,6 +42,16 @@ def test_share_rejects_other_types_and_unknown_tokens() -> None:
     assert r.status_code == 400
     assert client.get("/api/share/not-a-token!").status_code == 404
     assert client.get("/api/share/abcdefghijklmnop").status_code == 404
+
+
+def test_tmp_path_stays_in_tmp() -> None:
+    base = os.path.abspath(config.TMP_PATH)
+    assert _tmp_path("abcdefghijklmnop", ".share.json") == os.path.join(
+        base, "abcdefghijklmnop.share.json"
+    )
+    for bad in ["../secrets", "a/b", "/etc/passwd", "../"]:
+        with pytest.raises(HTTPException):
+            _tmp_path(bad, ".json")
 
 
 def test_share_size_cap() -> None:
