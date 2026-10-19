@@ -58,3 +58,9 @@ frontend/dist/
 
 # Manuscript drafts and figures: kept local, never pushed
 paper/
+
+# manuscripts and journal correspondence never go to GitHub, wherever they are
+*.docx
+*.doc
+*presubmission*
+nar_checklist*
