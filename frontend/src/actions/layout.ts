@@ -13,6 +13,7 @@ import {
 import type { UploadProgress } from '../api/client'
 import { ctx } from '../three'
 import { VOLUME_CONTAINERS, type LayerContainer } from '../three/Layer'
+import { placeInContainers } from './containers'
 import type { HiveState } from '../three/runtime'
 import { history } from '../commands/base'
 import {
@@ -91,39 +92,30 @@ export function normalizeLayoutPositions(
 }
 
 // Keep nodes inside their layer's shape: disk floors (Phase 18) pull nodes in
-// radially in the plane; sphere/cloud containers (Phase 20) radially in 3D;
-// cube containers clamp each axis. A layout normalised into the square would
-// otherwise poke out of round shapes.
+// radially in the plane; 3D containers (actions/containers.ts) take a fresh
+// layout spread over their box (`fresh`) and map it into the shape, or fit
+// nodes already there back in (those inside stay). A layout normalised into
+// the square would otherwise poke out of round shapes.
 export function fitToContainers(
-  positions: Record<string, LayoutPosition>
+  positions: Record<string, LayoutPosition>,
+  fresh = false
 ): Record<string, LayoutPosition> {
-  const out = { ...positions }
+  const out = placeInContainers(positions, fresh ? 'box' : 'current')
   for (const layer of ctx.layers) {
-    const round3d = layer.container === 'sphere' || layer.container === 'cloud'
-    const disk = layer.container === 'floor' && layer.floorShape === 'disk'
-    const cube = layer.container === 'cube'
-    if (!round3d && !disk && !cube) continue
+    if (layer.container !== 'floor' || layer.floorShape !== 'disk') continue
     const names = Object.keys(out).filter(
       (n) => ctx.nodeGroups[n] === layer.name
     )
     const rim = (layer.geometry_parameters_width / 2) * layer.getScale() * 0.92
-    if (cube) {
-      const c = (v: number) => Math.max(-rim, Math.min(rim, v))
-      for (const n of names) {
-        const [y, z, x] = out[n]
-        out[n] = x === undefined ? [c(y), c(z)] : [c(y), c(z), c(x)]
-      }
-      continue
-    }
-    const len = (p: LayoutPosition) =>
-      round3d ? Math.hypot(p[0], p[1], p[2] ?? 0) : Math.hypot(p[0], p[1])
-    const far = Math.max(0, ...names.map((n) => len(out[n])))
+    const far = Math.max(
+      0,
+      ...names.map((n) => Math.hypot(out[n][0], out[n][1]))
+    )
     if (far <= rim) continue
     const k = rim / far
     for (const n of names) {
       const [y, z, x] = out[n]
-      out[n] =
-        x === undefined ? [y * k, z * k] : [y * k, z * k, round3d ? x * k : x]
+      out[n] = x === undefined ? [y * k, z * k] : [y * k, z * k, x]
     }
   }
   return out
@@ -138,7 +130,8 @@ export async function applyLayout(
   const res = await api.layout(req, onProgress)
   onProgress?.('server', 1) // applying
   const positions = fitToContainers(
-    normalizeLayoutPositions(res.positions, perLayerFit)
+    normalizeLayoutPositions(res.positions, perLayerFit),
+    true
   )
   history.execute(new ApplyLayoutCommand(positions, res.clusters))
   return res.misalignment ?? null

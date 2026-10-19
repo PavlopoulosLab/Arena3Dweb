@@ -5,14 +5,16 @@
 // single space (layer survives only as node colour). Turning it off restores
 // the layers exactly as they were.
 //
-// Layer containers: cube / sphere / cloud layers get a per-layer 3D layout so
-// their nodes fill the volume.
+// Layer containers: 3D containers (three/containers.ts) get a per-layer 3D
+// layout so their nodes fill the volume, or sit on its surface.
 
 import * as THREE from 'three'
 import { store } from '../store'
 import { ctx } from '../three'
-import type { LayerContainer } from '../three/Layer'
+import type { ContainerPlacement, LayerContainer } from '../three/Layer'
 import { VOLUME_CONTAINERS } from '../three/Layer'
+import { CONTAINERS } from '../three/containers'
+import { currentPositions, placeLayerNodes } from './containers'
 import { history } from '../commands/base'
 import type { Command } from '../commands/base'
 import {
@@ -258,42 +260,95 @@ function spreadOverlappingVolumes(): boolean {
 
 const fitAll = () => focusOnNodes(ctx.nodeObjects.map((_, i) => i))
 
-// Switch layers to a container; volume containers get a 3D layout per layer
-// when their nodes are still flat, so the volume is actually used.
+// What setLayerContainer did to the nodes: a new 3D layout inside, a move
+// into the new shape, or nothing.
+export type ContainerOutcome = 'laidOut' | 'placed' | 'unchanged'
+
+// Switch layers to a container (and, given, inside / on the surface). Volume
+// containers get a 3D layout per layer when their nodes are still flat — or
+// were on a surface or in tiers, which keep no depth — so the volume is
+// actually used; otherwise the nodes move from the old shape into the new one,
+// keeping the layout, in the same undo step as the switch.
 export async function setLayerContainer(
   layerIds: number[],
   kind: LayerContainer,
-  algorithm = 'Fruchterman-Reingold'
-): Promise<boolean> {
+  algorithm = 'Fruchterman-Reingold',
+  placement?: ContainerPlacement
+): Promise<ContainerOutcome> {
   const net = store.get().network
-  if (!net || layerIds.length === 0) return false
+  if (!net || layerIds.length === 0) return 'unchanged'
+  const volume = VOLUME_CONTAINERS.includes(kind)
   // a hive plot's layers are axes: a volume ends it first (its own undo
   // step), bringing back the floors, the containers and the nodes it moved
-  if (ctx.hive && VOLUME_CONTAINERS.includes(kind))
+  if (ctx.hive && volume)
     history.execute(
       new PredefinedLayoutCommand('parallel', () =>
         applyPredefinedLayout('parallel')
       )
     )
-  history.execute(new ChangeContainerCommand(layerIds, kind))
-  if (!VOLUME_CONTAINERS.includes(kind)) return false
-  const spread = spreadOverlappingVolumes()
-  const names = new Set(layerIds.map((i) => ctx.layers[i].name))
+  const change = new ChangeContainerCommand(layerIds, kind, placement)
+  if (!volume) {
+    history.execute(change)
+    return 'unchanged'
+  }
+  const layers = layerIds.map((i) => ctx.layers[i])
+  const names = new Set(layers.map((l) => l.name))
   const flat = ctx.nodeObjects.every(
     (n) => !names.has(n.layer) || Math.abs(n.getPosition('x')) < 1
   )
-  if (!flat) {
-    if (spread) fitAll()
-    return false
-  }
-  await applyLayout({
-    nodes: net.nodes,
-    edges: net.edges,
-    algorithm,
-    scope: 'perLayer',
-    selected_layers: [...names],
-    dimensions: 3,
+  // a surface or tiers kept no depth: a new layout fills the new shape
+  const lossy = layers.some((l) => {
+    const was = CONTAINERS[l.container]
+    const to = placement ?? l.containerPlacement
+    return (
+      (was.tiers && !CONTAINERS[kind].tiers) ||
+      (was.surface &&
+        l.containerPlacement === 'surface' &&
+        (to === 'inside' || !CONTAINERS[kind].surface))
+    )
   })
-  if (spread) fitAll()
-  return true
+  if (flat || lossy) {
+    history.execute(change)
+    const spread = spreadOverlappingVolumes()
+    // each layer's own layout fills its own container
+    await applyLayout(
+      {
+        nodes: net.nodes,
+        edges: net.edges,
+        algorithm,
+        scope: 'perLayer',
+        selected_layers: [...names],
+        dimensions: 3,
+      },
+      true
+    )
+    if (spread) fitAll()
+    return 'laidOut'
+  }
+  // from the old shape into the new one, as one step with the switch
+  const positions: Record<string, LayoutPosition> = {}
+  for (const layer of layers)
+    Object.assign(
+      positions,
+      placeLayerNodes(
+        layer,
+        currentPositions(new Set([layer.name])),
+        { kind, placement: placement ?? layer.containerPlacement },
+        layer.container
+      )
+    )
+  const move = new ApplyLayoutCommand(positions)
+  history.execute({
+    description: change.description,
+    execute: () => {
+      change.execute()
+      move.execute()
+    },
+    undo: () => {
+      move.undo()
+      change.undo()
+    },
+  })
+  if (spreadOverlappingVolumes()) fitAll()
+  return 'placed'
 }

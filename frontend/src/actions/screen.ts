@@ -305,8 +305,16 @@ function forEachVisibleLabel(
     .forEach((div, i) => {
       const layer = ctx.layers[i]
       if (!layer || div.style.display === 'none') return
-      const world = layer.sphere.getWorldPosition(RAYVECTOR)
-      cb(div, world.x, world.y, 0, 0)
+      // the floor's corner, or centred above / under the floor
+      const [x, y] = layer.labelAnchor()
+      const [w, h] = [div.offsetWidth, div.offsetHeight]
+      const [dx, dy] =
+        layer.labelPosition === 'above'
+          ? [-w / 2, -h - 6]
+          : layer.labelPosition === 'below'
+            ? [-w / 2, 6]
+            : [0, 0]
+      cb(div, x, y, dx, dy)
     })
 }
 

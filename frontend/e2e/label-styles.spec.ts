@@ -1,4 +1,5 @@
 import { expect, test, type Page } from './fixtures'
+import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 
@@ -297,4 +298,234 @@ test('chosen labels: Find, Edit → Nodes, Attributes, Style, Chosen, session', 
   expect(back.pinned.length).toBe(s.pinned.length)
   expect(back.shown).toBe(s.pinned.length)
   await expect(page.locator('#nodeLabels_chosen')).toBeChecked()
+})
+
+// Edit → Nodes → Labels to show: tick boxes, a filter (Enter ticks every
+// match), All / None / Invert / The selected nodes, a count; then the label
+// columns of Edit → Attributes and the node attribute file
+test('label picker and the label columns of Edit → Attributes', async ({
+  page,
+}) => {
+  test.setTimeout(120_000)
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .click()
+  await page.locator('#input_network_file').setInputFiles(FIGURE_2A)
+  await expect(page.locator('#file_status')).toContainText('Loaded network')
+  type P = {
+    name: string
+    labelShown: boolean
+    labelSize: number
+    labelPosition: string
+    labelLook: { style: string; bold: boolean } | null
+  }
+  const nodes = () =>
+    page.evaluate(
+      () =>
+        (window as unknown as { __arena: { ctx: { nodeObjects: P[] } } })
+          .__arena.ctx.nodeObjects
+    )
+  const chosen = async () => (await nodes()).filter((n) => n.labelShown)
+
+  await tab(page, 'Nodes')
+  // (cards start open in tests; a click on the heading would fold it)
+  await page.evaluate(() => {
+    ;(
+      document.getElementById('nodeCard_labelPicker') as HTMLDetailsElement
+    ).open = true
+  })
+  const search = page.locator('#labelPickSearch')
+  await search.fill('17')
+  await search.press('Enter') // ticks every match
+  const matches = await chosen()
+  expect(matches.length).toBeGreaterThan(0)
+  expect(matches.every((n) => n.name.includes('17'))).toBe(true)
+  await expect(page.locator('#labelPickStatus')).toContainText(
+    'Show Labels switched to Chosen'
+  )
+  await expect(page.locator('#nodeLabels_chosen')).toBeChecked()
+  await expect(page.locator('#labelPickCount')).toContainText(
+    `${matches.length} of 255 labels chosen · ${matches.length} listed`
+  )
+  // Invert on the listed rows; then a tick box with the keyboard
+  await page.locator('#labelPickInvert').click()
+  expect(await chosen()).toHaveLength(0)
+  await search.fill('')
+  await search.press('Tab') // to the layer and group filters, the buttons …
+  const first = page.locator('#labelPickList input[type="checkbox"]').first()
+  await first.focus()
+  await page.keyboard.press('Space')
+  expect(await chosen()).toHaveLength(1)
+  // every node selected → The selected nodes ticks them all
+  await page.locator('#selectAllNodes').dispatchEvent('click')
+  await page.locator('#labelPickSelected').click()
+  expect(await chosen()).toHaveLength(255)
+  await page.locator('#labelPickNone').click()
+  expect(await chosen()).toHaveLength(0)
+  await page.locator('#selectAllNodes').dispatchEvent('click') // unselect
+
+  // the label columns of the node table
+  await tab(page, 'Attributes')
+  await expect(page.locator('#panel-attributes')).toHaveClass(/show/)
+  const row = page.locator('#attrNodeTable .attr-body .attr-row').first()
+  await row.locator('[data-f="labelSize"]').fill('18')
+  await row.locator('[data-f="labelSize"]').press('Enter')
+  await row.locator('[data-f="labelBold"]').check()
+  await row.locator('[data-f="labelPosition"]').selectOption('above')
+  await row.locator('[data-f="labelShown"]').check()
+  const n0 = (await nodes())[0]
+  expect(n0.labelSize).toBe(18)
+  expect(n0.labelLook).toMatchObject({ style: 'halo', bold: true }) // the default look, bold
+  expect(n0.labelPosition).toBe('above')
+  expect(n0.labelShown).toBe(true)
+
+  // the node attribute file carries every label column
+  const [dl] = await Promise.all([
+    page.waitForEvent('download'),
+    page.locator('#attrExportNodes').click(),
+  ])
+  const text = fs.readFileSync(await dl.path(), 'utf8')
+  const [head, firstRow] = text.split('\n')
+  const cols = head.split('\t')
+  for (const c of [
+    'Label',
+    'LabelColor',
+    'LabelSize',
+    'LabelStyle',
+    'LabelPosition',
+    'LabelBold',
+    'LabelShown',
+  ])
+    expect(cols).toContain(c)
+  const cell = (c: string) => firstRow.split('\t')[cols.indexOf(c)]
+  expect([cell('LabelSize'), cell('LabelStyle'), cell('LabelBold')]).toEqual([
+    '18',
+    'halo 2',
+    'yes',
+  ])
+  expect([cell('LabelPosition'), cell('LabelShown')]).toEqual(['above', 'yes'])
+})
+
+// Edit → Layers → Labels & axes: the layer labels' look, font, colour and
+// place; undo; a saved session; a theme's colours take over their colour
+test('layer label styles: halo by default, font, palette, position, session, theme', async ({
+  page,
+}) => {
+  test.setTimeout(120_000)
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .click()
+  await page.locator('#input_network_file').setInputFiles(FIGURE_2A)
+  await expect(page.locator('#file_status')).toContainText('Loaded network')
+  type L = {
+    labelFont: string
+    labelBold: boolean
+    labelItalic: boolean
+    labelColor: string
+    labelPosition: string
+  }
+  const layers = () =>
+    page.evaluate(() => {
+      const ctx = (window as unknown as { __arena: { ctx: { layers: L[] } } })
+        .__arena.ctx
+      return ctx.layers.map((l) => ({
+        font: l.labelFont,
+        bold: l.labelBold,
+        italic: l.labelItalic,
+        color: l.labelColor,
+        position: l.labelPosition,
+      }))
+    })
+  const drawn = () =>
+    page.evaluate(() =>
+      [
+        ...document.querySelectorAll<HTMLElement>('#labelDiv .layer-labels'),
+      ].map((d) => {
+        const cs = getComputedStyle(d)
+        return {
+          stroke: cs.getPropertyValue('-webkit-text-stroke-width'),
+          font: cs.fontFamily,
+          weight: cs.fontWeight,
+          style: cs.fontStyle,
+          transform: d.style.transform,
+        }
+      })
+    )
+  // the halo is the default for layer labels too
+  expect((await drawn())[0].stroke).toBe('4px')
+
+  await tab(page, 'Layers')
+  await page.evaluate(() => {
+    ;(document.getElementById('layerCard_labels') as HTMLDetailsElement).open =
+      true
+  })
+  await page.locator('#layerLabelFont').selectOption('condensed')
+  await page.locator('#layerLabelBold').check()
+  await page.locator('#layerLabelItalic').check()
+  await page.locator('#layerLabelColorBy').selectOption('palette')
+  await page.locator('#layerLabelPalette').selectOption('okabeIto')
+  await page.locator('#layerLabelPosition').selectOption('above')
+  await page.locator('#applyLayerLabelStyle').click()
+  await expect(page.locator('#layerLabelStatus')).toContainText(
+    'Label style applied to 4 layers'
+  )
+  const styled = await layers()
+  expect(new Set(styled.map((l) => l.color)).size).toBe(4)
+  expect(styled[0]).toMatchObject({
+    font: 'condensed',
+    bold: true,
+    italic: true,
+    position: 'above',
+  })
+  const d0 = (await drawn())[0]
+  expect(d0.font).toContain('Condensed')
+  expect([d0.weight, d0.style]).toEqual(['700', 'italic'])
+  expect(d0.transform).toContain('translate(-50%')
+
+  // undo, redo
+  await page.evaluate(() =>
+    (
+      window as unknown as { __arena: { history: { undo: () => void } } }
+    ).__arena.history.undo()
+  )
+  expect((await layers())[0]).toMatchObject({ font: '', position: 'corner' })
+  await page.evaluate(() =>
+    (
+      window as unknown as { __arena: { history: { redo: () => void } } }
+    ).__arena.history.redo()
+  )
+
+  // a saved session keeps them
+  await tab(page, 'File')
+  const [dl] = await Promise.all([
+    page.waitForEvent('download'),
+    page.locator('#save_network_object').click(),
+  ])
+  const file = path.join(os.tmpdir(), 'arena3d-e2e-layer-labels.json')
+  await dl.saveAs(file)
+  await page.reload()
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await page
+    .getByRole('tab', { name: 'File', includeHidden: true, exact: true })
+    .click()
+  await page.locator('#load_network_file').setInputFiles(file)
+  await expect(page.locator('#file_status')).toContainText('Session loaded')
+  expect(await layers()).toEqual(styled)
+
+  // applying a theme's colours gives the labels the theme's colour again
+  await page.locator('#themeSelect').selectOption('light')
+  await page.locator('#themeColours_apply').check()
+  await page.locator('#themeDialogOk').click()
+  expect((await layers()).map((l) => l.color)).toEqual(['', '', '', ''])
+  expect((await layers())[0].font).toBe('condensed') // the rest stays
 })

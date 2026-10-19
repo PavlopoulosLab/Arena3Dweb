@@ -1,17 +1,19 @@
 // View → Annotations: how annotation groups and clusters are highlighted in
-// the scene — the annotation set, the shape around each group (on the floor,
-// soft clouds or 3D containers) with its opacity and padding, pies
-// (ui/annotations.ts), and the group list with colours and a switch per group
-// (ui/groups.ts). Analyze → Annotations & Groups (enrichment), the Networks
-// menu and the Clustering panel link here with openAnnotationPanel().
+// the scene, in five cards — What to show (the set or the clusters), How to
+// draw (the shape around each group, its opacity and padding), On the nodes
+// (pies, group colours) in ui/annotations.ts; Groups (the list with colours
+// and a switch per group) and Legend & reports in ui/groups.ts. Analyze →
+// Annotations & Groups (enrichment), the Networks menu and the Clustering
+// panel link here with openAnnotationPanel().
 
 import { ANNOTATION_VIEW_HTML, initAnnotations } from './annotations'
 import { GROUPS_HTML, initGroups } from './groups'
-import { openCard } from './sections'
+import { FOLD_ALL_HTML, openCard } from './sections'
 import { showTab } from './tabs'
 
 const HTML = `
 <div class="col-md-8 col-lg-6 layout-panel annotation-panel">
+  ${FOLD_ALL_HTML}
   ${ANNOTATION_VIEW_HTML}
   ${GROUPS_HTML}
 </div>
@@ -50,17 +52,18 @@ export function initAnnotationPanel(): void {
   pane.innerHTML = HTML
   initAnnotations()
   initGroups()
-  // the links under the main card: Clustering, Analyze, Layout's Group Layout
+  // the links in the cards: another panel, and the card there to open
   pane.addEventListener('click', (e) => {
     const link = (e.target as Element).closest<HTMLElement>('[data-ann-go]')
     if (!link) return
     e.preventDefault()
-    const target = link.dataset.annGo!
-    showTab(target)
-    if (target === '#panel-layouts') {
-      const card = document.getElementById('groupLayoutCard')
-      openCard(card?.querySelector('summary') ?? null)
-      card?.scrollIntoView({ block: 'nearest' })
+    showTab(link.dataset.annGo!)
+    const card = link.dataset.annCard
+      ? document.getElementById(link.dataset.annCard)
+      : null
+    if (card) {
+      openCard(card.querySelector('summary'))
+      card.scrollIntoView({ block: 'nearest' })
     }
   })
 }

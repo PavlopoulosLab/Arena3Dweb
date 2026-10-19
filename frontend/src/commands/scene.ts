@@ -23,7 +23,13 @@ import { setRendererColor } from '../actions/screen'
 import { repaintLayers, getLastFloorColor } from '../actions/layer'
 import { createLabels } from '../actions/labels'
 import type { NodeGeometryType } from '../three/Node'
-import type { FloorShape, FloorStyle, LayerContainer } from '../three/Layer'
+import type {
+  ContainerLook,
+  ContainerPlacement,
+  FloorShape,
+  FloorStyle,
+  LayerContainer,
+} from '../three/Layer'
 import type { LayoutPosition } from '../api/client'
 import { store, type AppState } from '../store'
 import {
@@ -854,50 +860,65 @@ export class ChangeFloorShapeCommand implements Command {
   }
 }
 
-// Floor / none / cube / sphere / cloud per layer (Phase 20).
-// Container colour (null = follow the floor colour) and opacity, per layer.
+// A container's look per layer (Edit → Layers → Shape & container): colour
+// (null = the theme's), opacity, outline, wire cage, rim light and the floor
+// under it. Only the fields given change.
 export class ChangeContainerStyleCommand implements Command {
-  description = 'Container colour and opacity'
-  private readonly before: [string | null, number][]
+  description = 'Container look'
+  private readonly before: ContainerLook[]
+  private readonly look: Partial<ContainerLook>
 
   constructor(
     private readonly layerIds: number[],
-    private readonly color: string | null,
-    private readonly opacity: number
+    look: Partial<ContainerLook> | string | null,
+    opacity?: number
   ) {
-    this.before = layerIds.map((i) => [
-      ctx.layers[i].containerColor,
-      ctx.layers[i].containerOpacity,
-    ])
+    // (ids, colour, opacity): the original colour-and-opacity form
+    this.look =
+      typeof look === 'string' || look === null
+        ? { color: look, ...(opacity === undefined ? {} : { opacity }) }
+        : look
+    this.before = layerIds.map((i) => ctx.layers[i].containerLook())
   }
 
   execute(): void {
-    for (const i of this.layerIds)
-      ctx.layers[i].setContainerStyle(this.color, this.opacity)
+    for (const i of this.layerIds) ctx.layers[i].setContainerLook(this.look)
   }
   undo(): void {
     this.layerIds.forEach((i, k) =>
-      ctx.layers[i].setContainerStyle(...this.before[k])
+      ctx.layers[i].setContainerLook(this.before[k])
     )
   }
 }
 
+// Floor / none / a 3D container per layer (Phase 20; three/containers.ts),
+// and whether nodes sit inside it or on its surface.
 export class ChangeContainerCommand implements Command {
   description: string
-  private readonly before: LayerContainer[]
+  private readonly before: [LayerContainer, ContainerPlacement][]
 
   constructor(
     private readonly layerIds: number[],
-    private readonly kind: LayerContainer
+    private readonly kind: LayerContainer,
+    private readonly placement?: ContainerPlacement
   ) {
-    this.before = layerIds.map((i) => ctx.layers[i].container)
+    this.before = layerIds.map((i) => [
+      ctx.layers[i].container,
+      ctx.layers[i].containerPlacement,
+    ])
     this.description = `Layer container: ${kind}`
   }
 
   execute(): void {
-    for (const i of this.layerIds) ctx.layers[i].setContainer(this.kind)
+    for (const i of this.layerIds) {
+      if (this.placement) ctx.layers[i].containerPlacement = this.placement
+      ctx.layers[i].setContainer(this.kind)
+    }
   }
   undo(): void {
-    this.layerIds.forEach((i, k) => ctx.layers[i].setContainer(this.before[k]))
+    this.layerIds.forEach((i, k) => {
+      ctx.layers[i].containerPlacement = this.before[k][1]
+      ctx.layers[i].setContainer(this.before[k][0])
+    })
   }
 }

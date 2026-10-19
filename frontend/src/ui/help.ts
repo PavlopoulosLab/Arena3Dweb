@@ -134,9 +134,9 @@ const HELP_HTML = `
     session. On phones and narrow windows the menus fold into a drawer.
   </p>
   <p>
-    The panels are made of cards, and every card starts folded, except the only card of a panel (Analyze → Metrics,
-    for example), which starts open: its title, and the short hint after the title of a sub-section, says what is
-    inside. Click a title to open or fold it. In the long panels (File,
+    The panels are made of cards: the first card of every panel starts open and the others folded (and inside a
+    card, its first sub-section starts open); a folded card's title, and the short hint after the title of a
+    sub-section, says what is inside. Click a title to open or fold it. In the long panels (File,
     Edit → Nodes, Edges and Layers, Layout, Clustering, Analyze → Perturbation and Export), <i>Expand all</i> and <i>Collapse all</i>
     at the top open or fold every card at once. Arena3D remembers in this browser which cards you open or fold.
   </p>
@@ -724,7 +724,7 @@ const HELP_HTML = `
   <p>
     The Database Importers panel (top menu) fetches networks straight from public resources. As in NORMA, every source is an
     expandable, colour-coded card with its own fields and Import button, and a <b>?</b> that opens this page; the
-    cards start folded — click a card's title to open it.
+    first card (STRING) starts open and the others folded — click a card's title to open or fold it.
     Proteins, organism and score typed in one card are copied to the other cards that take them. Each card shows a
     progress bar under its button while it fetches, builds the scene and lays the network out. A query with
     something missing — no proteins, no pathways or GO terms picked, a search under two characters, no NDEx UUID —
@@ -901,6 +901,7 @@ const HELP_HTML = `
     offered first; <i>Cancel</i> keeps the theme on screen. One Undo takes a switch back, colours and all. A saved
     session keeps its theme and whether its colours were applied.
   </p>
+  <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/theme_dialog.png" alt="Switching theme with a network on screen: keep the current colours, or apply the theme's colours to nodes, floors, channels and edges" loading="lazy">
 </div>
 
 <div id="Layouts_tab" class="tabcontent">
@@ -1127,7 +1128,9 @@ const HELP_HTML = `
     <li><i>Enable Scene Auto Rotate</i> keeps the scene turning; set the axis and angle with the Scene buttons of the
       navigation table.</li>
     <li><i>Node Glow</i> makes nodes glow on dark backgrounds.</li>
-    <li><i>Show Navigator (2D)</i> shows or hides the overview at the bottom right.</li>
+    <li><i>Show Navigator (2D)</i> shows or hides the overview at the bottom right. It and View → Performance →
+      <i>Navigator refresh</i> agree: a refresh of <i>Off</i> unticks it, and ticking it turns the refresh back on.
+      On phones and narrow windows the navigator always steps aside.</li>
     <li><i>Show Legend</i> shows or hides the legend at the bottom of the view: the layers after a load, then
       whatever was coloured last — groups (click an entry to select its members), a metric or value gradient. A
       selected layer's entry is framed in the yellow its floor turns.</li>
@@ -1149,7 +1152,7 @@ const HELP_HTML = `
   <h3>Performance</h3>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/performance.png" alt="The Performance panel: presets, rendering, while moving, live stats" loading="lazy">
   <p class="last_p">
-    View → Performance tunes rendering for the network at hand; its four cards start folded. <i>Presets</i>: <i>Quality</i> (60 FPS, device
+    View → Performance tunes rendering for the network at hand; its first card (<i>Presets</i>) starts open and the other three folded. <i>Presets</i>: <i>Quality</i> (60 FPS, device
     resolution, smooth spheres), <i>Balanced</i> and <i>Fast</i> for large networks (15 FPS, 0.75× resolution,
     simple spheres, labels and inter-layer edges hidden while moving, navigator off). The individual options:
     <i>Frame rate</i> (15, 30 or 60 FPS); <i>Render resolution</i>, the pixel ratio the scene is drawn at — fewer
@@ -1179,6 +1182,12 @@ const HELP_HTML = `
       Show Labels is on Selected or None switches it to Chosen (keeping the selection's labels when it was on
       Selected). <i>Clear Chosen Labels</i> lets them all go. Each change is one undo step; sessions keep the chosen
       labels and the Show Labels choice.</li>
+    <li><i>Labels to show</i>: every node with a tick box — a ticked label is a chosen one. Filter the list by text
+      (names, labels, descriptions), layer or group; <i>All</i>, <i>None</i>, <i>Invert</i> and <i>The selected
+      nodes</i> (ticks the selected nodes in the list and unticks the others) act on the listed rows, and the count
+      says how many labels are chosen. Without the mouse: type in the filter and press Enter to tick every match,
+      or Tab to a tick box and press Space. Ticking switches Show Labels to <i>Chosen</i> when it was on Selected or
+      None, and says so. Only the rows in view are drawn, so long lists scroll smoothly.</li>
     <li><i>Label Style</i>: colour, font (system, serif, monospace), bold, italic, a dark halo for light backgrounds,
       a background pill and opacity — applied to all node labels or to the labels of the layers selected in
       Layout, so each layer can read differently; undoable. Labels keep the theme colour until a colour is
@@ -1239,14 +1248,47 @@ const HELP_HTML = `
   <p>Five cards, all folded at first: <i>Labels &amp; axes</i>, <i>Shape &amp; container</i>, <i>Floor</i>, <i>Colours</i> and <i>Restructure</i>.</p>
   <ul>
     <li><i>Show Labels</i>: all, selected or no layer labels; <i>Resize Labels</i> sets their size.</li>
+    <li><i>Label style</i> (layer labels; the halo is their default too): <i>Style</i> — halo, plain, box or shadow,
+      with the rim, box or shadow colour (<i>Auto</i>: against the text) and the halo width or box opacity;
+      <i>Font</i> — as the app, sans-serif, serif, monospace or condensed, with <i>Bold</i> and <i>Italic</i>;
+      <i>Colour</i> — the theme's, one colour for every label, <i>Match layer colour</i> (each label takes its
+      layer's colour, as the legend shows it) or a <i>Palette</i> (one colour per layer); <i>Position</i> — the
+      floor's outer corner (as always), centred above the floor or under it. <i>Apply Label Style</i> for all layers
+      or the selected layers; <i>Reset</i> goes back to the default. Undoable and saved in sessions; switching to a
+      theme with <i>Apply the theme's colours</i> gives the labels the theme's colour again (the rest stays), while
+      <i>Keep the current colours</i> keeps theirs. Image exports draw them with their look and place.</li>
     <li><i>Layer Coord Systems</i>: <i>All</i>, <i>Selected</i> (the selected layers, following the selection) or <i>None</i> shows each layer's own axes (arrows with ticks and letters at the layer's
       centre, turning with it); <i>Layer axes opacity</i> fades them. Layer selection → <i>Axes</i> shows or hides one layer's coordinate system at a time (no choice above is then marked); a layer keeps its axes through any change to its floor.</li>
-    <li><i>Layer Shape</i> turns the selected layers (or all) into 3D containers — <i>Cube</i>, <i>Sphere</i> or
-      <i>Fog cloud</i> (soft puffs of fog filling the volume, no hard boundary, as in NORMA) — or <i>None</i>, or back to a flat <i>Floor</i>. Nodes of a 3D layer
-      are laid out in 3D inside it and kept inside spheres and cubes; layers are spaced so volumes don't overlap.</li>
-    <li><i>3D Container Look</i> sets the colour (or the <i>Theme default</i>, a colour chosen to contrast with each
-      theme's background) and the opacity of cube, sphere and fog-cloud containers for the selected layers (or
-      all); saved in sessions and undoable.</li>
+    <li><i>Layer Shape</i> turns the selected layers (or all) into 3D containers, or back to a flat shape.
+      <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/containers.jpg" alt="Four layers in four containers: a cylinder, a torus, a cone and a bubble, each with its nodes laid out inside" loading="lazy">
+      The list is grouped:
+      <ul>
+        <li><b>Flat</b> — <i>Floor (2D)</i>, nodes laid out on the floor; <i>None</i>, no floor and no container.</li>
+        <li><b>Solid</b> — translucent shapes with an outline: <i>Cube</i>; <i>Sphere</i>; <i>Cylinder</i>, an upright
+          column (on the surface, nodes go on its wall); <i>Cone</i> and <i>Pyramid</i>, a hierarchy — nodes sit in up
+          to five tiers by degree, most at the wide base and the hubs at the narrow top; <i>Dome</i>, a hemisphere over a
+          round base, like a sky; <i>Ellipsoid</i>, an upright egg for elongated layouts; <i>Torus</i>, a ring standing
+          across the floor and facing you in the Parallel arrangement, for cycles and periodic data — the floor's layout
+          wraps round the ring (its angle on the floor becomes its place on the ring) and depth goes across the tube;
+          <i>Hexagonal prism</i>, a honeycomb cell (prisms side by side tile); <i>Geodesic sphere</i>, a faceted globe;
+          <i>Disc stack</i>, five thin plates with the nodes sorted by degree into slices.</li>
+        <li><b>Soft</b> — <i>Fog cloud</i>, soft puffs of fog filling the volume with no hard boundary, as in NORMA;
+          <i>Bubble</i>, a soft sphere with a glowing rim and no outline.</li>
+      </ul>
+      The shapes stand upright in the Parallel arrangement and fit the cube's room, so layers are spaced as for cubes and
+      volumes don't overlap. <i>Nodes: Inside</i> or <i>On the surface</i> (every solid shape and the bubble): a layer
+      that was flat gets a 3D layout, placed inside the shape, clear of its walls, or on its surface (round the rim of
+      each tier for the cone, pyramid and discs). A layer already in 3D keeps its layout when it changes shape: the
+      nodes move from the old shape into the new one, in the same undo step. Leaving a surface or tiers (which keep no
+      depth) lays the nodes out again. The placement is the same every time, and later layouts and group layouts stay
+      inside the shape.</li>
+    <li><i>3D Container Look</i>, for the selected layers (or all): the colour (or the <i>Theme default</i>, a colour
+      chosen to contrast with each theme's background), the <i>Opacity</i> (every part fades with it), the
+      <i>Outline</i> (on or off, in the container's colour or one of its own), a <i>Wireframe</i> cage of lines over
+      the whole surface, a <i>Glow</i> (a rim light, brighter where the surface turns away, like glass) and the
+      <i>Floor under it</i> (the layer's floor stays visible inside or under the container). A hovered or selected
+      layer's container takes the highlight colour. Saved in sessions (older sessions load as before) and undoable;
+      layers with the same container share one drawing, so many layers stay smooth.</li>
     <li><i>Floor Shape</i> makes the floors square or round (disk); nodes outside a disk are pulled inside, and
       layouts on disk floors stay inside the circle.</li>
     <li><i>Floor Style</i> draws the floors of the selected layers (or all) as a <i>Solid</i> plane, a
@@ -1343,9 +1385,11 @@ const HELP_HTML = `
     <b>Tables.</b> After Cytoscape's Node and Edge Tables: one row per node or per edge (<i>Nodes</i> / <i>Edges</i>
     at the top, with their counts). Nodes show their name, layer, colour, shape, size, opacity, label (text in place of
     the name; empty shows the name), label colour (a faded swatch is the label style's colour; × takes a colour of
-    its own away), label style (<i>Auto</i>: the label style of Edit → Nodes; or plain, halo, box, shadow — picked
-    here, it keeps the node's rim colour, width and bold), label shown (kept on screen with Edit → Nodes → Show
-    Labels: <i>Chosen</i>, whatever is selected) and description (shown on hover). Edges show their source, target, layers,
+    its own away), label size (blank: as the label style), label style (<i>Auto</i>: the default halo, or the
+    label style of Edit → Nodes; or plain, halo, box, shadow — each node keeps its own rim colour, width and bold),
+    bold, label position (right, centre, above, below), label shown (kept on screen with Edit → Nodes → Show
+    Labels: <i>Chosen</i>, whatever is selected) and description (shown on hover). Like every column, the label
+    columns sort and change all ticked rows at once. Edges show their source, target, layers,
     channels, colour, width (× the edge width of Edit → Edges), opacity (× the edge opacity), line type (solid,
     dashed, dotted) and arrow colour (a faded swatch follows the edge colour; × takes a colour of its own away).
     Every cell but the names, layers and channels is edited in place: pick a colour or a shape, or type a number or
@@ -1380,10 +1424,11 @@ const HELP_HTML = `
     <b>Export.</b> <i>Export node attributes</i> and <i>Export edge attributes</i> save tab-separated files in the
     node and edge attribute formats of the File tab, every node or edge with all its attributes (edges one row per
     channel); File → Node attributes / Edge attributes loads them back, onto the same network or another with the
-    same names and layers. Node files carry <i>LabelStyle</i> (e.g. <code>halo #ffffff 3 bold</code>,
-    <code>box 0.6</code>, <code>plain</code>), <i>LabelPosition</i> (right, centre, above, below) and
-    <i>LabelShown</i> (yes for a chosen label) besides
-    <i>LabelColor</i>. Edit → Style sets the same properties for a layer, the selection or all, with palettes.
+    same names and layers. Node files carry <i>Label</i>, <i>LabelColor</i>, <i>LabelSize</i>, <i>LabelStyle</i>
+    (e.g. <code>halo #ffffff 3</code>, <code>box 0.6</code>, <code>plain</code>), <i>LabelPosition</i> (right,
+    centre, above, below), <i>LabelBold</i> (yes) and <i>LabelShown</i> (yes for a chosen label); a value the
+    loader cannot read is refused with a message naming the column. Edit → Style sets the same properties for a
+    layer, the selection or all, with palettes.
   </p>
   <p class="last_p">
     <b>Label colours.</b> Above the node table, <i>Label colours</i> colours the labels of the ticked rows (or of
@@ -1591,7 +1636,7 @@ const HELP_HTML = `
     where they are found: <i>Within each layer</i>, over the <i>selected layers as one graph</i>, or <i>shared across
     layers by node name</i> (multiplex Leiden for Leiden, the label-merged graph for the others); it runs on the layers
     ticked in Layer selection, or on every layer while none is. In Single network mode the whole network is one graph.
-    Both cards start folded; inside <i>Clustering</i>, <i>How it works</i> under the buttons folds the longer notes
+    The first card starts open and the second folded; inside <i>Clustering</i>, <i>How it works</i> under the buttons folds the longer notes
     away.
   </p>
   <p>
@@ -1615,23 +1660,35 @@ const HELP_HTML = `
   <p class="help-lead">Highlight annotation groups and clusters in the scene: a hull, outline, cloud or 3D container around each, pies on the nodes, and the group list.</p>
   <img class="help-shot help-shot--panel" src="${import.meta.env.BASE_URL}images/help/ui/annotations.png" alt="The Annotations panel" loading="lazy">
   <p>
-    View → Annotations decides how annotation terms and clusters are highlighted on the network. Groups come from a node attributes file with an <i>Annotation</i> column, a group file (File), an
-    enrichment (Analyze → Annotations &amp; Groups), a STRING import, a saved session, or communities from the
-    Clustering panel. The panel has two cards: <i>Show on the network</i> and <i>Groups</i>. Three links lead
-    here too: <i>Open Annotations…</i> in Analyze → Annotations &amp; Groups, <i>Annotation options…</i> in the
-    Networks menu, and <i>Draw Around Clusters…</i> in the Clustering panel, which also draws around the clusters.
+    View → Annotations decides how annotation terms and clusters are highlighted on the network. Groups come from a
+    node attributes file with an <i>Annotation</i> column, a group file (File), an enrichment (Analyze → Annotations
+    &amp; Groups), STRING groupings (Database Importers), a saved session, or communities from the Clustering panel.
+    The panel has five cards, each with a one-line hint after its title; the first starts open, and <i>Expand
+    all</i> / <i>Collapse all</i> open or fold them together. Three links lead here too: <i>Open Annotations…</i> in
+    Analyze → Annotations &amp; Groups, <i>Annotation options…</i> in the Networks menu, and <i>Draw Around
+    Clusters…</i> in the Clustering panel, which also draws around the clusters.
   </p>
 
-  <h3>Show on the network</h3>
+  <h3>What to show</h3>
   <p>
-    <i>Annotation set</i> keeps every set of annotations the network received — each attribute or group file, an
-    enrichment, a cluster run — and switches between them (or to none); the newest set is the one shown. <i>Rename</i>
-    and <i>Delete</i> beside it act on the set shown (after asking, for Delete). The <i>Networks</i> menu in the top
-    bar shows the set on screen, switches, renames and deletes sets too, for any loaded network.
+    One choice at the top: draw around <i>Nothing</i>, the <i>Clusters</i> or the <i>Annotations</i>; the Groups card's
+    list follows it. <i>Annotation set</i> keeps every set of annotations the network received — each attribute or
+    group file, an enrichment, a cluster run — and switches between them (or to none); the newest set is the one
+    shown. <i>Rename</i> and <i>Delete</i> beside it act on the set shown (after asking, for Delete); the Networks
+    menu does the same for any loaded network. A line under them sums up what is drawn, for example <i>GO BP: 42
+    groups over 310 nodes</i>, and the links below lead to where annotations come from.
   </p>
   <p>
-    <i>Draw around</i> marks every cluster or annotation term on each layer (or <i>Nothing</i>). <i>Draw as</i>
-    chooses the shape, in the group's colour:
+    The annotation options (pie charts, shapes around annotations, annotations as groups or colours) are disabled
+    until the network carries annotations — from a node attributes or group file, a session, or an enrichment's
+    <i>Annotate Nodes with Top 5 Terms</i>; the card says so. Shapes around clusters need communities from the
+    Clustering panel.
+  </p>
+
+  <h3>How to draw</h3>
+  <p>
+    <i>Draw as</i> is a set of tiles, each with a sketch of its shape, drawn around every group on each layer in the
+    group's colour:
   </p>
   <ul>
     <li><b>On the floor</b> — <i>Hull</i>, a translucent area around the members, or <i>Outline</i>, a band along its
@@ -1645,37 +1702,40 @@ const HELP_HTML = `
     The soft shapes and the 3D containers hold groups whole in 3D layouts and sphere, cube or cloud layers too.
     <i>Opacity</i> sets how solid the shapes are (clouds and container walls stay softer by the same proportion) and
     <i>Padding</i> how far they reach beyond the members (1× is the usual margin, about three node radii). They
-    follow the nodes when a layout, a drag or an undo moves them. <i>Show Annotations as Pie Charts</i> draws
-    annotated nodes as pies with one slice per term. In Single network mode, the Layout panel's Group Layout card sets
-    the same drawing with <i>Draw groups as</i>. A saved session keeps all of this, and the groups whose shape is
-    switched off in the Groups card.
+    follow the nodes when a layout, a drag or an undo moves them. In Single network mode, the Layout panel's Group
+    Layout card sets the same drawing with <i>Draw groups as</i>, and Layout → Group Layout pulls the groups apart.
+    A saved session keeps all of this, and the groups whose shape is switched off in the Groups card.
   </p>
+
+  <h3>On the nodes</h3>
   <p>
-    The annotation options (pie charts, shapes around annotations, annotations as groups or colours) are
-    disabled until the network carries annotations — from a node attributes or group file, a session, or an
-    enrichment's <i>Annotate Nodes with Top 5 Terms</i>; the card says so. Shapes around clusters need communities
-    from the Clustering panel. The links under the card lead to Clustering, to the enrichment and to Layout →
-    Group Layout, which pulls the groups apart.
+    <i>Show Annotations as Pie Charts</i> draws annotated nodes as pies with one slice per term. <i>Colour Nodes by
+    Group</i> gives every node its first group's colour — the colour its pie and shape show — and <i>Colour Labels by
+    Group</i> does the same for the labels, made to read on the background; both use the groups chosen in <i>What to
+    show</i> (annotations unless clusters are chosen), and one Undo brings the old colours back. Edit → Style colours
+    nodes and labels with other palettes.
   </p>
 
   <h3>Groups</h3>
   <p>
-    The <i>Groups</i> card lists every annotation term — from attribute or group files, or an enrichment — or every
-    cluster, as in NORMA: its colour (click the swatch to recolour the group, its pies and shapes), the number of
-    members (hover for the count per layer), a <i>show</i> switch that draws or hides that group's shape (<i>Show: All</i> / <i>None</i> above the list switches every group that matches the filter at once — handy for the many terms a database import brings), and
-    <i>select</i>. With some groups switched off, the scene shows only the chosen ones: the nodes in none of the
-    groups still shown (and those in no group) fade, with the edges touching them, so <i>None</i> and then a tick or
-    two picks out a few groups. The Clustering panel's list of communities has the same switches, in step. <i>Legend</i> shows the groups in the on-canvas legend; <i>Groups Table</i> and <i>Overlap
-    Table</i> (the Jaccard overlap of every pair of groups, with an UpSet plot of the members the groups share)
-    open in Data Tables; <i>Collapse into Super Nodes</i>
+    The <i>Groups</i> card lists every annotation term or every cluster, as in NORMA, under a header row: its colour
+    (click the swatch to recolour the group, its pies and shapes), its name, the number of members (hover for the
+    count per layer), a <i>Show</i> switch that draws or hides that group's shape, and <i>select</i>. Above the list,
+    the count of groups (and how many match the filter) and <i>Show: All</i> / <i>None</i>, which switch every group
+    that matches the filter. With some groups switched off, the scene shows only the chosen ones: the nodes in none
+    of the groups still shown (and those in no group) fade, with the edges touching them, so <i>None</i> and then a
+    tick or two picks out a few groups. The Clustering panel's list of communities has the same switches, in step.
+  </p>
+
+  <h3>Legend &amp; reports</h3>
+  <p>
+    <i>Legend</i> shows the groups in the on-canvas legend. <i>Groups Table</i>, <i>Overlap Table</i> (the Jaccard
+    overlap of every pair of groups, with an UpSet plot of the members the groups share) and <i>Group Stats</i> open
+    in Data Tables; <i>Group Stats</i> reports, per group and as NORMA does, the members, the layers they span, the
+    edges inside the group (intra- and inter-layer), the density, the mean degree inside, the share of the network's
+    edges and the members that belong to other groups too. Set apart below them, <i>Collapse into Super Nodes</i>
     turns every group into one node per layer, sized by its members and coloured like the group, with member edges
     summed into the edges between them — undo restores the network.
-  </p>
-  <p>
-    <i>Group Stats</i> reports, per group and as NORMA does, the members, the layers they span, the edges inside
-    the group (intra- and inter-layer), the density, the mean degree inside, the share of the network's edges and
-    the members that belong to other groups too, in Data Tables → Group Statistics. Every table a button produces
-    opens the Data Tables panel on its tab.
   </p>
 </div>
 
@@ -1975,9 +2035,9 @@ webbrowser.open(r.json()["url"])</pre>
       'How the floor is drawn.',
     ],
     [
-      'layers[].container, container_color, container_opacity, floor_visible',
-      'floor | none | cube | sphere | cloud; hex | null; 0–1; boolean',
-      'The 3D container (a <code>null</code> colour follows the theme) and whether the floor shows.',
+      'layers[].container, container_placement, container_color, container_opacity, container_outline, container_outline_color, container_wireframe, container_glow, container_floor, floor_visible',
+      'floor | none | cube | sphere | cylinder | cone | pyramid | dome | ellipsoid | torus | hexprism | geodesic | discs | cloud | bubble; inside | surface; hex | null; 0–1; booleans and hex | null',
+      'The 3D container, where its nodes sit, and its look (a <code>null</code> colour follows the theme, a <code>null</code> outline colour the container); whether the floor shows.',
     ],
     ['nodes[]', 'list', 'One object per node copy.'],
     [

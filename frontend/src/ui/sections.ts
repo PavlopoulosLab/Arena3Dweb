@@ -1,8 +1,9 @@
 // Folding cards in the panels — <details class="lp-section lp-more" id=…>
-// (and the Database Importers' db-cards): every card starts folded, except a
-// panel's only card, which starts open; the open state is remembered in this
-// browser once the user opens or folds it, and an Expand all / Collapse all
-// row (FOLD_ALL_HTML) does every card of its panel.
+// (and the Database Importers' db-cards): in every panel the first card
+// starts open and the others folded, and so do the sub-sections inside a
+// card (its first one open); the open state is remembered in this browser
+// once the user opens or folds a card, and an Expand all / Collapse all row
+// (FOLD_ALL_HTML) does every card of its panel.
 
 // .v2: the cards started open or folded before; begin again from all folded
 const KEY = 'arena3d.sections.v2'
@@ -55,18 +56,23 @@ export function initSections(): void {
   const openAll =
     (window as unknown as { __arenaOpenCards?: boolean }).__arenaOpenCards ===
     true
-  // a panel of a single card shows it: there is nothing else to fold it for
-  const single = new Set<HTMLDetailsElement>()
-  root.querySelectorAll('.tab-pane').forEach((pane) => {
-    const cards = [...pane.querySelectorAll<HTMLDetailsElement>(CARDS)].filter(
-      (d) => !d.parentElement?.closest('details')
+  // the first card of each panel, and the first sub-section of each card,
+  // start open: the rest fold
+  const first = new Set<HTMLDetailsElement>()
+  const firstChild = (scope: Element, parent: HTMLDetailsElement | null) => {
+    const card = [...scope.querySelectorAll<HTMLDetailsElement>(CARDS)].find(
+      (d) => (d.parentElement?.closest('details') ?? null) === parent
     )
-    if (cards.length === 1) single.add(cards[0])
-  })
+    if (card) first.add(card)
+  }
+  root.querySelectorAll('.tab-pane').forEach((pane) => firstChild(pane, null))
+  root
+    .querySelectorAll<HTMLDetailsElement>(CARDS)
+    .forEach((card) => firstChild(card, card))
   root.querySelectorAll<HTMLDetailsElement>(CARDS).forEach((d) => {
     if (openAll) d.open = true
     else if (typeof state[d.id] === 'boolean') d.open = state[d.id]
-    else if (single.has(d)) d.open = true
+    else d.open = first.has(d)
   })
   // Only the user's own clicks are remembered (a summary is clicked by mouse
   // and by Enter / Space alike): a card the app opens to show something stays

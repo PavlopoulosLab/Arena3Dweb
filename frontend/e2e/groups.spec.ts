@@ -77,6 +77,10 @@ test('group file → Groups card → hulls, colours, selection, tables, super no
   await expect(rows.first().locator('.group-name')).toHaveText('Beta') // larger first
   // hulls: Beta hidden → fewer hulls
   await page.locator('#hull_annotation').dispatchEvent('click')
+  // What to show sums the set up; the list shows the groups drawn
+  await expect(page.locator('#annSummary')).toContainText('2 groups over')
+  await expect(page.locator('#groupsSource')).toHaveValue('annotation')
+  await expect(page.locator('#groupsCount')).toHaveText('2 groups')
   await page.waitForTimeout(300)
   const withHulls = (await read(page)).hulls
   expect(withHulls).toBeGreaterThan(0)
@@ -114,6 +118,16 @@ test('group file → Groups card → hulls, colours, selection, tables, super no
         ).__arena.ctx.nodeObjects.filter((n) => n.faded).length
     )
   ).toBe(0)
+  // On the nodes: each node takes its first group's colour; undo restores
+  const own = (await read(page)).colorOf1
+  const alpha = await rows.nth(1).locator('.group-color').inputValue()
+  await page.locator('#annColorNodes').dispatchEvent('click')
+  await expect(page.locator('#groups_status')).toContainText(
+    'coloured by their first annotation'
+  )
+  expect((await read(page)).colorOf1).toBe(alpha.toLowerCase())
+  await page.locator('#undoButton').dispatchEvent('click')
+  expect((await read(page)).colorOf1).toBe(own)
   // recolour Alpha → every copy of node 1 changes
   await rows
     .nth(1)

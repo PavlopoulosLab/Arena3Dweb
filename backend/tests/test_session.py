@@ -166,6 +166,30 @@ def test_chosen_labels_and_label_mode_kept_or_dropped() -> None:
     assert loose["nodeLabels"] == {"mode": "all", "withSelection": True}
 
 
+def test_layer_label_style_kept_or_dropped() -> None:
+    data = _minimal()
+    data["layers"] = [
+        {
+            "name": "L1",
+            "label_style": {"style": "box", "color": "#000000", "opacity": 0.5},
+            "label_font": "condensed",
+            "label_bold": True,
+            "label_italic": "yes",  # only true counts
+            "label_color": "#ff0000",
+            "label_position": "above",
+        }
+    ]
+    (layer,) = normalize_session(data)["layers"]
+    assert layer["label_style"]["style"] == "box"
+    assert (layer["label_font"], layer["label_bold"]) == ("condensed", True)
+    assert (layer["label_color"], layer["label_position"]) == ("#ff0000", "above")
+    assert "label_italic" not in layer
+    odd = _minimal()
+    odd["layers"] = [{"name": "L1", "label_font": "comic", "label_position": "corner"}]
+    (layer,) = normalize_session(odd)["layers"]
+    assert "label_font" not in layer and "label_position" not in layer
+
+
 def test_missing_mandatory_object_raises() -> None:
     with pytest.raises(SessionValidationError):
         normalize_session({"layers": [{"name": "L1"}], "nodes": []})

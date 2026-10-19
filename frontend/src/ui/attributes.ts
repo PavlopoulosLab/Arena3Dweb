@@ -8,14 +8,14 @@
 import { bus } from '../bus'
 import { ctx } from '../three'
 import {
-  DEFAULT_LABEL_LOOK,
   LABEL_LOOK_LABELS,
+  LABEL_POSITION_LABELS,
   NODE_SHAPE_LABELS,
-  labelLookText,
   type LabelLookStyle,
 } from '../three/Node'
 import {
   colorLabelIndices,
+  styleLabelLooks,
   LABEL_PALETTE_LABELS,
   type LabelColorBy,
   type LabelPalette,
@@ -60,6 +60,7 @@ const opts = (o: Record<string, string>) =>
     .join('')
 const SHAPE_OPTIONS = opts(NODE_SHAPE_LABELS)
 const LINE_OPTIONS = opts(LINE_TYPE_LABELS)
+const POSITION_OPTIONS = opts(LABEL_POSITION_LABELS)
 const LOOK_OPTIONS = opts({
   '': 'Auto',
   plain: 'Plain',
@@ -85,9 +86,20 @@ const NODE_COLUMNS: Column<NodeColumn>[] = [
     title: 'Label colour (faded: as the label style)',
   },
   {
+    key: 'labelSize',
+    name: 'Label size',
+    title: 'Label font size in px (blank: as the label style)',
+  },
+  {
     key: 'labelStyle',
     name: 'Label style',
     title: 'Plain, halo (outline), box or shadow (Auto: as the label style)',
+  },
+  { key: 'labelBold', name: 'Bold', title: 'Bold label' },
+  {
+    key: 'labelPosition',
+    name: 'Label position',
+    title: 'Right of the node, centred on it, above or below it',
   },
   {
     key: 'labelShown',
@@ -189,6 +201,9 @@ const FIELD_NAMES: Record<string, string> = {
   labelColor: 'label colour',
   labelStyle: 'label style',
   labelShown: 'label shown',
+  labelSize: 'label size',
+  labelBold: 'bold',
+  labelPosition: 'label position',
   lineType: 'line type',
   arrowColor: 'arrow colour',
 }
@@ -216,6 +231,7 @@ function nodeRowHtml(i: number): string {
   const w = e(nodeWho(i))
   const [s0, s1] = LIMITS.scale
   const [a0, a1] = LIMITS.alpha
+  const [ls0, ls1] = LIMITS.labelSize
   return `
     <span class="attr-c attr-c--tick" role="cell"><input type="checkbox" class="form-check-input" data-f="tick" aria-label="Tick ${w}" /></span>
     <span class="attr-c attr-c--text" role="cell" data-f="name"></span>
@@ -226,7 +242,10 @@ function nodeRowHtml(i: number): string {
     <span class="attr-c" role="cell"><input type="number" class="form-control form-control-sm" data-f="alpha" min="${a0}" max="${a1}" step="0.05" aria-label="Opacity of ${w}" /></span>
     <span class="attr-c" role="cell"><input type="text" class="form-control form-control-sm" data-f="label" maxlength="200" aria-label="Label of ${w}" /></span>
     <span class="attr-c attr-c--arrow" role="cell"><input type="color" data-f="labelColor" aria-label="${w}: label colour" /><button type="button" class="attr-reset" data-f="labelColorReset" title="As the label style (Edit → Nodes)" aria-label="${w}: label colour as the label style">×</button></span>
+    <span class="attr-c" role="cell"><input type="number" class="form-control form-control-sm" data-f="labelSize" min="${ls0}" max="${ls1}" step="1" placeholder="auto" aria-label="${w}: label size" /></span>
     <span class="attr-c" role="cell"><select class="form-select form-select-sm" data-f="labelStyle" aria-label="${w}: label style">${LOOK_OPTIONS}</select></span>
+    <span class="attr-c attr-c--shown" role="cell"><input type="checkbox" class="form-check-input" data-f="labelBold" aria-label="${w}: bold label" /></span>
+    <span class="attr-c" role="cell"><select class="form-select form-select-sm" data-f="labelPosition" aria-label="${w}: label position">${POSITION_OPTIONS}</select></span>
     <span class="attr-c attr-c--shown" role="cell"><input type="checkbox" class="form-check-input" data-f="labelShown" aria-label="${w}: label shown" /></span>
     <span class="attr-c" role="cell"><input type="text" class="form-control form-control-sm" data-f="descr" maxlength="2000" aria-label="Description of ${w}" /></span>
     <span class="attr-c attr-c--more" role="cell"><button type="button" class="attr-inspect" data-f="inspect" title="Inspector: every attribute of this node" aria-label="Inspect ${w}">⋯</button></span>`
@@ -281,6 +300,8 @@ function fillNodeRow(row: HTMLElement, i: number): void {
   row.classList.toggle('has-label-color', n.labelColor !== '')
   row.querySelector<HTMLInputElement>('[data-f="labelShown"]')!.checked =
     n.labelShown
+  row.querySelector<HTMLInputElement>('[data-f="labelBold"]')!.checked =
+    !!n.labelLook?.bold
   row
     .querySelector<HTMLInputElement>('[data-f="label"]')!
     .setAttribute('placeholder', n.name)
@@ -646,13 +667,31 @@ function download(text: string, name: string): void {
 
 // a cell's edit: the row, or every ticked row in the list with it
 function commitNode(i: number, field: string, raw: string): void {
-  // a style picked in the table keeps the row's halo / box colour, width,
-  // opacity and bold
-  if (field === 'labelStyle' && raw in LABEL_LOOK_LABELS)
-    raw = labelLookText({
-      ...(ctx.nodeObjects[i].labelLook ?? DEFAULT_LABEL_LOOK),
-      style: raw as LabelLookStyle,
-    })
+  // a label style or bold picked in the table: each node (the row, or every
+  // ticked row) keeps the rest of its own look
+  if (
+    field === 'labelBold' ||
+    (field === 'labelStyle' && raw in LABEL_LOOK_LABELS)
+  ) {
+    const ids = editTargets(
+      i,
+      nodes!.list,
+      (k) => ctx.nodeObjects[k].isSelected
+    )
+    const what = field === 'labelBold' ? 'bold' : 'label style'
+    styleLabelLooks(
+      ids,
+      field === 'labelBold'
+        ? { bold: raw === 'true' }
+        : { style: raw as LabelLookStyle },
+      `Set the ${what}`
+    )
+    return status(
+      ids.length > 1
+        ? `Set the ${what} of ${plural(ids.length, 'node')} (one undo step).`
+        : `Set the ${what} of ${nodeWho(i)}.`
+    )
+  }
   const patch = nodePatch(field as NodeField, raw)
   if (!patch) {
     status(`That is not a valid ${fieldName(field)} — nothing changed.`, true)

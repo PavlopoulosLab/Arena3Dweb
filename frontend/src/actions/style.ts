@@ -25,7 +25,8 @@ import {
   type SequentialPalette,
 } from './palettes'
 import { redrawIntraLayerEdges } from './edge'
-import { contrastWith, restyleNodeLabels } from './labels'
+import { contrastWith, restyleLayerLabels, restyleNodeLabels } from './labels'
+import type { LayerLabelFont, LayerLabelPosition } from '../three/Layer'
 import {
   decideNodeLabelFlags,
   revealChosenLabels,
@@ -544,6 +545,95 @@ export function colorLabelIndices(
     }))
   )
   return groups
+}
+
+// ---------------------------------------------------------------- layer labels
+// Edit → Layers → Labels & axes: the look, font, colour and place of the
+// layer labels, for all layers or the selected ones. One undo step each.
+export type LayerLabelStyle = {
+  look: LabelLook | null
+  font: LayerLabelFont | ''
+  bold: boolean
+  italic: boolean
+  color: string
+  position: LayerLabelPosition
+}
+export type LayerLabelColorBy = 'theme' | 'one' | 'layer' | 'palette'
+
+const layerLabelStyle = (i: number): LayerLabelStyle => {
+  const l = ctx.layers[i]
+  return {
+    look: l.labelLook && { ...l.labelLook },
+    font: l.labelFont,
+    bold: l.labelBold,
+    italic: l.labelItalic,
+    color: l.labelColor,
+    position: l.labelPosition,
+  }
+}
+
+function applyLayerLabelStyle(i: number, st: Partial<LayerLabelStyle>): void {
+  const l = ctx.layers[i]
+  if (st.look !== undefined) l.labelLook = st.look && { ...st.look }
+  if (st.font !== undefined) l.labelFont = st.font
+  if (st.bold !== undefined) l.labelBold = st.bold
+  if (st.italic !== undefined) l.labelItalic = st.italic
+  if (st.color !== undefined) l.labelColor = st.color
+  if (st.position !== undefined) l.labelPosition = st.position
+}
+
+/** The layer's own colour as its label colour: the colour of its nodes (as
+ * the layer legend shows it), made to read on the background. */
+export function layerLabelColor(i: number): string {
+  const l = ctx.layers[i]
+  const node = ctx.nodeObjects.find((n) => n.layer === l.name)
+  const c = `#${new THREE.Color(node?.getColor() ?? l.getColor()).getHexString()}`
+  return readableOn(c, background())
+}
+
+/** Style the labels of these layers; `after` gives each layer its change
+ * (worked out now, so a redo repeats it). @return layers changed */
+export function styleLayerLabels(
+  indices: number[],
+  after: (i: number) => Partial<LayerLabelStyle>,
+  description = 'Style layer labels'
+): number {
+  if (indices.length === 0) return 0
+  const before = indices.map(layerLabelStyle)
+  const changes = indices.map(after)
+  const apply = (sts: Partial<LayerLabelStyle>[]) => {
+    indices.forEach((i, k) => applyLayerLabelStyle(i, sts[k]))
+    restyleLayerLabels()
+  }
+  history.execute({
+    description,
+    execute: () => apply(changes),
+    undo: () => apply(before),
+  })
+  return indices.length
+}
+
+/** The label colour each of these layers gets: the theme's (''), one colour,
+ * its own colour, or one palette colour per layer (in layer order). */
+export function layerLabelColors(
+  indices: number[],
+  by: LayerLabelColorBy,
+  color = '#ffffff',
+  palette: LabelPalette = 'theme'
+): Map<number, string> {
+  if (by === 'palette') {
+    const colors = paletteColors(
+      ctx.layers.map((l) => l.name),
+      palette
+    )
+    return new Map(indices.map((i) => [i, colors.get(ctx.layers[i].name)!]))
+  }
+  return new Map(
+    indices.map((i) => [
+      i,
+      by === 'theme' ? '' : by === 'one' ? color : layerLabelColor(i),
+    ])
+  )
 }
 
 // Commands built with record=false, gathered into one undo step by

@@ -5,13 +5,48 @@ import {
   LAYER_DEFAULT_COLOR,
 } from './constants'
 import { ctx } from './runtime'
-import type { Axis } from './Node'
+import type { Axis, LabelLook } from './Node'
 import {
   DEFAULT_AXES_OPACITY,
   disposeAxes,
   makeAxes,
   setAxesOpacity,
 } from './axes'
+import {
+  isVolume,
+  type ContainerPlacement,
+  type LayerContainer,
+} from './containers'
+import {
+  containerPool,
+  fillGeometry,
+  glowMaterial,
+  outlineGeometry,
+  puffLayout,
+  puffTexture,
+  wireGeometry,
+} from './container_geometry'
+
+export { VOLUME_CONTAINERS } from './containers'
+export type { ContainerPlacement, LayerContainer } from './containers'
+
+// Edit → Layers → Labels & axes: the layer label's font, and where it sits —
+// at the floor's outer corner (as always), centred above the floor or under it
+export type LayerLabelFont = 'sans' | 'serif' | 'mono' | 'condensed'
+export const LAYER_LABEL_FONTS: Record<LayerLabelFont, string> = {
+  sans: 'Sans-serif',
+  serif: 'Serif',
+  mono: 'Monospace',
+  condensed: 'Condensed',
+}
+export type LayerLabelPosition = 'corner' | 'above' | 'below'
+export const LAYER_LABEL_POSITIONS: Record<LayerLabelPosition, string> = {
+  corner: 'Outer corner',
+  above: 'Above the floor',
+  below: 'Under the floor',
+}
+const ANCHOR = new THREE.Vector3()
+const FLOOR_BOX = new THREE.Box3()
 
 export interface LayerOptions {
   id?: number
@@ -49,10 +84,34 @@ const GRID_DIVISIONS = 10
 const DISK_SEGMENTS = 64
 
 // How a layer holds its nodes (Phases 19-20): the v2 floor, nothing at all,
-// or a 3D volume — nodes are then laid out in 3D inside it.
-export type LayerContainer = 'floor' | 'none' | 'cube' | 'sphere' | 'cloud'
-export const VOLUME_CONTAINERS: LayerContainer[] = ['cube', 'sphere', 'cloud']
+// or a 3D volume (three/containers.ts) — nodes are then laid out in 3D inside
+// it or on its surface.
 export const DEFAULT_CONTAINER_OPACITY = 0.3
+
+// How a container is drawn (Edit → Layers → Shape & container): its colour
+// (null = the theme's container colour) and opacity, its outline (colour null =
+// the container's), a wire cage, a rim light, and the floor kept under it.
+export interface ContainerLook {
+  color: string | null
+  opacity: number
+  outline: boolean
+  outlineColor: string | null
+  wireframe: boolean
+  glow: boolean
+  floor: boolean
+}
+export const DEFAULT_CONTAINER_LOOK: ContainerLook = {
+  color: null,
+  opacity: DEFAULT_CONTAINER_OPACITY,
+  outline: true,
+  outlineColor: null,
+  wireframe: false,
+  glow: false,
+  floor: false,
+}
+
+// each part's opacity at the default container opacity (scaled with it)
+const PART_OPACITY = { fill: 0.08, outline: 0.65, wire: 0.3, glow: 0.9 }
 
 export class Layer {
   plane!: THREE.Mesh
@@ -70,12 +129,30 @@ export class Layer {
   isVisible = true
   floorVisible = true
   floorShape: FloorShape = 'square'
-  // 3D container look: own colour (null = the floor colour) and opacity
-  // (0-1; DEFAULT_CONTAINER_OPACITY gives the standard look)
+  // 3D container look (ContainerLook): own colour (null = the theme's) and
+  // opacity (0-1; DEFAULT_CONTAINER_OPACITY gives the standard look) …
   containerColor: string | null = null
   containerOpacity = DEFAULT_CONTAINER_OPACITY
+  containerOutline = true
+  containerOutlineColor: string | null = null
+  containerWireframe = false
+  containerGlow = false
+  containerFloor = false // the floor stays under the container
   container: LayerContainer = 'floor'
-  volume: THREE.Object3D | null = null // cube/sphere/cloud drawing
+  // nodes inside the volume or on its surface (three/containers.ts)
+  containerPlacement: ContainerPlacement = 'inside'
+  // selection / hover colour over the container's own (null = none)
+  private volumeTint: string | null = null
+  private volumeKeys: string[] = [] // what the drawing holds in the pool
+  // the layer label's look (null: the default halo), font ('' = the app's),
+  // bold, italic, colour ('' = the theme's label colour) and place
+  labelLook: LabelLook | null = null
+  labelFont: LayerLabelFont | '' = ''
+  labelBold = false
+  labelItalic = false
+  labelColor = ''
+  labelPosition: LayerLabelPosition = 'corner'
+  volume: THREE.Object3D | null = null // the container's drawing
   coordSystem: THREE.Object3D[] = []
   coordsShown = false // Edit → Layers / Layer selection → Axes
   axesOpacity = DEFAULT_AXES_OPACITY
@@ -188,6 +265,24 @@ export class Layer {
     this.sphere = threeSphere
   }
 
+  /** World x, y the label hangs from: the floor's outer corner, or the middle
+   * of the floor's top or bottom edge as seen (the camera has no roll, so
+   * world x/y are the screen's). */
+  labelAnchor(): [number, number] {
+    if (this.labelPosition === 'corner') {
+      const w = this.sphere.getWorldPosition(ANCHOR)
+      return [w.x, w.y]
+    }
+    const g = this.plane.geometry
+    if (!g.boundingBox) g.computeBoundingBox()
+    this.plane.updateWorldMatrix(true, false)
+    FLOOR_BOX.copy(g.boundingBox!).applyMatrix4(this.plane.matrixWorld)
+    return [
+      (FLOOR_BOX.min.x + FLOOR_BOX.max.x) / 2,
+      this.labelPosition === 'above' ? FLOOR_BOX.max.y : FLOOR_BOX.min.y,
+    ]
+  }
+
   createSphere(): THREE.Mesh {
     const geometry = new THREE.SphereGeometry()
     const material = new THREE.MeshBasicMaterial({
@@ -243,10 +338,19 @@ export class Layer {
     this.syncFloorVisibility()
   }
 
-  // the floor only shows in 'floor' mode; other containers keep the (invisible)
-  // plane for raycasting and as the parent of nodes and edges
+  // the floor shows in 'floor' mode, and under a 3D container when asked;
+  // otherwise the (invisible) plane stays for raycasting and as the parent of
+  // nodes and edges
+  private floorShown(): boolean {
+    return (
+      this.floorVisible &&
+      (this.container === 'floor' ||
+        (isVolume(this.container) && this.containerFloor))
+    )
+  }
+
   private syncFloorVisibility(): void {
-    const shown = this.floorVisible && this.container === 'floor'
+    const shown = this.floorShown()
     ;(this.plane.material as THREE.MeshBasicMaterial).visible = shown
     if (this.floorLines) this.floorLines.visible = shown
   }
@@ -357,7 +461,7 @@ export class Layer {
         new THREE.LineBasicMaterial({ color, transparent: true })
       )
     }
-    object.visible = this.floorVisible && this.container === 'floor'
+    object.visible = this.floorShown()
     object.renderOrder = 1
     this.floorLines = object
     this.plane.add(object)
@@ -374,142 +478,126 @@ export class Layer {
     return (this.geometry_parameters_width / 2) * this.last_layer_scale
   }
 
+  // The container's drawing: unit shapes from the shared pool, scaled to the
+  // layer. Rebuilt on a change of kind, look, tint or theme; cheap, since
+  // geometries and materials are shared between layers. What the old drawing
+  // held goes back to the pool only after the new one took its share, so a
+  // layer alone with its shape does not dispose and rebuild it.
   rebuildVolume(): void {
-    if (this.volume) {
-      this.plane.remove(this.volume)
-      this.volume.traverse((o) => {
-        if (o instanceof THREE.Sprite) {
-          // sprites share one static geometry; only the material and its
-          // canvas texture are ours
-          o.material.map?.dispose()
-          o.material.dispose()
-          return
-        }
-        const m = o as THREE.Mesh
-        m.geometry?.dispose()
-        ;(m.material as THREE.Material | undefined)?.dispose()
-      })
-      this.volume = null
+    const held = this.volumeKeys
+    if (this.volume) this.plane.remove(this.volume)
+    this.volume = null
+    this.volumeKeys = []
+    try {
+      this.drawVolume()
+    } finally {
+      for (const key of held) containerPool.release(key)
     }
-    if (!VOLUME_CONTAINERS.includes(this.container)) return
-    const r = this.containerRadius()
-    const color = new THREE.Color(
-      this.containerColor ?? ctx.containerDefaultColor
-    )
+  }
+
+  private drawVolume(): void {
+    const kind = this.container
+    if (!isVolume(kind)) return
+    const use = <T extends { dispose(): void }>(key: string, make: () => T) => {
+      this.volumeKeys.push(key)
+      return containerPool.acquire(key, make)
+    }
+    const base = this.containerColor ?? ctx.containerDefaultColor
+    const fill = this.volumeTint ?? base
+    const line = this.volumeTint ?? this.containerOutlineColor ?? base
     // every part's opacity scales with the container opacity, capped at 1
     const k = this.containerOpacity / DEFAULT_CONTAINER_OPACITY
-    const op = (base: number) => Math.min(1, base * k)
-    const group = new THREE.Group()
-    if (this.container === 'cube') {
-      const box = new THREE.BoxGeometry(2 * r, 2 * r, 2 * r)
-      group.add(
-        new THREE.Mesh(
-          box,
+    const op = (part: number) => Math.round(Math.min(1, part * k) * 1000) / 1000
+    const basic = (color: string, opacity: number) =>
+      use(
+        `mat:fill|${color}|${opacity}`,
+        () =>
           new THREE.MeshBasicMaterial({
-            color,
-            transparent: true,
-            opacity: op(0.08),
-            depthWrite: false,
-          })
-        ),
-        new THREE.LineSegments(
-          new THREE.EdgesGeometry(box),
-          new THREE.LineBasicMaterial({
-            color,
-            transparent: true,
-            opacity: op(0.7),
-          })
-        )
-      )
-    } else if (this.container === 'sphere') {
-      group.add(
-        new THREE.Mesh(
-          new THREE.SphereGeometry(r, 48, 32),
-          new THREE.MeshBasicMaterial({
-            color,
-            transparent: true,
-            opacity: op(0.07),
-            depthWrite: false,
-          })
-        )
-      )
-      // three great circles read as a sphere without a dense wireframe
-      for (const axis of [0, 1, 2]) {
-        const ring = new THREE.LineLoop(
-          new THREE.BufferGeometry().setFromPoints(
-            Array.from({ length: 96 }, (_, i) => {
-              const a = (2 * Math.PI * i) / 96
-              const [u, v] = [r * Math.cos(a), r * Math.sin(a)]
-              return axis === 0
-                ? new THREE.Vector3(0, u, v)
-                : axis === 1
-                  ? new THREE.Vector3(u, 0, v)
-                  : new THREE.Vector3(u, v, 0)
-            })
-          ),
-          new THREE.LineBasicMaterial({
-            color,
-            transparent: true,
-            opacity: op(0.6),
-          })
-        )
-        group.add(ring)
-      }
-    } else {
-      // fog cloud (as in NORMA): soft tinted puffs filling the volume, no hard
-      // boundary; a fixed seed keeps the same cloud on every redraw
-      const size = 128
-      const canvas = document.createElement('canvas')
-      canvas.width = canvas.height = size
-      const g = canvas.getContext('2d')
-      if (g) {
-        const grad = g.createRadialGradient(
-          size / 2,
-          size / 2,
-          0,
-          size / 2,
-          size / 2,
-          size / 2
-        )
-        grad.addColorStop(0, 'rgba(255,255,255,1)')
-        grad.addColorStop(0.4, 'rgba(255,255,255,0.4)')
-        grad.addColorStop(1, 'rgba(255,255,255,0)')
-        g.fillStyle = grad
-        g.fillRect(0, 0, size, size)
-      }
-      const map = new THREE.CanvasTexture(canvas)
-      let seed = 7
-      const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646
-      const puff = (at: THREE.Vector3, scale: number, opacity: number) => {
-        const sprite = new THREE.Sprite(
-          new THREE.SpriteMaterial({
-            map,
             color,
             transparent: true,
             opacity,
             depthWrite: false,
           })
+      )
+    const lineMat = (color: string, opacity: number) =>
+      use(
+        `mat:line|${color}|${opacity}`,
+        () => new THREE.LineBasicMaterial({ color, transparent: true, opacity })
+      )
+    const group = new THREE.Group()
+    if (kind === 'cloud') {
+      // fog cloud (as in NORMA): soft tinted puffs filling the volume, no
+      // hard boundary; the same cloud on every redraw
+      const map = use('tex:puff', puffTexture)
+      const puff = (opacity: number) =>
+        use(
+          `mat:puff|${fill}|${opacity}`,
+          () =>
+            new THREE.SpriteMaterial({
+              map,
+              color: fill,
+              transparent: true,
+              opacity,
+              depthWrite: false,
+            })
         )
-        sprite.position.copy(at)
-        sprite.scale.set(scale, scale, 1)
+      const add = (m: THREE.SpriteMaterial, at: number[], size: number) => {
+        const sprite = new THREE.Sprite(m)
+        sprite.position.set(at[0], at[1], at[2])
+        sprite.scale.set(size, size, 1)
         group.add(sprite)
       }
-      puff(new THREE.Vector3(), 2.4 * r, op(0.25)) // the haze
-      for (let k = 0; k < 36; k++) {
-        // denser towards the centre, so the edge fades out
-        const dir = new THREE.Vector3(
-          rand() * 2 - 1,
-          rand() * 2 - 1,
-          rand() * 2 - 1
-        ).normalize()
-        puff(
-          dir.multiplyScalar(r * Math.sqrt(rand()) * 0.85),
-          r * (0.5 + 0.5 * rand()),
-          op(0.12)
+      add(puff(op(0.25)), [0, 0, 0], 2.4) // the haze
+      const puffMat = puff(op(0.12))
+      for (const [x, y, z, size] of puffLayout()) add(puffMat, [x, y, z], size)
+    } else {
+      const shape = (key: string) =>
+        use(`geo:${key}:${kind}`, () =>
+          key === 'fill'
+            ? fillGeometry(kind)
+            : key === 'outline'
+              ? outlineGeometry(kind)
+              : wireGeometry(kind)
         )
+      const bubble = kind === 'bubble'
+      group.add(
+        new THREE.Mesh(
+          shape('fill'),
+          basic(fill, op(PART_OPACITY.fill * (bubble ? 0.5 : 1)))
+        )
+      )
+      if (bubble || this.containerGlow) {
+        // a rim light: a bubble always has one, other shapes on request
+        const intensity = op(PART_OPACITY.glow * (bubble ? 1.2 : 0.8))
+        const power = bubble ? 2.2 : 3
+        const glow = new THREE.Mesh(
+          shape('fill'),
+          use(`mat:glow|${line}|${intensity}|${power}`, () =>
+            glowMaterial(line, intensity, power)
+          )
+        )
+        // glTF cannot carry the shader: the GLB export leaves it out, like
+        // the node outlines (actions/export.ts)
+        glow.userData.outline = true
+        group.add(glow)
       }
+      if (this.containerOutline && !bubble)
+        group.add(
+          new THREE.LineSegments(
+            shape('outline'),
+            lineMat(line, op(PART_OPACITY.outline))
+          )
+        )
+      if (this.containerWireframe)
+        group.add(
+          new THREE.LineSegments(
+            shape('wire'),
+            lineMat(line, op(PART_OPACITY.wire))
+          )
+        )
     }
-    group.userData.layerVolume = this.container
+    group.scale.setScalar(this.containerRadius())
+    group.userData.layerVolume = kind
     this.volume = group
     this.plane.add(group)
   }
@@ -579,7 +667,7 @@ export class Layer {
     const newScaleValue = parseFloat(String(value)) / this.getScale()
     this.plane.geometry.scale(1, newScaleValue, newScaleValue)
     this.last_layer_scale = parseFloat(String(value))
-    if (this.volume) this.rebuildVolume()
+    this.volume?.scale.setScalar(this.containerRadius())
   }
 
   getScale(): number {
@@ -587,15 +675,52 @@ export class Layer {
   }
 
   setContainerStyle(color: string | null, opacity: number): void {
-    this.containerColor = color
-    this.containerOpacity = Math.min(1, Math.max(0, opacity))
+    this.setContainerLook({ color, opacity })
+  }
+
+  containerLook(): ContainerLook {
+    return {
+      color: this.containerColor,
+      opacity: this.containerOpacity,
+      outline: this.containerOutline,
+      outlineColor: this.containerOutlineColor,
+      wireframe: this.containerWireframe,
+      glow: this.containerGlow,
+      floor: this.containerFloor,
+    }
+  }
+
+  setContainerLook(look: Partial<ContainerLook>): void {
+    const l = { ...this.containerLook(), ...look }
+    this.containerColor = l.color
+    this.containerOpacity = Math.min(1, Math.max(0, l.opacity))
+    this.containerOutline = l.outline
+    this.containerOutlineColor = l.outlineColor
+    this.containerWireframe = l.wireframe
+    this.containerGlow = l.glow
+    this.containerFloor = l.floor
+    this.syncFloorVisibility()
     this.rebuildVolume()
   }
 
+  // A hovered or selected layer's container takes the highlight colour.
+  private setVolumeTint(tint: string | null): void {
+    if (tint === this.volumeTint) return
+    this.volumeTint = tint
+    if (this.volume) this.rebuildVolume()
+  }
+
+  // hover (actions/layer.ts): the floor and the container turn red until
+  // the next repaint (setColor)
+  paintHover(color: string): void {
+    ;(this.plane.material as THREE.MeshBasicMaterial).color.set(color)
+    this.setVolumeTint(color)
+  }
+
   setColor(color: string): void {
-    const changed = color !== this.color
     this.color = color
-    if (changed && this.volume) this.rebuildVolume()
+    // repaintLayers gives a selected layer the selection colour
+    this.setVolumeTint(this.isSelected ? color : null)
     ;(this.plane.material as THREE.MeshBasicMaterial).color = new THREE.Color(
       color
     )

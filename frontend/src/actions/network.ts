@@ -18,7 +18,8 @@ import { history } from '../commands/base'
 import { LoadNetworkCommand } from '../commands/scene'
 import { store } from '../store'
 import { ctx, Edge, Layer, Node, resetContext, Scene } from '../three'
-import { DEFAULT_CONTAINER_OPACITY } from '../three/Layer'
+import { isContainer } from '../three/containers'
+import { sessionContainerLook } from './containers'
 import { stashAnnotationView } from './annotations'
 import { createLabels, setLabelColor } from './labels'
 import type { NodeGeometryType } from '../three/Node'
@@ -216,9 +217,7 @@ export function buildFromSession(s: SessionData): void {
           ? l.floor_shape
           : 'square',
       floor_style: FLOOR_STYLES.find((f) => f === l.floor_style) ?? 'solid',
-      container: (['floor', 'none', 'cube', 'sphere', 'cloud'] as const).find(
-        (c) => c === l.container
-      ),
+      container: isContainer(l.container) ? l.container : undefined,
     })
     ctx.layers.push(layer)
     ctx.scene!.addLayer(layer.plane)
@@ -228,20 +227,21 @@ export function buildFromSession(s: SessionData): void {
     initialSpreadLayers()
   applyDefaultFloorVisibility()
   s.layers.forEach((l, i) => {
+    // Labels & axes: the label's own look (checked by the backend)
+    const layer = ctx.layers[i]
+    layer.labelLook = l.label_style ? { ...l.label_style } : null
+    layer.labelFont = l.label_font ?? ''
+    layer.labelBold = l.label_bold === true
+    layer.labelItalic = l.label_italic === true
+    layer.labelColor = l.label_color ?? ''
+    layer.labelPosition = l.label_position ?? 'corner'
     if (typeof l.floor_visible === 'boolean')
       ctx.layers[i].toggleFloor(l.floor_visible)
-    const color =
-      typeof l.container_color === 'string' &&
-      /^#[0-9a-fA-F]{6}$/.test(l.container_color)
-        ? l.container_color
-        : null
-    const opacity =
-      typeof l.container_opacity === 'number' ? l.container_opacity : NaN
-    if (color || Number.isFinite(opacity))
-      ctx.layers[i].setContainerStyle(
-        color,
-        Number.isFinite(opacity) ? opacity : DEFAULT_CONTAINER_OPACITY
-      )
+    // Shape & container: the look and where nodes sit (older sessions:
+    // colour and opacity at most, the rest as before)
+    const { look, placement } = sessionContainerLook(l)
+    layer.containerPlacement = placement
+    layer.setContainerLook(look)
   })
 
   // channels from the edge rows

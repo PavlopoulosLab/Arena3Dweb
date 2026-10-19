@@ -45,14 +45,63 @@ def _number(row: pd.Series, column: str, low: float, high: float) -> float | Non
     return value
 
 
-def _yes_no(cell: str | None) -> bool | None:
-    """yes / true / 1 (or x) -> True, no / false / 0 -> False, else None."""
-    value = (cell or "").strip().lower()
+def _yes_no(row: pd.Series, column: str) -> bool | None:
+    """yes / true / 1 (or x) -> True, no / false / 0 -> False, blank -> None."""
+    value = (_cell(row, column) or "").strip().lower()
+    if not value:
+        return None
     if value in ("yes", "y", "true", "1", "x", "shown"):
         return True
     if value in ("no", "n", "false", "0"):
         return False
-    return None
+    raise NetworkValidationError(f"{column} values must be yes or no (or blank).")
+
+
+# Node label looks and positions (Edit → Style), as Export node attributes
+# writes them; the frontend reads the look (three/Node.ts labelLookFromText)
+LABEL_LOOKS = ("plain", "halo", "box", "shadow")
+LABEL_POSITIONS = {
+    "right": "right",
+    "centre": "centre",
+    "center": "centre",
+    "above": "above",
+    "below": "below",
+}
+
+
+def _label_style(row: pd.Series) -> str | None:
+    """A label look: one style word, and optionally a #rrggbb colour, a
+    number (halo px or box opacity) and "bold", in any order."""
+    cell = (_cell(row, "LabelStyle") or "").strip()
+    if not cell:
+        return None
+    tokens = cell.lower().split()
+    styles = [t for t in tokens if t in LABEL_LOOKS]
+    others = [
+        t
+        for t in tokens
+        if t not in LABEL_LOOKS
+        and t != "bold"
+        and not re.fullmatch(r"#[0-9a-f]{6}", t)
+        and not re.fullmatch(r"[0-9]*\.?[0-9]+", t)
+    ]
+    if len(styles) != 1 or others or len(cell) > 80:
+        raise NetworkValidationError(
+            "LabelStyle values must name plain, halo, box or shadow, optionally with a "
+            '#rrggbb colour, a number and "bold" (e.g. "halo #ffffff 2 bold").'
+        )
+    return " ".join(tokens)
+
+
+def _label_position(row: pd.Series) -> str | None:
+    cell = (_cell(row, "LabelPosition") or "").strip().lower()
+    if not cell:
+        return None
+    if cell not in LABEL_POSITIONS:
+        raise NetworkValidationError(
+            "LabelPosition values must be right, centre, above or below (or blank)."
+        )
+    return LABEL_POSITIONS[cell]
 
 
 def _annotations(cell: str | None) -> list[str] | None:
@@ -88,9 +137,10 @@ def parse_node_attributes_tsv(text: str) -> list[NodeAttributeRow]:
                 label=_cell(row, "Label"),
                 label_color=_cell(row, "LabelColor"),
                 label_size=_number(row, "LabelSize", 1, 200),
-                label_style=(_cell(row, "LabelStyle") or "")[:80] or None,
-                label_position=(_cell(row, "LabelPosition") or "").lower() or None,
-                label_shown=_yes_no(_cell(row, "LabelShown")),
+                label_style=_label_style(row),
+                label_position=_label_position(row),
+                label_shown=_yes_no(row, "LabelShown"),
+                label_bold=_yes_no(row, "LabelBold"),
             )
         )
     return rows

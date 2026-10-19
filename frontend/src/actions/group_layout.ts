@@ -22,7 +22,7 @@ import { ctx } from '../three'
 import { VOLUME_CONTAINERS } from '../three/Layer'
 import { history } from '../commands/base'
 import { ApplyLayoutCommand } from '../commands/scene'
-import { applyLayout } from './layout'
+import { applyLayout, fitToContainers } from './layout'
 import { LayerStateCommand, captureLayers, type LayerState } from './modes'
 import { redrawIntraLayerEdges } from './edge'
 import { focusOnNodes } from './search'
@@ -270,7 +270,8 @@ function placeLayersAsGroups(
     Object.assign(positions, p.nodes)
   }
   const stack = new LayerStateCommand('Layers as groups', before, after)
-  const nodes = new ApplyLayoutCommand(positions)
+  // into each layer's container shape (cylinder, torus, …), as layouts are
+  const nodes = new ApplyLayoutCommand(fitToContainers(positions, true))
   history.execute({
     description: 'Layers as groups (NORMA-2.0)',
     execute: () => {

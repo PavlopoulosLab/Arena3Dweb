@@ -294,6 +294,7 @@ describe('export and reload', () => {
       '20',
       '', // label style: as the label style
       '', // label position: right, as always
+      '', // bold: no
       '', // label shown: as Show Labels says
       '',
       'tab here',
@@ -315,7 +316,9 @@ describe('export and reload', () => {
     const lines = nodeAttributesTsv().split('\n')
     const cols = lines[0].split('\t')
     const row = lines[1].split('\t')
-    expect(row[cols.indexOf('LabelStyle')]).toBe('halo #ffffff 3 bold')
+    // bold has its own column
+    expect(row[cols.indexOf('LabelStyle')]).toBe('halo #ffffff 3')
+    expect(row[cols.indexOf('LabelBold')]).toBe('yes')
     expect(row[cols.indexOf('LabelPosition')]).toBe('centre')
     expect(row[cols.indexOf('LabelShown')]).toBe('yes')
     applyNodeAttributes([
@@ -328,6 +331,7 @@ describe('export and reload', () => {
         label_style: 'Box 0.5',
         label_position: 'Below',
         label_shown: true,
+        label_bold: true,
       },
     ])
     const b = ctx.nodeObjects[1]
@@ -336,7 +340,7 @@ describe('export and reload', () => {
       color: '',
       width: 2,
       opacity: 0.5,
-      bold: false,
+      bold: true, // LabelBold
     })
     expect(b.labelPosition).toBe('below')
     // a pinned label from the file shows: Show Labels went to Chosen

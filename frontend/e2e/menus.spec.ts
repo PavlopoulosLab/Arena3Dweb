@@ -31,7 +31,7 @@ test('grouped menus open their panels', async ({ page }) => {
         page.locator('#panel-clustering #runClustering')
       ).toBeVisible()
     if (item === 'Database Importers') {
-      // one card per source (folded by default: sections.spec.ts)
+      // one card per source (the first open, the rest folded: sections.spec.ts)
       for (const key of [
         'string',
         'reactome',

@@ -11,6 +11,7 @@ import { ctx, SELECTED_DEFAULT_COLOR } from '../three'
 import type { ColorPrioritySource } from '../three'
 import { NODE_DETAIL } from '../three/constants'
 import {
+  DEFAULT_LABEL_LOOK,
   LABEL_POSITION_LABELS,
   labelLookFromText,
   shapeFromText,
@@ -276,6 +277,11 @@ export function applyNodeAttributes(rows: NodeAttributeRow[]): void {
       ? labelLookFromText(row.label_style)
       : undefined
     if (look !== undefined) node.labelLook = look
+    if (row.label_bold != null)
+      node.labelLook = {
+        ...(node.labelLook ?? DEFAULT_LABEL_LOOK),
+        bold: row.label_bold,
+      }
     const position = row.label_position?.trim().toLowerCase()
     if (position && position in LABEL_POSITION_LABELS)
       node.labelPosition = position as LabelPosition

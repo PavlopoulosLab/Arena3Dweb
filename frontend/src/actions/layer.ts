@@ -4,7 +4,6 @@
 // color-picker DOM (Phase 13 UI), DragControls + held-key/slider
 // rotate/move/scale intervals (canvas_controls.ts).
 
-import type { MeshBasicMaterial } from 'three'
 import { bus } from '../bus'
 import { store } from '../store'
 import { ctx, SELECTED_LAYER_DEFAULT_COLOR } from '../three'
@@ -94,7 +93,7 @@ export function checkHoverOverLayer(event: {
       ctx.hoveredLayerPaintedFlag = true
     }
     const i = findIndexByUuid(planes, intersects[0].object.uuid)
-    ;(ctx.layers[i].plane.material as MeshBasicMaterial).color.set(0xff0000)
+    ctx.layers[i].paintHover('#ff0000') // the floor and its container
     ctx.lastHoveredLayerIndex = i
   } else {
     if (ctx.hoveredLayerPaintedFlag) {

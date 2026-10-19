@@ -15,7 +15,7 @@ import { ctx, type ColorPrioritySource } from '../three'
 import { askThemeColours, type ThemeColours } from '../ui/theme_dialog'
 import { redrawIntraLayerEdges } from './edge'
 import { layerLegend, legend, setLegend } from './legend'
-import { setLabelColor } from './labels'
+import { restyleLayerLabels, setLabelColor } from './labels'
 import { getLastFloorColor, repaintLayers } from './layer'
 import { repaintNodes } from './node'
 import { themeChannelColor, themeNodeColor } from './palette'
@@ -104,6 +104,10 @@ function applyColours(theme: Theme): void {
   if (filePriority) filePriority.checked = false
   for (const e of ctx.edgeObjects) e.arrowColor = ''
   redrawEdges()
+  // layer labels set to a colour of their own (Labels & axes) take the
+  // theme's label colour again
+  for (const l of ctx.layers) l.labelColor = ''
+  restyleLayerLabels()
 }
 
 export interface ColourSnapshot {
@@ -118,6 +122,7 @@ export interface ColourSnapshot {
   edgeDefault: string
   edgeFilePriority: boolean
   arrows: string[]
+  layerLabels: string[] // Labels & axes: each layer label's own colour
 }
 
 // what applying a theme's colours changes, so the switch's undo puts it back
@@ -134,6 +139,7 @@ export function snapshotColours(): ColourSnapshot {
     edgeDefault: ctx.edgeDefaultColor,
     edgeFilePriority: ctx.edgeFileColorPriority,
     arrows: ctx.edgeObjects.map((e) => e.arrowColor),
+    layerLabels: ctx.layers.map((l) => l.labelColor),
   }
 }
 
@@ -162,6 +168,10 @@ export function restoreColours(s: ColourSnapshot): void {
     if (s.arrows[i] !== undefined) e.arrowColor = s.arrows[i]
   })
   redrawEdges()
+  ctx.layers.forEach((l, i) => {
+    if (s.layerLabels?.[i] !== undefined) l.labelColor = s.layerLabels[i]
+  })
+  restyleLayerLabels()
 }
 
 /** Switches the scene to theme `name`; `colours`: its colours on the network too. */

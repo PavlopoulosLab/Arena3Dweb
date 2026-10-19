@@ -1,8 +1,8 @@
 import { expect, test, type Page } from './fixtures'
 
-// Panel cards (ui/sections.ts): every card and sub-section starts folded
-// (but a panel's only card starts open), its title (and hint) still says what
-// is inside, Expand all / Collapse all
+// Panel cards (ui/sections.ts): the first card of every panel starts open and
+// the others folded (and inside a card, its first sub-section), a folded
+// card's title (and hint) still says what is inside, Expand all / Collapse all
 // does every card of a panel, and the browser remembers what the user opened
 // or folded. These are the real defaults: the other specs see every card open.
 test.use({ openCards: false })
@@ -14,14 +14,26 @@ const tab = async (page: Page, name: string, pane: string) => {
   await expect(page.locator(pane)).toHaveClass(/show/)
 }
 
-// the panels of a single card: it starts open
-const SINGLE = [
-  'analyzeCard_metrics',
-  'analyzeCard_network',
-  'plotsCard',
-  'explore_card',
-  'annotation_card',
-]
+// cards whose default is wrong: in every panel (and inside every card) the
+// first card open, the rest folded
+const misfolded = (page: Page) =>
+  page.evaluate(() => {
+    const CARDS = 'details.lp-more[id], details.db-card[id]'
+    const bad: string[] = []
+    const check = (scope: Element, parent: Element | null) =>
+      [...scope.querySelectorAll<HTMLDetailsElement>(CARDS)]
+        .filter((d) => (d.parentElement?.closest('details') ?? null) === parent)
+        .forEach((d, i) => {
+          if (d.open !== (i === 0)) bad.push(d.id)
+        })
+    document
+      .querySelectorAll('#panelContent .tab-pane')
+      .forEach((pane) => check(pane, null))
+    document
+      .querySelectorAll<HTMLDetailsElement>('#panelContent details[id]')
+      .forEach((card) => check(card, card))
+    return bad
+  })
 const openCards = (page: Page) =>
   page.evaluate(() =>
     [
@@ -38,7 +50,9 @@ const start = async (page: Page) => {
   )
 }
 
-test('every card starts folded and remembers the choice', async ({ page }) => {
+test('the first card of each panel starts open; choices are remembered', async ({
+  page,
+}) => {
   await start(page)
   // a choice saved under the old key (when some cards started open) is gone
   await page.evaluate(() =>
@@ -48,23 +62,37 @@ test('every card starts folded and remembers the choice', async ({ page }) => {
     )
   )
   await start(page)
-  expect((await openCards(page)).sort()).toEqual([...SINGLE].sort())
+  expect(await misfolded(page)).toEqual([])
+  const defaults = await openCards(page)
+  expect(defaults).toEqual(
+    expect.arrayContaining([
+      'fileCard_network',
+      'card_string',
+      'exportCard_image',
+      'exportSub_formats',
+      'layoutCard_layers',
+      'explore_card',
+      'koSub_nodes',
+    ])
+  )
+  expect(defaults).not.toContain('fileCard_examples')
   expect(
     await page.evaluate(() => localStorage.getItem('arena3d.sections'))
   ).toBeNull()
 
   await tab(page, 'File', '#panel-file')
-  await expect(page.locator('#fileCard_network > summary')).toBeVisible()
-  await expect(page.locator('#input_network_file')).toBeHidden()
+  await expect(page.locator('#input_network_file')).toBeVisible()
+  await expect(page.locator('#fileCard_examples > summary')).toBeVisible()
   await expect(page.locator('#exampleButton')).toBeVisible() // not in a card
 
   await tab(page, 'Nodes', '#panel-node')
   const style = page.locator('#nodeCard_labelStyle')
-  await expect(page.locator('#selectAllNodes')).toBeHidden()
+  await expect(page.locator('#selectAllNodes')).toBeVisible() // first card
+  await expect(style).toHaveJSProperty('open', false)
   await style.locator('> summary').click()
   await expect(page.locator('#applyLabelStyle')).toBeVisible()
 
-  // a single card folded stays folded
+  // a first card folded stays folded
   await tab(page, 'Explore', '#panel-explore')
   await page.locator('#explore_card > summary').click()
   await expect(page.locator('#explore_card')).toHaveJSProperty('open', false)
@@ -75,7 +103,7 @@ test('every card starts folded and remembers the choice', async ({ page }) => {
   await expect(style).toHaveJSProperty('open', true)
   expect((await openCards(page)).sort()).toEqual(
     [
-      ...SINGLE.filter((id) => id !== 'explore_card'),
+      ...defaults.filter((id) => id !== 'explore_card'),
       'nodeCard_labelStyle',
     ].sort()
   )
@@ -109,7 +137,7 @@ test('Expand all and Collapse all do every card of the panel', async ({
 test('Export lists its tools in folded sub-sections', async ({ page }) => {
   await start(page)
   await tab(page, 'Export', '#panel-export')
-  await expect(page.locator('#export_scene_image')).toBeHidden()
+  await expect(page.locator('#export_scene_image')).toBeVisible() // first card
 
   await page.locator('#exportCard_tools > summary').click()
   await expect(page.locator('#exportSub_flame > summary')).toContainText(
@@ -128,7 +156,9 @@ test('Export lists its tools in folded sub-sections', async ({ page }) => {
   await expect(page.locator('#export_sankey')).toBeVisible()
 })
 
-test('Layout folds everything but the Run Layout bar', async ({ page }) => {
+test('Layout opens 1 · Layers, folds the rest; Run Layout stays in view', async ({
+  page,
+}) => {
   await start(page)
   await tab(page, 'Layout', '#panel-layouts')
   await expect(page.locator('#runLayout')).toBeVisible()
@@ -138,7 +168,11 @@ test('Layout folds everything but the Run Layout bar', async ({ page }) => {
   await expect(hint).toHaveText('2D layout, no edge weights')
   await page.locator('#layoutCard_layout > summary').click()
   await expect(page.locator('#layoutAlgorithmChoice')).toBeVisible()
-  await page.locator('#layoutSub_options > summary').click()
+  // its first sub-section starts open
+  await expect(page.locator('#layoutSub_options')).toHaveJSProperty(
+    'open',
+    true
+  )
   await page.locator('#layout3dCheckbox').check()
   await expect(hint).toHaveText('3D layout, no edge weights')
 
@@ -149,20 +183,21 @@ test('Layout folds everything but the Run Layout bar', async ({ page }) => {
   await expect(page.locator('#groupForce')).toBeVisible()
 })
 
-test('Database Importers and Perturbation start folded', async ({ page }) => {
+test('Database Importers and Perturbation open their first card', async ({
+  page,
+}) => {
   await start(page)
   await tab(page, 'Database Importers', '#panel-databases')
-  await expect(page.locator('#card_string > summary')).toBeVisible()
-  await expect(page.locator('#db_import_string')).toBeHidden()
-  await page.locator('#card_string > summary').click()
   await expect(page.locator('#db_import_string')).toBeVisible()
+  await expect(page.locator('#db_import_reactome')).toBeHidden()
+  await page.locator('#card_reactome > summary').click()
+  await expect(page.locator('#db_import_reactome')).toBeVisible()
 
   await tab(page, 'Perturbation', '#panel-perturbation')
-  await expect(page.locator('#runKnockout')).toBeHidden()
-  await page.locator('#perturbation_card > summary').click()
   await expect(page.locator('#runKnockout')).toBeVisible()
   await expect(page.locator('#koSub_nodes > summary')).toContainText('top k')
-  await expect(page.locator('#koNodes')).toBeHidden()
+  await expect(page.locator('#koNodes')).toBeVisible()
+  await expect(page.locator('#attackSteps')).toBeHidden()
   await page.locator('#panel-perturbation [data-fold-all="open"]').click()
   await expect(
     page.locator('#panel-perturbation details:not([open])')

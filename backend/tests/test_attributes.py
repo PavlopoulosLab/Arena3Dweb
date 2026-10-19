@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -14,6 +15,7 @@ NO_NODE_STYLE = {
     "label_style": None,
     "label_position": None,
     "label_shown": None,
+    "label_bold": None,
 }
 NO_EDGE_STYLE = {"width": None, "opacity": None, "line_type": None, "arrow_color": None}
 
@@ -93,10 +95,10 @@ def test_node_attributes_edit_attributes_columns() -> None:
     # what Edit → Attributes → Export node attributes writes
     tsv = (
         "Node\tLayer\tColor\tSize\tShape\tOpacity\tLabel\tLabelColor\tLabelSize\t"
-        "LabelStyle\tLabelPosition\tLabelShown\tUrl\tDescription\tAnnotation\n"
-        "A\tL1\t#ff0000\t1.5\tCube\t0.4\tHub\t#00ff00\t20\thalo #ffffff 3 bold\tCentre\tyes\t"
+        "LabelStyle\tLabelPosition\tLabelBold\tLabelShown\tUrl\tDescription\tAnnotation\n"
+        "A\tL1\t#ff0000\t1.5\tCube\t0.4\tHub\t#00ff00\t20\tHalo #ffffff 3\tCentre\tyes\tyes\t"
         "\tkinase\tGO:1;GO:2\n"
-        "B\tL1\t#00ff00\t1\t\t\t\t\t\t\t\t\t\t\t\n"
+        "B\tL1\t#00ff00\t1\t\t\t\t\t\t\t\t\t\t\t\t\n"
     )
     r = _post("nodes", tsv)
     assert r.status_code == 200
@@ -105,10 +107,40 @@ def test_node_attributes_edit_attributes_columns() -> None:
     assert a["opacity"] == 0.4
     assert (a["label"], a["label_color"], a["label_size"]) == ("Hub", "#00ff00", 20)
     # the frontend reads the label look; the position is lower-cased
-    assert (a["label_style"], a["label_position"]) == ("halo #ffffff 3 bold", "centre")
-    assert a["label_shown"] is True
+    assert (a["label_style"], a["label_position"]) == ("halo #ffffff 3", "centre")
+    assert (a["label_shown"], a["label_bold"]) == (True, True)
     assert a["annotations"] == ["GO:1", "GO:2"]
     assert {k: b[k] for k in NO_NODE_STYLE} == NO_NODE_STYLE
+
+
+@pytest.mark.parametrize(
+    ("column", "value", "message"),
+    [
+        ("LabelStyle", "neon", "LabelStyle values must name plain, halo, box or shadow"),
+        ("LabelStyle", "halo box", "LabelStyle values must name plain, halo, box or shadow"),
+        ("LabelStyle", "halo red", "LabelStyle values must name plain, halo, box or shadow"),
+        ("LabelPosition", "left", "LabelPosition values must be right, centre, above or below"),
+        ("LabelShown", "maybe", "LabelShown values must be yes or no"),
+        ("LabelBold", "heavy", "LabelBold values must be yes or no"),
+    ],
+)
+def test_node_attributes_bad_label_columns(column: str, value: str, message: str) -> None:
+    r = _post("nodes", f"Node\tLayer\t{column}\nA\tL1\t{value}\n")
+    assert r.status_code == 400
+    assert message in r.json()["detail"]
+
+
+def test_node_attributes_label_columns_read_loosely() -> None:
+    r = _post(
+        "nodes",
+        "Node\tLayer\tLabelStyle\tLabelPosition\tLabelShown\tLabelBold\n"
+        "A\tL1\tbold BOX 0.5\tCenter\tTrue\tno\n",
+    )
+    assert r.status_code == 200
+    (a,) = r.json()
+    assert a["label_style"] == "bold box 0.5"  # the frontend reads any order
+    assert a["label_position"] == "centre"
+    assert (a["label_shown"], a["label_bold"]) == (True, False)
 
 
 def test_node_attributes_opacity_out_of_range() -> None:

@@ -76,15 +76,21 @@ describe('fitToContainers', () => {
 })
 
 describe('fitToContainers (3D)', () => {
-  it('keeps sphere nodes inside the radius and clamps cube nodes', () => {
-    ctx.layers[0].setContainer('sphere') // width 100 -> rim 46
-    ctx.layers[1].setContainer('cube') // width 400 -> rim 184
+  it('brings sphere and cube nodes back inside, towards the centre', () => {
+    ctx.layers[0].setContainer('sphere') // width 100 -> inner wall 45
+    ctx.layers[1].setContainer('cube') // width 400 -> inner wall 180
     const out = fitToContainers({
       'A::L1': [40, 40, 40],
+      'B::L1': [10, -5, 3], // inside: stays
       'C::L2': [300, 0, -500],
     })
-    expect(Math.hypot(...(out['A::L1'] as number[]))).toBeCloseTo(46)
-    expect(out['C::L2']).toEqual([184, 0, -184])
+    expect(Math.hypot(...(out['A::L1'] as number[]))).toBeCloseTo(45)
+    out['B::L1'].forEach((v, k) => expect(v).toBeCloseTo([10, -5, 3][k]))
+    // along the same direction to the inset wall
+    const [y, z, x] = out['C::L2'] as number[]
+    expect(Math.max(Math.abs(y), Math.abs(z), Math.abs(x))).toBeCloseTo(180)
+    expect(y / x).toBeCloseTo(300 / -500)
+    expect(z).toBeCloseTo(0)
   })
 })
 

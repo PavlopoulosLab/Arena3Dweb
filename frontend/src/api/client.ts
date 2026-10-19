@@ -1,6 +1,8 @@
 // Typed REST client — mirrors the FastAPI Pydantic models (backend/app/models).
 // Every interaction with the backend is one typed fetch() call (SPEC §3).
 
+import type { ContainerPlacement, LayerContainer } from '../three/containers'
+
 export interface NodeModel {
   id: string
   label: string
@@ -52,15 +54,37 @@ export interface SessionLayer {
   geometry_parameters_width: string | number
   floor_shape?: 'square' | 'disk' | 'axis' // axis: a hive plot axis
   floor_style?: 'solid' | 'wireframe' | 'grid' | 'dots' | 'outline'
-  container?: 'floor' | 'none' | 'cube' | 'sphere' | 'cloud'
+  container?: LayerContainer
   floor_visible?: boolean
   container_color?: string | null // null/absent = the theme's container colour
   container_opacity?: number
+  // Shape & container: nodes inside or on the surface, and the container's
+  // outline (colour null = the container's), wire cage, rim light and floor
+  container_placement?: ContainerPlacement
+  container_outline?: boolean
+  container_outline_color?: string | null
+  container_wireframe?: boolean
+  container_glow?: boolean
+  container_floor?: boolean
+  // Labels & axes: the layer label's look, font, bold, italic, colour and
+  // place, only when set
+  label_style?: {
+    style: 'plain' | 'halo' | 'box' | 'shadow'
+    color: string
+    width: number
+    opacity: number
+    bold: boolean
+  }
+  label_font?: 'sans' | 'serif' | 'mono' | 'condensed'
+  label_bold?: boolean
+  label_italic?: boolean
+  label_color?: string
+  label_position?: 'above' | 'below'
   // 3D-network mode: where the layer goes when the layers come back
   layered?: {
     position: [number, number, number]
     quaternion: [number, number, number, number]
-    container: 'floor' | 'none' | 'cube' | 'sphere' | 'cloud'
+    container: LayerContainer
   }
   generate_coordinates: boolean
 }
@@ -617,6 +641,7 @@ export interface NodeAttributeRow {
   label_style?: string | null // "halo #ffffff 3 bold" (three/Node.ts labelLookFromText)
   label_position?: string | null // right | centre | above | below
   label_shown?: boolean | null // pinned: shown with Show Labels: Chosen
+  label_bold?: boolean | null // bold labels (with the look of LabelStyle)
 }
 
 // POST /api/attributes/groups — a node and the groups a group file puts it in

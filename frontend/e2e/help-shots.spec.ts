@@ -292,6 +292,8 @@ test('capture the interface screenshots for the Help pages', async ({
   // the communities kept as an annotation set, drawn as fog clouds, and the
   // group list
   await page.locator('#clustersToAnnotations').dispatchEvent('click')
+  // five cards, open: a taller window, so the panel fits whole
+  await page.setViewportSize({ width: 1440, height: 2000 })
   await panel(
     page,
     'Annotations',
@@ -300,10 +302,11 @@ test('capture the interface screenshots for the Help pages', async ({
     async () => {
       await page.locator('#hull_annotation').check()
       await page.locator('#hullStyle_fog').check()
-      // a filtered list, so the whole card fits the shot
-      await page.locator('#groupsFilter').fill('Cluster 1')
+      // a short list of groups
+      await page.locator('#groupsFilter').fill('Cluster 2')
     }
   )
+  await page.setViewportSize({ width: 1440, height: 1500 })
 })
 
 // Edit → Style → Label style: bold halos centred on the nodes, on the Light
@@ -343,4 +346,63 @@ test('capture the label style screenshot', async ({ page }) => {
     path: `${OUT}/label_styles.png`,
     clip: { x: 0, y: 140, width: 760, height: 480 },
   })
+})
+
+// Edit → Layers → Layer Shape: four layers in four of the containers
+// (containers.jpg), and the question a theme switch asks with a network on
+// screen (theme_dialog.png). A test of its own, so `--grep "containers"`
+// refreshes these two alone.
+test('capture the containers and theme dialog screenshots', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await tab(page, 'File')
+  await page
+    .locator('#input_network_file')
+    .setInputFiles(D('figure2A_data.tsv'))
+  await expect(page.locator('#file_status')).toContainText('Loaded network')
+  const choose = (id: string, value: string) =>
+    page.locator(id).evaluate((el, v) => {
+      ;(el as HTMLSelectElement).value = v
+      el.dispatchEvent(new Event('change', { bubbles: true }))
+    }, value)
+  const tick = (i: number) =>
+    page
+      .locator(`#checkbox_${i}`)
+      .evaluate((el) => (el as HTMLInputElement).click())
+  for (const [i, shape] of [
+    [0, 'cylinder'],
+    [1, 'torus'],
+    [2, 'cone'],
+    [3, 'bubble'],
+  ] as const) {
+    await tick(i)
+    await choose('#layerContainer', shape)
+    await page.waitForTimeout(2500) // the 3D layout inside comes back
+    await tick(i)
+  }
+  await tab(page, '3D View')
+  await page.evaluate(() => {
+    document.getElementById('info')!.style.visibility = 'hidden'
+    document.getElementById('recenterButton')?.click()
+  })
+  await page.waitForTimeout(2000)
+  await page.screenshot({
+    path: `${OUT}/containers.jpg`,
+    type: 'jpeg',
+    quality: 90,
+    clip: { x: 0, y: 70, width: 1440, height: 760 },
+  })
+
+  // a theme switch asks: keep the colours, or apply the theme's
+  await page.locator('#themeSelect').selectOption('light')
+  const dialog = page.locator('#themeDialog')
+  await expect(dialog).toBeVisible()
+  await page.waitForTimeout(400)
+  await dialog.screenshot({ path: `${OUT}/theme_dialog.png` })
+  await page.locator('#themeDialogCancel').click()
 })

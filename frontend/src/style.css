@@ -3006,6 +3006,9 @@ footer a:hover {
   #panelContent > .tab-pane.show {
     animation: sheet-up 0.24s var(--arena-ease);
   }
+  #panelContent #panel-node {
+    width: 100%;
+  }
   #panelContent #panel-data {
     width: 100%;
   }
@@ -3401,12 +3404,21 @@ body.mode-single .layout-panel .lp-step {
   margin: 0;
 }
 
-/* Groups card (ui/groups.ts) */
+/* Groups card (ui/groups.ts): the count and Show: All / None, then the
+   list under a header row whose columns it shares (as in Data Tables) */
+.groups-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
 .groups-show {
   display: flex;
   align-items: baseline;
   gap: 0.6rem;
-  margin-bottom: 0.25rem;
 }
 
 .groups-list {
@@ -3414,15 +3426,35 @@ body.mode-single .layout-panel .lp-step {
   overflow: auto;
 }
 
-.group-row {
+.group-row,
+.groups-head {
   display: grid;
-  /* fixed count column: hull and select line up whatever the counts */
-  grid-template-columns: 1.6rem 1fr 3rem auto auto;
+  /* swatch, name, size, switch, select: fixed columns, so every row and the
+     header line up whatever the names and counts */
+  grid-template-columns: 1.6rem minmax(0, 1fr) 3.2rem 2.6rem 2.8rem;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.2rem 0;
+  padding: 0.2rem 0.25rem 0.2rem 0;
   border-bottom: 1px solid var(--arena-border);
   font-size: 0.85rem;
+}
+
+.groups-head {
+  padding-top: 0;
+  color: var(--arena-text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.groups-head > :nth-child(3) {
+  text-align: right;
+}
+
+.groups-head > :nth-child(4),
+.group-row .group-hull {
+  justify-self: center;
 }
 
 .group-row .group-color {
@@ -3449,9 +3481,7 @@ body.mode-single .layout-panel .lp-step {
 .group-row .group-hull {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
   margin: 0;
-  color: var(--arena-text-muted);
 }
 
 /* Analyze → Annotations & Groups: the way to View → Annotations
@@ -3464,19 +3494,127 @@ body.mode-single .layout-panel .lp-step {
   background-color: color-mix(in srgb, #5b8def 8%, transparent);
 }
 
-/* View → Annotations, Draw as: the shapes in three columns (ui/annotations.ts) */
-.ann-shapes {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 0.75rem;
+/* View → Annotations (ui/annotations.ts, ui/groups.ts): each card's title
+   with a one-line hint after it, cut short on narrow screens */
+.annotation-panel .lp-section > summary {
+  white-space: nowrap;
 }
 
-.ann-shapes__head {
-  margin-bottom: 0.15rem;
+.annotation-panel .lp-section > summary .lp-hint {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 400;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* What to show: one segmented choice; Draw as: tiles with a sketch of each
+   shape. The radio sits invisibly over its segment or tile, so a click
+   anywhere on it chooses, and the keyboard moves through the choices. */
+.ann-seg {
+  display: flex;
+  border: 1px solid var(--arena-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ann-seg__item,
+.ann-tile {
+  position: relative;
+  flex: 1;
+  margin: 0;
+}
+
+.ann-pick {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ann-pick:disabled {
+  cursor: not-allowed;
+}
+
+.ann-seg__item > span {
+  display: block;
+  padding: 0.3rem 0.4rem;
+  font-size: 0.82rem;
+  text-align: center;
+  color: var(--arena-text-muted);
+  white-space: nowrap;
+}
+
+.ann-seg__item + .ann-seg__item > span {
+  border-left: 1px solid var(--arena-border);
+}
+
+.ann-pick:checked + span {
+  color: var(--arena-text);
+  background-color: color-mix(in srgb, var(--arena-accent) 22%, transparent);
+}
+
+.ann-pick:disabled + span {
+  opacity: 0.45;
+}
+
+.ann-pick:focus-visible + span {
+  outline: 2px solid var(--arena-accent);
+  outline-offset: -2px;
+}
+
+.ann-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.4rem, 1fr));
+  gap: 0.4rem;
+}
+
+.ann-tile__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  height: 100%;
+  padding: 0.35rem 0.2rem 0.3rem;
+  border: 1px solid var(--arena-border);
+  border-radius: 8px;
   color: var(--arena-text-muted);
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  line-height: 1.15;
+  text-align: center;
+  transition:
+    border-color 0.15s var(--arena-ease),
+    background-color 0.15s var(--arena-ease);
+}
+
+.ann-pick:hover + .ann-tile__body {
+  border-color: color-mix(
+    in srgb,
+    var(--arena-accent) 55%,
+    var(--arena-border)
+  );
+}
+
+.ann-pick:checked + .ann-tile__body {
+  border-color: var(--arena-accent);
+  color: var(--arena-text);
+  background-color: color-mix(in srgb, var(--arena-accent) 16%, transparent);
+}
+
+.ann-summary {
+  font-size: 0.85rem;
+  color: var(--arena-text);
+}
+
+/* Legend & reports: the super-node view set apart, as it rebuilds the network */
+.ann-action {
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--arena-border);
 }
 
 /* Database Importers panel (ui/databases.ts): NORMA-style source cards */
@@ -4860,6 +4998,139 @@ body.mode-single .layout-panel .lp-step {
   color: var(--arena-text-muted);
 }
 
+/* Edit → Nodes → Labels to show (ui/label_picker.ts): a filter, the buttons,
+   and a virtual list of tick boxes (rows placed by index, ROW_H 28px) */
+.label-pick__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.label-pick__filters input[type='search'] {
+  flex: 1 1 100%;
+}
+
+.label-pick__filters .form-select {
+  flex: 1 1 8rem;
+  width: auto;
+}
+
+.label-pick__count {
+  margin-bottom: 0.3rem;
+  color: var(--arena-text-muted);
+}
+
+.label-pick__list {
+  position: relative;
+  height: 240px;
+  overflow-y: auto;
+  margin-bottom: 0.35rem;
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius-sm);
+}
+
+.label-pick__row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 28px;
+  margin: 0;
+  padding: 0 0.6rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.label-pick__row:hover,
+.label-pick__row:focus-within {
+  background: rgba(var(--arena-accent-rgb), 0.12);
+}
+
+.label-pick__row .form-check-input {
+  flex: none;
+  margin: 0;
+}
+
+.label-pick__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label-pick__layer {
+  flex: none;
+  max-width: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  color: var(--arena-text-muted);
+}
+
+/* Edit → Layers → Labels & axes → Label style (ui/layer_labels.ts) */
+.layer-label-style__title {
+  margin-top: 0.75rem;
+}
+
+.layer-label-style {
+  display: grid;
+  grid-template-columns: 4.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.layer-label-style__value,
+.layer-label-style__look {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.layer-label-style__look[hidden] {
+  display: none;
+}
+
+/* a tick box and its word (not .form-check: its negative margin would put
+   the box outside the grid cell) */
+.layer-label-style__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.layer-label-style__check .form-check-input {
+  margin: 0;
+}
+
+.layer-label-style__value .form-select {
+  flex: 1 1 8rem;
+  width: auto;
+}
+
+.layer-label-style__value input[type='range'] {
+  flex: 1 1 5rem;
+  min-width: 3rem;
+}
+
+.layer-label-style__value input[type='color'] {
+  width: 2.2rem;
+  height: 1.6rem;
+  padding: 0;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+}
+
 /* phones: the new value goes under the property */
 @media (max-width: 480px) {
   .style-props__row {
@@ -4874,6 +5145,12 @@ body.mode-single .layout-panel .lp-step {
   .style-props__head {
     display: none;
   }
+}
+
+/* Edit → Nodes holds the label list and the label styles: a wider drawer, so
+   nothing in it scrolls sideways (phones keep the screen's width) */
+#panelContent #panel-node {
+  width: min(520px, 96vw);
 }
 
 /* Edit → Attributes (ui/attributes.ts): a node table and an edge table, every
@@ -4975,9 +5252,9 @@ body.mode-single .layout-panel .lp-step {
 .attr-table--node .attr-row {
   grid-template-columns:
     1.4rem minmax(6.5rem, 1.1fr) minmax(4.5rem, 0.7fr) 3.6rem 7.4rem
-    4.2rem 4.6rem minmax(6rem, 1fr) 5.6rem 5.6rem 5.2rem minmax(7rem, 1.4fr)
-    1.6rem;
-  min-width: 1120px;
+    4.2rem 4.6rem minmax(6rem, 1fr) 5.6rem 4.4rem 5.6rem 3rem 6.2rem 5.2rem
+    minmax(7rem, 1.4fr) 1.6rem;
+  min-width: 1340px;
 }
 
 .attr-table--edge .attr-row {
@@ -5355,4 +5632,27 @@ body.mode-single .layout-panel .lp-step {
 
 .plot-stats td {
   text-align: right;
+}
+
+/* Edit → Layers → Shape & container: the container look, one row per option
+   (ui/layer_container.ts) */
+.container-look {
+  display: grid;
+  grid-template-columns: 4.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.container-look__value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  min-width: 0;
+}
+
+.container-look__value .form-range {
+  flex: 1 1 8rem;
+  width: auto;
 }

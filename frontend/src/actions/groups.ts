@@ -18,6 +18,8 @@ import { collapseGroups } from './restructure'
 import { store } from '../store'
 import { NodeStyleCommand } from './style'
 import { updateSelectedNodesStore } from './node'
+import { readableOn } from './palette'
+import { THEMES } from './theme_presets'
 
 export type GroupSource = 'annotation' | 'cluster'
 
@@ -97,6 +99,39 @@ export function colorGroup(
   history.execute(
     new NodeStyleCommand(`Colour group ${name}`, g.members, () => ({ color }))
   )
+}
+
+/**
+ * Colours every grouped node (or its label) like its first group — the
+ * colour its pie and shape show — as one undo step; labels get the colour
+ * made to read on the scene's background.
+ * @return the nodes coloured
+ */
+export function colorByGroups(
+  source: GroupSource,
+  what: 'nodes' | 'labels'
+): number {
+  const colours = new Map(listGroups(source).map((g) => [g.name, g.color]))
+  const background = (THEMES[store.get().currentTheme] ?? THEMES.dark)
+    .background
+  const ids: number[] = []
+  const picked: string[] = []
+  ctx.nodeObjects.forEach((_, i) => {
+    const colour = colours.get(keysOf(i, source)[0] ?? '')
+    if (!colour) return
+    ids.push(i)
+    picked.push(what === 'nodes' ? colour : readableOn(colour, background))
+  })
+  if (ids.length)
+    history.execute(
+      new NodeStyleCommand(
+        what === 'nodes' ? 'Colour nodes by group' : 'Colour labels by group',
+        ids,
+        (_, k) =>
+          what === 'nodes' ? { color: picked[k] } : { labelColor: picked[k] }
+      )
+    )
+  return ids.length
 }
 
 // Jaccard overlap of every pair of groups (members as Node_Layer ids), with

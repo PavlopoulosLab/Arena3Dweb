@@ -20,6 +20,7 @@ class NodeAttributeRow(BaseModel):
     label_style: str | None = None  # "halo #ffffff 3 bold" — the frontend reads it
     label_position: str | None = None  # right | centre | above | below
     label_shown: bool | None = None  # pinned: shown with Show Labels: Chosen
+    label_bold: bool | None = None
 
 
 class EdgeAttributeRow(BaseModel):

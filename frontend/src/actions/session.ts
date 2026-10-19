@@ -15,6 +15,7 @@ import { network3dSessionState } from './modes'
 import { activeSlot } from './workspace'
 import type { Edge } from '../three/Edge'
 import type { Node } from '../three/Node'
+import type { Layer } from '../three/Layer'
 
 // Edit → Style per-node / per-edge style, only what differs from the default
 // so sessions stay small
@@ -31,6 +32,20 @@ function nodeStyleFields(n: Node): Partial<SessionData['nodes'][number]> {
     ...(n.labelLook ? { label_style: { ...n.labelLook } } : {}),
     ...(n.labelPosition !== 'right' ? { label_position: n.labelPosition } : {}),
     ...(n.labelShown ? { label_shown: true } : {}),
+  }
+}
+
+// Labels & axes: a layer label's look, only what differs from the default
+function layerLabelFields(l: Layer): Partial<SessionData['layers'][number]> {
+  return {
+    ...(l.labelLook ? { label_style: { ...l.labelLook } } : {}),
+    ...(l.labelFont ? { label_font: l.labelFont } : {}),
+    ...(l.labelBold ? { label_bold: true } : {}),
+    ...(l.labelItalic ? { label_italic: true } : {}),
+    ...(l.labelColor ? { label_color: l.labelColor } : {}),
+    ...(l.labelPosition !== 'corner'
+      ? { label_position: l.labelPosition }
+      : {}),
   }
 }
 
@@ -78,6 +93,13 @@ export function collectSession(): SessionData {
       floor_visible: l.floorVisible,
       container_color: l.containerColor,
       container_opacity: l.containerOpacity,
+      container_placement: l.containerPlacement,
+      container_outline: l.containerOutline,
+      container_outline_color: l.containerOutlineColor,
+      container_wireframe: l.containerWireframe,
+      container_glow: l.containerGlow,
+      container_floor: l.containerFloor,
+      ...layerLabelFields(l),
       ...(layered?.layers[i] ? { layered: layered.layers[i] } : {}),
       generate_coordinates: false,
     })),

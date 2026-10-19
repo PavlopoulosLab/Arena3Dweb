@@ -2,7 +2,7 @@
 // divs in #labelDiv, repositioned in the animate loop (flag-gated, as v2).
 // Positioning is set inline so it works before the Phase 13 stylesheet lands.
 
-import { Color, Vector3 } from 'three'
+import { Color } from 'three'
 import { ctx, NODE_LABEL_DEFAULT_SIZE } from '../three'
 import { setNodeLabelMode, type NodeLabelMode } from './node'
 import { luminance } from './palette'
@@ -11,9 +11,8 @@ import {
   type LabelLook,
   type LabelPosition,
 } from '../three/Node'
+import type { LayerLabelFont, LayerLabelPosition } from '../three/Layer'
 import { LABEL_GAP, registerAnimateHook } from './screen'
-
-const VEC3 = new Vector3() // scratch, reused per frame
 
 // Rebuilt on every network build (v2 resetValues cleared #labelDiv).
 let nodeLabelsDivs: HTMLDivElement[] = []
@@ -73,15 +72,16 @@ export function createLabels(): void {
   }
   labelStyles = {}
   restyleNodeLabels() // per-node overrides (Edit → Style)
+  restyleLayerLabels() // per-layer looks (Edit → Layers → Labels & axes)
   ctx.renderLayerLabelsFlag = true
 }
 
 // v2 setLabelColorVariable + setLabelColor.
 export function setLabelColor(color = ctx.labelColor): void {
   ctx.labelColor = color
-  for (const div of layerLabelsDivs) div.style.color = color
   for (const div of nodeLabelsDivs) div.style.color = color
   restyleNodeLabels()
+  restyleLayerLabels() // a layer label's own colour stays
 }
 
 // Handlers (v2 Shiny handlers) =====
@@ -132,9 +132,10 @@ function redrawLayerLabels(indexes: number[]): void {
     const div = layerLabelsDivs[i]
     if (!div) continue
     if (ctx.layers[i].isVisible) {
-      const world = ctx.layers[i].sphere.getWorldPosition(VEC3.set(0, 0, 0))
-      div.style.left = `${ctx.xBoundMax + world.x}px`
-      div.style.top = `${ctx.yBoundMax - world.y}px`
+      // the floor's corner, or above / under the floor (Labels & axes)
+      const [x, y] = ctx.layers[i].labelAnchor()
+      div.style.left = `${ctx.xBoundMax + x}px`
+      div.style.top = `${ctx.yBoundMax - y}px`
       div.style.display = 'inline-block'
     } else div.style.display = 'none'
   }
@@ -191,6 +192,42 @@ const FONTS: Record<NonNullable<LabelStyle['font']>, string> = {
   system: 'system-ui, -apple-system, "Segoe UI", sans-serif',
   serif: 'Georgia, "Times New Roman", serif',
   mono: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+}
+// layer labels: web-safe stacks, condensed ones first where a system has them
+const LAYER_FONTS: Record<LayerLabelFont, string> = {
+  sans: FONTS.system,
+  serif: FONTS.serif,
+  mono: FONTS.mono,
+  condensed:
+    '"Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Liberation Sans Narrow", sans-serif-condensed, sans-serif',
+}
+// a label above or under the floor: centred on it, this far from its edge
+const LAYER_LABEL_SHIFT: Record<LayerLabelPosition, string> = {
+  corner: '',
+  above: 'translate(-50%, calc(-100% - 6px))',
+  below: 'translate(-50%, 6px)',
+}
+
+/** Layer labels with their own look, font, colour and place (Edit → Layers
+ * → Labels & axes); the halo is their default too. */
+export function restyleLayerLabels(): void {
+  layerLabelsDivs.forEach((div, i) => {
+    const layer = ctx.layers[i]
+    if (!layer) return
+    const text = layer.labelColor || ctx.labelColor
+    div.style.color = text
+    div.style.fontFamily = layer.labelFont ? LAYER_FONTS[layer.labelFont] : ''
+    div.style.fontStyle = layer.labelItalic ? 'italic' : ''
+    applyLook(
+      div,
+      { ...(layer.labelLook ?? DEFAULT_LABEL_LOOK), bold: layer.labelBold },
+      {},
+      text
+    )
+    div.style.transform = LAYER_LABEL_SHIFT[layer.labelPosition]
+    div.dataset.pos = layer.labelPosition // read by the image export
+  })
+  ctx.renderLayerLabelsFlag = true
 }
 let labelStyles: Record<string, LabelStyle> = {}
 

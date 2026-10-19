@@ -16,8 +16,7 @@ import {
   showFloors,
 } from '../actions/layer'
 import { bus } from '../bus'
-import { setLayerContainer } from '../actions/modes'
-import { VOLUME_CONTAINERS, type LayerContainer } from '../three/Layer'
+import { CONTAINER_CARD_HTML, initContainerCard } from './layer_container'
 import { store } from '../store'
 import type { NetworkData } from '../api/client'
 import { loadNetwork } from '../actions/network'
@@ -33,10 +32,10 @@ import {
   ChangeFloorColorCommand,
   ChangeFloorShapeCommand,
   ChangeFloorStyleCommand,
-  ChangeContainerStyleCommand,
   ApplyLayoutCommand,
 } from '../commands/scene'
 import { FOLD_ALL_HTML } from './sections'
+import { initLayerLabelStyle, LAYER_LABELS_HTML } from './layer_labels'
 
 // Edit → Layers' radio and Layer selection's Axes ticks show the same state:
 // no radio is checked while layers are ticked one by one
@@ -95,35 +94,9 @@ const LAYER_HTML = `
     <label class="form-label" for="resizeLayerLabels">Resize Labels:</label>
     <input type="range" class="form-range" id="resizeLayerLabels" min="12" max="30" step="1" value="20" />
   </div>
+  ${LAYER_LABELS_HTML}
   </details>
-  <details class="lp-section lp-more" id="layerCard_shape">
-  <summary>Shape &amp; container</summary>
-  <label class="form-label" for="layerContainer">Layer Shape (selected layers, or all):</label>
-  <div class="d-flex gap-2 mb-1">
-    <select id="layerContainer" class="form-select form-select-sm" style="width:auto">
-      <option value="floor">Floor (2D)</option>
-      <option value="cube">Cube (3D)</option>
-      <option value="sphere">Sphere (3D)</option>
-      <option value="cloud">Fog cloud (3D)</option>
-      <option value="none">None</option>
-    </select>
-    <button id="applyLayerContainer" class="btn btn-outline-primary btn-sm">Apply</button>
-  </div>
-  <div class="form-text mb-2">3D shapes lay their nodes out in 3D inside the volume; use Layouts with "3D Layout" for other algorithms.</div>
-  <div id="containerStyle">
-    <label class="form-label small mb-1">3D Container Look (selected layers, or all):</label>
-    <div class="d-flex align-items-center gap-2 flex-wrap">
-      <input type="color" id="containerColor" class="form-control form-control-color form-control-sm" value="#5b8def" title="Container colour" aria-label="Container colour" />
-      <div class="form-check mb-0">
-        <input class="form-check-input" type="checkbox" id="containerFollowFloor" checked />
-        <label class="form-check-label small" for="containerFollowFloor">Theme default (contrasts with the background)</label>
-      </div>
-    </div>
-    <label class="form-label small mt-2 mb-0" for="containerOpacity">Opacity: <span id="containerOpacityValue">0.30</span></label>
-    <input type="range" class="form-range" id="containerOpacity" min="0" max="1" step="0.05" value="0.3" />
-    <button id="applyContainerStyle" class="btn btn-outline-primary btn-sm">Apply Look</button>
-  </div>
-  </details>
+  ${CONTAINER_CARD_HTML}
   <details class="lp-section lp-more" id="layerCard_floor">
   <summary>Floor</summary>
   <label class="form-label">Floor Shape (selected layers, or all):</label>
@@ -192,6 +165,7 @@ export function initLayerPanel(): void {
   const pane = document.getElementById('panel-layer')
   if (!pane) return
   pane.innerHTML = LAYER_HTML
+  initLayerLabelStyle()
 
   for (const radio of document.querySelectorAll<HTMLInputElement>(
     'input[name="showLayerLabelsRadio"]'
@@ -225,64 +199,7 @@ export function initLayerPanel(): void {
     })
   initRestructure()
 
-  document
-    .getElementById('containerOpacity')
-    ?.addEventListener('input', (e) => {
-      document.getElementById('containerOpacityValue')!.textContent = Number(
-        (e.target as HTMLInputElement).value
-      ).toFixed(2)
-    })
-  document
-    .getElementById('applyContainerStyle')
-    ?.addEventListener('click', () => {
-      const selected = ctx.layers.filter((l) => l.isSelected).map((l) => l.id)
-      const ids = selected.length ? selected : ctx.layers.map((l) => l.id)
-      if (ids.length === 0) return layerStatus('Load a network first.', true)
-      const follow = (
-        document.getElementById('containerFollowFloor') as HTMLInputElement
-      ).checked
-      const color = (
-        document.getElementById('containerColor') as HTMLInputElement
-      ).value
-      const opacity = Number(
-        (document.getElementById('containerOpacity') as HTMLInputElement).value
-      )
-      history.execute(
-        new ChangeContainerStyleCommand(ids, follow ? null : color, opacity)
-      )
-      layerStatus(
-        ids.some(
-          (i) =>
-            ctx.layers[i].container !== 'floor' &&
-            ctx.layers[i].container !== 'none'
-        )
-          ? 'Container look applied.'
-          : 'Container look saved; it shows once the layers are cubes, spheres or fog clouds.'
-      )
-    })
-  document
-    .getElementById('applyLayerContainer')
-    ?.addEventListener('click', () => {
-      const kind = (
-        document.getElementById('layerContainer') as HTMLSelectElement
-      ).value as LayerContainer
-      const selected = ctx.layers.filter((l) => l.isSelected).map((l) => l.id)
-      const ids = selected.length ? selected : ctx.layers.map((l) => l.id)
-      if (ids.length === 0) return layerStatus('Load a network first.', true)
-      const endsHive = !!ctx.hive && VOLUME_CONTAINERS.includes(kind)
-      setLayerContainer(ids, kind)
-        .then((laidOut) =>
-          layerStatus(
-            (endsHive ? 'Hive plot ended (its layers are axes). ' : '') +
-              (laidOut
-                ? `Layers set to ${kind}; nodes laid out in 3D inside.`
-                : `Layers set to ${kind}.`)
-          )
-        )
-        .catch((err: unknown) =>
-          layerStatus(err instanceof Error ? err.message : String(err), true)
-        )
-    })
+  initContainerCard(layerStatus)
 
   for (const radio of document.querySelectorAll<HTMLInputElement>(
     'input[name="floorShape"]'

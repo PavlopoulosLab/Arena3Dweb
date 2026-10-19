@@ -286,6 +286,50 @@ describe('collectSession', () => {
     ])
   })
 
+  it('saves layer label styles, only when set, and restores them', () => {
+    seed()
+    const [l1, l2] = ctx.layers
+    l1.labelLook = {
+      style: 'shadow',
+      color: '',
+      width: 2,
+      opacity: 0.75,
+      bold: true,
+    }
+    l1.labelFont = 'serif'
+    l1.labelBold = true
+    l1.labelItalic = true
+    l1.labelColor = '#00ff00'
+    l1.labelPosition = 'above'
+    const out = collectSession()
+    expect(out.layers[0]).toMatchObject({
+      label_style: { style: 'shadow', bold: true },
+      label_font: 'serif',
+      label_bold: true,
+      label_italic: true,
+      label_color: '#00ff00',
+      label_position: 'above',
+    })
+    for (const key of ['label_style', 'label_font', 'label_position'])
+      expect(out.layers[1]).not.toHaveProperty(key)
+    expect(l2.labelPosition).toBe('corner')
+    resetContext()
+    store.update({ network: null })
+    buildFromSession(out)
+    const [m1, m2] = ctx.layers
+    expect([m1.labelFont, m1.labelBold, m1.labelItalic]).toEqual([
+      'serif',
+      true,
+      true,
+    ])
+    expect([m1.labelColor, m1.labelPosition, m1.labelLook?.style]).toEqual([
+      '#00ff00',
+      'above',
+      'shadow',
+    ])
+    expect([m2.labelFont, m2.labelColor, m2.labelLook]).toEqual(['', '', null])
+  })
+
   it('emits one edge row per channel', () => {
     ctx.scene = new Scene()
     ctx.channelColors = { c1: '#111', c2: '#222' }

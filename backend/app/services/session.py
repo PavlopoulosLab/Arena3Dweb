@@ -246,6 +246,30 @@ def _node_labels(value: Any) -> dict[str, Any] | None:
     return {"mode": value["mode"], "withSelection": value.get("withSelection") is not False}
 
 
+LAYER_LABEL_FONTS = ("sans", "serif", "mono", "condensed")
+LAYER_LABEL_POSITIONS = ("above", "below")  # "corner", the default, is not written
+
+
+def _layer_label(row: dict[str, Any]) -> None:
+    """Keep a layer label's look (Edit → Layers → Labels & axes) when
+    readable, drop it otherwise; layers without it look as before."""
+    checks: dict[str, Any] = {
+        "label_style": _label_look(row.get("label_style")),
+        "label_font": row.get("label_font") if row.get("label_font") in LAYER_LABEL_FONTS else None,
+        "label_bold": True if row.get("label_bold") is True else None,
+        "label_italic": True if row.get("label_italic") is True else None,
+        "label_color": _hex(row.get("label_color")),
+        "label_position": row.get("label_position")
+        if row.get("label_position") in LAYER_LABEL_POSITIONS
+        else None,
+    }
+    for key, value in checks.items():
+        if value is None:
+            row.pop(key, None)
+        else:
+            row[key] = value
+
+
 def _label_look(value: Any) -> dict[str, Any] | None:
     """A node's label look (style, halo/box/shadow colour or '' for auto,
     halo px, box opacity, bold), or None when absent or unreadable."""
@@ -331,6 +355,7 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
         row["geometry_parameters_width"] = _default(
             row.get("geometry_parameters_width"), config.FLOOR_DEFAULT_WIDTH
         )
+        _layer_label(row)
 
     nodes = [dict(n) for n in data["nodes"]]
     scramble = all(_empty(n.get("position_x")) for n in nodes) if nodes else True

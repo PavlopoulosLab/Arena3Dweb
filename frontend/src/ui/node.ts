@@ -24,6 +24,7 @@ import { getSelectedLayers } from '../actions/layer'
 import { history } from '../commands/base'
 import { ChangeNodeGeometryCommand, LabelStyleCommand } from '../commands/scene'
 import { FOLD_ALL_HTML } from './sections'
+import { initLabelPicker, LABEL_PICKER_HTML } from './label_picker'
 import { confirmDialog } from './confirm'
 import { registerSelectionAction } from '../actions/right_click_menu'
 import { deleteNodes, edgesTouching } from '../actions/delete_nodes'
@@ -70,6 +71,7 @@ const NODE_HTML = `
     <input type="range" class="form-range" id="resizeNodeLabels" min="5" max="15" step="1" value="12" />
   </div>
   </details>
+  ${LABEL_PICKER_HTML}
   <details class="lp-section lp-more" id="nodeCard_labelStyle">
   <summary>Label style</summary>
   <div class="lp-grid mb-2">
@@ -163,6 +165,7 @@ export function initNodePanel(): void {
   const pane = document.getElementById('panel-node')
   if (!pane) return
   pane.innerHTML = NODE_HTML
+  initLabelPicker()
 
   document.getElementById('selectAllNodes')?.addEventListener('change', (e) => {
     selectAllNodes((e.target as HTMLInputElement).checked)

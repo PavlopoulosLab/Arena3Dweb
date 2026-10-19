@@ -39,7 +39,10 @@ export type NodeColumn =
   | 'alpha'
   | 'label'
   | 'labelColor'
+  | 'labelSize'
   | 'labelStyle'
+  | 'labelBold'
+  | 'labelPosition'
   | 'labelShown'
   | 'descr'
 export type EdgeColumn =
@@ -78,8 +81,14 @@ export function nodeCell(i: number, col: NodeColumn): string | number {
       return n.label
     case 'labelColor': // '' = as the label style
       return n.labelColor ? hex(n.labelColor) : ''
+    case 'labelSize': // '' = as the label style
+      return n.labelSize || ''
     case 'labelStyle': // '' = as the label style
       return n.labelLook?.style ?? ''
+    case 'labelBold':
+      return n.labelLook?.bold ? 'yes' : ''
+    case 'labelPosition':
+      return n.labelPosition
     case 'labelShown': // pinned: shown with Show Labels: Chosen
       return n.labelShown ? 'yes' : ''
     case 'descr':
@@ -234,11 +243,7 @@ export const LIMITS = {
 // A typed value as a patch for the Style command, or null when it is not
 // valid. Numbers are kept within the editor's limits.
 export type NodeField =
-  | Exclude<NodeColumn, 'name' | 'layer'>
-  | 'labelSize'
-  | 'labelPosition'
-  | 'borderColor'
-  | 'borderWidth'
+  Exclude<NodeColumn, 'name' | 'layer'> | 'borderColor' | 'borderWidth'
 
 export function nodePatch(field: NodeField, raw: string): NodePatch | null {
   const v = number(raw)
@@ -418,6 +423,7 @@ export const NODE_ATTRIBUTE_COLUMNS = [
   'LabelSize',
   'LabelStyle',
   'LabelPosition',
+  'LabelBold',
   'LabelShown',
   'Url',
   'Description',
@@ -437,8 +443,10 @@ export function nodeAttributesTsv(ids = ctx.nodeObjects.map((_, i) => i)) {
       n.label,
       n.labelColor,
       n.labelSize || '',
-      labelLookText(n.labelLook),
+      // bold has a column of its own
+      labelLookText(n.labelLook && { ...n.labelLook, bold: false }),
       n.labelPosition === 'right' ? '' : n.labelPosition,
+      n.labelLook?.bold ? 'yes' : '',
       n.labelShown ? 'yes' : '',
       n.url,
       n.descr,

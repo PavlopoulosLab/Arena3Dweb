@@ -19,14 +19,18 @@ import {
 import { contrast } from './palette'
 import { nodeLabelState, setNodeLabelMode } from './node'
 import {
+  chooseLabels,
   clearChosenLabels,
   colorBlindMode,
   colorLabelsBy,
   colorNodesBy,
   edgeTargets,
   nodeTargets,
+  layerLabelColors,
   showLabelsOf,
   styleEdges,
+  styleLabelLooks,
+  styleLayerLabels,
   styleNodes,
 } from './style'
 
@@ -287,6 +291,98 @@ describe('style commands', () => {
     setNodeLabelMode('all')
     showLabelsOf([1])
     expect(nodeLabelState().mode).toBe('all')
+  })
+
+  it('the label picker chooses all, none, the inverse or the selection', () => {
+    const [a, b, c] = ctx.nodeObjects
+    b.isSelected = true
+    expect(chooseLabels([0, 1], 'all')).toBe(2)
+    expect([a.labelShown, b.labelShown, c.labelShown]).toEqual([
+      true,
+      true,
+      false,
+    ])
+    expect(chooseLabels([0, 1, 2], 'invert')).toBe(1)
+    expect([a.labelShown, b.labelShown, c.labelShown]).toEqual([
+      false,
+      false,
+      true,
+    ])
+    // the selected nodes in the list, and only them
+    expect(chooseLabels([0, 1, 2], 'selected')).toBe(1)
+    expect([a.labelShown, b.labelShown, c.labelShown]).toEqual([
+      false,
+      true,
+      false,
+    ])
+    expect(chooseLabels([0, 1, 2], 'none')).toBe(0)
+    history.undo() // each choice one step
+    expect(b.labelShown).toBe(true)
+    expect(chooseLabels([], 'all')).toBe(0)
+  })
+
+  it('bold or a style for many labels keeps each one its own look', () => {
+    const [a, b] = ctx.nodeObjects
+    a.labelLook = {
+      style: 'box',
+      color: '#222222',
+      width: 2,
+      opacity: 0.4,
+      bold: false,
+    }
+    styleLabelLooks([0, 1], { bold: true })
+    expect(a.labelLook).toMatchObject({
+      style: 'box',
+      opacity: 0.4,
+      bold: true,
+    })
+    expect(b.labelLook).toMatchObject({ style: 'halo', bold: true }) // the default
+    history.undo()
+    expect(a.labelLook?.bold).toBe(false)
+    expect(b.labelLook).toBeNull()
+  })
+
+  it('styles layer labels for some layers, with their colours; undo', () => {
+    const [l1, l2] = ctx.layers
+    const colors = layerLabelColors([0, 1], 'palette', '#000000', 'okabeIto')
+    expect(colors.get(0)).not.toBe(colors.get(1))
+    expect(layerLabelColors([1], 'one', '#123456').get(1)).toBe('#123456')
+    expect(layerLabelColors([0], 'theme').get(0)).toBe('')
+    expect(layerLabelColors([0], 'layer').get(0)).toMatch(/^#[0-9a-f]{6}$/)
+    styleLayerLabels([1], () => ({
+      look: { style: 'box', color: '', width: 2, opacity: 0.5, bold: true },
+      font: 'condensed',
+      bold: true,
+      italic: true,
+      color: '#123456',
+      position: 'below',
+    }))
+    expect([l2.labelFont, l2.labelBold, l2.labelItalic]).toEqual([
+      'condensed',
+      true,
+      true,
+    ])
+    expect([l2.labelColor, l2.labelPosition, l2.labelLook?.style]).toEqual([
+      '#123456',
+      'below',
+      'box',
+    ])
+    expect([l1.labelFont, l1.labelPosition]).toEqual(['', 'corner'])
+    history.undo()
+    expect([l2.labelFont, l2.labelColor, l2.labelLook]).toEqual(['', '', null])
+  })
+
+  it('hangs layer labels at the corner, or centred above or under the floor', () => {
+    const l = ctx.layers[0] // 100 wide, the floor in its y-z plane
+    const corner = l.labelAnchor()
+    l.labelPosition = 'above'
+    const [ax, ay] = l.labelAnchor()
+    l.labelPosition = 'below'
+    const [bx, by] = l.labelAnchor()
+    expect(ay).toBeCloseTo(50)
+    expect(by).toBeCloseTo(-50)
+    expect(ax).toBeCloseTo(bx) // both centred
+    expect(corner[1]).toBeCloseTo(-50) // the outer corner, as before
   })
 
   it('colours by layer with the palette order of the layers', () => {
