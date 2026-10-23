@@ -1037,8 +1037,9 @@ const HELP_HTML = `
   <h3>Cross-Layer Alignment</h3>
   <p>
     With the <i>Per Layer</i> scope and a 2D layout, you can trade alignment against each layer keeping
-    its own shape, to reduce crossings between layers. <i>Soft</i> blends each layer's own layout toward the fully
-    aligned one; <i>Anchor to a reference layer</i> lays out the chosen layer first and starts every other layer from
+    its own shape, to reduce crossings between layers. <i>Soft</i> turns each layer's own layout, mirrored if that
+    fits better, to lie as close as it can to the fully aligned one, then blends it toward that layout, so a layer
+    keeps its shape and is never folded flat; <i>Anchor to a reference layer</i> lays out the chosen layer first and starts every other layer from
     the positions of its counterparts (the same node, or partners through inter-layer edges); <i>Chain</i> anchors
     each layer to the previous one, which suits time series and long stacks. <i>Strength</i> runs from 0 (independent
     layers) to 1 (shared nodes exactly aligned). After every multi-layer layout the panel reports the
