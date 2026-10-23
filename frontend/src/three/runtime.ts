@@ -76,6 +76,10 @@ export interface RuntimeContext {
   selectedEdgeColorFlag: boolean
   edgeFileColorPriority: boolean
   isDirectionEnabled: boolean
+  // where Show Direction draws arrowheads: the layers (null = every layer) and
+  // the links between layers, so directed and undirected layers can mix
+  arrowLayers: string[] | null
+  interLayerArrows: boolean
   // The two weight encodings are independent; the Edge Actions radio is just a
   // view over this pair (none / opacity / width / both).
   edgeOpacityByWeight: boolean
@@ -184,6 +188,8 @@ export const ctx: RuntimeContext = {
   selectedEdgeColorFlag: true,
   edgeFileColorPriority: false,
   isDirectionEnabled: false,
+  arrowLayers: null,
+  interLayerArrows: true,
   edgeOpacityByWeight: true,
   edgeWidthByWeight: false,
   edgeWeightThreshold: 0,
@@ -242,6 +248,8 @@ export function resetContext(): void {
   ctx.selectedEdgeColorFlag = true
   ctx.edgeFileColorPriority = false
   ctx.isDirectionEnabled = false
+  ctx.arrowLayers = null
+  ctx.interLayerArrows = true
   ctx.edgeOpacityByWeight = true
   ctx.edgeWidthByWeight = false
   ctx.interLayerEdgeOpacity = 0.4

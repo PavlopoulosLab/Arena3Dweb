@@ -11,6 +11,8 @@ import { ChangeChannelColorCommand } from '../commands/scene'
 import { store } from '../store'
 import {
   toggleDirection,
+  setArrowLayers,
+  setInterLayerArrows,
   setIntraDirectionArrowSize,
   setInterDirectionArrowSize,
   setEdgeWeightEncoding,
@@ -71,6 +73,15 @@ const EDGE_HTML = `
   <div class="mb-3 d-none" id="interDirectionArrowSizeWrap" data-multilayer-only>
     <label class="form-label" for="interDirectionArrowSize">Inter-Layer Direction Arrow Size:</label>
     <input type="range" class="form-range" id="interDirectionArrowSize" min="1" max="10" step="1" value="5" />
+  </div>
+  <div class="mb-2 d-none" id="arrowLayersWrap">
+    <label class="form-label">Arrowheads in:</label>
+    <div id="arrowLayersList" class="d-flex flex-wrap gap-2"></div>
+    <div class="form-check" data-multilayer-only>
+      <input class="form-check-input" type="checkbox" id="interLayerArrows" checked />
+      <label class="form-check-label" for="interLayerArrows">Links between layers</label>
+    </div>
+    <div class="form-text">For a network that mixes directed and undirected layers, such as OmniPath signalling next to STRING interactions, untick the undirected ones.</div>
   </div>
   </details>
   <details class="lp-section lp-more" id="edgeCard_appearance">
@@ -141,6 +152,35 @@ const EDGE_HTML = `
   </details>
 </div>
 `
+
+// The Direction card as the scene has it: the toggle, the arrow sizes and
+// the layers that draw arrowheads (one box per layer, ticked when it does).
+function syncDirectionControls(): void {
+  const on = ctx.isDirectionEnabled
+  const toggle = document.getElementById(
+    'edgeDirectionToggle'
+  ) as HTMLInputElement | null
+  if (toggle) toggle.checked = on
+  show('intraDirectionArrowSizeWrap', on)
+  show('interDirectionArrowSizeWrap', on)
+  show('arrowLayersWrap', on)
+  const list = document.getElementById('arrowLayersList')
+  if (list)
+    list.innerHTML = ctx.layers
+      .map((l, i) => {
+        const ticked =
+          ctx.arrowLayers === null || ctx.arrowLayers.includes(l.name)
+        return `<div class="form-check form-check-inline me-0">
+          <input class="form-check-input" type="checkbox" id="arrowLayer_${i}" data-layer="${escapeHtml(l.name)}"${ticked ? ' checked' : ''} />
+          <label class="form-check-label" for="arrowLayer_${i}">${escapeHtml(l.name)}</label>
+        </div>`
+      })
+      .join('')
+  const inter = document.getElementById(
+    'interLayerArrows'
+  ) as HTMLInputElement | null
+  if (inter) inter.checked = ctx.interLayerArrows
+}
 
 function show(id: string, visible: boolean): void {
   document.getElementById(id)?.classList.toggle('d-none', !visible)
@@ -252,14 +292,29 @@ export function initEdgePanel(): void {
       fn(Number((e.target as HTMLInputElement).value))
     })
 
-  // Direction toggle shows/hides the arrow-size sliders (edges.R).
+  // Direction toggle shows/hides the arrow-size sliders (edges.R) and the
+  // choice of where arrowheads go.
   document
     .getElementById('edgeDirectionToggle')
     ?.addEventListener('change', (e) => {
-      const on = (e.target as HTMLInputElement).checked
-      show('intraDirectionArrowSizeWrap', on)
-      show('interDirectionArrowSizeWrap', on)
-      toggleDirection(on)
+      toggleDirection((e.target as HTMLInputElement).checked)
+      syncDirectionControls()
+    })
+  document.getElementById('arrowLayersList')?.addEventListener('change', () => {
+    const boxes = [
+      ...document.querySelectorAll<HTMLInputElement>('#arrowLayersList input'),
+    ]
+    // every layer ticked is the default, saved as "all" so new layers have arrows too
+    setArrowLayers(
+      boxes.every((b) => b.checked)
+        ? null
+        : boxes.filter((b) => b.checked).map((b) => b.dataset.layer ?? '')
+    )
+  })
+  document
+    .getElementById('interLayerArrows')
+    ?.addEventListener('change', (e) => {
+      setInterLayerArrows((e.target as HTMLInputElement).checked)
     })
   range('intraDirectionArrowSize', setIntraDirectionArrowSize)
   range('interDirectionArrowSize', setInterDirectionArrowSize)
@@ -303,6 +358,7 @@ export function initEdgePanel(): void {
   syncChannelControls()
   initBundlingControls()
   bus.on('network:loaded', () => {
+    syncDirectionControls() // a session may carry direction and arrowheads
     buildChannelEditList()
     syncEncodingSliders() // an imported session may carry either flag
     syncChannelControls() // and may or may not be multi-edge

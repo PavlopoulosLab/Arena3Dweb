@@ -1239,7 +1239,9 @@ const HELP_HTML = `
     <li><i>Hide Edges with Weight Below</i> filters weak edges (and weak channels of multi-channel edges) out of the
       view.</li>
     <li><i>Enable Edge Direction</i> draws arrows from source to target; two sliders size the intra- and
-      inter-layer arrows.</li>
+      inter-layer arrows. <i>Arrowheads in</i> ticks the layers that get them, so a network can mix directed and
+      undirected layers (untick STRING next to OmniPath signalling, say), and <i>Links between layers</i> turns
+      them on or off on the inter-layer links; both are saved in sessions.</li>
     <li><i>Show Edge Weight As</i>: opacity, width, both or neither. Whichever property weight does not drive is set
       with the intra- and inter-layer opacity and width sliders.</li>
     <li><i>Edge Shape</i> (multi-channel networks): <i>Parallel</i> (the default) draws every channel as its own

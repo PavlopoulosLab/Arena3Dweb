@@ -1,7 +1,10 @@
+import * as THREE from 'three'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { ctx, Edge, Layer, Node, resetContext, Scene } from '../three'
 import {
   applyEdgeAttributes,
+  setArrowLayers,
+  setInterLayerArrows,
   renderInterLayerEdges,
   setChannelColor,
   setChannelVisibility,
@@ -133,6 +136,45 @@ describe('channels', () => {
     expect(ch2.length).toBeGreaterThan(0)
     for (const c of ch2) expect(c.visible).toBe(false)
     ctx.isDirectionEnabled = false
+  })
+})
+
+describe('arrowheads by layer', () => {
+  const arrows = (e: Edge) => {
+    let n = 0
+    e.THREE_Object.traverse((o) => {
+      if (o instanceof THREE.ArrowHelper) n++
+    })
+    return n
+  }
+
+  it('are drawn only in the chosen layers, and on links between layers by their own switch', () => {
+    // a second node in L1, for an edge within L1
+    ctx.nodeGroups.C_L1 = 'L1'
+    ctx.nodeLayerNames.push('C_L1')
+    ctx.nodeObjects.push(
+      new Node({ id: 2, name: 'C', nodeLayerName: 'C_L1', layer: 'L1' })
+    )
+    ctx.layers[0].addNode(ctx.nodeObjects[2].sphere)
+    ctx.isDirectionEnabled = true
+    const edges = () => [
+      new Edge({ id: 1, source: 'A_L1', target: 'C_L1', weights: [1] }),
+      new Edge({
+        id: 2,
+        source: 'A_L1',
+        target: 'B_L2',
+        weights: [1],
+        interLayer: true,
+      }),
+    ]
+    expect(edges().map(arrows)).toEqual([1, 1]) // by default, everywhere
+    setArrowLayers(['L2'])
+    setInterLayerArrows(false)
+    expect(edges().map(arrows)).toEqual([0, 0])
+    setArrowLayers(['L1'])
+    expect(edges().map(arrows)).toEqual([1, 0])
+    ctx.isDirectionEnabled = false
+    expect(edges().map(arrows)).toEqual([0, 0]) // and never without direction
   })
 })
 

@@ -148,6 +148,9 @@ export interface SessionData {
   scramble_nodes: boolean
   intraEdgeBundling?: number
   interEdgeBundling?: number
+  // where Show Direction draws arrowheads (null or missing = every layer)
+  arrowLayers?: string[] | null
+  interLayerArrows?: boolean
   // multi-channel edges (Edit → Edges → Edge Shape)
   edgeShape?: 'parallel' | 'curved' | 'straight'
   // Edit → Nodes → Show Labels, when saved (older sessions keep the current)
