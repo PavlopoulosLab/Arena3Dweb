@@ -3,6 +3,7 @@
 import { ABOUT_HTML, initAbout } from './about'
 import { decorateHelp } from './help_layout'
 import { showTab } from './tabs'
+import { tourChapters, tourPlayer, wireTour } from './video'
 
 // Tab-separated examples as tables: real tabs render as uneven gaps once
 // names differ in length, so columns are shown as cells and the caption
@@ -99,7 +100,16 @@ const HELP_HTML = `
 
 <div id="Start_tab" class="tabcontent">
   <h2>Getting Started</h2>
-  <p class="help-lead">Arena3D in five steps, then the menus, the Networks menu, undo, network mode and touch screens.</p>
+  <p class="help-lead">A four-minute video tour, Arena3D in five steps, then the menus, the Networks menu, undo, network mode and touch screens.</p>
+  <div class="help-tour">
+    ${tourPlayer('helpTour')}
+    <p class="help-tour__intro">
+      <b>Video tour</b>: loading and importing networks, layouts and layer arrangements, 3D containers, edge bundling,
+      communities and groups, analysis, search, themes, alternative views and the REST API, with captions. Pick a
+      chapter to start there.
+    </p>
+    ${tourChapters('helpTour')}
+  </div>
   <img class="help-shot" src="${import.meta.env.BASE_URL}images/help/ui/topbar.png" alt="The top bar: Home, File, Database Importers, Networks, View, Find, Layer selection, Layout, Clustering, Edit, Analyze, Export and Help menus, the Multilayered / Single network switch, the theme picker and Undo / Redo" loading="lazy">
   <p>
     Arena3D shows a multilayered network in 3D: every layer is a floor (or a disk, cube, sphere or cloud), a node
@@ -410,6 +420,14 @@ const HELP_HTML = `
     <b>Layers as spheres (GPCR signalling): </b> <br />
     A <a href="${import.meta.env.BASE_URL}data/GPCRs_spheres.json" download>session</a> in which the GPCR, G-protein, GRK and effector
     layers are spheres (Edit → Layers → <i>Layer Shape</i>) with a 3D layout inside each. <br />
+  </p>
+  <hr>
+  <p>
+    <b>Layers in glowing spheres: </b> <br />
+    A <a href="${import.meta.env.BASE_URL}data/figure2A_spheres.json" download>session</a> of the four weighted layers,
+    each in a glowing sphere (Edit → Layers → <i>Layer Shape</i> → <i>Bubble</i>) with its nodes laid out in 3D inside,
+    the spheres in a row (Layout → Layer Arrangement → <i>Parallel Coordinates</i>) and the links between them bundled
+    (Edit → Edges → <i>Inter-Layer Edge Bundling</i>). <br />
   </p>
   <h3>Hive plots</h3>
   <p>
@@ -1019,8 +1037,9 @@ const HELP_HTML = `
   <h3>Cross-Layer Alignment</h3>
   <p>
     With the <i>Per Layer</i> scope and a 2D layout, you can trade alignment against each layer keeping
-    its own shape, to reduce crossings between layers. <i>Soft</i> blends each layer's own layout toward the fully
-    aligned one; <i>Anchor to a reference layer</i> lays out the chosen layer first and starts every other layer from
+    its own shape, to reduce crossings between layers. <i>Soft</i> turns each layer's own layout, mirrored if that
+    fits better, to lie as close as it can to the fully aligned one, then blends it toward that layout, so a layer
+    keeps its shape and is never folded flat; <i>Anchor to a reference layer</i> lays out the chosen layer first and starts every other layer from
     the positions of its counterparts (the same node, or partners through inter-layer edges); <i>Chain</i> anchors
     each layer to the previous one, which suits time series and long stacks. <i>Strength</i> runs from 0 (independent
     layers) to 1 (shared nodes exactly aligned). After every multi-layer layout the panel reports the
@@ -1220,7 +1239,9 @@ const HELP_HTML = `
     <li><i>Hide Edges with Weight Below</i> filters weak edges (and weak channels of multi-channel edges) out of the
       view.</li>
     <li><i>Enable Edge Direction</i> draws arrows from source to target; two sliders size the intra- and
-      inter-layer arrows.</li>
+      inter-layer arrows. <i>Arrowheads in</i> ticks the layers that get them, so a network can mix directed and
+      undirected layers (untick STRING next to OmniPath signalling, say), and <i>Links between layers</i> turns
+      them on or off on the inter-layer links; both are saved in sessions.</li>
     <li><i>Show Edge Weight As</i>: opacity, width, both or neither. Whichever property weight does not drive is set
       with the intra- and inter-layer opacity and width sliders.</li>
     <li><i>Edge Shape</i> (multi-channel networks): <i>Parallel</i> (the default) draws every channel as its own
@@ -2264,7 +2285,7 @@ webbrowser.open(r.json()["url"])</pre>
   <h3>No cookies, no tracking</h3>
   <p>
     Arena3D sets no cookies and uses no analytics, tracking or advertising, and the page loads nothing from other
-    sites. The browser's local storage keeps a few interface preferences on your computer — which cards are open,
+    sites (the video tour's player comes from YouTube only when you press play, see below). The browser's local storage keeps a few interface preferences on your computer — which cards are open,
     the selection shape, whether the shortcuts list is folded — and they are never sent anywhere.
   </p>
   <h3>Other services, only when you ask</h3>
@@ -2282,6 +2303,9 @@ webbrowser.open(r.json()["url"])</pre>
       Cytoscape on your own computer.</li>
     <li><b>Links in the data</b>: a node's URL, and the database links in the tables, open the other site in a new
       tab.</li>
+    <li><b>Video tour</b> (Home and Getting Started): the pages show a still picture of the tour; YouTube's player,
+      in its privacy-enhanced mode (youtube-nocookie.com), loads only when you press play or pick a chapter, and
+      YouTube's privacy policy applies from then on.</li>
   </ul>
   <p>
     Each of those sites has its own privacy policy. Downloaded NGCircos and CircosJS pages load their libraries from
@@ -2321,6 +2345,7 @@ export function initHelpPanel(): void {
   pane.innerHTML = HELP_HTML
   initAbout(pane)
   decorateHelp(pane)
+  wireTour(pane)
   const buttons = pane.querySelectorAll<HTMLElement>('.tablinks')
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {

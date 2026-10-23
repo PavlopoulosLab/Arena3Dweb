@@ -123,6 +123,8 @@ export function collectSession(): SessionData {
     edges: collectEdges(),
     universalLabelColor: ctx.labelColor,
     direction: ctx.isDirectionEnabled,
+    arrowLayers: ctx.arrowLayers,
+    interLayerArrows: ctx.interLayerArrows,
     edgeOpacityByWeight: ctx.edgeOpacityByWeight,
     edgeWidthByWeight: ctx.edgeWidthByWeight,
     scramble_nodes: false,

@@ -67,6 +67,16 @@ def test_edge_bundling_strengths_clamped_and_defaulted() -> None:
     assert s["interEdgeBundling"] == 0.0
 
 
+def test_arrow_layers_kept_among_the_layers_and_defaulted() -> None:
+    s = normalize_session(_minimal())
+    assert s["arrowLayers"] is None and s["interLayerArrows"] is True
+    s = normalize_session(
+        {**_minimal(), "arrowLayers": ["L1", "Nope", "L1"], "interLayerArrows": False}
+    )
+    assert s["arrowLayers"] == ["L1"] and s["interLayerArrows"] is False
+    assert normalize_session({**_minimal(), "arrowLayers": "L1"})["arrowLayers"] is None
+
+
 def test_edge_shape_defaults_and_validation() -> None:
     # parallel lines by default; Bézier curves or straight lines on request
     assert normalize_session(_minimal())["edgeShape"] == "parallel"

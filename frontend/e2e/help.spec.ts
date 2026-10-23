@@ -154,8 +154,11 @@ test('Help layout: grouped navigation, page headers, figures, contents, callouts
   await expect(help.locator('.help-page > .help-head .help-lead')).toHaveCount(
     n
   )
-  // pictures are framed with their alt text as the caption
-  await expect(help.locator('.help-page img:not(figure img)')).toHaveCount(0)
+  // pictures are framed with their alt text as the caption (the video
+  // tour's still is its play button instead)
+  await expect(
+    help.locator('.help-page img:not(figure img):not(.tour img)')
+  ).toHaveCount(0)
   await expect(
     help.locator('#File_tab .help-figure--panel figcaption')
   ).toHaveText('The File panel')

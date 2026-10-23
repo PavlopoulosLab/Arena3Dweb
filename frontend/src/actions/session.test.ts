@@ -170,6 +170,8 @@ describe('collectSession', () => {
     seed()
     ctx.labelColor = '#cccccc'
     ctx.isDirectionEnabled = true
+    ctx.arrowLayers = ['L2']
+    ctx.interLayerArrows = false
     const out = collectSession()
 
     expect(out.scene.scale).toBeCloseTo(0.5)
@@ -187,6 +189,8 @@ describe('collectSession', () => {
     ])
     expect(out.universalLabelColor).toBe('#cccccc')
     expect(out.direction).toBe(true)
+    expect(out.arrowLayers).toEqual(['L2'])
+    expect(out.interLayerArrows).toBe(false)
 
     // feed it back through the importer
     resetContext()
@@ -194,6 +198,8 @@ describe('collectSession', () => {
     buildFromSession(out)
     expect(ctx.nodeObjects.map((n) => n.name)).toEqual(['A', 'B'])
     expect(ctx.edgeObjects).toHaveLength(1)
+    expect(ctx.arrowLayers).toEqual(['L2'])
+    expect(ctx.interLayerArrows).toBe(false)
   })
 
   it('saves the Edit → Style overrides, only when set, and restores them', () => {

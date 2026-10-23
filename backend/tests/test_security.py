@@ -109,6 +109,32 @@ def test_a_compute_job_past_the_time_limit_is_stopped(monkeypatch) -> None:
     assert time.monotonic() - start < 25
 
 
+def test_a_timed_out_job_does_not_crash_a_concurrent_healthy_one(monkeypatch) -> None:
+    # each concurrency slot is its own single-worker pool: killing a slot whose
+    # job overran must not affect a healthy job actively running in another
+    # slot at that exact moment (not just one that finished earlier — COMPUTE_
+    # SECONDS is set differently per call, read fresh each time, so the
+    # healthy job is still mid-sleep, in its own process, when the stuck
+    # job's kill fires).
+    monkeypatch.setattr(config, "LAYOUT_WORKERS", 2)
+    compute_pool.stop()  # drop any pool an earlier test sized differently
+
+    async def run() -> None:
+        monkeypatch.setattr(config, "COMPUTE_SECONDS", 0.5)
+        stuck = asyncio.create_task(compute_pool.run_isolated(time.sleep, 30))
+        await asyncio.sleep(0.1)  # let it claim its slot first
+        monkeypatch.setattr(config, "COMPUTE_SECONDS", 5.0)
+        # sleeps from t≈0.1 to t≈1.1, spanning the stuck job's kill at t≈0.5
+        await compute_pool.run_isolated(time.sleep, 1.0)
+        with pytest.raises(compute_pool.ComputeTimeout):
+            await stuck
+
+    start = time.monotonic()
+    asyncio.run(run())
+    compute_pool.stop()
+    assert time.monotonic() - start < 25
+
+
 def test_a_chunked_body_cannot_stream_past_the_cap(monkeypatch) -> None:
     monkeypatch.setattr(config, "MAX_UPLOAD_BYTES", 1000)
 

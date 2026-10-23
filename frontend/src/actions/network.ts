@@ -331,6 +331,8 @@ export function buildFromSession(s: SessionData): void {
   const labels = s.nodeLabels ?? nodeLabelState()
   setNodeLabelMode(labels.mode, labels.withSelection)
   ctx.isDirectionEnabled = Boolean(s.direction)
+  ctx.arrowLayers = Array.isArray(s.arrowLayers) ? s.arrowLayers : null
+  ctx.interLayerArrows = s.interLayerArrows !== false
   ctx.edgeOpacityByWeight = Boolean(s.edgeOpacityByWeight)
   ctx.edgeWidthByWeight = Boolean(s.edgeWidthByWeight)
   // bundled paths are computed on the first redraw (three/bundling.ts)

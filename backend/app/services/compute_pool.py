@@ -6,7 +6,18 @@ src/layout/align.c, "Assertion failed: correction_saved"), reachable from
 ordinary group-layout requests. A Python try/except can never catch an
 abort(); running the computation in a worker process means it only takes
 that worker down, so the request gets a clean error instead of the whole
-server dying mid-response.
+server dying mid-response. A job that runs past config.COMPUTE_SECONDS is
+stopped the same way (terminated, not just cancelled — asyncio cancellation
+doesn't interrupt a synchronous call already running in another process).
+
+Each of the LAYOUT_WORKERS concurrency slots is its own single-worker
+ProcessPoolExecutor, not one shared N-worker pool. This matters: killing any
+one worker in a ProcessPoolExecutor marks the *whole* pool BrokenProcessPool,
+failing every other future on it too — confirmed directly (a healthy sibling
+job submitted to a 2-worker pool failed with BrokenProcessPool when the
+other worker was killed, even though it never touched that worker). With one
+worker per slot, a kill or crash only ever replaces that slot's own pool —
+concurrent jobs in other slots are untouched.
 
 Workers use the "spawn" start method, not the POSIX default "fork": a forked
 worker inherits duplicates of the parent's open file descriptors (uvicorn's
@@ -17,7 +28,7 @@ request and the whole server hung forever (not just that one request); under
 "spawn" (a genuinely fresh process, no inherited fds), the crash is detected
 immediately and the server keeps serving. "spawn" pays a slower worker
 startup/restart cost, acceptable here since workers are long-lived and only
-restarted after an actual crash.
+restarted after an actual crash or timeout.
 """
 
 import asyncio
@@ -34,8 +45,9 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
-_pool: ProcessPoolExecutor | None = None
-_lock = asyncio.Lock()
+_slots: list[ProcessPoolExecutor] = []
+_free: asyncio.Queue[int] | None = None
+_start_lock = asyncio.Lock()
 
 
 class ComputeCrashed(RuntimeError):
@@ -46,61 +58,65 @@ class ComputeTimeout(ComputeCrashed):
     """The request ran past config.COMPUTE_SECONDS and was stopped."""
 
 
+def _new_slot() -> ProcessPoolExecutor:
+    return ProcessPoolExecutor(max_workers=1, mp_context=multiprocessing.get_context("spawn"))
+
+
 def start() -> None:
-    global _pool
-    _pool = ProcessPoolExecutor(
-        max_workers=config.LAYOUT_WORKERS,
-        mp_context=multiprocessing.get_context("spawn"),
-    )
+    global _slots, _free
+    _slots = [_new_slot() for _ in range(config.LAYOUT_WORKERS)]
+    _free = asyncio.Queue()
+    for i in range(len(_slots)):
+        _free.put_nowait(i)
 
 
 def stop() -> None:
-    global _pool
-    if _pool is not None:
-        _pool.shutdown(cancel_futures=True)
-        _pool = None
+    global _slots, _free
+    for pool in _slots:
+        pool.shutdown(cancel_futures=True)
+    _slots = []
+    _free = None
 
 
-async def _ensure_pool() -> ProcessPoolExecutor:
-    if _pool is None:
-        async with _lock:
-            if _pool is None:  # another request may have created it meanwhile
+async def _ensure_started() -> asyncio.Queue[int]:
+    if _free is None:
+        async with _start_lock:
+            if _free is None:  # another request may have started it meanwhile
                 start()
-    assert _pool is not None
-    return _pool
-
-
-async def _replace(pool: ProcessPoolExecutor, kill: bool = False) -> None:
-    async with _lock:
-        if _pool is pool:  # nobody else already replaced it
-            if kill:  # a running job cannot be cancelled: end its process
-                for proc in list(getattr(pool, "_processes", {}).values()):
-                    proc.terminate()
-            pool.shutdown(wait=False, cancel_futures=True)
-            start()
+    assert _free is not None
+    return _free
 
 
 async def run_isolated(fn: Callable[..., T], *args: object) -> T:
-    """Run `fn(*args)` in the worker pool; survives a worker crash, and stops
-    a job that runs past config.COMPUTE_SECONDS."""
-    pool = await _ensure_pool()
+    """Run `fn(*args)` in one of the worker slots; survives that slot's worker
+    crashing or running past config.COMPUTE_SECONDS, without affecting any
+    other slot's concurrently-running job."""
+    free = await _ensure_started()
+    i = await free.get()
+    pool = _slots[i]
     loop = asyncio.get_running_loop()
     try:
         return await asyncio.wait_for(
             loop.run_in_executor(pool, fn, *args), timeout=config.COMPUTE_SECONDS
         )
     except TimeoutError as e:
-        await _replace(pool, kill=True)
+        for proc in list(getattr(pool, "_processes", {}).values()):
+            proc.terminate()  # a running job cannot be cancelled: end its process
+        pool.shutdown(wait=False, cancel_futures=True)
+        _slots[i] = _new_slot()
         logger.error("Compute job stopped after %.0f s", config.COMPUTE_SECONDS)
         raise ComputeTimeout(
             f"The computation took longer than {config.COMPUTE_SECONDS:.0f} s and was "
             "stopped; try fewer layers, a smaller network or a faster algorithm."
         ) from e
     except BrokenProcessPool as e:
-        await _replace(pool)
+        pool.shutdown(wait=False, cancel_futures=True)
+        _slots[i] = _new_slot()
         logger.error("Compute worker crashed: %s", e)
         raise ComputeCrashed(
             "The server's layout engine crashed on this request (likely an "
             "internal igraph error) — try a different algorithm, grouping or "
             "clustering option."
         ) from e
+    finally:
+        free.put_nowait(i)

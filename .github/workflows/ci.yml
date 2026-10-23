@@ -11,6 +11,7 @@ permissions:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run: { working-directory: backend }
     steps:
@@ -24,6 +25,7 @@ jobs:
 
   frontend:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run: { working-directory: frontend }
     steps:
@@ -39,6 +41,10 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     needs: [backend, frontend]
+    # 155 tests measured locally at ~36 min (--workers=2); 60 gives headroom for
+    # CI variance without masking a genuine hang as "still running" for hours
+    # (GitHub's default job timeout is 360 min with none set).
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
@@ -47,3 +53,6 @@ jobs:
       - run: cd backend && uv sync --frozen && (uv run uvicorn app.main:app --port 8000 &)
       - run: cd frontend && npm ci && npx playwright install --with-deps chromium
       - run: cd frontend && npm run test:e2e
+        # separate from the job ceiling so a hang here is unambiguous in the
+        # logs, rather than looking like the whole job (incl. setup) stalled
+        timeout-minutes: 50

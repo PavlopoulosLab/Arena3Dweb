@@ -21,6 +21,10 @@ class SessionImportResponse(BaseModel):
     edges: list[dict[str, Any]]
     universalLabelColor: str
     direction: bool
+    # where the arrowheads go when direction is on: these layers (None = every
+    # layer) and the links between layers
+    arrowLayers: list[str] | None = None
+    interLayerArrows: bool = True
     edgeOpacityByWeight: bool
     edgeWidthByWeight: bool
     scramble_nodes: bool

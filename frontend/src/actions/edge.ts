@@ -117,6 +117,19 @@ export function toggleDirection(enabled: boolean): void {
   redrawIntraLayerEdges()
 }
 
+// Arrowheads only in some layers (null = all) and, apart from them, on the
+// links between layers: a network may mix directed and undirected layers,
+// such as OmniPath signalling next to STRING interactions.
+export function setArrowLayers(layers: string[] | null): void {
+  ctx.arrowLayers = layers
+  redrawIntraLayerEdges()
+}
+
+export function setInterLayerArrows(on: boolean): void {
+  ctx.interLayerArrows = on
+  ctx.renderInterLayerEdgesFlag = true
+}
+
 export function setIntraDirectionArrowSize(size: number): void {
   ctx.intraDirectionArrowSize = size
   redrawIntraLayerEdges()

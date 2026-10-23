@@ -5,6 +5,7 @@ import { showTab } from './tabs'
 import { openCard } from './sections'
 import { openHelpPage } from './help'
 import { EXAMPLES, exampleOptions, loadExample } from './file'
+import { tourChapters, tourPlayer, wireTour } from './video'
 import {
   PUBLICATIONS,
   citationText,
@@ -148,9 +149,9 @@ const FEATURED: [string, string, string][] = [
     'Five layers of viral and human proteins and what they touch.',
   ],
   [
-    'GPCRs_spheres.json',
-    'GPCR signalling',
-    'Receptors to effectors, each layer a sphere in space.',
+    'figure2A_spheres.json',
+    'Layers in 3D spheres',
+    'Four layers, each in a glowing sphere, with the links between them bundled.',
   ],
   [
     'prego.tsv',
@@ -212,6 +213,15 @@ const HOME_HTML = `
 
   <section class="home-stats" aria-label="Arena3D in numbers">
     ${STATS.map(([n, l]) => `<div class="home-stat"><span class="home-stat__n">${n}</span><span class="home-stat__l">${l}</span></div>`).join('')}
+  </section>
+
+  <section class="home-section home-video" aria-labelledby="homeTourTitle">
+    <div class="home-video__player">${tourPlayer('homeTour')}</div>
+    <div class="home-video__text">
+      <h2 class="home-h2" id="homeTourTitle">Take the four-minute tour</h2>
+      <p class="home-sub">Arena3D 3.0 at work, from the first import to themes and the REST API. Pick a chapter to jump in.</p>
+      ${tourChapters('homeTour')}
+    </div>
   </section>
 
   <section class="home-section">
@@ -297,6 +307,7 @@ export function initHomePanel(): void {
   const pane = document.getElementById('panel-home')
   if (!pane) return
   pane.innerHTML = HOME_HTML
+  wireTour(pane)
   const go = (id: string, tab: string) =>
     document.getElementById(id)?.addEventListener('click', (e) => {
       e.preventDefault()

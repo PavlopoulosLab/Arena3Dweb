@@ -77,6 +77,17 @@ export class Edge {
     return this.interLayer && ctx.networkMode !== 'single'
   }
 
+  // an arrowhead when Show Direction is on and the edge is where arrowheads
+  // are drawn: a link between layers by its own switch, any other edge by
+  // the layer of its source (Edges → Direction → Arrowheads in)
+  private get showsArrow(): boolean {
+    if (!ctx.isDirectionEnabled) return false
+    if (this.asInter) return ctx.interLayerArrows
+    if (ctx.arrowLayers === null) return true
+    const layer = ctx.layers[this.sourceLayerIndex]?.name
+    return layer !== undefined && ctx.arrowLayers.includes(layer)
+  }
+
   constructor({
     id = 0,
     source = '',
@@ -156,7 +167,7 @@ export class Edge {
       this.decideWidth()
     )
 
-    if (ctx.isDirectionEnabled)
+    if (this.showsArrow)
       this.createArrow(path.slice(-2), this.decideArrowColor(color))
   }
 
@@ -384,7 +395,7 @@ export class Edge {
     curveLine.visible = ctx.channelVisibility[channelName]
     curveGroup.add(curveLine)
 
-    if (ctx.isDirectionEnabled)
+    if (this.showsArrow)
       curveGroup = this.createCurvedArrow(
         curveGroup,
         curvePoints,

@@ -140,11 +140,13 @@ test('the rectangle still selects a box', async ({ page }) => {
   const all = await nodes(page)
   const cx = all.reduce((s, n) => s + n.x, 0) / all.length
   const cy = all.reduce((s, n) => s + n.y, 0) / all.length
-  // a rectangle is drawn from the press to the release: two corners
+  // a rectangle is drawn from the press to the release: two corners (the
+  // path between them is never read in rectangle mode — see the other
+  // test's drag() comment)
   await page.keyboard.down('Shift')
   await page.mouse.move(cx - 150, cy - 120)
   await page.mouse.down()
-  await page.mouse.move(cx + 150, cy + 120, { steps: 15 })
+  await page.mouse.move(cx + 150, cy + 120, { steps: 2 })
   await page.mouse.up()
   await page.keyboard.up('Shift')
   expectSelection(await nodes(page), [
@@ -158,6 +160,10 @@ test('the rectangle still selects a box', async ({ page }) => {
 test('the area can replace the selection or take nodes out of it', async ({
   page,
 }) => {
+  // four drag-select cycles, each followed by a full scene evaluation —
+  // the heaviest test in this file even after trimming unnecessary mouse
+  // steps (see drag() below).
+  test.setTimeout(120_000)
   await load(page)
   await page.locator('#info [data-shape="rectangle"]').click()
   await page.locator('#info [data-combine="new"]').click()
@@ -179,7 +185,11 @@ test('the area can replace the selection or take nodes out of it', async ({
     if (alt) await page.keyboard.down('Alt')
     await page.mouse.move(...outline[0])
     await page.mouse.down()
-    await page.mouse.move(...outline[2], { steps: 15 })
+    // rectangle mode computes the box from the press point and the current
+    // cursor only (canvas_controls.ts's lassoSelectNodes) — the path in
+    // between is never read, so a couple of steps (one live-redraw sanity
+    // check) covers it exactly as well as many, for a fraction of the cost.
+    await page.mouse.move(...outline[2], { steps: 2 })
     await page.mouse.up()
     if (alt) await page.keyboard.up('Alt')
     await page.keyboard.up('Shift')

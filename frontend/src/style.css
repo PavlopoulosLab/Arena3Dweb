@@ -1652,6 +1652,192 @@ body:has(#panelContent > #panel-data.show) footer {
   }
 }
 
+/* the video tour (ui/video.ts): a still with a play button that turns into
+   YouTube's player when pressed, and the chapters, on Home and in Help */
+.tour {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--arena-border-strong);
+  border-radius: 14px;
+  background: #05070b;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.tour__poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.tour__poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    transform 0.4s var(--arena-ease),
+    filter 0.4s var(--arena-ease);
+}
+
+.tour__poster:hover img {
+  transform: scale(1.02);
+  filter: brightness(1.12);
+}
+
+.tour__poster:focus-visible {
+  outline: 3px solid var(--arena-accent);
+  outline-offset: -3px;
+}
+
+.tour__play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  margin: auto;
+  padding-left: 4px;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(var(--arena-accent-rgb), 0.92);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s var(--arena-ease);
+}
+
+.tour__poster:hover .tour__play,
+.tour__poster:focus-visible .tour__play {
+  transform: scale(1.08);
+}
+
+.tour__length {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.72);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.tour iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.tour__note {
+  margin: 0.6rem 0 0;
+  color: var(--arena-text-muted);
+  font-size: 0.78rem;
+}
+
+.tour__note a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tour__note a:hover {
+  color: var(--arena-accent-hover);
+}
+
+.tour__chapters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.1rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tour__chapter {
+  display: flex;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.3rem 0;
+  border: 0;
+  background: none;
+  color: var(--arena-text-muted);
+  font-size: 0.88rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tour__chapter:hover,
+.tour__chapter:focus-visible {
+  color: var(--arena-text);
+}
+
+.tour__chapter time {
+  min-width: 2.4em;
+  color: var(--arena-accent-hover);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* Home: the player beside the title and the chapters */
+.home-video {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 2.5rem;
+}
+
+@media (max-width: 992px) {
+  .home-video {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Help, Getting Started: the player, a line on it, the chapters */
+.help-tour {
+  max-width: 820px;
+  margin: 0.3rem 0 2rem;
+}
+
+.help-tour__intro {
+  margin: 1rem 0 0.6rem;
+}
+
+#helpDiv .help-page ol.tour__chapters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+}
+
+#helpDiv .help-page ol.tour__chapters > li {
+  margin: 0;
+  padding: 0;
+}
+
+#helpDiv .help-page ol.tour__chapters > li::before {
+  content: none;
+}
+
+@media (max-width: 576px) {
+  .tour__chapters,
+  #helpDiv .help-page ol.tour__chapters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tour__play {
+    width: 60px;
+    height: 60px;
+  }
+}
+
 /* Help panel (ui/help.ts, ui/help_layout.ts) — the pages as documentation in
    the app's style: a side navigation of the pages, grouped, an icon each (a
    strip that scrolls sideways on narrow screens), and one page beside it — a

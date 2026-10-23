@@ -5,7 +5,11 @@ forces every layer into one shape. These modes trade alignment against each
 layer keeping its own structure:
 
 - soft:   blend each layer's own layout with the coupled (fully aligned)
-          layout; strength 0 = independent, 1 = coupled.
+          layout; strength 0 = independent, 1 = coupled. The own layout is
+          first turned (and mirrored, if that fits better) to lie as close as
+          possible to the coupled one: a layout and its turned or mirrored
+          copy have the same structure, but blending the two point by point
+          shrinks the layer or folds it flat onto a line.
 - anchor: lay out a reference layer, then start every other layer's
           Fruchterman-Reingold from its counterparts' positions (same node in
           the reference, or partners via inter-layer edges). Strength 1 pins
@@ -53,6 +57,38 @@ def _fit(pos: dict[str, XY], extent: float) -> dict[str, XY]:
     half = max(max(ys) - min(ys), max(zs) - min(zs)) / 2 or 1.0
     k = extent / half
     return {n: ((y - cy) * k, (z - cz) * k) for n, (y, z) in pos.items()}
+
+
+def _rotate_onto(own: dict[str, XY], target: Mapping[str, XY]) -> dict[str, XY]:
+    """Turn `own` about its centre, mirrored when that fits better, and move it
+    onto `target`'s centre, so its nodes lie as close as possible to theirs in
+    `target` (orthogonal Procrustes in 2D: no scaling, the shape is kept)."""
+    common = [n for n in own if n in target]
+    if len(common) < 2:
+        return own
+    cy = sum(own[n][0] for n in common) / len(common)
+    cz = sum(own[n][1] for n in common) / len(common)
+    ty = sum(target[n][0] for n in common) / len(common)
+    tz = sum(target[n][1] for n in common) / len(common)
+    best: tuple[float, int, float] | None = None
+    for mirror in (1, -1):
+        # the turn by theta maximises a cos(theta) + b sin(theta)
+        a = b = 0.0
+        for n in common:
+            y, z = own[n][0] - cy, (own[n][1] - cz) * mirror
+            u, v = target[n][0] - ty, target[n][1] - tz
+            a += y * u + z * v
+            b += y * v - z * u
+        fit = math.hypot(a, b)
+        if best is None or fit > best[0]:
+            best = (fit, mirror, math.atan2(b, a))
+    _, mirror, theta = best  # type: ignore[misc]
+    c, s = math.cos(theta), math.sin(theta)
+    out: dict[str, XY] = {}
+    for n, (y, z) in own.items():
+        y, z = y - cy, (z - cz) * mirror
+        out[n] = (c * y - s * z + ty, s * y + c * z + tz)
+    return out
 
 
 def _partners(
@@ -178,7 +214,7 @@ def aligned_layout(
     if req.alignment == "soft":
         aligned = _fit(coupled(), extent)
         for layer in layers:
-            own = _fit(layout_layer(layer), extent)
+            own = _rotate_onto(_fit(layout_layer(layer), extent), aligned)
             for n, (y, z) in own.items():
                 ay, az = aligned.get(n, (y, z))
                 positions[n] = (

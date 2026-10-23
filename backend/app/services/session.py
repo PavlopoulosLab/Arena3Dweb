@@ -140,6 +140,15 @@ def _dedup_edges(edges: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return out
 
 
+def _arrow_layers(value: Any, layers: list[dict[str, Any]]) -> list[str] | None:
+    """The layers that draw arrowheads, among the session's own (each once);
+    anything but a list means every layer (None)."""
+    if not isinstance(value, list):
+        return None
+    names = {str(row.get("name")) for row in layers}
+    return list(dict.fromkeys(str(v) for v in value if str(v) in names))
+
+
 def _strength(value: Any) -> float:
     """A 0-1 strength; anything missing or unreadable is 0 (off)."""
     try:
@@ -416,6 +425,8 @@ def normalize_session(data: dict[str, Any]) -> dict[str, Any]:
         "edges": edges,
         "universalLabelColor": _default(data.get("universalLabelColor"), "#FFFFFF"),
         "direction": _default(data.get("direction"), False),
+        "arrowLayers": _arrow_layers(data.get("arrowLayers"), layers),
+        "interLayerArrows": data.get("interLayerArrows") is not False,
         "edgeOpacityByWeight": _default(data.get("edgeOpacityByWeight"), True),
         # Sessions written before edge thickness existed default to off, so
         # they keep rendering exactly as they did.
