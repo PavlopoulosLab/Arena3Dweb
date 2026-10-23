@@ -135,7 +135,8 @@ function pageHeader(page: HTMLElement, group: string): HTMLElement | null {
 // every picture in a frame, its alt text as the caption
 function figures(page: HTMLElement): void {
   page.querySelectorAll('img').forEach((img) => {
-    if (img.closest('figure')) return
+    // the video tour's poster stays inside its play button
+    if (img.closest('figure, .tour')) return
     const fig = document.createElement('figure')
     fig.className = 'help-figure'
     if (img.classList.contains('help-shot--panel'))
