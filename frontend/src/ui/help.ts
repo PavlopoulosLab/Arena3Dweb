@@ -421,6 +421,14 @@ const HELP_HTML = `
     A <a href="${import.meta.env.BASE_URL}data/GPCRs_spheres.json" download>session</a> in which the GPCR, G-protein, GRK and effector
     layers are spheres (Edit → Layers → <i>Layer Shape</i>) with a 3D layout inside each. <br />
   </p>
+  <hr>
+  <p>
+    <b>Layers in glowing spheres: </b> <br />
+    A <a href="${import.meta.env.BASE_URL}data/figure2A_spheres.json" download>session</a> of the four weighted layers,
+    each in a glowing sphere (Edit → Layers → <i>Layer Shape</i> → <i>Bubble</i>) with its nodes laid out in 3D inside,
+    the spheres in a row (Layout → Layer Arrangement → <i>Parallel Coordinates</i>) and the links between them bundled
+    (Edit → Edges → <i>Inter-Layer Edge Bundling</i>). <br />
+  </p>
   <h3>Hive plots</h3>
   <p>
     <b>Hive plots, layers as axes: </b> <br />

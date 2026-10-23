@@ -44,6 +44,34 @@ test('the landing page leads to the File panel, the importers and an example', a
   expect(layers).toBe(6)
 })
 
+test('the spheres card opens four layers in glowing spheres, their links bundled', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.waitForFunction(
+    () => '__arena' in (window as unknown as Record<string, unknown>)
+  )
+  await page
+    .locator('.home-example', { hasText: 'Layers in 3D spheres' })
+    .click()
+  await expect(page.locator('#file_status')).toContainText('Session loaded')
+  const scene = await page.evaluate(() => {
+    const ctx = (
+      window as unknown as {
+        __arena: {
+          ctx: { layers: { container: string }[]; interEdgeBundling: number }
+        }
+      }
+    ).__arena.ctx
+    return {
+      containers: ctx.layers.map((l) => l.container),
+      bundling: ctx.interEdgeBundling,
+    }
+  })
+  expect(scene.containers).toEqual(['bubble', 'bubble', 'bubble', 'bubble'])
+  expect(scene.bundling).toBeGreaterThan(0.5)
+})
+
 test('the hero button opens the first featured example', async ({ page }) => {
   await page.goto('/')
   await page.waitForFunction(

@@ -111,6 +111,11 @@ export const EXAMPLES = [
     category: GEOMETRY,
   },
   {
+    file: 'figure2A_spheres.json',
+    label: 'Four layers in glowing spheres (session)',
+    category: GEOMETRY,
+  },
+  {
     file: 'aspirin_3channels_directed.json',
     label: 'Aspirin, three channels, directed',
     category: BIO,

@@ -149,9 +149,9 @@ const FEATURED: [string, string, string][] = [
     'Five layers of viral and human proteins and what they touch.',
   ],
   [
-    'GPCRs_spheres.json',
-    'GPCR signalling',
-    'Receptors to effectors, each layer a sphere in space.',
+    'figure2A_spheres.json',
+    'Layers in 3D spheres',
+    'Four layers, each in a glowing sphere, with the links between them bundled.',
   ],
   [
     'prego.tsv',
